@@ -15,7 +15,7 @@ import java.io.*;
     Describes a <tt>CONSTANT_Double_info</tt> constant pool data structure.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:29 $
+    @version $Revision: 1.4 $ $Date: 2003-08-20 17:14:37 $
 */
 public class ConstantDoubleInfo extends ConstantLargeNumeric {
 
@@ -36,7 +36,7 @@ public class ConstantDoubleInfo extends ConstantLargeNumeric {
         @return the value
      */
     public double getDouble() {
-        long longBits = ((long)highBytes << 32) | ((long)lowBytes & 0x7FFFFFFF);
+        long longBits = (long)highBytes << 32 | (long)lowBytes & 0xFFFFFFFFL;
         return Double.longBitsToDouble(longBits);
     }
 
@@ -46,8 +46,8 @@ public class ConstantDoubleInfo extends ConstantLargeNumeric {
      */
     public void setDouble(double number) {
         long longBits = Double.doubleToLongBits(number);
-        highBytes = (int)(longBits >>> 32);
-        lowBytes = (int)(longBits & 0x0000FFFF);
+        highBytes = (int)(longBits >>> 32 & 0xFFFFFFFFL);
+        lowBytes = (int)(longBits & 0xFFFFFFFFL);
     }
 
     public void read(DataInput in)
