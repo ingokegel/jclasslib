@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.attributes.CodeAttribute;
 import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
 
 import javax.swing.*;
@@ -21,7 +22,7 @@ import java.util.Map;
     child window.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2003-08-18 08:02:58 $
+    @version $Revision: 1.9 $ $Date: 2004-02-10 16:07:35 $
 */
 public class BrowserTreePane extends JPanel {
 
@@ -57,6 +58,40 @@ public class BrowserTreePane extends JPanel {
      */
     public TreePath getPathForCategory(String category) {
         return (TreePath)categoryToPath.get(category);
+    }
+
+    /**
+        Show the specified method if it exists.
+        @param methodName the name of the method
+        @param methodSignature the signature of the method (in class file format)
+     */
+    public void showMethod(String methodName, String methodSignature) {
+
+        TreePath methodsPath = (TreePath)categoryToPath.get(BrowserTreeNode.NODE_METHOD);
+        if (methodsPath == null) {
+            return;
+        }
+        MethodInfo[] methods = services.getClassFile().getMethods();
+        TreeNode methodsNode = (TreeNode)methodsPath.getLastPathComponent();
+        for (int i = 0; i < methodsNode.getChildCount(); i++) {
+            BrowserTreeNode treeNode = (BrowserTreeNode)methodsNode.getChildAt(i);
+            MethodInfo testMethod = methods[treeNode.getIndex()];
+            try {
+                if (testMethod.getName().equals(methodName) && testMethod.getDescriptor().equals(methodSignature)) {
+                    TreePath path = methodsPath.pathByAddingChild(treeNode);
+                    BrowserTreeNode codeNode = findCodeNode(treeNode, testMethod);
+                    if (codeNode != null) {
+                        path = path.pathByAddingChild(codeNode);
+                    }
+
+                    tree.makeVisible(path);
+                    tree.scrollPathToVisible(path);
+                    tree.setSelectionPath(path);
+                    return;
+                }
+            } catch (InvalidByteCodeException ex) {
+            }
+        }
     }
 
     /**
@@ -317,6 +352,16 @@ public class BrowserTreePane extends JPanel {
         buffer.append(" ");
 
         return buffer.toString();
+    }
+
+    private BrowserTreeNode findCodeNode(BrowserTreeNode treeNode, MethodInfo methodInfo) {
+        AttributeInfo[] attributes = methodInfo.getAttributes();
+        for (int i = 0; i < attributes.length; i++) {
+            if (attributes[i] instanceof CodeAttribute) {
+                return (BrowserTreeNode)treeNode.getChildAt(i);
+            }
+        }
+        return null;
     }
 
 }
