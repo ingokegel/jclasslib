@@ -1,4 +1,4 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>jclasslib bytecode viewer help</title><link type="text/css" href="doc.css" rel="stylesheet"><meta content="DocBook XSL Stylesheets V1.49" name="generator"><meta name="description" content="a library for viewing and manipulating java bytecode"><meta name="keywords" content="jclasslib, bytecode, performance, profiling, instrumentation, profiler, java, classes"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="left"><img src="images/jclasslib.jpg" width="287" height="97" alt="jclasslib logo"></td><td align="right"><a href="http://www.ej-technologies.com"><img border="0" src="images/ej-technologies.gif" width="330" height="65" alt="ej-technologies logo"></a></td></tr></table><div class="article"><div class="titlepage"><div style="margin-left:18px"><h2 class="title"><a name="N10001"></a>jclasslib bytecode viewer help</h2></div><div style="margin-left:18px"><h3 class="subtitle"><i>ej-technologies GmbH, Ingo Kegel, 2003-08-20</i></h3></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><a href="#N10007">Sponsor</a></dt><dt><a href="#N10018">Purpose</a></dt><dt><a href="#N10025">Installing the jclasslib bytecode viewer</a></dt><dd><dl><dt><a href="#N1002B">Requirements</a></dt><dt><a href="#N10038">Installing from binary distribution</a></dt><dt><a href="#N10041">Installing as Netbeans module</a></dt><dt><a href="#N1005B">Building jclasslib from source</a></dt></dl></dd><dt><a href="#N100FB">The bytecode viewer</a></dt><dd><dl><dt><a href="#N100FE">Starting the bytecode viewer</a></dt><dt><a href="#N1011B">Using the bytecode viewer</a></dt><dt><a href="#N101DC">The bytecode viewer as a Netbeans module</a></dt></dl></dd><dt><a href="#N101F3">The bytecode manipulation library</a></dt><dd><dl><dt><a href="#N101F6">UML diagrams of jclasslib</a></dt><dt><a href="#N10236">Debugging reading and writing of class files</a></dt><dt><a href="#N10255">Using jclasslib in your own application</a></dt></dl></dd><dt><a href="#N10299">Trademarks</a></dt></dl></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10007"></a>Sponsor</h2></div></div><p>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>jclasslib bytecode viewer help</title><link type="text/css" href="doc.css" rel="stylesheet"><meta content="DocBook XSL Stylesheets V1.49" name="generator"><meta name="description" content="a library for viewing and manipulating java bytecode"><meta name="keywords" content="jclasslib, bytecode, performance, profiling, instrumentation, profiler, java, classes"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="left"><img src="images/jclasslib.jpg" width="287" height="97" alt="jclasslib logo"></td><td align="right"><a href="http://www.ej-technologies.com"><img border="0" src="images/ej-technologies.gif" width="330" height="65" alt="ej-technologies logo"></a></td></tr></table><div class="article"><div class="titlepage"><div style="margin-left:18px"><h2 class="title"><a name="N10001"></a>jclasslib bytecode viewer help</h2></div><div style="margin-left:18px"><h3 class="subtitle"><i>ej-technologies GmbH, Ingo Kegel, 2003-08-20</i></h3></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><a href="#N10007">Sponsor</a></dt><dt><a href="#N10018">Purpose</a></dt><dt><a href="#N10025">Installing the jclasslib bytecode viewer</a></dt><dd><dl><dt><a href="#N1002B">Requirements</a></dt><dt><a href="#N10038">Installing from binary distribution</a></dt><dt><a href="#N10041">Installing as Netbeans module</a></dt><dt><a href="#N1005B">Building jclasslib from source</a></dt></dl></dd><dt><a href="#N100FB">The bytecode viewer</a></dt><dd><dl><dt><a href="#N100FE">Starting the bytecode viewer</a></dt><dt><a href="#N1011D">Using the bytecode viewer</a></dt><dt><a href="#N101DE">The bytecode viewer as a Netbeans module</a></dt></dl></dd><dt><a href="#N101F5">The bytecode manipulation library</a></dt><dd><dl><dt><a href="#N101F8">UML diagrams of jclasslib</a></dt><dt><a href="#N10238">Debugging reading and writing of class files</a></dt><dt><a href="#N10257">Using jclasslib in your own application</a></dt></dl></dd><dt><a href="#N1029B">Trademarks</a></dt></dl></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10007"></a>Sponsor</h2></div></div><p>
       The development of the <i>jclasslib bytecode viewer</i> is sponsored by
       <a href="http://www.ej-technologies.com" target="_top">ej-technologies GmbH</a>.
       If you are working with Java bytecode, you might also be interested in
@@ -9,7 +9,7 @@
       to read, modify and write class files.
       The <i>jclasslib bytecode viewer</i> displays class files and
       bytecode and lets you navigate through the class file structure in a browser-like fashion.
-      While the bytecode manipulation classes is of interest to developers with
+      While the bytecode manipulation part is of interest to developers with
       specialized development targets such as obfuscators, compilers or code completion
       engines, the bytecode viewer is a standalone application which is useful for
       anyone trying to understand the java virtual machine.
@@ -80,7 +80,10 @@
         with the default look and feel instead of the native look and feel, pass the VM parameter
         <tt>jclasslib.laf.default=true</tt> to the application. For the Windows launcher,
         this is done by passing <tt>-J-Djclasslib.laf.default=true</tt> as an argument.
-      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N1011B"></a>Using the bytecode viewer</h3></div></div><p>
+      </p><p>
+        As an argument, you can pass either the path of a workspace file or the path
+        of a single class file to be opened on startup.
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N1011D"></a>Using the bytecode viewer</h3></div></div><p>
         The bytecode viewer allows you to open class files and jar archives 
         (not java files!) with
         <i>File</i>-&gt;<i>Open class file</i>.
@@ -183,7 +186,7 @@
         To understand the meaning of the classfile structure, its substructures and the bytecode itself,
         it is useful to have the <a href="http://java.sun.com/docs/books/vmspec/" target="_top">Java virtual machine
         specification</a> at hand.
-      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101DC"></a>The bytecode viewer as a Netbeans module</h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101DE"></a>The bytecode viewer as a Netbeans module</h3></div></div><p>
         To open a class file in Netbeans, the first step is to either select a java source node
         or a class file node in the explorer or to activate a Java source file in the source editor.
         Java sources have to be compiled in order for the bytecode viewer menu entries to be 
@@ -192,7 +195,7 @@
         in the popup menu or to execute
         <i>Tools</i>-&gt;<i>View class file</i>
         in the main Netbeans menu.
-      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N101F3"></a>The bytecode manipulation library</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101F6"></a><a name="uml"></a>UML diagrams of <i>jclasslib</i></h3></div></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N101F5"></a>The bytecode manipulation library</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101F8"></a><a name="uml"></a>UML diagrams of <i>jclasslib</i></h3></div></div><p>
         The following UML diagrams for the bytecode manipulation library packages contained in
         <tt>org.gjt.jclasslib</tt> and its subpackages give an overview
          of the general architecture.
@@ -216,7 +219,7 @@
             <a href="images/structures_constants.gif" target="_top">
             <tt>org.gjt.jclasslib.structures.constants</tt>
             </a>
-          </p></li></ul></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10236"></a>Debugging reading and writing of class files</h3></div></div><p>
+          </p></li></ul></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10238"></a>Debugging reading and writing of class files</h3></div></div><p>
         To see extensive debugging on stdout while <i>jclasslib</i> reads or
         writes class files, set the JVM environment variable
         <tt>org.gjt.jclasslib.structures.AbstractStructure.SYSTEM_PROPERTY_DEBUG</tt>
@@ -224,7 +227,7 @@
         <tt>-Djclasslib.io.debug=true</tt> right after the the <tt>java</tt>
         command in the invokation of the apllication of by setting the property via
         <tt>System.setProperty</tt>.
-      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10255"></a>Using <i>jclasslib</i> in your own application</h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10257"></a>Using <i>jclasslib</i> in your own application</h3></div></div><p>
         To use <i>jclasslib</i> in your own application you need
         to look at the javadoc documentation and at the source. Here are a few hints
         on how to begin:
@@ -259,7 +262,7 @@
               which require other constant pool entries to be genererated
               with only one method call.
             </p></li></ul></div>
-      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10299"></a>Trademarks</h2></div></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N1029B"></a>Trademarks</h2></div></div><p>
       <div class="itemizedlist"><ul type="disc"><li><p>
             Sun, Sun Microsystems and Java are registered trademarks of Sun Microsystems, Inc.
             in the United States and other countries.
