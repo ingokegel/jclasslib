@@ -1,4 +1,4 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>jclasslib help</title><link type="text/css" href="doc.css" rel="stylesheet"><meta content="DocBook XSL Stylesheets V1.49" name="generator"><meta name="keywords" content="jclasslib"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><h2 class="title"><a name="N10001"></a>jclasslib help</h2></div><div><h3 class="subtitle"><i>Ingo Kegel, 2002-02-26</i></h3></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><a href="#N10007">Purpose</a></dt><dt><a href="#N10010">Installing jclasslib</a></dt><dd><dl><dt><a href="#N10016">Requirements</a></dt><dt><a href="#N10023">Installing from binary distribution</a></dt><dt><a href="#N1002C">Installing as Netbeans module</a></dt><dt><a href="#N10039">Building jclasslib from source</a></dt></dl></dd><dt><a href="#N10102">The class file browser</a></dt><dd><dl><dt><a href="#N10105">Starting the class file browser</a></dt><dt><a href="#N10127">Using the class file browser</a></dt><dt><a href="#N101B7">The class file browser as a Netbeans module</a></dt></dl></dd><dt><a href="#N101CE">The bytecode manipulation library</a></dt><dd><dl><dt><a href="#N101D1">UML diagrams of jclasslib</a></dt><dt><a href="#N10257">Debugging reading and writing of class files</a></dt><dt><a href="#N10276">Using jclasslib in your own application</a></dt></dl></dd></dl></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10007"></a>Purpose</h2></div></div><p>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>jclasslib help</title><link type="text/css" href="doc.css" rel="stylesheet"><meta content="DocBook XSL Stylesheets V1.49" name="generator"><meta name="keywords" content="jclasslib"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><h2 class="title"><a name="N10001"></a>jclasslib help</h2></div><div><h3 class="subtitle"><i>Ingo Kegel, 2002-02-26</i></h3></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><a href="#N10007">Purpose</a></dt><dt><a href="#N10010">Installing jclasslib</a></dt><dd><dl><dt><a href="#N10016">Requirements</a></dt><dt><a href="#N10023">Installing from binary distribution</a></dt><dt><a href="#N1002C">Installing as Netbeans module</a></dt><dt><a href="#N10066">Building jclasslib from source</a></dt></dl></dd><dt><a href="#N1012F">The class file browser</a></dt><dd><dl><dt><a href="#N10132">Starting the class file browser</a></dt><dt><a href="#N10154">Using the class file browser</a></dt><dt><a href="#N101E4">The class file browser as a Netbeans module</a></dt></dl></dd><dt><a href="#N101FB">The bytecode manipulation library</a></dt><dd><dl><dt><a href="#N101FE">UML diagrams of jclasslib</a></dt><dt><a href="#N10284">Debugging reading and writing of class files</a></dt><dt><a href="#N102A3">Using jclasslib in your own application</a></dt></dl></dd></dl></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10007"></a>Purpose</h2></div></div><p>
       <i>jclasslib</i> is a library and a collection of
       utilities and applications which are aimed at the manipulation of java bytecode.
       The core functionality consists in mechanism to read, modify and write class files.
@@ -19,8 +19,17 @@
       </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N1002C"></a>Installing as Netbeans module</h3></div></div><p>
         To install the class file browser as a Netbeans module, copy
         <tt>nb-jclasslib.jar</tt> to the <tt>modules</tt>
-        subdirectory of your Netbeans distribution and restart Netbeans.
-      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10039"></a>Building <i>jclasslib</i> from source</h3></div></div><p>
+        subdirectory of your Netbeans distribution. Then (from NB 3.3 on) open the
+        options dialog via
+        Tools-&gt;Options
+        and look for
+        IDE Configuration-&gt;System-&gt;Modules
+        in the options tree. Right-click this entry and select
+        Modules-&gt;Add-&gt;Module.
+        Choose <tt>nb-jclasslib.jar</tt> in the <tt>modules</tt>
+        subdirectory of your Netbeans distribution. The <i>jclasslib</i>
+        module is inserted in the "Tools" module category and can be used immediately.
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10066"></a>Building <i>jclasslib</i> from source</h3></div></div><p>
         To build <i>jclasslib</i>, you need the
         <i>ant</i> build tool available at
         <a href="http://jakarta.apache.org/ant/" target="_top">http://jakarta.apache.org/ant/</a>.
@@ -71,7 +80,7 @@
                   build a distribution of <i>jclasslib</i> in the
                   <tt>dist</tt> directory
                 </td></tr><tr><td align="center">clean</td><td align="left">cleans all generated files and directories</td></tr></tbody></table></div>
-      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10102"></a>The class file browser</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10105"></a>Starting the class file browser</h3></div></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N1012F"></a>The class file browser</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10132"></a>Starting the class file browser</h3></div></div><p>
         The class file browser is run by entering
         <div class="cmdsynopsis"><p><tt>java -jar jclasslib.jar</tt> </p></div>
         at the command line with the current director at the
@@ -83,7 +92,7 @@
         <a href="http://www.incors.org" target="_top">Kunststoff look and feel</a>,
         edit the startup script for your platform and set the <tt>DEFAULT_LAF</tt>
         variable to "true".
-      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10127"></a>Using the class file browser</h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10154"></a>Using the class file browser</h3></div></div><p>
         The class file browser allows you to open class files (not java files!) with
         File-&gt;Open.
         Class files will be displayed in child windows which are initially maximized.
@@ -154,7 +163,7 @@
         To understand the meaning of the classfile structure, its substructures and the bytecode itself,
         it is useful to have the <a href="http://java.sun.com/docs/books/vmspec/" target="_top">Java virtual machine
         specification</a> at hand.
-      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101B7"></a>The class file browser as a Netbeans module</h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101E4"></a>The class file browser as a Netbeans module</h3></div></div><p>
         To open a class file in Netbeans, the first step is to either select a java source node
         or a class file node in the explorer or to activate a Java source file in the source editor.
         Java sources have to be compiled in order for the class file browser menu entries to be 
@@ -163,7 +172,7 @@
         in the popup menu or to execute
         Tools-&gt;View class file
         in the main Netbeans menu.
-      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N101CE"></a>The bytecode manipulation library</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101D1"></a><a name="uml"></a>UML diagrams of <i>jclasslib</i></h3></div></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N101FB"></a>The bytecode manipulation library</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101FE"></a><a name="uml"></a>UML diagrams of <i>jclasslib</i></h3></div></div><p>
         The following UML diagrams for each package contained in
         <tt>org.gjt.jclasslib</tt> and its subpackages give an overview
          of the general architecture.
@@ -215,7 +224,7 @@
             <a href="images/util.gif" target="_top">
             <tt>org.gjt.jclasslib.util</tt>
             </a>
-          </p></li></ul></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10257"></a>Debugging reading and writing of class files</h3></div></div><p>
+          </p></li></ul></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10284"></a>Debugging reading and writing of class files</h3></div></div><p>
         To see extensive debugging on stdout while <i>jclasslib</i> reads or
         writes class files, set the JVM environment variable
         <tt>org.gjt.jclasslib.structures.AbstractStructure.SYSTEM_PROPERTY_DEBUG</tt>
@@ -223,7 +232,7 @@
         <tt>-Dclasslib.io.debug=true</tt> right after the the <tt>java</tt>
         command in the invokation of the apllication of by setting the property via
         <tt>System.setProperty</tt>.
-      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10276"></a>Using <i>jclasslib</i> in your own application</h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N102A3"></a>Using <i>jclasslib</i> in your own application</h3></div></div><p>
         To use <i>jclasslib</i> in your own application you need
         to look at the javadoc documentation and at the source. Here are a few hints
         on how to begin:

@@ -41,7 +41,27 @@
       <para>
         To install the class file browser as a Netbeans module, copy
         <filename>nb-jclasslib.jar</filename> to the <filename>modules</filename>
-        subdirectory of your Netbeans distribution and restart Netbeans.
+        subdirectory of your Netbeans distribution. Then (from NB 3.3 on) open the
+        options dialog via
+        <menuchoice>
+          <guimenu>Tools</guimenu>
+          <guimenuitem>Options</guimenuitem>
+        </menuchoice>
+        and look for
+        <menuchoice>
+          <guimenu>IDE Configuration</guimenu>
+          <guimenuitem>System</guimenuitem>
+          <guimenuitem>Modules</guimenuitem>
+        </menuchoice>
+        in the options tree. Right-click this entry and select
+        <menuchoice>
+          <guimenu>Modules</guimenu>
+          <guimenuitem>Add</guimenuitem>
+          <guimenuitem>Module</guimenuitem>
+        </menuchoice>.
+        Choose <filename>nb-jclasslib.jar</filename> in the <filename>modules</filename>
+        subdirectory of your Netbeans distribution. The <application>jclasslib</application>
+        module is inserted in the "Tools" module category and can be used immediately.
       </para>
     </sect2>
     <sect2>
