@@ -17,23 +17,32 @@ import java.util.*;
     method. Allows for pre and post insertions.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2002-02-17 17:32:58 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 21:37:10 $
 */
 public class CodeInsertion {
     
     
     public static CodeInsertion merge(int position,
+                                      boolean shiftTarget,
                                       CodeInsertion inner,
                                       CodeInsertion outer)
     {
         
+        if (outer == null) {
+            return inner;
+        }
+        if (inner == null) {
+            return outer;
+        }
+        
         AbstractInstruction[] preInstructions = mergeInstructions(outer.preInstructions, inner.preInstructions);
-        AbstractInstruction[] postInstructions = mergeInstructions(inner.preInstructions, outer.preInstructions);
+        AbstractInstruction[] postInstructions = mergeInstructions(inner.postInstructions, outer.postInstructions);
         
         CodeInsertion codeInsertion = 
             new CodeInsertion(position, 
                               preInstructions,
-                              postInstructions);
+                              postInstructions,
+                              shiftTarget);
         
         return codeInsertion;
     }
@@ -128,7 +137,7 @@ public class CodeInsertion {
                 addedAfter = addInstructions(newInstructions, currentInsertion.getPostInstructions());
             }
             if (addedBefore > 0 || addedAfter > 0) {
-                shiftIndices(i, addedBefore, addedAfter, transformedIndices);
+                shiftIndices(i, addedBefore, addedAfter, transformedIndices, currentInsertion.isShiftTarget());
             }
         }
         
@@ -157,9 +166,12 @@ public class CodeInsertion {
     private static void shiftIndices(int currentIndex,
                                      int addedBefore,
                                      int addedAfter,
-                                     int[] transformedIndices)
+                                     int[] transformedIndices,
+                                     boolean shiftTarget)
     {
-        transformedIndices[currentIndex] += addedBefore;
+        if (!shiftTarget) {
+            transformedIndices[currentIndex] += addedBefore;
+        }
         for (int i = currentIndex + 1; i < transformedIndices.length; i++) {
             transformedIndices[i] += addedBefore + addedAfter;
         }
@@ -225,7 +237,7 @@ public class CodeInsertion {
                 for (int i = 0; i < jumpOffsets.length; i++) {
                     int targetIndex = getBranchTargetIndex(instructions, sourceIndex, jumpOffsets[i]);
                     jumpOffsets[i] =
-                        calculateNewBranchOffset(sourceIndex, targetIndex, transformedIndices, newOffsets);
+                        calculateNewBranchOffset(newInstructions, sourceIndex, targetIndex, transformedIndices, newOffsets);
                 }
             } else if (currentInstruction instanceof LookupSwitchInstruction) {
                 List matchOffsetPairs = ((LookupSwitchInstruction)currentInstruction).getMatchOffsetPairs();
@@ -234,7 +246,7 @@ public class CodeInsertion {
                         (LookupSwitchInstruction.MatchOffsetPair)matchOffsetPairs.get(i);
                     int targetIndex = getBranchTargetIndex(instructions, sourceIndex, matchOffsetPair.getOffset());
                     matchOffsetPair.setOffset(
-                        calculateNewBranchOffset(sourceIndex, targetIndex, transformedIndices, newOffsets)
+                        calculateNewBranchOffset(newInstructions, sourceIndex, targetIndex, transformedIndices, newOffsets)
                     );
                 }
             }
@@ -242,19 +254,21 @@ public class CodeInsertion {
             
             setBranchOffset(
                 currentInstruction,
-                calculateNewBranchOffset(sourceIndex, targetIndex, transformedIndices, newOffsets)
+                calculateNewBranchOffset(newInstructions, sourceIndex, targetIndex, transformedIndices, newOffsets)
             );
                                 
         }
     }
     
-    private static int calculateNewBranchOffset(int sourceIndex,
+    private static int calculateNewBranchOffset(List newInstructions,
+                                                int sourceIndex,
                                                 int targetIndex,
                                                 int[] transformedIndices,
                                                 int[] newOffsets)
-    {
+{
             int transformedSourceIndex = transformedIndices[sourceIndex];
             int transformedTargetIndex = transformedIndices[targetIndex];
+            
             int newBranchOffset = newOffsets[transformedTargetIndex] - newOffsets[transformedSourceIndex];
             
             return newBranchOffset;
@@ -366,14 +380,17 @@ public class CodeInsertion {
     private int position;
     private AbstractInstruction[] preInstructions;
     private AbstractInstruction[] postInstructions;
+    private boolean shiftTarget;
 
     public CodeInsertion(int position,
-                          AbstractInstruction[] preInstructions,
-                          AbstractInstruction[] postInstructions)
+                         AbstractInstruction[] preInstructions,
+                         AbstractInstruction[] postInstructions,
+                         boolean shiftTarget)
     {
         this.position = position;
         this.preInstructions = preInstructions;
         this.postInstructions  = postInstructions;
+        this.shiftTarget = shiftTarget;
     }
 
     /** 
@@ -425,4 +442,19 @@ public class CodeInsertion {
         this.postInstructions = postInstructions;
     }
     
+    /** 
+        Get whether branch targets should be shifted to the first pre-instruction.
+        @return the boolean value
+     */
+    public boolean isShiftTarget() {
+        return shiftTarget;
+    }
+    
+    /** 
+        Set whether branch targets should be shifted to the first pre-instruction.
+        @param 
+     */
+    public void setShiftTarget(boolean shiftTarget) {
+        this.shiftTarget = shiftTarget;
+    }
 }
