@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "docbook/dtd/docbookx.dtd">
+<article>
+  <title>jclasslib help</title>
+  <subtitle>Ingo Kegel, 2000-05-10</subtitle>
+  <sect1>
+    <title>Purpose</title>
+    <para>
+      <application>jclasslib</application> is a library and a collection of
+      utilities and applications which are aimed at the manipulation of java bytecode.
+      The core functionality consists in mechanism to read, modify and write class files.
+      Currently one application - the bytecode browser - is built on top of this. While
+      the bytecode manipulation classes could be of interest to developers with
+      specialized development targets such as obfuscators, compilers or code completion
+      engines, the bytecode browser is a standalone application which may be useful for
+      anyone trying to understand the java virtual machine.
+    </para>
+  </sect1>
+  <sect1>
+    <title>Installing <application>jclasslib</application></title>
+    <sect2>
+      <title>Requirements</title>
+      <para>
+        To run <application>jclasslib</application> you need a  Java 1.3 runtime
+        environment or higher, available at
+        <ulink url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.
+      </para>
+    </sect2>
+    <sect2>
+      <title>Installing from binary distribution</title>
+      <para>
+        <application>jclasslib</application> is provided as a zip or tgz archive.
+        Besides unpacking it at a suitable location, no further steps are necessary
+        for the installation. Specifically, no external libraries and classpath
+        settings are necessary.
+      </para>
+    </sect2>
+    <sect2>
+      <title>Building <application>jclasslib</application> from source</title>
+      <para>
+        To build <application>jclasslib</application>, you need the
+        <application>ant</application> build tool available at
+        <ulink url="http://jakarta.apache.org/ant/">http://jakarta.apache.org/ant/</ulink>.
+        If you want to build this documentation, you have to
+      </para>
+      <para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              download the optional tasks jar
+              (<filename>jakarta-ant-1.3-optional.jar</filename> for
+              <application>ant</application> 1.3) and copy it to
+              <varname>$ANT_HOME</varname><filename>/lib</filename>.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              download the XML parser <application>xerces</application> and the XSLT processor
+              <application>xalan</application> of the Apache Software Foundation both available at
+              <ulink url="http://xml.apache.org/dist/">http://xml.apache.org/dist/</ulink> and
+              put the jar files <filename>xerces.jar</filename> and <filename>xalan.jar</filename>
+              into your <varname>CLASSPATH</varname> environment variable.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Install the dcobook DTD and stylesheets. This is done in three steps:
+            </para>
+            <para>
+              <orderedlist>
+                <listitem>
+                  <para>
+                    Create a directory <filename>docbook</filename> in <filename>doc/src</filename>
+                    under the <application>jclasslib</application> root. In this new directory, create
+                    the subdirectories <filename>dtd</filename> and <filename>stylesheets</filename>.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    download the Docbook XML DTD from
+                    <ulink url="http://www.oasis-open.org/docbook/xml/index.html">
+                    http://www.oasis-open.org/docbook/xml/index.html</ulink>
+                    and unpack the zip file to the <filename>dtd</filename> directory created in step 1.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    download the Docbook XSL stylesheets from
+                    <ulink url="http://nwalsh.com/docbook/xsl/index.html">
+                    http://nwalsh.com/docbook/xsl/index.html</ulink>
+                    and unpack the zip file to the <filename>stylesheets</filename> directory created
+                    in step 1.
+                  </para>
+                </listitem>
+              </orderedlist>
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para>
+        The following ant targets are used for building <application>jclasslib</application>:
+        <informaltable>
+          <tgroup cols="2">
+            <colspec align="center"/>
+            <colspec align="left"/>
+            <thead>
+              <row>
+                <entry>ant target</entry>
+                <entry>purpose</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>compile (default)</entry>
+                <entry>compile java files to the <filename>build</filename> directory</entry>
+              </row>
+              <row>
+                <entry>jar</entry>
+                <entry>create jar file in the <filename>build</filename> directory</entry>
+              </row>
+              <row>
+                <entry>doc</entry>
+                <entry>
+                  build this documentation in the
+                  <filename>doc</filename> directory
+                </entry>
+              </row>
+              <row>
+                <entry>doc</entry>
+                <entry>
+                  build the javadoc documentation in the
+                  <filename>doc/javadoc</filename> directory
+                </entry>
+              </row>
+              <row>
+                <entry>dist</entry>
+                <entry>
+                  build a distribution of <application>jclasslib</application> in the
+                  <filename>dist</filename> directory
+                </entry>
+              </row>
+              <row>
+                <entry>clean</entry>
+                <entry>cleans all generated files and directories</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </para>
+    </sect2>
+  </sect1>
+  <sect1>
+    <title>The bytecode browser</title>
+    <sect2>
+      <title>Starting the bytecode browser</title>
+      <para>
+        The bytecode browser is run by entering
+        <cmdsynopsis>
+          <command>java -jar jclasslib.jar</command>
+        </cmdsynopsis>
+        at the command line with the current director at the
+        <application>jclasslib</application> root. Microsoft Windows users may also
+        doubleclick the file <filename>jclasslib.jar</filename>. In addition, startup
+        scripts for Microsoft Windows (<filename>jclasslib.bat</filename>) and UNIX
+        (<filename>jclasslib</filename>) are provided.
+      </para>
+    </sect2>
+    <sect2>
+      <title>Using the bytecode browser</title>
+      <para>
+        The bytecode browser allows you to open class files (not java files!) with
+        <menuchoice>
+          <guimenu>File</guimenu>
+          <guimenuitem>Open</guimenuitem>
+        </menuchoice>.
+        Class files will be displayed in child windows which are initially maximized.
+        If you recompile the class while having it opened in the bytecode browser,
+        you can reload the class file with
+        <menuchoice>
+          <shortcut>
+            <keysym>CTRL-R</keysym>
+          </shortcut>
+          <guimenu>Browse</guimenu>
+          <guimenuitem>Reload</guimenuitem>
+        </menuchoice>.
+        A window list and several window operations are available in the
+        <menuchoice>
+          <guimenu>Window</guimenu>
+        </menuchoice>
+        menu. The information contained in a class file are accessible via the tree
+        in the left side of the window, closely mirroring the structures as defined
+        in the Java virtual machine specification. The panel to the right side of
+        the tree displays details contained in the selected structure. Green underlined
+        entries are hyperlinks, which lead to a different structure in the tree or to
+        a different offset in a code structure. Red entries - prefixed by verbose
+        explanations in normal font - are values contained in a particular fields of
+        a structure.
+      </para>
+      <para>
+        The detail view of attribute structures is always composed of two areas:
+      </para>
+      <para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              The <emphasis>generic info</emphasis> pane showing fields that apply to
+              all attribute structures.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The <emphasis>specific info</emphasis> pane showing fields that apply only to
+              the specified attribute structure.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para>
+        The main sections of the class file structure tree are:
+        <variablelist>
+          <varlistentry><term>General Information</term>
+          <listitem>
+            <para>
+              All fields without sub-structure directly contained in the class file
+              structure.
+            </para>
+          </listitem>
+          </varlistentry>
+          <varlistentry><term>Constant pool</term>
+          <listitem>
+            <para>
+              The runtime constant pool of the class file. All entries are named as
+              suggested in the Java virtual machine specification and are hyperlinked
+              where appropriate,
+            </para>
+          </listitem>
+          </varlistentry>
+          <varlistentry><term>Interfaces</term>
+          <listitem>
+            <para>
+              All interfaces which are implemented by the class described by the class
+              file numbered from <literal>0</literal> to <literal>n - 1</literal>.
+            </para>
+          </listitem>
+          </varlistentry>
+          <varlistentry><term>Fields</term>
+          <listitem>
+            <para>
+              All fields of the class described by the class file.
+            </para>
+          </listitem>
+          </varlistentry>
+          <varlistentry><term>Fields</term>
+          <listitem>
+            <para>
+              All fields of the class described by the class file. Fields entries may
+              themselves be nodes and contain a <literal>ConstantValue</literal> attribute.
+            </para>
+          </listitem>
+          </varlistentry>
+          <varlistentry><term>Methods</term>
+          <listitem>
+            <para>
+              All methods of the class described by the class file. Method entries contain
+              at least a <literal>Code</literal> attribute. The specific info part of the
+              detail view of a code attribute contains a tabbed pane with 3 tabs showing
+            </para>
+            <para>
+              <itemizedlist>
+                <listitem>
+                  <para>
+                    the bytecode in a somewhat modified assembly notation like the one
+                    produced by <application>javap</application>. The gray numbers in
+                    small font at the beginning of each line containing an opcode show the
+                    ordinal position of that opcode in the current method. The red nummbers
+                    following the gray numbers show the byte offset of the opcode in the current
+                    method. Constant pool entries are hyperlinks denoted as <literal>#nnn</literal>,
+                    links to other offset such as in branching instructions are hyperlinks denoted
+                    as <literal>nnn</literal>.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    the exception table pertaining to the bytecode.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    other fields of the code attribute structure without further sub-structure.
+                  </para>
+                </listitem>
+              </itemizedlist>
+            </para>
+            <para>
+              The <literal>Code</literal> attribute usually contains other attributes itself and is
+              therefore a node in the tree.
+            </para>
+          </listitem>
+          </varlistentry>
+        </variablelist>
+      </para>
+      <para>
+        To understand the meaning of the classfile structure, its substructures and the bytecode itself,
+        it is useful to have the <ulink url="http://java.sun.com/docs/books/vmspec/">Java virtual machine
+        specification</ulink> at hand.
+      </para>
+    </sect2>
+  </sect1>
+  <sect1>
+    <title>The bytecode manipulation library</title>
+    <sect2>
+      <title><anchor id="uml"/>UML diagrams of <application>jclasslib</application></title>
+      <para>
+        The following UML diagrams for each package contained in
+        <classname>org.gjt.jclasslib</classname> and its subpackages give an overview
+         of the general architecture.
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <ulink url="images/browser.gif">
+            <classname>org.gjt.jclasslib.browser</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/browser_detail.gif">
+            <classname>org.gjt.jclasslib.detail</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/browser_detail_attributes.gif">
+            <classname>org.gjt.jclasslib.browser.detail.attributes</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/browser_detail_constants.gif">
+            <classname>org.gjt.jclasslib.browser.detail.constants</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/bytecode.gif">
+            <classname>org.gjt.jclasslib.bytecode</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/io.gif">
+            <classname>org.gjt.jclasslib.io</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/mdi.gif">
+            <classname>org.gjt.jclasslib.mdi</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/structures.gif">
+            <classname>org.gjt.jclasslib.structures</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/structures_attributes.gif">
+            <classname>org.gjt.jclasslib.structures.attributes</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/structures_constants.gif">
+            <classname>org.gjt.jclasslib.structures.constants</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/util.gif">
+            <classname>org.gjt.jclasslib.util</classname>
+            </ulink>
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+    <sect2>
+      <title>Debugging reading and writing of class files</title>
+      <para>
+        To see extensive debugging on stdout while <application>jclasslib</application> reads or
+        writes class files, set the JVM environment variable
+        <varname>org.gjt.jclasslib.structures.AbstractStructure.SYSTEM_PROPERTY_DEBUG</varname>
+        (= <literal>classlib.io.debug</literal>) to <literal>true</literal> either by passing
+        <literal>-Dclasslib.io.debug=true</literal> right after the the <literal>java</literal>
+        command in the invokation of the apllication of by setting the property via
+        <methodname>System.setProperty</methodname>.
+      </para>
+    </sect2>
+    <sect2>
+      <title>Using <application>jclasslib</application> in your own application</title>
+      <para>
+        To use <application>jclasslib</application> in your own application you need
+        to look at the javadoc documentation and at the source. Here are a few hints
+        on how to begin:
+      </para>
+      <para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              The single most important class is the
+              <classname>org.gjt.jclasslib.structures.ClassFile</classname> class. All other
+              structures defined in the class file format are hooked up here.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Reading and writing class files is done with the
+              <classname>org.gjt.jclasslib.io.ClassFileReader</classname> and
+              <classname>org.gjt.jclasslib.io.ClassFileWriter</classname> classes.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Bytecode is not translated to java classes within a <classname>ClassFile</classname>
+              structure. To manipulate bytecode as a sequence of opcodes the
+              <classname>org.gjt.jclasslib.io.ByteCodeReader</classname> and
+              <classname>org.gjt.jclasslib.io.ByteCodeWriter</classname> classes can be used to convert
+              the bytecode between classes of the <classname>org.gjt.jclasslib.bytecode</classname>
+              package and <classname>byte[]</classname> arrays as returned and expected by the
+              <classname>ClassFile</classname> structure.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </sect2>
+  </sect1>
+</article>

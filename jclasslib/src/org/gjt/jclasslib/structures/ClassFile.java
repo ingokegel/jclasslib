@@ -1,0 +1,551 @@
+/*
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the license, or (at your option) any later version.
+*/
+
+package org.gjt.jclasslib.structures;
+
+import org.gjt.jclasslib.io.Log;
+import org.gjt.jclasslib.structures.constants.*;
+
+import java.io.*;
+
+/**
+    The class file structure in which all other structures are hooked up.
+ 
+    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
+    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+*/
+public class ClassFile extends AbstractStructureWithAttributes {
+
+    /**
+        Set this JVM System property to true to skip reading of constant pool
+        entries. This is not advisable, since most sunsequent operations on the
+        class file structure will fail.
+     */
+    public static final String SYSTEM_PROPERTY_SKIP_CONSTANT_POOL = "classlib.io.skipConstantPool";
+
+    private static final int MAGIC_NUMBER = 0xcafebabe;
+
+    private final boolean skipConstantPool;
+
+    private int minorVersion;
+    private int majorVersion;
+    private CPInfo[] constantPool;
+    private int accessFlags;
+    private int thisClass;
+    private int superClass;
+    private int[] interfaces;
+    private FieldInfo[] fields;
+    private MethodInfo[] methods;
+    
+    public ClassFile() {
+        skipConstantPool = Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_CONSTANT_POOL);
+        setClassFile(this);
+    }
+
+    /**
+        Get the minor version of the class file format.
+        @return the minor version 
+     */
+    public int getMinorVersion() {
+        return minorVersion;
+    }
+
+    /**
+        Set the minor version of the class file format.
+        @param minorVersion the minor version
+     */
+    public void setMinorVersion(int minorVersion) {
+        this.minorVersion = minorVersion;
+    }
+    
+    /**
+        Get the major version of the class file format.
+        @return the major version 
+     */
+    public int getMajorVersion() {
+        return majorVersion;
+    }
+
+    /**
+        Set the major version of the class file format.
+        @param majorVersion the major version
+     */
+    public void setMajorVersion(int majorVersion) {
+        this.majorVersion = majorVersion;
+    }
+    
+    /**
+        Get the array with all constant pool entries.
+        @return the array
+     */
+    public CPInfo[] getConstantPool() {
+        return constantPool;
+    }
+
+    /**
+        Set the array with all constant pool entries.
+        @param constantPool the array
+     */
+    public void setConstantPool(CPInfo[] constantPool) {
+        this.constantPool = constantPool;
+    }
+    
+    /**
+        Get the access flags of this class.
+        @return the access flags
+     */
+    public int getAccessFlags() {
+        return accessFlags;
+    }
+
+    /**
+        Set the access flags of this class.
+        @param accessFlags the access flags
+     */
+    public void setAccessFlags(int accessFlags) {
+        this.accessFlags = accessFlags;
+    }
+    
+    /**
+        Get the constant pool index of this class.
+        @return the index
+     */
+    public int getThisClass() {
+        return thisClass;
+    }
+
+    /**
+        Set the constant pool index of this class.
+        @param thisClass the index
+     */
+    public void setThisClass(int thisClass) {
+        this.thisClass = thisClass;
+    }
+
+    /**
+        Get the constant pool index of the super class of this class.
+        @return the index
+     */
+    public int getSuperClass() {
+        return superClass;
+    }
+
+    /**
+        Set the constant pool index of the super class of this class.
+        @param superClass the index
+     */
+    public void setSuperClass(int superClass) {
+        this.superClass = superClass;
+    }
+
+    /**
+        Get the array with the constant pool entries of all interfaces.
+        @return the array
+     */
+    public int[] getInterfaces() {
+        return interfaces;
+    }
+
+    /**
+        Set the array with the constant pool entries of all interfaces.
+        @param interfaces the array
+     */
+    public void setInterfaces(int[] interfaces) {
+        this.interfaces = interfaces;
+    }
+
+    /**
+        Get the array with the <tt>FieldInfo</tt> structures for the fields of this class.
+        @return the array
+     */
+    public FieldInfo[] getFields() {
+        return fields;
+    }
+
+    /**
+        Set the array with the <tt>FieldInfo</tt> structures for the fields of this class.
+        @param fields the array
+     */
+    public void setFields(FieldInfo[] fields) {
+        this.fields = fields;
+    }
+    
+    /**
+        Get the array with the <tt>MethodInfo</tt> structures for the methods of this class.
+        @return the array
+     */
+    public MethodInfo[] getMethods() {
+        return methods;
+    }
+
+    /**
+        Set the array with the <tt>MethodInfo</tt> structures for the methods of this class.
+        @param methods the array
+     */
+    public void setMethods(MethodInfo[] methods) {
+        this.methods = methods;
+    }
+    
+    /**
+        Get the the access flags of this class as a hex string.
+        @return the hex string
+     */
+    public String getFormattedAccessFlags() {
+        return printAccessFlags(accessFlags);
+    }
+
+    /**
+        Get the verbose description of the access flags of this class.
+        @return the description
+     */
+    public String getAccessFlagsVerbose() {
+        return printAccessFlagsVerbose(accessFlags);
+    }
+
+    /**
+        Get the <tt>ConstantUtf8Info</tt> constant pool entry at the specified index.
+        @param index the index
+        @return the constant pool entry
+        @throws InvalidByteCodeException if the entry is not a <tt>ConstantUtf8Info</tt>
+     */
+    public ConstantUtf8Info getConstantPoolUtf8Entry(int index) 
+        throws InvalidByteCodeException {
+            
+        return (ConstantUtf8Info)getConstantPoolEntry(index, ConstantUtf8Info.class);
+    }
+    
+    /**
+        Get the constant pool entry at the specified index and cast it to a specified class.
+        @param index the index
+        @param entryClass the required subtype of <tt>CPInfo</tt>
+        @return the constant pool entry
+        @throws InvalidByteCodeException if the entry is of a different class than expected
+     */
+    public CPInfo getConstantPoolEntry(int index, Class entryClass)
+        throws InvalidByteCodeException {
+            
+        checkValidConstantPoolIndex(index);
+        CPInfo cpInfo = constantPool[index];
+        
+        if (entryClass.isAssignableFrom(cpInfo.getClass())) {
+            return cpInfo;
+        } else {
+            throw new InvalidByteCodeException("constant pool entry at " + index + 
+                                               " is not assignable to " +
+                                               entryClass.getClass().getName());
+        }
+    }
+
+    /**
+        Get an approximate verbose description of the content of the constant pool entry
+        at the specified index.
+        @param index the index
+        @return the description
+        @throws InvalidByteCodeException if the entry is invalid
+     */
+    public String getConstantPoolEntryName(int index)
+        throws InvalidByteCodeException {
+
+        checkValidConstantPoolIndex(index);
+        CPInfo cpInfo = constantPool[index];
+            
+        return cpInfo.getVerbose();
+    }
+    
+    
+    public void read(DataInput in)
+        throws InvalidByteCodeException, IOException {
+            
+        readMagicNumber(in);
+        readVersion(in);
+        readConstantPool(in);
+        readAccessFlags(in);
+        readThisClass(in);
+        readSuperClass(in);
+        readInterfaces(in);
+        readFields(in);
+        readMethods(in);
+        readAttributes(in);
+    }
+
+    public void write(DataOutput in)
+        throws InvalidByteCodeException, IOException {
+            
+        writeMagicNumber(in);
+        writeVersion(in);
+        writeConstantPool(in);
+        writeAccessFlags(in);
+        writeThisClass(in);
+        writeSuperClass(in);
+        writeInterfaces(in);
+        writeFields(in);
+        writeMethods(in);
+        writeAttributes(in);
+        
+    }
+    
+    private void checkValidConstantPoolIndex(int index)
+        throws InvalidByteCodeException {
+            
+        if (index < 1 || index >= constantPool.length) {
+            throw new InvalidByteCodeException("invalid constant pool index " + index);
+        }
+            
+    }
+    
+    private void readMagicNumber(DataInput in)
+        throws InvalidByteCodeException, IOException {
+            
+        int magicNumber = in.readInt();
+        if (magicNumber != MAGIC_NUMBER) {
+            throw new InvalidByteCodeException("Invalid magic number 0x" +
+                                               Integer.toHexString(magicNumber) + 
+                                               " instead of 0x" + 
+                                               Integer.toHexString(MAGIC_NUMBER));
+        }
+        
+        if (debug) debug("read magic number");
+    }
+
+    private void writeMagicNumber(DataOutput out)
+        throws InvalidByteCodeException, IOException {            
+        
+        out.writeInt(MAGIC_NUMBER);
+        if (debug) debug("wrote magic number");
+    }
+
+    private void readVersion(DataInput in)
+        throws InvalidByteCodeException, IOException {
+            
+        minorVersion = in.readUnsignedShort();
+        if (debug) debug("read minor version " + minorVersion);
+        
+        majorVersion = in.readUnsignedShort();
+        if (debug) debug("read major version " + majorVersion);
+        
+        checkMajorVersion(majorVersion);
+    }
+
+    private void writeVersion(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+        
+        out.writeShort(minorVersion);
+        if (debug) debug("wrote minor version " + minorVersion);
+        
+        out.writeShort(majorVersion);
+        if (debug) debug("wrote major version " + majorVersion);
+        
+        checkMajorVersion(majorVersion);
+    }
+
+    private void readConstantPool(DataInput in)
+        throws InvalidByteCodeException, IOException {
+    
+        int constantPoolCount = in.readUnsignedShort();
+        if (debug) debug("read constant pool count " + constantPoolCount);
+        
+        constantPool = new CPInfo[constantPoolCount];
+        
+        // constantPool has effective length constantPoolCount - 1
+        // constantPool[0] defaults to null
+        for (int i = 1; i < constantPoolCount; i++) {
+            if (skipConstantPool) {
+                // see below for i++
+                i += CPInfo.skip(in);
+            } else {
+                // create CPInfos via factory method since the actual type 
+                // of the constant is not yet known 
+                if (debug) debug("reading constant pool entry " + i);
+                constantPool[i] = CPInfo.create(in, this);
+                if (constantPool[i] instanceof ConstantLargeNumeric) {
+                    // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
+                    // pool entries, the second entry is unusable (design mistake)
+                    i++;
+                }
+            }
+        }
+    }
+
+    private void writeConstantPool(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+    
+        int constantPoolCount = getLength(constantPool);
+        
+        out.writeShort(constantPoolCount);
+        if (debug) debug("wrote constant pool count " + constantPoolCount);
+        
+        // constantPool[0] defaults to null and is not written into the class file
+        for (int i = 1; i < constantPoolCount; i++) {
+            if (constantPool[i] == null) {
+                throw new InvalidByteCodeException("constant pool entry " + i + " is null");
+            }
+            if (debug) debug("writing constant pool entry " + i);
+            constantPool[i].write(out);
+            if (constantPool[i] instanceof ConstantLargeNumeric) {
+                // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
+                // pool entries, the second entry is unusable (design mistake)
+                i++;
+            }
+        }
+    }
+    
+    private void readAccessFlags(DataInput in)
+        throws InvalidByteCodeException, IOException {
+
+        accessFlags = in.readUnsignedShort();
+        if (debug) debug("read access flags " + printAccessFlags(accessFlags));
+    }
+
+    private void writeAccessFlags(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+
+        out.writeShort(accessFlags);
+        if (debug) debug("wrote access flags " + printAccessFlags(accessFlags));
+    }
+
+    private void readThisClass(DataInput in)
+        throws InvalidByteCodeException, IOException {
+
+        thisClass = in.readUnsignedShort();
+        if (debug) debug("read this_class index " + thisClass);
+    }
+
+    private void writeThisClass(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+
+        out.writeShort(thisClass);
+        if (debug) debug("wrote this_class index " + thisClass);
+    }
+
+    private void readSuperClass(DataInput in)
+        throws InvalidByteCodeException, IOException {
+
+        superClass = in.readUnsignedShort();
+        if (debug) debug("read super_class index " + superClass);
+    }
+
+    private void writeSuperClass(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+
+        out.writeShort(superClass);
+        if (debug) debug("wrote super_class index " + superClass);
+    }
+
+    private void readInterfaces(DataInput in)
+        throws InvalidByteCodeException, IOException {
+
+        int interfacesCount = in.readUnsignedShort();
+        if (debug) debug("read interfaces count " + interfacesCount);
+        
+        interfaces = new int[interfacesCount];
+        
+        for (int i = 0; i < interfacesCount; i++) {
+            interfaces[i] = in.readUnsignedShort();
+            if (debug) debug("read interface index " + interfaces[i]);
+        }
+        
+    }
+    
+    private void writeInterfaces(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+
+        int interfacesCount = getLength(interfaces);
+            
+        out.writeShort(interfacesCount);
+        if (debug) debug("wrote interfaces count " + interfacesCount);
+        
+        for (int i = 0; i < interfacesCount; i++) {
+            out.writeShort(interfaces[i]);
+            if (debug) debug("wrote interface index " + interfaces[i]);
+        }
+        
+    }
+    
+    private void readFields(DataInput in)
+        throws InvalidByteCodeException, IOException {
+
+        int fieldsCount = in.readUnsignedShort();
+        if (debug) debug("read fields count " + fieldsCount);
+        
+        fields = new FieldInfo[fieldsCount];
+        
+        for (int i = 0; i < fieldsCount; i++) {
+            fields[i] = FieldInfo.create(in, this);
+        }
+        
+    }
+    
+    private void writeFields(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+
+        int fieldsCount = getLength(fields);
+
+        out.writeShort(fieldsCount);
+        if (debug) debug("wrote fields count " + fieldsCount);
+        
+        for (int i = 0; i < fieldsCount; i++) {
+            if (fields[i] == null) {
+                throw new InvalidByteCodeException("field " + i + " is null");
+            }
+            fields[i].write(out);
+        }
+        
+    }
+    
+    private void readMethods(DataInput in)
+        throws InvalidByteCodeException, IOException {
+
+        int methodsCount = in.readUnsignedShort();
+        if (debug) debug("read methods count " + methodsCount);
+        
+        methods = new MethodInfo[methodsCount];
+        
+        for (int i = 0; i < methodsCount; i++) {
+            methods[i] = MethodInfo.create(in, this);
+        }
+        
+    }
+    
+    private void writeMethods(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+
+        int methodsCount = getLength(methods);
+
+        out.writeShort(methodsCount);
+        if (debug) debug("wrote methods count " + methodsCount);
+        
+        for (int i = 0; i < methodsCount; i++) {
+            if (methods[i] == null) {
+                throw new InvalidByteCodeException("method " + i + " is null");
+            }
+            methods[i].write(out);
+        }
+        
+    }
+    
+    protected void readAttributes(DataInput in)
+        throws InvalidByteCodeException, IOException {
+
+        super.readAttributes(in);
+        if (debug) debug("read " + getLength(attributes) + " attributes for the ClassFile structure");
+    }
+
+    protected void writeAttributes(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+
+        super.writeAttributes(out);
+        if (debug) debug("wrote " + getLength(attributes) + " attributes for the ClassFile structure");
+    }
+
+    private void checkMajorVersion(int majorVersion) {
+
+        if (majorVersion < 45 || majorVersion > 46) {
+            Log.warning("major version should be between 45 and 46 for JDK <= 1.3");
+        }
+        
+    }
+}

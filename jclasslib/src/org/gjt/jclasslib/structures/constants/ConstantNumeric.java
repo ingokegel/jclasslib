@@ -1,0 +1,65 @@
+/*
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the license, or (at your option) any later version.
+*/
+
+package org.gjt.jclasslib.structures.constants;
+
+import org.gjt.jclasslib.structures.*;
+
+import java.io.*;
+
+/**
+    Base class for numeric constant pool data structures.
+
+    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
+    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+*/
+public abstract class ConstantNumeric extends CPInfo {
+
+    /** Length of the constant pool data structure in bytes */
+    public static final int SIZE = 4;
+    
+    /** <tt>bytes</tt> field */
+    protected int bytes;
+    
+    /**
+        Get the <tt>bytes</tt> field of this constant pool entry.
+        @return the <tt>bytes</tt> field
+     */
+    public int getBytes() {
+        return bytes;
+    }
+
+    /**
+        Set the <tt>bytes</tt> field of this constant pool entry.
+        @param bytes the <tt>bytes</tt> field
+     */
+    public void setBytes(int bytes) {
+        this.bytes = bytes;
+    }
+
+    /**
+        Get the the <tt>bytes</tt> field of this constant pool
+        entry as a hex string.
+        @return the hex string
+     */
+    public String getFormattedBytes() {
+        return printBytes(bytes);
+    }
+
+    public void read(DataInput in)
+        throws InvalidByteCodeException, IOException {
+            
+        bytes = in.readInt();
+    }
+    
+    public void write(DataOutput out)
+        throws InvalidByteCodeException, IOException {
+        
+        out.writeInt(bytes);
+    }
+    
+}

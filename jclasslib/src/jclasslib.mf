@@ -1,0 +1,1 @@
+Main-Class: org.gjt.jclasslib.browser.BrowserMDIFrame

@@ -1,0 +1,22 @@
+body {
+  font-family: sans-serif;
+  color: black;
+  background: white;
+}
+
+ul, p, td, th, li {font-family: sans-serif;}
+
+h1, h2, h3 { font-weight: bold; }
+
+h1.title { font-size: 24pt; }
+h2.title { font-size: 20pt; }
+h3.title { font-size: 16pt; }
+
+h2.subtitle { font-size: 12pt;
+              font-weight: normal;
+              font-style: italic;
+              margin-left:.5cm;
+}
+
+
+span.term { font-weight: bold;}

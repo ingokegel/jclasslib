@@ -1,0 +1,170 @@
+<!--
+
+Build file for jclasslib
+
+Important targets:
+
+compile (default): Builds execution environment in ${build.dir}.
+jar              : Assembles an executable jar file in ${build.dir}.
+doc:             : Builds the documentation
+javadoc          : Builds the javadoc
+dist             : Bundles the jar file together with the documentation
+                   into a tar.gz file in ${dist.dir}.
+clean            : Delete all generated files and directories.
+
+-->
+
+<project name="jclasslib" default="compile" basedir=".">
+
+    <!-- Properties can be overridden in this file -->
+    <property file="my.properties"/>
+
+    <!-- Version for directories -->
+    <property name="version" value="1.0"/>
+    <!-- Version for files -->
+    <property name="version.nodots" value="1_0"/>
+
+
+    <!-- Build properties -->
+    <property name="build.compiler" value="jikes"/>
+    <property name="build.dir" value="build"/>
+    <property name="build.jar.filename.prefix" value="jclasslib" />
+    <property name="build.manifest.filename" value="jclasslib.mf" />
+
+    <!-- Location of source code -->
+    <property name="src.dir" value="src"/>
+
+    <!-- Location of documentation -->
+    <property name="doc.dir" value="doc"/>
+    <property name="doc.src.dir" value="${doc.dir}/src"/>
+    <property name="doc.javadoc.dir" value="${doc.dir}/api"/>
+
+    <!-- Distribution properties -->
+    <property name="dist.dir" value="dist"/>
+    <property name="dist.filename.prefix" value="jclasslib" />
+    
+    <!-- Class path for compiling -->
+    <path id="project.classpath">
+        <pathelement location="${java.classes}"/>
+    </path>
+
+
+    <!-- Make all standard directories -->
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${doc.javadoc.dir}"/>
+    </target>
+
+    <!-- Delete all generated files and directories -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${doc.javadoc.dir}"/>
+    </target>
+    
+    <!-- Compile source code -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}">
+            <classpath refid="project.classpath" />
+        </javac>
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}">
+                <include name="images/*.gif"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- Assemble source code and images into jar file -->
+    <target name="jar" depends="compile">
+        <jar jarfile="${build.dir}/${build.jar.filename.prefix}.jar"
+             basedir="${build.dir}"
+             manifest="${src.dir}/${build.manifest.filename}">
+             
+             <exclude name="${build.jar.filename.prefix}.jar"/>
+        </jar>
+    </target>
+
+    <!-- Make distribution -->
+    <target name="dist" depends="jar">
+
+        <!-- Version-specific locations -->    
+        <property name="dist.name" value="jclasslib-${version}" />
+        <property name="dist.assembly.dir" value="${dist.dir}/${dist.name}" />
+        <property name="dist.tar.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.tar" />
+        <property name="dist.zip.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.zip" />
+
+        <!-- Assemble distribution directory -->
+        <mkdir dir="${dist.assembly.dir}"/>
+        <copy todir="${dist.assembly.dir}">
+            <fileset dir="${build.dir}">
+                <include name="jclasslib.jar" />
+            </fileset>
+            <fileset dir="${basedir}">
+                <include name="${doc.dir}/**/*"/>
+                <include name="${src.dir}/**/*.java"/>
+                <include name="${src.dir}/*.mf"/>
+                <include name="${src.dir}/images/**/*"/>
+                <include name="build.xml"/>
+                <include name="licence"/>
+                <include name="jclasslib"/>
+                <include name="jclasslib.bat"/>
+                <exclude name="**/docbook/**/*"/>
+            </fileset>
+        </copy>
+
+        <!-- Build tar.gz file only if zip file is out of date -->
+        <uptodate property="build.tar.notrequired" targetfile="${dist.zip.filename}">
+            <srcfiles dir="${dist.assembly.dir}"/>
+        </uptodate>
+
+        <antcall target="buildTar" />
+
+        <!-- build zip file -->
+        <zip zipfile="${dist.zip.filename}" basedir="${dist.dir}">
+            <include name="${dist.name}/**"/>
+        </zip>
+
+    </target>
+
+    <!-- Helper target for dist -->
+    <target name="buildTar" unless="build.tar.notrequired">
+
+        <!-- Build tar.gz file -->
+        <tar tarfile="${dist.tar.filename}" basedir="${dist.dir}" longfile="gnu">
+            <include name="${dist.name}/**"/>
+        </tar>
+        
+        <gzip src="${dist.tar.filename}"
+              zipfile="${dist.tar.filename}.gz" />
+    
+        <!-- Tar file is not necessary to keep around -->
+        <delete file="${dist.tar.filename}" />
+
+    </target>
+    
+    <target name="doc">
+        <style basedir="${doc.src.dir}"
+               destdir="${doc.dir}"
+               includes="*.xml"
+               extension=".html"
+               processor="xalan"
+               style="doc.xsl"/>
+        
+    </target>
+    
+    <target name="javadoc" depends="init">
+        <javadoc sourcepath="${src.dir}"
+                 destdir="${doc.javadoc.dir}"
+                 packagenames="org.gjt.jclasslib.*"
+        >
+
+          <link offline="true"
+                href="http://java.sun.com/products/jdk/1.3/docs/api/"
+                packagelistLoc="${doc.src.dir}/offline"/>
+                
+        </javadoc>
+    </target>
+
+</project>
