@@ -9,7 +9,7 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.util.ExtendedTableCellRenderer;
+import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -22,17 +22,19 @@ import java.awt.event.*;
     a variable number of row entries with the same number of columns.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:11:01 $
 */
 public abstract class ListDetailPane extends AbstractDetailPane {
 
-    private TableLinkListener linkListener;
-    
     // Visual components
 
     private JTable table;
     
-    public ListDetailPane(BrowserServices services) {
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
+    protected ListDetailPane(BrowserServices services) {
         super(services);
     }
     
@@ -42,8 +44,16 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         
         table = new JTable();
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        
-        linkListener = new TableLinkListener();
+        table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        float rowHeightFactor = getRowHeightFactor();
+        if (rowHeightFactor != 1f) {
+            table.setRowHeight((int)(table.getRowHeight() * rowHeightFactor));
+        }
+
+        TableLinkListener linkListener = new TableLinkListener();
+        table.addMouseListener(linkListener);
+        table.addMouseMotionListener(linkListener);
+
 
         JScrollPane scrollPane = new JScrollPane(table);
 
@@ -54,19 +64,26 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         TableModel tableModel = getTableModel(treePath);
         table.setModel(tableModel);
 
-        ExtendedTableCellRenderer linkRenderer = new ExtendedTableCellRenderer();
-        linkRenderer.setForeground(COLOR_LINK);
-        linkRenderer.setUnderlined(true);
-
         createTableColumnModel(table, tableModel);
-        table.setDefaultRenderer(Link.class, linkRenderer);
+        ((JLabel)table.getDefaultRenderer(Number.class)).setVerticalAlignment(JLabel.TOP);
+        ((JLabel)table.getDefaultRenderer(String.class)).setVerticalAlignment(JLabel.TOP);
+        table.setDefaultRenderer(Link.class, new LinkRenderer());
 
+    }
+
+    /**
+        Get the factor for calculating the row height as a multiple of the normal row
+        height of a single label.
+        @return the factor.
+     */
+    protected float getRowHeightFactor() {
+        return 1f;
     }
 
     /**
         Create the table column model for the given table and table column model.
         @param table the table
-        @return tableModel the model
+        @param tableModel the table model
      */
     protected void createTableColumnModel(JTable table, TableModel tableModel) {
         table.createDefaultColumnsFromModel();
@@ -78,6 +95,18 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         @return the table model
      */
     protected abstract TableModel getTableModel(TreePath treePath);
+
+    /**
+        Create a link value object with a comment for use of a <tt>LinkRenderer</tt>.
+        @param index the constant pool index to link to.
+        @return the link value object.
+     */
+    protected Object createCommentLink(int index) {
+        return new LinkRenderer.LinkCommentValue(
+                        CPINFO_LINK_TEXT + String.valueOf(index),
+                        getConstantPoolEntryName(index)
+        );
+    }
 
     /**
         Link to the destination described by the target of the hyperlink
@@ -94,7 +123,12 @@ public abstract class ListDetailPane extends AbstractDetailPane {
     public static class ColumnCache {
         
         private Object[][] cache;
-        
+
+        /**
+         * Constructor.
+         * @param rowNumber the row number.
+         * @param columnNumber the column number.
+         */
         public ColumnCache(int rowNumber, int columnNumber) {
             cache = new Object[rowNumber][columnNumber];
         }
@@ -136,11 +170,8 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         private int defaultCursorType;
         private Cursor handCursor;
         
-        public TableLinkListener() {
+        private TableLinkListener() {
 
-            table.addMouseListener(this);
-            table.addMouseMotionListener(this);
-            
             defaultCursor = Cursor.getDefaultCursor();
             defaultCursorType = defaultCursor.getType();
             handCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
@@ -149,11 +180,9 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         public void mouseClicked(MouseEvent event) {
             
             Point point = event.getPoint();
-            int column = table.columnAtPoint(point);
-            
-            if (isLink(column)) {
-                int row = table.rowAtPoint(point);
-                link(row, column);
+
+            if (isLink(point)) {
+                link(table.rowAtPoint(point), table.columnAtPoint(point));
             }
         }
 
@@ -161,18 +190,24 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         }
         
         public void mouseMoved(MouseEvent event) {
-            
-            int column = table.columnAtPoint(event.getPoint());
 
-            if (table.getCursor().getType() == defaultCursorType && isLink(column)) {
+            Point point = event.getPoint();
+
+            if (table.getCursor().getType() == defaultCursorType && isLink(point)) {
                 table.setCursor(handCursor);
-            } else if (!isLink(column)) {
+            } else if (!isLink(point)) {
                 table.setCursor(defaultCursor);
             }
         }
         
-        private boolean isLink(int column) {
-            return column >= 0 && table.getColumnClass(column).equals(Link.class);
+        private boolean isLink(Point point) {
+
+            int column = table.columnAtPoint(point);
+            int row = table.rowAtPoint(point);
+
+            return row >= 0 && column >= 0 &&
+                   table.getColumnClass(column).equals(Link.class) &&
+                   !table.getModel().getValueAt(row, column).toString().equals(CPINFO_LINK_TEXT + "0");
         }
 
         

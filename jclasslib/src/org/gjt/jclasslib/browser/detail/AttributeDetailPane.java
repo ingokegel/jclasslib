@@ -25,7 +25,7 @@ import java.util.HashMap;
     subpackage and switches between the contained panes as required.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:13:57 $
 */
 public class AttributeDetailPane extends AbstractDetailPane {
 
@@ -44,7 +44,11 @@ public class AttributeDetailPane extends AbstractDetailPane {
     
     private JPanel specificInfoPane;
     private GenericAttributeDetailPane genericInfoPane;
-    
+
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public AttributeDetailPane(BrowserServices services) {
         super(services);
     }
@@ -143,9 +147,14 @@ public class AttributeDetailPane extends AbstractDetailPane {
                   SCREEN_LOCAL_VARIABLE_TABLE);
     }
     
-    private void addScreen(JPanel panel, String name) {
-        specificInfoPane.add(panel, name);
-        attributeTypeToDetailPane.put(name, panel);
+    private void addScreen(AbstractDetailPane detailPane, String name) {
+
+        if (detailPane instanceof FixedListDetailPane) {
+            specificInfoPane.add(((FixedListDetailPane)detailPane).getScrollPane(), name);
+        } else {
+            specificInfoPane.add(detailPane, name);
+        }
+        attributeTypeToDetailPane.put(name, detailPane);
     }
     
     private Border createTitledBorder(String title) {

@@ -21,32 +21,40 @@ import java.util.HashMap;
     a specific tree node selected in <tt>BrowserTreePane</tt>.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:06:31 $
 */
 public abstract class AbstractDetailPane extends JPanel {
     
-    /** Color for highlighted text (values in key-value pairs) */
+    /** Text prepended to constant pool hyperlinks. */
+    public static final String CPINFO_LINK_TEXT = "cp_info #";
+    /** Color for hyperlinks. */
+    public static final Color COLOR_LINK = new Color(0, 128, 0);
+
+    /** Color for highlighted text (values in key-value pairs). */
     protected static final Color COLOR_HIGHLIGHT = new Color(128, 0, 0);
-    /** Color for hyperlinks */
-    protected static final Color COLOR_LINK = new Color(0, 128, 0);
-    
-    /** Text prepended to constant pool hyperlinks */
-    protected static final String CPINFO_LINK_TEXT = "cp_info #";
-    
-    /** Services for this detail pane */
+
+    /** Services for this detail pane. */
     protected BrowserServices services;
-    /** Connects labels to mouse listeners */
-    protected HashMap labelToMouseListener = new HashMap();
+
+    private HashMap labelToMouseListener = new HashMap();
  
     /**
-        Constructs a detail pane with a specified parent frame
+        Constructs a detail pane with a specified parent frame.
         @param services browser services
      */
-    public AbstractDetailPane(BrowserServices services) {
+    protected AbstractDetailPane(BrowserServices services) {
         this.services = services;
         setupComponent();
     }
-    
+
+    /**
+        Get the associated <tt>BrowserServices</tt> object.
+        @return the browser services
+     */
+    public BrowserServices getBrowserServices() {
+        return services;
+    }
+
     /**
         Show the detail pane for a specific tree node 
         selected in <tt>BrowserTreePane</tt>.
@@ -107,7 +115,7 @@ public abstract class AbstractDetailPane extends JPanel {
         @return the index
      */
     protected int getIndex(TreePath treePath) {
-        return ((BrowserMutableTreeNode)treePath.getLastPathComponent()).getIndex();
+        return ((BrowserTreeNode)treePath.getLastPathComponent()).getIndex();
     }
     
     /**
@@ -118,20 +126,20 @@ public abstract class AbstractDetailPane extends JPanel {
     protected AttributeInfo findAttribute(TreePath path) {
         
         TreePath parentPath = path.getParentPath();
-        BrowserMutableTreeNode parentNode = (BrowserMutableTreeNode)parentPath.getLastPathComponent();
+        BrowserTreeNode parentNode = (BrowserTreeNode)parentPath.getLastPathComponent();
         String parentNodeType = parentNode.getType();
         
         ClassFile classFile = services.getClassFile();
         int parentIndex = getIndex(parentPath);
         int index = getIndex(path);
         
-        if (parentNodeType.equals(BrowserMutableTreeNode.NODE_NO_CONTENT)) {
+        if (parentNodeType.equals(BrowserTreeNode.NODE_NO_CONTENT)) {
             return classFile.getAttributes()[index];
 
-        } else if (parentNodeType.equals(BrowserMutableTreeNode.NODE_FIELD)) {
+        } else if (parentNodeType.equals(BrowserTreeNode.NODE_FIELD)) {
             return classFile.getFields()[parentIndex].getAttributes()[index];
 
-        } else if (parentNodeType.equals(BrowserMutableTreeNode.NODE_METHOD)) {
+        } else if (parentNodeType.equals(BrowserTreeNode.NODE_METHOD)) {
             return classFile.getMethods()[parentIndex].getAttributes()[index];
 
         } else {

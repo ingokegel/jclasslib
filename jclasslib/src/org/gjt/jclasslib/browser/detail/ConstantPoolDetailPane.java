@@ -23,7 +23,7 @@ import java.util.HashMap;
     the contained panes as required.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:13:10 $
 */
 public class ConstantPoolDetailPane extends AbstractDetailPane {
 
@@ -39,7 +39,11 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     private static final String SCREEN_CONSTANT_REFERENCE = "ConstantReference";
     
     private HashMap constantTypeToDetailPane;
-    
+
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public ConstantPoolDetailPane(BrowserServices services) {
         super(services);
     }
@@ -84,7 +88,7 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     
     public void show(TreePath treePath) {
 
-        int constantPoolIndex = ((BrowserMutableTreeNode)treePath.getLastPathComponent()).getIndex();
+        int constantPoolIndex = ((BrowserTreeNode)treePath.getLastPathComponent()).getIndex();
         CPInfo constantPoolEntry = services.getClassFile().getConstantPool()[constantPoolIndex];
         
         String paneName = null;
@@ -120,9 +124,14 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
         
     }
     
-    private void addScreen(JPanel pane, String name) {
-        add(pane, name);
-        constantTypeToDetailPane.put(name, pane);
+    private void addScreen(AbstractDetailPane detailPane, String name) {
+
+        if (detailPane instanceof FixedListDetailPane) {
+            add(((FixedListDetailPane)detailPane).getScrollPane(), name);
+        } else {
+            add(detailPane, name);
+        }
+        constantTypeToDetailPane.put(name, detailPane);
     }
     
 }

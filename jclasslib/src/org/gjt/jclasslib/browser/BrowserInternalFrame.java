@@ -7,51 +7,67 @@
 
 package org.gjt.jclasslib.browser;
 
+import org.gjt.jclasslib.browser.config.classpath.FindResult;
+import org.gjt.jclasslib.browser.config.window.BrowserPath;
+import org.gjt.jclasslib.browser.config.window.WindowState;
 import org.gjt.jclasslib.io.ClassFileReader;
 import org.gjt.jclasslib.mdi.BasicDesktopManager;
 import org.gjt.jclasslib.mdi.BasicInternalFrame;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.util.GUIHelper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
     A child window of the class file browser application.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.7 $ $Date: 2003-08-18 08:05:39 $
 */
 public class BrowserInternalFrame extends BasicInternalFrame
                                   implements BrowserServices {
 
 
-    private File file;
-    private ClassFile classFile;
+    /**
+        Constructor for creating a derived <tt>BasicInternalFrame</tt> with
+        an initialization parameter.
+     */
+    public static final Class[] CONSTRUCTOR_ARGUMENTS =
+        new Class[] {BasicDesktopManager.class, WindowState.class};
 
-    private boolean valid;
-    private Exception exception;
+    private String fileName;
+    private ClassFile classFile;
 
     // Visual Components
 
     private BrowserComponent browserComponent;
 
-    public BrowserInternalFrame(BasicDesktopManager desktopManager, String fileName) {
-        this(desktopManager, new File(fileName));
-    }
+    /**
+        Constructor.
+        @param desktopManager the associated desktop manager
+        @param windowState the window state object. The frame will load the class file from
+                           information present within this object.
+     */
+    public BrowserInternalFrame(BasicDesktopManager desktopManager, WindowState windowState) {
+        super(desktopManager, windowState.getFileName());
+        this.fileName = windowState.getFileName();
 
-    public BrowserInternalFrame(BasicDesktopManager desktopManager, File file) {
-        super(desktopManager, file.getAbsolutePath());
-        this.file = file;
-
+        setFrameIcon(BrowserMDIFrame.ICON_APPLICATION);
         readClassFile();
-        setupInternalFrame();
+        setupInternalFrame(windowState.getBrowserPath());
     }
 
-    public String getInitParam() {
-        return file.getAbsolutePath();
+    public Object getInitParam() {
+        WindowState windowState = new WindowState(fileName, browserComponent.getBrowserPath());
+        return windowState;
     }
 
     // Browser services
@@ -71,11 +87,54 @@ public class BrowserInternalFrame extends BasicInternalFrame
     }
 
     public Action getActionBackward() {
-        return getParentFrame().actionBackward;
+        return getParentFrame().getActionBackward();
     }
 
     public Action getActionForward() {
-        return getParentFrame().actionForward;
+        return getParentFrame().getActionForward();
+    }
+
+    public void openClassFile(String className, BrowserPath browserPath) {
+
+        FindResult findResult = getParentFrame().getConfig().findClass(className);
+        while (findResult == null) {
+            int result = GUIHelper.showOptionDialog(
+                    getParentFrame(),
+                    "The class " + className + " could not be found.\n" +
+                    "You can check your classpath configuration and try again.",
+                    new String[] {"Setup classpath", "Cancel"},
+                    JOptionPane.WARNING_MESSAGE
+            );
+            if (result == 0) {
+                getParentFrame().getActionSetupClasspath().actionPerformed(new ActionEvent(this, 0, null));
+                findResult = getParentFrame().getConfig().findClass(className);
+            } else {
+                return;
+            }
+        }
+
+        BrowserInternalFrame frame = (BrowserInternalFrame)desktopManager.getOpenFrame(new WindowState(findResult.getFileName()));
+        if (frame != null) {
+            try {
+                frame.setSelected(true);
+                frame.browserComponent.setBrowserPath(browserPath);
+                desktopManager.scrollToVisible(frame);
+            } catch (PropertyVetoException e) {
+            }
+        } else {
+            WindowState windowState = new WindowState(findResult.getFileName(), browserPath);
+            frame = new BrowserInternalFrame(desktopManager, windowState);
+            if (frame != null) {
+                if (isMaximum()) {
+                    try {
+                        frame.setMaximum(true);
+                    } catch (PropertyVetoException ex) {
+                    }
+                } else {
+                    desktopManager.scrollToVisible(frame);
+                }
+            }
+        }
     }
 
     /**
@@ -87,16 +146,16 @@ public class BrowserInternalFrame extends BasicInternalFrame
     }
 
     /**
-        Get the <tt>File</tt> object for the show class file.
-        @return the <tt>File</tt> object
+        Get the file name for the displayed class file.
+        @return the file name
      */
-    public File getFile() {
-        return file;
+    public String getFileName() {
+        return fileName;
     }
 
-    protected void setupInternalFrame() {
+    private void setupInternalFrame(BrowserPath browserPath) {
 
-        setTitle(file.getAbsolutePath());
+        setTitle(fileName);
 
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
@@ -104,7 +163,8 @@ public class BrowserInternalFrame extends BasicInternalFrame
         browserComponent = new BrowserComponent(this);
         contentPane.add(browserComponent, BorderLayout.CENTER);
 
-        super.setupInternalFrame();
+        setupInternalFrame();
+        browserComponent.setBrowserPath(browserPath);
 
     }
 
@@ -113,16 +173,23 @@ public class BrowserInternalFrame extends BasicInternalFrame
     }
 
     private void readClassFile() {
-        valid = false;
         try {
-            classFile = ClassFileReader.readFromFile(file);
-            valid = true;
+            int index = fileName.indexOf('!');
+            if (index > -1) {
+                String jarFileName = fileName.substring(0, index);
+                String classFileName = fileName.substring(index + 1);
+                JarFile jarFile = new JarFile(jarFileName);
+                JarEntry jarEntry = jarFile.getJarEntry(classFileName);
+                if (jarEntry != null) {
+                    classFile = ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry));
+                }
+            } else {
+                classFile = ClassFileReader.readFromFile(new File(fileName));
+            }
         } catch (InvalidByteCodeException ex) {
 			ex.printStackTrace();
-            exception = ex;
         } catch (IOException ex) {
 			ex.printStackTrace();
-            exception = ex;
         }
     }
 

@@ -15,10 +15,14 @@ import javax.swing.event.InternalFrameEvent;
     The desktop manager for the class file browser application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.6 $ $Date: 2003-08-18 08:05:39 $
 */
 public class BrowserDesktopManager extends BasicDesktopManager {
 
+    /**
+        Constructor.
+        @param parentFrame the parent frame
+     */
     public BrowserDesktopManager(BrowserMDIFrame parentFrame) {
         super(parentFrame);
     }
@@ -32,19 +36,19 @@ public class BrowserDesktopManager extends BasicDesktopManager {
     public void internalFrameDeactivated(InternalFrameEvent event) {
         actionStatus(null);
     }
-    
-    
+
+
     private void actionStatus(BrowserInternalFrame internalFrame) {
-        
+
         BrowserMDIFrame browserParentFrame = (BrowserMDIFrame)parentFrame;
-        
+
         if (internalFrame != null) {
             internalFrame.getBrowserComponent().getHistory().updateActions();
         } else {
-            browserParentFrame.actionReload.setEnabled(false);
-            browserParentFrame.actionBackward.setEnabled(false);
-            browserParentFrame.actionForward.setEnabled(false);
+            browserParentFrame.getActionReload().setEnabled(false);
+            browserParentFrame.getActionBackward().setEnabled(false);
+            browserParentFrame.getActionForward().setEnabled(false);
         }
-        browserParentFrame.actionReload.setEnabled(internalFrame != null);
+        browserParentFrame.getActionReload().setEnabled(internalFrame != null);
     }
 }

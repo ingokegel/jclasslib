@@ -14,16 +14,16 @@ import org.gjt.jclasslib.util.ExtendedJLabel;
 import javax.swing.tree.TreePath;
 
 /**
-    Detail pane showing class members (methods or fields):
+    Detail pane showing class members (methods or fields).
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.6 $ $Date: 2003-08-18 08:13:21 $
 */
 public class ClassMemberDetailPane extends FixedListDetailPane {
 
-    /** Constant which indicates that a <tt>ClassMemberDetailPane</tt> shows fields */
+    /** Constant which indicates that a <tt>ClassMemberDetailPane</tt> shows fields. */
     public static final int FIELDS = 1;
-    /** Constant which indicates that a <tt>ClassMemberDetailPane</tt> shows methods */
+    /** Constant which indicates that a <tt>ClassMemberDetailPane</tt> shows methods. */
     public static final int METHODS = 2;
     
     private int mode;
@@ -68,7 +68,7 @@ public class ClassMemberDetailPane extends FixedListDetailPane {
     public void show(TreePath treePath) {
         
         int index = getIndex(treePath);
-        ClassMember classMember = null;
+        ClassMember classMember;
         if (mode == FIELDS) {
             FieldInfo[] fields = services.getClassFile().getFields();
             if (index >= fields.length) {

@@ -7,71 +7,119 @@
 
 package org.gjt.jclasslib.browser;
 
+import org.gjt.jclasslib.browser.config.BrowserConfig;
+import org.gjt.jclasslib.browser.config.classpath.*;
+import org.gjt.jclasslib.browser.config.window.WindowState;
 import org.gjt.jclasslib.mdi.*;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.util.GUIHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
+import java.beans.*;
+import java.io.*;
+import java.net.URL;
+import java.util.prefs.Preferences;
 
 
 /**
     MDI Frame and entry point for the class file browser application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.8 $ $Date: 2003-08-18 08:05:40 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
 
-    /** System property used to choose default look and feel */
-    public static final String SYSTEM_PROPERTY_LAF_DEFAULT = "classlib.laf.default";
+    static final ImageIcon ICON_APPLICATION = loadIcon("jclasslib.gif");
 
-    /** Title of the applicaton */
-    protected static final String APPLICATION_TITLE = "Class file browser";
-    /** Title for message windows */
-    protected static final String MESSAGE_TITLE = "jclasslib";
+    private static final String SETTINGS_WORKSPACE_CHOOSER_PATH = "workspaceChooserPath";
+    private static final String SETTINGS_CLASSES_CHOOSER_PATH = "classesChooserPath";
 
-    private static final String SETTINGS_DOT_FILE = ".jclasslib.properties";
-    private static final String SETTINGS_HEADER = APPLICATION_TITLE + " properties";
-    private static final String SETTINGS_PROPERTY_CHOOSER_PATH = "chooserPath";
-    
-    private File chooserPath = null;
+    private static final ImageIcon ICON_OPEN_CLASS_FILE = loadIcon("open_small.png");
+    private static final ImageIcon ICON_OPEN_CLASS_FILE_LARGE = loadIcon("open_large.png");
+    private static final ImageIcon ICON_OPEN_WORKSPACE = loadIcon("open_ws_small.png");
+    private static final ImageIcon ICON_OPEN_WORKSPACE_LARGE = loadIcon("open_ws_large.png");
+    private static final ImageIcon ICON_SAVE_WORKSPACE = loadIcon("save_ws_small.png");
+    private static final ImageIcon ICON_SAVE_WORKSPACE_LARGE = loadIcon("save_ws_large.png");
+    private static final ImageIcon ICON_BACKWARD = loadIcon("browser_backward_small.png");
+    private static final ImageIcon ICON_BACKWARD_LARGE = loadIcon("browser_backward_large.png");
+    private static final ImageIcon ICON_FORWARD = loadIcon("browser_forward_small.png");
+    private static final ImageIcon ICON_FORWARD_LARGE = loadIcon("browser_forward_large.png");
+    private static final ImageIcon ICON_RELOAD = loadIcon("reload_small.png");
+    private static final ImageIcon ICON_RELOAD_LARGE = loadIcon("reload_large.png");
+    private static final ImageIcon ICON_WEB = loadIcon("web_small.png");
+    private static final ImageIcon ICON_WEB_LARGE = loadIcon("web_large.png");
+    private static final ImageIcon ICON_BROWSE_CLASSPATH = loadIcon("tree_small.png");
+    private static final ImageIcon ICON_BROWSE_CLASSPATH_LARGE = loadIcon("tree_large.png");
+    private static final ImageIcon ICON_HELP = loadIcon("help.png");
 
-    // Actions
-    
-    /** Action for choosing a class file and displaying it a new child window */
-    protected Action actionChoose;
-    /** Action for saving the application state to disk */
-    protected Action actionSaveSettings;
-    /** Action for exiting the application */
-    protected Action actionQuit;
-    /** Action for moving backward in the navigation history */
-    protected Action actionBackward;
-    /** Action for moving forward in the navigation history */
-    protected Action actionForward;
-    /** Action for reloading a class file */
-    protected Action actionReload;
+    /**
+        Load an icon from the <tt>images</tt> directory.
+        @param fileName the file name for the icon
+        @return the icon
+     */
+    public static ImageIcon loadIcon(String fileName) {
 
+        URL imageURL = BrowserMDIFrame.class.getResource("images/" + fileName);
+        return new ImageIcon(imageURL);
+    }
+
+    private Action actionOpenClassFile;
+    private Action actionBrowseClasspath;
+    private Action actionSetupClasspath;
+    private Action actionNewWorkspace;
+    private Action actionOpenWorkspace;
+    private Action actionSaveWorkspace;
+    private Action actionSaveWorkspaceAs;
+    private Action actionQuit;
     private Action actionShowHomepage;
-    private Action actionShowEJTechnologies;
+    private Action actionShowEJT;
+    private Action actionBackward;
+    private Action actionForward;
+    private Action actionReload;
+    private Action actionShowHelp;
+    private Action actionAbout;
+
+    private File workspaceFile;
+    private String workspaceChooserPath = "";
+    private String classesChooserPath = "";
+    private BrowserConfig config;
 
     // Visual Components
 
-    private JMenu menuFile;
-    private JMenu menuBrowse;
+    private JFileChooser workspaceFileChooser;
+    private JFileChooser classesFileChooser;
 
+    private RecentMenu recentMenu;
+    private ClasspathSetupDialog classpathSetupDialog;
+    private ClasspathBrowser classpathBrowser;
+    private ClasspathBrowser jarBrowser;
+
+    /**
+        Constructor.
+     */
     public BrowserMDIFrame() {
-        
+
+        doNewWorkspace();
+
+        recentMenu = new RecentMenu(this);
         loadSettings();
         setupActions();
         setupMenu();
         setupFrame();
     }
-    
+
+    /**
+        Get the current browser config.
+        @return the browser config
+     */
+    public BrowserConfig getConfig() {
+        return config;
+    }
+
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible) {
@@ -79,38 +127,178 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         }
     }
 
+    /**
+        Get the action for displaying the classpath setup dialog.
+        @return the action
+     */
+    public Action getActionSetupClasspath() {
+        return actionSetupClasspath;
+    }
+
+    /**
+        Get the action for going backward in the navigation history.
+        @return the action
+     */
+    public Action getActionBackward() {
+        return actionBackward;
+    }
+
+    /**
+        Get the action for going forward in the navigation history.
+        @return the action
+     */
+    public Action getActionForward() {
+        return actionForward;
+    }
+
+    /**
+        Get the action for reloading the current frame.
+        @return the action
+     */
+    public Action getActionReload() {
+        return actionReload;
+    }
+
+    /**
+        Get the last path for the classes file chooser.
+        @return the path
+     */
+    public String getClassesChooserPath() {
+        return classesChooserPath;
+    }
+
+    /**
+        Set the last path for the classes file chooser.
+        @param classesChooserPath the path
+     */
+    public void setClassesChooserPath(String classesChooserPath) {
+        this.classesChooserPath = classesChooserPath;
+    }
+
+    /**
+        Open a workspace file.
+        @param file the file.
+     */
+    public void openWorkspace(File file) {
+
+        repaintNow();
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        closeAllFrames();
+        try {
+            FileInputStream fos = new FileInputStream(file);
+            XMLDecoder decoder = new XMLDecoder(fos);
+            config = (BrowserConfig)decoder.readObject();
+            readMDIConfig(config.getMDIConfig());
+            decoder.close();
+            recentMenu.addRecentWorkspace(file);
+            if (classpathBrowser != null) {
+                classpathBrowser.setClasspathComponent(config);
+            }
+        } catch (FileNotFoundException e) {
+            GUIHelper.showMessage(this, "An error occured while reading " + file.getPath(), JOptionPane.ERROR_MESSAGE);
+        } finally {
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+        workspaceFile = file;
+        updateTitle();
+        actionSaveWorkspaceAs.setEnabled(true);
+    }
+
+    /**
+        Open an internal frame for a given file.
+        @param file the file
+        @return the created internal frame
+     */
+    public BrowserInternalFrame openClassFromFile(File file) {
+
+        BrowserInternalFrame frame = new BrowserInternalFrame(desktopManager, new WindowState(file.getPath()));
+        ClassFile classFile = frame.getClassFile();
+
+        if (classFile != null) {
+            try {
+                String className = classFile.getThisClassName();
+                String[] pathComponents = className.split("/");
+                File currentDirectory = file.getParentFile();
+                boolean validClasspathEntry = true;
+                for (int i = pathComponents.length - 2; i >= 0 ; i--) {
+                    String pathComponent = pathComponents[i];
+                    if (!currentDirectory.getName().equals(pathComponent)) {
+                        validClasspathEntry = false;
+                        break;
+                    }
+                    currentDirectory = currentDirectory.getParentFile();
+                }
+                if (validClasspathEntry) {
+                    config.addClasspathDirectory(currentDirectory.getPath());
+                }
+            } catch (InvalidByteCodeException e) {
+            }
+        }
+        return frame;
+    }
+
+    protected void doQuit() {
+        saveSettings();
+        super.doQuit();
+    }
+
     protected BasicDesktopManager createDesktopManager() {
-        
         return new BrowserDesktopManager(this);
+    }
+
+    protected Class[] getFrameConstructorArguments(Class frameClass) {
+        return BrowserInternalFrame.CONSTRUCTOR_ARGUMENTS;
     }
 
     private void setupActions() {
 
-        actionChoose = new DefaultAction("Open class file", loadIcon("open_large.gif"));
-        actionChoose.putValue(Action.SHORT_DESCRIPTION, "Open a class file");
+        actionOpenClassFile = new DefaultAction("Open class file", ICON_OPEN_CLASS_FILE);
+        actionOpenClassFile.putValue(Action.SHORT_DESCRIPTION, "Open a class file");
 
-        actionSaveSettings = new DefaultAction("Save settings", loadIcon("save_large.gif"));
-        actionSaveSettings.putValue(Action.SHORT_DESCRIPTION, "Save option settings, file and window state to current directory");
-        
-        actionQuit = new DefaultAction("Quit");
+        actionBrowseClasspath = new DefaultAction("Browse classpath", ICON_BROWSE_CLASSPATH);
+        actionBrowseClasspath.putValue(Action.SHORT_DESCRIPTION, "Browse the current classpath to open a class file");
 
-        actionBackward = new DefaultAction("Backward", loadIcon("browser_backward_large.gif"));
+        actionSetupClasspath = new DefaultAction("Setup classpath", GUIHelper.ICON_EMPTY);
+        actionSetupClasspath.putValue(Action.SHORT_DESCRIPTION, "Configure the classpath");
+
+        actionNewWorkspace = new DefaultAction("New workspace", GUIHelper.ICON_EMPTY);
+        actionNewWorkspace.putValue(Action.SHORT_DESCRIPTION, "Close all frames and open a new workspace");
+
+        actionOpenWorkspace = new DefaultAction("Open workspace", ICON_OPEN_WORKSPACE);
+        actionOpenWorkspace.putValue(Action.SHORT_DESCRIPTION, "Open workspace from disk");
+
+        actionSaveWorkspace = new DefaultAction("Save workspace", ICON_SAVE_WORKSPACE);
+        actionSaveWorkspace.putValue(Action.SHORT_DESCRIPTION, "Save current workspace to disk");
+
+        actionSaveWorkspaceAs = new DefaultAction("Save workspace as", GUIHelper.ICON_EMPTY);
+        actionSaveWorkspaceAs.putValue(Action.SHORT_DESCRIPTION, "Save current workspace to a different file");
+        actionSaveWorkspaceAs.setEnabled(false);
+
+        actionQuit = new DefaultAction("Quit", GUIHelper.ICON_EMPTY);
+
+        actionBackward = new DefaultAction("Backward", ICON_BACKWARD);
         actionBackward.putValue(Action.SHORT_DESCRIPTION, "Move backward in the navigation history");
         actionBackward.setEnabled(false);
 
-        actionForward = new DefaultAction("Forward", loadIcon("browser_forward_large.gif"));
+        actionForward = new DefaultAction("Forward", ICON_FORWARD);
         actionForward.putValue(Action.SHORT_DESCRIPTION, "Move forward in the navigation history");
         actionForward.setEnabled(false);
 
-        actionReload = new DefaultAction("Reload", loadIcon("reload_large.gif"));
+        actionReload = new DefaultAction("Reload", ICON_RELOAD);
         actionReload.putValue(Action.SHORT_DESCRIPTION, "Reload class file");
         actionReload.setEnabled(false);
         
-        actionShowHomepage = new DefaultAction("jclasslib on the web", loadIcon("web.gif"));
+        actionShowHomepage = new DefaultAction("jclasslib on the web", ICON_WEB);
         actionShowHomepage.putValue(Action.SHORT_DESCRIPTION, "Visit jclasslib on the web");
         
-        actionShowEJTechnologies = new DefaultAction("ej-technologies on the web", loadIcon("web.gif"));
-        actionShowEJTechnologies.putValue(Action.SHORT_DESCRIPTION, "Visit ej-technologies on the web");
+        actionShowEJT = new DefaultAction("ej-technologies on the web", ICON_WEB);
+        actionShowEJT.putValue(Action.SHORT_DESCRIPTION, "Visit ej-technologies on the web");
+
+        actionShowHelp = new DefaultAction("Show help", ICON_HELP);
+        actionShowHelp.putValue(Action.SHORT_DESCRIPTION, "Show the jclasslib documentation");
+
+        actionAbout = new DefaultAction("About the jclasslib bytecode viewer", GUIHelper.ICON_EMPTY);
+        actionAbout.putValue(Action.SHORT_DESCRIPTION, "Show the jclasslib documentation");
     }
 
     private void setupMenu() {
@@ -118,35 +306,50 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         JMenuItem menuItem;
         JMenuBar menuBar = new JMenuBar();
         
-        menuFile = new JMenu("File");
-            menuFile.add(actionChoose).setIcon(loadIcon("open_small.gif"));
+        JMenu menuFile = new JMenu("File");
+            menuFile.add(actionOpenClassFile);
             menuFile.addSeparator();
-            menuFile.add(actionSaveSettings).setIcon(loadIcon("save_small.gif"));
+            menuFile.add(actionNewWorkspace);
+            menuFile.add(actionOpenWorkspace);
+            menuFile.add(recentMenu);
+            menuFile.addSeparator();
+            menuFile.add(actionSaveWorkspace);
+            menuFile.add(actionSaveWorkspaceAs);
             menuFile.addSeparator();
             menuFile.add(actionShowHomepage);
-            menuFile.add(actionShowEJTechnologies);
+            menuFile.add(actionShowEJT);
             menuFile.addSeparator();
-            menuFile.add(actionQuit).setIcon(loadIcon("exit.gif"));
+            menuFile.add(actionQuit);
 
-        menuBrowse = new JMenu("Browse");
+        JMenu menuClasspath = new JMenu("Classpath");
+            menuClasspath.add(actionBrowseClasspath);
+            menuClasspath.add(actionSetupClasspath);
+
+        JMenu menuBrowse = new JMenu("Browse");
             menuItem = menuBrowse.add(actionBackward);
-                menuItem.setIcon(loadIcon("browser_backward_small.gif"));
                 menuItem.setAccelerator(
                     KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.ALT_MASK));
             menuItem = menuBrowse.add(actionForward);
-                menuItem.setIcon(loadIcon("browser_forward_small.gif"));
                 menuItem.setAccelerator(
                     KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.ALT_MASK));
                 
             menuBrowse.addSeparator();
             menuItem = menuBrowse.add(actionReload);
-                menuItem.setIcon(loadIcon("reload_small.gif"));
                 menuItem.setAccelerator(
                     KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.CTRL_MASK));
             
+        JMenu menuHelp = new JMenu("Help");
+            menuItem = menuHelp.add(actionShowHelp);
+                menuItem.setAccelerator(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+            menuHelp.add(actionAbout);
+
+
         menuBar.add(menuFile);
+        menuBar.add(menuClasspath);
         menuBar.add(menuBrowse);
         menuBar.add(menuWindow);
+        menuBar.add(menuHelp);
         setJMenuBar(menuBar);
         
     }
@@ -155,73 +358,224 @@ public class BrowserMDIFrame extends BasicMDIFrame {
 
         Container contentPane = getContentPane();
         
-        setTitle(APPLICATION_TITLE);
         contentPane.add(buildToolbar(), BorderLayout.NORTH);
-        setIconImage(loadIcon("jclasslib.gif").getImage());
+        setIconImage(ICON_APPLICATION.getImage());
     }
     
+    private void updateTitle() {
+
+        if (workspaceFile == null) {
+            setTitle(BrowserApplication.APPLICATION_TITLE);
+            if (actionSaveWorkspaceAs != null) {
+                actionSaveWorkspaceAs.setEnabled(false);
+            }
+        } else {
+            setTitle(BrowserApplication.APPLICATION_TITLE + " [" + workspaceFile.getName() + "]");
+        }
+    }
+
     private JToolBar buildToolbar() {
+
         JToolBar toolBar = new JToolBar();
-        toolBar.add(actionChoose);
+        toolBar.add(actionOpenClassFile).setIcon(ICON_OPEN_CLASS_FILE_LARGE);
+        toolBar.add(actionBrowseClasspath).setIcon(ICON_BROWSE_CLASSPATH_LARGE);
         toolBar.addSeparator();
-        toolBar.add(actionSaveSettings);
+        toolBar.add(actionOpenWorkspace).setIcon(ICON_OPEN_WORKSPACE_LARGE);
+        toolBar.add(actionSaveWorkspace).setIcon(ICON_SAVE_WORKSPACE_LARGE);
         toolBar.addSeparator();
-        toolBar.add(actionBackward);
-        toolBar.add(actionForward);
+        toolBar.add(actionBackward).setIcon(ICON_BACKWARD_LARGE);
+        toolBar.add(actionForward).setIcon(ICON_FORWARD_LARGE);
         toolBar.addSeparator();
-        toolBar.add(actionReload);
-        
+        toolBar.add(actionReload).setIcon(ICON_RELOAD_LARGE);
+        toolBar.addSeparator();
+        toolBar.add(actionShowHomepage).setIcon(ICON_WEB_LARGE);
+
         toolBar.setFloatable(false);
         
         return toolBar;
     }
     
+    private void repaintNow() {
+
+        JComponent contentPane = (JComponent)getContentPane();
+        contentPane.paintImmediately(0, 0, contentPane.getWidth(), contentPane.getHeight());
+        JMenuBar menuBar = getJMenuBar();
+        menuBar.paintImmediately(0, 0, menuBar.getWidth(), menuBar.getHeight());
+    }
+
     private void loadSettings() {
 
-        Properties props = loadSettings(SETTINGS_DOT_FILE);
-        if (props == null) {
+        Preferences preferences = Preferences.userNodeForPackage(getClass());
+
+        workspaceChooserPath = preferences.get(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath);
+        classesChooserPath = preferences.get(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath);
+        recentMenu.read(preferences);
+    }
+    
+    private void saveSettings() {
+        
+        Preferences preferences = Preferences.userNodeForPackage(getClass());
+        preferences.put(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath);
+        preferences.put(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath);
+        recentMenu.save(preferences);
+    }
+
+    private void doSaveWorkspace(boolean saveAs) {
+
+        config.setMDIConfig(createMDIConfig());
+        if (workspaceFile != null && !saveAs) {
+            saveWorkspaceToFile(workspaceFile);
             return;
         }
 
-        String chooserPathName = (String)props.get(SETTINGS_PROPERTY_CHOOSER_PATH);
+        JFileChooser fileChooser = getWorkspaceFileChooser();
+        int result = fileChooser.showSaveDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            if (!selectedFile.getName().toLowerCase().endsWith("." + BrowserApplication.WORKSPACE_FILE_SUFFIX)) {
+                selectedFile = new File(selectedFile.getPath() + "." + BrowserApplication.WORKSPACE_FILE_SUFFIX);
+            }
+            if (selectedFile.exists() &&
+                GUIHelper.showOptionDialog(
+                        this,
+                        "The file " + selectedFile.getPath() + "\nexists. Do you want to overwrite this file?",
+                        GUIHelper.YES_NO_OPTIONS,
+                        JOptionPane.QUESTION_MESSAGE) != 0)
+            {
+                return;
+            }
+            saveWorkspaceToFile(selectedFile);
+            workspaceFile = selectedFile;
+            updateTitle();
+            workspaceChooserPath = fileChooser.getCurrentDirectory().getAbsolutePath();
+        }
+    }
 
-        if (chooserPathName != null) {
-            chooserPath = new File(chooserPathName);
+    private void saveWorkspaceToFile(File file) {
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            XMLEncoder encoder = new XMLEncoder(fos);
+            encoder.writeObject(config);
+            encoder.close();
+            recentMenu.addRecentWorkspace(file);
+        } catch (FileNotFoundException e) {
+            GUIHelper.showMessage(this, "An error occured while saving to " + file.getPath(), JOptionPane.ERROR_MESSAGE);
+        }
+        GUIHelper.showMessage(this, "Workspace saved to " + file.getPath(), JOptionPane.INFORMATION_MESSAGE);
+        actionSaveWorkspaceAs.setEnabled(true);
+    }
+
+    private void doNewWorkspace() {
+
+        closeAllFrames();
+        workspaceFile = null;
+        config = new BrowserConfig();
+        config.addRuntimeLib();
+        if (classpathBrowser != null) {
+            classpathBrowser.setClasspathComponent(config);
+        }
+        updateTitle();
+    }
+
+    private void doOpenWorkspace() {
+
+        JFileChooser fileChooser = getWorkspaceFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            openWorkspace(selectedFile);
+            workspaceChooserPath = fileChooser.getCurrentDirectory().getAbsolutePath();
+        }
+    }
+
+    private void doOpenClassFile() {
+        
+        JFileChooser fileChooser = getClassesFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            repaintNow();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            File file = fileChooser.getSelectedFile();
+            classesChooserPath = fileChooser.getCurrentDirectory().getAbsolutePath();
+
+            BrowserInternalFrame frame;
+            if (file.getPath().toLowerCase().endsWith(".class")) {
+                frame = openClassFromFile(file);
+            } else {
+                frame = openClassFromJar(file);
+            }
+
+            if (frame != null) {
+                try {
+                    frame.setMaximum(true);
+                } catch (PropertyVetoException ex) {
+                }
+            }
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+    }
+
+    private BrowserInternalFrame openClassFromJar(File file) {
+
+        ClasspathArchiveEntry entry = new ClasspathArchiveEntry();
+        entry.setFileName(file.getPath());
+        if (jarBrowser == null) {
+            jarBrowser = new ClasspathBrowser(this, null, "Classes in selected JAR file:", false);
+        }
+        jarBrowser.clear();
+        jarBrowser.setClasspathComponent(entry);
+        jarBrowser.setVisible(true);
+        String selectedClassName = jarBrowser.getSelectedClassName();
+        if (selectedClassName == null) {
+            return null;
         }
 
+        String fileName = file.getPath() + "!" + selectedClassName + ".class";
+
+        BrowserInternalFrame frame = new BrowserInternalFrame(desktopManager, new WindowState(fileName));
+        ClassFile classFile = frame.getClassFile();
+        if (classFile != null) {
+            config.addClasspathArchive(file.getPath());
+        }
+
+        return frame;
     }
-    
-    private void doSaveSettings() {
-        
-        Properties props = new Properties();
-        props.put(SETTINGS_PROPERTY_CHOOSER_PATH, chooserPath == null ? "" : chooserPath.getAbsolutePath());
 
-        saveSettings(props, SETTINGS_DOT_FILE, SETTINGS_HEADER, MESSAGE_TITLE);
-    }
+    private void doBrowseClasspath() {
 
-    private void doChoose() {
-        
-        JFileChooser fileChooser = new JFileChooser(chooserPath);
-        fileChooser.addChoosableFileFilter(new BasicFileFilter("class", "Class files"));
-        int returnValue = fileChooser.showOpenDialog(this);
-        
-        if(returnValue == JFileChooser.APPROVE_OPTION) {
+        if (classpathBrowser == null) {
+            classpathBrowser = new ClasspathBrowser(this, config, "Configured classpath:", true);
+        }
+        classpathBrowser.setVisible(true);
+        String selectedClassName = classpathBrowser.getSelectedClassName();
+        if (selectedClassName == null) {
+            return;
+        }
 
-            File file = fileChooser.getSelectedFile();
-            String fileName = file.getAbsolutePath();
-            chooserPath = new File(fileName.substring(0, fileName.lastIndexOf(File.separatorChar) + 1));            
-            
-            createInternalFrame(file);
-        }        
-    }
-    
-    private void createInternalFrame(File file) {
+        FindResult findResult = config.findClass(selectedClassName);
+        if (findResult == null) {
+            GUIHelper.showMessage(this, "Error loading " + selectedClassName, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-        BrowserInternalFrame frame = new BrowserInternalFrame(desktopManager, file);
+        repaintNow();
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        BrowserInternalFrame frame = new BrowserInternalFrame(desktopManager, new WindowState(findResult.getFileName()));
         try {
             frame.setMaximum(true);
         } catch (PropertyVetoException ex) {
         }
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+    }
+
+    private void doSetupClasspath() {
+        if (classpathSetupDialog == null) {
+            classpathSetupDialog = new ClasspathSetupDialog(this);
+
+        }
+        classpathSetupDialog.setVisible(true);
     }
 
     private void doBackward() {
@@ -245,10 +599,34 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         }
     }
     
+    private JFileChooser getWorkspaceFileChooser() {
+
+        if (workspaceFileChooser == null) {
+            workspaceFileChooser = new JFileChooser(workspaceChooserPath);
+            workspaceFileChooser.setDialogTitle("Choose workspace file");
+            workspaceFileChooser.setFileFilter(new BasicFileFilter(BrowserApplication.WORKSPACE_FILE_SUFFIX, "jclasslib workspace files"));
+        }
+
+        return workspaceFileChooser;
+    }
+
+    private JFileChooser getClassesFileChooser() {
+
+        if (classesFileChooser == null) {
+            classesFileChooser = new JFileChooser(classesChooserPath);
+            classesFileChooser.setDialogTitle("Choose class file or jar file");
+            classesFileChooser.addChoosableFileFilter(new BasicFileFilter("class", "class files"));
+            classesFileChooser.addChoosableFileFilter(new BasicFileFilter("jar", "jar files"));
+            classesFileChooser.setFileFilter(new BasicFileFilter(new String[] {"class", "jar"}, "class files and jar files"));
+        }
+
+        return classesFileChooser;
+    }
+
     private void doShowURL(String urlSpec) {
         
-        String commandLine = null;
-        if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+        String commandLine;
+        if (System.getProperty("os.name").startsWith("Windows")) {
             commandLine = "rundll32.exe url.dll,FileProtocolHandler " + urlSpec;
         } else {
             commandLine = "netscape " + urlSpec;
@@ -259,22 +637,32 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         }
     }
 
+    private void doAbout() {
+        new BrowserAboutDialog(this).setVisible(true);
+    }
+
     private class DefaultAction extends AbstractAction {
 
-        public DefaultAction(String name) {
-            super(name);
-        }
-
-        public DefaultAction(String name, Icon icon) {
+        private DefaultAction(String name, Icon icon) {
             super(name, icon);
         }
 
         public void actionPerformed(ActionEvent ev) {
 
-            if (this == actionChoose) {
-                doChoose();
-            } else if (this == actionSaveSettings) {
-                doSaveSettings();
+            if (this == actionOpenClassFile) {
+                doOpenClassFile();
+            } else if (this == actionBrowseClasspath) {
+                doBrowseClasspath();
+            } else if (this == actionSetupClasspath) {
+                doSetupClasspath();
+            } else if (this == actionNewWorkspace) {
+                doNewWorkspace();
+            } else if (this == actionOpenWorkspace) {
+                doOpenWorkspace();
+            } else if (this == actionSaveWorkspace) {
+                doSaveWorkspace(false);
+            } else if (this == actionSaveWorkspaceAs) {
+                doSaveWorkspace(true);
             } else if (this == actionQuit) {
                 doQuit();
             } else if (this == actionBackward) {
@@ -285,37 +673,15 @@ public class BrowserMDIFrame extends BasicMDIFrame {
                 doReload();
             } else if (this == actionShowHomepage) {
                 doShowURL("http://jclasslib.sourceforge.net");
-            } else if (this == actionShowEJTechnologies) {
+            } else if (this == actionShowEJT) {
                 doShowURL("http://www.ej-technologies.com");
-            }
-        }
-    }
-    
-    /**
-        Entry point for the class file browser application.
-        @param args arguments for the application. Not evaluated.
-     */
-    public static void main(String[] args) {
-        
-        if (!Boolean.getBoolean(SYSTEM_PROPERTY_LAF_DEFAULT)) {
-            Class lookAndFeelClass = com.incors.plaf.kunststoff.KunststoffLookAndFeel.class;
-            try {
-                UIManager.setLookAndFeel(lookAndFeelClass.getName());
-            } catch (Exception ex) {
+            } else if (this == actionShowHelp) {
+                doShowURL("doc/help.html");
+            } else if (this == actionAbout) {
+                doAbout();
             }
         }
 
-        BrowserMDIFrame frame = new BrowserMDIFrame();
-        frame.setVisible(true);
-        
-        // JInternalFrame can only be selected in visible JDesktopPane
-        JInternalFrame[] frames = frame.desktopPane.getAllFrames();
-        if (frames.length > 0) {
-            try {
-                frames[0].setSelected(true);
-            } catch (PropertyVetoException ex) {
-            }
-        }
     }
 
 }
