@@ -16,11 +16,11 @@ import java.io.*;
     Describes a <tt>CONSTANT_NameAndType_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:29 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:51:15 $
 */
 public class ConstantNameAndTypeInfo extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes */
+    /** Length of the constant pool data structure in bytes. */
     public static final int SIZE = 4;
     
     private int nameIndex;
@@ -35,10 +35,9 @@ public class ConstantNameAndTypeInfo extends CPInfo {
     }
     
     public String getVerbose() throws InvalidByteCodeException {
-        return classFile.getConstantPoolEntryName(nameIndex) +
-               classFile.getConstantPoolEntryName(descriptorIndex);
+        return getName() + getDescriptor();
     }
-    
+
     /**
         Get the index of the constant pool entry containing the name of this entry.
         @return the index
@@ -70,7 +69,25 @@ public class ConstantNameAndTypeInfo extends CPInfo {
     public void setDescriptorIndex(int descriptorIndex) {
         this.descriptorIndex = descriptorIndex;
     }
-    
+
+    /**
+        Get the name.
+        @return the name.
+        @throws InvalidByteCodeException
+     */
+    public String getName() throws InvalidByteCodeException {
+        return classFile.getConstantPoolEntryName(nameIndex);
+    }
+
+    /**
+        Get the descriptor string.
+        @return the string.
+        @throws InvalidByteCodeException
+     */
+    public String getDescriptor() throws InvalidByteCodeException {
+        return classFile.getConstantPoolEntryName(descriptorIndex);
+    }
+
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
             
