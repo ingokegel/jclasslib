@@ -29,7 +29,7 @@ import java.util.*;
     Bytecode renderer.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:19:37 $
+    @version $Revision: 1.2 $ $Date: 2004-10-26 11:33:28 $
 */
 public class ByteCodeDisplay extends JPanel implements Scrollable {
 
@@ -41,21 +41,30 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     /** Border for the renderer. */
     public static final Border BORDER = new EmptyBorder(MARGIN_Y, MARGIN_X, MARGIN_Y, MARGIN_X);
 
-    private static final Map STYLE_BASE;
-    private static final Map STYLE_NORMAL;
-    private static final Map STYLE_SMALL;
-    private static final Map STYLE_LINK;
-    private static final Map STYLE_OFFSET;
-    private static final Map STYLE_INSTRUCTION;
-    private static final Map STYLE_IMMEDIATE_VALUE;
+    private static Map STYLE_BASE;
+    private static Map STYLE_NORMAL;
+    private static Map STYLE_SMALL;
+    private static Map STYLE_LINK;
+    private static Map STYLE_OFFSET;
+    private static Map STYLE_INSTRUCTION;
+    private static Map STYLE_IMMEDIATE_VALUE;
 
     private static final String TAB_STRING = "        ";
 
     static {
-        Font baseFont = UIManager.getFont("TextArea.font");
+        initStyles(null);
+    }
+
+    public static void initStyles(Font baseFont) {
 
         STYLE_BASE = new HashMap(2);
-        STYLE_BASE.put(TextAttribute.FAMILY, "MonoSpaced");
+        if (baseFont != null && baseFont.getFamily().equals("MonoSpaced")) {
+            STYLE_BASE.put(TextAttribute.FAMILY, baseFont.getFontName());
+        } else {
+            baseFont = UIManager.getFont("TextArea.font");
+            STYLE_BASE.put(TextAttribute.FAMILY, "MonoSpaced");
+        }
+
         STYLE_BASE.put(TextAttribute.SIZE, new Float(baseFont.getSize()));
 
         STYLE_NORMAL = new HashMap(0);
