@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail;
 import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.util.ExtendedJLabel;
-import org.gjt.jclasslib.util.ScrollableJLabel;
+import org.gjt.jclasslib.util.GUIHelper;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -23,17 +23,20 @@ import java.util.Iterator;
     a fixed number of key-value pairs arranged in a list.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:12:02 $
 */
 public abstract class FixedListDetailPane extends AbstractDetailPane {
     
-    private java.util.List resizeListeners;
-        
     // Visual components
 
     private java.util.List detailPaneEntries;
+    private JScrollPane scrollPane;
 
-    public FixedListDetailPane(BrowserServices services) {
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
+    protected FixedListDetailPane(BrowserServices services) {
         super(services);
     }
 
@@ -96,7 +99,6 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
         gRemainder.weightx = gRemainder.weighty = 1;
         gRemainder.fill = GridBagConstraints.BOTH;
 
-        resizeListeners = new ArrayList();
         Iterator it = detailPaneEntries.iterator();
         while (it.hasNext()) {
             DetailPaneEntry entry = (DetailPaneEntry)it.next();
@@ -112,27 +114,35 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
                 add(entry.value, gValue);
             }
             if (entry.comment != null) {
-                ScrollableJLabel scollableLabel = new ScrollableJLabel(entry.comment);
-                
-                services.addMaximizedListener(scollableLabel);
-                resizeListeners.add(scollableLabel); 
-                    
-                add(scollableLabel, (entry.value == null) ? gCommentOnly : gComment);
+                add(entry.comment, (entry.value == null) ? gCommentOnly : gComment);
 
                 entry.comment.setAutoTooltip(true);
             }
             
         }
-        
+
         gRemainder.gridy = gKey.gridy + 1;
+        gRemainder.gridy += addSpecial(gRemainder.gridy);
+
         add(new JPanel(), gRemainder);
-        
+        scrollPane = new JScrollPane(this);
+        GUIHelper.setDefaultScrollbarUnits(scrollPane);
+        scrollPane.setBorder(null);
+
+    }
+
+    /**
+        Get the scroll pane.
+        @return the scroll pane.
+     */
+    public JScrollPane getScrollPane() {
+        return scrollPane;
     }
 
     public void show(TreePath treePath) {
-        for (int i = 0; i < resizeListeners.size(); i++) {
-            ((ScrollableJLabel)resizeListeners.get(i)).resize(true);
-        }
+
+        scrollPane.getViewport().setViewPosition(new Point(0, 0));
+
     }
 
     /**
@@ -140,16 +150,24 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
         <tt>setupComponent</tt> can layout the pane.
      */
     protected abstract void setupLabels();
-    
-    
+
+    /**
+        Hook for derived classes to add additional visual elements.
+        @param gridy the current <tt>gridy</tt> of the <tt>GridbagLayout</tt>.
+        @return the number of added rows.
+     */
+    protected int addSpecial(int gridy) {
+        return 0;
+    }
+
     private static class DetailPaneEntry {
         public final ExtendedJLabel key;
         public final ExtendedJLabel value;
         public final ExtendedJLabel comment;
         
-        public DetailPaneEntry(ExtendedJLabel key,
-                               ExtendedJLabel value,
-                               ExtendedJLabel comment) {
+        private DetailPaneEntry(ExtendedJLabel key,
+                                ExtendedJLabel value,
+                                ExtendedJLabel comment) {
             this.key = key;
             this.value = value;
             this.comment = comment;
