@@ -35,6 +35,9 @@ clean            : Delete all generated files and directories.
 
     <!-- Location of source code -->
     <property name="src.dir" value="src"/>
+    
+    <!-- Location of external libraries -->
+    <property name="lib.dir" value="lib"/>
 
     <!-- Location of documentation -->
     <property name="doc.dir" value="doc"/>
@@ -51,6 +54,7 @@ clean            : Delete all generated files and directories.
     <!-- Class path for compiling -->
     <path id="project.classpath">
         <pathelement location="${java.classes}"/>
+        <pathelement location="${lib.dir}/kunststoff.jar"/>
     </path>
 
     <!-- Additional class path for compiling netbeans module-->
@@ -87,6 +91,7 @@ clean            : Delete all generated files and directories.
             <fileset dir="${src.dir}">
                 <include name="images/*.gif"/>
             </fileset>
+            <fileset dir="${lib.dir}"/>
         </copy>
     </target>
 
@@ -141,8 +146,7 @@ clean            : Delete all generated files and directories.
         <mkdir dir="${dist.assembly.dir}"/>
         <copy todir="${dist.assembly.dir}">
             <fileset dir="${build.dir}">
-                <include name="${build.jar.filename.prefix}.jar" />
-                <include name="${build.nbmodule.filename.prefix}.jar" />
+                <include name="*.jar" />
             </fileset>
             <fileset dir="${basedir}">
                 <include name="${doc.dir}/**/*"/>
