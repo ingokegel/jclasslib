@@ -24,7 +24,7 @@ import java.util.prefs.Preferences;
     and supplies various utility methods.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-08-18 07:59:50 $
+    @version $Revision: 1.7 $ $Date: 2004-06-29 15:40:27 $
 */
 public class BasicMDIFrame extends JFrame {
 
@@ -285,12 +285,15 @@ public class BasicMDIFrame extends JFrame {
 
         boolean maximized = (getExtendedState() & MAXIMIZED_BOTH) != 0;
         preferences.putBoolean(SETTINGS_WINDOW_MAXIMIZED, maximized);
+        System.out.println(maximized);
         Rectangle frameBounds = maximized ? lastNormalFrameBounds : getBounds();
 
-        preferences.putInt(SETTINGS_WINDOW_WIDTH, frameBounds.width);
-        preferences.putInt(SETTINGS_WINDOW_HEIGHT, frameBounds.height);
-        preferences.putInt(SETTINGS_WINDOW_X, frameBounds.x);
-        preferences.putInt(SETTINGS_WINDOW_Y, frameBounds.y);
+        if (frameBounds != null) {
+            preferences.putInt(SETTINGS_WINDOW_WIDTH, frameBounds.width);
+            preferences.putInt(SETTINGS_WINDOW_HEIGHT, frameBounds.height);
+            preferences.putInt(SETTINGS_WINDOW_X, frameBounds.x);
+            preferences.putInt(SETTINGS_WINDOW_Y, frameBounds.y);
+        }
     }
 
     private void loadWindowSettings() {
