@@ -29,7 +29,7 @@ import java.util.HashMap;
     Parent component for a class file browser in Netbeans.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2003-08-18 17:11:21 $
+    @version $Revision: 1.9 $ $Date: 2004-02-10 16:06:56 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices
@@ -181,6 +181,10 @@ public class ClassFileViewer extends TopComponent
             NotifyDescriptor desc = new NotifyDescriptor.Message("The class " + className + " could not be found.", NotifyDescriptor.INFORMATION_MESSAGE);
             TopManager.getDefault().notify(desc);
         }
+    }
+
+    public boolean canOpenClassFiles() {
+        return true;
     }
 
     public void activate() {

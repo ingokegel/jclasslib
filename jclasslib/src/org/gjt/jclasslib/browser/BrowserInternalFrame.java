@@ -30,7 +30,7 @@ import java.util.jar.JarFile;
     A child window of the class file browser application.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-08-18 08:05:39 $
+    @version $Revision: 1.8 $ $Date: 2004-02-10 16:06:56 $
 */
 public class BrowserInternalFrame extends BasicInternalFrame
                                   implements BrowserServices {
@@ -135,6 +135,10 @@ public class BrowserInternalFrame extends BasicInternalFrame
                 }
             }
         }
+    }
+
+    public boolean canOpenClassFiles() {
+        return true;
     }
 
     /**

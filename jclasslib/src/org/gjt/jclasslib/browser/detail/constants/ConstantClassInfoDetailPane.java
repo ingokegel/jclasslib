@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
     Detail pane showing a <tt>CONSTANT_Class</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:15:30 $
+    @version $Revision: 1.6 $ $Date: 2004-02-10 16:06:56 $
 */
 public class ConstantClassInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -45,8 +45,13 @@ public class ConstantClassInfoDetailPane extends AbstractConstantInfoDetailPane 
     }
 
     protected int addSpecial(int gridy) {
+
         classElementOpener = new ClassElementOpener(this);
-        return classElementOpener.addSpecial(this, gridy);
+        if (getBrowserServices().canOpenClassFiles()) {
+            return classElementOpener.addSpecial(this, gridy);
+        } else {
+            return 0;
+        }
     }
 
     public void show(TreePath treePath) {
