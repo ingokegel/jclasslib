@@ -2,12 +2,12 @@
 
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "docbook/dtd/docbookx.dtd">
 <article>
-  <title>jclasslib help</title>
-  <subtitle>ej-technologies GmbH, Ingo Kegel, 2002-02-26</subtitle>
+  <title>jclasslib bytecode viewer help</title>
+  <subtitle>ej-technologies GmbH, Ingo Kegel, 2003-08-20</subtitle>
   <sect1>
     <title>Sponsor</title>
     <para>
-      The development of <application>jclasslib</application> is sponsored by
+      The development of the <application>jclasslib bytecode viewer</application> is sponsored by
       <ulink url="http://www.ej-technologies.com">ej-technologies GmbH</ulink>.
       If you are working with Java bytecode, you might also be interested in
       <ulink url="http://www.ej-technologies.com/jprofiler/overview.html">JProfiler</ulink>,
@@ -17,127 +17,89 @@
   <sect1>
     <title>Purpose</title>
     <para>
-      <application>jclasslib</application> is a library and a collection of
-      utilities and applications which are aimed at the visualization and manipulation
-      of java bytecode.
-      The core functionality consists in mechanism to read, modify and write class files.
-      Currently one bundled application - the class file browser - is built on top of this.
-      While the bytecode manipulation classes is of interest to developers with
+      <application>jclasslib</application> is a Java class file library that can be used
+      to read, modify and write class files.
+      The <application>jclasslib bytecode viewer</application> displays class files and
+      bytecode and lets you navigate through the class file structure in a browser-like fashion.
+      While the bytecode manipulation part is of interest to developers with
       specialized development targets such as obfuscators, compilers or code completion
-      engines, the class file browser is a standalone application which is useful for
+      engines, the bytecode viewer is a standalone application which is useful for
       anyone trying to understand the java virtual machine.
     </para>
   </sect1>
   <sect1>
-    <title>Installing <application>jclasslib</application></title>
+    <title>Installing the <application>jclasslib bytecode viewer</application></title>
     <sect2>
       <title>Requirements</title>
       <para>
-        To run <application>jclasslib</application> you need a  Java 1.3 runtime
-        environment or higher, available at
+        To run the <application>jclasslib bytecode viewer</application> you need
+        a Java 1.4 runtime environment or higher, available at
         <ulink url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.
       </para>
     </sect2>
     <sect2>
       <title>Installing from binary distribution</title>
       <para>
-        <application>jclasslib</application> is provided as a zip or tgz archive.
-        Besides unpacking it at a suitable location, no further steps are necessary
-        for the installation. Specifically, no external libraries and classpath
-        settings are necessary.
+        The <application>jclasslib bytecode viewer</application> is provided as a Windows 
+        installer or as a gzipped tar archive. Besides unpacking it at a suitable location,
+        no further steps are necessary for the installation. Specifically, no external
+        libraries and classpath settings are necessary.
       </para>
     </sect2>
     <sect2>
       <title>Installing as Netbeans module</title>
       <para>
-        To install the class file browser as a Netbeans module, copy
-        <filename>nb-jclasslib.jar</filename> to the <filename>modules</filename>
-        subdirectory of your Netbeans distribution. Then (from NB 3.3 on) open the
-        options dialog via
+        To install the bytecode viewer as a Netbeans module, double click on
+        <filename>jclasslib.nbm</filename> in Windows, or perform the following steps in
+        the Netbeans IDE:
         <menuchoice>
           <guimenu>Tools</guimenu>
-          <guimenuitem>Options</guimenuitem>
+          <guimenuitem>Update Center</guimenuitem>
         </menuchoice>
-        and look for
-        <menuchoice>
-          <guimenu>IDE Configuration</guimenu>
-          <guimenuitem>System</guimenuitem>
-          <guimenuitem>Modules</guimenuitem>
-        </menuchoice>
-        in the options tree. Right-click this entry and select
-        <menuchoice>
-          <guimenu>Modules</guimenu>
-          <guimenuitem>Add</guimenuitem>
-          <guimenuitem>Module</guimenuitem>
-        </menuchoice>.
-        Choose <filename>nb-jclasslib.jar</filename> in the <filename>modules</filename>
-        subdirectory of your Netbeans distribution. The <application>jclasslib</application>
-        module is inserted in the "Tools" module category and can be used immediately.
+        and select
+        <guibutton>Install Manually Downloaded Modules (*.nbm files)</guibutton>. Add
+        the file <filename>jclasslib.nbm</filename> in the next step and complete the
+        remaining steps of the installation wizard.
       </para>
     </sect2>
     <sect2>
       <title>Building <application>jclasslib</application> from source</title>
       <para>
         To build <application>jclasslib</application>, you need the
-        <application>ant</application> build tool available at
-        <ulink url="http://jakarta.apache.org/ant/">http://jakarta.apache.org/ant/</ulink>.
+        <application>ant</application> build tool (>= 1.5) available at
+        <ulink url="http://ant.apache.org">http://ant.apache.org/</ulink>.
         If you want to build this documentation, you have to
-      </para>
-      <para>
-        <itemizedlist>
-          <listitem>
-            <para>
-              download the optional tasks jar
-              (<filename>jakarta-ant-1.4-optional.jar</filename> for
-              <application>ant</application> 1.4) and copy it to
-              <varname>$ANT_HOME</varname><filename>/lib</filename>.
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              download the XML parser <application>xerces</application> and the XSLT processor
-              <application>xalan</application> of the Apache Software Foundation both available at
-              <ulink url="http://xml.apache.org/dist/">http://xml.apache.org/dist/</ulink> and
-              put the jar files <filename>xerces.jar</filename> and <filename>xalan.jar</filename>
-              into your <varname>CLASSPATH</varname> environment variable.
-            </para>
-          </listitem>
-          <listitem>
-            <para>
-              Install the dcobook DTD and stylesheets. This is done in three steps:
-            </para>
-            <para>
-              <orderedlist>
-                <listitem>
-                  <para>
-                    Create a directory <filename>docbook</filename> in <filename>doc/src</filename>
-                    under the <application>jclasslib</application> root. In this new directory, create
-                    the subdirectories <filename>dtd</filename> and <filename>stylesheets</filename>.
-                  </para>
-                </listitem>
-                <listitem>
-                  <para>
-                    download the Docbook XML DTD version 4.1.2 from
-                    <ulink url="http://www.oasis-open.org/docbook/xml/index.shtml">
-                    http://www.oasis-open.org/docbook/xml/index.shtml</ulink>
-                    and unpack contents of this zip file directly to the
-                    <filename>dtd</filename> directory created in step 1.
-                  </para>
-                </listitem>
-                <listitem>
-                  <para>
-                    download the Docbook XSL stylesheets from
-                    <ulink url="http://sourceforge.net/project/showfiles.php?group_id=21935">
-                    http://sourceforge.net/project/showfiles.php?group_id=21935</ulink>
-                    and unpack the zip file to the <filename>stylesheets</filename> directory created
-                    in step 1. Rename the first directory which contains all the other files
-                    to <filename>docbook</filename>.
-                  </para>
-                </listitem>
-              </orderedlist>
-            </para>
-          </listitem>
-        </itemizedlist>
+        install the dcobook DTD and stylesheets. This is done in three steps:
+        <para>
+          <orderedlist>
+            <listitem>
+              <para>
+                Create a directory <filename>docbook</filename> in <filename>doc/src</filename>
+                under the <application>jclasslib</application> root. In this new directory, create
+                the subdirectories <filename>dtd</filename> and <filename>stylesheets</filename>.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                download the Docbook XML DTD version 4.1.2 from
+                <ulink url="http://www.oasis-open.org/docbook/xml/index.shtml">
+                http://www.oasis-open.org/docbook/xml/index.shtml</ulink>
+                and unpack contents of this zip file directly to the
+                <filename>dtd</filename> directory created in step 1.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                download the Docbook XSL stylesheets from
+                <ulink url="http://sourceforge.net/project/showfiles.php?group_id=21935">
+                http://sourceforge.net/project/showfiles.php?group_id=21935</ulink>
+                and unpack the zip file to the <filename>stylesheets</filename> directory created
+                in step 1. Rename the first directory which contains all the other files
+                to <filename>docbook</filename>.
+              </para>
+            </listitem>
+          </orderedlist>
+        </para>
       </para>
       <para>
         The following ant targets are used for building <application>jclasslib</application>:
@@ -163,22 +125,23 @@
               <row>
                 <entry>doc</entry>
                 <entry>
-                  build this documentation in the
-                  <filename>doc</filename> directory
+                  build this documentation in the <filename>doc</filename> directory
                 </entry>
               </row>
               <row>
-                <entry>doc</entry>
+                <entry>javadoc</entry>
                 <entry>
-                  build the javadoc documentation in the
-                  <filename>doc/javadoc</filename> directory
+                  build the javadoc documentation in the <filename>doc/api</filename> directory
                 </entry>
               </row>
               <row>
                 <entry>dist</entry>
                 <entry>
                   build a distribution of <application>jclasslib</application> in the
-                  <filename>dist</filename> directory
+                  <filename>dist</filename> directory. The distribution is created with
+                  <application>install4j</application> available at
+                  <ulink url="http://www.ej-technologies.com/products/install4j/overview.html">
+                  http://www.ej-technologies.com/products/install4j/overview.html</ulink>.
                 </entry>
               </row>
               <row>
@@ -192,35 +155,81 @@
     </sect2>
   </sect1>
   <sect1>
-    <title>The class file browser</title>
+    <title>The bytecode viewer</title>
     <sect2>
-      <title>Starting the class file browser</title>
+      <title>Starting the bytecode viewer</title>
       <para>
-        The class file browser is run by entering
+        Application launchers for Microsoft Windows (<filename>jclasslib.exe</filename>)
+        and UNIX (<filename>jclasslib</filename>) are available. 
+        The bytecode viewer can also be run by entering
         <cmdsynopsis>
           <command>java -jar jclasslib.jar</command>
         </cmdsynopsis>
         at the command line with the current director at the
-        <application>jclasslib</application> root. Microsoft Windows users may also
-        doubleclick the file <filename>jclasslib.jar</filename>. In addition, startup
-        scripts for Microsoft Windows (<filename>jclasslib.bat</filename>) and UNIX
-        (<filename>jclasslib</filename>) are provided. If you want to use jclasslib
-        with the system default look and feel instead of 
-        <ulink url="http://www.incors.org">Kunststoff look and feel</ulink>,
-        edit the startup script for your platform and set the <varname>DEFAULT_LAF</varname>
-        variable to "true".
+        <application>jclasslib</application> root. If you want to use the jclasslib bytecode viewer
+        with the default look and feel instead of the native look and feel, pass the VM parameter
+        <varname>jclasslib.laf.default=true</varname> to the application. For the Windows launcher,
+        this is done by passing <varname>-J-Djclasslib.laf.default=true</varname> as an argument.
+      </para>
+      <para>
+        As an argument, you can pass either the path of a workspace file or the path
+        of a single class file to be opened on startup.
       </para>
     </sect2>
     <sect2>
-      <title>Using the class file browser</title>
+      <title>Using the bytecode viewer</title>
       <para>
-        The class file browser allows you to open class files (not java files!) with
+        The bytecode viewer allows you to open class files and jar archives 
+        (not java files!) with
         <menuchoice>
           <guimenu>File</guimenu>
-          <guimenuitem>Open</guimenuitem>
+          <guimenuitem>Open class file</guimenuitem>
         </menuchoice>.
         Class files will be displayed in child windows which are initially maximized.
-        If you recompile the class while having it opened in the class file browser,
+        If you select a jar file, a tree will be displayed which lets you to
+        select a class contained within the archive. 
+        As you open class files, the classpath will be automatically updated.
+        You can edit the classpath by choosing
+        <menuchoice>
+          <guimenu>Classpath</guimenu>
+          <guimenuitem>Setup classpath</guimenuitem>
+        </menuchoice>.
+        You can also choose a class from the currently configured classpath by
+        choosing
+        <menuchoice>
+          <guimenu>Classpath</guimenu>
+          <guimenuitem>Browse classpath</guimenuitem>
+        </menuchoice>
+        and selecting the desired class from the classpath tree.
+        The classpath for a new workspace initially consists of the runtime 
+        library of the JRE that is used to run the bytecode viewer.
+      </para>
+      <para>
+        The currently configured classpath, the currently opened classes, the window
+        positions and the currently selected detail panes for each class constitute
+        a workspace. Workspaces can be saved and loaded with the 
+        <menuchoice>
+          <guimenu>File</guimenu>
+          <guimenuitem>Save workspace</guimenuitem>
+        </menuchoice>
+        and
+        <menuchoice>
+          <guimenu>File</guimenu>
+          <guimenuitem>Open Workspace</guimenuitem>
+        </menuchoice>
+        actions. A list of the 10 last used workspaces is displayed in the
+        <menuchoice>
+          <guimenu>File</guimenu>
+          <guimenu>Reopen Workspace</guimenu>
+        </menuchoice>
+        menu.
+      </para>
+      <para>
+        As you navigate through constant pool entries and branch offsets in a class,
+        the backward and forward actions will become available. In this way, you can
+        for example examine the details of a constant pool entry and then easily return 
+        to the bytecode you were looking at.
+        If you recompile the class while having it opened in the bytecode viewer,
         you can reload the class file with
         <menuchoice>
           <shortcut>
@@ -229,11 +238,9 @@
           <guimenu>Browse</guimenu>
           <guimenuitem>Reload</guimenuitem>
         </menuchoice>.
-        A window list and several window operations are available in the
-        <menuchoice>
-          <guimenu>Window</guimenu>
-        </menuchoice>
-        menu. The information contained in a class file are accessible via the tree
+      </para>
+      <para>
+        The information contained in a class file are accessible via the tree
         in the left side of the window, closely mirroring the structures as defined
         in the Java virtual machine specification. The panel to the right side of
         the tree displays details contained in the selected structure. Green underlined
@@ -243,7 +250,7 @@
         a structure.
       </para>
       <para>
-        The detail view of attribute structures is always composed of two areas:
+        The detail view of any attribute structure is always composed of two areas:
       </para>
       <para>
         <itemizedlist>
@@ -277,7 +284,14 @@
             <para>
               The runtime constant pool of the class file. All entries are named as
               suggested in the Java virtual machine specification and are hyperlinked
-              where appropriate,
+              where appropriate. For class references, method references, interface
+              method references and field references a <guibutton>Show</guibutton> button
+              is displayed that displays the referenced class or class member. If the 
+              referenced class is not the currently displayed class, the bytecode viewer
+              will try to locate the class in the currently configured class path and
+              open it in a new window. If the class is already opened, the existing
+              window will be activated. If the class can not be located, you get a
+              chance to edit the classpath and try again.
             </para>
           </listitem>
           </varlistentry>
@@ -316,10 +330,9 @@
                 <listitem>
                   <para>
                     the bytecode in a somewhat modified assembly notation like the one
-                    produced by <application>javap</application>. The gray numbers in
-                    small font at the beginning of each line containing an opcode show the
-                    ordinal position of that opcode in the current method. The red nummbers
-                    following the gray numbers show the byte offset of the opcode in the current
+                    produced by <application>javap</application>. The left gutter shows line numbers
+                    in small font. The red numbers at the start of each line
+                    show the byte offset of the opcode in the current
                     method. Constant pool entries are hyperlinks denoted as <literal>#nnn</literal>,
                     links to other offset such as in branching instructions are hyperlinks denoted
                     as <literal>nnn</literal>.
@@ -352,11 +365,11 @@
       </para>
     </sect2>
     <sect2>
-      <title>The class file browser as a Netbeans module</title>
+      <title>The bytecode viewer as a Netbeans module</title>
       <para>
         To open a class file in Netbeans, the first step is to either select a java source node
         or a class file node in the explorer or to activate a Java source file in the source editor.
-        Java sources have to be compiled in order for the class file browser menu entries to be 
+        Java sources have to be compiled in order for the bytecode viewer menu entries to be 
         available. The second step is to either right click and navigate to
         <menuchoice>
           <guimenu>Tools</guimenu>
@@ -376,39 +389,11 @@
     <sect2>
       <title><anchor id="uml"/>UML diagrams of <application>jclasslib</application></title>
       <para>
-        The following UML diagrams for each package contained in
+        The following UML diagrams for the bytecode manipulation library packages contained in
         <classname>org.gjt.jclasslib</classname> and its subpackages give an overview
          of the general architecture.
       </para>
       <itemizedlist>
-        <listitem>
-          <para>
-            <ulink url="images/browser.gif">
-            <classname>org.gjt.jclasslib.browser</classname>
-            </ulink>
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <ulink url="images/browser_detail.gif">
-            <classname>org.gjt.jclasslib.detail</classname>
-            </ulink>
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <ulink url="images/browser_detail_attributes.gif">
-            <classname>org.gjt.jclasslib.browser.detail.attributes</classname>
-            </ulink>
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <ulink url="images/browser_detail_constants.gif">
-            <classname>org.gjt.jclasslib.browser.detail.constants</classname>
-            </ulink>
-          </para>
-        </listitem>
         <listitem>
           <para>
             <ulink url="images/bytecode.gif">
@@ -420,20 +405,6 @@
           <para>
             <ulink url="images/io.gif">
             <classname>org.gjt.jclasslib.io</classname>
-            </ulink>
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <ulink url="images/mdi.gif">
-            <classname>org.gjt.jclasslib.mdi</classname>
-            </ulink>
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <ulink url="images/nbmodule.gif">
-            <classname>org.gjt.jclasslib.nbmodule</classname>
             </ulink>
           </para>
         </listitem>
@@ -458,13 +429,6 @@
             </ulink>
           </para>
         </listitem>
-        <listitem>
-          <para>
-            <ulink url="images/util.gif">
-            <classname>org.gjt.jclasslib.util</classname>
-            </ulink>
-          </para>
-        </listitem>
       </itemizedlist>
     </sect2>
     <sect2>
@@ -473,8 +437,8 @@
         To see extensive debugging on stdout while <application>jclasslib</application> reads or
         writes class files, set the JVM environment variable
         <varname>org.gjt.jclasslib.structures.AbstractStructure.SYSTEM_PROPERTY_DEBUG</varname>
-        (= <literal>classlib.io.debug</literal>) to <literal>true</literal> either by passing
-        <literal>-Dclasslib.io.debug=true</literal> right after the the <literal>java</literal>
+        (= <literal>jclasslib.io.debug</literal>) to <literal>true</literal> either by passing
+        <literal>-Djclasslib.io.debug=true</literal> right after the the <literal>java</literal>
         command in the invokation of the apllication of by setting the property via
         <methodname>System.setProperty</methodname>.
       </para>
