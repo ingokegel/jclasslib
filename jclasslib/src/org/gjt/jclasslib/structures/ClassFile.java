@@ -15,9 +15,9 @@ import java.util.*;
 
 /**
     The class file structure in which all other structures are hooked up.
- 
+
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.5 $ $Date: 2002-05-29 15:51:24 $
 */
 public class ClassFile extends AbstractStructureWithAttributes {
 
@@ -35,6 +35,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private int minorVersion;
     private int majorVersion;
     private CPInfo[] constantPool;
+    /** @collectionType int */
     private HashMap constantPoolEntryToIndex = new HashMap();
     private int accessFlags;
     private int thisClass;
@@ -42,8 +43,8 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private int[] interfaces;
     private FieldInfo[] fields;
     private MethodInfo[] methods;
-    
-    
+
+
     public ClassFile() {
         skipConstantPool = Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_CONSTANT_POOL);
         setClassFile(this);
@@ -51,7 +52,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
     /**
         Get the minor version of the class file format.
-        @return the minor version 
+        @return the minor version
      */
     public int getMinorVersion() {
         return minorVersion;
@@ -64,10 +65,10 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public void setMinorVersion(int minorVersion) {
         this.minorVersion = minorVersion;
     }
-    
+
     /**
         Get the major version of the class file format.
-        @return the major version 
+        @return the major version
      */
     public int getMajorVersion() {
         return majorVersion;
@@ -80,7 +81,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public void setMajorVersion(int majorVersion) {
         this.majorVersion = majorVersion;
     }
-    
+
     /**
         Get the array with all constant pool entries.
         @return the array
@@ -131,7 +132,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
             }
         }
     }
-    
+
     /**
         Register the constant pool entry at a given index, so that it can
         be found through the <tt>getConstantPoolIndex</tt> method.
@@ -140,7 +141,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public void registerConstantPoolEntry(int index) {
         constantPoolEntryToIndex.put(constantPool[index], new Integer(index));
     }
-    
+
     /**
         Unregister the constant pool entry at a given index, so that it can
         no longer be found through the <tt>getConstantPoolIndex</tt> method.
@@ -165,7 +166,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public void setAccessFlags(int accessFlags) {
         this.accessFlags = accessFlags;
     }
-    
+
     /**
         Get the constant pool index of this class.
         @return the index
@@ -229,7 +230,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public void setFields(FieldInfo[] fields) {
         this.fields = fields;
     }
-    
+
     /**
         Get the array with the <tt>MethodInfo</tt> structures for the methods of this class.
         @return the array
@@ -245,7 +246,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public void setMethods(MethodInfo[] methods) {
         this.methods = methods;
     }
-    
+
     /**
         Get the the access flags of this class as a hex string.
         @return the hex string
@@ -268,12 +269,12 @@ public class ClassFile extends AbstractStructureWithAttributes {
         @return the constant pool entry
         @throws InvalidByteCodeException if the entry is not a <tt>ConstantUtf8Info</tt>
      */
-    public ConstantUtf8Info getConstantPoolUtf8Entry(int index) 
+    public ConstantUtf8Info getConstantPoolUtf8Entry(int index)
         throws InvalidByteCodeException {
-            
+
         return (ConstantUtf8Info)getConstantPoolEntry(index, ConstantUtf8Info.class);
     }
-    
+
     /**
         Get the constant pool entry at the specified index and cast it to a specified class.
         @param index the index
@@ -283,14 +284,21 @@ public class ClassFile extends AbstractStructureWithAttributes {
      */
     public CPInfo getConstantPoolEntry(int index, Class entryClass)
         throws InvalidByteCodeException {
-            
-        checkValidConstantPoolIndex(index);
+
+        if (!checkValidConstantPoolIndex(index)) {
+			return null;
+		}
+
         CPInfo cpInfo = constantPool[index];
-        
+
+        if (cpInfo == null) {
+            return null;
+        }
+
         if (entryClass.isAssignableFrom(cpInfo.getClass())) {
             return cpInfo;
         } else {
-            throw new InvalidByteCodeException("constant pool entry at " + index + 
+            throw new InvalidByteCodeException("constant pool entry at " + index +
                                                " is not assignable to " +
                                                entryClass.getName());
         }
@@ -306,16 +314,22 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public String getConstantPoolEntryName(int index)
         throws InvalidByteCodeException {
 
-        checkValidConstantPoolIndex(index);
+        if (!checkValidConstantPoolIndex(index)) {
+			return null;
+		}
+
         CPInfo cpInfo = constantPool[index];
-            
-        return cpInfo.getVerbose();
+        if (cpInfo == null) {
+            return "invalid constant pool index";
+        } else {
+            return cpInfo.getVerbose();
+        }
     }
-    
-    
+
+
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
-            
+
         readMagicNumber(in);
         readVersion(in);
         readConstantPool(in);
@@ -330,7 +344,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
     public void write(DataOutput in)
         throws InvalidByteCodeException, IOException {
-            
+
         writeMagicNumber(in);
         writeVersion(in);
         writeConstantPool(in);
@@ -341,72 +355,73 @@ public class ClassFile extends AbstractStructureWithAttributes {
         writeFields(in);
         writeMethods(in);
         writeAttributes(in);
-        
+
     }
-    
-    private void checkValidConstantPoolIndex(int index)
+
+    private boolean checkValidConstantPoolIndex(int index)
         throws InvalidByteCodeException {
-            
+
         if (index < 1 || index >= constantPool.length) {
-            throw new InvalidByteCodeException("invalid constant pool index " + index);
+			return false;
         }
-            
+        return true;
+
     }
-    
+
     private void readMagicNumber(DataInput in)
         throws InvalidByteCodeException, IOException {
-            
+
         int magicNumber = in.readInt();
         if (magicNumber != MAGIC_NUMBER) {
             throw new InvalidByteCodeException("Invalid magic number 0x" +
-                                               Integer.toHexString(magicNumber) + 
-                                               " instead of 0x" + 
+                                               Integer.toHexString(magicNumber) +
+                                               " instead of 0x" +
                                                Integer.toHexString(MAGIC_NUMBER));
         }
-        
+
         if (debug) debug("read magic number");
     }
 
     private void writeMagicNumber(DataOutput out)
-        throws InvalidByteCodeException, IOException {            
-        
+        throws InvalidByteCodeException, IOException {
+
         out.writeInt(MAGIC_NUMBER);
         if (debug) debug("wrote magic number");
     }
 
     private void readVersion(DataInput in)
         throws InvalidByteCodeException, IOException {
-            
+
         minorVersion = in.readUnsignedShort();
         if (debug) debug("read minor version " + minorVersion);
-        
+
         majorVersion = in.readUnsignedShort();
         if (debug) debug("read major version " + majorVersion);
-        
+
         checkMajorVersion(majorVersion);
     }
 
     private void writeVersion(DataOutput out)
         throws InvalidByteCodeException, IOException {
-        
+
         out.writeShort(minorVersion);
         if (debug) debug("wrote minor version " + minorVersion);
-        
+
         out.writeShort(majorVersion);
         if (debug) debug("wrote major version " + majorVersion);
-        
+
         checkMajorVersion(majorVersion);
     }
 
     private void readConstantPool(DataInput in)
         throws InvalidByteCodeException, IOException {
-    
+
         constantPoolEntryToIndex.clear();
         int constantPoolCount = in.readUnsignedShort();
         if (debug) debug("read constant pool count " + constantPoolCount);
-        
+
         constantPool = new CPInfo[constantPoolCount];
-        
+
         // constantPool has effective length constantPoolCount - 1
         // constantPool[0] defaults to null
         for (int i = 1; i < constantPoolCount; i++) {
@@ -414,8 +429,8 @@ public class ClassFile extends AbstractStructureWithAttributes {
                 // see below for i++
                 i += CPInfo.skip(in);
             } else {
-                // create CPInfos via factory method since the actual type 
-                // of the constant is not yet known 
+                // create CPInfos via factory method since the actual type
+                // of the constant is not yet known
                 if (debug) debug("reading constant pool entry " + i);
                 constantPool[i] = CPInfo.create(in, this);
                 constantPoolEntryToIndex.put(constantPool[i], new Integer(i));
@@ -430,15 +445,15 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
     private void writeConstantPool(DataOutput out)
         throws InvalidByteCodeException, IOException {
-    
+
         int lastFreeIndex;
         for (lastFreeIndex = getLength(constantPool) - 1;
              lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null;
              lastFreeIndex--) {}
-        
+
         out.writeShort(lastFreeIndex + 1);
         if (debug) debug("wrote constant pool count " + (lastFreeIndex + 1));
-        
+
         // constantPool[0] defaults to null and is not written into the class file
         for (int i = 1; i <= lastFreeIndex; i++) {
             if (constantPool[i] == null) {
@@ -453,7 +468,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
             }
         }
     }
-    
+
     private void readAccessFlags(DataInput in)
         throws InvalidByteCodeException, IOException {
 
@@ -501,45 +516,45 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
         int interfacesCount = in.readUnsignedShort();
         if (debug) debug("read interfaces count " + interfacesCount);
-        
+
         interfaces = new int[interfacesCount];
-        
+
         for (int i = 0; i < interfacesCount; i++) {
             interfaces[i] = in.readUnsignedShort();
             if (debug) debug("read interface index " + interfaces[i]);
         }
-        
+
     }
-    
+
     private void writeInterfaces(DataOutput out)
         throws InvalidByteCodeException, IOException {
 
         int interfacesCount = getLength(interfaces);
-            
+
         out.writeShort(interfacesCount);
         if (debug) debug("wrote interfaces count " + interfacesCount);
-        
+
         for (int i = 0; i < interfacesCount; i++) {
             out.writeShort(interfaces[i]);
             if (debug) debug("wrote interface index " + interfaces[i]);
         }
-        
+
     }
-    
+
     private void readFields(DataInput in)
         throws InvalidByteCodeException, IOException {
 
         int fieldsCount = in.readUnsignedShort();
         if (debug) debug("read fields count " + fieldsCount);
-        
+
         fields = new FieldInfo[fieldsCount];
-        
+
         for (int i = 0; i < fieldsCount; i++) {
             fields[i] = FieldInfo.create(in, this);
         }
-        
+
     }
-    
+
     private void writeFields(DataOutput out)
         throws InvalidByteCodeException, IOException {
 
@@ -547,30 +562,30 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
         out.writeShort(fieldsCount);
         if (debug) debug("wrote fields count " + fieldsCount);
-        
+
         for (int i = 0; i < fieldsCount; i++) {
             if (fields[i] == null) {
                 throw new InvalidByteCodeException("field " + i + " is null");
             }
             fields[i].write(out);
         }
-        
+
     }
-    
+
     private void readMethods(DataInput in)
         throws InvalidByteCodeException, IOException {
 
         int methodsCount = in.readUnsignedShort();
         if (debug) debug("read methods count " + methodsCount);
-        
+
         methods = new MethodInfo[methodsCount];
-        
+
         for (int i = 0; i < methodsCount; i++) {
             methods[i] = MethodInfo.create(in, this);
         }
-        
+
     }
-    
+
     private void writeMethods(DataOutput out)
         throws InvalidByteCodeException, IOException {
 
@@ -578,16 +593,16 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
         out.writeShort(methodsCount);
         if (debug) debug("wrote methods count " + methodsCount);
-        
+
         for (int i = 0; i < methodsCount; i++) {
             if (methods[i] == null) {
                 throw new InvalidByteCodeException("method " + i + " is null");
             }
             methods[i].write(out);
         }
-        
+
     }
-    
+
     protected void readAttributes(DataInput in)
         throws InvalidByteCodeException, IOException {
 
@@ -607,6 +622,6 @@ public class ClassFile extends AbstractStructureWithAttributes {
         if (majorVersion < 45 || majorVersion > 46) {
             Log.warning("major version should be between 45 and 46 for JDK <= 1.3");
         }
-        
+
     }
 }
