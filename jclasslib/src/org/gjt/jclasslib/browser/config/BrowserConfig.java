@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
     Workspace configuration object.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
+    @version $Revision: 1.2 $ $Date: 2003-08-21 14:40:45 $
 */
 public class BrowserConfig implements ClasspathComponent {
 
@@ -128,7 +128,11 @@ public class BrowserConfig implements ClasspathComponent {
         String fileName = String.class.getResource("String.class").toExternalForm();
         Matcher matcher = Pattern.compile("jar:file:/(.*)!.*").matcher(fileName);
         if (matcher.matches()) {
-            addClasspathArchive(new File(matcher.group(1)).getPath());
+            String path = matcher.group(1);
+            if (path.indexOf(':') == -1) {
+                path = "/" + path;
+            }
+            addClasspathArchive(new File(path).getPath());
             fireClasspathChanged(false);
         }
     }
