@@ -3,17 +3,17 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "docbook/dtd/docbookx.dtd">
 <article>
   <title>jclasslib help</title>
-  <subtitle>Ingo Kegel, 2000-05-10</subtitle>
+  <subtitle>Ingo Kegel, 2001-06-01</subtitle>
   <sect1>
     <title>Purpose</title>
     <para>
       <application>jclasslib</application> is a library and a collection of
       utilities and applications which are aimed at the manipulation of java bytecode.
       The core functionality consists in mechanism to read, modify and write class files.
-      Currently one application - the bytecode browser - is built on top of this. While
+      Currently one application - the class file browser - is built on top of this. While
       the bytecode manipulation classes could be of interest to developers with
       specialized development targets such as obfuscators, compilers or code completion
-      engines, the bytecode browser is a standalone application which may be useful for
+      engines, the class file browser is a standalone application which may be useful for
       anyone trying to understand the java virtual machine.
     </para>
   </sect1>
@@ -34,6 +34,14 @@
         Besides unpacking it at a suitable location, no further steps are necessary
         for the installation. Specifically, no external libraries and classpath
         settings are necessary.
+      </para>
+    </sect2>
+    <sect2>
+      <title>Installing as Netbeans module</title>
+      <para>
+        To install the class file browser as a Netbeans module, copy
+        <filename>nb-jclasslib.jar</filename> to the <filename>modules</filename>
+        subdirectory of your Netbeans distribution and restart Netbeans.
       </para>
     </sect2>
     <sect2>
@@ -151,11 +159,11 @@
     </sect2>
   </sect1>
   <sect1>
-    <title>The bytecode browser</title>
+    <title>The class file browser</title>
     <sect2>
-      <title>Starting the bytecode browser</title>
+      <title>Starting the class file browser</title>
       <para>
-        The bytecode browser is run by entering
+        The class file browser is run by entering
         <cmdsynopsis>
           <command>java -jar jclasslib.jar</command>
         </cmdsynopsis>
@@ -167,15 +175,15 @@
       </para>
     </sect2>
     <sect2>
-      <title>Using the bytecode browser</title>
+      <title>Using the class file browser</title>
       <para>
-        The bytecode browser allows you to open class files (not java files!) with
+        The class file browser allows you to open class files (not java files!) with
         <menuchoice>
           <guimenu>File</guimenu>
           <guimenuitem>Open</guimenuitem>
         </menuchoice>.
         Class files will be displayed in child windows which are initially maximized.
-        If you recompile the class while having it opened in the bytecode browser,
+        If you recompile the class while having it opened in the class file browser,
         you can reload the class file with
         <menuchoice>
           <shortcut>
@@ -306,6 +314,25 @@
         specification</ulink> at hand.
       </para>
     </sect2>
+    <sect2>
+      <title>The class file browser as a Netbeans module</title>
+      <para>
+        To open a class file in Netbeans, the first step is to either select a java source node
+        or a class file node in the explorer or to activate a Java source file in the source editor.
+        Java sources have to be compiled in order for the class file browser menu entries to be 
+        available. The second step is to either right click and navigate to
+        <menuchoice>
+          <guimenu>Tools</guimenu>
+          <guimenuitem>View class file</guimenuitem>
+        </menuchoice>
+        in the popup menu or to execute
+        <menuchoice>
+          <guimenu>Tools</guimenu>
+          <guimenuitem>View class file</guimenuitem>
+        </menuchoice>
+        in the main Netbeans menu.
+      </para>
+    </sect2>
   </sect1>
   <sect1>
     <title>The bytecode manipulation library</title>
@@ -363,6 +390,13 @@
           <para>
             <ulink url="images/mdi.gif">
             <classname>org.gjt.jclasslib.mdi</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="images/nbmodule.gif">
+            <classname>org.gjt.jclasslib.nbmodule</classname>
             </ulink>
           </para>
         </listitem>
