@@ -30,13 +30,15 @@ import org.openide.text.*;
     Parent component for a class file browser in Netbeans.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-26 17:22:17 $
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:25:59 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices
 {
 
     private static HashMap fileObjectToClassFileViewer = new HashMap();
+    
+    private static final String VERSION = "1.2";
 
     private FileObject fo;
     private ClassFileNode node;
@@ -112,13 +114,31 @@ public class ClassFileViewer extends TopComponent
     public void writeExternal (ObjectOutput out)
         throws IOException
     {
+        if (out == null) {
+            return;
+        }
+        if (node == null) {
+            out.writeBoolean(false);
+            return;
+        }
+        out.writeBoolean(true);
+        out.writeUTF(VERSION);
         out.writeObject(node.getHandle());
+        
         super.writeExternal(out);
     }
     
     public void readExternal (ObjectInput in)
         throws IOException, ClassNotFoundException
     {
+        if (in == null) {
+            return;
+        }
+        boolean valid = in.readBoolean();
+        if (!valid) {
+            return;
+        }
+        String version = in.readUTF();
         Node.Handle handle = (Node.Handle)in.readObject();
         super.readExternal(in);
 
@@ -168,9 +188,11 @@ public class ClassFileViewer extends TopComponent
             return;
         }
         
-        setName(fo.getName());
+        if (fo != null) {
+            setName(fo.getName());
+        }
 
-        if (!readClassFile()) {
+        if (fo != null && !readClassFile()) {
             this.close();
             return;
         }
