@@ -1,10 +1,28 @@
+/*
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the license, or (at your option) any later version.
+*/
+
 package org.gjt.jclasslib.bytecode;
 
-/** Holds a single match-offset pair */
+/**
+    Holds a single match-offset pair.
+
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.2 $ $Date: 2003-08-18 07:58:54 $
+*/
 public class MatchOffsetPair {
+
     private int match;
     private int offset;
 
+    /**
+     * Constructor.
+     * @param match the match value.
+     * @param offset the branch offset.
+     */
     public MatchOffsetPair(int match, int offset) {
         this.match = match;
         this.offset = offset;
