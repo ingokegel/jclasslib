@@ -10,17 +10,61 @@ package org.gjt.jclasslib.io;
 import org.gjt.jclasslib.structures.*;
 
 import java.io.*;
+import java.util.*;
+import java.util.jar.*;
 
 /**
     Converts class files to a class file structure <tt>ClassFile</tt> as defined in
     <tt>org.gjt.jclasslib.structures</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.5 $ $Date: 2002-05-29 15:52:44 $
 */
 public class ClassFileReader {
 
     private ClassFileReader() {
+    }
+
+    /**
+        Looks up a class file in the specified class path and converts it 
+        to a <tt>ClassFile</tt> structure.
+        @param classPath the class path from which to read the <tt>ClassFile</tt> structure
+        @param packageName the name of the package in which the class resides
+        @param className the simple name of the class
+        @return the new <tt>ClassFile</tt> structure or <tt>null</tt> if it cannot be found
+        @throws InvalidByteCodeException if the bytecode is invalid
+        @throws IOException if an exception occurs while reading the file
+     */
+    public static ClassFile readFromClassPath(String[] classPath, String packageName, String className)
+        throws InvalidByteCodeException, IOException
+    {
+        
+        String relativePath = packageName.replace('.', File.separatorChar) + (packageName.length() == 0 ? "" : File.separator) + className + ".class";
+        String jarRelativePath = relativePath.replace(File.separatorChar, '/');
+        for (int i = 0; i <  classPath.length; i++) {
+            File currentClassPathEntry = new File(classPath[i]);
+            if (!currentClassPathEntry.exists()) {
+                continue;
+            }
+            if (currentClassPathEntry.isDirectory()) {
+                File testFile = new File(currentClassPathEntry, relativePath);
+                if (testFile.exists()) {
+                    return readFromFile(testFile);
+                }
+            } else if (currentClassPathEntry.isFile()) {
+                JarFile jarFile = new JarFile(currentClassPathEntry);
+                try {
+                    JarEntry jarEntry = jarFile.getJarEntry(jarRelativePath);
+                    if (jarEntry != null) {
+                        return readFromInputStream(jarFile.getInputStream(jarEntry));
+                    }
+                } finally {
+                    jarFile.close();
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
