@@ -16,12 +16,19 @@ import java.awt.event.*;
     text of the label does not fit into the current width of the label.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:20 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:23:00 $
 */
 public class ScrollableJLabel extends JScrollPane 
                               implements ComponentListener,
                                          MaximizedListener {
 
+    private static final int scrollBarHeight;
+    
+    static {
+        scrollBarHeight = (int)
+            (new JScrollBar(JScrollBar.HORIZONTAL)).getPreferredSize().getHeight();
+    }
+                                             
     private ExtendedJLabel label;
     private Dimension scrollPaneMinimumSize;
     private boolean isScrolling = false;
@@ -58,8 +65,7 @@ public class ScrollableJLabel extends JScrollPane
                 return;
             }
             if (scrollPaneMinimumSize == null) {
-                Integer scrollbarWidth = (Integer)UIManager.get("ScrollBar.width");
-                int height = label.getHeight() + scrollbarWidth.intValue();
+                int height = label.getHeight() + scrollBarHeight;
                 scrollPaneMinimumSize = new Dimension(0, height);
             }
             setMinimumSize(scrollPaneMinimumSize);
