@@ -20,6 +20,7 @@ import org.openide.windows.*;
 import org.openide.filesystems.*;
 import org.openide.util.actions.CookieAction;
 import org.openide.compiler.CompilerType;
+import org.netbeans.modules.java.settings.*;
 
 import org.netbeans.modules.java.*;
 
@@ -29,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
     Action to open a class file.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-16 10:17:39 $
+    @version $Revision: 1.3 $ $Date: 2002-02-18 10:15:08 $
 */
 public class OpenAction extends CookieAction {
 
@@ -108,20 +109,8 @@ public class OpenAction extends CookieAction {
         
     private FileSystem getTargetFileSystem() {
 
-        Node projectNode = TopManager.getDefault().getPlaces().nodes().project();
-
-        Node javaNode = projectNode.getChildren().findChild("Java Sources");
-        Sheet.Set propSet = (Sheet.Set)javaNode.getPropertySets()[0];
-        Node.Property compilerProperty = propSet.get("compiler");
-
-        CompilerType compiler = null;
-        try {
-            compiler = (CompilerType)compilerProperty.getValue();
-        } catch (IllegalAccessException ex) {
-            return null;
-        } catch (InvocationTargetException ex) {
-            return null;
-        }
+        JavaSettings javaSettings = (JavaSettings)Lookup.getDefault().lookup(JavaSettings.class);
+        CompilerType compiler = javaSettings.getCompiler();
 
         if (!(compiler instanceof JavaCompilerType)) {
             return null;
