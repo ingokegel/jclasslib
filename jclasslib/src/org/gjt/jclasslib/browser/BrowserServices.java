@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser;
 
+import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.util.MaximizedListener;
 
 import javax.swing.*;
 
@@ -16,7 +16,7 @@ import javax.swing.*;
     Container services for a <tt>BrowserComponent</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 08:05:01 $
 */
 public interface BrowserServices {
     /**
@@ -29,13 +29,6 @@ public interface BrowserServices {
         Activate this view.
      */
     void activate();
-    
-    /** 
-        Add a <tt>MaximizedListener</tt> listening for maximizations
-        of the parent frame if applicable.
-        @param listener the listener
-     */
-    void addMaximizedListener(MaximizedListener listener);
     
     /**
         Get the <tt>BrowserComponent</tt> which is the top parent of
@@ -57,5 +50,12 @@ public interface BrowserServices {
         @return the <tt>Action</tt>
      */
     Action getActionForward();
+
+    /**
+        Open a class.
+        @param className the name of the class.
+        @param browserPath an optional <tt>BrowserPath</tt> object. May be <tt>null</tt>.
+     */
+    void openClassFile(String className, BrowserPath browserPath);
 }
 
