@@ -7,16 +7,17 @@
 
 package org.gjt.jclasslib.browser.detail;
 
-import org.gjt.jclasslib.browser.*;
+import org.gjt.jclasslib.browser.AbstractDetailPane;
+import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.detail.attributes.*;
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.attributes.*;
 
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.tree.*;
+import javax.swing.border.Border;
+import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
 
 /**
     Detail pane for an attribute of class <tt>org.gjt.jclasslib.structures.AttributeInfo</tt>.
@@ -24,7 +25,7 @@ import java.util.*;
     subpackage and switches between the contained panes as required.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class AttributeDetailPane extends AbstractDetailPane {
 

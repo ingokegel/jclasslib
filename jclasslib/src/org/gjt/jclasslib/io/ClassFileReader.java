@@ -10,15 +10,15 @@ package org.gjt.jclasslib.io;
 import org.gjt.jclasslib.structures.*;
 
 import java.io.*;
-import java.util.*;
-import java.util.jar.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
     Converts class files to a class file structure <tt>ClassFile</tt> as defined in
     <tt>org.gjt.jclasslib.structures</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-05-29 15:52:44 $
+    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ClassFileReader {
 

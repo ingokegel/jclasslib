@@ -7,17 +7,19 @@
 
 package org.gjt.jclasslib.mdi;
 
-import org.gjt.jclasslib.util.*;
+import org.gjt.jclasslib.util.MaximizedEvent;
+import org.gjt.jclasslib.util.MaximizedListener;
 
 import javax.swing.*;
-import java.beans.*;
-import java.util.*;
+import java.beans.PropertyVetoException;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
     Child frame for MDI application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class BasicInternalFrame extends JInternalFrame {
 

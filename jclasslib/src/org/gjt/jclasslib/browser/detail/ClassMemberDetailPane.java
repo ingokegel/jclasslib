@@ -7,17 +7,17 @@
 
 package org.gjt.jclasslib.browser.detail;
 
-import org.gjt.jclasslib.browser.*;
+import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.util.*;
+import org.gjt.jclasslib.util.ExtendedJLabel;
 
-import javax.swing.tree.*;
+import javax.swing.tree.TreePath;
 
 /**
     Detail pane showing class members (methods or fields):
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-05-31 13:08:14 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ClassMemberDetailPane extends FixedListDetailPane {
 

@@ -7,14 +7,14 @@
 
 package org.gjt.jclasslib.browser;
 
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
     Tree node contained in the tree of the <tt>BrowserTreePane</tt> and 
     representing a structural element of the class file format.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:27 $
 */
 public class BrowserMutableTreeNode extends DefaultMutableTreeNode {
 

@@ -10,9 +10,9 @@ package org.gjt.jclasslib.browser;
 import org.gjt.jclasslib.browser.detail.*;
 
 import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
 
 /**
     The right half of a child window of the class file browser application
@@ -20,7 +20,7 @@ import java.util.*;
     <tt>BrowserTreePane</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-05-30 17:56:27 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:27 $
 */
 public class BrowserDetailPane extends JPanel {
 

@@ -7,15 +7,16 @@
 
 package org.gjt.jclasslib.browser.detail.attributes;
 
-import org.gjt.jclasslib.browser.*;
-import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.structures.attributes.*;
+import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.structures.AttributeInfo;
+import org.gjt.jclasslib.structures.attributes.LineNumberTableAttribute;
+import org.gjt.jclasslib.structures.attributes.LineNumberTableEntry;
 
 /**
     Detail pane showing a <tt>LineNumberTable</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class LineNumberTableAttributeDetailPane extends AbstractAttributeListDetailPane {
 

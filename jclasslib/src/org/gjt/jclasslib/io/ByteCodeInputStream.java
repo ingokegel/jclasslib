@@ -7,13 +7,14 @@
 
 package org.gjt.jclasslib.io;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.InputStream;
 
 /**
     <tt>DataInputStream</tt> which extends <tt>ByteCodeInput</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ByteCodeInputStream extends DataInputStream
                                  implements ByteCodeInput

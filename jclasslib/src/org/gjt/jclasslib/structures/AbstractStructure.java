@@ -7,16 +7,17 @@
 
 package org.gjt.jclasslib.structures;
 
+import org.gjt.jclasslib.io.Log;
+
 import java.io.*;
 import java.lang.reflect.Array;
-import org.gjt.jclasslib.io.Log;
 
 /**
     Base class for all structures defined in the class file format. <p>
     Provides common services such as reading, writing and debugging.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
  */
 public abstract class AbstractStructure {
 

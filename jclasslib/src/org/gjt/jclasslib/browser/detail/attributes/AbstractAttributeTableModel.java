@@ -7,17 +7,18 @@
 
 package org.gjt.jclasslib.browser.detail.attributes;
 
-import org.gjt.jclasslib.structures.*;
 import org.gjt.jclasslib.browser.detail.ListDetailPane.ColumnCache;
+import org.gjt.jclasslib.structures.AttributeInfo;
 
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
     Base class for all table models for attributes diaplayed by a
     <tt>AbstractAttributeListDetailPane</tt>.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
 */
 public abstract class AbstractAttributeTableModel extends AbstractTableModel {
 

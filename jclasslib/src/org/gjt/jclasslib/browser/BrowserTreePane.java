@@ -8,11 +8,11 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.structures.constants.*;
+import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.tree.*;
-import javax.swing.border.*;
 import java.awt.*;
 
 /**
@@ -20,7 +20,7 @@ import java.awt.*;
     child window.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2002-06-01 09:59:13 $
+    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:27 $
 */
 public class BrowserTreePane extends JPanel {
 

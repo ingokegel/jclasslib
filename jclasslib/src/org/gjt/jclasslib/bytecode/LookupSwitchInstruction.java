@@ -7,15 +7,18 @@
 
 package org.gjt.jclasslib.bytecode;
 
-import org.gjt.jclasslib.io.*;
-import java.io.*;
-import java.util.*;
+import org.gjt.jclasslib.io.ByteCodeInput;
+import org.gjt.jclasslib.io.ByteCodeOutput;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
     Describes the <tt>lookupswitch</tt> instruction.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-05-29 15:53:39 $
+    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:28 $
 */
 public class LookupSwitchInstruction extends PaddedInstruction {
 

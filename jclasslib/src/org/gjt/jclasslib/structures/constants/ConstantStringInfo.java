@@ -7,7 +7,8 @@
 
 package org.gjt.jclasslib.structures.constants;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.*;
 
@@ -15,7 +16,7 @@ import java.io.*;
     Describes a <tt>CONSTANT_String_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:29 $
 */
 public class ConstantStringInfo extends CPInfo {
 

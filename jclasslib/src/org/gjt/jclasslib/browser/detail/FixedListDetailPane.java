@@ -7,20 +7,23 @@
 
 package org.gjt.jclasslib.browser.detail;
 
-import org.gjt.jclasslib.browser.*;
-import org.gjt.jclasslib.util.*;
+import org.gjt.jclasslib.browser.AbstractDetailPane;
+import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.gjt.jclasslib.util.ScrollableJLabel;
 
 import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
     Base class for all detail panes with a structure of
     a fixed number of key-value pairs arranged in a list.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public abstract class FixedListDetailPane extends AbstractDetailPane {
     

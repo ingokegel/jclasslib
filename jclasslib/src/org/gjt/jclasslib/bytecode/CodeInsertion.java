@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.bytecode;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.attributes.*;
 
 import java.util.*;
@@ -18,7 +18,7 @@ import java.util.*;
     to perform code insertions is the static <tt>apply</tt> method.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2002-05-29 15:53:38 $
+    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:28 $
 */
 public class CodeInsertion {
 

@@ -8,29 +8,29 @@
 package org.gjt.jclasslib.nbmodule;
 
 import org.gjt.jclasslib.browser.*;
-import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.util.*;
-import org.gjt.jclasslib.io.*;
+import org.gjt.jclasslib.io.ClassFileReader;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.util.MaximizedListener;
+import org.openide.ErrorManager;
+import org.openide.TopManager;
+import org.openide.filesystems.FileObject;
+import org.openide.nodes.Node;
+import org.openide.text.EditorSupport;
+import org.openide.windows.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.beans.BeanInfo;
 import java.io.*;
-import java.net.*;
-import java.beans.*;
-
-import org.openide.*;
-import org.openide.filesystems.*;
-import org.openide.nodes.*;
-import org.openide.windows.*;
-import org.openide.text.*;
+import java.net.URL;
+import java.util.HashMap;
 
 /**
     Parent component for a class file browser in Netbeans.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-05-30 17:56:28 $
+    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices

@@ -8,10 +8,10 @@
 package org.gjt.jclasslib.mdi;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.beans.*;
 import java.util.*;
 
@@ -19,7 +19,7 @@ import java.util.*;
     <tt>DesktopManager</tt> for MDI application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:28 $
 */
 public class BasicDesktopManager extends DefaultDesktopManager
                                  implements VetoableChangeListener,

@@ -8,14 +8,16 @@
 package org.gjt.jclasslib.browser;
 
 import javax.swing.*;
-import javax.swing.tree.*;
-import java.awt.event.*;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
     Listens for mouse clicks and manages linking into the constat pool.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:27 $
 */
 public class ConstantPoolHyperlinkListener extends MouseAdapter {
 

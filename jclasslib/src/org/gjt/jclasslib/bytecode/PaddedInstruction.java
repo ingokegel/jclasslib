@@ -7,8 +7,10 @@
 
 package org.gjt.jclasslib.bytecode;
 
-import org.gjt.jclasslib.io.*;
-import java.io.*;
+import org.gjt.jclasslib.io.ByteCodeInput;
+import org.gjt.jclasslib.io.ByteCodeOutput;
+
+import java.io.IOException;
 
 /**
     Base class for intstructions which need a four byte padding relative
@@ -16,7 +18,7 @@ import java.io.*;
     attribute before reading immediate arguments.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class PaddedInstruction extends AbstractInstruction {
 

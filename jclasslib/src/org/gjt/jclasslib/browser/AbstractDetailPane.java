@@ -8,20 +8,20 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.util.*;
+import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.MouseListener;
+import java.util.HashMap;
 
 /**
     Base class for all detail panes showing specific information for
     a specific tree node selected in <tt>BrowserTreePane</tt>.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:27 $
 */
 public abstract class AbstractDetailPane extends JPanel {
     

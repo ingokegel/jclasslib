@@ -8,22 +8,22 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.mdi.*;
-import org.gjt.jclasslib.util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
-import java.beans.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 
 /**
     MDI Frame and entry point for the class file browser application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:27 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
 

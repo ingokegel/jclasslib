@@ -7,21 +7,17 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.mdi.*;
-import org.gjt.jclasslib.io.*;
-import org.gjt.jclasslib.structures.*;
-
 import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.io.*;
 
 /**
     Visual component displaying a class file.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-06-01 09:58:51 $
+    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:27 $
 */
 public class BrowserComponent extends JComponent
                               implements TreeSelectionListener

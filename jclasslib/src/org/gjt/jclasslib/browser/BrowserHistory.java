@@ -7,18 +7,19 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.browser.detail.attributes.*;
+import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane;
 
 import javax.swing.*;
-import javax.swing.tree.*;
-import java.util.*;
+import javax.swing.tree.TreePath;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 
 /**
     Manages the navigation history of a single child window.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:27 $
 */
 public class BrowserHistory {
 

@@ -7,14 +7,14 @@
 
 package org.gjt.jclasslib.nbmodule;
 
+import org.openide.filesystems.FileObject;
 import org.openide.nodes.*;
-import org.openide.filesystems.*;
 
 /**
     Node for a <tt>ClassFileViewer</tt> component.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ClassFileNode extends AbstractNode {
 

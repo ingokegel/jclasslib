@@ -7,14 +7,15 @@
 
 package org.gjt.jclasslib.structures;
 
+import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
+
 import java.io.*;
-import org.gjt.jclasslib.structures.constants.*;
 
 /**
     Base class for class members.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-05-29 15:52:17 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public abstract class ClassMember extends AbstractStructureWithAttributes
                                   implements AccessFlags {

@@ -9,14 +9,15 @@ package org.gjt.jclasslib.util;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 /**
     Wrapper around a label which displays a horizontal scrollbar if the
     text of the label does not fit into the current width of the label.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:29 $
 */
 public class ScrollableJLabel extends JScrollPane 
                               implements ComponentListener,

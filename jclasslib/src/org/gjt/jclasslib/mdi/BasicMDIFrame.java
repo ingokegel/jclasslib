@@ -10,12 +10,11 @@ package org.gjt.jclasslib.mdi;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+import java.beans.PropertyVetoException;
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.util.*;
-import java.beans.*;
-import java.lang.reflect.*;
+import java.util.Properties;
 
 
 /**
@@ -23,7 +22,7 @@ import java.lang.reflect.*;
     and supplies various utility methods.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
 */
 public class BasicMDIFrame extends JFrame {
 

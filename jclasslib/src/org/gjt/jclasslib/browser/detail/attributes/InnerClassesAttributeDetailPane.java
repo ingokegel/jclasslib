@@ -7,15 +7,17 @@
 
 package org.gjt.jclasslib.browser.detail.attributes;
 
-import org.gjt.jclasslib.browser.*;
-import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.structures.attributes.*;
+import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener;
+import org.gjt.jclasslib.structures.AttributeInfo;
+import org.gjt.jclasslib.structures.attributes.InnerClassesAttribute;
+import org.gjt.jclasslib.structures.attributes.InnerClassesEntry;
 
 /**
     Detail pane showing an <tt>InnerClasses</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetailPane {
 

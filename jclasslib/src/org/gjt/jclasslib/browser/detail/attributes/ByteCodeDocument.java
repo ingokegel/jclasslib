@@ -7,21 +7,23 @@
 
 package org.gjt.jclasslib.browser.detail.attributes;
 
-import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.structures.attributes.*;
 import org.gjt.jclasslib.bytecode.*;
-import org.gjt.jclasslib.io.*;
+import org.gjt.jclasslib.io.ByteCodeReader;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.attributes.CodeAttribute;
 
 import javax.swing.text.*;
 import java.awt.*;
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
     Document type for the bytecode in <tt>Code</tt> attributes.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ByteCodeDocument extends DefaultStyledDocument
                               implements Opcodes

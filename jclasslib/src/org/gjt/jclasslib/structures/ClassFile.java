@@ -8,16 +8,17 @@
 package org.gjt.jclasslib.structures;
 
 import org.gjt.jclasslib.io.Log;
-import org.gjt.jclasslib.structures.constants.*;
+import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
+import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
 
 /**
     The class file structure in which all other structures are hooked up.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2002-06-01 09:59:45 $
+    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ClassFile extends AbstractStructureWithAttributes {
 

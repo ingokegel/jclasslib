@@ -8,7 +8,7 @@
 package org.gjt.jclasslib.structures;
 
 import org.gjt.jclasslib.structures.attributes.*;
-import org.gjt.jclasslib.structures.constants.*;
+import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
 
 import java.io.*;
 
@@ -16,7 +16,7 @@ import java.io.*;
     Base class for all attribute structures in the <tt>attribute</tt> package.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-05-29 15:52:03 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class AttributeInfo extends AbstractStructureWithAttributes {
 

@@ -7,15 +7,15 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.mdi.*;
+import org.gjt.jclasslib.mdi.BasicDesktopManager;
 
-import javax.swing.event.*;
+import javax.swing.event.InternalFrameEvent;
 
 /**
     The desktop manager for the class file browser application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:27 $
 */
 public class BrowserDesktopManager extends BasicDesktopManager {
 

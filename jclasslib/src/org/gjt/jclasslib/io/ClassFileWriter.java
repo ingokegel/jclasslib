@@ -7,7 +7,8 @@
 
 package org.gjt.jclasslib.io;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.*;
 
@@ -16,7 +17,7 @@ import java.io.*;
     <tt>org.gjt.jclasslib.structures</tt> to class files.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ClassFileWriter {
 

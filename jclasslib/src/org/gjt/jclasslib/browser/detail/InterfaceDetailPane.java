@@ -7,16 +7,16 @@
 
 package org.gjt.jclasslib.browser.detail;
 
-import org.gjt.jclasslib.browser.*;
-import org.gjt.jclasslib.util.*;
+import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.util.ExtendedJLabel;
 
-import javax.swing.tree.*;
+import javax.swing.tree.TreePath;
 
 /**
     Detail pane showing interface entries.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class InterfaceDetailPane extends FixedListDetailPane {
 

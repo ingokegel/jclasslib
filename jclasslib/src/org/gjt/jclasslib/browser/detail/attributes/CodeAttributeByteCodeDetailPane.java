@@ -9,21 +9,21 @@ package org.gjt.jclasslib.browser.detail.attributes;
 
 import org.gjt.jclasslib.browser.*;
 import org.gjt.jclasslib.browser.detail.attributes.ByteCodeDocument.DocumentLink;
-import org.gjt.jclasslib.structures.attributes.*;
+import org.gjt.jclasslib.structures.attributes.CodeAttribute;
 
 import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.text.*;
 import javax.swing.text.AbstractDocument.AbstractElement;
+import javax.swing.text.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.WeakHashMap;
 
 /**
     Detail pane showing the bytecode of a <tt>Code</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class CodeAttributeByteCodeDetailPane extends AbstractDetailPane {
 

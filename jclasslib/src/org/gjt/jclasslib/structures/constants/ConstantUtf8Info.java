@@ -7,7 +7,8 @@
 
 package org.gjt.jclasslib.structures.constants;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.*;
 
@@ -15,7 +16,7 @@ import java.io.*;
     Describes a <tt>CONSTANT_Utf8_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:29 $
 */
 public class ConstantUtf8Info extends CPInfo {
 

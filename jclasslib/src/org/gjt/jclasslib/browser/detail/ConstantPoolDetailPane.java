@@ -9,13 +9,13 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.*;
 import org.gjt.jclasslib.browser.detail.constants.*;
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.CPInfo;
 import org.gjt.jclasslib.structures.constants.*;
 
 import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
 
 /**
     Detail pane showing constant pool entries. This class is a container for
@@ -23,7 +23,7 @@ import java.util.*;
     the contained panes as required.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ConstantPoolDetailPane extends AbstractDetailPane {
 

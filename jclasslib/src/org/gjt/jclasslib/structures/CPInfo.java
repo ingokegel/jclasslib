@@ -9,13 +9,14 @@ package org.gjt.jclasslib.structures;
 
 import org.gjt.jclasslib.structures.constants.*;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.IOException;
 
 /**
     Base class for all constant pool entries in the <tt>constants</tt> package.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
 */
 public abstract class CPInfo extends AbstractStructure {
 

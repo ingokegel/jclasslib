@@ -7,30 +7,23 @@
 
 package org.gjt.jclasslib.nbmodule;
 
-import java.util.*;
-import java.awt.Toolkit;
-import javax.swing.JEditorPane;
-import javax.swing.text.*;
-import org.openide.*;
-import org.openide.cookies.OpenCookie;
-import org.openide.nodes.*;
-import org.openide.loaders.*;
-import org.openide.util.*;
-import org.openide.windows.*;
-import org.openide.filesystems.*;
-import org.openide.util.actions.CookieAction;
+import org.netbeans.modules.java.JavaCompilerType;
+import org.netbeans.modules.java.settings.JavaSettings;
 import org.openide.compiler.CompilerType;
-import org.netbeans.modules.java.settings.*;
-
-import org.netbeans.modules.java.*;
-
-import java.lang.reflect.InvocationTargetException;
+import org.openide.cookies.OpenCookie;
+import org.openide.filesystems.*;
+import org.openide.loaders.DataObject;
+import org.openide.nodes.Node;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+import org.openide.util.actions.CookieAction;
+import org.openide.windows.TopComponent;
 
 /**
     Action to open a class file.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
 */
 public class OpenAction extends CookieAction {
 

@@ -8,15 +8,18 @@
 package org.gjt.jclasslib.io;
 
 import org.gjt.jclasslib.bytecode.*;
-import java.io.*;
-import java.util.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
     Converts bytecode to a list of instructions as defined in the package
     <tt>org.gjt.jclasslib.bytecode</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-05-29 15:53:50 $
+    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
 */
 public class ByteCodeReader implements Opcodes {
 
