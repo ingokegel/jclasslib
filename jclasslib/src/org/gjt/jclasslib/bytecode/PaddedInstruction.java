@@ -16,14 +16,22 @@ import java.io.*;
     attribute before reading immediate arguments.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:16 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class PaddedInstruction extends AbstractInstruction {
 
     public PaddedInstruction(int opcode) {
         super(opcode); 
     }
-    
+
+    /**
+        Get the padded size in bytes of this instruction.
+        @return the padded size in bytes
+     */
+    public int getPaddedSize(int offset) {
+        return getSize() + paddingBytes(offset + 1);
+    }
+
     public void read(ByteCodeInput in) throws IOException {
         super.read(in);
         

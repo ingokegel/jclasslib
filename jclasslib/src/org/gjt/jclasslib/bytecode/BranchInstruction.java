@@ -14,7 +14,7 @@ import java.io.*;
     Describes an instruction that branches to a different offset.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class BranchInstruction extends AbstractInstruction {
 
@@ -24,6 +24,15 @@ public class BranchInstruction extends AbstractInstruction {
         super(opcode); 
     }
     
+    public BranchInstruction(int opcode, int branchOffset) {
+        super(opcode); 
+        this.branchOffset = branchOffset;
+    }
+    
+    public int getSize() {
+        return super.getSize() + 2;
+    }
+
     /**
         Get the relative offset of the branch of this instruction.
         @return the offset

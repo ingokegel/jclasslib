@@ -15,7 +15,7 @@ import java.util.*;
     Describes the <tt>lookupswitch</tt> instruction.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class LookupSwitchInstruction extends PaddedInstruction {
 
@@ -26,6 +26,10 @@ public class LookupSwitchInstruction extends PaddedInstruction {
         super(opcode); 
     }
     
+    public int getSize() {
+        return super.getSize() + 8 + 8 * matchOffsetPairs.size();
+    }
+
     /**
         Get the default offset of the branch of this instruction.
         @return the offset

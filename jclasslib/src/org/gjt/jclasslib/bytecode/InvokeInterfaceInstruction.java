@@ -14,7 +14,7 @@ import java.io.*;
     Describes the <tt>invokeinterface</tt> instruction.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:16 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
 
@@ -24,6 +24,16 @@ public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
         super(opcode); 
     }
     
+    public InvokeInterfaceInstruction(int opcode, int immediateShort, int count) {
+        super(opcode, immediateShort); 
+        this.count = count;
+    }
+    
+    
+    public int getSize() {
+        return super.getSize() + 2;
+    }
+
     /**
         Get the argument count of this instruction 
         @return the argument count

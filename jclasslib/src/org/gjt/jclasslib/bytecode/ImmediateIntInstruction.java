@@ -14,7 +14,7 @@ import java.io.*;
     Describes an instruction that is followed by an immediate int.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class ImmediateIntInstruction extends AbstractInstruction {
 
@@ -23,7 +23,16 @@ public class ImmediateIntInstruction extends AbstractInstruction {
     public ImmediateIntInstruction(int opcode) {
         super(opcode); 
     }
+
+    public ImmediateIntInstruction(int opcode, int immediateInt) {
+        super(opcode); 
+        this.immediateInt = immediateInt;
+    }
     
+    public int getSize() {
+        return super.getSize() + 4;
+    }
+
     /**
         Get the immediate int of this instruction.
         @return the int

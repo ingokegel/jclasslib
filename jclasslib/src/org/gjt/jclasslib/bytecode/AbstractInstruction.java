@@ -14,7 +14,7 @@ import java.io.*;
     Base class for all opcode instruction wrappers.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public abstract class AbstractInstruction implements Opcodes {
 
@@ -27,6 +27,14 @@ public abstract class AbstractInstruction implements Opcodes {
         this.opcode = opcode; 
     }
     
+    /**
+        Get the size in bytes of this instruction.
+        @return the size in bytes
+     */
+    public int getSize() {
+        return 1;
+    }
+
     /**
         Get the opcode of this instruction.
         @return the opcode

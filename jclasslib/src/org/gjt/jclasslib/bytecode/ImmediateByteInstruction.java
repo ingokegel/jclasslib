@@ -14,7 +14,7 @@ import java.io.*;
     Describes an instruction that is followed by an immediate unsigned byte.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:16 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class ImmediateByteInstruction extends AbstractInstruction {
 
@@ -27,6 +27,15 @@ public class ImmediateByteInstruction extends AbstractInstruction {
         this.wide = wide;
     }
     
+    public ImmediateByteInstruction(int opcode, boolean wide, int immediateByte) {
+        this(opcode, wide); 
+        this.immediateByte = immediateByte;
+    }
+    
+    public int getSize() {
+        return super.getSize() + (wide ? 2 : 1);
+    }
+
     /**
         Get the immediate unsigned byte of this instruction.
         @return the byte

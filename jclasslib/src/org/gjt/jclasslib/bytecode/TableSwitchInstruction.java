@@ -14,7 +14,7 @@ import java.io.*;
     Describes the <tt>tableswitch</tt> instruction.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class TableSwitchInstruction extends PaddedInstruction {
 
@@ -27,6 +27,10 @@ public class TableSwitchInstruction extends PaddedInstruction {
         super(opcode); 
     }
     
+    public int getSize() {
+        return super.getSize() + 12 + 4 * jumpOffsets.length;
+    }
+
     /**
         Get the default offset of the branch of this instruction.
         @return the offset

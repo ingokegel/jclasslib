@@ -14,7 +14,7 @@ import java.io.*;
     Describes the <tt>multianewarray</tt> instruction.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:16 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class MultianewarrayInstruction extends ImmediateShortInstruction {
 
@@ -24,6 +24,10 @@ public class MultianewarrayInstruction extends ImmediateShortInstruction {
         super(opcode); 
     }
     
+    public int getSize() {
+        return super.getSize() + 1;
+    }
+
     /**
         Get the number of dimensions for the new array.
         @return the number of dimensions

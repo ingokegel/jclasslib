@@ -14,7 +14,7 @@ import java.io.*;
     Describes the <tt>iinc</tt> instruction.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class IncrementInstruction extends ImmediateByteInstruction {
 
@@ -23,7 +23,17 @@ public class IncrementInstruction extends ImmediateByteInstruction {
     public IncrementInstruction(int opcode, boolean wide) {
         super(opcode, wide); 
     }
+
+    public IncrementInstruction(int opcode, boolean wide, int immediateByte, int incrementConst) {
+        super(opcode, wide, immediateByte); 
+        this.incrementConst = incrementConst;
+    }
     
+    
+    public int getSize() {
+        return super.getSize() + (wide ? 2 : 1);
+    }
+
     /**
         Get the increment of this instruction.
         @return the increment

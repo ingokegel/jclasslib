@@ -14,14 +14,23 @@ import java.io.*;
     Describes an instruction that is followed by an immediate unsigned short.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
 */
 public class ImmediateShortInstruction extends AbstractInstruction {
 
     private int immediateShort;
    
+    public int getSize() {
+        return super.getSize() + 2;
+    }
+
     public ImmediateShortInstruction(int opcode) {
         super(opcode); 
+    }
+    
+    public ImmediateShortInstruction(int opcode, int immediateShort) {
+        super(opcode); 
+        this.immediateShort = immediateShort;
     }
     
     /**
