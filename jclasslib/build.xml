@@ -115,7 +115,7 @@ clean            : Delete all generated files and directories.
         <jar jarfile="${build.dir}/${build.jar.filename.prefix}.jar"
              basedir="${build.dir}"
              manifest="${src.dir}/${build.manifest.jar.filename}"
-             compress="false">
+             compress="true">
              
              
              <exclude name="**/nbmodule/*"/>
