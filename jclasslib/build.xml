@@ -18,16 +18,16 @@
 
   <!-- Build properties -->
   <property name="build.dir" value="build"/>
-  <property name="build.jar" value="${build.dir}/jclasslib.jar" />
-  <property name="build.library.jar" value="${build.dir}/jclasslib-library.jar" />
-  
-  <property name="build.nbmodule.dir" value="${build.dir}/netbeans" />
-  <property name="build.nbmodule.modules.dir" value="${build.nbmodule.dir}/modules" />
-  <property name="build.nbmodule.jar" value="${build.nbmodule.modules.dir}/jclasslib.jar" />
-  <property name="build.nbmodule.file" value="${build.dir}/jclasslib.nbm" />
+  <property name="build.jar" value="${build.dir}/jclasslib.jar"/>
+  <property name="build.library.jar" value="${build.dir}/jclasslib-library.jar"/>
 
-  <property name="jar.manifest.filename" value="${service.dir}/jclasslib.mf" />
-  <property name="nbmodule.manifest.filename" value="${service.dir}/nbmodule.mf" />
+  <property name="build.nbmodule.dir" value="${build.dir}/netbeans"/>
+  <property name="build.nbmodule.modules.dir" value="${build.nbmodule.dir}/modules"/>
+  <property name="build.nbmodule.jar" value="${build.nbmodule.modules.dir}/jclasslib.jar"/>
+  <property name="build.nbmodule.file" value="${build.dir}/jclasslib.nbm"/>
+
+  <property name="jar.manifest.filename" value="${service.dir}/jclasslib.mf"/>
+  <property name="nbmodule.manifest.filename" value="${service.dir}/nbmodule.mf"/>
 
   <!-- Location of source code -->
   <property name="src.dir" value="src"/>
@@ -35,12 +35,12 @@
   <!-- Location of documentation -->
   <property name="doc.dir" value="doc"/>
   <property name="doc.src.dir" value="${doc.dir}/src"/>
-  <property name="doc.src.docbook.dir" value="${doc.src.dir}/docbook" />
+  <property name="doc.src.docbook.dir" value="${doc.src.dir}/docbook"/>
   <property name="doc.javadoc.dir" value="${doc.dir}/api"/>
 
   <!-- Distribution properties -->
   <property name="dist.dir" value="dist"/>
-  <property name="dist.filename.prefix" value="jclasslib" />
+  <property name="dist.filename.prefix" value="jclasslib"/>
 
   <!-- Location of external libraries required for compilation -->
   <property name="lib-compile.dir" value="lib-compile"/>
@@ -61,8 +61,8 @@
 
   <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${lib-compile.dir}/antnbm.jar"/>
   <taskdef name="install4j"
-           classname="com.install4j.Install4JTask"
-           classpath="/opt/install4j/bin/install4j.jar:/Program Files/install4j/bin/install4j.jar:/Programme/install4j/bin/install4j.jar"/>
+    classname="com.install4j.Install4JTask"
+    classpath="/opt/install4j/bin/install4j.jar:/Program Files/install4j/bin/install4j.jar:/Programme/install4j/bin/install4j.jar"/>
 
   <!-- Make all standard directories -->
   <target name="init">
@@ -81,7 +81,7 @@
 
   <target name="compile" depends="init" description="Compile source code">
     <javac srcdir="${src.dir}" destdir="${build.dir}">
-      <classpath refid="project.classpath" />
+      <classpath refid="project.classpath"/>
       <exclude name="**/nbmodule/*"/>
     </javac>
     <copy todir="${build.dir}">
@@ -95,8 +95,8 @@
 
   <target name="nb-compile" depends="init" description="Compile netbeans module">
     <javac srcdir="${src.dir}" destdir="${build.dir}">
-      <classpath refid="project.classpath" />
-      <classpath refid="netbeans.classpath" />
+      <classpath refid="project.classpath"/>
+      <classpath refid="netbeans.classpath"/>
     </javac>
     <copy todir="${build.dir}">
       <fileset dir="${src.dir}">
@@ -109,9 +109,9 @@
 
   <target name="jar" depends="compile" description="Assemble source code and images into jar file">
     <jar jarfile="${build.jar}"
-         basedir="${build.dir}"
-         manifest="${jar.manifest.filename}"
-         compress="false">
+      basedir="${build.dir}"
+      manifest="${jar.manifest.filename}"
+      compress="false">
 
 
       <exclude name="**/nbmodule/*"/>
@@ -119,8 +119,8 @@
       <exclude name="**/*.html"/>
     </jar>
     <jar jarfile="${build.library.jar}"
-         basedir="${build.dir}"
-         compress="false">
+      basedir="${build.dir}"
+      compress="false">
 
 
       <include name="org/gjt/jclasslib/bytecode/**"/>
@@ -133,76 +133,71 @@
   <target name="nb-module" depends="nb-compile" description="Generate Netbeans module">
     <condition property="keystoreIsDefault" value="true">
       <equals arg1="${keystore.password}" arg2=""/>
-    </condition>      
-    <antcall target="testKeystorePassword"/>
+    </condition>
 
     <jar jarfile="${build.nbmodule.jar}"
-         basedir="${build.dir}"
-         manifest="${nbmodule.manifest.filename}">
+      basedir="${build.dir}"
+      manifest="${nbmodule.manifest.filename}">
 
       <include name="org/**"/>
       <exclude name="**/*.html"/>
     </jar>
     <makenbm file="${build.nbmodule.file}"
-             topdir="${build.dir}"
-             module="${build.nbmodule.jar}"
-             homepage="http://www.ej-technologies.com/"
-             distribution="http://www.ej-technologies.com/products/jclasslib/overview.html">
+      topdir="${build.dir}"
+      module="${build.nbmodule.jar}"
+      homepage="http://www.ej-technologies.com/"
+      distribution="http://www.ej-technologies.com/products/jclasslib/overview.html">
       <license file="${license.file}"/>
-      <signature keystore="${keystore.file}" storepass="${keystore.password}" alias="ejt"/>
     </makenbm>
   </target>
 
-  <!-- test if the keystore password has been supplied -->
-  <target name="testKeystorePassword" if="keystoreIsDefault">
-    <fail message="please supply keystore.password"/>
+  <target name="dist" depends="clean,jar,doc,javadoc,nb-module" description="Create distribution with install4j">
   </target>
 
-  <target name="dist" depends="clean,jar,doc,javadoc,nb-module" description="Create distribution with install4j">
-
-    <install4j projectfile="${service.dir}/jclasslib.install4j" release="${jclasslib.version}"/>          
+  <target name="media" depends="clean,dist" description="Create media files with install4j">
+    <install4j projectfile="${service.dir}/jclasslib.install4j" release="${jclasslib.version}"/>
   </target>
 
   <target name="doc" description="Generate HTML help document from docbook source file">
-  
-    <available file="${doc.src.docbook.dir}" property="docbook.available" />
-    <antcall target="copyDocbook" />
-  
+
+    <available file="${doc.src.docbook.dir}" property="docbook.available"/>
+    <antcall target="copyDocbook"/>
+
     <style basedir="${doc.src.dir}"
-           destdir="${doc.dir}"
-           includes="*.xml"
-           extension=".html"
-           style="${doc.src.dir}/doc.xsl"/>
+      destdir="${doc.dir}"
+      includes="*.xml"
+      extension=".html"
+      style="${doc.src.dir}/doc.xsl"/>
 
   </target>
 
   <!-- Helper target to copy docbook.zip to suitable location, if not already present -->
   <target name="copyDocbook" unless="docbook.available">
 
-    <mkdir dir="${doc.src.docbook.dir}" />
-    <unzip src="${lib-compile.dir}/docbook.zip" dest="${doc.src.docbook.dir}" />
+    <mkdir dir="${doc.src.docbook.dir}"/>
+    <unzip src="${lib-compile.dir}/docbook.zip" dest="${doc.src.docbook.dir}"/>
 
   </target>
 
   <target name="javadoc" depends="init" description="Generate javadoc">
 
     <javadoc sourcepath="${src.dir}:"
-             destdir="${doc.javadoc.dir}"
-             packagenames="org.gjt.jclasslib.*"
-             classpathref="netbeans.classpath"
-             overview="${doc.src.dir}/overview.html"
-             stylesheetfile="${doc.dir}/doc.css"
-             header="&lt;b&gt;&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;ej-technologies&lt;/a&gt;&lt;/b&gt;"
-             windowtitle="jclasslib API documentation"
-             doctitle="&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;&lt;img border='0' src='../images/ej-technologies.gif' &gt;&lt;/a&gt;"
-    >
+      destdir="${doc.javadoc.dir}"
+      packagenames="org.gjt.jclasslib.*"
+      classpathref="netbeans.classpath"
+      overview="${doc.src.dir}/overview.html"
+      stylesheetfile="${doc.dir}/doc.css"
+      header="&lt;b&gt;&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;ej-technologies&lt;/a&gt;&lt;/b&gt;"
+      windowtitle="jclasslib API documentation"
+      doctitle="&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;&lt;img border='0' src='../images/ej-technologies.gif' &gt;&lt;/a&gt;"
+      >
 
       <link offline="true"
-            href="http://www.netbeans.org/download/apis/"
-            packagelistLoc="${doc.src.dir}/offline-netbeans"/>
+        href="http://www.netbeans.org/download/apis/"
+        packagelistLoc="${doc.src.dir}/offline-netbeans"/>
       <link offline="true"
-            href="http://java.sun.com/products/jdk/1.4/docs/api/"
-            packagelistLoc="${doc.src.dir}/offline-java"/>
+        href="http://java.sun.com/products/jdk/1.4/docs/api/"
+        packagelistLoc="${doc.src.dir}/offline-java"/>
 
 
     </javadoc>

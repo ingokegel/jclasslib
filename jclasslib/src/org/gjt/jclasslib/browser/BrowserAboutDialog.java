@@ -15,17 +15,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
-    About dialog.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:00:22 $
-*/
+ * About dialog.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+ * @version $Revision: 1.2 $ $Date: 2005-01-14 15:01:03 $
+ */
 public class BrowserAboutDialog extends JDialog {
 
     private JButton btnOk;
 
     /**
      * Constructor.
+     *
      * @param parent parent frame.
      */
     public BrowserAboutDialog(JFrame parent) {
@@ -57,7 +58,7 @@ public class BrowserAboutDialog extends JDialog {
         contentPane.add(label, gc);
         gc.insets.top = 5;
         contentPane.add(new JLabel("Version " + BrowserApplication.APPLICATION_VERSION), gc);
-        contentPane.add(new JLabel("Copyright ej-technologies GmbH, 2001-2003"), gc);
+        contentPane.add(new JLabel("Copyright ej-technologies GmbH, 2001-2005"), gc);
         contentPane.add(new JLabel("Licensed under the General Public License"), gc);
 
         gc.weighty = 0;
