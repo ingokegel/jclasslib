@@ -19,7 +19,7 @@ import java.util.*;
     <tt>DesktopManager</tt> for MDI application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-18 12:52:30 $
+    @version $Revision: 1.4 $ $Date: 2002-02-18 17:05:08 $
 */
 public class BasicDesktopManager extends DefaultDesktopManager
                                  implements VetoableChangeListener,
@@ -205,9 +205,9 @@ public class BasicDesktopManager extends DefaultDesktopManager
         int rows = sqrt;
         int cols = sqrt;
         if (rows * cols < framesCount) {
-            rows++;
+            cols++;
             if (rows * cols < framesCount) {
-                cols++;
+                rows++;
             }
         }
         
