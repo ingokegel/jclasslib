@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser.detail.attributes;
 
 import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.browser.detail.attributes.code.*;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -19,16 +20,20 @@ import java.awt.*;
     panes in its tabbed pane.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:19:03 $
 */
 public class CodeAttributeDetailPane extends AbstractDetailPane {
 
     private JTabbedPane tabbedPane;
     
-    private CodeAttributeExceptionTableDetailPane exceptionTablePane;
-    private CodeAttributeByteCodeDetailPane byteCodePane;
-    private CodeAttributeMiscDetailPane miscPane;
+    private ExceptionTableDetailPane exceptionTablePane;
+    private ByteCodeDetailPane byteCodePane;
+    private MiscDetailPane miscPane;
     
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public CodeAttributeDetailPane(BrowserServices services) {
         super(services);
     }
@@ -40,16 +45,16 @@ public class CodeAttributeDetailPane extends AbstractDetailPane {
     }
     
     /**
-        Get the <tt>CodeAttributeByteCodeDetailPane</tt> showing the bytecode
+        Get the <tt>ByteCodeDetailPane</tt> showing the code
         of this <tt>Code</tt> attribute.
-        @return the <tt>CodeAttributeByteCodeDetailPane</tt>
+        @return the <tt>ByteCodeDetailPane</tt>
      */
-    public CodeAttributeByteCodeDetailPane getCodeAttributeByteCodeDetailPane() {
+    public ByteCodeDetailPane getCodeAttributeByteCodeDetailPane() {
         return byteCodePane;
     }
     
     /**
-        Select the <tt>CodeAttributeByteCodeDetailPane</tt> showing the bytecode
+        Select the <tt>ByteCodeDetailPane</tt> showing the code
         of this <tt>Code</tt> attribute.
      */
     public void selectByteCodeDetailPane() {
@@ -66,17 +71,17 @@ public class CodeAttributeDetailPane extends AbstractDetailPane {
     }
 
     private JPanel buildByteCodePane() {
-        byteCodePane = new CodeAttributeByteCodeDetailPane(services);
+        byteCodePane = new ByteCodeDetailPane(services);
         return byteCodePane;
     }
 
     private JPanel buildExceptionTablePane() {
-        exceptionTablePane = new CodeAttributeExceptionTableDetailPane(services);
+        exceptionTablePane = new ExceptionTableDetailPane(services);
         return exceptionTablePane;
     }
 
     private JPanel buildMiscPane() {
-        miscPane = new CodeAttributeMiscDetailPane(services);
+        miscPane = new MiscDetailPane(services);
         return miscPane;
     }
     
