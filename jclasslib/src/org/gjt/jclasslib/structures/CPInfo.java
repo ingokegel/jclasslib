@@ -13,11 +13,11 @@ import java.io.DataInput;
 import java.io.IOException;
 
 /**
-    Base class for all constant pool entries in the <tt>constants</tt> package.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:52:54 $
-*/
+ * Base class for all constant pool entries in the <tt>constants</tt> package.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
+ * @version $Revision: 1.6 $ $Date: 2004-12-28 13:04:32 $
+ */
 public abstract class CPInfo extends AbstractStructure {
 
     public static final byte CONSTANT_CLASS = 7;
@@ -31,7 +31,7 @@ public abstract class CPInfo extends AbstractStructure {
     public static final byte CONSTANT_DOUBLE = 6;
     public static final byte CONSTANT_NAME_AND_TYPE = 12;
     public static final byte CONSTANT_UTF8 = 1;
-    
+
     public static final String CONSTANT_CLASS_VERBOSE = "CONSTANT_Class_info";
     public static final String CONSTANT_FIELDREF_VERBOSE = "CONSTANT_Fieldref_info";
     public static final String CONSTANT_METHODREF_VERBOSE = "CONSTANT_Methodref_info";
@@ -45,34 +45,34 @@ public abstract class CPInfo extends AbstractStructure {
     public static final String CONSTANT_UTF8_VERBOSE = "CONSTANT_Utf8_info";
 
     /**
-        Factory method for creating <tt>CPInfo</tt> structures. <p>
-        A <tt>CPInfo</tt> of the appropriate subtype from the <tt>constants</tt> package
-        is created. <p>
-     
-        @param in the <tt>DataInput</tt> from which to read the <tt>CPInfo</tt> structure
-        @param classFile the parent class file of the structure to be created
-        @return the new <tt>CPInfo</tt> structure
-        @throws InvalidByteCodeException if the byte code is invalid
-        @throws IOException if an exception occurs with the <tt>DataInput</tt>
-    */
+     * Factory method for creating <tt>CPInfo</tt> structures. <p>
+     * A <tt>CPInfo</tt> of the appropriate subtype from the <tt>constants</tt> package
+     * is created. <p>
+     *
+     * @param in        the <tt>DataInput</tt> from which to read the <tt>CPInfo</tt> structure
+     * @param classFile the parent class file of the structure to be created
+     * @return the new <tt>CPInfo</tt> structure
+     * @throws InvalidByteCodeException if the byte code is invalid
+     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     */
     public static CPInfo create(DataInput in, ClassFile classFile)
-        throws InvalidByteCodeException, IOException {
-        
+            throws InvalidByteCodeException, IOException {
+
         CPInfo cpInfo;
-        
+
         byte tag = in.readByte();
 
         switch (tag) {
-            case CONSTANT_CLASS: 
+            case CONSTANT_CLASS:
                 cpInfo = new ConstantClassInfo();
                 break;
-            case CONSTANT_FIELDREF: 
+            case CONSTANT_FIELDREF:
                 cpInfo = new ConstantFieldrefInfo();
                 break;
-            case CONSTANT_METHODREF: 
+            case CONSTANT_METHODREF:
                 cpInfo = new ConstantMethodrefInfo();
                 break;
-            case CONSTANT_INTERFACE_METHODREF: 
+            case CONSTANT_INTERFACE_METHODREF:
                 cpInfo = new ConstantInterfaceMethodrefInfo();
                 break;
             case CONSTANT_STRING:
@@ -101,41 +101,44 @@ public abstract class CPInfo extends AbstractStructure {
         }
         cpInfo.setClassFile(classFile);
         cpInfo.read(in);
-        
+
         return cpInfo;
     }
 
 
     /**
-        Get the value of the <tt>tag</tt> field of the <tt>cp_info</tt> structure.
-        @return the tag
+     * Get the value of the <tt>tag</tt> field of the <tt>cp_info</tt> structure.
+     *
+     * @return the tag
      */
     public abstract byte getTag();
 
     /**
-        Get the verbose description of the <tt>tag</tt> field of the
-        <tt>cp_info</tt> structure.
-        @return the verbose description
+     * Get the verbose description of the <tt>tag</tt> field of the
+     * <tt>cp_info</tt> structure.
+     *
+     * @return the verbose description
      */
     public abstract String getTagVerbose();
-    
+
     /**
-        Get the verbose description of the content of the constant pool entry.
-        @throws InvalidByteCodeException if the byte code is invalid
-        @return the verbose description
+     * Get the verbose description of the content of the constant pool entry.
+     *
+     * @return the verbose description
+     * @throws InvalidByteCodeException if the byte code is invalid
      */
     public String getVerbose() throws InvalidByteCodeException {
         return "";
     }
 
     /**
-        Skip a <tt>CPInfo</tt> structure in a <tt>DataInput</tt>. <p>
-     
-        @param in the <tt>DataInput</tt> from which to read the <tt>CPInfo</tt> structure
-        @return the number of bytes skipped
-        @throws InvalidByteCodeException if the byte code is invalid
-        @throws IOException if an exception occurs with the <tt>DataInput</tt>
-    */
+     * Skip a <tt>CPInfo</tt> structure in a <tt>DataInput</tt>. <p>
+     *
+     * @param in the <tt>DataInput</tt> from which to read the <tt>CPInfo</tt> structure
+     * @return the number of bytes skipped
+     * @throws InvalidByteCodeException if the byte code is invalid
+     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     */
     public static int skip(DataInput in)
             throws InvalidByteCodeException, IOException {
 
@@ -144,12 +147,12 @@ public abstract class CPInfo extends AbstractStructure {
         byte tag = in.readByte();
 
         switch (tag) {
-            case CONSTANT_CLASS: 
+            case CONSTANT_CLASS:
                 in.skipBytes(ConstantClassInfo.SIZE);
                 break;
-            case CONSTANT_FIELDREF: 
-            case CONSTANT_METHODREF: 
-            case CONSTANT_INTERFACE_METHODREF: 
+            case CONSTANT_FIELDREF:
+            case CONSTANT_METHODREF:
+            case CONSTANT_INTERFACE_METHODREF:
                 in.skipBytes(ConstantReference.SIZE);
                 break;
             case CONSTANT_STRING:
@@ -174,15 +177,21 @@ public abstract class CPInfo extends AbstractStructure {
             default:
                 throw new InvalidByteCodeException("invalid constant pool entry with unknown tag " + tag);
         }
-        
+
         return offset;
     }
 
     public boolean equals(Object object) {
         return object instanceof CPInfo;
     }
-    
+
     public int hashCode() {
         return 0;
+    }
+
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        if (accessFlags != 0)
+            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
+        return "";
     }
 }

@@ -10,51 +10,55 @@ package org.gjt.jclasslib.structures;
 import java.io.*;
 
 /**
-    Describes a method in a <tt>ClassFile</tt> structure.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
-*/
+ * Describes a method in a <tt>ClassFile</tt> structure.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
+ * @version $Revision: 1.3 $ $Date: 2004-12-28 13:04:32 $
+ */
 public class MethodInfo extends ClassMember {
 
     /**
-        Factory method for creating <tt>MethodInfo</tt> structures from a <tt>DataInput</tt>.
-     
-        @param in the <tt>DataInput</tt> from which to read the <tt>MethodInfo</tt> structure
-        @param classFile the parent class file of the structure to be created
-        @return the new <tt>MethodInfo</tt> structure
-        @throws InvalidByteCodeException if the byte code is invalid
-        @throws IOException if an exception occurs with the <tt>DataInput</tt>
-    */
+     * Factory method for creating <tt>MethodInfo</tt> structures from a <tt>DataInput</tt>.
+     *
+     * @param in        the <tt>DataInput</tt> from which to read the <tt>MethodInfo</tt> structure
+     * @param classFile the parent class file of the structure to be created
+     * @return the new <tt>MethodInfo</tt> structure
+     * @throws InvalidByteCodeException if the byte code is invalid
+     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     */
     public static MethodInfo create(DataInput in, ClassFile classFile)
-        throws InvalidByteCodeException, IOException {
-            
+            throws InvalidByteCodeException, IOException {
+
         MethodInfo methodInfo = new MethodInfo();
         methodInfo.setClassFile(classFile);
         methodInfo.read(in);
 
         return methodInfo;
     }
-    
+
     public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-        
+            throws InvalidByteCodeException, IOException {
+
         super.read(in);
 
         if (debug) debug("read ");
     }
 
     public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         super.write(out);
         if (debug) debug("wrote ");
     }
 
     protected void debug(String message) {
-        super.debug(message + "method with access flags " + printAccessFlags(accessFlags) + 
-              ", name_index " + nameIndex + ", descriptor_index " + descriptorIndex + 
-              ", " + getLength(attributes) + " attributes");
+        super.debug(message + "method with access flags " + printAccessFlags(accessFlags) +
+                ", name_index " + nameIndex + ", descriptor_index " + descriptorIndex +
+                ", " + getLength(attributes) + " attributes");
+    }
+
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        return printAccessFlagsVerbose(AccessFlags.METHOD_ACCESS_FLAGS, AccessFlags.METHOD_ACCESS_FLAGS_VERBOSE, accessFlags);
     }
 
 }

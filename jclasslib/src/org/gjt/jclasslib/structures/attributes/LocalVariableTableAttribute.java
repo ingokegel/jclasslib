@@ -7,73 +7,61 @@
 
 package org.gjt.jclasslib.structures.attributes;
 
-import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.IOException;
 
 /**
-    Describes an <tt>LocalVariableTable</tt> attribute structure.
+ * Describes an <tt>LocalVariableTable</tt> attribute structure.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
+ * @version $Revision: 1.5 $ $Date: 2004-12-28 13:04:32 $
+ */
+public class LocalVariableTableAttribute extends LocalVariableCommonAttribute {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:05 $
-*/
-public class LocalVariableTableAttribute extends AttributeInfo {
-
-    /** Name of the attribute as in the corresponding constant pool entry. */
+    /**
+     * Name of the attribute as in the corresponding constant pool entry.
+     */
     public static final String ATTRIBUTE_NAME = "LocalVariableTable";
 
-    private static final int INITIAL_LENGTH = 2;
-
-    private LocalVariableTableEntry[] localVariableTable;
-    
     /**
-        Get the list of local variable associations of the parent
-        <tt>Code</tt> structure as an array of <tt>LocalVariableTableEntry</tt> structures.
-        @return the array
+     * Get the list of local variable associations of the parent <tt>Code</tt>
+     * structure as an array of <tt>LocalVariableTableEntry</tt> structures.
+     *
+     * @return the array
      */
     public LocalVariableTableEntry[] getLocalVariableTable() {
-        return localVariableTable;
+        return (LocalVariableTableEntry[])localVariableTable;
     }
-    
+
     /**
-        Set the list of local variable associations of the parent
-        <tt>Code</tt> structure as an array of <tt>LocalVariableTableEntry</tt> structures.
-        @param localVariableTable the index
+     * Set the list of local variable associations of the parent <tt>Code</tt>
+     * structure as an array of <tt>LocalVariableTableEntry</tt> structures.
+     *
+     * @param localVariableTable the index
      */
     public void setLocalVariableTable(LocalVariableTableEntry[] localVariableTable) {
         this.localVariableTable = localVariableTable;
     }
-    
+
     public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
+            throws InvalidByteCodeException, IOException {
+        super.read(in);
+
         int localVariableTableLength = in.readUnsignedShort();
         localVariableTable = new LocalVariableTableEntry[localVariableTableLength];
-        for (int i = 0 ; i < localVariableTableLength; i++) {
+        for (int i = 0; i < localVariableTableLength; i++) {
             localVariableTable[i] = LocalVariableTableEntry.create(in, classFile);
         }
-        
+
         if (debug) debug("read ");
-    }
-
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        super.write(out);
-
-        int localVariableTableLength = getLength(localVariableTable);
-        
-        out.writeShort(localVariableTableLength);
-        for (int i = 0 ; i < localVariableTableLength; i++) {
-            localVariableTable[i].write(out);
-        }
-        if (debug) debug("wrote ");
     }
 
     public int getAttributeLength() {
         return INITIAL_LENGTH + getLength(localVariableTable) * LocalVariableTableEntry.LENGTH;
     }
+
 
     protected void debug(String message) {
         super.debug(message + "LocalVariableTable attribute with " + getLength(localVariableTable) + " entries");

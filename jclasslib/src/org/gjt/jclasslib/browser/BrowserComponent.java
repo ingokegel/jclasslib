@@ -19,15 +19,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
-    Visual component displaying a class file.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2004-02-10 16:05:45 $
-*/
+ * Visual component displaying a class file.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+ * @version $Revision: 1.9 $ $Date: 2004-12-28 13:04:31 $
+ */
 public class BrowserComponent extends JComponent
-                              implements TreeSelectionListener
-
-{
+        implements TreeSelectionListener {
 
     private BrowserHistory history;
     private BrowserServices services;
@@ -39,8 +37,9 @@ public class BrowserComponent extends JComponent
     private BrowserDetailPane detailPane;
 
     /**
-        Constructor.
-        @param services the associated browser services
+     * Constructor.
+     *
+     * @param services the associated browser services
      */
     public BrowserComponent(BrowserServices services) {
 
@@ -49,33 +48,37 @@ public class BrowserComponent extends JComponent
     }
 
     /**
-        Get the pane containing the tree structure for the shown class file.
-        @return the pane
+     * Get the pane containing the tree structure for the shown class file.
+     *
+     * @return the pane
      */
     public BrowserTreePane getTreePane() {
         return treePane;
     }
 
     /**
-        Get the pane containing the detail area for the specific tree node selected
-        in the <tt>BrowserTreePane</tt>.
-        @return the pane
+     * Get the pane containing the detail area for the specific tree node selected
+     * in the <tt>BrowserTreePane</tt>.
+     *
+     * @return the pane
      */
     public BrowserDetailPane getDetailPane() {
         return detailPane;
     }
 
     /**
-        Get the navigation history of this child window.
-        @return the history
+     * Get the navigation history of this child window.
+     *
+     * @return the history
      */
     public BrowserHistory getHistory() {
         return history;
     }
 
     /**
-        Construct a <tt>BrowserPath</tt> object for the curently selected path in the tree.
-        @return the browser path
+     * Construct a <tt>BrowserPath</tt> object for the curently selected path in the tree.
+     *
+     * @return the browser path
      */
     public BrowserPath getBrowserPath() {
 
@@ -101,7 +104,7 @@ public class BrowserComponent extends JComponent
             addClassMemberPathComponent(methodInfo, browserPath, selectionPath);
         } else if (category.equals(BrowserTreeNode.NODE_FIELD)) {
             FieldInfo fieldInfo = services.getClassFile().getFields()[categoryNodeIndex];
-            addClassMemberPathComponent(fieldInfo, browserPath,selectionPath);
+            addClassMemberPathComponent(fieldInfo, browserPath, selectionPath);
         } else {
             browserPath.addPathComponent(new IndexHolder(categoryNodeIndex));
         }
@@ -110,8 +113,9 @@ public class BrowserComponent extends JComponent
     }
 
     /**
-        Set the currently selected path in the tree by analyzing a <tt>BrowserPath</tt> object.
-        @param browserPath the browser path
+     * Set the currently selected path in the tree by analyzing a <tt>BrowserPath</tt> object.
+     *
+     * @param browserPath the browser path
      */
     public void setBrowserPath(BrowserPath browserPath) {
 
@@ -162,14 +166,14 @@ public class BrowserComponent extends JComponent
         tree.setSelectionPath(path);
         Object[] pathObjects = path.getPath();
         if (pathObjects.length > 2) {
-            TreePath categoryPath = new TreePath(new Object[] {pathObjects[0], pathObjects[1], pathObjects[2]});
+            TreePath categoryPath = new TreePath(new Object[]{pathObjects[0], pathObjects[1], pathObjects[2]});
             tree.scrollPathToVisible(categoryPath);
         }
 
     }
 
     /**
-        Rebuild tree view, clear history and try to set the same path in the browser as before.
+     * Rebuild tree view, clear history and try to set the same path in the browser as before.
      */
     public void rebuild() {
 
@@ -182,7 +186,7 @@ public class BrowserComponent extends JComponent
     }
 
     /**
-        Rebuild tree view and clear history.
+     * Rebuild tree view and clear history.
      */
     public void reset() {
 
@@ -196,19 +200,19 @@ public class BrowserComponent extends JComponent
 
 
     /**
-        Check whether anything is selected. If not select the first node.
+     * Check whether anything is selected. If not select the first node.
      */
     public void checkSelection() {
 
         JTree tree = treePane.getTree();
         if (services.getClassFile() == null) {
-			((CardLayout)detailPane.getLayout()).show(detailPane, BrowserTreeNode.NODE_NO_CONTENT);
-		} else {
-			if (tree.getSelectionPath() == null) {
-				BrowserTreeNode rootNode = (BrowserTreeNode)tree.getModel().getRoot();
-				tree.setSelectionPath(new TreePath(new Object[] {rootNode, rootNode.getFirstChild()}));
-			}
-		}
+            ((CardLayout)detailPane.getLayout()).show(detailPane, BrowserTreeNode.NODE_NO_CONTENT);
+        } else {
+            if (tree.getSelectionPath() == null) {
+                BrowserTreeNode rootNode = (BrowserTreeNode)tree.getModel().getRoot();
+                tree.setSelectionPath(new TreePath(new Object[]{rootNode, rootNode.getFirstChild()}));
+            }
+        }
     }
 
     public void valueChanged(TreeSelectionEvent selectionEvent) {
@@ -251,8 +255,8 @@ public class BrowserComponent extends JComponent
         detailPane = new BrowserDetailPane(services);
 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                                   buildTreePane(),
-                                   detailPane);
+                buildTreePane(),
+                detailPane);
 
         add(splitPane, BorderLayout.CENTER);
 

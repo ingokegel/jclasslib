@@ -15,17 +15,17 @@ import java.io.*;
 import java.util.HashMap;
 
 /**
-    The class file structure in which all other structures are hooked up.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.9 $ $Date: 2004-02-11 15:15:48 $
-*/
+ * The class file structure in which all other structures are hooked up.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
+ * @version $Revision: 1.10 $ $Date: 2004-12-28 13:04:32 $
+ */
 public class ClassFile extends AbstractStructureWithAttributes {
 
     /**
-        Set this JVM System property to true to skip reading of constant pool
-        entries. This is not advisable, since most sunsequent operations on the
-        class file structure will fail.
+     * Set this JVM System property to true to skip reading of constant pool
+     * entries. This is not advisable, since most sunsequent operations on the
+     * class file structure will fail.
      */
     public static final String SYSTEM_PROPERTY_SKIP_CONSTANT_POOL = "jclasslib.io.skipConstantPool";
 
@@ -46,7 +46,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
 
     /**
-        Constructor.
+     * Constructor.
      */
     public ClassFile() {
         skipConstantPool = Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_CONSTANT_POOL);
@@ -54,49 +54,55 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Get the minor version of the class file format.
-        @return the minor version
+     * Get the minor version of the class file format.
+     *
+     * @return the minor version
      */
     public int getMinorVersion() {
         return minorVersion;
     }
 
     /**
-        Set the minor version of the class file format.
-        @param minorVersion the minor version
+     * Set the minor version of the class file format.
+     *
+     * @param minorVersion the minor version
      */
     public void setMinorVersion(int minorVersion) {
         this.minorVersion = minorVersion;
     }
 
     /**
-        Get the major version of the class file format.
-        @return the major version
+     * Get the major version of the class file format.
+     *
+     * @return the major version
      */
     public int getMajorVersion() {
         return majorVersion;
     }
 
     /**
-        Set the major version of the class file format.
-        @param majorVersion the major version
+     * Set the major version of the class file format.
+     *
+     * @param majorVersion the major version
      */
     public void setMajorVersion(int majorVersion) {
         this.majorVersion = majorVersion;
     }
 
     /**
-        Get the array with all constant pool entries.
-        @return the array
+     * Get the array with all constant pool entries.
+     *
+     * @return the array
      */
     public CPInfo[] getConstantPool() {
         return constantPool;
     }
 
     /**
-        Get the index of an equivalent constant pool entry.
-        @param cpInfo the constant pool entry
-        @return the index, -1 if no equivalent constant pool entry can be found
+     * Get the index of an equivalent constant pool entry.
+     *
+     * @param cpInfo the constant pool entry
+     * @return the index, -1 if no equivalent constant pool entry can be found
      */
     public int getConstantPoolIndex(CPInfo cpInfo) {
         Integer index = (Integer)constantPoolEntryToIndex.get(cpInfo);
@@ -108,10 +114,11 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Set the array with all constant pool entries. An internal hash map
-        will need to be recalulated. If you add to the end of the constant
-        pool, use <tt>enlargeConstantPool</tt>.
-        @param constantPool the array
+     * Set the array with all constant pool entries. An internal hash map
+     * will need to be recalulated. If you add to the end of the constant
+     * pool, use <tt>enlargeConstantPool</tt>.
+     *
+     * @param constantPool the array
      */
     public void setConstantPool(CPInfo[] constantPool) {
         this.constantPool = constantPool;
@@ -121,10 +128,11 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Set the array with all constant pool entries where the new array
-        of constant pool entries starts with the old constant pool. If
-        you delete entries, use <tt>setConstantPool</tt>.
-        @param enlargedConstantPool the array
+     * Set the array with all constant pool entries where the new array
+     * of constant pool entries starts with the old constant pool. If
+     * you delete entries, use <tt>setConstantPool</tt>.
+     *
+     * @param enlargedConstantPool the array
      */
     public void enlargeConstantPool(CPInfo[] enlargedConstantPool) {
         int startIndex = constantPool == null ? 0 : constantPool.length;
@@ -137,178 +145,198 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Register the constant pool entry at a given index, so that it can
-        be found through the <tt>getConstantPoolIndex</tt> method.
-        @param index the index
+     * Register the constant pool entry at a given index, so that it can
+     * be found through the <tt>getConstantPoolIndex</tt> method.
+     *
+     * @param index the index
      */
     public void registerConstantPoolEntry(int index) {
         constantPoolEntryToIndex.put(constantPool[index], new Integer(index));
     }
 
     /**
-        Unregister the constant pool entry at a given index, so that it can
-        no longer be found through the <tt>getConstantPoolIndex</tt> method.
-        @param index the index
+     * Unregister the constant pool entry at a given index, so that it can
+     * no longer be found through the <tt>getConstantPoolIndex</tt> method.
+     *
+     * @param index the index
      */
     public void unregisterConstantPoolEntry(int index) {
         constantPoolEntryToIndex.remove(constantPool[index]);
     }
 
     /**
-        Get the access flags of this class.
-        @return the access flags
+     * Get the access flags of this class.
+     *
+     * @return the access flags
      */
     public int getAccessFlags() {
         return accessFlags;
     }
 
     /**
-        Set the access flags of this class.
-        @param accessFlags the access flags
+     * Set the access flags of this class.
+     *
+     * @param accessFlags the access flags
      */
     public void setAccessFlags(int accessFlags) {
         this.accessFlags = accessFlags;
     }
 
     /**
-        Get the constant pool index of this class.
-        @return the index
+     * Get the constant pool index of this class.
+     *
+     * @return the index
      */
     public int getThisClass() {
         return thisClass;
     }
 
     /**
-        Set the constant pool index of this class.
-        @param thisClass the index
+     * Set the constant pool index of this class.
+     *
+     * @param thisClass the index
      */
     public void setThisClass(int thisClass) {
         this.thisClass = thisClass;
     }
 
     /**
-        Get the name of this class.
-        @return the name
-        @throws InvalidByteCodeException
+     * Get the name of this class.
+     *
+     * @return the name
+     * @throws InvalidByteCodeException
      */
     public String getThisClassName() throws InvalidByteCodeException {
         return getConstantPoolEntryName(getThisClass());
     }
 
     /**
-        Get the constant pool index of the super class of this class.
-        @return the index
+     * Get the constant pool index of the super class of this class.
+     *
+     * @return the index
      */
     public int getSuperClass() {
         return superClass;
     }
 
     /**
-        Set the constant pool index of the super class of this class.
-        @param superClass the index
+     * Set the constant pool index of the super class of this class.
+     *
+     * @param superClass the index
      */
     public void setSuperClass(int superClass) {
         this.superClass = superClass;
     }
 
     /**
-        Get the name of the super class.
-        @return the name
-        @throws InvalidByteCodeException
+     * Get the name of the super class.
+     *
+     * @return the name
+     * @throws InvalidByteCodeException
      */
     public String getSuperClassName() throws InvalidByteCodeException {
         return getConstantPoolEntryName(getSuperClass());
     }
 
     /**
-        Get the array with the constant pool entries of all interfaces.
-        @return the array
+     * Get the array with the constant pool entries of all interfaces.
+     *
+     * @return the array
      */
     public int[] getInterfaces() {
         return interfaces;
     }
 
     /**
-        Set the array with the constant pool entries of all interfaces.
-        @param interfaces the array
+     * Set the array with the constant pool entries of all interfaces.
+     *
+     * @param interfaces the array
      */
     public void setInterfaces(int[] interfaces) {
         this.interfaces = interfaces;
     }
 
     /**
-        Get the array with the <tt>FieldInfo</tt> structures for the fields of this class.
-        @return the array
+     * Get the array with the <tt>FieldInfo</tt> structures for the fields of this class.
+     *
+     * @return the array
      */
     public FieldInfo[] getFields() {
         return fields;
     }
 
     /**
-        Set the array with the <tt>FieldInfo</tt> structures for the fields of this class.
-        @param fields the array
+     * Set the array with the <tt>FieldInfo</tt> structures for the fields of this class.
+     *
+     * @param fields the array
      */
     public void setFields(FieldInfo[] fields) {
         this.fields = fields;
     }
 
     /**
-        Get the array with the <tt>MethodInfo</tt> structures for the methods of this class.
-        @return the array
+     * Get the array with the <tt>MethodInfo</tt> structures for the methods of this class.
+     *
+     * @return the array
      */
     public MethodInfo[] getMethods() {
         return methods;
     }
 
     /**
-        Set the array with the <tt>MethodInfo</tt> structures for the methods of this class.
-        @param methods the array
+     * Set the array with the <tt>MethodInfo</tt> structures for the methods of this class.
+     *
+     * @param methods the array
      */
     public void setMethods(MethodInfo[] methods) {
         this.methods = methods;
     }
 
     /**
-        Get the the access flags of this class as a hex string.
-        @return the hex string
+     * Get the the access flags of this class as a hex string.
+     *
+     * @return the hex string
      */
     public String getFormattedAccessFlags() {
         return printAccessFlags(accessFlags);
     }
 
     /**
-        Get the verbose description of the access flags of this class.
-        @return the description
+     * Get the verbose description of the access flags of this class.
+     *
+     * @return the description
      */
     public String getAccessFlagsVerbose() {
         return printAccessFlagsVerbose(accessFlags);
     }
 
     /**
-        Get the <tt>ConstantUtf8Info</tt> constant pool entry at the specified index.
-        @param index the index
-        @return the constant pool entry
-        @throws InvalidByteCodeException if the entry is not a <tt>ConstantUtf8Info</tt>
+     * Get the <tt>ConstantUtf8Info</tt> constant pool entry at the specified index.
+     *
+     * @param index the index
+     * @return the constant pool entry
+     * @throws InvalidByteCodeException if the entry is not a <tt>ConstantUtf8Info</tt>
      */
     public ConstantUtf8Info getConstantPoolUtf8Entry(int index)
-        throws InvalidByteCodeException {
+            throws InvalidByteCodeException {
 
         return (ConstantUtf8Info)getConstantPoolEntry(index, ConstantUtf8Info.class);
     }
 
     /**
-        Get the constant pool entry at the specified index and cast it to a specified class.
-        @param index the index
-        @param entryClass the required subtype of <tt>CPInfo</tt>
-        @return the constant pool entry
-        @throws InvalidByteCodeException if the entry is of a different class than expected
+     * Get the constant pool entry at the specified index and cast it to a specified class.
+     *
+     * @param index      the index
+     * @param entryClass the required subtype of <tt>CPInfo</tt>
+     * @return the constant pool entry
+     * @throws InvalidByteCodeException if the entry is of a different class than expected
      */
     public CPInfo getConstantPoolEntry(int index, Class entryClass)
-        throws InvalidByteCodeException {
+            throws InvalidByteCodeException {
 
         if (!checkValidConstantPoolIndex(index)) {
-			return null;
-		}
+            return null;
+        }
 
         CPInfo cpInfo = constantPool[index];
 
@@ -320,24 +348,25 @@ public class ClassFile extends AbstractStructureWithAttributes {
             return cpInfo;
         } else {
             throw new InvalidByteCodeException("constant pool entry at " + index +
-                                               " is not assignable to " +
-                                               entryClass.getName());
+                    " is not assignable to " +
+                    entryClass.getName());
         }
     }
 
     /**
-        Get an approximate verbose description of the content of the constant pool entry
-        at the specified index.
-        @param index the index
-        @return the description
-        @throws InvalidByteCodeException if the entry is invalid
+     * Get an approximate verbose description of the content of the constant pool entry
+     * at the specified index.
+     *
+     * @param index the index
+     * @return the description
+     * @throws InvalidByteCodeException if the entry is invalid
      */
     public String getConstantPoolEntryName(int index)
-        throws InvalidByteCodeException {
+            throws InvalidByteCodeException {
 
         if (!checkValidConstantPoolIndex(index)) {
-			return null;
-		}
+            return null;
+        }
 
         CPInfo cpInfo = constantPool[index];
         if (cpInfo == null) {
@@ -348,11 +377,12 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Get the index of a field for given field name and signature.
-        @param name the field name.
-        @param descriptor the signature.
-        @return the index or <tt>-1</tt> if not found.
-        @throws InvalidByteCodeException
+     * Get the index of a field for given field name and signature.
+     *
+     * @param name       the field name.
+     * @param descriptor the signature.
+     * @return the index or <tt>-1</tt> if not found.
+     * @throws InvalidByteCodeException
      */
     public int getFieldIndex(String name, String descriptor) throws InvalidByteCodeException {
 
@@ -366,11 +396,12 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Get the <tt>FieldInfo</tt> for given field name and signature.
-        @param name the field name.
-        @param descriptor the signature.
-        @return the <tt>FieldInfo</tt> or <tt>null</tt> if not found.
-        @throws InvalidByteCodeException
+     * Get the <tt>FieldInfo</tt> for given field name and signature.
+     *
+     * @param name       the field name.
+     * @param descriptor the signature.
+     * @return the <tt>FieldInfo</tt> or <tt>null</tt> if not found.
+     * @throws InvalidByteCodeException
      */
     public FieldInfo getField(String name, String descriptor) throws InvalidByteCodeException {
 
@@ -383,11 +414,12 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Get the index of a method for given method name and signature.
-        @param name the method name.
-        @param descriptor the signature.
-        @return the index or <tt>-1</tt> if not found.
-        @throws InvalidByteCodeException
+     * Get the index of a method for given method name and signature.
+     *
+     * @param name       the method name.
+     * @param descriptor the signature.
+     * @return the index or <tt>-1</tt> if not found.
+     * @throws InvalidByteCodeException
      */
     public int getMethodIndex(String name, String descriptor) throws InvalidByteCodeException {
 
@@ -401,11 +433,12 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Get the <tt>MethodInfo</tt> for given method name and signature.
-        @param name the method name.
-        @param descriptor the signature.
-        @return the <tt>MethodInfo</tt> or <tt>null</tt> if not found.
-        @throws InvalidByteCodeException
+     * Get the <tt>MethodInfo</tt> for given method name and signature.
+     *
+     * @param name       the method name.
+     * @param descriptor the signature.
+     * @return the <tt>MethodInfo</tt> or <tt>null</tt> if not found.
+     * @throws InvalidByteCodeException
      */
     public MethodInfo getMethod(String name, String descriptor) throws InvalidByteCodeException {
 
@@ -418,7 +451,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         readMagicNumber(in);
         readVersion(in);
@@ -433,7 +466,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     public void write(DataOutput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         writeMagicNumber(in);
         writeVersion(in);
@@ -448,39 +481,36 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
     }
 
-    private boolean checkValidConstantPoolIndex(int index)
-        throws InvalidByteCodeException {
+    private boolean checkValidConstantPoolIndex(int index) {
 
         if (index < 1 || index >= constantPool.length) {
-			return false;
+            return false;
         }
         return true;
 
     }
 
     private void readMagicNumber(DataInput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         int magicNumber = in.readInt();
         if (magicNumber != MAGIC_NUMBER) {
             throw new InvalidByteCodeException("Invalid magic number 0x" +
-                                               Integer.toHexString(magicNumber) +
-                                               " instead of 0x" +
-                                               Integer.toHexString(MAGIC_NUMBER));
+                    Integer.toHexString(magicNumber) +
+                    " instead of 0x" +
+                    Integer.toHexString(MAGIC_NUMBER));
         }
 
         if (debug) debug("read magic number");
     }
 
-    private void writeMagicNumber(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    private void writeMagicNumber(DataOutput out) throws IOException {
 
         out.writeInt(MAGIC_NUMBER);
         if (debug) debug("wrote magic number");
     }
 
-    private void readVersion(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    private void readVersion(DataInput in) throws IOException {
 
         minorVersion = in.readUnsignedShort();
         if (debug) debug("read minor version " + minorVersion);
@@ -491,8 +521,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         checkMajorVersion(majorVersion);
     }
 
-    private void writeVersion(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    private void writeVersion(DataOutput out) throws IOException {
 
         out.writeShort(minorVersion);
         if (debug) debug("wrote minor version " + minorVersion);
@@ -504,7 +533,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     private void readConstantPool(DataInput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         constantPoolEntryToIndex.clear();
         int constantPoolCount = in.readUnsignedShort();
@@ -534,12 +563,13 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     private void writeConstantPool(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         int lastFreeIndex;
         for (lastFreeIndex = getLength(constantPool) - 1;
              lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null;
-             lastFreeIndex--) {}
+             lastFreeIndex--) {
+        }
 
         out.writeShort(lastFreeIndex + 1);
         if (debug) debug("wrote constant pool count " + (lastFreeIndex + 1));
@@ -559,50 +589,43 @@ public class ClassFile extends AbstractStructureWithAttributes {
         }
     }
 
-    private void readAccessFlags(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    private void readAccessFlags(DataInput in) throws IOException {
 
         accessFlags = in.readUnsignedShort();
         if (debug) debug("read access flags " + printAccessFlags(accessFlags));
     }
 
-    private void writeAccessFlags(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    private void writeAccessFlags(DataOutput out) throws IOException {
 
         out.writeShort(accessFlags);
         if (debug) debug("wrote access flags " + printAccessFlags(accessFlags));
     }
 
-    private void readThisClass(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    private void readThisClass(DataInput in) throws IOException {
 
         thisClass = in.readUnsignedShort();
         if (debug) debug("read this_class index " + thisClass);
     }
 
-    private void writeThisClass(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    private void writeThisClass(DataOutput out) throws IOException {
 
         out.writeShort(thisClass);
         if (debug) debug("wrote this_class index " + thisClass);
     }
 
-    private void readSuperClass(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    private void readSuperClass(DataInput in) throws IOException {
 
         superClass = in.readUnsignedShort();
         if (debug) debug("read super_class index " + superClass);
     }
 
-    private void writeSuperClass(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    private void writeSuperClass(DataOutput out) throws IOException {
 
         out.writeShort(superClass);
         if (debug) debug("wrote super_class index " + superClass);
     }
 
-    private void readInterfaces(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    private void readInterfaces(DataInput in) throws IOException {
 
         int interfacesCount = in.readUnsignedShort();
         if (debug) debug("read interfaces count " + interfacesCount);
@@ -616,8 +639,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
     }
 
-    private void writeInterfaces(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    private void writeInterfaces(DataOutput out) throws IOException {
 
         int interfacesCount = getLength(interfaces);
 
@@ -632,7 +654,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     private void readFields(DataInput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         int fieldsCount = in.readUnsignedShort();
         if (debug) debug("read fields count " + fieldsCount);
@@ -646,7 +668,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     private void writeFields(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         int fieldsCount = getLength(fields);
 
@@ -663,7 +685,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     private void readMethods(DataInput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         int methodsCount = in.readUnsignedShort();
         if (debug) debug("read methods count " + methodsCount);
@@ -677,7 +699,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     private void writeMethods(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         int methodsCount = getLength(methods);
 
@@ -694,14 +716,14 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     protected void readAttributes(DataInput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         super.readAttributes(in);
         if (debug) debug("read " + getLength(attributes) + " attributes for the ClassFile structure");
     }
 
     protected void writeAttributes(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         super.writeAttributes(out);
         if (debug) debug("wrote " + getLength(attributes) + " attributes for the ClassFile structure");
@@ -710,9 +732,12 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private void checkMajorVersion(int majorVersion) {
 
         if (majorVersion < 45 || majorVersion > 49) {
-            Log.warning("major version should be between 45 and 48 for JDK <= 1.5");
+            Log.warning("major version should be between 45 and 49 for JDK <= 1.5");
         }
 
     }
 
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        return printAccessFlagsVerbose(AccessFlags.CLASS_ACCESS_FLAGS, AccessFlags.CLASS_ACCESS_FLAGS_VERBOSE, accessFlags);
+    }
 }

@@ -12,34 +12,36 @@ import org.gjt.jclasslib.structures.*;
 import java.io.*;
 
 /**
-    Describes an exception table entry in a <tt>Code</tt> attribute structure.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:05 $
-*/
+ * Describes an exception table entry in a <tt>Code</tt> attribute structure.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
+ * @version $Revision: 1.5 $ $Date: 2004-12-28 13:04:31 $
+ */
 public class ExceptionTableEntry extends AbstractStructure {
 
-    /** Length in bytes of an exception table entry. */
+    /**
+     * Length in bytes of an exception table entry.
+     */
     public static final int LENGTH = 8;
-    
+
     private int startPc;
     private int endPc;
     private int handlerPc;
     private int catchType;
-    
+
     /**
-        Factory method for creating <tt>ExceptionTableEntry</tt> structures.
-     
-        @param in the <tt>DataInput</tt> from which to read the
-                  <tt>ExceptionTableEntry</tt> structure
-        @param classFile the parent class file of the structure to be created
-        @return the new <tt>ExceptionTableEntry</tt> structure
-        @throws InvalidByteCodeException if the byte code is invalid
-        @throws IOException if an exception occurs with the <tt>DataInput</tt>
-    */
+     * Factory method for creating <tt>ExceptionTableEntry</tt> structures.
+     *
+     * @param in        the <tt>DataInput</tt> from which to read the
+     *                  <tt>ExceptionTableEntry</tt> structure
+     * @param classFile the parent class file of the structure to be created
+     * @return the new <tt>ExceptionTableEntry</tt> structure
+     * @throws InvalidByteCodeException if the byte code is invalid
+     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     */
     public static ExceptionTableEntry create(DataInput in, ClassFile classFile)
-        throws InvalidByteCodeException, IOException {
-    
+            throws InvalidByteCodeException, IOException {
+
         ExceptionTableEntry exceptionTableEntry = new ExceptionTableEntry();
         exceptionTableEntry.setClassFile(classFile);
         exceptionTableEntry.read(in);
@@ -48,93 +50,101 @@ public class ExceptionTableEntry extends AbstractStructure {
     }
 
     /**
-        Constructor.
+     * Constructor.
      */
-    public ExceptionTableEntry(){
+    public ExceptionTableEntry() {
     }
 
     /**
-        Constructor.
-        @param startPc the <tt>start_pc</tt>
-        @param endPc the <tt>end_pc</tt>
-        @param handlerPc the <tt>handler_pc</tt>
-        @param catchType the constant pool index for the catch type of this exception table entry
+     * Constructor.
+     *
+     * @param startPc   the <tt>start_pc</tt>
+     * @param endPc     the <tt>end_pc</tt>
+     * @param handlerPc the <tt>handler_pc</tt>
+     * @param catchType the constant pool index for the catch type of this exception table entry
      */
-    public ExceptionTableEntry(int startPc, int endPc, int handlerPc, int catchType)
-    {
+    public ExceptionTableEntry(int startPc, int endPc, int handlerPc, int catchType) {
         this.startPc = startPc;
         this.endPc = endPc;
         this.handlerPc = handlerPc;
         this.catchType = catchType;
     }
-            
+
     /**
-        Get the <tt>start_pc</tt> of this exception table entry.
-        @return the <tt>start_pc</tt>
+     * Get the <tt>start_pc</tt> of this exception table entry.
+     *
+     * @return the <tt>start_pc</tt>
      */
     public int getStartPc() {
         return startPc;
     }
-    
+
     /**
-        Set the <tt>start_pc</tt> of this exception table entry.
-        @param startPc the <tt>start_pc</tt>
+     * Set the <tt>start_pc</tt> of this exception table entry.
+     *
+     * @param startPc the <tt>start_pc</tt>
      */
     public void setStartPc(int startPc) {
         this.startPc = startPc;
     }
 
     /**
-        Get the <tt>end_pc</tt> of this exception table entry.
-        @return the <tt>end_pc</tt>
+     * Get the <tt>end_pc</tt> of this exception table entry.
+     *
+     * @return the <tt>end_pc</tt>
      */
     public int getEndPc() {
         return endPc;
     }
-    
+
     /**
-        Set the <tt>end_pc</tt> of this exception table entry.
-        @param endPc the <tt>end_pc</tt>
+     * Set the <tt>end_pc</tt> of this exception table entry.
+     *
+     * @param endPc the <tt>end_pc</tt>
      */
     public void setEndPc(int endPc) {
         this.endPc = endPc;
     }
 
     /**
-        Get the <tt>handler_pc</tt> of this exception table entry.
-        @return the <tt>handler_pc</tt>
+     * Get the <tt>handler_pc</tt> of this exception table entry.
+     *
+     * @return the <tt>handler_pc</tt>
      */
     public int getHandlerPc() {
         return handlerPc;
     }
-    
+
     /**
-        Set the <tt>handler_pc</tt> of this exception table entry.
-        @param handlerPc the <tt>handler_pc</tt>
+     * Set the <tt>handler_pc</tt> of this exception table entry.
+     *
+     * @param handlerPc the <tt>handler_pc</tt>
      */
     public void setHandlerPc(int handlerPc) {
         this.handlerPc = handlerPc;
     }
 
     /**
-        Get the constant pool index for the catch type of this exception table entry.
-        @return the index
+     * Get the constant pool index for the catch type of this exception table entry.
+     *
+     * @return the index
      */
     public int getCatchType() {
         return catchType;
     }
 
     /**
-        Set the constant pool index for the catch type of this exception table entry.
-        @param catchType the index
+     * Set the constant pool index for the catch type of this exception table entry.
+     *
+     * @param catchType the index
      */
     public void setCatchType(int catchType) {
         this.catchType = catchType;
     }
 
     public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
+            throws InvalidByteCodeException, IOException {
+
         startPc = in.readUnsignedShort();
         endPc = in.readUnsignedShort();
         handlerPc = in.readUnsignedShort();
@@ -143,8 +153,8 @@ public class ExceptionTableEntry extends AbstractStructure {
     }
 
     public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
+            throws InvalidByteCodeException, IOException {
+
         super.write(out);
         out.writeShort(startPc);
         out.writeShort(endPc);
@@ -154,9 +164,15 @@ public class ExceptionTableEntry extends AbstractStructure {
     }
 
     protected void debug(String message) {
-        super.debug(message + "exception table entry with start_pc " + startPc + 
-              ", end_pc " + endPc + ", handler_pc " + handlerPc + 
-              ", catch_type index " + catchType);
+        super.debug(message + "exception table entry with start_pc " + startPc +
+                ", end_pc " + endPc + ", handler_pc " + handlerPc +
+                ", catch_type index " + catchType);
+    }
+
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        if (accessFlags != 0)
+            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
+        return "";
     }
 
 }

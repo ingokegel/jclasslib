@@ -13,14 +13,13 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import java.io.*;
 
 /**
-    Describes a <tt>CONSTANT_Utf8_info</tt> constant pool data structure.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:29 $
-*/
+ * Describes a <tt>CONSTANT_Utf8_info</tt> constant pool data structure.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+ * @version $Revision: 1.7 $ $Date: 2004-12-28 13:04:32 $
+ */
 public class ConstantUtf8Info extends CPInfo {
 
-    private byte[] bytes;
     private String string;
 
     public byte getTag() {
@@ -36,48 +35,52 @@ public class ConstantUtf8Info extends CPInfo {
     }
 
     /**
-        Get the byte array of the string in this entry.
-        @return the array
+     * Get the byte array of the string in this entry.
+     *
+     * @return the array
      */
     public byte[] getBytes() {
         return string.getBytes();
     }
 
     /**
-        Get the string in this entry.
-        @return the string
+     * Get the string in this entry.
+     *
+     * @return the string
      */
     public String getString() {
         return string;
     }
 
     /**
-        Set the byte array of the string in this entry.
-        @param bytes the array
-        @deprecated use <tt>setString</tt> instead
+     * Set the byte array of the string in this entry.
+     *
+     * @param bytes the array
+     * @deprecated use <tt>setString</tt> instead
      */
     public void setBytes(byte[] bytes) {
         string = new String(bytes);
     }
 
     /**
-        Set the string in this entry.
-        @param string the string
+     * Set the string in this entry.
+     *
+     * @param string the string
      */
     public void setString(String string) {
         this.string = string;
     }
 
     public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         string = in.readUTF();
 
-		if (debug) debug("read ");
+        if (debug) debug("read ");
     }
 
     public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+            throws InvalidByteCodeException, IOException {
 
         out.writeByte(CONSTANT_UTF8);
         out.writeUTF(string);
@@ -85,8 +88,8 @@ public class ConstantUtf8Info extends CPInfo {
     }
 
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with length " + getLength(bytes) +
-                    " (\"" + string  + "\")");
+        super.debug(message + getTagVerbose() + " with length " + string.length() +
+                " (\"" + string + "\")");
     }
 
     public boolean equals(Object object) {
@@ -100,6 +103,6 @@ public class ConstantUtf8Info extends CPInfo {
     public int hashCode() {
         return super.hashCode() ^ string.hashCode();
     }
-    
+
 
 }

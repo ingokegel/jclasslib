@@ -27,21 +27,21 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
-    A child window of the class file browser application.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2004-02-10 16:06:56 $
-*/
+ * A child window of the class file browser application.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+ * @version $Revision: 1.9 $ $Date: 2004-12-28 13:04:31 $
+ */
 public class BrowserInternalFrame extends BasicInternalFrame
-                                  implements BrowserServices {
+        implements BrowserServices {
 
 
     /**
-        Constructor for creating a derived <tt>BasicInternalFrame</tt> with
-        an initialization parameter.
+     * Constructor for creating a derived <tt>BasicInternalFrame</tt> with
+     * an initialization parameter.
      */
     public static final Class[] CONSTRUCTOR_ARGUMENTS =
-        new Class[] {BasicDesktopManager.class, WindowState.class};
+            new Class[]{BasicDesktopManager.class, WindowState.class};
 
     private String fileName;
     private ClassFile classFile;
@@ -51,10 +51,11 @@ public class BrowserInternalFrame extends BasicInternalFrame
     private BrowserComponent browserComponent;
 
     /**
-        Constructor.
-        @param desktopManager the associated desktop manager
-        @param windowState the window state object. The frame will load the class file from
-                           information present within this object.
+     * Constructor.
+     *
+     * @param desktopManager the associated desktop manager
+     * @param windowState    the window state object. The frame will load the class file from
+     *                       information present within this object.
      */
     public BrowserInternalFrame(BasicDesktopManager desktopManager, WindowState windowState) {
         super(desktopManager, windowState.getFileName());
@@ -98,13 +99,11 @@ public class BrowserInternalFrame extends BasicInternalFrame
 
         FindResult findResult = getParentFrame().getConfig().findClass(className);
         while (findResult == null) {
-            int result = GUIHelper.showOptionDialog(
-                    getParentFrame(),
+            int result = GUIHelper.showOptionDialog(getParentFrame(),
                     "The class " + className + " could not be found.\n" +
                     "You can check your classpath configuration and try again.",
-                    new String[] {"Setup classpath", "Cancel"},
-                    JOptionPane.WARNING_MESSAGE
-            );
+                    new String[]{"Setup classpath", "Cancel"},
+                    JOptionPane.WARNING_MESSAGE);
             if (result == 0) {
                 getParentFrame().getActionSetupClasspath().actionPerformed(new ActionEvent(this, 0, null));
                 findResult = getParentFrame().getConfig().findClass(className);
@@ -142,7 +141,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
     }
 
     /**
-        Reload class file.
+     * Reload class file.
      */
     public void reload() {
         readClassFile();
@@ -150,8 +149,9 @@ public class BrowserInternalFrame extends BasicInternalFrame
     }
 
     /**
-        Get the file name for the displayed class file.
-        @return the file name
+     * Get the file name for the displayed class file.
+     *
+     * @return the file name
      */
     public String getFileName() {
         return fileName;
@@ -191,9 +191,9 @@ public class BrowserInternalFrame extends BasicInternalFrame
                 classFile = ClassFileReader.readFromFile(new File(fileName));
             }
         } catch (InvalidByteCodeException ex) {
-			ex.printStackTrace();
+            ex.printStackTrace();
         } catch (IOException ex) {
-			ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 

@@ -20,13 +20,13 @@ import java.awt.*;
 import java.util.HashMap;
 
 /**
-    Detail pane for an attribute of class <tt>org.gjt.jclasslib.structures.AttributeInfo</tt>.
-    This class is a container for the classes defined in the <tt>attributes</tt> 
-    subpackage and switches between the contained panes as required.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:13:57 $
-*/
+ * Detail pane for an attribute of class <tt>org.gjt.jclasslib.structures.AttributeInfo</tt>.
+ * This class is a container for the classes defined in the <tt>attributes</tt>
+ * subpackage and switches between the contained panes as required.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+ * @version $Revision: 1.6 $ $Date: 2004-12-28 13:04:31 $
+ */
 public class AttributeDetailPane extends AbstractDetailPane {
 
     private static final String SCREEN_UNKNOWN = "Unknown";
@@ -37,7 +37,12 @@ public class AttributeDetailPane extends AbstractDetailPane {
     private static final String SCREEN_SOURCE_FILE = "SourceFile";
     private static final String SCREEN_LINE_NUMBER_TABLE = "LineNumberTable";
     private static final String SCREEN_LOCAL_VARIABLE_TABLE = "LocalVariableTable";
-    
+    private static final String SCREEN_ENCLOSING_METHOD = "EnclosingMethod";
+    private static final String SCREEN_SIGNATURE = "Signature";
+    private static final String SCREEN_LOCAL_VARIABLE_TYPE_TABLE = "LocalVariableTypeTable";
+    private static final String SCREEN_RUNTIME_ANNOTATIONS = "RuntimeAnnotations";
+    private static final String SCREEN_ANNOTATION_DEFAULT = "AnnotationDefault";
+
     private HashMap attributeTypeToDetailPane;
     
     // Visual components
@@ -46,25 +51,26 @@ public class AttributeDetailPane extends AbstractDetailPane {
     private GenericAttributeDetailPane genericInfoPane;
 
     /**
-        Constructor.
-        @param services the associated browser services.
+     * Constructor.
+     *
+     * @param services the associated browser services.
      */
     public AttributeDetailPane(BrowserServices services) {
         super(services);
     }
 
     protected void setupComponent() {
-        
+
         buildGenericInfoPane();
         buildSpecificInfoPane();
-        
+
         setLayout(new BorderLayout());
-        
+
         add(genericInfoPane, BorderLayout.NORTH);
         add(specificInfoPane, BorderLayout.CENTER);
 
     }
-    
+
     public void show(TreePath treePath) {
 
         AttributeInfo attribute = findAttribute(treePath);
@@ -84,6 +90,16 @@ public class AttributeDetailPane extends AbstractDetailPane {
             paneName = SCREEN_LINE_NUMBER_TABLE;
         } else if (attribute instanceof LocalVariableTableAttribute) {
             paneName = SCREEN_LOCAL_VARIABLE_TABLE;
+        } else if (attribute instanceof EnclosingMethodAttribute) {
+            paneName = SCREEN_ENCLOSING_METHOD;
+        } else if (attribute instanceof SignatureAttribute) {
+            paneName = SCREEN_SIGNATURE;
+        } else if (attribute instanceof LocalVariableTypeTableAttribute) {
+            paneName = SCREEN_LOCAL_VARIABLE_TYPE_TABLE;
+        } else if (attribute instanceof RuntimeAnnotationsAttribute) {
+            paneName = SCREEN_RUNTIME_ANNOTATIONS;
+        } else if (attribute instanceof AnnotationDefaultAttribute) {
+            paneName = SCREEN_ANNOTATION_DEFAULT;
         }
 
         CardLayout layout = (CardLayout)specificInfoPane.getLayout();
@@ -94,19 +110,20 @@ public class AttributeDetailPane extends AbstractDetailPane {
             pane.show(treePath);
             layout.show(specificInfoPane, paneName);
         }
-        
+
         genericInfoPane.show(treePath);
     }
 
     /**
-        Get the <tt>CodeAttributeDetailPane</tt> showing the details of a
-        <tt>Code</tt> attribute.
-        @return the <tt>CodeAttributeDetailPane</tt>
+     * Get the <tt>CodeAttributeDetailPane</tt> showing the details of a
+     * <tt>Code</tt> attribute.
+     *
+     * @return the <tt>CodeAttributeDetailPane</tt>
      */
     public CodeAttributeDetailPane getCodeAttributeDetailPane() {
         return (CodeAttributeDetailPane)attributeTypeToDetailPane.get(SCREEN_CODE);
     }
-    
+
     private void buildGenericInfoPane() {
 
         genericInfoPane = new GenericAttributeDetailPane(services);
@@ -114,39 +131,54 @@ public class AttributeDetailPane extends AbstractDetailPane {
     }
 
     private void buildSpecificInfoPane() {
-        
+
         specificInfoPane = new JPanel();
         specificInfoPane.setBorder(createTitledBorder("Specific info:"));
-        
+
         specificInfoPane.setLayout(new CardLayout());
         attributeTypeToDetailPane = new HashMap();
         JPanel pane;
-        
+
         pane = new JPanel();
         specificInfoPane.add(pane, SCREEN_UNKNOWN);
-        
+
         addScreen(new ConstantValueAttributeDetailPane(services),
-                  SCREEN_CONSTANT_VALUE);
+                SCREEN_CONSTANT_VALUE);
 
         addScreen(new CodeAttributeDetailPane(services),
-                  SCREEN_CODE);
+                SCREEN_CODE);
 
         addScreen(new ExceptionsAttributeDetailPane(services),
-                  SCREEN_EXCEPTIONS);
+                SCREEN_EXCEPTIONS);
 
         addScreen(new InnerClassesAttributeDetailPane(services),
-                  SCREEN_INNER_CLASSES);
+                SCREEN_INNER_CLASSES);
 
         addScreen(new SourceFileAttributeDetailPane(services),
-                  SCREEN_SOURCE_FILE);
+                SCREEN_SOURCE_FILE);
 
         addScreen(new LineNumberTableAttributeDetailPane(services),
-                  SCREEN_LINE_NUMBER_TABLE);
+                SCREEN_LINE_NUMBER_TABLE);
 
         addScreen(new LocalVariableTableAttributeDetailPane(services),
-                  SCREEN_LOCAL_VARIABLE_TABLE);
+                SCREEN_LOCAL_VARIABLE_TABLE);
+
+        addScreen(new EnclosingMethodAttributeDetailPane(services),
+                SCREEN_ENCLOSING_METHOD);
+
+        addScreen(new SignatureAttributeDetailPane(services),
+                SCREEN_SIGNATURE);
+
+        addScreen(new LocalVariableTypeTableAttributeDetailPane(services),
+                SCREEN_LOCAL_VARIABLE_TYPE_TABLE);
+
+        addScreen(new RuntimeAnnotationsAttributeDetailPane(services),
+                SCREEN_RUNTIME_ANNOTATIONS);
+
+        addScreen(new AnnotationDefaultAttributeDetailPane(services),
+                SCREEN_ANNOTATION_DEFAULT);
     }
-    
+
     private void addScreen(AbstractDetailPane detailPane, String name) {
 
         if (detailPane instanceof FixedListDetailPane) {
@@ -156,11 +188,11 @@ public class AttributeDetailPane extends AbstractDetailPane {
         }
         attributeTypeToDetailPane.put(name, detailPane);
     }
-    
+
     private Border createTitledBorder(String title) {
         Border simpleBorder = BorderFactory.createEtchedBorder();
         Border titledBorder = BorderFactory.createTitledBorder(simpleBorder, title);
-        
+
         return titledBorder;
     }
 }
