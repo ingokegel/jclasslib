@@ -15,7 +15,7 @@ import java.util.*;
     Describes the <tt>lookupswitch</tt> instruction.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
+    @version $Revision: 1.3 $ $Date: 2002-02-20 08:03:17 $
 */
 public class LookupSwitchInstruction extends PaddedInstruction {
 
@@ -100,48 +100,5 @@ public class LookupSwitchInstruction extends PaddedInstruction {
         }
     }
 
-    /** Holds a single match-offset pair */
-    public static class MatchOffsetPair {
-        private int match;
-        private int offset;
-        
-        public MatchOffsetPair(int match, int offset) {
-            this.match = match;
-            this.offset = offset;
-        }
-        
-        /**
-            Get the match value of this match-offset pair.
-            @return the value
-         */
-        public int getMatch() {
-            return match;
-        }
-
-        /**
-            Set the match value of this match-offset pair.
-            @param match the value
-         */
-        public void setMatch(int match) {
-            this.match = match;
-        }
-
-        /**
-            Get the offset of the branch for this match-offset pair.
-            @return the offset
-         */
-        public int getOffset() {
-            return offset;
-        }
-
-        /**
-            Set the offset of the branch for this match-offset pair.
-            @param offset the offset
-         */
-        public void setOffset(int offset) {
-            this.offset = offset;
-        }
-        
-    }
     
 }
