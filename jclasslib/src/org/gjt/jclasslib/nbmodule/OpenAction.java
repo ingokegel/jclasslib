@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
     Action to open a class file.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2001-05-31 13:24:15 $
+    @version $Revision: 1.2 $ $Date: 2002-02-16 10:17:39 $
 */
 public class OpenAction extends CookieAction {
 
@@ -92,7 +92,11 @@ public class OpenAction extends CookieAction {
         } else if (foSource.hasExt("java")) {
             FileSystem targetFs = getTargetFileSystem();
             if (targetFs == null) {
-                return null;
+                try {
+                    targetFs = foSource.getFileSystem();
+                } catch (FileStateInvalidException ex) {
+                    return null;
+                }
             }
             
             String className = foSource.getPackageName('/');
