@@ -15,12 +15,12 @@ import org.gjt.jclasslib.structures.attributes.*;
     Detail pane showing the exception table about a <tt>Code</tt> attribute.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:24 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class CodeAttributeExceptionTableDetailPane extends AbstractAttributeListDetailPane {
 
-    public CodeAttributeExceptionTableDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public CodeAttributeExceptionTableDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute) {
@@ -69,7 +69,7 @@ public class CodeAttributeExceptionTableDetailPane extends AbstractAttributeList
             
             if (column == CATCH_TYPE_COLUMN_INDEX) {
                 int constantPoolIndex = exceptionTable[row].getCatchType();
-                ConstantPoolHyperlinkListener.link(parentFrame, constantPoolIndex);
+                ConstantPoolHyperlinkListener.link(services, constantPoolIndex);
             }
         }
         

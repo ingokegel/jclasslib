@@ -16,15 +16,15 @@ import javax.swing.tree.*;
     Base class for all constant pool entry detail panes.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public abstract class AbstractConstantInfoDetailPane extends FixedListDetailPane {
 
     /** Message which is diplayed if the constant pool entry is invalid */
     protected static final String MESSAGE_INVALID_CONSTANT_POOL_ENTRY = "invalid constant pool entry";
 
-    public AbstractConstantInfoDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public AbstractConstantInfoDetailPane(BrowserServices services) {
+        super(services);
     }
     
     /**

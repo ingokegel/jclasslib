@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing a <tt>CONSTANT_String</tt> constant pool entry.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -27,8 +27,8 @@ public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane
     private ExtendedJLabel lblString;
     private ExtendedJLabel lblStringVerbose;
     
-    public ConstantStringInfoDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantStringInfoDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -43,7 +43,7 @@ public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
-            ConstantStringInfo entry = (ConstantStringInfo)parentFrame.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantStringInfo.class);
+            ConstantStringInfo entry = (ConstantStringInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantStringInfo.class);
 
             constantPoolHyperlink(lblString,
                                   lblStringVerbose,

@@ -23,7 +23,7 @@ import java.util.*;
     the contained panes as required.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantPoolDetailPane extends AbstractDetailPane {
 
@@ -40,8 +40,8 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     
     private HashMap constantTypeToDetailPane;
     
-    public ConstantPoolDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantPoolDetailPane(BrowserServices services) {
+        super(services);
     }
 
     protected void setupComponent() {
@@ -53,31 +53,31 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
         pane.setBackground(Color.blue);
         add(pane, SCREEN_CONSTANT_UNKNOWN);
         
-        addScreen(new ConstantUtf8InfoDetailPane(parentFrame),
+        addScreen(new ConstantUtf8InfoDetailPane(services),
             SCREEN_CONSTANT_UTF8_INFO);
 
-        addScreen(new ConstantClassInfoDetailPane(parentFrame),
+        addScreen(new ConstantClassInfoDetailPane(services),
                   SCREEN_CONSTANT_CLASS_INFO);
 
-        addScreen(new ConstantDoubleInfoDetailPane(parentFrame),
+        addScreen(new ConstantDoubleInfoDetailPane(services),
                   SCREEN_CONSTANT_DOUBLE_INFO);
 
-        addScreen(new ConstantLongInfoDetailPane(parentFrame),
+        addScreen(new ConstantLongInfoDetailPane(services),
             SCREEN_CONSTANT_LONG_INFO);
 
-        addScreen(new ConstantFloatInfoDetailPane(parentFrame),
+        addScreen(new ConstantFloatInfoDetailPane(services),
             SCREEN_CONSTANT_FLOAT_INFO);
 
-        addScreen(new ConstantIntegerInfoDetailPane(parentFrame),
+        addScreen(new ConstantIntegerInfoDetailPane(services),
             SCREEN_CONSTANT_INTEGER_INFO);
 
-        addScreen(new ConstantNameAndTypeInfoDetailPane(parentFrame),
+        addScreen(new ConstantNameAndTypeInfoDetailPane(services),
             SCREEN_CONSTANT_NAME_AND_TYPE_INFO);
 
-        addScreen(new ConstantStringInfoDetailPane(parentFrame),
+        addScreen(new ConstantStringInfoDetailPane(services),
             SCREEN_CONSTANT_STRING_INFO);
                 
-        addScreen(new ConstantReferenceDetailPane(parentFrame),
+        addScreen(new ConstantReferenceDetailPane(services),
             SCREEN_CONSTANT_REFERENCE);
                 
     }
@@ -85,7 +85,7 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     public void show(TreePath treePath) {
 
         int constantPoolIndex = ((BrowserMutableTreeNode)treePath.getLastPathComponent()).getIndex();
-        CPInfo constantPoolEntry = parentFrame.getClassFile().getConstantPool()[constantPoolIndex];
+        CPInfo constantPoolEntry = services.getClassFile().getConstantPool()[constantPoolIndex];
         
         String paneName = null;
         if (constantPoolEntry instanceof ConstantUtf8Info) {

@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing a <tt>CONSTANT_Float</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -28,8 +28,8 @@ public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane 
     private ExtendedJLabel lblFloat;
     private ExtendedJLabel lblComment;
     
-    public ConstantFloatInfoDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantFloatInfoDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -48,7 +48,7 @@ public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane 
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
-            ConstantFloatInfo entry = (ConstantFloatInfo)parentFrame.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantFloatInfo.class);
+            ConstantFloatInfo entry = (ConstantFloatInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantFloatInfo.class);
             lblBytes.setText(entry.getFormattedBytes());
             lblFloat.setText(entry.getFloat());
         } catch (InvalidByteCodeException ex) {

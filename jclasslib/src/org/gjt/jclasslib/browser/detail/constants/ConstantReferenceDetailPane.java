@@ -19,7 +19,7 @@ import javax.swing.tree.*;
     or a <tt>CONSTANT_InterfaceMethodref</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantReferenceDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -30,8 +30,8 @@ public class ConstantReferenceDetailPane extends AbstractConstantInfoDetailPane 
     private ExtendedJLabel lblNameAndType;
     private ExtendedJLabel lblNameAndTypeVerbose;
     
-    public ConstantReferenceDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantReferenceDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -50,7 +50,7 @@ public class ConstantReferenceDetailPane extends AbstractConstantInfoDetailPane 
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
-            ConstantReference entry = (ConstantReference)parentFrame.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantReference.class);
+            ConstantReference entry = (ConstantReference)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantReference.class);
 
             constantPoolHyperlink(lblClass,
                                   lblClassVerbose,

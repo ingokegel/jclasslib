@@ -15,12 +15,12 @@ import org.gjt.jclasslib.structures.attributes.*;
     Detail pane showing a <tt>LocalVariableTable</tt> attribute.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:25 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class LocalVariableTableAttributeDetailPane extends AbstractAttributeListDetailPane {
 
-    public LocalVariableTableAttributeDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public LocalVariableTableAttributeDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute) {
@@ -82,7 +82,7 @@ public class LocalVariableTableAttributeDetailPane extends AbstractAttributeList
                 default:
                     return;
             }
-            ConstantPoolHyperlinkListener.link(parentFrame, constantPoolIndex);
+            ConstantPoolHyperlinkListener.link(services, constantPoolIndex);
         }
         
         public int getRowCount() {

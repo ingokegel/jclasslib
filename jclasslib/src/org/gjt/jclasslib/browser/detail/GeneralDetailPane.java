@@ -19,7 +19,7 @@ import javax.swing.tree.*;
     are incorporated in theis pane.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class GeneralDetailPane extends FixedListDetailPane {
     
@@ -39,8 +39,8 @@ public class GeneralDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblMethodsCount;
     private ExtendedJLabel lblAttributesCount;
     
-    public GeneralDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public GeneralDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -82,7 +82,7 @@ public class GeneralDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        ClassFile classFile = parentFrame.getClassFile();
+        ClassFile classFile = services.getClassFile();
         
         lblMinorVersion.setText(classFile.getMinorVersion());
         lblMajorVersion.setText(classFile.getMajorVersion());

@@ -12,10 +12,10 @@ import org.gjt.jclasslib.mdi.*;
 import javax.swing.event.*;
 
 /**
-    The desktop manager for the bytecode browser application.
+    The desktop manager for the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:21 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class BrowserDesktopManager extends BasicDesktopManager {
 
@@ -37,7 +37,7 @@ public class BrowserDesktopManager extends BasicDesktopManager {
         BrowserMDIFrame browserParentFrame = (BrowserMDIFrame)parentFrame;
         
         if (internalFrame != null) {
-            internalFrame.getHistory().updateActions();
+            internalFrame.getBrowserComponent().getHistory().updateActions();
         } else {
             browserParentFrame.actionReload.setEnabled(false);
             browserParentFrame.actionBackward.setEnabled(false);

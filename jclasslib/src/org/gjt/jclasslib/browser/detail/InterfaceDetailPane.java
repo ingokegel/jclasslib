@@ -16,7 +16,7 @@ import javax.swing.tree.*;
     Detail pane showing interface entries.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class InterfaceDetailPane extends FixedListDetailPane {
 
@@ -25,8 +25,8 @@ public class InterfaceDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblInterface;
     private ExtendedJLabel lblInterfaceVerbose;
     
-    public InterfaceDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public InterfaceDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -39,7 +39,7 @@ public class InterfaceDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        int constantPoolIndex = parentFrame.getClassFile().getInterfaces()[getIndex(treePath)];
+        int constantPoolIndex = services.getClassFile().getInterfaces()[getIndex(treePath)];
         
         constantPoolHyperlink(lblInterface,
                               lblInterfaceVerbose,

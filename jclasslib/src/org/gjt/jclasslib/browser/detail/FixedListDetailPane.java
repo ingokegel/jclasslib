@@ -20,7 +20,7 @@ import java.util.*;
     a fixed number of key-value pairs arranged in a list.
     
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public abstract class FixedListDetailPane extends AbstractDetailPane {
     
@@ -30,8 +30,8 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
 
     private java.util.List detailPaneEntries;
 
-    public FixedListDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public FixedListDetailPane(BrowserServices services) {
+        super(services);
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
             if (entry.comment != null) {
                 ScrollableJLabel scollableLabel = new ScrollableJLabel(entry.comment);
                 
-                parentFrame.addMaximizedListener(scollableLabel);
+                services.addMaximizedListener(scollableLabel);
                 resizeListeners.add(scollableLabel); 
                     
                 add(scollableLabel, (entry.value == null) ? gCommentOnly : gComment);

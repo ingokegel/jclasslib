@@ -18,7 +18,7 @@ import java.awt.*;
     panes in its tabbed pane.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:24 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class CodeAttributeDetailPane extends AbstractDetailPane {
 
@@ -28,8 +28,8 @@ public class CodeAttributeDetailPane extends AbstractDetailPane {
     private CodeAttributeByteCodeDetailPane byteCodePane;
     private CodeAttributeMiscDetailPane miscPane;
     
-    public CodeAttributeDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public CodeAttributeDetailPane(BrowserServices services) {
+        super(services);
     }
 
     protected void setupComponent() {
@@ -65,17 +65,17 @@ public class CodeAttributeDetailPane extends AbstractDetailPane {
     }
 
     private JPanel buildByteCodePane() {
-        byteCodePane = new CodeAttributeByteCodeDetailPane(parentFrame);
+        byteCodePane = new CodeAttributeByteCodeDetailPane(services);
         return byteCodePane;
     }
 
     private JPanel buildExceptionTablePane() {
-        exceptionTablePane = new CodeAttributeExceptionTableDetailPane(parentFrame);
+        exceptionTablePane = new CodeAttributeExceptionTableDetailPane(services);
         return exceptionTablePane;
     }
 
     private JPanel buildMiscPane() {
-        miscPane = new CodeAttributeMiscDetailPane(parentFrame);
+        miscPane = new CodeAttributeMiscDetailPane(services);
         return miscPane;
     }
     

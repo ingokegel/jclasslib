@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing a <tt>CONSTANT_Double</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -29,8 +29,8 @@ public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane
     private ExtendedJLabel lblDouble;
     private ExtendedJLabel lblComment;
     
-    public ConstantDoubleInfoDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantDoubleInfoDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -52,7 +52,7 @@ public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
-            ConstantDoubleInfo entry = (ConstantDoubleInfo)parentFrame.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantDoubleInfo.class);
+            ConstantDoubleInfo entry = (ConstantDoubleInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantDoubleInfo.class);
             lblHighBytes.setText(entry.getFormattedHighBytes());
             lblLowBytes.setText(entry.getFormattedLowBytes());
             lblDouble.setText(entry.getDouble());

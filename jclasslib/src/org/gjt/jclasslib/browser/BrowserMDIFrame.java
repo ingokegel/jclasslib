@@ -19,15 +19,15 @@ import java.beans.*;
 
 
 /**
-    MDI Frame and entry point for the bytecode browser application.
+    MDI Frame and entry point for the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:22 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
 
     /** Title of the applicaton */
-    protected static final String APPLICATION_TITLE = "Bytecode browser";
+    protected static final String APPLICATION_TITLE = "Class file browser";
     /** Title for message windows */
     protected static final String MESSAGE_TITLE = "jclasslib";
 
@@ -203,14 +203,14 @@ public class BrowserMDIFrame extends BasicMDIFrame {
     private void doBackward() {
         BrowserInternalFrame frame = (BrowserInternalFrame)desktopPane.getSelectedFrame();
         if (frame != null) {
-            frame.getHistory().historyBackward();
+            frame.getBrowserComponent().getHistory().historyBackward();
         }
     }
 
     private void doForward() {
         BrowserInternalFrame frame = (BrowserInternalFrame)desktopPane.getSelectedFrame();
         if (frame != null) {
-            frame.getHistory().historyForward();
+            frame.getBrowserComponent().getHistory().historyForward();
         }
     }
 
@@ -250,7 +250,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
     }
     
     /**
-        Entry point for the bytecode browser application.
+        Entry point for the class file browser application.
         @param args arguments for the application. Not evaluated.
      */
     public static void main(String[] args) {

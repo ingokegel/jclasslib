@@ -18,23 +18,19 @@ import java.util.*;
     Manages the navigation history of a single child window.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:22 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class BrowserHistory {
 
     private static int MAX_HISTORY_ENTRIES = 50;
     
-    private BrowserMDIFrame parentFrame;
+    private BrowserServices services;
 
     private LinkedList history = new LinkedList();
     private int historyPointer = -1;
-    private JTree treeView;
-    private BrowserDetailPane detailPane;
     
-    public BrowserHistory(BrowserMDIFrame parentFrame, JTree treeView, BrowserDetailPane detailPane) {
-        this.parentFrame = parentFrame;
-        this.treeView = treeView;
-        this.detailPane = detailPane;
+    public BrowserHistory(BrowserServices services) {
+        this.services = services;
     }
 
     /** 
@@ -73,11 +69,11 @@ public class BrowserHistory {
      */
     public void updateActions() {
 
-        if (parentFrame.actionBackward == null || parentFrame.actionForward == null) {
+        if (services.getActionBackward() == null || services.getActionForward() == null) {
             return;
         }
-        parentFrame.actionBackward.setEnabled(historyPointer > 0);
-        parentFrame.actionForward.setEnabled(historyPointer < history.size() - 1);
+        services.getActionBackward().setEnabled(historyPointer > 0);
+        services.getActionForward().setEnabled(historyPointer < history.size() - 1);
     }
 
     /** 
@@ -153,12 +149,16 @@ public class BrowserHistory {
         
         BrowserHistoryEntry entry = (BrowserHistoryEntry)history.get(historyPointer);
 
+        JTree treeView = services.getBrowserComponent().getTreePane().getTreeView();
+        
         treeView.setSelectionPath(entry.getTreePath());
         treeView.scrollPathToVisible(entry.getTreePath());
         
         Integer offset = entry.getOffset();
         
         if (offset != null) {
+            BrowserDetailPane detailPane = services.getBrowserComponent().getDetailPane();
+            
             CodeAttributeDetailPane codeAttributeDetailPane =
                 detailPane.getAttributeDetailPane().getCodeAttributeDetailPane();
             

@@ -23,7 +23,7 @@ import java.util.*;
     columns.
     
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:25 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
 
@@ -44,8 +44,8 @@ public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
     /** table model for this detail pane */
     protected AbstractAttributeTableModel tableModel;
     
-    public AbstractAttributeListDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public AbstractAttributeListDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected TableModel getTableModel(TreePath treePath) {

@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing a <tt>CONSTANT_Integer</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -28,8 +28,8 @@ public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPan
     private ExtendedJLabel lblInt;
     private ExtendedJLabel lblComment;
     
-    public ConstantIntegerInfoDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantIntegerInfoDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -48,7 +48,7 @@ public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPan
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
-            ConstantIntegerInfo entry = (ConstantIntegerInfo)parentFrame.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantIntegerInfo.class);
+            ConstantIntegerInfo entry = (ConstantIntegerInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantIntegerInfo.class);
             lblBytes.setText(entry.getFormattedBytes());
             lblInt.setText(entry.getInt());
         } catch (InvalidByteCodeException ex) {

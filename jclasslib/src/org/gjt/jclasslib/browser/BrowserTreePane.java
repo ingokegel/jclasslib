@@ -20,19 +20,19 @@ import java.awt.*;
     child window.
     
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:22 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class BrowserTreePane extends JPanel {
 
     private static final Dimension treeMinimumSize = new Dimension(100,150);
     private static final Dimension treePreferredSize = new Dimension(250,150);
 
-    private BrowserInternalFrame parentFrame;
+    private BrowserServices services;
     private JTree treeView;
     private TreePath constantPoolPath;
     
-    public BrowserTreePane(BrowserInternalFrame parentFrame) {
-        this.parentFrame = parentFrame;
+    public BrowserTreePane(BrowserServices services) {
+        this.services = services;
         setLayout(new BorderLayout());
         setupComponent();
     }
@@ -108,7 +108,7 @@ public class BrowserTreePane extends JPanel {
     private BrowserMutableTreeNode buildConstantPoolNode() {
 
         BrowserMutableTreeNode constantPoolNode = new BrowserMutableTreeNode("Constant Pool");
-        CPInfo[] constantPool = parentFrame.getClassFile().getConstantPool();
+        CPInfo[] constantPool = services.getClassFile().getConstantPool();
         int constantPoolCount = constantPool.length;
         
         for (int i = 1; i < constantPoolCount; i++) { 
@@ -158,7 +158,7 @@ public class BrowserTreePane extends JPanel {
     private BrowserMutableTreeNode buildInterfacesNode() {
 
         BrowserMutableTreeNode interfacesNode = new BrowserMutableTreeNode("Interfaces");
-        int[] interfaces = parentFrame.getClassFile().getInterfaces();
+        int[] interfaces = services.getClassFile().getInterfaces();
         int interfacesCount = interfaces.length;
         BrowserMutableTreeNode entryNode;
         for (int i = 0; i < interfacesCount; i++) {
@@ -175,14 +175,14 @@ public class BrowserTreePane extends JPanel {
 
         return buildClassMembersNode("Fields",
                                      BrowserMutableTreeNode.NODE_FIELD,
-                                     parentFrame.getClassFile().getFields());
+                                     services.getClassFile().getFields());
     }
     
     private BrowserMutableTreeNode buildMethodsNode() {
         
         return buildClassMembersNode("Methods",
                                      BrowserMutableTreeNode.NODE_METHOD,
-                                     parentFrame.getClassFile().getMethods());
+                                     services.getClassFile().getMethods());
     }
 
     private BrowserMutableTreeNode buildClassMembersNode(String text,
@@ -231,7 +231,7 @@ public class BrowserTreePane extends JPanel {
     private BrowserMutableTreeNode buildAttributesNode() {
         BrowserMutableTreeNode attributesNode = new BrowserMutableTreeNode("Attributes");
         
-        addAttributeNodes(attributesNode, parentFrame.getClassFile());
+        addAttributeNodes(attributesNode, services.getClassFile());
         
         return attributesNode;
     }

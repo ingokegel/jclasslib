@@ -21,7 +21,7 @@ import java.util.*;
     a specific tree node selected in <tt>BrowserTreePane</tt>.
     
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:22 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public abstract class AbstractDetailPane extends JPanel {
     
@@ -33,17 +33,17 @@ public abstract class AbstractDetailPane extends JPanel {
     /** Text prepended to constant pool hyperlinks */
     protected static final String CPINFO_LINK_TEXT = "cp_info #";
     
-    /** Parent frame of this detail pane */
-    protected BrowserInternalFrame parentFrame;
+    /** Services for this detail pane */
+    protected BrowserServices services;
     /** Connects labels to mouse listeners */
     protected HashMap labelToMouseListener = new HashMap();
  
     /**
         Constructs a detail pane with a specified parent frame
-        @param parentFrame the parent frame
+        @param services browser services
      */
-    public AbstractDetailPane(BrowserInternalFrame parentFrame) {
-        this.parentFrame = parentFrame;
+    public AbstractDetailPane(BrowserServices services) {
+        this.services = services;
         setupComponent();
     }
     
@@ -121,7 +121,7 @@ public abstract class AbstractDetailPane extends JPanel {
         BrowserMutableTreeNode parentNode = (BrowserMutableTreeNode)parentPath.getLastPathComponent();
         String parentNodeType = parentNode.getType();
         
-        ClassFile classFile = parentFrame.getClassFile();
+        ClassFile classFile = services.getClassFile();
         int parentIndex = getIndex(parentPath);
         int index = getIndex(path);
         
@@ -147,7 +147,7 @@ public abstract class AbstractDetailPane extends JPanel {
     protected String getConstantPoolEntryName(int constantPoolIndex) {
 
         try {
-            return parentFrame.getClassFile().getConstantPoolEntryName(constantPoolIndex);
+            return services.getClassFile().getConstantPoolEntryName(constantPoolIndex);
         } catch (InvalidByteCodeException ex) {
             return "invalid constant pool reference";
         }
@@ -183,7 +183,7 @@ public abstract class AbstractDetailPane extends JPanel {
             value.removeMouseListener(oldListener);
         }
         MouseListener newListener = new ConstantPoolHyperlinkListener(
-                                        parentFrame,
+                                        services,
                                         constantPoolIndex);
 
         value.addMouseListener(newListener);

@@ -18,27 +18,24 @@ import java.awt.*;
 import java.io.*;
 
 /**
-    A child window of the bytecode browser application.
+    A child window of the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:22 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class BrowserInternalFrame extends BasicInternalFrame
-                                  implements TreeSelectionListener {
+                                  implements BrowserServices {
 
 
     private File file;
     private ClassFile classFile;
-    private BrowserHistory history;
 
     private boolean valid;
     private Exception exception;
 
     // Visual Components
     
-    private JSplitPane splitPane;
-    private BrowserTreePane treePane;
-    private BrowserDetailPane detailPane;
+    private BrowserComponent browserComponent;
     
     public BrowserInternalFrame(BasicDesktopManager desktopManager, String fileName) {
         this(desktopManager, new File(fileName));
@@ -56,74 +53,44 @@ public class BrowserInternalFrame extends BasicInternalFrame
         return file.getAbsolutePath();
     }
     
+    // Browser services
+    
+    public ClassFile getClassFile() {
+        return classFile;
+    }
+ 
+    public void activate() {
+
+        // force sync of toolbar state with this frame
+        desktopManager.getDesktopPane().setSelectedFrame(this);
+    }
+
+    public BrowserComponent getBrowserComponent() {
+        return browserComponent;
+    }
+
+    public Action getActionBackward() {
+        return getParentFrame().actionBackward;
+    }
+
+    public Action getActionForward() {
+        return getParentFrame().actionForward;
+    }
+    
+    /**
+        Reload class file.
+     */
+    public void reload() {
+        readClassFile();
+        browserComponent.rebuild();
+    }
+
     /**
         Get the <tt>File</tt> object for the show class file.
         @return the <tt>File</tt> object
      */
     public File getFile() {
         return file;
-    }
-    
-    /**
-        Get the <tt>ClassFile</tt> object for the show class file.
-        @return the <tt>ClassFile</tt> object
-     */
-    public ClassFile getClassFile() {
-        return classFile;
-    }
-
-    /**
-        Get the pane containing the tree structure for the shown class file.
-        @return the pane
-     */
-    public BrowserTreePane getTreePane() {
-        return treePane;
-    }
-    
-    /**
-        Get the pane containing the detail area for the specific tree node selected
-        in the <tt>BrowserTreePane</tt>.
-        @return the pane
-     */
-    public BrowserDetailPane getDetailPane() {
-        return detailPane;
-    }
-    
-    /**
-        Get the navigation history of this child window.
-        @return the history
-     */
-    public BrowserHistory getHistory() {
-        return history;
-    }
-    
-    /**
-        Reload the class file and update the display.
-     */
-    public void reload() {
-        readClassFile();
-        treePane.rebuild();
-        history.clear();
-        initialSelection();
-    }
-
-    public void valueChanged(TreeSelectionEvent selectionEvent) {
-        
-        // force sync of toolbar state with this frame
-        desktopManager.getDesktopPane().setSelectedFrame(this);
-        
-        TreePath selectedPath = selectionEvent.getPath();
-        
-        history.updateHistory(selectedPath);
-        showDetailPaneForPath(selectedPath);
-        
-    }
-    
-    private void showDetailPaneForPath(TreePath path) {
-        
-        BrowserMutableTreeNode node = (BrowserMutableTreeNode)path.getLastPathComponent();
-        String nodeType = node.getType();
-        detailPane.showPane(nodeType, path);
     }
     
     private BrowserMDIFrame getParentFrame() {
@@ -149,35 +116,9 @@ public class BrowserInternalFrame extends BasicInternalFrame
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
-        detailPane = new BrowserDetailPane(this);
+        browserComponent = new BrowserComponent(this);
+        contentPane.add(browserComponent, BorderLayout.CENTER);
         
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                                   buildTreePane(),
-                                   detailPane);
-
-        contentPane.add(splitPane, BorderLayout.CENTER);
-        
-    }
-    
-    private BrowserTreePane buildTreePane() {
-        
-        treePane = new BrowserTreePane(this);
-        
-        JTree treeView = treePane.getTreeView();
-        treeView.addTreeSelectionListener(this);
-        history = new BrowserHistory(getParentFrame(), treeView, detailPane);
-        
-        initialSelection();
-        
-        return treePane;
-    }
-    
-    private void initialSelection() {
-
-        JTree treeView = treePane.getTreeView();
-
-        BrowserMutableTreeNode rootNode = (BrowserMutableTreeNode)treeView.getModel().getRoot();
-        treeView.setSelectionPath(new TreePath(new Object[] {rootNode, rootNode.getFirstChild()}));
     }
 
 }

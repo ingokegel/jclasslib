@@ -24,7 +24,7 @@ import java.util.*;
     subpackage and switches between the contained panes as required.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class AttributeDetailPane extends AbstractDetailPane {
 
@@ -44,8 +44,8 @@ public class AttributeDetailPane extends AbstractDetailPane {
     private JPanel specificInfoPane;
     private GenericAttributeDetailPane genericInfoPane;
     
-    public AttributeDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public AttributeDetailPane(BrowserServices services) {
+        super(services);
     }
 
     protected void setupComponent() {
@@ -104,7 +104,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
     
     private void buildGenericInfoPane() {
 
-        genericInfoPane = new GenericAttributeDetailPane(parentFrame);
+        genericInfoPane = new GenericAttributeDetailPane(services);
         genericInfoPane.setBorder(createTitledBorder("Generic info:"));
     }
 
@@ -120,25 +120,25 @@ public class AttributeDetailPane extends AbstractDetailPane {
         pane = new JPanel();
         specificInfoPane.add(pane, SCREEN_UNKNOWN);
         
-        addScreen(new ConstantValueAttributeDetailPane(parentFrame),
+        addScreen(new ConstantValueAttributeDetailPane(services),
                   SCREEN_CONSTANT_VALUE);
 
-        addScreen(new CodeAttributeDetailPane(parentFrame),
+        addScreen(new CodeAttributeDetailPane(services),
                   SCREEN_CODE);
 
-        addScreen(new ExceptionsAttributeDetailPane(parentFrame),
+        addScreen(new ExceptionsAttributeDetailPane(services),
                   SCREEN_EXCEPTIONS);
 
-        addScreen(new InnerClassesAttributeDetailPane(parentFrame),
+        addScreen(new InnerClassesAttributeDetailPane(services),
                   SCREEN_INNER_CLASSES);
 
-        addScreen(new SourceFileAttributeDetailPane(parentFrame),
+        addScreen(new SourceFileAttributeDetailPane(services),
                   SCREEN_SOURCE_FILE);
 
-        addScreen(new LineNumberTableAttributeDetailPane(parentFrame),
+        addScreen(new LineNumberTableAttributeDetailPane(services),
                   SCREEN_LINE_NUMBER_TABLE);
 
-        addScreen(new LocalVariableTableAttributeDetailPane(parentFrame),
+        addScreen(new LocalVariableTableAttributeDetailPane(services),
                   SCREEN_LOCAL_VARIABLE_TABLE);
     }
     

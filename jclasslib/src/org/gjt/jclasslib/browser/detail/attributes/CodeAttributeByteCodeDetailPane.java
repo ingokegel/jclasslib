@@ -23,7 +23,7 @@ import java.util.*;
     Detail pane showing the bytecode of a <tt>Code</tt> attribute.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:24 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class CodeAttributeByteCodeDetailPane extends AbstractDetailPane {
 
@@ -45,8 +45,8 @@ public class CodeAttributeByteCodeDetailPane extends AbstractDetailPane {
     private JTextPane opcodeCounterTextPane;
     private JScrollPane scrollPane;
 
-    public CodeAttributeByteCodeDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public CodeAttributeByteCodeDetailPane(BrowserServices services) {
+        super(services);
     }
 
     protected void setupComponent() {
@@ -144,7 +144,7 @@ public class CodeAttributeByteCodeDetailPane extends AbstractDetailPane {
 
     private ByteCodeDocument createByteCodeDocument(CodeAttribute attribute) {
 
-        ByteCodeDocument byteCodeDocument = new ByteCodeDocument(styles, attribute, parentFrame.getClassFile());
+        ByteCodeDocument byteCodeDocument = new ByteCodeDocument(styles, attribute, services.getClassFile());
         
         return byteCodeDocument;
     }
@@ -156,7 +156,7 @@ public class CodeAttributeByteCodeDetailPane extends AbstractDetailPane {
         updateHistory(sourceOffset);
 
         if (linkType == DocumentLink.CONSTANT_POOL_LINK) {
-            ConstantPoolHyperlinkListener.link(parentFrame, link.getIndex());
+            ConstantPoolHyperlinkListener.link(services, link.getIndex());
 
         } else if (linkType == DocumentLink.OFFSET_LINK) {
             scrollToOffset(link.getIndex());
@@ -169,9 +169,9 @@ public class CodeAttributeByteCodeDetailPane extends AbstractDetailPane {
     
     private void updateHistory(int offset) {
         
-        TreePath treePath = parentFrame.getTreePane().getTreeView().getSelectionPath();
+        TreePath treePath = services.getBrowserComponent().getTreePane().getTreeView().getSelectionPath();
 
-        BrowserHistory history = parentFrame.getHistory();
+        BrowserHistory history = services.getBrowserComponent().getHistory();
         history.updateHistory(treePath, new Integer(offset));
     }
     

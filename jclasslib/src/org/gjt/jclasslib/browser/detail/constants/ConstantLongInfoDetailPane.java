@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing a <tt>CONSTANT_Long</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantLongInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -29,8 +29,8 @@ public class ConstantLongInfoDetailPane extends AbstractConstantInfoDetailPane {
     private ExtendedJLabel lblLong;
     private ExtendedJLabel lblComment;
     
-    public ConstantLongInfoDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantLongInfoDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -52,7 +52,7 @@ public class ConstantLongInfoDetailPane extends AbstractConstantInfoDetailPane {
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
-            ConstantLongInfo entry = (ConstantLongInfo)parentFrame.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantLongInfo.class);
+            ConstantLongInfo entry = (ConstantLongInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantLongInfo.class);
             lblHighBytes.setText(entry.getFormattedHighBytes());
             lblLowBytes.setText(entry.getFormattedLowBytes());
             lblLong.setText(entry.getLong());

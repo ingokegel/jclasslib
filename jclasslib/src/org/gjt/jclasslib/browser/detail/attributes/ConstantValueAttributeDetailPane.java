@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing a <tt>ConstantValue</tt> attribute.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:25 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantValueAttributeDetailPane extends FixedListDetailPane {
 
@@ -27,8 +27,8 @@ public class ConstantValueAttributeDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblValue;
     private ExtendedJLabel lblVerbose;
     
-    public ConstantValueAttributeDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantValueAttributeDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {

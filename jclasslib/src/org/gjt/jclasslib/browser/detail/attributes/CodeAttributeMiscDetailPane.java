@@ -19,7 +19,7 @@ import javax.swing.tree.*;
     without substructure.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:25 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class CodeAttributeMiscDetailPane extends FixedListDetailPane {
 
@@ -29,8 +29,8 @@ public class CodeAttributeMiscDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblMaxLocals;
     private ExtendedJLabel lblCodeLength;
     
-    public CodeAttributeMiscDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public CodeAttributeMiscDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {

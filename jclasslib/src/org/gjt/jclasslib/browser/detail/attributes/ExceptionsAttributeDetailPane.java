@@ -15,12 +15,12 @@ import org.gjt.jclasslib.structures.attributes.*;
     Detail pane showing an <tt>Exceptions</tt> attribute.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:24 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ExceptionsAttributeDetailPane extends AbstractAttributeListDetailPane {
 
-    public ExceptionsAttributeDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ExceptionsAttributeDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute) {
@@ -59,7 +59,7 @@ public class ExceptionsAttributeDetailPane extends AbstractAttributeListDetailPa
             
             if (column == EXCEPTION_INDEX_COLUMN_INDEX) {
                 int constantPoolIndex = exceptionIndexTable[row];
-                ConstantPoolHyperlinkListener.link(parentFrame, constantPoolIndex);
+                ConstantPoolHyperlinkListener.link(services, constantPoolIndex);
             }
         }
         

@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing the generic information which applies to all attribute.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:24 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class GenericAttributeDetailPane extends FixedListDetailPane {
 
@@ -28,8 +28,8 @@ public class GenericAttributeDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblNameIndexVerbose;
     private ExtendedJLabel lblLength;
     
-    public GenericAttributeDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public GenericAttributeDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {

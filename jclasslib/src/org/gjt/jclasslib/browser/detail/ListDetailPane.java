@@ -21,7 +21,7 @@ import javax.swing.table.*;
     a variable number of row entries with the same number of columns.
     
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public abstract class ListDetailPane extends AbstractDetailPane {
 
@@ -31,8 +31,8 @@ public abstract class ListDetailPane extends AbstractDetailPane {
 
     private JTable table;
     
-    public ListDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ListDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupComponent() {

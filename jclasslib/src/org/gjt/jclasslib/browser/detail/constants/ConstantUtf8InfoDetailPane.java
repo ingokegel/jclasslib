@@ -18,7 +18,7 @@ import javax.swing.tree.*;
     Detail pane showing a <tt>CONSTANT_Utf8</tt> constant pool entry.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -29,8 +29,8 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
     private ExtendedJLabel lblStringLength;
     private ExtendedJLabel lblString;
     
-    public ConstantUtf8InfoDetailPane(BrowserInternalFrame parentFrame) {
-        super(parentFrame);
+    public ConstantUtf8InfoDetailPane(BrowserServices services) {
+        super(services);
     }
     
     protected void setupLabels() {
@@ -53,7 +53,7 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
-            ConstantUtf8Info entry = parentFrame.getClassFile().getConstantPoolUtf8Entry(constantPoolIndex);
+            ConstantUtf8Info entry = services.getClassFile().getConstantPoolUtf8Entry(constantPoolIndex);
             lblByteLength.setText(entry.getBytes().length);
             lblStringLength.setText(entry.getString().length());
             lblString.setText(getConstantPoolEntryName(constantPoolIndex));

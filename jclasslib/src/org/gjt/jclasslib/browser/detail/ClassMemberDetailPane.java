@@ -17,7 +17,7 @@ import javax.swing.tree.*;
     Detail pane showing class members (methods or fields):
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:23 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ClassMemberDetailPane extends FixedListDetailPane {
 
@@ -42,11 +42,11 @@ public class ClassMemberDetailPane extends FixedListDetailPane {
     /**
         Construct a <tt>ClassMemberDetailPane</tt> with a specified mode which is
         either <tt>FIELDS</tt> or <tt>METHODS</tt>.
-        @param parentFrame the parent frame
+        @param services browser services
         @param mode the mode
      */
-    public ClassMemberDetailPane(BrowserInternalFrame parentFrame, int mode) {
-        super(parentFrame);
+    public ClassMemberDetailPane(BrowserServices services, int mode) {
+        super(services);
         this.mode = mode;
     }
     
@@ -69,9 +69,9 @@ public class ClassMemberDetailPane extends FixedListDetailPane {
         
         ClassMember classMember = null;
         if (mode == FIELDS) {
-            classMember = parentFrame.getClassFile().getFields()[getIndex(treePath)];
+            classMember = services.getClassFile().getFields()[getIndex(treePath)];
         } else {
-            classMember = parentFrame.getClassFile().getMethods()[getIndex(treePath)];
+            classMember = services.getClassFile().getMethods()[getIndex(treePath)];
         }
         
         constantPoolHyperlink(lblName,

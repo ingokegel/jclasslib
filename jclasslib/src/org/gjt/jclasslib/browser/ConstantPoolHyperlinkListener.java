@@ -15,39 +15,39 @@ import java.awt.event.*;
     Listens for mouse clicks and manages linking into the constat pool.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:21 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
 */
 public class ConstantPoolHyperlinkListener extends MouseAdapter {
 
-    private BrowserInternalFrame parentFrame;
+    private BrowserServices services;
     private int constantPoolIndex; 
     
-    public ConstantPoolHyperlinkListener(BrowserInternalFrame parentFrame, int constantPoolIndex) {
+    public ConstantPoolHyperlinkListener(BrowserServices services, int constantPoolIndex) {
         
-        this.parentFrame = parentFrame;
+        this.services = services;
         this.constantPoolIndex = constantPoolIndex;
     }
     
     public void mouseClicked(MouseEvent event) {
-        link(parentFrame, constantPoolIndex);
+        link(services, constantPoolIndex);
     }
 
     /**
         Link to a specific constant pool entry.
-        @param parentFrame the frame in which the link is to be performed
+        @param services browser services
         @param constantPoolIndex the index of the constant pool entry
      */
-    public static void link(BrowserInternalFrame parentFrame, int constantPoolIndex) {
+    public static void link(BrowserServices services, int constantPoolIndex) {
         
-        JTree treeView = parentFrame.getTreePane().getTreeView();
-        TreePath newPath = linkPath(parentFrame, constantPoolIndex);
+        JTree treeView = services.getBrowserComponent().getTreePane().getTreeView();
+        TreePath newPath = linkPath(services, constantPoolIndex);
         treeView.setSelectionPath(newPath);
         treeView.scrollPathToVisible(newPath);
     }
     
-    private static TreePath linkPath(BrowserInternalFrame parentFrame, int constantPoolIndex) {
+    private static TreePath linkPath(BrowserServices services, int constantPoolIndex) {
         
-        TreePath constantPoolPath = parentFrame.getTreePane().getConstantPoolPath();
+        TreePath constantPoolPath = services.getBrowserComponent().getTreePane().getConstantPoolPath();
         
         BrowserMutableTreeNode constantPoolNode = (BrowserMutableTreeNode)constantPoolPath.getLastPathComponent();
         TreeNode targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1);
