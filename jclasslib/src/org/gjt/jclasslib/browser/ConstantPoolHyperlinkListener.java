@@ -15,7 +15,7 @@ import java.awt.event.*;
     Listens for mouse clicks and manages linking into the constat pool.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @version $Revision: 1.3 $ $Date: 2002-02-18 15:00:28 $
 */
 public class ConstantPoolHyperlinkListener extends MouseAdapter {
 
@@ -38,6 +38,10 @@ public class ConstantPoolHyperlinkListener extends MouseAdapter {
         @param constantPoolIndex the index of the constant pool entry
      */
     public static void link(BrowserServices services, int constantPoolIndex) {
+        
+        if (constantPoolIndex <= 0) {
+            return;
+        }
         
         JTree treeView = services.getBrowserComponent().getTreePane().getTreeView();
         TreePath newPath = linkPath(services, constantPoolIndex);
