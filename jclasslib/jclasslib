@@ -2,4 +2,6 @@
 #
 # Startup script for jclasslib
 
-java -jar jclasslib.jar
+DEFAULT_LAF=false
+
+java -Dclasslib.laf.default=$DEFAULT_LAF -jar jclasslib.jar
