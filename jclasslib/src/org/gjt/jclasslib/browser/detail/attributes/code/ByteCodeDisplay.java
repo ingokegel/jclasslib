@@ -29,7 +29,7 @@ import java.util.*;
     Bytecode renderer.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2004-10-26 11:33:28 $
+    @version $Revision: 1.3 $ $Date: 2004-11-02 09:38:13 $
 */
 public class ByteCodeDisplay extends JPanel implements Scrollable {
 
@@ -58,8 +58,8 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     public static void initStyles(Font baseFont) {
 
         STYLE_BASE = new HashMap(2);
-        if (baseFont != null && baseFont.getFamily().equals("MonoSpaced")) {
-            STYLE_BASE.put(TextAttribute.FAMILY, baseFont.getFontName());
+        if (baseFont != null) {
+            STYLE_BASE.put(TextAttribute.FAMILY, baseFont.getFamily());
         } else {
             baseFont = UIManager.getFont("TextArea.font");
             STYLE_BASE.put(TextAttribute.FAMILY, "MonoSpaced");
