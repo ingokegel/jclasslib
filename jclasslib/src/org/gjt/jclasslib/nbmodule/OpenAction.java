@@ -29,8 +29,8 @@ import java.lang.reflect.InvocationTargetException;
 /**
     Action to open a class file.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-18 10:15:08 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
 */
 public class OpenAction extends CookieAction {
 

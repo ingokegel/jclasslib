@@ -13,8 +13,8 @@ import javax.swing.tree.*;
     Tree node contained in the tree of the <tt>BrowserTreePane</tt> and 
     representing a structural element of the class file format.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:21 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:42 $
 */
 public class BrowserMutableTreeNode extends DefaultMutableTreeNode {
 

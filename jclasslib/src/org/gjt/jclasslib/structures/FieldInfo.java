@@ -12,8 +12,8 @@ import java.io.*;
 /**
     Describes a field in a <tt>ClassFile</tt> structure.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:18 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
 */
 public class FieldInfo extends ClassMember {
 

@@ -18,8 +18,8 @@ import javax.swing.tree.*;
     All fields in the <tt>ClassFile</tt> structure without substructure 
     are incorporated in theis pane.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
 */
 public class GeneralDetailPane extends FixedListDetailPane {
     

@@ -14,8 +14,8 @@ import java.io.*;
 /**
     Base class for all constant pool entries in the <tt>constants</tt> package.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-17 17:33:48 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
 */
 public abstract class CPInfo extends AbstractStructure {
 

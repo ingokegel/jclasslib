@@ -22,8 +22,8 @@ import java.beans.*;
 /**
     MDI Frame and entry point for the class file browser application.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-02-27 16:26:42 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.6 $ $Date: 2002-02-27 16:47:42 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
 

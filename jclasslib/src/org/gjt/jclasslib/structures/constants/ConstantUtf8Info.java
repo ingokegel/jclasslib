@@ -14,8 +14,8 @@ import java.io.*;
 /**
     Describes a <tt>CONSTANT_Utf8_info</tt> constant pool data structure.
 
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:25:28 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.5 $ $Date: 2002-02-27 16:47:43 $
 */
 public class ConstantUtf8Info extends CPInfo {
 

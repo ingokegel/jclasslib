@@ -20,8 +20,8 @@ import java.io.*;
 /**
     Visual component displaying a class file.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-18 12:44:31 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
 */
 public class BrowserComponent extends JComponent
                               implements TreeSelectionListener

@@ -11,8 +11,8 @@ package org.gjt.jclasslib.structures;
     Defines access flags constants and verbose expressions as defined by
     the java access modifiers.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:17 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
 */
 public interface AccessFlags {
 

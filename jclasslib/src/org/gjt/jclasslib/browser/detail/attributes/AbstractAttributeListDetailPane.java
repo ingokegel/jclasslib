@@ -22,8 +22,8 @@ import java.util.*;
     which can be displayed as a list of row entries with the same number of
     columns.
     
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
 */
 public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
 

@@ -17,8 +17,8 @@ import javax.swing.tree.*;
 /**
     Detail pane showing the generic information which applies to all attribute.
 
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
 */
 public class GenericAttributeDetailPane extends FixedListDetailPane {
 

@@ -14,8 +14,8 @@ import java.io.*;
 /**
     Describes a <tt>CONSTANT_Class_info</tt> constant pool data structure.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-17 17:35:06 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
 */
 public class ConstantClassInfo extends CPInfo {
 

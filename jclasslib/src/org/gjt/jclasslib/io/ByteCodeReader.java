@@ -15,8 +15,8 @@ import java.util.*;
     Converts bytecode to a list of instructions as defined in the package
     <tt>org.gjt.jclasslib.bytecode</tt>.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-18 17:04:40 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
 */
 public class ByteCodeReader implements Opcodes {
 

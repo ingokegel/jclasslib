@@ -14,8 +14,8 @@ import org.gjt.jclasslib.structures.constants.*;
     Utility methods for working on the constant pool of a <tt>ClassFile</tt>
     object.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-26 13:05:29 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
 */
 
 public class ConstantPoolUtil {

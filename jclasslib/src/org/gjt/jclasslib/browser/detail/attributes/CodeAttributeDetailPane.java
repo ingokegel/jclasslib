@@ -17,8 +17,8 @@ import java.awt.*;
     Detail pane showing a <tt>Code</tt> attribute. Contains three other detail
     panes in its tabbed pane.
 
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
 */
 public class CodeAttributeDetailPane extends AbstractDetailPane {
 

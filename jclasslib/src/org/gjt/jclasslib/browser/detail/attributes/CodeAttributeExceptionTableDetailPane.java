@@ -14,8 +14,8 @@ import org.gjt.jclasslib.structures.attributes.*;
 /**
     Detail pane showing the exception table about a <tt>Code</tt> attribute.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-17 17:32:12 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:42 $
 */
 public class CodeAttributeExceptionTableDetailPane extends AbstractAttributeListDetailPane {
 

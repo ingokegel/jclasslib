@@ -22,8 +22,8 @@ import java.lang.reflect.*;
     Parent frame for MDI application. Handles window actions, state saving and loading
     and supplies various utility methods.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-18 12:44:32 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
 */
 public class BasicMDIFrame extends JFrame {
 

@@ -15,8 +15,8 @@ import java.io.*;
     Converts class files to a class file structure <tt>ClassFile</tt> as defined in
     <tt>org.gjt.jclasslib.structures</tt>.
 
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-16 10:16:33 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
 */
 public class ClassFileReader {
 

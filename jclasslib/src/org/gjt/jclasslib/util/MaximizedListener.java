@@ -11,8 +11,8 @@ package org.gjt.jclasslib.util;
     Listens for (internal) frames to be maximized. There is no standard
     listener for <tt>JInternalFrame</tt>s which transmits this information.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:20 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
 */
 public interface MaximizedListener {
 

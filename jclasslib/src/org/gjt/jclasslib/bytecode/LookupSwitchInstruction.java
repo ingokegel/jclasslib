@@ -14,8 +14,8 @@ import java.util.*;
 /**
     Describes the <tt>lookupswitch</tt> instruction.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-20 08:03:17 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
 */
 public class LookupSwitchInstruction extends PaddedInstruction {
 

@@ -17,8 +17,8 @@ import java.util.*;
     method. Allows for pre and post insertions. The core method
     to perform code insertions is the static <tt>apply</tt> method.
 
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-26 13:05:29 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.5 $ $Date: 2002-02-27 16:47:43 $
 */
 public class CodeInsertion {
 

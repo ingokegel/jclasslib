@@ -29,8 +29,8 @@ import org.openide.text.*;
 /**
     Parent component for a class file browser in Netbeans.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:25:59 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices

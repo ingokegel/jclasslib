@@ -20,8 +20,8 @@ import java.io.*;
 /**
     A child window of the class file browser application.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-18 12:44:31 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:42 $
 */
 public class BrowserInternalFrame extends BasicInternalFrame
                                   implements BrowserServices {

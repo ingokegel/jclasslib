@@ -20,8 +20,8 @@ import javax.swing.table.*;
     Base class for all detail panes with a structure of
     a variable number of row entries with the same number of columns.
     
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
 */
 public abstract class ListDetailPane extends AbstractDetailPane {
 

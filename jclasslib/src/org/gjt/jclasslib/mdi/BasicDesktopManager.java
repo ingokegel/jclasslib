@@ -18,8 +18,8 @@ import java.util.*;
 /**
     <tt>DesktopManager</tt> for MDI application.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-18 17:05:08 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.5 $ $Date: 2002-02-27 16:47:43 $
 */
 public class BasicDesktopManager extends DefaultDesktopManager
                                  implements VetoableChangeListener,

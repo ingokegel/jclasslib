@@ -13,8 +13,8 @@ import java.io.*;
 /**
     Describes an instruction that branches to a different offset.
  
-    @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-17 17:32:37 $
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
 */
 public class BranchInstruction extends AbstractInstruction {
 
