@@ -18,22 +18,24 @@ import javax.swing.table.TableColumnModel;
     <tt>AbstractAttributeListDetailPane</tt>.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 08:18:35 $
 */
 public abstract class AbstractAttributeTableModel extends AbstractTableModel {
 
-    /** Number of default columns */
+    /** Number of default columns. */
     protected static final int BASE_COLUMN_COUNT = 1;
 
-    /** The associated attribute */
+    /** The associated attribute. */
     protected AttributeInfo attribute;
-    
-    private static String[] rowNumberStrings = new String[0];
     
     private ColumnCache columnCache;
     private TableColumnModel tableColumnModel;
 
-    public AbstractAttributeTableModel(AttributeInfo attribute) {
+    /**
+     * Constructor.
+     * @param attribute the associated attribute.
+     */
+    protected AbstractAttributeTableModel(AttributeInfo attribute) {
         this.attribute = attribute;
     }
 
@@ -60,7 +62,7 @@ public abstract class AbstractAttributeTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
 
         if  (column == 0) {
-            return rowNumberAsString(row);
+            return String.valueOf(row);
         } else {
             if (columnCache == null) {
                 columnCache = new ColumnCache(getRowCount(), getColumnCount() - 1);
@@ -128,37 +130,6 @@ public abstract class AbstractAttributeTableModel extends AbstractTableModel {
         @param column the column number of the hyperlink
      */
     public void link(int row, int column) {
-    }
-
-    /**
-        Initialize the cache for row number strings. Has to be called from
-        constructors of subclasses.
-     */
-    protected void initRowNumberStrings() {
-        
-        int maxRowNumber = getRowCount();
-        
-        if (rowNumberStrings.length - 1 < maxRowNumber) {
-            String[] newRowNumberStrings = new String[maxRowNumber];
-            System.arraycopy(rowNumberStrings,
-                             0,
-                             newRowNumberStrings,
-                             0,
-                             rowNumberStrings.length);
-            
-            for (int i = rowNumberStrings.length; i < newRowNumberStrings.length; i++) {
-                newRowNumberStrings[i] = String.valueOf(i);
-            }
-            
-            rowNumberStrings = newRowNumberStrings;
-        }
-    }
-    
-    private String rowNumberAsString(int row) {
-        if (rowNumberStrings == null || row >= rowNumberStrings.length) {
-            return "null";
-        }
-        return rowNumberStrings[row];
     }
 
 }

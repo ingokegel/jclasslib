@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
     Detail pane showing a <tt>CONSTANT_Long</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:16:34 $
 */
 public class ConstantLongInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -29,6 +29,10 @@ public class ConstantLongInfoDetailPane extends AbstractConstantInfoDetailPane {
     private ExtendedJLabel lblLong;
     private ExtendedJLabel lblComment;
     
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public ConstantLongInfoDetailPane(BrowserServices services) {
         super(services);
     }

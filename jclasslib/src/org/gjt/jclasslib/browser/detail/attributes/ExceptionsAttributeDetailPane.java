@@ -16,10 +16,14 @@ import org.gjt.jclasslib.structures.attributes.ExceptionsAttribute;
     Detail pane showing an <tt>Exceptions</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:35 $
 */
 public class ExceptionsAttributeDetailPane extends AbstractAttributeListDetailPane {
 
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public ExceptionsAttributeDetailPane(BrowserServices services) {
         super(services);
     }
@@ -37,10 +41,9 @@ public class ExceptionsAttributeDetailPane extends AbstractAttributeListDetailPa
         
         private int[] exceptionIndexTable;
         
-        public AttributeTableModel(AttributeInfo attribute) {
+        private AttributeTableModel(AttributeInfo attribute) {
             super(attribute);
             exceptionIndexTable = ((ExceptionsAttribute)attribute).getExceptionIndexTable();
-            initRowNumberStrings();
         }
 
         public int getColumnWidth(int column) {

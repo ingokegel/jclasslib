@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
     Detail pane showing a <tt>CONSTANT_Utf8</tt> constant pool entry.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:16:34 $
 */
 public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -29,6 +29,10 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
     private ExtendedJLabel lblStringLength;
     private ExtendedJLabel lblString;
     
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public ConstantUtf8InfoDetailPane(BrowserServices services) {
         super(services);
     }

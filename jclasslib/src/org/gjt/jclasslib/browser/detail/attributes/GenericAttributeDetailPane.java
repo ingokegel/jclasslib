@@ -18,16 +18,19 @@ import javax.swing.tree.TreePath;
     Detail pane showing the generic information which applies to all attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:35 $
 */
 public class GenericAttributeDetailPane extends FixedListDetailPane {
 
     // Visual components
     
     private ExtendedJLabel lblNameIndex;
-    private ExtendedJLabel lblNameIndexVerbose;
     private ExtendedJLabel lblLength;
     
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public GenericAttributeDetailPane(BrowserServices services) {
         super(services);
     }
@@ -36,7 +39,7 @@ public class GenericAttributeDetailPane extends FixedListDetailPane {
         
         addDetailPaneEntry(normalLabel("Attribute name index:"),
                            lblNameIndex = linkLabel(),
-                           lblNameIndexVerbose);
+                           null);
 
         addDetailPaneEntry(normalLabel("Attribute length:"),
                            lblLength = highlightLabel());
@@ -48,7 +51,7 @@ public class GenericAttributeDetailPane extends FixedListDetailPane {
         AttributeInfo attribute = findAttribute(treePath);
 
         constantPoolHyperlink(lblNameIndex,
-                              lblNameIndexVerbose,
+                              null,
                               attribute.getAttributeNameIndex());
         
         lblLength.setText(attribute.getAttributeLength());

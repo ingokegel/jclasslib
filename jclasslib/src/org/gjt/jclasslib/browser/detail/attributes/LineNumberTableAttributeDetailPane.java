@@ -16,10 +16,14 @@ import org.gjt.jclasslib.structures.attributes.LineNumberTableEntry;
     Detail pane showing a <tt>LineNumberTable</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:35 $
 */
 public class LineNumberTableAttributeDetailPane extends AbstractAttributeListDetailPane {
 
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public LineNumberTableAttributeDetailPane(BrowserServices services) {
         super(services);
     }
@@ -39,10 +43,9 @@ public class LineNumberTableAttributeDetailPane extends AbstractAttributeListDet
         
         private LineNumberTableEntry[] lineNumberTable;
         
-        public AttributeTableModel(AttributeInfo attribute) {
+        private AttributeTableModel(AttributeInfo attribute) {
             super(attribute);
             lineNumberTable = ((LineNumberTableAttribute)attribute).getLineNumberTable();
-            initRowNumberStrings();
         }
         
         public int getColumnWidth(int column) {

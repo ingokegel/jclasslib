@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
     Detail pane showing a <tt>SourceFile</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:35 $
 */
 public class SourceFileAttributeDetailPane extends FixedListDetailPane {
 
@@ -27,6 +27,10 @@ public class SourceFileAttributeDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblSourceFile;
     private ExtendedJLabel lblSourceFileVerbose;
     
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public SourceFileAttributeDetailPane(BrowserServices services) {
         super(services);
     }

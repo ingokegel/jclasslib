@@ -23,28 +23,29 @@ import java.util.WeakHashMap;
     columns.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:35 $
 */
 public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
 
-    /** Default width in pixels for a column displaying a number */
+    /** Default width in pixels for a column displaying a number. */
     protected static final int NUMBER_COLUMN_WIDTH = 60;
-    /** Default width in pixels for a column displaying a hyperlink */
+    /** Default width in pixels for a column displaying a hyperlink. */
     protected static final int LINK_COLUMN_WIDTH = 80;
-    /** Default width in pixels for a column displaying a verbose entry */
+    /** Default width in pixels for a column displaying a verbose entry. */
     protected static final int VERBOSE_COLUMN_WIDTH = 250;
-    /** Default width in pixels for a column displaying a short verbose entry */
-    protected static final int SHORT_VERBOSE_COLUMN_WIDTH = 125;
-    
+
     private static final int COLUMN_MIN_WIDTH = 20;
     private static final int ROW_NUMBER_COLUMN_WIDTH = 35;
 
     private static WeakHashMap attributeToTableModel = new WeakHashMap();
 
-    /** table model for this detail pane */
-    protected AbstractAttributeTableModel tableModel;
+    private AbstractAttributeTableModel tableModel;
     
-    public AbstractAttributeListDetailPane(BrowserServices services) {
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
+    protected AbstractAttributeListDetailPane(BrowserServices services) {
         super(services);
     }
     

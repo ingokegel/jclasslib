@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
     Detail pane showing a <tt>CONSTANT_Integer</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:16:34 $
 */
 public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -28,6 +28,10 @@ public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPan
     private ExtendedJLabel lblInt;
     private ExtendedJLabel lblComment;
     
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public ConstantIntegerInfoDetailPane(BrowserServices services) {
         super(services);
     }
