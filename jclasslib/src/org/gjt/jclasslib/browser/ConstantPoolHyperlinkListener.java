@@ -17,13 +17,18 @@ import java.awt.event.MouseEvent;
     Listens for mouse clicks and manages linking into the constat pool.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.6 $ $Date: 2003-08-18 08:02:07 $
 */
 public class ConstantPoolHyperlinkListener extends MouseAdapter {
 
     private BrowserServices services;
-    private int constantPoolIndex; 
-    
+    private int constantPoolIndex;
+
+    /**
+        Constructor.
+        @param services the browser services
+        @param constantPoolIndex the index of the constant pool to lonk to.
+     */
     public ConstantPoolHyperlinkListener(BrowserServices services, int constantPoolIndex) {
         
         this.services = services;
@@ -45,17 +50,17 @@ public class ConstantPoolHyperlinkListener extends MouseAdapter {
             return;
         }
         
-        JTree treeView = services.getBrowserComponent().getTreePane().getTreeView();
+        JTree tree = services.getBrowserComponent().getTreePane().getTree();
         TreePath newPath = linkPath(services, constantPoolIndex);
-        treeView.setSelectionPath(newPath);
-        treeView.scrollPathToVisible(newPath);
+        tree.setSelectionPath(newPath);
+        tree.scrollPathToVisible(newPath);
     }
     
     private static TreePath linkPath(BrowserServices services, int constantPoolIndex) {
         
-        TreePath constantPoolPath = services.getBrowserComponent().getTreePane().getConstantPoolPath();
+        TreePath constantPoolPath = services.getBrowserComponent().getTreePane().getPathForCategory(BrowserTreeNode.NODE_CONSTANT_POOL);
         
-        BrowserMutableTreeNode constantPoolNode = (BrowserMutableTreeNode)constantPoolPath.getLastPathComponent();
+        BrowserTreeNode constantPoolNode = (BrowserTreeNode)constantPoolPath.getLastPathComponent();
         TreeNode targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1);
         TreePath linkPath = constantPoolPath.pathByAddingChild(targetNode);
         
