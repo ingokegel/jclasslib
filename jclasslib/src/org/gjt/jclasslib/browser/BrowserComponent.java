@@ -21,7 +21,7 @@ import java.io.*;
     Visual component displaying a class file.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2001-05-31 13:16:00 $
+    @version $Revision: 1.2 $ $Date: 2002-02-18 12:44:31 $
 */
 public class BrowserComponent extends JComponent
                               implements TreeSelectionListener
@@ -74,7 +74,19 @@ public class BrowserComponent extends JComponent
     public void rebuild() {
         treePane.rebuild();
         history.clear();
-        initialSelection();
+        checkSelection();
+    }
+
+    /**
+        Check whether anything is selected. If not select the first node.
+     */
+    public void checkSelection() {
+
+        JTree treeView = treePane.getTreeView();
+        if (treeView.getSelectionPath() == null) {
+            BrowserMutableTreeNode rootNode = (BrowserMutableTreeNode)treeView.getModel().getRoot();
+            treeView.setSelectionPath(new TreePath(new Object[] {rootNode, rootNode.getFirstChild()}));
+        }
     }
 
     public void valueChanged(TreeSelectionEvent selectionEvent) {
@@ -118,17 +130,7 @@ public class BrowserComponent extends JComponent
         treeView.addTreeSelectionListener(this);
         history = new BrowserHistory(services);
         
-        initialSelection();
-        
         return treePane;
     }
     
-    private void initialSelection() {
-
-        JTree treeView = treePane.getTreeView();
-
-        BrowserMutableTreeNode rootNode = (BrowserMutableTreeNode)treeView.getModel().getRoot();
-        treeView.setSelectionPath(new TreePath(new Object[] {rootNode, rootNode.getFirstChild()}));
-    }
-
 }

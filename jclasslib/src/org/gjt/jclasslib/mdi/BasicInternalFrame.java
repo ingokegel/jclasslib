@@ -17,7 +17,7 @@ import java.util.*;
     Child frame for MDI application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:21 $
+    @version $Revision: 1.2 $ $Date: 2002-02-18 12:44:32 $
 */
 public class BasicInternalFrame extends JInternalFrame {
 
@@ -40,8 +40,6 @@ public class BasicInternalFrame extends JInternalFrame {
     public BasicInternalFrame(BasicDesktopManager desktopManager, String title) {
         super(title, true, true, true, true);
         this.desktopManager = desktopManager;
-        
-        setupInternalFrame();
     }
     
     /** 
@@ -84,7 +82,12 @@ public class BasicInternalFrame extends JInternalFrame {
         }
     }
     
-    private void setupInternalFrame() {
+    /**
+        Setup the internal frame. To be overridden by derived classes.
+        Call <tt>super()</tt> after the initialization in the
+        the dreived class is completed.
+     */
+    protected void setupInternalFrame() {
 
         setBounds(desktopManager.getNextInternalFrameBounds());
 
@@ -92,7 +95,9 @@ public class BasicInternalFrame extends JInternalFrame {
         addInternalFrameListener(desktopManager);
         desktopManager.addInternalFrame(this);
 
-        setVisible(true);
+        if (desktopManager.getParentFrame().isVisible()) {
+            setVisible(true);
+        }
     }
     
 }

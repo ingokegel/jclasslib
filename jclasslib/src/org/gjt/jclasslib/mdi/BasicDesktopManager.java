@@ -19,7 +19,7 @@ import java.util.*;
     <tt>DesktopManager</tt> for MDI application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:21 $
+    @version $Revision: 1.2 $ $Date: 2002-02-18 12:44:31 $
 */
 public class BasicDesktopManager extends DefaultDesktopManager
                                  implements VetoableChangeListener,
@@ -59,6 +59,8 @@ public class BasicDesktopManager extends DefaultDesktopManager
     protected LinkedList openFrames = new LinkedList();
     /** Menu index fo separator in the window menu*/
     protected int separatorMenuIndex = -1;
+    /** the index of the frame to be shown on top after a call to <tt>showAll()</tt> */
+    protected int activeFrameIndex = -1;
     
     public BasicDesktopManager(BasicMDIFrame parentFrame) {
         this.parentFrame = parentFrame;
@@ -113,6 +115,29 @@ public class BasicDesktopManager extends DefaultDesktopManager
     }
     
     /**
+        Set the index of the frame to be shown on top after a call to <tt>showAll()</tt>.
+        @param activeFrameIndex the index
+     */
+    public void setActiveFrameIndex(int activeFrameIndex) {
+        this.activeFrameIndex = activeFrameIndex;
+    }
+    
+    /**
+        Show all internal frames.
+     */
+    public void showAll() {
+        Iterator it = openFrames.iterator();
+        while (it.hasNext()) {
+            ((BasicInternalFrame)it.next()).setVisible(true);
+        }
+        JInternalFrame activeFrame = (JInternalFrame)openFrames.get(activeFrameIndex);
+        try {
+            activeFrame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+        }
+    }
+    
+    /**
         Add a child frame to this <tt>DesktopManager</tt>.
         @param frame the frame
      */
@@ -125,6 +150,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         Action action = new WindowActivateAction(frame);
         JMenuItem menuItem = parentFrame.menuWindow.add(action);
         
+        desktopPane.add(frame);
         frameToMenuItem.put(frame, menuItem);
         openFrames.add(frame);
         setWindowActionsEnabled(true);

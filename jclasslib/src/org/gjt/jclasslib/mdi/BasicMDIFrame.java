@@ -23,7 +23,7 @@ import java.lang.reflect.*;
     and supplies various utility methods.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:20:00 $
+    @version $Revision: 1.3 $ $Date: 2002-02-18 12:44:32 $
 */
 public class BasicMDIFrame extends JFrame {
 
@@ -276,7 +276,6 @@ public class BasicMDIFrame extends JFrame {
                 ex.printStackTrace();
                 continue;
             }
-            desktopPane.add(frame);
             desktopManager.resizeFrame(frame, frameX, frameY, frameWidth, frameHeight);
             
             try {
@@ -296,12 +295,7 @@ public class BasicMDIFrame extends JFrame {
         int activeFrameIndex = getIntProperty(props, SETTINGS_PROPERTY_ACTIVE_FRAME, -1);
         java.util.List openFrames = desktopManager.getOpenFrames();
         if (activeFrameIndex > -1 && activeFrameIndex < desktopManager.getOpenFrames().size()) {
-            JInternalFrame activeFrame = (JInternalFrame)openFrames.get(activeFrameIndex);
-            // workaround for showing the active frame at the top
-            // setSelected(true) does not work while still without peer
-            int layer = activeFrame.getLayer();
-            activeFrame.setLayer(layer + 1);
-            activeFrame.setLayer(layer);
+            desktopManager.setActiveFrameIndex(activeFrameIndex);
         }
 
     }

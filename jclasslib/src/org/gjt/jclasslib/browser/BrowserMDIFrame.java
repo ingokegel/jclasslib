@@ -22,7 +22,7 @@ import java.beans.*;
     MDI Frame and entry point for the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @version $Revision: 1.3 $ $Date: 2002-02-18 12:44:31 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
 
@@ -63,6 +63,13 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         setupActions();
         setupMenu();
         setupFrame();
+    }
+    
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            desktopManager.showAll();
+        }
     }
 
     protected BasicDesktopManager createDesktopManager() {
@@ -193,7 +200,6 @@ public class BrowserMDIFrame extends BasicMDIFrame {
     private void createInternalFrame(File file) {
 
         BrowserInternalFrame frame = new BrowserInternalFrame(desktopManager, file);
-        desktopPane.add(frame);
         try {
             frame.setMaximum(true);
         } catch (PropertyVetoException ex) {

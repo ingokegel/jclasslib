@@ -21,7 +21,7 @@ import java.io.*;
     A child window of the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @version $Revision: 1.3 $ $Date: 2002-02-18 12:44:31 $
 */
 public class BrowserInternalFrame extends BasicInternalFrame
                                   implements BrowserServices {
@@ -93,6 +93,20 @@ public class BrowserInternalFrame extends BasicInternalFrame
         return file;
     }
     
+    protected void setupInternalFrame() {
+        
+        setTitle(file.getAbsolutePath());
+
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
+
+        browserComponent = new BrowserComponent(this);
+        contentPane.add(browserComponent, BorderLayout.CENTER);
+        
+        super.setupInternalFrame();
+
+    }
+
     private BrowserMDIFrame getParentFrame() {
         return (BrowserMDIFrame)desktopManager.getParentFrame();
     }
@@ -109,16 +123,4 @@ public class BrowserInternalFrame extends BasicInternalFrame
         }
     }
     
-    private void setupInternalFrame() {
-
-        setTitle(file.getAbsolutePath());
-
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
-
-        browserComponent = new BrowserComponent(this);
-        contentPane.add(browserComponent, BorderLayout.CENTER);
-        
-    }
-
 }

@@ -15,7 +15,7 @@ import javax.swing.event.*;
     The desktop manager for the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @version $Revision: 1.3 $ $Date: 2002-02-18 12:44:31 $
 */
 public class BrowserDesktopManager extends BasicDesktopManager {
 
@@ -24,7 +24,9 @@ public class BrowserDesktopManager extends BasicDesktopManager {
     }
 
     public void internalFrameActivated(InternalFrameEvent event) {
-        actionStatus((BrowserInternalFrame)event.getInternalFrame());
+        BrowserInternalFrame internalFrame = (BrowserInternalFrame)event.getInternalFrame();
+        actionStatus(internalFrame);
+        internalFrame.getBrowserComponent().checkSelection();
     }
 
     public void internalFrameDeactivated(InternalFrameEvent event) {
