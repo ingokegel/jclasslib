@@ -22,7 +22,7 @@ import java.util.LinkedList;
     Visual component displaying a class file.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-08-18 08:05:39 $
+    @version $Revision: 1.8 $ $Date: 2004-02-10 16:05:45 $
 */
 public class BrowserComponent extends JComponent
                               implements TreeSelectionListener
@@ -169,24 +169,31 @@ public class BrowserComponent extends JComponent
     }
 
     /**
-        Rebuild tree view and clear history.
+        Rebuild tree view, clear history and try to set the same path in the browser as before.
      */
     public void rebuild() {
 
 
         BrowserPath browserPath = getBrowserPath();
-        JTree tree = treePane.getTree();
+        reset();
+        if (browserPath != null) {
+            setBrowserPath(browserPath);
+        }
+    }
 
+    /**
+        Rebuild tree view and clear history.
+     */
+    public void reset() {
+
+        JTree tree = treePane.getTree();
         tree.removeTreeSelectionListener(this);
         treePane.rebuild();
         history.clear();
         tree.addTreeSelectionListener(this);
-        if (browserPath == null) {
-            checkSelection();
-        } else {
-            setBrowserPath(browserPath);
-        }
+        checkSelection();
     }
+
 
     /**
         Check whether anything is selected. If not select the first node.
