@@ -205,12 +205,21 @@ clean            : Delete all generated files and directories.
                  destdir="${doc.javadoc.dir}"
                  packagenames="org.gjt.jclasslib.*"
                  classpathref="netbeans.classpath"
+                 overview="${doc.src.dir}/overview.html"
+                 stylesheetfile="${doc.dir}/doc.css"
+                 header="&lt;b&gt;&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;ej-technologies&lt;/a&gt;&lt;/b&gt;"
+                 windowtitle="jclasslib API documentation"
+                 doctitle="&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;&lt;img border='0' src='../images/ej-technologies.gif' &gt;&lt;/a&gt;"
         >
 
           <link offline="true"
+                href="http://www.netbeans.org/download/apis/"
+                packagelistLoc="${doc.src.dir}/offline-netbeans"/>
+          <link offline="true"
                 href="http://java.sun.com/products/jdk/1.3/docs/api/"
-                packagelistLoc="${doc.src.dir}/offline"/>
+                packagelistLoc="${doc.src.dir}/offline-java"/>
                 
+
         </javadoc>
     </target>
 
