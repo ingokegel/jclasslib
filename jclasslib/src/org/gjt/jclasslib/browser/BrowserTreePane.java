@@ -20,7 +20,7 @@ import java.awt.*;
     child window.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-05-31 13:07:46 $
+    @version $Revision: 1.6 $ $Date: 2002-06-01 09:59:13 $
 */
 public class BrowserTreePane extends JPanel {
 
@@ -60,7 +60,7 @@ public class BrowserTreePane extends JPanel {
         @param methodSignature the signature of the method (in class file format)
      */
     public void showMethod(String methodName, String methodSignature) {
-        
+
         if (methodsPath == null) {
             return;
         }
@@ -88,6 +88,7 @@ public class BrowserTreePane extends JPanel {
     public void rebuild() {
         constantPoolPath = null;
         methodsPath = null;
+        treeView.clearSelection();
         treeView.setModel(buildTreeModel());
     }
 

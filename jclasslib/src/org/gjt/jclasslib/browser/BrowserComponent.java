@@ -21,7 +21,7 @@ import java.io.*;
     Visual component displaying a class file.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-05-30 17:56:27 $
+    @version $Revision: 1.5 $ $Date: 2002-06-01 09:58:51 $
 */
 public class BrowserComponent extends JComponent
                               implements TreeSelectionListener
@@ -72,8 +72,13 @@ public class BrowserComponent extends JComponent
         Rebuild tree view and clear history.
      */
     public void rebuild() {
+
+        JTree treeView = treePane.getTreeView();
+
+        treeView.removeTreeSelectionListener(this);
         treePane.rebuild();
         history.clear();
+        treeView.addTreeSelectionListener(this);
         checkSelection();
     }
 
