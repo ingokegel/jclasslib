@@ -17,7 +17,7 @@ import javax.swing.tree.*;
     Detail pane showing class members (methods or fields):
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2002-05-31 13:08:14 $
 */
 public class ClassMemberDetailPane extends FixedListDetailPane {
 
@@ -67,11 +67,20 @@ public class ClassMemberDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
+        int index = getIndex(treePath);
         ClassMember classMember = null;
         if (mode == FIELDS) {
-            classMember = services.getClassFile().getFields()[getIndex(treePath)];
+            FieldInfo[] fields = services.getClassFile().getFields();
+            if (index >= fields.length) {
+                return;
+            }
+            classMember = fields[index];
         } else {
-            classMember = services.getClassFile().getMethods()[getIndex(treePath)];
+            MethodInfo[] methods = services.getClassFile().getMethods();
+            if (index >= methods.length) {
+                return;
+            }
+            classMember = methods[index];
         }
         
         constantPoolHyperlink(lblName,
