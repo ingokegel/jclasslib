@@ -19,7 +19,7 @@ import java.util.*;
     <tt>DesktopManager</tt> for MDI application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-18 12:44:31 $
+    @version $Revision: 1.3 $ $Date: 2002-02-18 12:52:30 $
 */
 public class BasicDesktopManager extends DefaultDesktopManager
                                  implements VetoableChangeListener,
@@ -130,10 +130,12 @@ public class BasicDesktopManager extends DefaultDesktopManager
         while (it.hasNext()) {
             ((BasicInternalFrame)it.next()).setVisible(true);
         }
-        JInternalFrame activeFrame = (JInternalFrame)openFrames.get(activeFrameIndex);
-        try {
-            activeFrame.setSelected(true);
-        } catch (PropertyVetoException ex) {
+        if (activeFrameIndex > -1) {
+            JInternalFrame activeFrame = (JInternalFrame)openFrames.get(activeFrameIndex);
+            try {
+                activeFrame.setSelected(true);
+            } catch (PropertyVetoException ex) {
+            }
         }
     }
     
