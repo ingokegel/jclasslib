@@ -11,12 +11,13 @@ import org.gjt.jclasslib.io.Log;
 import org.gjt.jclasslib.structures.constants.*;
 
 import java.io.*;
+import java.util.*;
 
 /**
     The class file structure in which all other structures are hooked up.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:34:20 $
 */
 public class ClassFile extends AbstractStructureWithAttributes {
 
@@ -34,12 +35,14 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private int minorVersion;
     private int majorVersion;
     private CPInfo[] constantPool;
+    private HashMap constantPoolEntryToIndex = new HashMap();
     private int accessFlags;
     private int thisClass;
     private int superClass;
     private int[] interfaces;
     private FieldInfo[] fields;
     private MethodInfo[] methods;
+    
     
     public ClassFile() {
         skipConstantPool = Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_CONSTANT_POOL);
@@ -87,13 +90,66 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
-        Set the array with all constant pool entries.
+        Get the index of an equivalent constant pool entry.
+        @param cpInfo the constant pool entry
+        @return the index, -1 if no equivalent constant pool entry can be found
+     */
+    public int getConstantPoolIndex(CPInfo cpInfo) {
+        Integer index = (Integer)constantPoolEntryToIndex.get(cpInfo);
+        if (index != null) {
+            return index.intValue();
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+        Set the array with all constant pool entries. An internal hash map
+        will need to be recalulated. If you add to the end of the constant
+        pool, use <tt>enlargeConstantPool</tt>.
         @param constantPool the array
      */
     public void setConstantPool(CPInfo[] constantPool) {
         this.constantPool = constantPool;
+        for (int i = 0; i < constantPool.length; i++) {
+            constantPoolEntryToIndex.put(constantPool[i], new Integer(i));
+        }
+    }
+
+    /**
+        Set the array with all constant pool entries where the new array
+        of constant pool entries starts with the old constant pool. If
+        you delete entries, use <tt>setConstantPool</tt>.
+        @param enlargedConstantPool the array
+     */
+    public void enlargeConstantPool(CPInfo[] enlargedConstantPool) {
+        int startIndex = constantPool == null ? 0 : constantPool.length;
+        this.constantPool = enlargedConstantPool;
+        for (int i = startIndex; i < constantPool.length; i++) {
+            if (constantPool[i] != null) {
+                constantPoolEntryToIndex.put(constantPool[i], new Integer(i));
+            }
+        }
     }
     
+    /**
+        Register the constant pool entry at a given index, so that it can
+        be found through the <tt>getConstantPoolIndex</tt> method.
+        @param index the index
+     */
+    public void registerConstantPoolEntry(int index) {
+        constantPoolEntryToIndex.put(constantPool[index], new Integer(index));
+    }
+    
+    /**
+        Unregister the constant pool entry at a given index, so that it can
+        no longer be found through the <tt>getConstantPoolIndex</tt> method.
+        @param index the index
+     */
+    public void unregisterConstantPoolEntry(int index) {
+        constantPoolEntryToIndex.remove(constantPool[index]);
+    }
+
     /**
         Get the access flags of this class.
         @return the access flags
@@ -345,6 +401,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private void readConstantPool(DataInput in)
         throws InvalidByteCodeException, IOException {
     
+        constantPoolEntryToIndex.clear();
         int constantPoolCount = in.readUnsignedShort();
         if (debug) debug("read constant pool count " + constantPoolCount);
         
@@ -361,6 +418,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
                 // of the constant is not yet known 
                 if (debug) debug("reading constant pool entry " + i);
                 constantPool[i] = CPInfo.create(in, this);
+                constantPoolEntryToIndex.put(constantPool[i], new Integer(i));
                 if (constantPool[i] instanceof ConstantLargeNumeric) {
                     // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
                     // pool entries, the second entry is unusable (design mistake)
@@ -373,13 +431,16 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private void writeConstantPool(DataOutput out)
         throws InvalidByteCodeException, IOException {
     
-        int constantPoolCount = getLength(constantPool);
+        int lastFreeIndex;
+        for (lastFreeIndex = getLength(constantPool) - 1;
+             lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null;
+             lastFreeIndex--) {}
         
-        out.writeShort(constantPoolCount);
-        if (debug) debug("wrote constant pool count " + constantPoolCount);
+        out.writeShort(lastFreeIndex + 1);
+        if (debug) debug("wrote constant pool count " + (lastFreeIndex + 1));
         
         // constantPool[0] defaults to null and is not written into the class file
-        for (int i = 1; i < constantPoolCount; i++) {
+        for (int i = 1; i <= lastFreeIndex; i++) {
             if (constantPool[i] == null) {
                 throw new InvalidByteCodeException("constant pool entry " + i + " is null");
             }
