@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Long-Description: Module to view bytecode
+OpenIDE-Module-Specification-Version: 2.0
+OpenIDE-Module-Implementation-Version: 2.0
+OpenIDE-Module-Display-Category: Tools
+OpenIDE-Module: org.gjt.jclasslib.nbmodule
+OpenIDE-Module-Name: jclasslib
+OpenIDE-Module-Layer: org/gjt/jclasslib/nbmodule/mf-layer.xml
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.java/1
+Class-Path: java.jar
+
+Name: org/gjt/jclasslib/nbmodule/OpenAction.class
+OpenIDE-Module-Class: Action
+
