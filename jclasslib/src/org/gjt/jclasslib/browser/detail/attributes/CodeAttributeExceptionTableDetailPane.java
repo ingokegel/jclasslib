@@ -15,7 +15,7 @@ import org.gjt.jclasslib.structures.attributes.*;
     Detail pane showing the exception table about a <tt>Code</tt> attribute.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2001-05-31 13:15:25 $
+    @version $Revision: 1.3 $ $Date: 2002-02-17 17:32:12 $
 */
 public class CodeAttributeExceptionTableDetailPane extends AbstractAttributeListDetailPane {
 
@@ -115,6 +115,7 @@ public class CodeAttributeExceptionTableDetailPane extends AbstractAttributeList
         protected Object doGetValueAt(int row, int column) {
 
             ExceptionTableEntry exceptionTableEntry = exceptionTable[row];
+            int catchType = exceptionTableEntry.getCatchType();
             
             switch (column) {
                 case START_PC_COLUMN_INDEX:
@@ -124,9 +125,17 @@ public class CodeAttributeExceptionTableDetailPane extends AbstractAttributeList
                 case HANDLER_PC_COLUMN_INDEX:
                     return String.valueOf(exceptionTableEntry.getHandlerPc());
                 case CATCH_TYPE_COLUMN_INDEX:
-                    return CPINFO_LINK_TEXT + String.valueOf(exceptionTableEntry.getCatchType());
+                    if (catchType == 0) {
+                        return "";
+                    } else {
+                        return CPINFO_LINK_TEXT + String.valueOf(catchType);
+                    }
                 case CATCH_TYPE_VERBOSE_COLUMN_INDEX:
-                    return getConstantPoolEntryName(exceptionTableEntry.getCatchType());
+                    if (catchType == 0) {
+                        return "any";
+                    } else {
+                        return getConstantPoolEntryName(exceptionTableEntry.getCatchType());
+                    }
                 default:
                     return "";
             }
