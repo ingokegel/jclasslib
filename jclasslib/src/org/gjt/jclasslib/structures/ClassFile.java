@@ -17,7 +17,7 @@ import java.util.*;
     The class file structure in which all other structures are hooked up.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-17 17:34:20 $
+    @version $Revision: 1.3 $ $Date: 2002-02-26 16:36:12 $
 */
 public class ClassFile extends AbstractStructureWithAttributes {
 
@@ -292,7 +292,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         } else {
             throw new InvalidByteCodeException("constant pool entry at " + index + 
                                                " is not assignable to " +
-                                               entryClass.getClass().getName());
+                                               entryClass.getName());
         }
     }
 
