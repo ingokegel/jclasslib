@@ -29,7 +29,7 @@ import java.util.prefs.Preferences;
     MDI Frame and entry point for the class file browser application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2003-08-18 08:05:40 $
+    @version $Revision: 1.9 $ $Date: 2003-08-18 17:10:42 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
 
@@ -672,7 +672,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
             } else if (this == actionReload) {
                 doReload();
             } else if (this == actionShowHomepage) {
-                doShowURL("http://jclasslib.sourceforge.net");
+                doShowURL("http://www.ej-technologies.com/products/jclasslib/overview.html");
             } else if (this == actionShowEJT) {
                 doShowURL("http://www.ej-technologies.com");
             } else if (this == actionShowHelp) {
