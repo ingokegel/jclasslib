@@ -16,7 +16,7 @@ import java.io.*;
     <tt>org.gjt.jclasslib.structures</tt>.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:21 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:17:26 $
 */
 public class ClassFileReader {
 
@@ -31,11 +31,27 @@ public class ClassFileReader {
         @throws IOException if an exception occurs while reading the file
      */
     public static ClassFile readFromFile(File file)
-        throws InvalidByteCodeException, IOException {
+        throws InvalidByteCodeException, IOException
+    {
+            
+        return readFromInputStream(new FileInputStream(file));
+    }
+
+    /**
+        Converts a class file to a <tt>ClassFile</tt> structure.
+        @param is the input stream from which to read the
+                  <tt>ClassFile</tt> structure
+        @return the new <tt>ClassFile</tt> structure
+        @throws InvalidByteCodeException if the bytecode is invalid
+        @throws IOException if an exception occurs while reading from
+                            the input stream
+     */
+    public static ClassFile readFromInputStream(InputStream is)
+        throws InvalidByteCodeException, IOException
+    {
             
         DataInputStream in = new DataInputStream(
-                                new BufferedInputStream(
-                                new FileInputStream(file)));
+                                new BufferedInputStream(is));
         
         ClassFile classFile = new ClassFile();
         classFile.read(in);
