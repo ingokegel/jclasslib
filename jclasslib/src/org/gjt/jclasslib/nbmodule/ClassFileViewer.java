@@ -8,14 +8,14 @@
 package org.gjt.jclasslib.nbmodule;
 
 import org.gjt.jclasslib.browser.*;
+import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.gjt.jclasslib.io.ClassFileReader;
 import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.util.MaximizedListener;
-import org.openide.ErrorManager;
-import org.openide.TopManager;
-import org.openide.filesystems.FileObject;
+import org.openide.*;
+import org.openide.filesystems.*;
+import org.openide.filesystems.FileSystem;
 import org.openide.nodes.Node;
-import org.openide.text.EditorSupport;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.windows.*;
 
 import javax.swing.*;
@@ -23,14 +23,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.BeanInfo;
 import java.io.*;
-import java.net.URL;
 import java.util.HashMap;
 
 /**
     Parent component for a class file browser in Netbeans.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.7 $ $Date: 2003-08-18 07:57:18 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices
@@ -69,6 +68,9 @@ public class ClassFileViewer extends TopComponent
         }
     }
 
+    /**
+     * Constructor.
+     */
     public ClassFileViewer() {
         setCloseOperation(CLOSE_EACH);
     }
@@ -102,9 +104,9 @@ public class ClassFileViewer extends TopComponent
 
         init();
         if (ws == null) {
-            ws = TopManager.getDefault().getWindowManager().getCurrentWorkspace();
+            ws = WindowManager.getDefault().getCurrentWorkspace();
         }
-        Mode mode = ws.findMode(EditorSupport.EDITOR_MODE);
+        Mode mode = ws.findMode(CloneableEditorSupport.EDITOR_MODE);
         if (mode != null) {
             mode.dockInto(this);
         }
@@ -138,7 +140,7 @@ public class ClassFileViewer extends TopComponent
         if (!valid) {
             return;
         }
-        String version = in.readUTF();
+        in.readUTF(); // version string
         Node.Handle handle = (Node.Handle)in.readObject();
         super.readExternal(in);
 
@@ -165,11 +167,23 @@ public class ClassFileViewer extends TopComponent
         return actionForward;
     }
 
-    public void activate() {
-        // not applicable
+    public void openClassFile(String className, BrowserPath browserPath) {
+
+        FileSystem targetFs = OpenAction.getTargetFileSystem(fo);
+        String classFileName = className.replace('.', '/') + ".class";
+        FileObject targetFo = targetFs.findResource(classFileName);
+        if (targetFo == null) {
+            targetFo = Repository.getDefault().findResource(classFileName);
+        }
+        if (targetFo != null) {
+            OpenAction.openFileObject(targetFo, browserPath);
+        } else {
+            NotifyDescriptor desc = new NotifyDescriptor.Message("The class " + className + " could not be found.", NotifyDescriptor.INFORMATION_MESSAGE);
+            TopManager.getDefault().notify(desc);
+        }
     }
 
-    public void addMaximizedListener(MaximizedListener listener) {
+    public void activate() {
         // not applicable
     }
 
@@ -180,11 +194,11 @@ public class ClassFileViewer extends TopComponent
         }
 
         if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater (new Runnable () {
+            SwingUtilities.invokeLater(new Runnable () {
                                             public void run () {
                                                 init();
                                             }
-                                        });
+                                       });
             return;
         }
 
@@ -208,7 +222,7 @@ public class ClassFileViewer extends TopComponent
             classFile =
                 ClassFileReader.readFromInputStream(fo.getInputStream());
         } catch (Exception ex) {
-            TopManager.getDefault().getErrorManager().notify(
+            ErrorManager.getDefault().notify(
                 ErrorManager.EXCEPTION,
                 ex);
             return false;
@@ -218,15 +232,15 @@ public class ClassFileViewer extends TopComponent
 
     private void setupActions() {
 
-        actionBackward = new DefaultAction("Backward", loadIcon("browser_backward_small.gif"));
+        actionBackward = new DefaultAction("Backward", BrowserMDIFrame.loadIcon("browser_backward_small.gif"));
         actionBackward.putValue(Action.SHORT_DESCRIPTION, "Move backward in the navigation history");
         actionBackward.setEnabled(false);
 
-        actionForward = new DefaultAction("Forward", loadIcon("browser_forward_small.gif"));
+        actionForward = new DefaultAction("Forward", BrowserMDIFrame.loadIcon("browser_forward_small.gif"));
         actionForward.putValue(Action.SHORT_DESCRIPTION, "Move forward in the navigation history");
         actionForward.setEnabled(false);
 
-        actionReload = new DefaultAction("Reload", loadIcon("reload_small.gif"));
+        actionReload = new DefaultAction("Reload", BrowserMDIFrame.loadIcon("reload_small.gif"));
         actionReload.putValue(Action.SHORT_DESCRIPTION, "Reload class file");
         actionReload.setEnabled(true);
 
@@ -253,24 +267,9 @@ public class ClassFileViewer extends TopComponent
         return toolBar;
     }
 
-    private ImageIcon loadIcon(String fileName) {
-
-        URL imageURL = getClass().getResource("/" +
-                            BrowserMDIFrame.IMAGES_DIRECTORY +
-                            "/" +
-                            fileName);
-
-        return new ImageIcon(imageURL);
-
-    }
-
     private class DefaultAction extends AbstractAction {
 
-        public DefaultAction(String name) {
-            super(name);
-        }
-
-        public DefaultAction(String name, Icon icon) {
+        private DefaultAction(String name, Icon icon) {
             super(name, icon);
         }
 
