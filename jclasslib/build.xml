@@ -1,43 +1,32 @@
-<!--
+<!-- Build file for jclasslib -->
 
-Build file for jclasslib
-
-Important targets:
-
-compile (default): Builds execution environment in ${build.dir}.
-jar              : Assembles an executable jar file in ${build.dir}.
-doc              : Builds the documentation
-javadoc          : Builds the javadoc
-dist             : Bundles the jar file together with the documentation
-                   into a tar.gz file in ${dist.dir}.
-clean            : Delete all generated files and directories.
-
--->
-
-<project name="jclasslib" default="compile" basedir=".">
+<project name="jclasslib" default="compile">
 
   <!-- Properties can be overridden in this file -->
   <property file="my.properties"/>
 
-  <!-- Version for directories -->
-  <property name="version" value="2.0"/>
-  <!-- Version for files -->
-  <property name="version.nodots" value="2_0"/>
+  <!-- Version -->
+  <property name="jclasslib.version" value="2.0"/>
 
   <!-- Keystore for signing -->
   <property name="keystore.file" value="../jprofiler/.keystore"/>
   <!-- Keystore password, empty if not signed -->
   <property name="keystore.password" value=""/>
 
+  <!-- Directory with miscellaneous files needed for the build process -->
+  <property name="service.dir" value="service"/>
+
   <!-- Build properties -->
   <property name="build.dir" value="build"/>
   <property name="build.jar" value="${build.dir}/jclasslib.jar" />
+  
   <property name="build.nbmodule.dir" value="${build.dir}/netbeans" />
   <property name="build.nbmodule.modules.dir" value="${build.nbmodule.dir}/modules" />
   <property name="build.nbmodule.jar" value="${build.nbmodule.modules.dir}/jclasslib.jar" />
   <property name="build.nbmodule.file" value="${build.dir}/jclasslib.nbm" />
-  <property name="build.manifest.jar.filename" value="jclasslib.mf" />
-  <property name="build.manifest.nbmodule.filename" value="nbmodule.mf" />
+
+  <property name="jar.manifest.filename" value="${service.dir}/jclasslib.mf" />
+  <property name="nbmodule.manifest.filename" value="${service.dir}/nbmodule.mf" />
 
   <!-- Location of source code -->
   <property name="src.dir" value="src"/>
@@ -45,6 +34,7 @@ clean            : Delete all generated files and directories.
   <!-- Location of documentation -->
   <property name="doc.dir" value="doc"/>
   <property name="doc.src.dir" value="${doc.dir}/src"/>
+  <property name="doc.src.docbook.dir" value="${doc.src.dir}/docbook" />
   <property name="doc.javadoc.dir" value="${doc.dir}/api"/>
 
   <!-- Distribution properties -->
@@ -69,6 +59,9 @@ clean            : Delete all generated files and directories.
   </path>
 
   <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${lib-compile.dir}/antnbm.jar"/>
+  <taskdef name="install4j"
+           classname="com.install4j.Install4JTask"
+           classpath="/opt/install4j/bin/install4j.jar:/Program Files/install4j/bin/install4j.jar:/Programme/install4j/bin/install4j.jar"/>
 
   <!-- Make all standard directories -->
   <target name="init">
@@ -79,15 +72,13 @@ clean            : Delete all generated files and directories.
     <mkdir dir="${build.nbmodule.modules.dir}"/>
   </target>
 
-  <!-- Delete all generated files and directories -->
-  <target name="clean">
+  <target name="clean" description="Delete all generated files and directories">
     <delete dir="${build.dir}"/>
     <delete dir="${dist.dir}"/>
     <delete dir="${doc.javadoc.dir}"/>
   </target>
 
-  <!-- Compile source code -->
-  <target name="compile" depends="init">
+  <target name="compile" depends="init" description="Compile source code">
     <javac srcdir="${src.dir}" destdir="${build.dir}">
       <classpath refid="project.classpath" />
       <exclude name="**/nbmodule/*"/>
@@ -101,26 +92,24 @@ clean            : Delete all generated files and directories.
     </copy>
   </target>
 
-  <!-- Compile netbeans module -->
-  <target name="nb-compile" depends="init">
+  <target name="nb-compile" depends="init" description="Compile netbeans module">
     <javac srcdir="${src.dir}" destdir="${build.dir}">
       <classpath refid="project.classpath" />
       <classpath refid="netbeans.classpath" />
     </javac>
     <copy todir="${build.dir}">
       <fileset dir="${src.dir}">
-         <include name="**/*.gif"/>
-         <include name="**/*.xml"/>
-       </fileset>
+        <include name="**/*.gif"/>
+        <include name="**/*.png"/>
+        <include name="**/*.xml"/>
+      </fileset>
     </copy>
   </target>
 
-
-  <!-- Assemble source code and images into jar file -->
-  <target name="jar" depends="compile">
+  <target name="jar" depends="compile" description="Assemble source code and images into jar file">
     <jar jarfile="${build.jar}"
          basedir="${build.dir}"
-         manifest="${src.dir}/${build.manifest.jar.filename}"
+         manifest="${jar.manifest.filename}"
          compress="true">
 
 
@@ -130,11 +119,15 @@ clean            : Delete all generated files and directories.
     </jar>
   </target>
 
-  <!-- Assemble Netbeans module jar file -->
-  <target name="nb-module" depends="nb-compile">
+  <target name="nb-module" depends="nb-compile" description="Generate Netbeans module">
+    <condition property="keystoreIsDefault" value="true">
+      <equals arg1="${keystore.password}" arg2=""/>
+    </condition>      
+    <antcall target="testKeystorePassword"/>
+
     <jar jarfile="${build.nbmodule.jar}"
          basedir="${build.dir}"
-         manifest="${src.dir}/${build.manifest.nbmodule.filename}">
+         manifest="${nbmodule.manifest.filename}">
 
       <include name="org/**"/>
       <exclude name="**/*.html"/>
@@ -149,66 +142,20 @@ clean            : Delete all generated files and directories.
     </makenbm>
   </target>
 
-  <!-- Make distribution -->
-  <target name="dist" depends="jar,doc,javadoc,nb-module">
-
-    <!-- Version-specific locations -->    
-    <property name="dist.name" value="jclasslib-${version}" />
-    <property name="dist.assembly.dir" value="${dist.dir}/${dist.name}" />
-    <property name="dist.tar.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.tar" />
-    <property name="dist.zip.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.zip" />
-
-    <!-- Assemble distribution directory -->
-    <mkdir dir="${dist.assembly.dir}"/>
-    <copy todir="${dist.assembly.dir}">
-      <fileset dir="${build.dir}">
-        <include name="*.jar" />
-      </fileset>
-      <fileset dir="${basedir}">
-        <include name="${doc.dir}/**/*"/>
-        <include name="${src.dir}/**/*.java"/>
-        <include name="${src.dir}/*.mf"/>
-        <include name="${src.dir}/images/**/*"/>
-        <include name="build.xml"/>
-        <include name="licence"/>
-        <include name="jclasslib"/>
-        <include name="jclasslib.bat"/>
-        <exclude name="**/docbook/**/*"/>
-      </fileset>
-    </copy>
-
-    <!-- Build tar.gz file only if zip file is out of date -->
-    <uptodate property="build.tar.notrequired" targetfile="${dist.zip.filename}">
-      <srcfiles dir="${dist.assembly.dir}"/>
-    </uptodate>
-
-    <antcall target="buildTar" />
-
-    <!-- build zip file -->
-    <zip zipfile="${dist.zip.filename}" basedir="${dist.dir}">
-      <include name="${dist.name}/**"/>
-    </zip>
-
+  <!-- test if the keystore password has been supplied -->
+  <target name="testKeystorePassword" if="keystoreIsDefault">
+    <fail message="please supply keystore.password"/>
   </target>
 
-  <!-- Helper target for dist -->
-  <target name="buildTar" unless="build.tar.notrequired">
+  <target name="dist" depends="clean,jar,doc,javadoc,nb-module" description="Create distribution with install4j">
 
-    <!-- Build tar.gz file -->
-    <tar tarfile="${dist.tar.filename}" basedir="${dist.dir}" longfile="gnu">
-      <include name="${dist.name}/**"/>
-    </tar>
-
-    <gzip src="${dist.tar.filename}"
-          zipfile="${dist.tar.filename}.gz" />
-
-    <!-- Tar file is not necessary to keep around -->
-    <delete file="${dist.tar.filename}" />
-
+    <install4j projectfile="${src.service.dir}/jclasslib.install4j" release="${jclasslib.version}"/>          
   </target>
 
-  <target name="doc">
-    
+  <target name="doc" description="Generate HTML help document from docbook source file">
+  
+    <available file="${doc.src.docbook.dir}" property="docbook.available" />
+    <antcall target="copyDocbook" />
   
     <style basedir="${doc.src.dir}"
            destdir="${doc.dir}"
@@ -218,8 +165,17 @@ clean            : Delete all generated files and directories.
 
   </target>
 
-  <target name="javadoc" depends="init">
-    <javadoc sourcepath="${src.dir}"
+  <!-- Helper target to copy docbook.zip to suitable location, if not already present -->
+  <target name="copyDocbook" unless="docbook.available">
+
+    <mkdir dir="${doc.src.docbook.dir}" />
+    <unzip src="${lib-compile.dir}/docbook.zip" dest="${doc.src.docbook.dir}" />
+
+  </target>
+
+  <target name="javadoc" depends="init" description="Generate javadoc">
+
+    <javadoc sourcepath="${src.dir}:"
              destdir="${doc.javadoc.dir}"
              packagenames="org.gjt.jclasslib.*"
              classpathref="netbeans.classpath"
@@ -234,11 +190,12 @@ clean            : Delete all generated files and directories.
             href="http://www.netbeans.org/download/apis/"
             packagelistLoc="${doc.src.dir}/offline-netbeans"/>
       <link offline="true"
-            href="http://java.sun.com/products/jdk/1.3/docs/api/"
+            href="http://java.sun.com/products/jdk/1.4/docs/api/"
             packagelistLoc="${doc.src.dir}/offline-java"/>
 
 
     </javadoc>
+
   </target>
 
 </project>
