@@ -29,7 +29,9 @@ clean            : Delete all generated files and directories.
     <property name="build.compiler" value="jikes"/>
     <property name="build.dir" value="build"/>
     <property name="build.jar.filename.prefix" value="jclasslib" />
-    <property name="build.manifest.filename" value="jclasslib.mf" />
+    <property name="build.nbmodule.filename.prefix" value="nb-jclasslib" />
+    <property name="build.manifest.jar.filename" value="jclasslib.mf" />
+    <property name="build.manifest.nbmodule.filename" value="nbmodule.mf" />
 
     <!-- Location of source code -->
     <property name="src.dir" value="src"/>
@@ -43,11 +45,22 @@ clean            : Delete all generated files and directories.
     <property name="dist.dir" value="dist"/>
     <property name="dist.filename.prefix" value="jclasslib" />
     
+    <!-- Location of Netbeans installation -->
+    <property name="netbeans.dir" value="netbeans"/>
+    
     <!-- Class path for compiling -->
     <path id="project.classpath">
         <pathelement location="${java.classes}"/>
     </path>
 
+    <!-- Additional class path for compiling netbeans module-->
+    <path id="netbeans.classpath">
+        <pathelement location="${netbeans.dir}/lib/openide.jar"/>
+        <pathelement location="${netbeans.dir}/lib/openide-fs.jar"/>
+        <pathelement location="${netbeans.dir}/lib/openide-util.jar"/>
+        <pathelement location="${netbeans.dir}/lib/openide-nodes.jar"/>
+        <pathelement location="${netbeans.dir}/modules/java.jar"/>
+    </path>
 
     <!-- Make all standard directories -->
     <target name="init">
@@ -68,6 +81,7 @@ clean            : Delete all generated files and directories.
     <target name="compile" depends="init">
         <javac srcdir="${src.dir}" destdir="${build.dir}">
             <classpath refid="project.classpath" />
+            <exclude name="**/nbmodule/*"/>
         </javac>
         <copy todir="${build.dir}">
             <fileset dir="${src.dir}">
@@ -76,18 +90,44 @@ clean            : Delete all generated files and directories.
         </copy>
     </target>
 
+    <!-- Compile netbeans module -->
+    <target name="nb-compile" depends="init">
+    <javac srcdir="${src.dir}" destdir="${build.dir}">
+            <classpath refid="project.classpath" />
+            <classpath refid="netbeans.classpath" />
+        </javac>
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}">
+                <include name="images/*.gif"/>
+                <include name="**/*.xml"/>
+            </fileset>
+        </copy>
+    </target>
+    
+
     <!-- Assemble source code and images into jar file -->
     <target name="jar" depends="compile">
         <jar jarfile="${build.dir}/${build.jar.filename.prefix}.jar"
              basedir="${build.dir}"
-             manifest="${src.dir}/${build.manifest.filename}">
+             manifest="${src.dir}/${build.manifest.jar.filename}">
              
-             <exclude name="${build.jar.filename.prefix}.jar"/>
+             <exclude name="**/nbmodule/*"/>
+             <exclude name="*.jar"/>
+        </jar>
+    </target>
+
+    <!-- Assemble Netbeans module jar file -->
+    <target name="nb-jar" depends="nb-compile">
+        <jar jarfile="${build.dir}/${build.nbmodule.filename.prefix}.jar"
+             basedir="${build.dir}"
+             manifest="${src.dir}/${build.manifest.nbmodule.filename}">
+             
+             <exclude name="*.jar"/>
         </jar>
     </target>
 
     <!-- Make distribution -->
-    <target name="dist" depends="jar">
+    <target name="dist" depends="jar,doc,javadoc,nb-jar">
 
         <!-- Version-specific locations -->    
         <property name="dist.name" value="jclasslib-${version}" />
@@ -99,7 +139,8 @@ clean            : Delete all generated files and directories.
         <mkdir dir="${dist.assembly.dir}"/>
         <copy todir="${dist.assembly.dir}">
             <fileset dir="${build.dir}">
-                <include name="jclasslib.jar" />
+                <include name="${build.jar.filename.prefix}.jar" />
+                <include name="${build.nbmodule.filename.prefix}.jar" />
             </fileset>
             <fileset dir="${basedir}">
                 <include name="${doc.dir}/**/*"/>
@@ -158,6 +199,7 @@ clean            : Delete all generated files and directories.
         <javadoc sourcepath="${src.dir}"
                  destdir="${doc.javadoc.dir}"
                  packagenames="org.gjt.jclasslib.*"
+                 classpathref="netbeans.classpath"
         >
 
           <link offline="true"
