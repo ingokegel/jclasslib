@@ -28,16 +28,16 @@ import org.openide.text.*;
 
 /**
     Parent component for a class file browser in Netbeans.
- 
+
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.5 $ $Date: 2002-05-30 17:56:28 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices
 {
 
     private static HashMap fileObjectToClassFileViewer = new HashMap();
-    
+
     private static final String VERSION = "1.2";
 
     private FileObject fo;
@@ -52,9 +52,9 @@ public class ClassFileViewer extends TopComponent
     private BrowserComponent browserComponent;
 
     /**
-        Retrive an already opened <tt>ClassFileViewer</tt> or create
+        Retrieve an already opened <tt>ClassFileViewer</tt> or create
         a new one if necessary.
-        @param fo the <tt>FileObject</tt> for which to create a 
+        @param fo the <tt>FileObject</tt> for which to create a
                   <tt>ClassFileViewer</tt>
         @return the <tt>ClassFileViewer</tt>
      */
@@ -68,26 +68,26 @@ public class ClassFileViewer extends TopComponent
             return viewer;
         }
     }
-    
+
     public ClassFileViewer() {
         setCloseOperation(CLOSE_EACH);
     }
-    
+
     private ClassFileViewer(FileObject fo) {
 
         this();
         this.fo = fo;
         node = new ClassFileNode(fo);
         setActivatedNodes(new Node[] {node});
-        
+
     }
-    
+
     public boolean canClose (Workspace workspace, boolean last) {
 
         fileObjectToClassFileViewer.remove(fo);
         return true;
     }
-    
+
     public Image getIcon() {
 
         if (node != null) {
@@ -95,7 +95,7 @@ public class ClassFileViewer extends TopComponent
         } else {
             return null;
         }
-           
+
     }
 
     public void open(Workspace ws) {
@@ -124,10 +124,10 @@ public class ClassFileViewer extends TopComponent
         out.writeBoolean(true);
         out.writeUTF(VERSION);
         out.writeObject(node.getHandle());
-        
+
         super.writeExternal(out);
     }
-    
+
     public void readExternal (ObjectInput in)
         throws IOException, ClassNotFoundException
     {
@@ -148,15 +148,15 @@ public class ClassFileViewer extends TopComponent
     }
 
     // Browser services
-    
+
     public ClassFile getClassFile() {
         return classFile;
     }
-    
+
     public BrowserComponent getBrowserComponent() {
         return browserComponent;
     }
-    
+
     public Action getActionBackward() {
         return actionBackward;
     }
@@ -164,11 +164,11 @@ public class ClassFileViewer extends TopComponent
     public Action getActionForward() {
         return actionForward;
     }
-    
+
     public void activate() {
         // not applicable
     }
-    
+
     public void addMaximizedListener(MaximizedListener listener) {
         // not applicable
     }
@@ -178,7 +178,7 @@ public class ClassFileViewer extends TopComponent
         if (initialized) {
             return;
         }
-        
+
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater (new Runnable () {
                                             public void run () {
@@ -187,7 +187,7 @@ public class ClassFileViewer extends TopComponent
                                         });
             return;
         }
-        
+
         if (fo != null) {
             setName(fo.getName());
         }
@@ -196,7 +196,7 @@ public class ClassFileViewer extends TopComponent
             this.close();
             return;
         }
-        
+
         setupActions();
         setupComponent();
 
@@ -229,7 +229,7 @@ public class ClassFileViewer extends TopComponent
         actionReload = new DefaultAction("Reload", loadIcon("reload_small.gif"));
         actionReload.putValue(Action.SHORT_DESCRIPTION, "Reload class file");
         actionReload.setEnabled(true);
-        
+
     }
 
     private void setupComponent() {
@@ -239,29 +239,29 @@ public class ClassFileViewer extends TopComponent
         add(buildToolbar(), BorderLayout.NORTH);
         add(browserComponent, BorderLayout.CENTER);
     }
-    
+
     private JToolBar buildToolbar() {
-        
+
         JToolBar toolBar = new JToolBar();
         toolBar.add(actionBackward);
         toolBar.add(actionForward);
         toolBar.addSeparator();
         toolBar.add(actionReload);
-        
+
         toolBar.setFloatable(false);
-        
+
         return toolBar;
     }
-    
+
     private ImageIcon loadIcon(String fileName) {
 
-        URL imageURL = getClass().getResource("/" + 
+        URL imageURL = getClass().getResource("/" +
                             BrowserMDIFrame.IMAGES_DIRECTORY +
-                            "/" + 
+                            "/" +
                             fileName);
-        
+
         return new ImageIcon(imageURL);
- 
+
     }
 
     private class DefaultAction extends AbstractAction {

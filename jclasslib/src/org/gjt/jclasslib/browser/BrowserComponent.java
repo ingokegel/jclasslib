@@ -19,9 +19,9 @@ import java.io.*;
 
 /**
     Visual component displaying a class file.
- 
+
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.4 $ $Date: 2002-05-30 17:56:27 $
 */
 public class BrowserComponent extends JComponent
                               implements TreeSelectionListener
@@ -32,11 +32,11 @@ public class BrowserComponent extends JComponent
     private BrowserServices services;
 
     // Visual Components
-    
+
     private JSplitPane splitPane;
     private BrowserTreePane treePane;
     private BrowserDetailPane detailPane;
-    
+
     public BrowserComponent(BrowserServices services) {
 
         this.services = services;
@@ -50,7 +50,7 @@ public class BrowserComponent extends JComponent
     public BrowserTreePane getTreePane() {
         return treePane;
     }
-    
+
     /**
         Get the pane containing the detail area for the specific tree node selected
         in the <tt>BrowserTreePane</tt>.
@@ -59,7 +59,7 @@ public class BrowserComponent extends JComponent
     public BrowserDetailPane getDetailPane() {
         return detailPane;
     }
-    
+
     /**
         Get the navigation history of this child window.
         @return the history
@@ -67,7 +67,7 @@ public class BrowserComponent extends JComponent
     public BrowserHistory getHistory() {
         return history;
     }
-    
+
     /**
         Rebuild tree view and clear history.
      */
@@ -83,54 +83,58 @@ public class BrowserComponent extends JComponent
     public void checkSelection() {
 
         JTree treeView = treePane.getTreeView();
-        if (treeView.getSelectionPath() == null) {
-            BrowserMutableTreeNode rootNode = (BrowserMutableTreeNode)treeView.getModel().getRoot();
-            treeView.setSelectionPath(new TreePath(new Object[] {rootNode, rootNode.getFirstChild()}));
-        }
+        if (services.getClassFile() == null) {
+			((CardLayout)detailPane.getLayout()).show(detailPane, BrowserMutableTreeNode.NODE_NO_CONTENT);
+		} else {
+			if (treeView.getSelectionPath() == null) {
+				BrowserMutableTreeNode rootNode = (BrowserMutableTreeNode)treeView.getModel().getRoot();
+				treeView.setSelectionPath(new TreePath(new Object[] {rootNode, rootNode.getFirstChild()}));
+			}
+		}
     }
 
     public void valueChanged(TreeSelectionEvent selectionEvent) {
-        
+
         services.activate();
-        
+
         TreePath selectedPath = selectionEvent.getPath();
-        
+
         history.updateHistory(selectedPath);
         showDetailPaneForPath(selectedPath);
-        
+
     }
-    
+
     private void showDetailPaneForPath(TreePath path) {
-        
+
         BrowserMutableTreeNode node = (BrowserMutableTreeNode)path.getLastPathComponent();
         String nodeType = node.getType();
         detailPane.showPane(nodeType, path);
     }
-    
-    
+
+
     private void setupComponent() {
 
         setLayout(new BorderLayout());
 
         detailPane = new BrowserDetailPane(services);
-        
+
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                    buildTreePane(),
                                    detailPane);
 
         add(splitPane, BorderLayout.CENTER);
-        
+
     }
-    
+
     private BrowserTreePane buildTreePane() {
-        
+
         treePane = new BrowserTreePane(services);
-        
+
         JTree treeView = treePane.getTreeView();
         treeView.addTreeSelectionListener(this);
         history = new BrowserHistory(services);
-        
+
         return treePane;
     }
-    
+
 }
