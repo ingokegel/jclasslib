@@ -19,20 +19,23 @@ import java.awt.*;
     a <tt>JLabel</tt> like the <tt>javax.swing.table.DefaultTableCellRenderer</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:29 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:48:28 $
 */
 public class ExtendedTableCellRenderer extends ExtendedJLabel
                                        implements TableCellRenderer {
 
-    private static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+    private static final Border NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
 
     private Color unselectedForeground;
-    private Color unselectedBackground; 
+    private Color unselectedBackground;
 
+    /**
+     * Constructor.
+     */
     public ExtendedTableCellRenderer() {
         super();
         setOpaque(true);
-        setBorder(noFocusBorder);
+        setBorder(NO_FOCUS_BORDER);
     }
 
     public void setForeground(Color c) {
@@ -51,36 +54,38 @@ public class ExtendedTableCellRenderer extends ExtendedJLabel
         setBackground(null);
     }
     
-    public Component getTableCellRendererComponent(JTable table, Object value,
-              boolean isSelected, boolean hasFocus, int row, int column) {
-
+    public Component getTableCellRendererComponent(JTable table,
+                                                   Object value,
+                                                   boolean isSelected,
+                                                   boolean hasFocus,
+                                                   int row,
+                                                   int column)
+    {
         if (isSelected) {
            super.setForeground(table.getSelectionForeground());
            super.setBackground(table.getSelectionBackground());
 
         } else {
-            super.setForeground((unselectedForeground != null) ? unselectedForeground 
-                                       : table.getForeground());
-            super.setBackground((unselectedBackground != null) ? unselectedBackground 
-                                       : table.getBackground());
+            super.setForeground((unselectedForeground != null) ? unselectedForeground : table.getForeground());
+            super.setBackground((unselectedBackground != null) ? unselectedBackground : table.getBackground());
         }
 
         setFont(table.getFont());
 
         if (hasFocus) {
-            setBorder( UIManager.getBorder("Table.focusCellHighlightBorder") );
+            setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
             if (table.isCellEditable(row, column)) {
-                super.setForeground( UIManager.getColor("Table.focusCellForeground") );
-                super.setBackground( UIManager.getColor("Table.focusCellBackground") );
+                super.setForeground(UIManager.getColor("Table.focusCellForeground"));
+                super.setBackground(UIManager.getColor("Table.focusCellBackground"));
             }
         } else {
-            setBorder(noFocusBorder);
+            setBorder(NO_FOCUS_BORDER);
         }
 
         setValue(value); 
 
-        Color back = getBackground();
-        boolean colorMatch = (back != null) && ( back.equals(table.getBackground()) ) && table.isOpaque();
+        Color background = getBackground();
+        boolean colorMatch = (background != null) && (background.equals(table.getBackground())) && table.isOpaque();
         setOpaque(!colorMatch);
 
         return this;
