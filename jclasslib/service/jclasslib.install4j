@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install4j version="1.0">
+  <directoryPresets config="bin" />
+  <application name="jclasslib bytecode viewer" distributionSourceDir="" mediaDir="../dist" mediaFilePattern="%SHORT_NAME%_%PLATFORM%_%VERSION%" compression="6" shortName="jclasslib" publisher="ej-technologies" publisherWeb="http://www.ej-technologies.com" version="2.0" allPathsRelative="true" backupOnSave="false" autoSave="false" />
+  <files>
+    <mountPoints>
+      <mountPoint name="" id="683316172" location="bin" />
+      <mountPoint name="" id="319023622" location="doc" />
+      <mountPoint name="" id="1640019204" location="lib-compile" />
+      <mountPoint name="" id="400268283" location="src" />
+      <mountPoint name="" id="1880276840" location="service" />
+      <mountPoint name="" id="1504655503" location="" />
+    </mountPoints>
+    <entries>
+      <fileEntry mountPoint="683316172" file="../build/jclasslib.jar" />
+      <fileEntry mountPoint="683316172" file="../build/jclasslib.nbm" />
+      <dirEntry mountPoint="319023622" file="../doc" excludeSuffixes="CVS, .cvsignore">
+        <exclude>
+          <entry location="src/docbook" />
+        </exclude>
+      </dirEntry>
+      <fileEntry mountPoint="1640019204" file="../lib-compile/antnbm.jar" />
+      <dirEntry mountPoint="400268283" file="../src" excludeSuffixes="CVS, .cvsignore">
+        <exclude />
+      </dirEntry>
+      <dirEntry mountPoint="1880276840" file="." excludeSuffixes="CVS, .cvsignore">
+        <exclude />
+      </dirEntry>
+      <fileEntry mountPoint="1504655503" file="../build.xml" />
+      <fileEntry mountPoint="1504655503" file="../license" />
+    </entries>
+  </files>
+  <launchers>
+    <launcher name="jclasslib bytecode viewer" id="404488187">
+      <executable name="jclasslib" menuName="" excludeFromMenu="false" pngIcon16File="./jclasslib16x16.png" pngIcon32File="./jclasslib32x32.png" type="1" iconSet="true" iconFile="" executableDir="bin" redirectStderr="true" stderrFile="error.log" redirectStdout="false" stdoutFile="output.log" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory=".." singleInstance="false" />
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="%VERSION%" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="org.gjt.jclasslib.browser.BrowserApplication" vmParameters="-Dsun.java2d.noddraw=true" arguments="" allowVMPassthroughParameters="true" minVersion="1.4" maxVersion="">
+        <searchSequence>
+          <registry />
+          <envVar name="JAVA_HOME" />
+          <envVar name="JDK_HOME" />
+        </searchSequence>
+        <classPath>
+          <archive location="bin/jclasslib.jar" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories />
+      </java>
+    </launcher>
+  </launchers>
+  <mediaSets>
+    <win32 name="Windows" id="1636329964" mediaFileName="" installDir="jclasslib" allLaunchers="true" includedJRE="" languageID="409" licenseFile="" preInformationFile="" postInformationFile="" customInstallBaseDir="" allowUserChangeInstallDir="true" mainExecutableId="404488187" allowUserStartAfterFinish="true" launchExecutableId="404488187" programGroup="jclasslib bytecode viewer" allowUserChangeProgramGroup="true" allowUserDisableStartMenuCreation="true" createInternetShortcut="true" createUninstallIcon="true" allowUserCreateDesktopIcon="true" allowUserCreateQuickLaunchIcon="false">
+      <selectedLaunchers />
+      <messageSet language="English" />
+      <exclude />
+      <additionalStartMenuEntries>
+        <entry name="jclasslib help" file="doc/help.html" />
+        <entry name="API Javadoc" file="doc/api/index.html" />
+      </additionalStartMenuEntries>
+    </win32>
+    <linuxRPM name="Linux RPM" id="2047307087" mediaFileName="" installDir="/opt/jclasslib" allLaunchers="true" includedJRE="" languageID="409" licenseFile="" preInformationFile="" postInformationFile="">
+      <selectedLaunchers />
+      <messageSet language="English" />
+      <exclude />
+      <customScriptLines />
+    </linuxRPM>
+    <genericUnix name="Generic Unix" id="850942491" mediaFileName="" installDir="jclasslib" allLaunchers="true" includedJRE="" languageID="409" licenseFile="" preInformationFile="" postInformationFile="">
+      <selectedLaunchers />
+      <messageSet language="English" />
+      <exclude />
+      <customScriptLines />
+    </genericUnix>
+    <macos name="Mac OS X" id="453430872" mediaFileName="" installDir="jclasslib" allLaunchers="false" includedJRE="" languageID="409" licenseFile="" preInformationFile="" postInformationFile="" executableId="" iconsFile="">
+      <selectedLaunchers>
+        <launcher id="404488187" />
+      </selectedLaunchers>
+      <messageSet language="English" />
+      <exclude />
+      <customScriptLines />
+    </macos>
+  </mediaSets>
+</install4j>
+
