@@ -15,7 +15,7 @@ import java.io.*;
     Describes an exception table entry in a <tt>Code</tt> attribute structure.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:20 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:34:49 $
 */
 public class ExceptionTableEntry extends AbstractStructure {
 
@@ -45,6 +45,17 @@ public class ExceptionTableEntry extends AbstractStructure {
         exceptionTableEntry.read(in);
 
         return exceptionTableEntry;
+    }
+    
+    public ExceptionTableEntry(){
+    }
+    
+    public ExceptionTableEntry(int startPc, int endPc, int handlerPc, int catchType)
+    {
+        this.startPc = startPc;
+        this.endPc = endPc;
+        this.handlerPc = handlerPc;
+        this.catchType = catchType;
     }
             
     /**
