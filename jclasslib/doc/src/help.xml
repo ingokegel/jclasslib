@@ -3,17 +3,28 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "docbook/dtd/docbookx.dtd">
 <article>
   <title>jclasslib help</title>
-  <subtitle>Ingo Kegel, 2002-02-26</subtitle>
+  <subtitle>ej-technologies GmbH, Ingo Kegel, 2002-02-26</subtitle>
+  <sect1>
+    <title>Sponsor</title>
+    <para>
+      The development of <application>jclasslib</application> is sponsored by
+      <ulink url="http://www.ej-technologies.com">ej-technologies GmbH</ulink>.
+      If you are working with Java bytecode, you might also be interested in
+      <ulink url="http://www.ej-technologies.com/jprofiler/overview.html">JProfiler</ulink>,
+      an all-purpose Java profiling suite.
+    </para>
+  </sect1>
   <sect1>
     <title>Purpose</title>
     <para>
       <application>jclasslib</application> is a library and a collection of
-      utilities and applications which are aimed at the manipulation of java bytecode.
+      utilities and applications which are aimed at the visualization and manipulation
+      of java bytecode.
       The core functionality consists in mechanism to read, modify and write class files.
       Currently one bundled application - the class file browser - is built on top of this.
-      While the bytecode manipulation classes could be of interest to developers with
+      While the bytecode manipulation classes is of interest to developers with
       specialized development targets such as obfuscators, compilers or code completion
-      engines, the class file browser is a standalone application which may be useful for
+      engines, the class file browser is a standalone application which is useful for
       anyone trying to understand the java virtual machine.
     </para>
   </sect1>
@@ -524,5 +535,24 @@
         </itemizedlist>
       </para>
     </sect2>
+  </sect1>
+  <sect1>
+    <title>Trademarks</title>
+    <para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            Sun, Sun Microsystems and Java are registered trademarks of Sun Microsystems, Inc.
+            in the United States and other countries.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Microsoft and Microsoft Windows are registered trademarks of Microsoft Corporation,
+            registered in the U.S. and other countries.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
   </sect1>
 </article>
