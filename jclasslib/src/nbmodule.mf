@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-OpenIDE-Module-Long-Description: Module to browse java bytecode
-OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0
+OpenIDE-Module-Long-Description: Module to view bytecode
+OpenIDE-Module-Specification-Version: 2.0
+OpenIDE-Module-Implementation-Version: 2.0
 OpenIDE-Module-Display-Category: Tools
 OpenIDE-Module: org.gjt.jclasslib.nbmodule
 OpenIDE-Module-Name: jclasslib
