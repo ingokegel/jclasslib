@@ -20,9 +20,9 @@ clean            : Delete all generated files and directories.
     <property file="my.properties"/>
 
     <!-- Version for directories -->
-    <property name="version" value="1.0"/>
+    <property name="version" value="1.1"/>
     <!-- Version for files -->
-    <property name="version.nodots" value="1_0"/>
+    <property name="version.nodots" value="1_1"/>
 
 
     <!-- Build properties -->
