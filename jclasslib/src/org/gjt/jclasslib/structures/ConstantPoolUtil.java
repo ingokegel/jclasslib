@@ -12,13 +12,13 @@ import org.gjt.jclasslib.structures.constants.*;
 /**
     Utility methods for working on the constant pool of a <tt>ClassFile</tt>
     object.
- 
+
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-07-23 11:03:55 $
 */
 
 public class ConstantPoolUtil {
-    
+
     private ConstantPoolUtil() {
     }
 
@@ -28,7 +28,7 @@ public class ConstantPoolUtil {
         @param classFile the class file whose constant pool is to be edited
         @param className the name of the referenced class
         @param methodName the name of the referenced method
-        @param methodSignature the signature of the references method
+        @param methodSignature the signature of the referenced method
         @param sizeDelta the minimum increment by which the array holding the
                          constant pool is to be enlarged. Set to 0 if unsure.
         @return the constant pool index of the added <tt>ConstantMethodRef</tt>
@@ -51,7 +51,35 @@ public class ConstantPoolUtil {
     }
 
     /**
-        Add a <tt>ConstantNameAndTypeInfo</tt> constant pool entry to the 
+        Add a <tt>ConstantFieldRef</tt> constant pool entry to the constant pool
+        of a <tt>ClassFile</tt>.
+        @param classFile the class file whose constant pool is to be edited
+        @param className the name of the referenced class
+        @param fieldName the name of the referenced field
+        @param fieldType the type of the referenced field
+        @param sizeDelta the minimum increment by which the array holding the
+                         constant pool is to be enlarged. Set to 0 if unsure.
+        @return the constant pool index of the added <tt>ConstantMethodRef</tt>
+     */
+    public static int addConstantFieldrefInfo(ClassFile classFile,
+                                              String className,
+                                              String fieldName,
+                                              String fieldType,
+                                              int sizeDelta)
+    {
+        sizeDelta = Math.max(sizeDelta, 6);
+        int classIndex = addConstantClassInfo(classFile, className, sizeDelta);
+        int nameAndTypeIndex = addConstantNameAndTypeInfo(classFile, fieldName, fieldType, sizeDelta);
+
+        ConstantFieldrefInfo fieldrefInfo = new ConstantFieldrefInfo();
+        fieldrefInfo.setClassFile(classFile);
+        fieldrefInfo.setClassIndex(classIndex);
+        fieldrefInfo.setNameAndTypeIndex(nameAndTypeIndex);
+        return addConstantPoolEntry(classFile, fieldrefInfo, sizeDelta);
+    }
+
+    /**
+        Add a <tt>ConstantNameAndTypeInfo</tt> constant pool entry to the
         constant pool of a <tt>ClassFile</tt>.
         @param classFile the class file whose constant pool is to be edited
         @param name the name
@@ -75,9 +103,9 @@ public class ConstantPoolUtil {
         nameAndTypeInfo.setDescriptorIndex(descriptorIndex);
         return addConstantPoolEntry(classFile, nameAndTypeInfo, sizeDelta);
     }
-    
+
     /**
-        Add a <tt>ConstantClassInfo</tt> constant pool entry to the 
+        Add a <tt>ConstantClassInfo</tt> constant pool entry to the
         constant pool of a <tt>ClassFile</tt>.
         @param classFile the class file whose constant pool is to be edited
         @param className the name of the referenced class
@@ -99,7 +127,7 @@ public class ConstantPoolUtil {
     }
 
     /**
-        Add a <tt>ConstantUTF8Info</tt> constant pool entry to the 
+        Add a <tt>ConstantUTF8Info</tt> constant pool entry to the
         constant pool of a <tt>ClassFile</tt>.
         @param classFile the class file whose constant pool is to be edited
         @param string the string
@@ -118,7 +146,7 @@ public class ConstantPoolUtil {
     }
 
     /**
-        Add a constant pool entry to the 
+        Add a constant pool entry to the
         constant pool of a <tt>ClassFile</tt>.
         @param classFile the class file whose constant pool is to be edited
         @param newEntry the new constant pool entry
@@ -131,7 +159,7 @@ public class ConstantPoolUtil {
                                            int sizeDelta)
     {
         CPInfo[] constantPool = classFile.getConstantPool();
-        
+
         int index = classFile.getConstantPoolIndex(newEntry);
         if (index > -1) {
             return index;
