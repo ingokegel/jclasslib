@@ -29,7 +29,7 @@ import java.util.HashMap;
     Parent component for a class file browser in Netbeans.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-08-18 07:57:18 $
+    @version $Revision: 1.8 $ $Date: 2003-08-18 17:11:21 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices
@@ -232,15 +232,15 @@ public class ClassFileViewer extends TopComponent
 
     private void setupActions() {
 
-        actionBackward = new DefaultAction("Backward", BrowserMDIFrame.loadIcon("browser_backward_small.gif"));
+        actionBackward = new DefaultAction("Backward", BrowserMDIFrame.loadIcon("browser_backward_small.png"));
         actionBackward.putValue(Action.SHORT_DESCRIPTION, "Move backward in the navigation history");
         actionBackward.setEnabled(false);
 
-        actionForward = new DefaultAction("Forward", BrowserMDIFrame.loadIcon("browser_forward_small.gif"));
+        actionForward = new DefaultAction("Forward", BrowserMDIFrame.loadIcon("browser_forward_small.png"));
         actionForward.putValue(Action.SHORT_DESCRIPTION, "Move forward in the navigation history");
         actionForward.setEnabled(false);
 
-        actionReload = new DefaultAction("Reload", BrowserMDIFrame.loadIcon("reload_small.gif"));
+        actionReload = new DefaultAction("Reload", BrowserMDIFrame.loadIcon("reload_small.png"));
         actionReload.putValue(Action.SHORT_DESCRIPTION, "Reload class file");
         actionReload.setEnabled(true);
 
