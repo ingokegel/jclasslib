@@ -20,3 +20,13 @@ h2.subtitle { font-size: 12pt;
 
 
 span.term { font-weight: bold;}
+
+a:link, a:visited { 
+  color: #5A4E87;
+}
+
+a:hover { 
+  color: #FF3300;
+  text-decoration: underline;
+}
+
