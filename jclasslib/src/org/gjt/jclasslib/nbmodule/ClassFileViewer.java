@@ -30,7 +30,7 @@ import org.openide.text.*;
     Parent component for a class file browser in Netbeans.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2001-05-31 13:24:15 $
+    @version $Revision: 1.2 $ $Date: 2002-02-26 17:22:17 $
 */
 public class ClassFileViewer extends TopComponent
                              implements BrowserServices
@@ -196,15 +196,15 @@ public class ClassFileViewer extends TopComponent
 
     private void setupActions() {
 
-        actionBackward = new DefaultAction("Backward", loadIcon("backward.gif"));
+        actionBackward = new DefaultAction("Backward", loadIcon("browser_backward_small.gif"));
         actionBackward.putValue(Action.SHORT_DESCRIPTION, "Move backward in the navigation history");
         actionBackward.setEnabled(false);
 
-        actionForward = new DefaultAction("Forward", loadIcon("forward.gif"));
+        actionForward = new DefaultAction("Forward", loadIcon("browser_forward_small.gif"));
         actionForward.putValue(Action.SHORT_DESCRIPTION, "Move forward in the navigation history");
         actionForward.setEnabled(false);
 
-        actionReload = new DefaultAction("Reload", loadIcon("reload.gif"));
+        actionReload = new DefaultAction("Reload", loadIcon("reload_small.gif"));
         actionReload.putValue(Action.SHORT_DESCRIPTION, "Reload class file");
         actionReload.setEnabled(true);
         
