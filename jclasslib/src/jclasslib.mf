@@ -1,4 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: org.gjt.jclasslib.browser.BrowserMDIFrame
-Class-Path: kunststoff.jar
-
+Main-Class: org.gjt.jclasslib.browser.BrowserApplication
