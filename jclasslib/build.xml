@@ -19,6 +19,7 @@
   <!-- Build properties -->
   <property name="build.dir" value="build"/>
   <property name="build.jar" value="${build.dir}/jclasslib.jar" />
+  <property name="build.library.jar" value="${build.dir}/jclasslib-library.jar" />
   
   <property name="build.nbmodule.dir" value="${build.dir}/netbeans" />
   <property name="build.nbmodule.modules.dir" value="${build.nbmodule.dir}/modules" />
@@ -110,11 +111,21 @@
     <jar jarfile="${build.jar}"
          basedir="${build.dir}"
          manifest="${jar.manifest.filename}"
-         compress="true">
+         compress="false">
 
 
       <exclude name="**/nbmodule/*"/>
       <include name="org/**"/>
+      <exclude name="**/*.html"/>
+    </jar>
+    <jar jarfile="${build.library.jar}"
+         basedir="${build.dir}"
+         compress="false">
+
+
+      <include name="org/gjt/jclasslib/bytecode/**"/>
+      <include name="org/gjt/jclasslib/io/**"/>
+      <include name="org/gjt/jclasslib/structures/**"/>
       <exclude name="**/*.html"/>
     </jar>
   </target>
