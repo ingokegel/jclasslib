@@ -149,7 +149,7 @@
 
   <target name="dist" depends="clean,jar,doc,javadoc,nb-module" description="Create distribution with install4j">
 
-    <install4j projectfile="${src.service.dir}/jclasslib.install4j" release="${jclasslib.version}"/>          
+    <install4j projectfile="${service.dir}/jclasslib.install4j" release="${jclasslib.version}"/>          
   </target>
 
   <target name="doc" description="Generate HTML help document from docbook source file">
