@@ -11,16 +11,17 @@ import org.gjt.jclasslib.structures.*;
 import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.tree.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
     The pane containing the tree structure for the class file shown in the
     child window.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.8 $ $Date: 2003-08-18 08:02:58 $
 */
 public class BrowserTreePane extends JPanel {
 
@@ -28,10 +29,13 @@ public class BrowserTreePane extends JPanel {
     private static final Dimension treePreferredSize = new Dimension(250,150);
 
     private BrowserServices services;
-    private JTree treeView;
-    private TreePath constantPoolPath;
-    private TreePath methodsPath;
+    private JTree tree;
+    private Map categoryToPath = new HashMap();
 
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public BrowserTreePane(BrowserServices services) {
         this.services = services;
         setLayout(new BorderLayout());
@@ -42,109 +46,89 @@ public class BrowserTreePane extends JPanel {
         Get the tree view.
         @return the tree view
      */
-    public JTree getTreeView() {
-        return treeView;
+    public JTree getTree() {
+        return tree;
     }
 
     /**
-        Get the tree path for the parent node of the constant pool.
-        @return the tree path
+        Get the tree path for a given category.
+        @param category the category. One the <tt>BrowserTree.NODE_</tt> constants.
+        @return the tree path.
      */
-    public TreePath getConstantPoolPath() {
-        return constantPoolPath;
-    }
-
-    /**
-        Show the specified method if it exists.
-        @param methodName the name of the method
-        @param methodSignature the signature of the method (in class file format)
-     */
-    public void showMethod(String methodName, String methodSignature) {
-
-        if (methodsPath == null) {
-            return;
-        }
-        MethodInfo[] methods = services.getClassFile().getMethods();
-        TreeNode methodsNode = (TreeNode)methodsPath.getLastPathComponent();
-        for (int i = 0; i < methodsNode.getChildCount(); i++) {
-            BrowserMutableTreeNode treeNode = (BrowserMutableTreeNode)methodsNode.getChildAt(i);
-            MethodInfo testMethod = methods[treeNode.getIndex()];
-            try {
-                if (testMethod.getName().equals(methodName) && testMethod.getDescriptor().equals(methodSignature)) {
-                    TreePath path = methodsPath.pathByAddingChild(treeNode);
-                    treeView.makeVisible(path);
-                    treeView.scrollPathToVisible(path);
-                    treeView.setSelectionPath(path);
-                    return;
-                }
-            } catch (InvalidByteCodeException ex) {
-            }
-        }
+    public TreePath getPathForCategory(String category) {
+        return (TreePath)categoryToPath.get(category);
     }
 
     /**
         Rebuild the tree from the <tt>ClassFile</tt> object.
      */
     public void rebuild() {
-        constantPoolPath = null;
-        methodsPath = null;
-        treeView.clearSelection();
-        treeView.setModel(buildTreeModel());
+        categoryToPath.clear();
+        tree.clearSelection();
+        tree.setModel(buildTreeModel());
     }
 
     private void setupComponent() {
 
-        JScrollPane treeScrollPane = new JScrollPane(buildTreeView());
+        JScrollPane treeScrollPane = new JScrollPane(buildTree());
         treeScrollPane.setMinimumSize(treeMinimumSize);
         treeScrollPane.setPreferredSize(treePreferredSize);
 
         add(treeScrollPane, BorderLayout.CENTER);
     }
 
-    private JTree buildTreeView() {
+    private JTree buildTree() {
 
-        treeView = new JTree(buildTreeModel());
+        tree = new JTree(buildTreeModel());
 
-        treeView.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        treeView.setRootVisible(false);
-        treeView.setShowsRootHandles(true);
-        treeView.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.setRootVisible(false);
+        tree.setShowsRootHandles(true);
 
-        return treeView;
+        return tree;
     }
 
     private TreeModel buildTreeModel() {
-        BrowserMutableTreeNode rootNode = buildRootNode();
+        BrowserTreeNode rootNode = buildRootNode();
         DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
         return treeModel;
     }
 
-    private BrowserMutableTreeNode buildRootNode() {
+    private BrowserTreeNode buildRootNode() {
 
-        BrowserMutableTreeNode rootNode = new BrowserMutableTreeNode("Class file");
+        BrowserTreeNode rootNode = new BrowserTreeNode("Class file");
         ClassFile classFile = services.getClassFile();
         if (classFile != null) {
-			BrowserMutableTreeNode generalNode = new BrowserMutableTreeNode("General Information", BrowserMutableTreeNode.NODE_GENERAL);
-			BrowserMutableTreeNode constantPoolNode = buildConstantPoolNode();
-                        BrowserMutableTreeNode methodsNode = buildMethodsNode();
+
+			BrowserTreeNode generalNode = new BrowserTreeNode("General Information", BrowserTreeNode.NODE_GENERAL);
+			BrowserTreeNode constantPoolNode = buildConstantPoolNode();
+            BrowserTreeNode interfacesNode = buildInterfacesNode();
+            BrowserTreeNode fieldsNode = buildFieldsNode();
+            BrowserTreeNode methodsNode = buildMethodsNode();
+            BrowserTreeNode attributesNode = buildAttributesNode();
+
 			rootNode.add(generalNode);
 			rootNode.add(constantPoolNode);
-			rootNode.add(buildInterfacesNode());
-			rootNode.add(buildFieldsNode());
+            rootNode.add(interfacesNode);
+            rootNode.add(fieldsNode);
 			rootNode.add(methodsNode);
-			rootNode.add(buildAttributesNode());
+            rootNode.add(attributesNode);
 
-			constantPoolPath = new TreePath(new Object[] {rootNode, constantPoolNode});
-                        methodsPath =  new TreePath(new Object[] {rootNode, methodsNode});
+            categoryToPath.put(BrowserTreeNode.NODE_GENERAL, new TreePath(new Object[] {rootNode, generalNode}));
+			categoryToPath.put(BrowserTreeNode.NODE_CONSTANT_POOL, new TreePath(new Object[] {rootNode, constantPoolNode}));
+            categoryToPath.put(BrowserTreeNode.NODE_INTERFACE, new TreePath(new Object[] {rootNode, interfacesNode}));
+            categoryToPath.put(BrowserTreeNode.NODE_FIELD, new TreePath(new Object[] {rootNode, fieldsNode}));
+            categoryToPath.put(BrowserTreeNode.NODE_METHOD, new TreePath(new Object[] {rootNode, methodsNode}));
+            categoryToPath.put(BrowserTreeNode.NODE_ATTRIBUTE, new TreePath(new Object[] {rootNode, attributesNode}));
 		}
 
         return rootNode;
     }
 
-    private BrowserMutableTreeNode buildConstantPoolNode() {
+    private BrowserTreeNode buildConstantPoolNode() {
 
-        BrowserMutableTreeNode constantPoolNode = new BrowserMutableTreeNode("Constant Pool");
+        BrowserTreeNode constantPoolNode = new BrowserTreeNode("Constant Pool");
 
 		CPInfo[] constantPool = services.getClassFile().getConstantPool();
 		int constantPoolCount = constantPool.length;
@@ -159,16 +143,16 @@ public class BrowserTreePane extends JPanel {
     private int addConstantPoolEntry(CPInfo constantPoolEntry,
                                      int index,
                                      int constantPoolCount,
-                                     BrowserMutableTreeNode constantPoolNode) {
+                                     BrowserTreeNode constantPoolNode) {
 
 
         if (constantPoolEntry == null) {
             constantPoolNode.add(buildNullNode());
         } else {
-            BrowserMutableTreeNode entryNode =
-                new BrowserMutableTreeNode(getFormattedIndex(index, constantPoolCount) +
+            BrowserTreeNode entryNode =
+                new BrowserTreeNode(getFormattedIndex(index, constantPoolCount) +
                                            constantPoolEntry.getTagVerbose(),
-                                           BrowserMutableTreeNode.NODE_CONSTANT_POOL,
+                                           BrowserTreeNode.NODE_CONSTANT_POOL,
                                            index);
 
             constantPoolNode.add(entryNode);
@@ -184,24 +168,24 @@ public class BrowserTreePane extends JPanel {
 
     private void addConstantPoolContinuedEntry(int index,
                                                int constantPoolCount,
-                                               BrowserMutableTreeNode constantPoolNode) {
+                                               BrowserTreeNode constantPoolNode) {
 
-        BrowserMutableTreeNode entryNode =
-            new BrowserMutableTreeNode(getFormattedIndex(index, constantPoolCount) +
+        BrowserTreeNode entryNode =
+            new BrowserTreeNode(getFormattedIndex(index, constantPoolCount) +
                                        "(large numeric continued)",
-                                       BrowserMutableTreeNode.NODE_NO_CONTENT);
+                                       BrowserTreeNode.NODE_NO_CONTENT);
         constantPoolNode.add(entryNode);
     }
 
-    private BrowserMutableTreeNode buildInterfacesNode() {
+    private BrowserTreeNode buildInterfacesNode() {
 
-        BrowserMutableTreeNode interfacesNode = new BrowserMutableTreeNode("Interfaces");
+        BrowserTreeNode interfacesNode = new BrowserTreeNode("Interfaces");
         int[] interfaces = services.getClassFile().getInterfaces();
         int interfacesCount = interfaces.length;
-        BrowserMutableTreeNode entryNode;
+        BrowserTreeNode entryNode;
         for (int i = 0; i < interfacesCount; i++) {
-            entryNode = new BrowserMutableTreeNode("Interface " + i,
-                                                   BrowserMutableTreeNode.NODE_INTERFACE,
+            entryNode = new BrowserTreeNode("Interface " + i,
+                                                   BrowserTreeNode.NODE_INTERFACE,
                                                    i);
             interfacesNode.add(entryNode);
         }
@@ -209,25 +193,25 @@ public class BrowserTreePane extends JPanel {
         return interfacesNode;
     }
 
-    private BrowserMutableTreeNode buildFieldsNode() {
+    private BrowserTreeNode buildFieldsNode() {
 
         return buildClassMembersNode("Fields",
-                                     BrowserMutableTreeNode.NODE_FIELD,
+                                     BrowserTreeNode.NODE_FIELD,
                                      services.getClassFile().getFields());
     }
 
-    private BrowserMutableTreeNode buildMethodsNode() {
+    private BrowserTreeNode buildMethodsNode() {
 
         return buildClassMembersNode("Methods",
-                                     BrowserMutableTreeNode.NODE_METHOD,
+                                     BrowserTreeNode.NODE_METHOD,
                                      services.getClassFile().getMethods());
     }
 
-    private BrowserMutableTreeNode buildClassMembersNode(String text,
-                                                         String type,
-                                                         ClassMember[] classMembers) {
+    private BrowserTreeNode buildClassMembersNode(String text,
+                                                  String type,
+                                                  ClassMember[] classMembers) {
 
-        BrowserMutableTreeNode classMemberNode = new BrowserMutableTreeNode(text);
+        BrowserTreeNode classMemberNode = new BrowserTreeNode(text);
         int classMembersCount = classMembers.length;
 
         for (int i = 0; i < classMembersCount; i++) {
@@ -245,14 +229,14 @@ public class BrowserTreePane extends JPanel {
                                      int index,
                                      int classMembersCount,
                                      String type,
-                                     BrowserMutableTreeNode classMemberNode) {
+                                     BrowserTreeNode classMemberNode) {
 
         if (classMember == null) {
             classMemberNode.add(buildNullNode());
         } else {
             try {
-                BrowserMutableTreeNode entryNode =
-                    new BrowserMutableTreeNode(getFormattedIndex(index, classMembersCount) +
+                BrowserTreeNode entryNode =
+                    new BrowserTreeNode(getFormattedIndex(index, classMembersCount) +
                                                classMember.getName(),
                                                type,
                                                index);
@@ -266,20 +250,20 @@ public class BrowserTreePane extends JPanel {
         }
     }
 
-    private BrowserMutableTreeNode buildAttributesNode() {
-        BrowserMutableTreeNode attributesNode = new BrowserMutableTreeNode("Attributes");
+    private BrowserTreeNode buildAttributesNode() {
+        BrowserTreeNode attributesNode = new BrowserTreeNode("Attributes");
 
         addAttributeNodes(attributesNode, services.getClassFile());
 
         return attributesNode;
     }
 
-    private BrowserMutableTreeNode buildNullNode() {
+    private BrowserTreeNode buildNullNode() {
 
-        return new BrowserMutableTreeNode("[error] null");
+        return new BrowserTreeNode("[error] null");
     }
 
-    private void addAttributeNodes(BrowserMutableTreeNode parentNode,
+    private void addAttributeNodes(BrowserTreeNode parentNode,
                                    AbstractStructureWithAttributes structure) {
 
         AttributeInfo[] attributes = structure.getAttributes();
@@ -298,17 +282,17 @@ public class BrowserTreePane extends JPanel {
     private void addSingleAttributeNode(AttributeInfo attribute,
                                         int index,
                                         int attributesCount,
-                                        BrowserMutableTreeNode parentNode) {
+                                        BrowserTreeNode parentNode) {
 
 
         if (attribute == null) {
             parentNode.add(buildNullNode());
         } else {
             try {
-                BrowserMutableTreeNode entryNode =
-                    new BrowserMutableTreeNode(getFormattedIndex(index, attributesCount) +
+                BrowserTreeNode entryNode =
+                    new BrowserTreeNode(getFormattedIndex(index, attributesCount) +
                                                attribute.getName(),
-                                               BrowserMutableTreeNode.NODE_ATTRIBUTE,
+                                               BrowserTreeNode.NODE_ATTRIBUTE,
                                                index);
 
                 parentNode.add(entryNode);
