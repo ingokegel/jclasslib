@@ -17,7 +17,7 @@ import java.util.*;
     The class file structure in which all other structures are hooked up.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2002-05-29 15:51:24 $
+    @version $Revision: 1.6 $ $Date: 2002-06-01 09:59:45 $
 */
 public class ClassFile extends AbstractStructureWithAttributes {
 
@@ -619,8 +619,8 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
     private void checkMajorVersion(int majorVersion) {
 
-        if (majorVersion < 45 || majorVersion > 46) {
-            Log.warning("major version should be between 45 and 46 for JDK <= 1.3");
+        if (majorVersion < 45 || majorVersion > 48) {
+            Log.warning("major version should be between 45 and 48 for JDK <= 1.4");
         }
 
     }
