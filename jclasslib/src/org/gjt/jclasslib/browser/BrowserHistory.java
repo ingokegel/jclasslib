@@ -19,7 +19,7 @@ import java.util.ListIterator;
     Manages the navigation history of a single child window.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:27 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:06:46 $
 */
 public class BrowserHistory {
 
@@ -29,7 +29,11 @@ public class BrowserHistory {
 
     private LinkedList history = new LinkedList();
     private int historyPointer = -1;
-    
+
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public BrowserHistory(BrowserServices services) {
         this.services = services;
     }
@@ -88,7 +92,7 @@ public class BrowserHistory {
     /** 
         Add a navigation step to the history.
         @param newPath the selected tree path in <tt>BrowserTreePane</tt>
-        @param offset the target's offset in the bytecode. <tt>Null</tt> if 
+        @param offset the target's offset in the code. <tt>Null</tt> if
                       not applicable.
      */
     public void updateHistory(TreePath newPath, Integer offset) {
@@ -150,10 +154,10 @@ public class BrowserHistory {
         
         BrowserHistoryEntry entry = (BrowserHistoryEntry)history.get(historyPointer);
 
-        JTree treeView = services.getBrowserComponent().getTreePane().getTreeView();
+        JTree tree = services.getBrowserComponent().getTreePane().getTree();
         
-        treeView.setSelectionPath(entry.getTreePath());
-        treeView.scrollPathToVisible(entry.getTreePath());
+        tree.setSelectionPath(entry.getTreePath());
+        tree.scrollPathToVisible(entry.getTreePath());
         
         Integer offset = entry.getOffset();
         
@@ -164,7 +168,7 @@ public class BrowserHistory {
                 detailPane.getAttributeDetailPane().getCodeAttributeDetailPane();
             
             codeAttributeDetailPane.selectByteCodeDetailPane();
-            
+
             codeAttributeDetailPane.getCodeAttributeByteCodeDetailPane().
                 scrollToOffset(offset.intValue());
         }
@@ -177,7 +181,7 @@ public class BrowserHistory {
         private TreePath treePath;
         private Integer offset;
         
-        public BrowserHistoryEntry(TreePath treePath, Integer offset) {
+        private BrowserHistoryEntry(TreePath treePath, Integer offset) {
             this.treePath = treePath;
             this.offset = offset;
         }
@@ -204,7 +208,11 @@ public class BrowserHistory {
             return isEqual(offset, other.getOffset()) &&
                    isEqual(treePath, other.getTreePath());
         }
-        
+
+        public int hashCode() {
+            return treePath.hashCode() ^ offset.hashCode();
+        }
+
         private boolean isEqual(Object one, Object two) {
             
             if (one == null) {
