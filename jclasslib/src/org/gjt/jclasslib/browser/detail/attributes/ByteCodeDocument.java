@@ -22,7 +22,7 @@ import java.io.*;
     Document type for the bytecode in <tt>Code</tt> attributes.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:24 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:14:41 $
 */
 public class ByteCodeDocument extends DefaultStyledDocument
                               implements Opcodes
@@ -33,6 +33,8 @@ public class ByteCodeDocument extends DefaultStyledDocument
 
     /** Style for normal text */
     public static final MutableAttributeSet STYLE_NORMAL;
+    /** Style for small text */
+    public static final MutableAttributeSet STYLE_SMALL;
     /** Style for hyperlinks */
     public static final MutableAttributeSet STYLE_LINK;
     /** Style for bytecode offsets */
@@ -66,10 +68,14 @@ public class ByteCodeDocument extends DefaultStyledDocument
     
         STYLE_LINE_NUMBER = new SimpleAttributeSet();
         StyleConstants.setForeground(STYLE_LINE_NUMBER, new Color(128,128,128));
-        StyleConstants.setFontSize(STYLE_LINE_NUMBER, 
-                                   StyleConstants.getFontSize(STYLE_LINE_NUMBER) - 
-                                        LINE_NUMBERS_FONT_DIFF);
+
+        StyleConstants.setFontSize(STYLE_LINE_NUMBER, StyleConstants.getFontSize(STYLE_LINE_NUMBER) - 
+                                LINE_NUMBERS_FONT_DIFF);
         
+        STYLE_SMALL = new SimpleAttributeSet();
+        StyleConstants.setFontSize(STYLE_SMALL, StyleConstants.getFontSize(STYLE_SMALL) - 
+                                1);
+
     }
     
     private StyleContext styles;
@@ -355,7 +361,7 @@ public class ByteCodeDocument extends DefaultStyledDocument
         try {
             String name = classFile.getConstantPoolEntryName(constantPoolIndex);
             if (name.length() > 0) {
-                appendString(" <" + name + ">", STYLE_NORMAL);
+                appendString(" <" + name + ">", STYLE_SMALL);
             }
         } catch (InvalidByteCodeException ex) {
         }
