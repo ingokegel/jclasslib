@@ -19,7 +19,7 @@ import javax.swing.tree.TreePath;
     or a <tt>CONSTANT_InterfaceMethodref</tt> constant pool entry.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:15:30 $
 */
 public class ConstantReferenceDetailPane extends AbstractConstantInfoDetailPane {
 
@@ -29,7 +29,13 @@ public class ConstantReferenceDetailPane extends AbstractConstantInfoDetailPane 
     private ExtendedJLabel lblClassVerbose;
     private ExtendedJLabel lblNameAndType;
     private ExtendedJLabel lblNameAndTypeVerbose;
-    
+
+    private ClassElementOpener classElementOpener;
+
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public ConstantReferenceDetailPane(BrowserServices services) {
         super(services);
     }
@@ -45,12 +51,18 @@ public class ConstantReferenceDetailPane extends AbstractConstantInfoDetailPane 
                            lblNameAndTypeVerbose = highlightLabel());
     }
 
+    protected int addSpecial(int gridy) {
+        classElementOpener = new ClassElementOpener(this);
+        return classElementOpener.addSpecial(this, gridy);
+    }
+
     public void show(TreePath treePath) {
         
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
             ConstantReference entry = (ConstantReference)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantReference.class);
+            classElementOpener.setCPInfo(entry);
 
             constantPoolHyperlink(lblClass,
                                   lblClassVerbose,
