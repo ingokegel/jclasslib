@@ -23,7 +23,7 @@ import java.util.Map;
  * child window.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.10 $ $Date: 2004-12-28 13:04:31 $
+ * @version $Revision: 1.11 $ $Date: 2005-03-04 16:36:00 $
  */
 public class BrowserTreePane extends JPanel {
 
@@ -236,6 +236,7 @@ public class BrowserTreePane extends JPanel {
     private BrowserTreeNode buildFieldsNode() {
 
         return buildClassMembersNode("Fields",
+                BrowserTreeNode.NODE_FIELDS,
                 BrowserTreeNode.NODE_FIELD,
                 services.getClassFile().getFields());
     }
@@ -243,22 +244,24 @@ public class BrowserTreePane extends JPanel {
     private BrowserTreeNode buildMethodsNode() {
 
         return buildClassMembersNode("Methods",
+                BrowserTreeNode.NODE_METHODS,
                 BrowserTreeNode.NODE_METHOD,
                 services.getClassFile().getMethods());
     }
 
     private BrowserTreeNode buildClassMembersNode(String text,
-                                                  String type,
+                                                  String containerType,
+                                                  String childType,
                                                   ClassMember[] classMembers) {
 
-        BrowserTreeNode classMemberNode = new BrowserTreeNode(text);
+        BrowserTreeNode classMemberNode = new BrowserTreeNode(text, containerType);
         int classMembersCount = classMembers.length;
 
         for (int i = 0; i < classMembersCount; i++) {
             addClassMembersNode(classMembers[i],
                     i,
                     classMembersCount,
-                    type,
+                    childType,
                     classMemberNode);
         }
 

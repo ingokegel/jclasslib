@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * representing a structural element of the class file format.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.2 $ $Date: 2004-12-28 13:04:31 $
+ * @version $Revision: 1.3 $ $Date: 2005-03-04 16:36:00 $
  */
 public class BrowserTreeNode extends DefaultMutableTreeNode {
 
@@ -34,6 +34,14 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
      * Node for an interface entry.
      */
     public static final String NODE_INTERFACE = "interface";
+    /**
+     * Node for method container.
+     */
+    public static final String NODE_METHODS = "methods";
+    /**
+     * Node for method container.
+     */
+    public static final String NODE_FIELDS = "fields";
     /**
      * Node for a field entry  (<tt>FieldInfo</tt>).
      */

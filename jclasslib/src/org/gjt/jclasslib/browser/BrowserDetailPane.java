@@ -20,7 +20,7 @@ import java.util.HashMap;
  * <tt>BrowserTreePane</tt>.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.7 $ $Date: 2004-12-28 13:04:31 $
+ * @version $Revision: 1.8 $ $Date: 2005-03-04 16:36:00 $
  */
 public class BrowserDetailPane extends JPanel {
 
@@ -78,26 +78,18 @@ public class BrowserDetailPane extends JPanel {
 
         add(new JPanel(), BrowserTreeNode.NODE_NO_CONTENT);
 
-        addScreen(new GeneralDetailPane(services),
-                BrowserTreeNode.NODE_GENERAL);
-        addScreen(new ConstantPoolDetailPane(services),
-                BrowserTreeNode.NODE_CONSTANT_POOL);
-        addScreen(new InterfaceDetailPane(services),
-                BrowserTreeNode.NODE_INTERFACE);
-        addScreen(new ClassMemberDetailPane(services, ClassMemberDetailPane.FIELDS),
-                BrowserTreeNode.NODE_FIELD);
-        addScreen(new ClassMemberDetailPane(services, ClassMemberDetailPane.METHODS),
-                BrowserTreeNode.NODE_METHOD);
-        addScreen(new AttributeDetailPane(services),
-                BrowserTreeNode.NODE_ATTRIBUTE);
-        addScreen(new AnnotationDetailPane(services),
-                BrowserTreeNode.NODE_ANNOTATION);
-        addScreen(new ElementValueDetailPane(services),
-                BrowserTreeNode.NODE_ELEMENTVALUE);
-        addScreen(new ElementValuePairDetailPane(services),
-                BrowserTreeNode.NODE_ELEMENTVALUEPAIR);
-        addScreen(new ArrayElementValueDetailPane(services),
-                BrowserTreeNode.NODE_ARRAYELEMENTVALUE);
+        addScreen(new GeneralDetailPane(services), BrowserTreeNode.NODE_GENERAL);
+        addScreen(new ConstantPoolDetailPane(services), BrowserTreeNode.NODE_CONSTANT_POOL);
+        addScreen(new InterfaceDetailPane(services), BrowserTreeNode.NODE_INTERFACE);
+        addScreen(new ClassMemberContainerDetailPane(services, ClassMemberContainerDetailPane.FIELDS), BrowserTreeNode.NODE_FIELDS);
+        addScreen(new ClassMemberContainerDetailPane(services, ClassMemberContainerDetailPane.METHODS), BrowserTreeNode.NODE_METHODS);
+        addScreen(new ClassMemberDetailPane(services, ClassMemberDetailPane.FIELDS), BrowserTreeNode.NODE_FIELD);
+        addScreen(new ClassMemberDetailPane(services, ClassMemberDetailPane.METHODS), BrowserTreeNode.NODE_METHOD);
+        addScreen(new AttributeDetailPane(services), BrowserTreeNode.NODE_ATTRIBUTE);
+        addScreen(new AnnotationDetailPane(services), BrowserTreeNode.NODE_ANNOTATION);
+        addScreen(new ElementValueDetailPane(services), BrowserTreeNode.NODE_ELEMENTVALUE);
+        addScreen(new ElementValuePairDetailPane(services), BrowserTreeNode.NODE_ELEMENTVALUEPAIR);
+        addScreen(new ArrayElementValueDetailPane(services), BrowserTreeNode.NODE_ARRAYELEMENTVALUE);
 
         setMinimumSize(detailMinimumSize);
         setPreferredSize(detailPreferredSize);
