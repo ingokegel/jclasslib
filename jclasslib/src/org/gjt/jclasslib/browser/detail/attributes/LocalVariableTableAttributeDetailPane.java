@@ -17,10 +17,14 @@ import org.gjt.jclasslib.structures.attributes.LocalVariableTableEntry;
     Detail pane showing a <tt>LocalVariableTable</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:11 $
 */
 public class LocalVariableTableAttributeDetailPane extends AbstractAttributeListDetailPane {
 
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public LocalVariableTableAttributeDetailPane(BrowserServices services) {
         super(services);
     }
@@ -29,26 +33,27 @@ public class LocalVariableTableAttributeDetailPane extends AbstractAttributeList
         return new AttributeTableModel(attribute);
     }
     
+    protected float getRowHeightFactor() {
+        return 2f;
+    }
+
     private class AttributeTableModel extends AbstractAttributeTableModel {
         
-        private static final int COLUMN_COUNT = BASE_COLUMN_COUNT + 7;
+        private static final int COLUMN_COUNT = BASE_COLUMN_COUNT + 5;
         
         private static final int START_PC_COLUMN_INDEX = BASE_COLUMN_COUNT;
         private static final int LENGTH_COLUMN_INDEX = BASE_COLUMN_COUNT + 1;
         private static final int INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 2;
-        private static final int NAME_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 3;
-        private static final int NAME_INDEX_COLUMN_VERBOSE_INDEX = BASE_COLUMN_COUNT + 4;
-        private static final int DESCRIPTOR_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 5;
-        private static final int DESCRIPTOR_INDEX_VERBOSE_COLUMN_INDEX = BASE_COLUMN_COUNT + 6;
+        private static final int NAME_COLUMN_INDEX = BASE_COLUMN_COUNT + 3;
+        private static final int DESCRIPTOR_COLUMN_INDEX = BASE_COLUMN_COUNT + 4;
         
-        private static final int DESCRIPTOR_INDEX_COLUMN_WIDTH = 100;
-        
+        private static final int COMMENT_LINK_COLUMN_WIDTH = 200;
+
         private LocalVariableTableEntry[] localVariableTable;
         
-        public AttributeTableModel(AttributeInfo attribute) {
+        private AttributeTableModel(AttributeInfo attribute) {
             super(attribute);
             localVariableTable = ((LocalVariableTableAttribute)attribute).getLocalVariableTable();
-            initRowNumberStrings();
         }
 
         public int getColumnWidth(int column) {
@@ -58,14 +63,10 @@ public class LocalVariableTableAttributeDetailPane extends AbstractAttributeList
                 case INDEX_COLUMN_INDEX:
                    return NUMBER_COLUMN_WIDTH;
                    
-                case DESCRIPTOR_INDEX_COLUMN_INDEX:
-                   return DESCRIPTOR_INDEX_COLUMN_WIDTH;
+                case NAME_COLUMN_INDEX:
+                case DESCRIPTOR_COLUMN_INDEX:
+                    return COMMENT_LINK_COLUMN_WIDTH;
                 
-                case NAME_INDEX_COLUMN_VERBOSE_INDEX:
-                case DESCRIPTOR_INDEX_VERBOSE_COLUMN_INDEX:
-                    return SHORT_VERBOSE_COLUMN_WIDTH;
-                
-                case NAME_INDEX_COLUMN_INDEX:
                 default:
                    return LINK_COLUMN_WIDTH;
             }
@@ -73,12 +74,12 @@ public class LocalVariableTableAttributeDetailPane extends AbstractAttributeList
         
         public void link(int row, int column) {
             
-            int constantPoolIndex = 0;
+            int constantPoolIndex;
             switch (column) {
-                case NAME_INDEX_COLUMN_INDEX:
+                case NAME_COLUMN_INDEX:
                     constantPoolIndex = localVariableTable[row].getNameIndex();
                     break;
-                case DESCRIPTOR_INDEX_COLUMN_INDEX:
+                case DESCRIPTOR_COLUMN_INDEX:
                     constantPoolIndex = localVariableTable[row].getDescriptorIndex();
                     break;
                 default:
@@ -103,14 +104,10 @@ public class LocalVariableTableAttributeDetailPane extends AbstractAttributeList
                    return "length";
                 case INDEX_COLUMN_INDEX:
                    return "index";
-                case NAME_INDEX_COLUMN_INDEX:
-                   return "name_index";
-                case NAME_INDEX_COLUMN_VERBOSE_INDEX:
-                    return "name verbose";
-                case DESCRIPTOR_INDEX_COLUMN_INDEX:
-                   return "descriptor_index";
-                case DESCRIPTOR_INDEX_VERBOSE_COLUMN_INDEX:
-                    return "descriptor verbose";
+                case NAME_COLUMN_INDEX:
+                    return "name";
+                case DESCRIPTOR_COLUMN_INDEX:
+                    return "descriptor";
                 default:
                    return "";
             }
@@ -122,8 +119,8 @@ public class LocalVariableTableAttributeDetailPane extends AbstractAttributeList
                 case LENGTH_COLUMN_INDEX:
                 case INDEX_COLUMN_INDEX:
                    return Number.class;
-                case NAME_INDEX_COLUMN_INDEX:
-                case DESCRIPTOR_INDEX_COLUMN_INDEX:
+                case NAME_COLUMN_INDEX:
+                case DESCRIPTOR_COLUMN_INDEX:
                    return Link.class;
                 default:
                    return String.class;
@@ -141,17 +138,14 @@ public class LocalVariableTableAttributeDetailPane extends AbstractAttributeList
                     return String.valueOf(localVariableTableEntry.getLength());
                 case INDEX_COLUMN_INDEX:
                     return String.valueOf(localVariableTableEntry.getIndex());
-                case NAME_INDEX_COLUMN_INDEX:
-                    return CPINFO_LINK_TEXT + String.valueOf(localVariableTableEntry.getNameIndex());
-                case NAME_INDEX_COLUMN_VERBOSE_INDEX:
-                    return getConstantPoolEntryName(localVariableTableEntry.getNameIndex());
-                case DESCRIPTOR_INDEX_COLUMN_INDEX:
-                    return CPINFO_LINK_TEXT + String.valueOf(localVariableTableEntry.getDescriptorIndex());
-                case DESCRIPTOR_INDEX_VERBOSE_COLUMN_INDEX:
-                    return getConstantPoolEntryName(localVariableTableEntry.getDescriptorIndex());
+                case NAME_COLUMN_INDEX:
+                    return createCommentLink(localVariableTableEntry.getNameIndex());
+                case DESCRIPTOR_COLUMN_INDEX:
+                    return createCommentLink(localVariableTableEntry.getDescriptorIndex());
                 default:
                     return "";
             }
         }
+
     }
 }

@@ -17,10 +17,14 @@ import org.gjt.jclasslib.structures.attributes.InnerClassesEntry;
     Detail pane showing an <tt>InnerClasses</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:11 $
 */
 public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetailPane {
 
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public InnerClassesAttributeDetailPane(BrowserServices services) {
         super(services);
     }
@@ -28,7 +32,11 @@ public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetail
     protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute) {
         return new AttributeTableModel(attribute);
     }
-    
+
+    protected float getRowHeightFactor() {
+        return 2f;
+    }
+
     private class AttributeTableModel extends AbstractAttributeTableModel {
         
         private static final int COLUMN_COUNT = BASE_COLUMN_COUNT + 4;
@@ -37,24 +45,26 @@ public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetail
         private static final int OUTER_CLASS_INFO_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 1;
         private static final int INNER_NAME_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 2;
         private static final int INNER_CLASS_ACCESS_FLAGS_COLUMN_INDEX = BASE_COLUMN_COUNT + 3;
-        
-        private static final int INNER_CLASS_ACCESS_FLAGS_COLUMN_WIDTH = 250;
+
+        private static final int CLASS_LINK_COLUMN_WIDTH = 160;
+        private static final int NAME_LINK_COLUMN_WIDTH = 110;
+        private static final int INNER_CLASS_ACCESS_FLAGS_COLUMN_WIDTH = 200;
         
         private InnerClassesEntry[] innerClasses;
         
-        public AttributeTableModel(AttributeInfo attribute) {
+        private AttributeTableModel(AttributeInfo attribute) {
             super(attribute);
             innerClasses = ((InnerClassesAttribute)attribute).getClasses();
-            initRowNumberStrings();
         }
 
         public int getColumnWidth(int column) {
             switch (column) {
                 case INNER_CLASS_INFO_INDEX_COLUMN_INDEX:
                 case OUTER_CLASS_INFO_INDEX_COLUMN_INDEX:
+                   return CLASS_LINK_COLUMN_WIDTH;
                 case INNER_NAME_INDEX_COLUMN_INDEX:
-                   return LINK_COLUMN_WIDTH;
-                   
+                    return NAME_LINK_COLUMN_WIDTH;
+
                 case INNER_CLASS_ACCESS_FLAGS_COLUMN_INDEX:
                    return INNER_CLASS_ACCESS_FLAGS_COLUMN_WIDTH;
                     
@@ -65,7 +75,7 @@ public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetail
         
         public void link(int row, int column) {
             
-            int constantPoolIndex = 0;
+            int constantPoolIndex;
             switch (column) {
                 case INNER_CLASS_INFO_INDEX_COLUMN_INDEX:
                     constantPoolIndex = innerClasses[row].getInnerClassInfoIndex();
@@ -120,16 +130,15 @@ public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetail
         protected Object doGetValueAt(int row, int column) {
 
             InnerClassesEntry innerClassesEntry = innerClasses[row];
-            
             switch (column) {
                 case INNER_CLASS_INFO_INDEX_COLUMN_INDEX:
-                    return CPINFO_LINK_TEXT + String.valueOf(innerClassesEntry.getInnerClassInfoIndex());
+                    return createCommentLink(innerClassesEntry.getInnerClassInfoIndex());
                 case OUTER_CLASS_INFO_INDEX_COLUMN_INDEX:
-                    return CPINFO_LINK_TEXT + String.valueOf(innerClassesEntry.getOuterClassInfoIndex());
+                    return createCommentLink(innerClassesEntry.getOuterClassInfoIndex());
                 case INNER_NAME_INDEX_COLUMN_INDEX:
-                    return CPINFO_LINK_TEXT + String.valueOf(innerClassesEntry.getInnerNameIndex());
+                    return createCommentLink(innerClassesEntry.getInnerNameIndex());
                 case INNER_CLASS_ACCESS_FLAGS_COLUMN_INDEX:
-                    return innerClassesEntry.getInnerClassFormattedAccessFlags() + 
+                    return innerClassesEntry.getInnerClassFormattedAccessFlags() +
                            " [" + innerClassesEntry.getInnerClassAccessFlagsVerbose() + "]";
                 default:
                     return "";
