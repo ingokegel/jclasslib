@@ -18,7 +18,7 @@ import java.util.HashMap;
     The class file structure in which all other structures are hooked up.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.8 $ $Date: 2003-08-18 07:49:06 $
 */
 public class ClassFile extends AbstractStructureWithAttributes {
 
@@ -27,7 +27,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         entries. This is not advisable, since most sunsequent operations on the
         class file structure will fail.
      */
-    public static final String SYSTEM_PROPERTY_SKIP_CONSTANT_POOL = "classlib.io.skipConstantPool";
+    public static final String SYSTEM_PROPERTY_SKIP_CONSTANT_POOL = "jclasslib.io.skipConstantPool";
 
     private static final int MAGIC_NUMBER = 0xcafebabe;
 
@@ -36,7 +36,6 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private int minorVersion;
     private int majorVersion;
     private CPInfo[] constantPool;
-    /** @collectionType int */
     private HashMap constantPoolEntryToIndex = new HashMap();
     private int accessFlags;
     private int thisClass;
@@ -46,6 +45,9 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private MethodInfo[] methods;
 
 
+    /**
+        Constructor.
+     */
     public ClassFile() {
         skipConstantPool = Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_CONSTANT_POOL);
         setClassFile(this);
@@ -185,6 +187,15 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
+        Get the name of this class.
+        @return the name
+        @throws InvalidByteCodeException
+     */
+    public String getThisClassName() throws InvalidByteCodeException {
+        return getConstantPoolEntryName(getThisClass());
+    }
+
+    /**
         Get the constant pool index of the super class of this class.
         @return the index
      */
@@ -198,6 +209,15 @@ public class ClassFile extends AbstractStructureWithAttributes {
      */
     public void setSuperClass(int superClass) {
         this.superClass = superClass;
+    }
+
+    /**
+        Get the name of the super class.
+        @return the name
+        @throws InvalidByteCodeException
+     */
+    public String getSuperClassName() throws InvalidByteCodeException {
+        return getConstantPoolEntryName(getSuperClass());
     }
 
     /**
@@ -327,6 +347,75 @@ public class ClassFile extends AbstractStructureWithAttributes {
         }
     }
 
+    /**
+        Get the index of a field for given field name and signature.
+        @param name the field name.
+        @param descriptor the signature.
+        @return the index or <tt>-1</tt> if not found.
+        @throws InvalidByteCodeException
+     */
+    public int getFieldIndex(String name, String descriptor) throws InvalidByteCodeException {
+
+        for (int i = 0; i < fields.length; i++) {
+            FieldInfo field = fields[i];
+            if (field.getName().equals(name) && field.getDescriptor().equals(descriptor)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+        Get the <tt>FieldInfo</tt> for given field name and signature.
+        @param name the field name.
+        @param descriptor the signature.
+        @return the <tt>FieldInfo</tt> or <tt>null</tt> if not found.
+        @throws InvalidByteCodeException
+     */
+    public FieldInfo getField(String name, String descriptor) throws InvalidByteCodeException {
+
+        int index = getFieldIndex(name, descriptor);
+        if (index < 0) {
+            return null;
+        } else {
+            return fields[index];
+        }
+    }
+
+    /**
+        Get the index of a method for given method name and signature.
+        @param name the method name.
+        @param descriptor the signature.
+        @return the index or <tt>-1</tt> if not found.
+        @throws InvalidByteCodeException
+     */
+    public int getMethodIndex(String name, String descriptor) throws InvalidByteCodeException {
+
+        for (int i = 0; i < methods.length; i++) {
+            MethodInfo method = methods[i];
+            if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+        Get the <tt>MethodInfo</tt> for given method name and signature.
+        @param name the method name.
+        @param descriptor the signature.
+        @return the <tt>MethodInfo</tt> or <tt>null</tt> if not found.
+        @throws InvalidByteCodeException
+     */
+    public MethodInfo getMethod(String name, String descriptor) throws InvalidByteCodeException {
+
+        int index = getMethodIndex(name, descriptor);
+        if (index < 0) {
+            return null;
+        } else {
+            return methods[index];
+        }
+    }
 
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
@@ -625,4 +714,5 @@ public class ClassFile extends AbstractStructureWithAttributes {
         }
 
     }
+
 }
