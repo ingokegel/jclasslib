@@ -7,14 +7,16 @@
 
 package org.gjt.jclasslib.mdi;
 
+import org.gjt.jclasslib.util.GUIHelper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
-import java.io.*;
 import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.util.Properties;
+import java.util.*;
+import java.util.List;
+import java.util.prefs.Preferences;
 
 
 /**
@@ -22,66 +24,53 @@ import java.util.Properties;
     and supplies various utility methods.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.6 $ $Date: 2003-08-18 07:59:50 $
 */
 public class BasicMDIFrame extends JFrame {
 
-    /**  Path where images are found relative to the class path root of this class
-         in case <tt>SYSTEM_PROPERTY_BASE_PATH</tt> is not set */
-    public static final String IMAGES_DIRECTORY = "images";
+    private static final int DEFAULT_WINDOW_WIDTH = 800;
+    private static final int DEFAULT_WINDOW_HEIGHT = 600;
 
-    /** Default width of the parent window */
-    protected static final int DEFAULT_WINDOW_WIDTH = 800;
-    /** Default height of the parent window */
-    protected static final int DEFAULT_WINDOW_HEIGHT = 600;
-    /** JVM system property which contains the path where images are found */
-    protected static final String SYSTEM_PROPERTY_BASE_PATH = "images.basePath";
+    private static final String SETTINGS_WINDOW_WIDTH = "windowWidth";
+    private static final String SETTINGS_WINDOW_HEIGHT = "windowHeight";
+    private static final String SETTINGS_WINDOW_X = "windowX";
+    private static final String SETTINGS_WINDOW_Y = "windowY";
+    private static final String SETTINGS_WINDOW_MAXIMIZED = "windowMaximized";
 
-    private static final String SETTINGS_PROPERTY_WINDOW_WIDTH = "windowWidth";
-    private static final String SETTINGS_PROPERTY_WINDOW_HEIGHT = "windowHeight";
-    private static final String SETTINGS_PROPERTY_WINDOW_X = "windowX";
-    private static final String SETTINGS_PROPERTY_WINDOW_Y = "windowY";
-
-    private static final String SETTINGS_PROPERTY_NUMBER_OF_FRAMES = "numberOfFrames";
-    private static final String SETTINGS_PROPERTY_FRAMES_CLASS_NAME = "frameClassName_";
-    private static final String SETTINGS_PROPERTY_FRAMES_INIT_PARAM = "frameInitParam_";
-    private static final String SETTINGS_PROPERTY_FRAMES_X = "frameX_";
-    private static final String SETTINGS_PROPERTY_FRAMES_Y = "frameY_";
-    private static final String SETTINGS_PROPERTY_FRAMES_WIDTH = "frameWidth_";
-    private static final String SETTINGS_PROPERTY_FRAMES_HEIGHT = "frameHeight_";
-    private static final String SETTINGS_PROPERTY_FRAMES_MAXIMIZED = "frameMaximized_";
-    private static final String SETTINGS_PROPERTY_FRAMES_ICONIFIED = "frameIconified_";
-    private static final String SETTINGS_PROPERTY_ACTIVE_FRAME = "activeFrame";
-    
-    /** Optional path where images are found */
-    protected String imagePath;
-    
     // Actions
     
-    /** Action for selecting the next child window */
+    /** Action for selecting the next child window. */
     protected Action actionNextWindow;
-    /** Action for selecting the provious child window */
+    /** Action for selecting the provious child window. */
     protected Action actionPreviousWindow;
-    /** Action for tiling all child windows */
+    /** Action for tiling all child windows. */
     protected Action actionTileWindows;
-    /** Action for stacking all child windows */
+    /** Action for stacking all child windows. */
     protected Action actionStackWindows;
 
     // Visual components
 
-    /** <tt>JDesktop</tt> pane which contains all child windows */
+    /** <tt>JDesktop</tt> pane which contains all child windows. */
+    protected JScrollPane scpDesktop;
+    /** The desktop pane. */
     protected JDesktopPane desktopPane;
-    /** <tt>DesktopManager</tt> for this MDI parent frame */
+    /** <tt>DesktopManager</tt> for this MDI parent frame. */
     protected BasicDesktopManager desktopManager;    
-    /** <tt>JMenu</tt> for window actions */
+    /** <tt>JMenu</tt> for window actions. */
     protected JMenu menuWindow;
 
+    private Rectangle lastNormalFrameBounds;
+
+    /**
+        Constructor.
+     */
     public BasicMDIFrame() {
 
-        setupImagePath();
         setupActions();
         setupMenu();
         setupFrame();
+        setupEventHandlers();
+        loadWindowSettings();
     }
 
     /**
@@ -97,284 +86,133 @@ public class BasicMDIFrame extends JFrame {
         Exit the application.
      */
     protected void doQuit() {
-        
+
+        saveWindowSettings();
         dispose();
         System.exit(0);
     }
-    
-    /**
-        Load an icon either from the path contained in <tt>SYSTEM_PROPERTY_BASE_PATH</tt>
-        or from the directory <tt>IMAGES_DIRECTORY</tt> relative to the classpath
-        root of this class.
-        @param fileName the file name for the icon
-        @return the icon
-     */
-    protected ImageIcon loadIcon(String fileName) {
 
-        URL imageURL = getClass().getResource("/" + IMAGES_DIRECTORY + "/" + fileName);
-        if (imageURL == null) {
-            return new ImageIcon(imagePath + fileName);
-        } else {
-            return new ImageIcon(imageURL);
+    /**
+        Close all internal frames.
+     */
+    protected void closeAllFrames() {
+
+        List frames = desktopManager.getOpenFrames();
+        while (frames.size() > 0) {
+            BasicInternalFrame frame = (BasicInternalFrame)frames.get(0);
+            frame.doDefaultCloseAction();
         }
-    
     }
 
-    
-
     /**
-        Get an <tt>int</tt> property from a <tt>Properties</tt> object,
-        supplying a default value if this property does not exist.
-        @param props the <tt>Properties</tt> object
-        @param propertyName the name of the requested property
-        @param defaultValue the default value
-        @return the <tt>int</tt>
+         Create an <tt>MDIConfig</tt> object that describes the current configuration of
+         all internal frames. This object can be serialized and reactivated with
+         <tt>readMDIConfig</tt>.
+         @return the <tt>MDIConfig</tt> object
      */
-    protected int getIntProperty(Properties props, String propertyName, int defaultValue) {
+    protected MDIConfig createMDIConfig() {
 
-        String propertyValue = (String)props.get(propertyName);
-        int propertyIntValue = defaultValue;
-        if (propertyValue != null) {
-            try {
-                propertyIntValue = Integer.parseInt(propertyValue);
-            } catch (NumberFormatException ex) {
+        MDIConfig config = new MDIConfig();
+        java.util.List openFrames = desktopManager.getOpenFrames();
+        List internalFrameDescs = new ArrayList(openFrames.size());
+
+        for (int i = 0; i < openFrames.size(); i++) {
+
+            BasicInternalFrame internalFrame = (BasicInternalFrame)openFrames.get(i);
+
+            Rectangle bounds = internalFrame.getNormalBounds();
+            MDIConfig.InternalFrameDesc internalFrameDesc = new MDIConfig.InternalFrameDesc();
+            internalFrameDesc.setClassName(internalFrame.getClass().getName());
+            internalFrameDesc.setInitParam(internalFrame.getInitParam());
+            internalFrameDesc.setX(bounds.x);
+            internalFrameDesc.setY(bounds.y);
+            internalFrameDesc.setWidth(bounds.width);
+            internalFrameDesc.setHeight(bounds.height);
+            internalFrameDesc.setMaximized(internalFrame.isMaximum());
+            internalFrameDesc.setIconified(internalFrame.isIcon());
+
+            if (internalFrame == desktopPane.getSelectedFrame()) {
+                config.setActiveFrameDesc(internalFrameDesc);
             }
+            internalFrameDescs.add(internalFrameDesc);
+
         }
-        return propertyIntValue;
+        config.setInternalFrameDescs(internalFrameDescs);
+
+        return config;
     }
 
     /**
-        Get an <tt>boolean</tt> property from a <tt>Properties</tt> object,
-        supplying a default value if this property does not exist.
-        @param props the <tt>Properties</tt> object
-        @param propertyName the name of the requested property
-        @param defaultValue the default value
-        @return the <tt>boolean</tt>
+         Takes an <tt>MDIConfig</tt> object that describes a configuration of
+         internal frames and populates the MDI frame with this configuration.
+         @param config the <tt>MDIConfig</tt> object to be read
      */
-    protected boolean getBooleanProperty(Properties props, String propertyName, boolean defaultValue) {
+    protected void readMDIConfig(MDIConfig config) {
 
-        String propertyValue = (String)props.get(propertyName);
-        boolean propertyBooleanValue = defaultValue;
-        if (propertyValue != null) {
-            propertyBooleanValue = (new Boolean(propertyValue)).booleanValue();
-        }
-        return propertyBooleanValue;
-    }
-    
-    /**
-        Save the state of the application to a properties file.
-        @param props the <tt>Properties</tt> object to fill with information
-        @param filename the file name to save to
-        @param header the header for the properties file
-        @param messageTitle the title for the message box confirming the operation
-     */
-    protected void saveSettings(Properties props, String filename, String header, String messageTitle) {
-
-        saveWindowSettings(props);
-        saveFrameSettings(props);
-        
-        OutputStream out = null;
-        try {
-            out = new BufferedOutputStream(
-                      new FileOutputStream(
-                      new File(filename)));
-            
-            props.store(out, header);
-            out.flush();
-            out.close();
-            
-            JOptionPane.showMessageDialog(this,
-                                         "Settings saved to current directory",
-                                         messageTitle,
-                                         JOptionPane.INFORMATION_MESSAGE);
-            
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this,
-                                          "Cannot save settings to " + filename,
-                                          messageTitle,
-                                          JOptionPane.ERROR_MESSAGE);
-            
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex2) {}
-            }
-        }
-
-    }
-    
-    /**
-        Load the state of the application from a properties file and restore
-        the application as far as possible.
-        @param filename the file name to read from
-        @return the <tt>Properties</tt> object filled with state information
-     */
-    protected Properties loadSettings(String filename) {
-
-        setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-        
-        Properties props = new Properties();
-        InputStream in = null;
-        try {
-            in = new BufferedInputStream(
-                     new FileInputStream(
-                     new File(filename)));
-            
-            props.load(in);
-            loadWindowSettings(props);
-            loadFrameSettings(props);
-            loadActiveFrameSettings(props);
-        }
-        catch (IOException ex) {
-            props = null;
-        }
-        finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ex2) {}
-            }
-        }
-        return props;
-    }
-
-    private void loadFrameSettings(Properties props) {
-
-        int numberOfFrames = getIntProperty(props, SETTINGS_PROPERTY_NUMBER_OF_FRAMES, 0);
         boolean anyFrameMaximized = false;
-        for (int i = 0; i < numberOfFrames; i++) {
-            String className = (String)props.get(SETTINGS_PROPERTY_FRAMES_CLASS_NAME + i);
-            String initParam = (String)props.get(SETTINGS_PROPERTY_FRAMES_INIT_PARAM + i);
-            if (className == null || initParam == null) {
-                continue;
-            }
-            Constructor frameConstructor = null;
+        Iterator it = config.getInternalFrameDescs().iterator();
+        while (it.hasNext()) {
+            MDIConfig.InternalFrameDesc internalFrameDesc = (MDIConfig.InternalFrameDesc)it.next();
+
+
+            Constructor frameConstructor;
             try {
-                Class frameClass = Class.forName(className);
-                frameConstructor = frameClass.getConstructor(BasicInternalFrame.DEFAULT_CONSTRUCTOR);
-                
+                Class frameClass = Class.forName(internalFrameDesc.getClassName());
+                frameConstructor = frameClass.getConstructor(getFrameConstructorArguments(frameClass));
             } catch (ClassNotFoundException ex) {
+                System.out.println("class not found:" + ex.getMessage());
                 continue;
             } catch (NoSuchMethodException ex) {
+                System.out.println("constructor not found:" + ex.getMessage());
                 continue;
             }
 
-            int frameX = getIntProperty(props, SETTINGS_PROPERTY_FRAMES_X + i, -1);
-            int frameY = getIntProperty(props, SETTINGS_PROPERTY_FRAMES_Y + i, -1);
-            int frameWidth = getIntProperty(props, SETTINGS_PROPERTY_FRAMES_WIDTH + i, -1);
-            int frameHeight = getIntProperty(props, SETTINGS_PROPERTY_FRAMES_HEIGHT + i, -1);
-            boolean frameMaximized = getBooleanProperty(props, SETTINGS_PROPERTY_FRAMES_MAXIMIZED + i, false);
-            anyFrameMaximized = anyFrameMaximized & frameMaximized;
-            boolean frameIconified = getBooleanProperty(props, SETTINGS_PROPERTY_FRAMES_ICONIFIED + i, false);
-            
-            BasicInternalFrame frame = null;
+            BasicInternalFrame frame;
             try {
-                frame = (BasicInternalFrame)frameConstructor.newInstance(new Object[] {desktopManager, initParam});
+                frame = (BasicInternalFrame)frameConstructor.newInstance(new Object[] {desktopManager, internalFrameDesc.getInitParam()});
             } catch (Exception ex) {
                 ex.printStackTrace();
+                Throwable cause = ex.getCause();
+                if (cause != null) {
+                    ex.printStackTrace();
+                }
                 continue;
             }
-            desktopManager.resizeFrame(frame, frameX, frameY, frameWidth, frameHeight);
-            
+            desktopManager.resizeFrame(
+                    frame,
+                    internalFrameDesc.getX(),
+                    internalFrameDesc.getY(),
+                    internalFrameDesc.getWidth(),
+                    internalFrameDesc.getHeight()
+            );
+
+            boolean frameMaximized = internalFrameDesc.isMaximized();
+            anyFrameMaximized = anyFrameMaximized || frameMaximized;
+
             try {
-                if (frameMaximized & frameMaximized) {
+                if (frameMaximized || anyFrameMaximized) {
                     frame.setMaximum(true);
-                } else if (frameIconified) {
-                    frame.setIcon(frameIconified);
+                } else if (internalFrameDesc.isIconified()) {
+                    frame.setIcon(true);
                 }
             } catch (PropertyVetoException ex) {
             }
 
-        }
-    }
-
-    private void loadActiveFrameSettings(Properties props) {
-
-        int activeFrameIndex = getIntProperty(props, SETTINGS_PROPERTY_ACTIVE_FRAME, -1);
-        java.util.List openFrames = desktopManager.getOpenFrames();
-        if (activeFrameIndex > -1 && activeFrameIndex < desktopManager.getOpenFrames().size()) {
-            desktopManager.setActiveFrameIndex(activeFrameIndex);
-        }
-
-    }
-    
-    private void saveWindowSettings(Properties props) {
-
-        props.put(SETTINGS_PROPERTY_WINDOW_WIDTH, String.valueOf(getSize().width));
-        props.put(SETTINGS_PROPERTY_WINDOW_HEIGHT, String.valueOf(getSize().height));
-        props.put(SETTINGS_PROPERTY_WINDOW_X, String.valueOf(getBounds().x));
-        props.put(SETTINGS_PROPERTY_WINDOW_Y, String.valueOf(getBounds().y));
-    }
-    
-    private void saveFrameSettings(Properties props) {
-
-        java.util.List openFrames = desktopManager.getOpenFrames();
-        props.put(SETTINGS_PROPERTY_NUMBER_OF_FRAMES, String.valueOf(openFrames.size()));
-
-        int activeFrameIndex = -1;
-        JInternalFrame activeFrame = desktopPane.getSelectedFrame();
-        if (activeFrame != null) {
-            activeFrameIndex = openFrames.indexOf(activeFrame);
-        }
-        props.put(SETTINGS_PROPERTY_ACTIVE_FRAME, String.valueOf(activeFrameIndex));
-        
-        BasicInternalFrame currentFrame;
-        Rectangle currentBounds;
-        for (int i = 0; i < openFrames.size(); i++) {
-            currentFrame = (BasicInternalFrame)openFrames.get(i);
-            currentBounds = currentFrame.getNormalBounds();
-            
-            props.put(SETTINGS_PROPERTY_FRAMES_CLASS_NAME + i,
-                      currentFrame.getClass().getName());
-            props.put(SETTINGS_PROPERTY_FRAMES_INIT_PARAM + i,
-                      currentFrame.getInitParam());
-            props.put(SETTINGS_PROPERTY_FRAMES_X + i,
-                      String.valueOf(currentBounds.x));
-            props.put(SETTINGS_PROPERTY_FRAMES_Y + i,
-                      String.valueOf(currentBounds.y));
-            props.put(SETTINGS_PROPERTY_FRAMES_WIDTH + i,
-                      String.valueOf(currentBounds.width));
-            props.put(SETTINGS_PROPERTY_FRAMES_HEIGHT + i,
-                      String.valueOf(currentBounds.height));
-            props.put(SETTINGS_PROPERTY_FRAMES_MAXIMIZED + i,
-                      String.valueOf(currentFrame.isMaximum()));
-            props.put(SETTINGS_PROPERTY_FRAMES_ICONIFIED + i,
-                      String.valueOf(currentFrame.isIcon()));
-        }
-        
-    }
-    
-    private void loadWindowSettings(Properties props) {
-
-        int windowX = getIntProperty(props, SETTINGS_PROPERTY_WINDOW_X, -1);
-        int windowY = getIntProperty(props, SETTINGS_PROPERTY_WINDOW_Y, -1);
-        int windowHeight = getIntProperty(props, SETTINGS_PROPERTY_WINDOW_HEIGHT, -1);
-        int windowWidth = getIntProperty(props, SETTINGS_PROPERTY_WINDOW_WIDTH, -1);
-
-        if (windowX > -1 && windowY  > -1) {
-            setBounds(windowX,
-                      windowY,
-                      getSize().width,
-                      getSize().height);
-        }
-
-        if (windowHeight  > -1 && windowWidth  > -1) {
-            setSize(windowWidth, windowHeight);
-        }
-    }
-    
-    private void setupImagePath() {
-
-        String basePath = System.getProperty(SYSTEM_PROPERTY_BASE_PATH);
-        if (basePath != null) {
-            if (basePath.endsWith(File.separator)) {
-                basePath = basePath.substring(0, basePath.length() - 1);
+            if (internalFrameDesc == config.getActiveFrameDesc()) {
+                desktopManager.setActiveFrame(frame);
             }
-            imagePath=basePath + File.separator + IMAGES_DIRECTORY + File.separator;
-        } else {
-            imagePath = IMAGES_DIRECTORY + File.separator;
         }
+
+        desktopManager.showAll();
+    }
+
+    /**
+        Get the constructor arguments classes for the constructor of the supplied frame class.
+        @param frameClass the frame class.
+        @return the constructor argument classes.
+     */
+    protected Class[] getFrameConstructorArguments(Class frameClass) {
+        return BasicInternalFrame.CONSTRUCTOR_ARGUMENTS;
     }
 
     private void setupActions() {
@@ -417,32 +255,95 @@ public class BasicMDIFrame extends JFrame {
         
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout(5,5));
-        contentPane.add(buildDesktopPane(), BorderLayout.CENTER);
+        contentPane.add(buildDesktop(), BorderLayout.CENTER);
         
+    }
+
+    private void setupEventHandlers() {
+
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
                 doQuit();
             }
         });
+
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent event) {
+                desktopManager.checkResizeInMaximizedState();
+                recordLastNormalFrameBounds();
+            }
+            public void componentMoved(ComponentEvent event) {
+                recordLastNormalFrameBounds();
+            }
+        });
+
     }
-    
-    private JDesktopPane buildDesktopPane() {
+
+    private void saveWindowSettings() {
+
+        Preferences preferences = Preferences.userNodeForPackage(getClass());
+
+        boolean maximized = (getExtendedState() & MAXIMIZED_BOTH) != 0;
+        preferences.putBoolean(SETTINGS_WINDOW_MAXIMIZED, maximized);
+        Rectangle frameBounds = maximized ? lastNormalFrameBounds : getBounds();
+
+        preferences.putInt(SETTINGS_WINDOW_WIDTH, frameBounds.width);
+        preferences.putInt(SETTINGS_WINDOW_HEIGHT, frameBounds.height);
+        preferences.putInt(SETTINGS_WINDOW_X, frameBounds.x);
+        preferences.putInt(SETTINGS_WINDOW_Y, frameBounds.y);
+    }
+
+    private void loadWindowSettings() {
+
+        Preferences preferences = Preferences.userNodeForPackage(getClass());
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Rectangle screenBounds = new Rectangle(screenSize);
+
+        int windowX = preferences.getInt(SETTINGS_WINDOW_X, (int)(screenSize.getWidth() - DEFAULT_WINDOW_WIDTH)/2);
+        int windowY = preferences.getInt(SETTINGS_WINDOW_Y, (int)(screenSize.getHeight() - DEFAULT_WINDOW_HEIGHT)/2);
+        int windowWidth = preferences.getInt(SETTINGS_WINDOW_WIDTH, DEFAULT_WINDOW_WIDTH);
+        int windowHeight = preferences.getInt(SETTINGS_WINDOW_HEIGHT, DEFAULT_WINDOW_HEIGHT);
+
+        Rectangle frameBounds = new Rectangle(windowX, windowY, windowWidth, windowHeight);
+
+        // sanitize frame bounds
+        frameBounds.translate(-Math.min(0, frameBounds.x), -Math.min(0, frameBounds.y));
+        frameBounds.translate(-Math.max(0, frameBounds.x + frameBounds.width - screenSize.width), -Math.max(0, frameBounds.y + frameBounds.height- screenSize.height));
+        frameBounds = screenBounds.intersection(frameBounds);
+
+        setBounds(frameBounds);
+
+        if (preferences.getBoolean(SETTINGS_WINDOW_MAXIMIZED, false)) {
+            setExtendedState(MAXIMIZED_BOTH);
+        }
+
+    }
+
+    private void recordLastNormalFrameBounds() {
+        if ((getExtendedState() & MAXIMIZED_BOTH) == 0) {
+            Rectangle frameBounds = getBounds();
+            if (frameBounds.getX() >= 0 && frameBounds.getY() >= 0) {
+                lastNormalFrameBounds = frameBounds;
+            }
+        }
+
+    }
+
+    private JComponent buildDesktop() {
 
         desktopPane = new JDesktopPane();
         desktopManager = createDesktopManager();
         desktopPane.setDesktopManager(desktopManager);
-        
-        return desktopPane;
+        scpDesktop = new JScrollPane(desktopPane);
+        GUIHelper.setDefaultScrollbarUnits(scpDesktop);
+
+        return scpDesktop;
     }
     
     private class WindowAction extends AbstractAction {
 
-        public WindowAction(String name) {
+        private WindowAction(String name) {
             super(name);
-        }
-
-        public WindowAction(String name, Icon icon) {
-            super(name, icon);
         }
 
         public void actionPerformed(ActionEvent ev) {

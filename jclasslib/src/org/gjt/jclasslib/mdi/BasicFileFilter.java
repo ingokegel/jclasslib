@@ -14,19 +14,41 @@ import java.io.File;
     Configurable file filter for a <tt>JFileChooser</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:59:50 $
 */
 public class BasicFileFilter extends FileFilter {
 
     private String[] extensions;
     private String description;
 
+    /**
+        Constructor.
+        @param extensions the file extensions.
+        @param description the description.
+     */
     public BasicFileFilter(String[] extensions, String description) {
 
         this.extensions = extensions;
-        this.description = description;
+
+        StringBuffer buffer = new StringBuffer(description);
+        buffer.append(" (");
+        for (int i = 0; i < extensions.length; i++) {
+            if (i > 0) {
+                buffer.append(", ");
+            }
+            buffer.append("*.");
+            buffer.append(extensions[i]);
+        }
+        buffer.append(")");
+
+        this.description = buffer.toString();
     }
 
+    /**
+        Constructor.
+        @param extension the file extension.
+        @param description the description.
+     */
     public BasicFileFilter(String extension, String description) {
 
         this(new String[] {extension}, description);
@@ -45,7 +67,7 @@ public class BasicFileFilter extends FileFilter {
     }
 
     public String getDescription() {
-        return description;
+        return description + "";
     }
 }
 
