@@ -173,7 +173,11 @@
         <application>jclasslib</application> root. Microsoft Windows users may also
         doubleclick the file <filename>jclasslib.jar</filename>. In addition, startup
         scripts for Microsoft Windows (<filename>jclasslib.bat</filename>) and UNIX
-        (<filename>jclasslib</filename>) are provided.
+        (<filename>jclasslib</filename>) are provided. If you want to use jclasslib
+        with the system default look and feel instead of 
+        <ulink url="http://www.incors.org">Kunststoff look and feel</ulink>,
+        edit the startup script for your platform and set the <varname>DEFAULT_LAF</varname>
+        variable to "true".
       </para>
     </sect2>
     <sect2>
