@@ -1,83 +1,85 @@
-<html><head><title>jclasslib help</title><link type="text/css" href="doc.css" rel="stylesheet"><meta content="DocBook XSL Stylesheets V1.29" name="generator"><meta name="keywords" content="jclasslib"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" id="Na21"><div class="titlepage"><div><h1 class="title"><a name="Na21"></a>jclasslib help</h1></div><div><h2 class="subtitle">Ingo Kegel, 2001-06-01</h2></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt> <a href="#Na29">Purpose</a></dt><dt> <a href="#Na37">Installing <i>jclasslib</i></a></dt><dd><dl><dt> <a href="#Na40">Requirements</a></dt><dt> <a href="#Na53">Installing from binary distribution</a></dt><dt> <a href="#Na61">Installing as Netbeans module</a></dt><dt> <a href="#Na74">Building <i>jclasslib</i> from source</a></dt></dl></dd><dt> <a href="#Nb9b">The class file browser</a></dt><dd><dl><dt> <a href="#Nba0">Starting the class file browser</a></dt><dt> <a href="#Nbc7">Using the class file browser</a></dt><dt> <a href="#Ncae">The class file browser as a Netbeans module</a></dt></dl></dd><dt> <a href="#Ncd6">The bytecode manipulation library</a></dt><dd><dl><dt> <a href="#Ncdb">UML diagrams of <i>jclasslib</i></a></dt><dt> <a href="#Nd99">Debugging reading and writing of class files</a></dt><dt> <a href="#Ndc1">Using <i>jclasslib</i> in your own application</a></dt></dl></dd></dl></div><div class="sect1"><a name="Na29"></a><div class="titlepage"><div><h2 class="title" style="clear: all"><a name="Na29"></a><span class="title">Purpose</span></h2></div></div><p>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>jclasslib help</title><link type="text/css" href="doc.css" rel="stylesheet"><meta content="DocBook XSL Stylesheets V1.49" name="generator"><meta name="keywords" content="jclasslib"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><h2 class="title"><a name="N10001"></a>jclasslib help</h2></div><div><h3 class="subtitle"><i>Ingo Kegel, 2002-02-26</i></h3></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><a href="#N10007">Purpose</a></dt><dt><a href="#N10010">Installing jclasslib</a></dt><dd><dl><dt><a href="#N10016">Requirements</a></dt><dt><a href="#N10023">Installing from binary distribution</a></dt><dt><a href="#N1002C">Installing as Netbeans module</a></dt><dt><a href="#N10039">Building jclasslib from source</a></dt></dl></dd><dt><a href="#N10102">The class file browser</a></dt><dd><dl><dt><a href="#N10105">Starting the class file browser</a></dt><dt><a href="#N10120">Using the class file browser</a></dt><dt><a href="#N101B0">The class file browser as a Netbeans module</a></dt></dl></dd><dt><a href="#N101C7">The bytecode manipulation library</a></dt><dd><dl><dt><a href="#N101CA">UML diagrams of jclasslib</a></dt><dt><a href="#N10250">Debugging reading and writing of class files</a></dt><dt><a href="#N1026F">Using jclasslib in your own application</a></dt></dl></dd></dl></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10007"></a>Purpose</h2></div></div><p>
       <i>jclasslib</i> is a library and a collection of
       utilities and applications which are aimed at the manipulation of java bytecode.
       The core functionality consists in mechanism to read, modify and write class files.
-      Currently one application - the class file browser - is built on top of this. While
-      the bytecode manipulation classes could be of interest to developers with
+      Currently one bundled application - the class file browser - is built on top of this.
+      While the bytecode manipulation classes could be of interest to developers with
       specialized development targets such as obfuscators, compilers or code completion
       engines, the class file browser is a standalone application which may be useful for
       anyone trying to understand the java virtual machine.
-    </p></div><div class="sect1"><a name="Na37"></a><div class="titlepage"><div><h2 class="title" style="clear: all"><a name="Na37"></a><span class="title">Installing <i>jclasslib</i></span></h2></div></div><div class="sect2"><a name="Na40"></a><div class="titlepage"><div><h3 class="title"><a name="Na40"></a><span class="title">Requirements</span></h3></div></div><p>
+    </p></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10010"></a>Installing <i>jclasslib</i></h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10016"></a>Requirements</h3></div></div><p>
         To run <i>jclasslib</i> you need a  Java 1.3 runtime
         environment or higher, available at
         <a href="http://java.sun.com/j2se/" target="_top">http://java.sun.com/j2se/</a>.
-      </p></div><div class="sect2"><a name="Na53"></a><div class="titlepage"><div><h3 class="title"><a name="Na53"></a><span class="title">Installing from binary distribution</span></h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10023"></a>Installing from binary distribution</h3></div></div><p>
         <i>jclasslib</i> is provided as a zip or tgz archive.
         Besides unpacking it at a suitable location, no further steps are necessary
         for the installation. Specifically, no external libraries and classpath
         settings are necessary.
-      </p></div><div class="sect2"><a name="Na61"></a><div class="titlepage"><div><h3 class="title"><a name="Na61"></a><span class="title">Installing as Netbeans module</span></h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N1002C"></a>Installing as Netbeans module</h3></div></div><p>
         To install the class file browser as a Netbeans module, copy
         <tt>nb-jclasslib.jar</tt> to the <tt>modules</tt>
         subdirectory of your Netbeans distribution and restart Netbeans.
-      </p></div><div class="sect2"><a name="Na74"></a><div class="titlepage"><div><h3 class="title"><a name="Na74"></a><span class="title">Building <i>jclasslib</i> from source</span></h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10039"></a>Building <i>jclasslib</i> from source</h3></div></div><p>
         To build <i>jclasslib</i>, you need the
         <i>ant</i> build tool available at
         <a href="http://jakarta.apache.org/ant/" target="_top">http://jakarta.apache.org/ant/</a>.
         If you want to build this documentation, you have to
       </p><p>
-        <div class="itemizedlist"><ul><li><p><a name="Na94"></a>
+        <div class="itemizedlist"><ul type="disc"><li><p>
               download the optional tasks jar
-              (<tt>jakarta-ant-1.3-optional.jar</tt> for
-              <i>ant</i> 1.3) and copy it to
+              (<tt>jakarta-ant-1.4-optional.jar</tt> for
+              <i>ant</i> 1.4) and copy it to
               <tt>$ANT_HOME</tt><tt>/lib</tt>.
-            </p></li><li><p><a name="Naab"></a>
+            </p></li><li><p>
               download the XML parser <i>xerces</i> and the XSLT processor
               <i>xalan</i> of the Apache Software Foundation both available at
               <a href="http://xml.apache.org/dist/" target="_top">http://xml.apache.org/dist/</a> and
               put the jar files <tt>xerces.jar</tt> and <tt>xalan.jar</tt>
               into your <tt>CLASSPATH</tt> environment variable.
-            </p></li><li><p><a name="Nacd"></a>
+            </p></li><li><p>
               Install the dcobook DTD and stylesheets. This is done in three steps:
             </p><p>
-              <div class="orderedlist"><ol type="1"><li><p><a name="Nada"></a>
+              <div class="orderedlist"><ol type="1"><li><p>
                     Create a directory <tt>docbook</tt> in <tt>doc/src</tt>
                     under the <i>jclasslib</i> root. In this new directory, create
                     the subdirectories <tt>dtd</tt> and <tt>stylesheets</tt>.
-                  </p></li><li><p><a name="Naf9"></a>
-                    download the Docbook XML DTD from
-                    <a href="http://www.oasis-open.org/docbook/xml/index.html" target="_top">
-                    http://www.oasis-open.org/docbook/xml/index.html</a>
-                    and unpack the zip file to the <tt>dtd</tt> directory created in step 1.
-                  </p></li><li><p><a name="Nb09"></a>
+                  </p></li><li><p>
+                    download the Docbook XML DTD version 4.1.2 from
+                    <a href="http://www.oasis-open.org/docbook/xml/index.shtml" target="_top">
+                    http://www.oasis-open.org/docbook/xml/index.shtml</a>
+                    and unpack contents of this zip file directly to the
+                    <tt>dtd</tt> directory created in step 1.
+                  </p></li><li><p>
                     download the Docbook XSL stylesheets from
-                    <a href="http://nwalsh.com/docbook/xsl/index.html" target="_top">
-                    http://nwalsh.com/docbook/xsl/index.html</a>
+                    <a href="http://sourceforge.net/project/showfiles.php?group_id=21935" target="_top">
+                    http://sourceforge.net/project/showfiles.php?group_id=21935</a>
                     and unpack the zip file to the <tt>stylesheets</tt> directory created
-                    in step 1.
+                    in step 1. Rename the first directory which contains all the other files
+                    to <tt>docbook</tt>.
                   </p></li></ol></div>
             </p></li></ul></div>
       </p><p>
         The following ant targets are used for building <i>jclasslib</i>:
-        <div id="Nb25" class="informaltable"><p></p><a name="Nb25"></a><table border="1"><colgroup><col align="center"><col align="left"></colgroup><thead><tr><th>ant target</th><th>purpose</th></tr></thead><tbody><tr><td>compile (default)</td><td>compile java files to the <tt>build</tt> directory</td></tr><tr><td>jar</td><td>create jar file in the <tt>build</tt> directory</td></tr><tr><td>doc</td><td>
+        <div class="informaltable"><table border="1"><colgroup><col align="center"><col align="left"></colgroup><thead><tr><th align="center">ant target</th><th align="left">purpose</th></tr></thead><tbody><tr><td align="center">compile (default)</td><td align="left">compile java files to the <tt>build</tt> directory</td></tr><tr><td align="center">jar</td><td align="left">create jar file in the <tt>build</tt> directory</td></tr><tr><td align="center">doc</td><td align="left">
                   build this documentation in the
                   <tt>doc</tt> directory
-                </td></tr><tr><td>doc</td><td>
+                </td></tr><tr><td align="center">doc</td><td align="left">
                   build the javadoc documentation in the
                   <tt>doc/javadoc</tt> directory
-                </td></tr><tr><td>dist</td><td>
+                </td></tr><tr><td align="center">dist</td><td align="left">
                   build a distribution of <i>jclasslib</i> in the
                   <tt>dist</tt> directory
-                </td></tr><tr><td>clean</td><td>cleans all generated files and directories</td></tr></tbody></table><p></p></div>
-      </p></div></div><div class="sect1"><a name="Nb9b"></a><div class="titlepage"><div><h2 class="title" style="clear: all"><a name="Nb9b"></a><span class="title">The class file browser</span></h2></div></div><div class="sect2"><a name="Nba0"></a><div class="titlepage"><div><h3 class="title"><a name="Nba0"></a><span class="title">Starting the class file browser</span></h3></div></div><p>
+                </td></tr><tr><td align="center">clean</td><td align="left">cleans all generated files and directories</td></tr></tbody></table></div>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N10102"></a>The class file browser</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10105"></a>Starting the class file browser</h3></div></div><p>
         The class file browser is run by entering
-        <div id="Nba7" class="cmdsynopsis"><a name="Nba7"></a><tt>java -jar jclasslib.jar</tt> </div>
+        <div class="cmdsynopsis"><p><tt>java -jar jclasslib.jar</tt> </p></div>
         at the command line with the current director at the
         <i>jclasslib</i> root. Microsoft Windows users may also
         doubleclick the file <tt>jclasslib.jar</tt>. In addition, startup
         scripts for Microsoft Windows (<tt>jclasslib.bat</tt>) and UNIX
         (<tt>jclasslib</tt>) are provided.
-      </p></div><div class="sect2"><a name="Nbc7"></a><div class="titlepage"><div><h3 class="title"><a name="Nbc7"></a><span class="title">Using the class file browser</span></h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10120"></a>Using the class file browser</h3></div></div><p>
         The class file browser allows you to open class files (not java files!) with
         File-&gt;Open.
         Class files will be displayed in child windows which are initially maximized.
@@ -97,36 +99,36 @@
       </p><p>
         The detail view of attribute structures is always composed of two areas:
       </p><p>
-        <div class="itemizedlist"><ul><li><p><a name="Nc06"></a>
-              The <i>generic info</i> pane showing fields that apply to
+        <div class="itemizedlist"><ul type="disc"><li><p>
+              The <span class="emphasis"><i>generic info</i></span> pane showing fields that apply to
               all attribute structures.
-            </p></li><li><p><a name="Nc0f"></a>
-              The <i>specific info</i> pane showing fields that apply only to
+            </p></li><li><p>
+              The <span class="emphasis"><i>specific info</i></span> pane showing fields that apply only to
               the specified attribute structure.
             </p></li></ul></div>
       </p><p>
         The main sections of the class file structure tree are:
-        <div class="variablelist"><dl><dt><a name="Nc1e"></a><span class="term">General Information</span></dt><dd><p><a name="Nc22"></a>
+        <div class="variablelist"><dl><dt><span class="term">General Information</span></dt><dd><p>
               All fields without sub-structure directly contained in the class file
               structure.
-            </p></dd><dt><a name="Nc29"></a><span class="term">Constant pool</span></dt><dd><p><a name="Nc2d"></a>
+            </p></dd><dt><span class="term">Constant pool</span></dt><dd><p>
               The runtime constant pool of the class file. All entries are named as
               suggested in the Java virtual machine specification and are hyperlinked
               where appropriate,
-            </p></dd><dt><a name="Nc34"></a><span class="term">Interfaces</span></dt><dd><p><a name="Nc38"></a>
+            </p></dd><dt><span class="term">Interfaces</span></dt><dd><p>
               All interfaces which are implemented by the class described by the class
               file numbered from <tt>0</tt> to <tt>n - 1</tt>.
-            </p></dd><dt><a name="Nc49"></a><span class="term">Fields</span></dt><dd><p><a name="Nc4d"></a>
+            </p></dd><dt><span class="term">Fields</span></dt><dd><p>
               All fields of the class described by the class file.
-            </p></dd><dt><a name="Nc54"></a><span class="term">Fields</span></dt><dd><p><a name="Nc58"></a>
+            </p></dd><dt><span class="term">Fields</span></dt><dd><p>
               All fields of the class described by the class file. Fields entries may
               themselves be nodes and contain a <tt>ConstantValue</tt> attribute.
-            </p></dd><dt><a name="Nc64"></a><span class="term">Methods</span></dt><dd><p><a name="Nc68"></a>
+            </p></dd><dt><span class="term">Methods</span></dt><dd><p>
               All methods of the class described by the class file. Method entries contain
               at least a <tt>Code</tt> attribute. The specific info part of the
               detail view of a code attribute contains a tabbed pane with 3 tabs showing
             </p><p>
-              <div class="itemizedlist"><ul><li><p><a name="Nc76"></a>
+              <div class="itemizedlist"><ul type="disc"><li><p>
                     the bytecode in a somewhat modified assembly notation like the one
                     produced by <i>javap</i>. The gray numbers in
                     small font at the beginning of each line containing an opcode show the
@@ -135,9 +137,9 @@
                     method. Constant pool entries are hyperlinks denoted as <tt>#nnn</tt>,
                     links to other offset such as in branching instructions are hyperlinks denoted
                     as <tt>nnn</tt>.
-                  </p></li><li><p><a name="Nc8b"></a>
+                  </p></li><li><p>
                     the exception table pertaining to the bytecode.
-                  </p></li><li><p><a name="Nc91"></a>
+                  </p></li><li><p>
                     other fields of the code attribute structure without further sub-structure.
                   </p></li></ul></div>
             </p><p>
@@ -148,7 +150,7 @@
         To understand the meaning of the classfile structure, its substructures and the bytecode itself,
         it is useful to have the <a href="http://java.sun.com/docs/books/vmspec/" target="_top">Java virtual machine
         specification</a> at hand.
-      </p></div><div class="sect2"><a name="Ncae"></a><div class="titlepage"><div><h3 class="title"><a name="Ncae"></a><span class="title">The class file browser as a Netbeans module</span></h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101B0"></a>The class file browser as a Netbeans module</h3></div></div><p>
         To open a class file in Netbeans, the first step is to either select a java source node
         or a class file node in the explorer or to activate a Java source file in the source editor.
         Java sources have to be compiled in order for the class file browser menu entries to be 
@@ -157,59 +159,59 @@
         in the popup menu or to execute
         Tools-&gt;View class file
         in the main Netbeans menu.
-      </p></div></div><div class="sect1"><a name="Ncd6"></a><div class="titlepage"><div><h2 class="title" style="clear: all"><a name="Ncd6"></a><span class="title">The bytecode manipulation library</span></h2></div></div><div class="sect2"><a name="Ncdb"></a><div class="titlepage"><div><h3 class="title"><a name="Ncdb"></a><span class="title"><a name="uml"></a>UML diagrams of <i>jclasslib</i></span></h3></div></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="N101C7"></a>The bytecode manipulation library</h2></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N101CA"></a><a name="uml"></a>UML diagrams of <i>jclasslib</i></h3></div></div><p>
         The following UML diagrams for each package contained in
         <tt>org.gjt.jclasslib</tt> and its subpackages give an overview
          of the general architecture.
-      </p><div class="itemizedlist"><ul><li><p><a name="Ncef"></a>
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
             <a href="images/browser.gif" target="_top">
             <tt>org.gjt.jclasslib.browser</tt>
             </a>
-          </p></li><li><p><a name="Ncfd"></a>
+          </p></li><li><p>
             <a href="images/browser_detail.gif" target="_top">
             <tt>org.gjt.jclasslib.detail</tt>
             </a>
-          </p></li><li><p><a name="Nd0b"></a>
+          </p></li><li><p>
             <a href="images/browser_detail_attributes.gif" target="_top">
             <tt>org.gjt.jclasslib.browser.detail.attributes</tt>
             </a>
-          </p></li><li><p><a name="Nd19"></a>
+          </p></li><li><p>
             <a href="images/browser_detail_constants.gif" target="_top">
             <tt>org.gjt.jclasslib.browser.detail.constants</tt>
             </a>
-          </p></li><li><p><a name="Nd27"></a>
+          </p></li><li><p>
             <a href="images/bytecode.gif" target="_top">
             <tt>org.gjt.jclasslib.bytecode</tt>
             </a>
-          </p></li><li><p><a name="Nd35"></a>
+          </p></li><li><p>
             <a href="images/io.gif" target="_top">
             <tt>org.gjt.jclasslib.io</tt>
             </a>
-          </p></li><li><p><a name="Nd43"></a>
+          </p></li><li><p>
             <a href="images/mdi.gif" target="_top">
             <tt>org.gjt.jclasslib.mdi</tt>
             </a>
-          </p></li><li><p><a name="Nd51"></a>
+          </p></li><li><p>
             <a href="images/nbmodule.gif" target="_top">
             <tt>org.gjt.jclasslib.nbmodule</tt>
             </a>
-          </p></li><li><p><a name="Nd5f"></a>
+          </p></li><li><p>
             <a href="images/structures.gif" target="_top">
             <tt>org.gjt.jclasslib.structures</tt>
             </a>
-          </p></li><li><p><a name="Nd6d"></a>
+          </p></li><li><p>
             <a href="images/structures_attributes.gif" target="_top">
             <tt>org.gjt.jclasslib.structures.attributes</tt>
             </a>
-          </p></li><li><p><a name="Nd7b"></a>
+          </p></li><li><p>
             <a href="images/structures_constants.gif" target="_top">
             <tt>org.gjt.jclasslib.structures.constants</tt>
             </a>
-          </p></li><li><p><a name="Nd89"></a>
+          </p></li><li><p>
             <a href="images/util.gif" target="_top">
             <tt>org.gjt.jclasslib.util</tt>
             </a>
-          </p></li></ul></div></div><div class="sect2"><a name="Nd99"></a><div class="titlepage"><div><h3 class="title"><a name="Nd99"></a><span class="title">Debugging reading and writing of class files</span></h3></div></div><p>
+          </p></li></ul></div></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N10250"></a>Debugging reading and writing of class files</h3></div></div><p>
         To see extensive debugging on stdout while <i>jclasslib</i> reads or
         writes class files, set the JVM environment variable
         <tt>org.gjt.jclasslib.structures.AbstractStructure.SYSTEM_PROPERTY_DEBUG</tt>
@@ -217,20 +219,20 @@
         <tt>-Dclasslib.io.debug=true</tt> right after the the <tt>java</tt>
         command in the invokation of the apllication of by setting the property via
         <tt>System.setProperty</tt>.
-      </p></div><div class="sect2"><a name="Ndc1"></a><div class="titlepage"><div><h3 class="title"><a name="Ndc1"></a><span class="title">Using <i>jclasslib</i> in your own application</span></h3></div></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><h3 class="title"><a name="N1026F"></a>Using <i>jclasslib</i> in your own application</h3></div></div><p>
         To use <i>jclasslib</i> in your own application you need
         to look at the javadoc documentation and at the source. Here are a few hints
         on how to begin:
       </p><p>
-        <div class="itemizedlist"><ul><li><p><a name="Ndd7"></a>
+        <div class="itemizedlist"><ul type="disc"><li><p>
               The single most important class is the
               <tt>org.gjt.jclasslib.structures.ClassFile</tt> class. All other
               structures defined in the class file format are hooked up here.
-            </p></li><li><p><a name="Nde0"></a>
+            </p></li><li><p>
               Reading and writing class files is done with the
               <tt>org.gjt.jclasslib.io.ClassFileReader</tt> and
               <tt>org.gjt.jclasslib.io.ClassFileWriter</tt> classes.
-            </p></li><li><p><a name="Ndec"></a>
+            </p></li><li><p>
               Bytecode is not translated to java classes within a <tt>ClassFile</tt>
               structure. To manipulate bytecode as a sequence of opcodes the
               <tt>org.gjt.jclasslib.io.ByteCodeReader</tt> and
@@ -238,5 +240,18 @@
               the bytecode between classes of the <tt>org.gjt.jclasslib.bytecode</tt>
               package and <tt>byte[]</tt> arrays as returned and expected by the
               <tt>ClassFile</tt> structure.
+            </p></li><li><p>
+              Inserting your own instructions into existing bytecode is done by creating
+              a list of instances of <tt>org.gjt.jclasslib.io.CodeInsertion</tt>
+              and invoking the <tt>org.gjt.jclasslib.io.CodeInsertion.apply</tt>
+              method. This way, bytecode offsets of branch instructions are shifted 
+              to take account for the inserted instructions. Dependant structures such as
+              line number and exception table are updated as well.
+            </p></li><li><p>
+              Manipulation of the constant pool is most conveniently done via the 
+              <tt>org.gjt.jclasslib.structures.ConstantPoolUtil</tt> class.
+              With its static methods, you can insert higher-level constant pool entries
+              which require other constant pool entries to be genererated
+              with only one method call.
             </p></li></ul></div>
       </p></div></div></div></body></html>
