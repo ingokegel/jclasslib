@@ -8,12 +8,13 @@
 package org.gjt.jclasslib.structures;
 
 import java.io.*;
+import org.gjt.jclasslib.structures.constants.*;
 
 /**
     Base class for class members.
- 
+
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2002-05-29 15:52:17 $
 */
 public abstract class ClassMember extends AbstractStructureWithAttributes
                                   implements AccessFlags {
@@ -27,12 +28,12 @@ public abstract class ClassMember extends AbstractStructureWithAttributes
 
     /**
         Get the access flags of this class member.
-        @return the access flags 
+        @return the access flags
      */
     public int getAccessFlags() {
         return accessFlags;
     }
-    
+
     /**
         Set the access flags of this class member.
         @param accessFlags the access flags
@@ -40,7 +41,7 @@ public abstract class ClassMember extends AbstractStructureWithAttributes
     public void setAccessFlags(int accessFlags) {
         this.accessFlags = accessFlags;
     }
-    
+
     /**
         Get the constant pool index of the name of this class member.
         @return the index
@@ -72,14 +73,33 @@ public abstract class ClassMember extends AbstractStructureWithAttributes
     public void setDescriptorIndex(int descriptorIndex) {
         this.descriptorIndex = descriptorIndex;
     }
-    
+
     /**
         Get the name of the class member.
         @return the name
         @throws InvalidByteCodeException if the entry is invalid
      */
     public String getName() throws InvalidByteCodeException {
-        return classFile.getConstantPoolUtf8Entry(nameIndex).getString();
+        ConstantUtf8Info cpinfo = classFile.getConstantPoolUtf8Entry(nameIndex);
+        if (cpinfo == null) {
+            return "invalid constant pool index";
+        } else {
+            return cpinfo.getString();
+        }
+    }
+
+    /**
+        Get the verbose descriptor of the class member.
+        @return the descriptor
+        @throws InvalidByteCodeException if the entry is invalid
+     */
+    public String getDescriptor() throws InvalidByteCodeException {
+        ConstantUtf8Info cpinfo = classFile.getConstantPoolUtf8Entry(descriptorIndex);
+        if (cpinfo == null) {
+            return "invalid constant pool index";
+        } else {
+            return cpinfo.getString();
+        }
     }
 
     /**
@@ -100,11 +120,11 @@ public abstract class ClassMember extends AbstractStructureWithAttributes
 
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
-        
+
         accessFlags = in.readUnsignedShort();
         nameIndex = in.readUnsignedShort();
         descriptorIndex = in.readUnsignedShort();
-        
+
         readAttributes(in);
 
     }
@@ -115,7 +135,7 @@ public abstract class ClassMember extends AbstractStructureWithAttributes
         out.writeShort(accessFlags);
         out.writeShort(nameIndex);
         out.writeShort(descriptorIndex);
-        
+
         writeAttributes(out);
     }
 
