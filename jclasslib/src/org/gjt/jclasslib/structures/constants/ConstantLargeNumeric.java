@@ -15,7 +15,7 @@ import java.io.*;
     Base class for large numeric constant pool data structures.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:35:06 $
 */
 public abstract class ConstantLargeNumeric extends CPInfo {
 
@@ -89,6 +89,20 @@ public abstract class ConstantLargeNumeric extends CPInfo {
         
         out.writeInt(highBytes);
         out.writeInt(lowBytes);
+    }
+    
+    public boolean equals(Object object) {
+        if (!(object instanceof ConstantLargeNumeric)) {
+            return false;
+        }
+        ConstantLargeNumeric constantLargeNumeric = (ConstantLargeNumeric)object;
+        return super.equals(object) &&
+               constantLargeNumeric.highBytes == highBytes &&
+               constantLargeNumeric.lowBytes == lowBytes;
+    }
+
+    public int hashCode() {
+        return super.hashCode() ^ highBytes ^ lowBytes;
     }
     
 }

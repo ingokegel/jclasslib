@@ -15,7 +15,7 @@ import java.io.*;
     Describes a <tt>CONSTANT_NameAndType_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:35:06 $
 */
 public class ConstantNameAndTypeInfo extends CPInfo {
 
@@ -34,8 +34,8 @@ public class ConstantNameAndTypeInfo extends CPInfo {
     }
     
     public String getVerbose() throws InvalidByteCodeException {
-        return classFile.getConstantPoolEntryName(descriptorIndex) + " " +
-               classFile.getConstantPoolEntryName(nameIndex);
+        return classFile.getConstantPoolEntryName(nameIndex) +
+               classFile.getConstantPoolEntryName(descriptorIndex);
     }
     
     /**
@@ -93,4 +93,18 @@ public class ConstantNameAndTypeInfo extends CPInfo {
               " and descriptor_index " + descriptorIndex);
     }
 
+    public boolean equals(Object object) {
+        if (!(object instanceof ConstantNameAndTypeInfo)) {
+            return false;
+        }
+        ConstantNameAndTypeInfo constantNameAndTypeInfo = (ConstantNameAndTypeInfo)object;
+        return super.equals(object) &&
+               constantNameAndTypeInfo.nameIndex == nameIndex &&
+               constantNameAndTypeInfo.descriptorIndex == descriptorIndex;
+    }
+
+    public int hashCode() {
+        return super.hashCode() ^ nameIndex ^ descriptorIndex;
+    }
+    
 }

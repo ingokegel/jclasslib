@@ -15,7 +15,7 @@ import java.io.*;
     Describes a <tt>CONSTANT_Class_info</tt> constant pool data structure.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:35:06 $
 */
 public class ConstantClassInfo extends CPInfo {
 
@@ -75,7 +75,19 @@ public class ConstantClassInfo extends CPInfo {
         out.writeShort(nameIndex);
         if (debug) debug("wrote ");
     }
+    
+    public boolean equals(Object object) {
+        if (!(object instanceof ConstantClassInfo)) {
+            return false;
+        }
+        ConstantClassInfo constantClassInfo = (ConstantClassInfo)object;
+        return super.equals(object) && constantClassInfo.nameIndex == nameIndex;
+    }
 
+    public int hashCode() {
+        return super.hashCode() ^ nameIndex;
+    }
+    
     protected void debug(String message) {
         super.debug(message + getTagVerbose() + " with name_index " + nameIndex);
     }

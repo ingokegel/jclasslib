@@ -15,7 +15,7 @@ import java.io.*;
     Describes a <tt>CONSTANT_Utf8_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-16 10:14:51 $
+    @version $Revision: 1.3 $ $Date: 2002-02-17 17:35:06 $
 */
 public class ConstantUtf8Info extends CPInfo {
 
@@ -50,6 +50,14 @@ public class ConstantUtf8Info extends CPInfo {
         return string;
     }
 
+    /**
+        Set the string in this entry.
+        @param string the string
+     */
+    public void setString(String string) {
+        this.string = string;
+    }
+
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
 
@@ -70,5 +78,18 @@ public class ConstantUtf8Info extends CPInfo {
         super.debug(message + getTagVerbose() + " with length " + getLength(bytes) +
                     " (\"" + string  + "\")");
     }
+
+    public boolean equals(Object object) {
+        if (!(object instanceof ConstantUtf8Info)) {
+            return false;
+        }
+        ConstantUtf8Info constantUtf8Info = (ConstantUtf8Info)object;
+        return super.equals(object) && constantUtf8Info.string.equals(string);
+    }
+
+    public int hashCode() {
+        return super.hashCode() ^ string.hashCode();
+    }
+    
 
 }

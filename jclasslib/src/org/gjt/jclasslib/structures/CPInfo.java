@@ -15,7 +15,7 @@ import java.io.*;
     Base class for all constant pool entries in the <tt>constants</tt> package.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:18 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:33:48 $
 */
 public abstract class CPInfo extends AbstractStructure {
 
@@ -176,5 +176,12 @@ public abstract class CPInfo extends AbstractStructure {
         
         return offset;
     }
+
+    public boolean equals(Object object) {
+        return object instanceof CPInfo;
+    }
     
+    public int hashCode() {
+        return 0;
+    }
 }

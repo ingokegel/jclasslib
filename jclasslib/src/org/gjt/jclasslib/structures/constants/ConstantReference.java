@@ -15,7 +15,7 @@ import java.io.*;
     Base class for constant pool data structures which reference class members.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:35:06 $
 */
 public abstract class ConstantReference extends CPInfo {
 
@@ -84,6 +84,20 @@ public abstract class ConstantReference extends CPInfo {
         
         out.writeShort(classIndex);
         out.writeShort(nameAndTypeIndex);
+    }
+    
+    public boolean equals(Object object) {
+        if (!(object instanceof ConstantReference)) {
+            return false;
+        }
+        ConstantReference constantReference = (ConstantReference)object;
+        return super.equals(object) &&
+               constantReference.classIndex == classIndex &&
+               constantReference.nameAndTypeIndex == nameAndTypeIndex;
+    }
+
+    public int hashCode() {
+        return super.hashCode() ^ classIndex ^ nameAndTypeIndex;
     }
     
 }

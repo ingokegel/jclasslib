@@ -15,7 +15,7 @@ import java.io.*;
     Describes a <tt>CONSTANT_String_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:35:06 $
 */
 public class ConstantStringInfo extends CPInfo {
 
@@ -73,4 +73,16 @@ public class ConstantStringInfo extends CPInfo {
         super.debug(message + getTagVerbose() + " with string_index " + stringIndex);
     }
 
+    public boolean equals(Object object) {
+        if (!(object instanceof ConstantStringInfo)) {
+            return false;
+        }
+        ConstantStringInfo constantStringInfo = (ConstantStringInfo)object;
+        return super.equals(object) && constantStringInfo.stringIndex == stringIndex;
+    }
+
+    public int hashCode() {
+        return super.hashCode() ^ stringIndex;
+    }
+    
 }

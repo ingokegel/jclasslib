@@ -15,7 +15,7 @@ import java.io.*;
     Base class for numeric constant pool data structures.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:19 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:35:06 $
 */
 public abstract class ConstantNumeric extends CPInfo {
 
@@ -60,6 +60,18 @@ public abstract class ConstantNumeric extends CPInfo {
         throws InvalidByteCodeException, IOException {
         
         out.writeInt(bytes);
+    }
+    
+    public boolean equals(Object object) {
+        if (!(object instanceof ConstantNumeric)) {
+            return false;
+        }
+        ConstantNumeric constantNumeric = (ConstantNumeric)object;
+        return super.equals(object) && constantNumeric.bytes == bytes;
+    }
+
+    public int hashCode() {
+        return super.hashCode() ^ bytes;
     }
     
 }
