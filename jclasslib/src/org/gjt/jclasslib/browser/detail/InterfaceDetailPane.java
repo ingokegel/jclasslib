@@ -16,7 +16,7 @@ import javax.swing.tree.TreePath;
     Detail pane showing interface entries.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 08:14:22 $
 */
 public class InterfaceDetailPane extends FixedListDetailPane {
 
@@ -25,6 +25,10 @@ public class InterfaceDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblInterface;
     private ExtendedJLabel lblInterfaceVerbose;
     
+    /**
+        Constructor.
+        @param services the associated browser services.
+     */
     public InterfaceDetailPane(BrowserServices services) {
         super(services);
     }
