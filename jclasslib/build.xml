@@ -109,7 +109,9 @@ clean            : Delete all generated files and directories.
     <target name="jar" depends="compile">
         <jar jarfile="${build.dir}/${build.jar.filename.prefix}.jar"
              basedir="${build.dir}"
-             manifest="${src.dir}/${build.manifest.jar.filename}">
+             manifest="${src.dir}/${build.manifest.jar.filename}"
+             compress="false">
+             
              
              <exclude name="**/nbmodule/*"/>
              <exclude name="*.jar"/>
@@ -190,8 +192,7 @@ clean            : Delete all generated files and directories.
                destdir="${doc.dir}"
                includes="*.xml"
                extension=".html"
-               processor="xalan"
-               style="doc.xsl"/>
+               style="${doc.src.dir}/doc.xsl"/>
         
     </target>
     
