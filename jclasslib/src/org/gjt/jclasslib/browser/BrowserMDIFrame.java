@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.mdi.*;
+import org.gjt.jclasslib.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +23,7 @@ import java.beans.*;
     MDI Frame and entry point for the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-26 16:29:24 $
+    @version $Revision: 1.5 $ $Date: 2002-02-27 16:26:42 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
 
@@ -54,6 +55,9 @@ public class BrowserMDIFrame extends BasicMDIFrame {
     protected Action actionForward;
     /** Action for reloading a class file */
     protected Action actionReload;
+
+    private Action actionShowHomepage;
+    private Action actionShowEJTechnologies;
 
     // Visual Components
 
@@ -102,6 +106,11 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         actionReload.putValue(Action.SHORT_DESCRIPTION, "Reload class file");
         actionReload.setEnabled(false);
         
+        actionShowHomepage = new DefaultAction("jclasslib on the web", loadIcon("web.gif"));
+        actionShowHomepage.putValue(Action.SHORT_DESCRIPTION, "Visit jclasslib on the web");
+        
+        actionShowEJTechnologies = new DefaultAction("ej-technologies on the web", loadIcon("web.gif"));
+        actionShowEJTechnologies.putValue(Action.SHORT_DESCRIPTION, "Visit ej-technologies on the web");
     }
 
     private void setupMenu() {
@@ -113,6 +122,9 @@ public class BrowserMDIFrame extends BasicMDIFrame {
             menuFile.add(actionChoose).setIcon(loadIcon("open_small.gif"));
             menuFile.addSeparator();
             menuFile.add(actionSaveSettings).setIcon(loadIcon("save_small.gif"));
+            menuFile.addSeparator();
+            menuFile.add(actionShowHomepage);
+            menuFile.add(actionShowEJTechnologies);
             menuFile.addSeparator();
             menuFile.add(actionQuit).setIcon(loadIcon("exit.gif"));
 
@@ -158,6 +170,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         toolBar.add(actionForward);
         toolBar.addSeparator();
         toolBar.add(actionReload);
+        
         toolBar.setFloatable(false);
         
         return toolBar;
@@ -231,6 +244,20 @@ public class BrowserMDIFrame extends BasicMDIFrame {
             frame.reload();
         }
     }
+    
+    private void doShowURL(String urlSpec) {
+        
+        String commandLine = null;
+        if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+            commandLine = "rundll32.exe url.dll,FileProtocolHandler " + urlSpec;
+        } else {
+            commandLine = "netscape " + urlSpec;
+        }
+        try {
+            Runtime.getRuntime().exec(commandLine);
+        } catch (IOException ex) {
+        }
+    }
 
     private class DefaultAction extends AbstractAction {
 
@@ -256,6 +283,10 @@ public class BrowserMDIFrame extends BasicMDIFrame {
                 doForward();
             } else if (this == actionReload) {
                 doReload();
+            } else if (this == actionShowHomepage) {
+                doShowURL("http://jclasslib.sourceforge.net");
+            } else if (this == actionShowEJTechnologies) {
+                doShowURL("http://www.ej-technologies.com");
             }
         }
     }
