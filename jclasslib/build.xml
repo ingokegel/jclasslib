@@ -6,7 +6,7 @@ Important targets:
 
 compile (default): Builds execution environment in ${build.dir}.
 jar              : Assembles an executable jar file in ${build.dir}.
-doc:             : Builds the documentation
+doc              : Builds the documentation
 javadoc          : Builds the javadoc
 dist             : Bundles the jar file together with the documentation
                    into a tar.gz file in ${dist.dir}.
@@ -16,211 +16,226 @@ clean            : Delete all generated files and directories.
 
 <project name="jclasslib" default="compile" basedir=".">
 
-    <!-- Properties can be overridden in this file -->
-    <property file="my.properties"/>
+  <!-- Properties can be overridden in this file -->
+  <property file="my.properties"/>
 
-    <!-- Version for directories -->
-    <property name="version" value="1.2"/>
-    <!-- Version for files -->
-    <property name="version.nodots" value="1_2"/>
+  <!-- Version for directories -->
+  <property name="version" value="2.0"/>
+  <!-- Version for files -->
+  <property name="version.nodots" value="2_0"/>
 
+  <!-- Keystore for signing -->
+  <property name="keystore.file" value="../jprofiler/.keystore"/>
+  <!-- Keystore password, empty if not signed -->
+  <property name="keystore.password" value=""/>
 
-    <!-- Build properties -->
-    <property name="build.compiler" value="jikes"/>
-    <property name="build.dir" value="build"/>
-    <property name="build.jar.filename.prefix" value="jclasslib" />
-    <property name="build.nbmodule.filename.prefix" value="nb-jclasslib" />
-    <property name="build.manifest.jar.filename" value="jclasslib.mf" />
-    <property name="build.manifest.nbmodule.filename" value="nbmodule.mf" />
+  <!-- Build properties -->
+  <property name="build.dir" value="build"/>
+  <property name="build.jar" value="${build.dir}/jclasslib.jar" />
+  <property name="build.nbmodule.dir" value="${build.dir}/netbeans" />
+  <property name="build.nbmodule.modules.dir" value="${build.nbmodule.dir}/modules" />
+  <property name="build.nbmodule.jar" value="${build.nbmodule.modules.dir}/jclasslib.jar" />
+  <property name="build.nbmodule.file" value="${build.dir}/jclasslib.nbm" />
+  <property name="build.manifest.jar.filename" value="jclasslib.mf" />
+  <property name="build.manifest.nbmodule.filename" value="nbmodule.mf" />
 
-    <!-- Location of source code -->
-    <property name="src.dir" value="src"/>
-    
-    <!-- Location of external libraries -->
-    <property name="lib.dir" value="lib"/>
+  <!-- Location of source code -->
+  <property name="src.dir" value="src"/>
 
-    <!-- Location of documentation -->
-    <property name="doc.dir" value="doc"/>
-    <property name="doc.src.dir" value="${doc.dir}/src"/>
-    <property name="doc.javadoc.dir" value="${doc.dir}/api"/>
+  <!-- Location of documentation -->
+  <property name="doc.dir" value="doc"/>
+  <property name="doc.src.dir" value="${doc.dir}/src"/>
+  <property name="doc.javadoc.dir" value="${doc.dir}/api"/>
 
-    <!-- Distribution properties -->
-    <property name="dist.dir" value="dist"/>
-    <property name="dist.filename.prefix" value="jclasslib" />
-    
-    <!-- Location of Netbeans installation -->
-    <property name="netbeans.dir" value="netbeans"/>
-    
-    <!-- Class path for compiling -->
-    <path id="project.classpath">
-        <pathelement location="${java.classes}"/>
-        <pathelement location="${lib.dir}/kunststoff.jar"/>
-    </path>
+  <!-- Distribution properties -->
+  <property name="dist.dir" value="dist"/>
+  <property name="dist.filename.prefix" value="jclasslib" />
 
-    <!-- Additional class path for compiling netbeans module-->
-    <path id="netbeans.classpath">
-        <pathelement location="${netbeans.dir}/lib/openide.jar"/>
-        <pathelement location="${netbeans.dir}/lib/openide-fs.jar"/>
-        <pathelement location="${netbeans.dir}/lib/openide-util.jar"/>
-        <pathelement location="${netbeans.dir}/lib/openide-nodes.jar"/>
-        <pathelement location="${netbeans.dir}/modules/java.jar"/>
-    </path>
+  <!-- Location of external libraries required for compilation -->
+  <property name="lib-compile.dir" value="lib-compile"/>
 
-    <!-- Make all standard directories -->
-    <target name="init">
-        <tstamp/>
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${dist.dir}"/>
-        <mkdir dir="${doc.javadoc.dir}"/>
-    </target>
+  <!-- Location of license file -->
+  <property name="license.file" value="license"/>
 
-    <!-- Delete all generated files and directories -->
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-        <delete dir="${dist.dir}"/>
-        <delete dir="${doc.javadoc.dir}"/>
-    </target>
-    
-    <!-- Compile source code -->
-    <target name="compile" depends="init">
-        <javac srcdir="${src.dir}" destdir="${build.dir}">
-            <classpath refid="project.classpath" />
-            <exclude name="**/nbmodule/*"/>
-        </javac>
-        <copy todir="${build.dir}">
-            <fileset dir="${src.dir}">
-                <include name="images/*.gif"/>
-            </fileset>
-            <fileset dir="${lib.dir}"/>
-        </copy>
-    </target>
+  <!-- Class path for compiling -->
+  <path id="project.classpath">
+    <pathelement location="${java.classes}"/>
+  </path>
 
-    <!-- Compile netbeans module -->
-    <target name="nb-compile" depends="init">
+  <!-- Additional class path for compiling netbeans module-->
+  <path id="netbeans.classpath">
+    <pathelement location="${lib-compile.dir}/openide.jar"/>
+    <pathelement location="${lib-compile.dir}/java.jar"/>
+  </path>
+
+  <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${lib-compile.dir}/antnbm.jar"/>
+
+  <!-- Make all standard directories -->
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${doc.javadoc.dir}"/>
+    <mkdir dir="${build.nbmodule.modules.dir}"/>
+  </target>
+
+  <!-- Delete all generated files and directories -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+    <delete dir="${doc.javadoc.dir}"/>
+  </target>
+
+  <!-- Compile source code -->
+  <target name="compile" depends="init">
     <javac srcdir="${src.dir}" destdir="${build.dir}">
-            <classpath refid="project.classpath" />
-            <classpath refid="netbeans.classpath" />
-        </javac>
-        <copy todir="${build.dir}">
-            <fileset dir="${src.dir}">
-                <include name="images/*.gif"/>
-                <include name="**/*.xml"/>
-            </fileset>
-        </copy>
-    </target>
-    
+      <classpath refid="project.classpath" />
+      <exclude name="**/nbmodule/*"/>
+    </javac>
+    <copy todir="${build.dir}">
+      <fileset dir="${src.dir}">
+        <exclude name="**/nbmodule/*"/>
+        <include name="**/*.gif"/>
+      </fileset>
+    </copy>
+  </target>
 
-    <!-- Assemble source code and images into jar file -->
-    <target name="jar" depends="compile">
-        <jar jarfile="${build.dir}/${build.jar.filename.prefix}.jar"
-             basedir="${build.dir}"
-             manifest="${src.dir}/${build.manifest.jar.filename}"
-             compress="true">
-             
-             
-             <exclude name="**/nbmodule/*"/>
-             <exclude name="*.jar"/>
-        </jar>
-    </target>
+  <!-- Compile netbeans module -->
+  <target name="nb-compile" depends="init">
+    <javac srcdir="${src.dir}" destdir="${build.dir}">
+      <classpath refid="project.classpath" />
+      <classpath refid="netbeans.classpath" />
+    </javac>
+    <copy todir="${build.dir}">
+      <fileset dir="${src.dir}">
+         <include name="**/*.gif"/>
+         <include name="**/*.xml"/>
+       </fileset>
+    </copy>
+  </target>
 
-    <!-- Assemble Netbeans module jar file -->
-    <target name="nb-jar" depends="nb-compile">
-        <jar jarfile="${build.dir}/${build.nbmodule.filename.prefix}.jar"
-             basedir="${build.dir}"
-             manifest="${src.dir}/${build.manifest.nbmodule.filename}">
-             
-             <exclude name="*.jar"/>
-        </jar>
-    </target>
 
-    <!-- Make distribution -->
-    <target name="dist" depends="jar,doc,javadoc,nb-jar">
+  <!-- Assemble source code and images into jar file -->
+  <target name="jar" depends="compile">
+    <jar jarfile="${build.jar}"
+         basedir="${build.dir}"
+         manifest="${src.dir}/${build.manifest.jar.filename}"
+         compress="true">
 
-        <!-- Version-specific locations -->    
-        <property name="dist.name" value="jclasslib-${version}" />
-        <property name="dist.assembly.dir" value="${dist.dir}/${dist.name}" />
-        <property name="dist.tar.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.tar" />
-        <property name="dist.zip.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.zip" />
 
-        <!-- Assemble distribution directory -->
-        <mkdir dir="${dist.assembly.dir}"/>
-        <copy todir="${dist.assembly.dir}">
-            <fileset dir="${build.dir}">
-                <include name="*.jar" />
-            </fileset>
-            <fileset dir="${basedir}">
-                <include name="${doc.dir}/**/*"/>
-                <include name="${src.dir}/**/*.java"/>
-                <include name="${src.dir}/*.mf"/>
-                <include name="${src.dir}/images/**/*"/>
-                <include name="build.xml"/>
-                <include name="licence"/>
-                <include name="jclasslib"/>
-                <include name="jclasslib.bat"/>
-                <exclude name="**/docbook/**/*"/>
-            </fileset>
-        </copy>
+      <exclude name="**/nbmodule/*"/>
+      <include name="org/**"/>
+      <exclude name="**/*.html"/>
+    </jar>
+  </target>
 
-        <!-- Build tar.gz file only if zip file is out of date -->
-        <uptodate property="build.tar.notrequired" targetfile="${dist.zip.filename}">
-            <srcfiles dir="${dist.assembly.dir}"/>
-        </uptodate>
+  <!-- Assemble Netbeans module jar file -->
+  <target name="nb-module" depends="nb-compile">
+    <jar jarfile="${build.nbmodule.jar}"
+         basedir="${build.dir}"
+         manifest="${src.dir}/${build.manifest.nbmodule.filename}">
 
-        <antcall target="buildTar" />
+      <include name="org/**"/>
+      <exclude name="**/*.html"/>
+    </jar>
+    <makenbm file="${build.nbmodule.file}"
+             topdir="${build.dir}"
+             module="${build.nbmodule.jar}"
+             homepage="http://www.ej-technologies.com/"
+             distribution="http://www.ej-technologies.com/products/jclasslib/overview.html">
+      <license file="${license.file}"/>
+      <signature keystore="${keystore.file}" storepass="${keystore.password}" alias="ejt"/>
+    </makenbm>
+  </target>
 
-        <!-- build zip file -->
-        <zip zipfile="${dist.zip.filename}" basedir="${dist.dir}">
-            <include name="${dist.name}/**"/>
-        </zip>
+  <!-- Make distribution -->
+  <target name="dist" depends="jar,doc,javadoc,nb-module">
 
-    </target>
+    <!-- Version-specific locations -->    
+    <property name="dist.name" value="jclasslib-${version}" />
+    <property name="dist.assembly.dir" value="${dist.dir}/${dist.name}" />
+    <property name="dist.tar.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.tar" />
+    <property name="dist.zip.filename" value="${dist.dir}/${dist.filename.prefix}-${version.nodots}.zip" />
 
-    <!-- Helper target for dist -->
-    <target name="buildTar" unless="build.tar.notrequired">
+    <!-- Assemble distribution directory -->
+    <mkdir dir="${dist.assembly.dir}"/>
+    <copy todir="${dist.assembly.dir}">
+      <fileset dir="${build.dir}">
+        <include name="*.jar" />
+      </fileset>
+      <fileset dir="${basedir}">
+        <include name="${doc.dir}/**/*"/>
+        <include name="${src.dir}/**/*.java"/>
+        <include name="${src.dir}/*.mf"/>
+        <include name="${src.dir}/images/**/*"/>
+        <include name="build.xml"/>
+        <include name="licence"/>
+        <include name="jclasslib"/>
+        <include name="jclasslib.bat"/>
+        <exclude name="**/docbook/**/*"/>
+      </fileset>
+    </copy>
 
-        <!-- Build tar.gz file -->
-        <tar tarfile="${dist.tar.filename}" basedir="${dist.dir}" longfile="gnu">
-            <include name="${dist.name}/**"/>
-        </tar>
-        
-        <gzip src="${dist.tar.filename}"
-              zipfile="${dist.tar.filename}.gz" />
-    
-        <!-- Tar file is not necessary to keep around -->
-        <delete file="${dist.tar.filename}" />
+    <!-- Build tar.gz file only if zip file is out of date -->
+    <uptodate property="build.tar.notrequired" targetfile="${dist.zip.filename}">
+      <srcfiles dir="${dist.assembly.dir}"/>
+    </uptodate>
 
-    </target>
-    
-    <target name="doc">
-        <style basedir="${doc.src.dir}"
-               destdir="${doc.dir}"
-               includes="*.xml"
-               extension=".html"
-               style="${doc.src.dir}/doc.xsl"/>
-        
-    </target>
-    
-    <target name="javadoc" depends="init">
-        <javadoc sourcepath="${src.dir}"
-                 destdir="${doc.javadoc.dir}"
-                 packagenames="org.gjt.jclasslib.*"
-                 classpathref="netbeans.classpath"
-                 overview="${doc.src.dir}/overview.html"
-                 stylesheetfile="${doc.dir}/doc.css"
-                 header="&lt;b&gt;&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;ej-technologies&lt;/a&gt;&lt;/b&gt;"
-                 windowtitle="jclasslib API documentation"
-                 doctitle="&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;&lt;img border='0' src='../images/ej-technologies.gif' &gt;&lt;/a&gt;"
-        >
+    <antcall target="buildTar" />
 
-          <link offline="true"
-                href="http://www.netbeans.org/download/apis/"
-                packagelistLoc="${doc.src.dir}/offline-netbeans"/>
-          <link offline="true"
-                href="http://java.sun.com/products/jdk/1.3/docs/api/"
-                packagelistLoc="${doc.src.dir}/offline-java"/>
-                
+    <!-- build zip file -->
+    <zip zipfile="${dist.zip.filename}" basedir="${dist.dir}">
+      <include name="${dist.name}/**"/>
+    </zip>
 
-        </javadoc>
-    </target>
+  </target>
+
+  <!-- Helper target for dist -->
+  <target name="buildTar" unless="build.tar.notrequired">
+
+    <!-- Build tar.gz file -->
+    <tar tarfile="${dist.tar.filename}" basedir="${dist.dir}" longfile="gnu">
+      <include name="${dist.name}/**"/>
+    </tar>
+
+    <gzip src="${dist.tar.filename}"
+          zipfile="${dist.tar.filename}.gz" />
+
+    <!-- Tar file is not necessary to keep around -->
+    <delete file="${dist.tar.filename}" />
+
+  </target>
+
+  <target name="doc">
+    <style basedir="${doc.src.dir}"
+           destdir="${doc.dir}"
+           includes="*.xml"
+           extension=".html"
+           style="${doc.src.dir}/doc.xsl"/>
+
+  </target>
+
+  <target name="javadoc" depends="init">
+    <javadoc sourcepath="${src.dir}"
+             destdir="${doc.javadoc.dir}"
+             packagenames="org.gjt.jclasslib.*"
+             classpathref="netbeans.classpath"
+             overview="${doc.src.dir}/overview.html"
+             stylesheetfile="${doc.dir}/doc.css"
+             header="&lt;b&gt;&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;ej-technologies&lt;/a&gt;&lt;/b&gt;"
+             windowtitle="jclasslib API documentation"
+             doctitle="&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;&lt;img border='0' src='../images/ej-technologies.gif' &gt;&lt;/a&gt;"
+    >
+
+      <link offline="true"
+            href="http://www.netbeans.org/download/apis/"
+            packagelistLoc="${doc.src.dir}/offline-netbeans"/>
+      <link offline="true"
+            href="http://java.sun.com/products/jdk/1.3/docs/api/"
+            packagelistLoc="${doc.src.dir}/offline-java"/>
+
+
+    </javadoc>
+  </target>
 
 </project>
