@@ -23,9 +23,13 @@ import java.lang.reflect.*;
     and supplies various utility methods.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:20 $
+    @version $Revision: 1.2 $ $Date: 2001-05-31 13:20:00 $
 */
 public class BasicMDIFrame extends JFrame {
+
+    /**  Path where images are found relative to the class path root of this class
+         in case <tt>SYSTEM_PROPERTY_BASE_PATH</tt> is not set */
+    public static final String IMAGES_DIRECTORY = "images";
 
     /** Default width of the parent window */
     protected static final int DEFAULT_WINDOW_WIDTH = 800;
@@ -33,9 +37,6 @@ public class BasicMDIFrame extends JFrame {
     protected static final int DEFAULT_WINDOW_HEIGHT = 600;
     /** JVM system property which contains the path where images are found */
     protected static final String SYSTEM_PROPERTY_BASE_PATH = "images.basePath";
-    /**  Path where images are found relative to the class path root of this class
-         in case <tt>SYSTEM_PROPERTY_BASE_PATH</tt> is not set */
-    protected static final String IMAGES_DIRECTORY = "images";
 
     private static final String SETTINGS_PROPERTY_WINDOW_WIDTH = "windowWidth";
     private static final String SETTINGS_PROPERTY_WINDOW_HEIGHT = "windowHeight";
