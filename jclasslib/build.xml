@@ -96,6 +96,7 @@ clean            : Delete all generated files and directories.
       <fileset dir="${src.dir}">
         <exclude name="**/nbmodule/*"/>
         <include name="**/*.gif"/>
+        <include name="**/*.png"/>
       </fileset>
     </copy>
   </target>
@@ -207,6 +208,8 @@ clean            : Delete all generated files and directories.
   </target>
 
   <target name="doc">
+    
+  
     <style basedir="${doc.src.dir}"
            destdir="${doc.dir}"
            includes="*.xml"
