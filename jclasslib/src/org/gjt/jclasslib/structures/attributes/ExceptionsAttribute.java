@@ -16,11 +16,11 @@ import java.io.*;
     Describes an <tt>Exceptions</tt> attribute structure.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:29 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:05 $
 */
 public class ExceptionsAttribute extends AttributeInfo {
 
-    /** Name of the attribute as in the corresponding constant pool entry */
+    /** Name of the attribute as in the corresponding constant pool entry. */
     public static final String ATTRIBUTE_NAME = "Exceptions";
 
     private static final int INITIAL_LENGTH = 2;

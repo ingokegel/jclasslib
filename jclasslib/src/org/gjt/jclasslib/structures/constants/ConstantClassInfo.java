@@ -16,11 +16,11 @@ import java.io.*;
     Describes a <tt>CONSTANT_Class_info</tt> constant pool data structure.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:29 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:51:44 $
 */
 public class ConstantClassInfo extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes */
+    /** Length of the constant pool data structure in bytes. */
     public static final int SIZE = 2;
     
     private int nameIndex;

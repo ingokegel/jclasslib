@@ -16,11 +16,11 @@ import java.io.*;
     Describes a <tt>Code</tt> attribute structure.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:05 $
 */
 public class CodeAttribute extends AttributeInfo {
 
-    /** Name of the attribute as in the corresponding constant pool entry */
+    /** Name of the attribute as in the corresponding constant pool entry. */
     public static final String ATTRIBUTE_NAME = "Code";
 
     private static final int INITIAL_LENGTH = 12;
@@ -63,7 +63,7 @@ public class CodeAttribute extends AttributeInfo {
     }
 
     /**
-        Get the bytecode of this code attribute as an array of bytes .
+        Get the code of this code attribute as an array of bytes .
         @return the array
      */
     public byte[] getCode() {
@@ -71,7 +71,7 @@ public class CodeAttribute extends AttributeInfo {
     }
 
     /**
-        Set the bytecode of this code attribute as an array of bytes .
+        Set the code of this code attribute as an array of bytes .
         @param code the array
      */
     public void setCode(byte[] code) {

@@ -15,11 +15,11 @@ import java.io.*;
     Describes an entry in a <tt>LocalVariableTableEntry</tt> attribute structure.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2003-08-18 07:52:05 $
 */
 public class LocalVariableTableEntry extends AbstractStructure {
 
-    /** Length in bytes of a local variable association */
+    /** Length in bytes of a local variable association. */
     public static final int LENGTH = 10;
                                    
     private int startPc;

@@ -15,16 +15,16 @@ import java.io.*;
     Base class for class members.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:52:54 $
 */
 public abstract class ClassMember extends AbstractStructureWithAttributes
                                   implements AccessFlags {
 
-    /** The access flags of this class member */
+    /** The access flags of this class member. */
     protected int accessFlags;
-    /** the constant pool index of the name of this class member */
+    /** the constant pool index of the name of this class member. */
     protected int nameIndex;
-    /** the constant pool index of the descriptor of this class member */
+    /** the constant pool index of the descriptor of this class member. */
     protected int descriptorIndex;
 
     /**

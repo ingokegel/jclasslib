@@ -16,7 +16,7 @@ import java.io.IOException;
     Base class for all constant pool entries in the <tt>constants</tt> package.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:52:54 $
 */
 public abstract class CPInfo extends AbstractStructure {
 
@@ -58,7 +58,7 @@ public abstract class CPInfo extends AbstractStructure {
     public static CPInfo create(DataInput in, ClassFile classFile)
         throws InvalidByteCodeException, IOException {
         
-        CPInfo cpInfo = null;
+        CPInfo cpInfo;
         
         byte tag = in.readByte();
 

@@ -12,7 +12,7 @@ package org.gjt.jclasslib.structures;
     the java access modifiers.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2003-08-18 07:52:54 $
 */
 public interface AccessFlags {
 
@@ -32,7 +32,7 @@ public interface AccessFlags {
     public static final int ACC_ABSTRACT =     0x0400;
     public static final int ACC_STRICT =       0x0800;
 
-    /** All access flag bits for generating a verbose list in a loop */
+    /** All access flag bits for generating a verbose list in a loop. */
     public static final int[] allAccessFlags = new int[] {
         ACC_PUBLIC,
         ACC_PRIVATE,
@@ -64,7 +64,7 @@ public interface AccessFlags {
     
     /**
         All verbose descriptions of access flag bits for generating a verbose
-        list in a loop
+        list in a loop.
     */
     public static final String[] allAccessFlagsVerbose = new String[] {
         ACC_PUBLIC_VERBOSE,

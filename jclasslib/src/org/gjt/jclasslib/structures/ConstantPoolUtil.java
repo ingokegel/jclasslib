@@ -14,7 +14,7 @@ import org.gjt.jclasslib.structures.constants.*;
     object.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-07-23 11:03:55 $
+    @version $Revision: 1.6 $ $Date: 2003-08-18 07:52:54 $
 */
 
 public class ConstantPoolUtil {
@@ -165,7 +165,7 @@ public class ConstantPoolUtil {
             return index;
         }
 
-        int lastFreeIndex = -1;
+        int lastFreeIndex;
         for (lastFreeIndex = constantPool.length - 1;
              lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null;
              lastFreeIndex--) {}

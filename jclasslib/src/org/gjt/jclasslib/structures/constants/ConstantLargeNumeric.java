@@ -16,16 +16,16 @@ import java.io.*;
     Base class for large numeric constant pool data structures.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:29 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:51:44 $
 */
 public abstract class ConstantLargeNumeric extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes */
+    /** Length of the constant pool data structure in bytes. */
     public static final int SIZE = 8;
     
-    /** <tt>high_bytes</tt> field */
+    /** <tt>high_bytes</tt> field. */
     protected int highBytes;
-    /** <tt>low_bytes</tt> field */
+    /** <tt>low_bytes</tt> field. */
     protected int lowBytes;
     
     /**

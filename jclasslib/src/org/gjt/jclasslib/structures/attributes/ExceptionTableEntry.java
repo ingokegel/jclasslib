@@ -15,11 +15,11 @@ import java.io.*;
     Describes an exception table entry in a <tt>Code</tt> attribute structure.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:05 $
 */
 public class ExceptionTableEntry extends AbstractStructure {
 
-    /** Length in bytes of an exception table entry */
+    /** Length in bytes of an exception table entry. */
     public static final int LENGTH = 8;
     
     private int startPc;
@@ -46,10 +46,20 @@ public class ExceptionTableEntry extends AbstractStructure {
 
         return exceptionTableEntry;
     }
-    
+
+    /**
+        Constructor.
+     */
     public ExceptionTableEntry(){
     }
-    
+
+    /**
+        Constructor.
+        @param startPc the <tt>start_pc</tt>
+        @param endPc the <tt>end_pc</tt>
+        @param handlerPc the <tt>handler_pc</tt>
+        @param catchType the constant pool index for the catch type of this exception table entry
+     */
     public ExceptionTableEntry(int startPc, int endPc, int handlerPc, int catchType)
     {
         this.startPc = startPc;
@@ -107,7 +117,7 @@ public class ExceptionTableEntry extends AbstractStructure {
     }
 
     /**
-        Get the constant pool index for the datch type of this exception table entry.
+        Get the constant pool index for the catch type of this exception table entry.
         @return the index
      */
     public int getCatchType() {
@@ -115,7 +125,7 @@ public class ExceptionTableEntry extends AbstractStructure {
     }
 
     /**
-        Set the constant pool index for the datch type of this exception table entry.
+        Set the constant pool index for the catch type of this exception table entry.
         @param catchType the index
      */
     public void setCatchType(int catchType) {

@@ -17,15 +17,15 @@ import java.lang.reflect.Array;
     Provides common services such as reading, writing and debugging.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:54 $
  */
 public abstract class AbstractStructure {
 
     /**
         Set this JVM System property to true to switch on debugging for
-        reading and writing class files
+        reading and writing class files.
      */
-    public static final String SYSTEM_PROPERTY_DEBUG = "classlib.io.debug";
+    public static final String SYSTEM_PROPERTY_DEBUG = "jclasslib.io.debug";
 
     /**
         Parent class file for this structure. <tt>Null</tt> for a <tt>ClassFile</tt>
@@ -33,15 +33,18 @@ public abstract class AbstractStructure {
      */
     protected ClassFile classFile;
     
-    /** Flag for debugging while reading and writing class files */
+    /** Flag for debugging while reading and writing class files. */
     protected boolean debug;
-    
-    public AbstractStructure() {
+
+    /**
+        Constructor.
+     */
+    protected AbstractStructure() {
         debug = Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG);
     }
 
     /**
-        Get parent class file
+        Get parent class file.
         @return the class file
      */
     public ClassFile getClassFile() {
@@ -109,9 +112,9 @@ public abstract class AbstractStructure {
      */
     protected int getLength(Object array) {
         if (array == null || !array.getClass().isArray()) {
-            return (int)0;
+            return 0;
         } else {
-            return (int)Array.getLength(array);
+            return Array.getLength(array);
         }
     }
     

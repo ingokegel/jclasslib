@@ -16,7 +16,7 @@ import java.io.*;
     Base class for all attribute structures in the <tt>attribute</tt> package.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:52:54 $
 */
 public class AttributeInfo extends AbstractStructureWithAttributes {
 
@@ -24,13 +24,10 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
         Set this JVM System property to true to skip reading of all attributes.
         Some class file operations may fail in this case.
      */
-    public static final String SYSTEM_PROPERTY_SKIP_ATTRIBUTES = "classlib.io.skipAttributes";
+    public static final String SYSTEM_PROPERTY_SKIP_ATTRIBUTES = "jclasslib.io.skipAttributes";
 
-    /** Constant pool <tt>name_index</tt> of the attribute */
-    protected int attributeNameIndex;
-    /** Total length of the attribute in bytes */
+    private int attributeNameIndex;
     private int attributeLength;
-
     private byte[] info;
 
     /**
@@ -67,9 +64,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
 				return null;
 			}
 
-            if (cpInfoName != null) {
-            	attributeName = cpInfoName.getString();
-			}
+            attributeName = cpInfoName.getString();
 
             if (ConstantValueAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new ConstantValueAttribute();
@@ -109,7 +104,10 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
         return attributeInfo;
     }
 
-    public AttributeInfo() {
+    /**
+        Constructor.
+     */
+    protected AttributeInfo() {
     }
 
     private AttributeInfo(int attributeLength) {
@@ -192,7 +190,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
     // cannot override debug because subclasses will call super.debug
     // and expect to call the implementation in AbstractStructure
     private String getDebugMessage() {
-        String type = null;
+        String type;
         try {
             type = classFile.getConstantPoolUtf8Entry(attributeNameIndex).getString();
         }
