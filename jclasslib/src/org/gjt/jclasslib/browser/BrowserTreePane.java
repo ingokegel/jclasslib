@@ -20,7 +20,7 @@ import java.awt.*;
     child window.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-05-30 17:56:27 $
+    @version $Revision: 1.5 $ $Date: 2002-05-31 13:07:46 $
 */
 public class BrowserTreePane extends JPanel {
 
@@ -30,6 +30,7 @@ public class BrowserTreePane extends JPanel {
     private BrowserServices services;
     private JTree treeView;
     private TreePath constantPoolPath;
+    private TreePath methodsPath;
 
     public BrowserTreePane(BrowserServices services) {
         this.services = services;
@@ -54,9 +55,39 @@ public class BrowserTreePane extends JPanel {
     }
 
     /**
+        Show the specified method if it exists.
+        @param methodName the name of the method
+        @param methodSignature the signature of the method (in class file format)
+     */
+    public void showMethod(String methodName, String methodSignature) {
+        
+        if (methodsPath == null) {
+            return;
+        }
+        MethodInfo[] methods = services.getClassFile().getMethods();
+        TreeNode methodsNode = (TreeNode)methodsPath.getLastPathComponent();
+        for (int i = 0; i < methodsNode.getChildCount(); i++) {
+            BrowserMutableTreeNode treeNode = (BrowserMutableTreeNode)methodsNode.getChildAt(i);
+            MethodInfo testMethod = methods[treeNode.getIndex()];
+            try {
+                if (testMethod.getName().equals(methodName) && testMethod.getDescriptor().equals(methodSignature)) {
+                    TreePath path = methodsPath.pathByAddingChild(treeNode);
+                    treeView.makeVisible(path);
+                    treeView.scrollPathToVisible(path);
+                    treeView.setSelectionPath(path);
+                    return;
+                }
+            } catch (InvalidByteCodeException ex) {
+            }
+        }
+    }
+
+    /**
         Rebuild the tree from the <tt>ClassFile</tt> object.
      */
     public void rebuild() {
+        constantPoolPath = null;
+        methodsPath = null;
         treeView.setModel(buildTreeModel());
     }
 
@@ -95,14 +126,16 @@ public class BrowserTreePane extends JPanel {
         if (classFile != null) {
 			BrowserMutableTreeNode generalNode = new BrowserMutableTreeNode("General Information", BrowserMutableTreeNode.NODE_GENERAL);
 			BrowserMutableTreeNode constantPoolNode = buildConstantPoolNode();
+                        BrowserMutableTreeNode methodsNode = buildMethodsNode();
 			rootNode.add(generalNode);
 			rootNode.add(constantPoolNode);
 			rootNode.add(buildInterfacesNode());
 			rootNode.add(buildFieldsNode());
-			rootNode.add(buildMethodsNode());
+			rootNode.add(methodsNode);
 			rootNode.add(buildAttributesNode());
 
 			constantPoolPath = new TreePath(new Object[] {rootNode, constantPoolNode});
+                        methodsPath =  new TreePath(new Object[] {rootNode, methodsNode});
 		}
 
         return rootNode;
