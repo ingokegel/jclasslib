@@ -6,7 +6,7 @@
   <property file="my.properties"/>
 
   <!-- Version -->
-  <property name="jclasslib.version" value="2.0"/>
+  <property name="jclasslib.version" value="2.0.1"/>
 
   <!-- Keystore for signing -->
   <property name="keystore.file" value="../jprofiler/.keystore"/>
