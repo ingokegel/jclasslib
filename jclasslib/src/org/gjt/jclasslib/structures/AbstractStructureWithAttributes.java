@@ -13,7 +13,7 @@ import java.io.*;
     Base class for all structures with attributes.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:18 $
+    @version $Revision: 1.2 $ $Date: 2002-02-17 17:34:33 $
 */
 public abstract class AbstractStructureWithAttributes extends AbstractStructure {
 
@@ -36,6 +36,22 @@ public abstract class AbstractStructureWithAttributes extends AbstractStructure 
         this.attributes = attributes;
     }
     
+    /**
+        Find an attribute of a certain class.
+        @param attributeClass the class of the attribute
+        @returns the found attribute, <tt>null</tt> if not found
+     */
+    public AttributeInfo findAttribute(Class attributeClass) {
+        AttributeInfo foundAttribute = null;
+        for (int i = 0; i < attributes.length; i++) {
+            if (attributes[i].getClass() == attributeClass) {
+                foundAttribute = (AttributeInfo)attributes[i];
+                break;
+            }
+        }
+        return foundAttribute;
+    }
+
     /**
         Read the attributes of this structure from the given <tt>DataInput</tt>. <p>
      
