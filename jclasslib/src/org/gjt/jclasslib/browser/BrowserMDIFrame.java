@@ -22,9 +22,12 @@ import java.beans.*;
     MDI Frame and entry point for the class file browser application.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-18 12:44:31 $
+    @version $Revision: 1.4 $ $Date: 2002-02-26 16:29:24 $
 */
 public class BrowserMDIFrame extends BasicMDIFrame {
+
+    /** System property used to choose default look and feel */
+    public static final String SYSTEM_PROPERTY_LAF_DEFAULT = "classlib.laf.default";
 
     /** Title of the applicaton */
     protected static final String APPLICATION_TITLE = "Class file browser";
@@ -79,23 +82,23 @@ public class BrowserMDIFrame extends BasicMDIFrame {
 
     private void setupActions() {
 
-        actionChoose = new DefaultAction("Open class file", loadIcon("open.gif"));
+        actionChoose = new DefaultAction("Open class file", loadIcon("open_large.gif"));
         actionChoose.putValue(Action.SHORT_DESCRIPTION, "Open a class file");
 
-        actionSaveSettings = new DefaultAction("Save settings", loadIcon("save.gif"));
+        actionSaveSettings = new DefaultAction("Save settings", loadIcon("save_large.gif"));
         actionSaveSettings.putValue(Action.SHORT_DESCRIPTION, "Save option settings, file and window state to current directory");
         
         actionQuit = new DefaultAction("Quit");
 
-        actionBackward = new DefaultAction("Backward", loadIcon("backward.gif"));
+        actionBackward = new DefaultAction("Backward", loadIcon("browser_backward_large.gif"));
         actionBackward.putValue(Action.SHORT_DESCRIPTION, "Move backward in the navigation history");
         actionBackward.setEnabled(false);
 
-        actionForward = new DefaultAction("Forward", loadIcon("forward.gif"));
+        actionForward = new DefaultAction("Forward", loadIcon("browser_forward_large.gif"));
         actionForward.putValue(Action.SHORT_DESCRIPTION, "Move forward in the navigation history");
         actionForward.setEnabled(false);
 
-        actionReload = new DefaultAction("Reload", loadIcon("reload.gif"));
+        actionReload = new DefaultAction("Reload", loadIcon("reload_large.gif"));
         actionReload.putValue(Action.SHORT_DESCRIPTION, "Reload class file");
         actionReload.setEnabled(false);
         
@@ -107,25 +110,25 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         JMenuBar menuBar = new JMenuBar();
         
         menuFile = new JMenu("File");
-            menuFile.add(actionChoose).setIcon(null);
+            menuFile.add(actionChoose).setIcon(loadIcon("open_small.gif"));
             menuFile.addSeparator();
-            menuFile.add(actionSaveSettings).setIcon(null);
+            menuFile.add(actionSaveSettings).setIcon(loadIcon("save_small.gif"));
             menuFile.addSeparator();
-            menuFile.add(actionQuit);
+            menuFile.add(actionQuit).setIcon(loadIcon("exit.gif"));
 
         menuBrowse = new JMenu("Browse");
             menuItem = menuBrowse.add(actionBackward);
-                menuItem.setIcon(null);
+                menuItem.setIcon(loadIcon("browser_backward_small.gif"));
                 menuItem.setAccelerator(
                     KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.ALT_MASK));
             menuItem = menuBrowse.add(actionForward);
-                menuItem.setIcon(null);
+                menuItem.setIcon(loadIcon("browser_forward_small.gif"));
                 menuItem.setAccelerator(
                     KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.ALT_MASK));
                 
             menuBrowse.addSeparator();
             menuItem = menuBrowse.add(actionReload);
-                menuItem.setIcon(null);
+                menuItem.setIcon(loadIcon("reload_small.gif"));
                 menuItem.setAccelerator(
                     KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.CTRL_MASK));
             
@@ -142,6 +145,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         
         setTitle(APPLICATION_TITLE);
         contentPane.add(buildToolbar(), BorderLayout.NORTH);
+        setIconImage(loadIcon("jclasslib.gif").getImage());
     }
     
     private JToolBar buildToolbar() {
@@ -154,6 +158,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         toolBar.add(actionForward);
         toolBar.addSeparator();
         toolBar.add(actionReload);
+        toolBar.setFloatable(false);
         
         return toolBar;
     }
@@ -260,11 +265,19 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         @param args arguments for the application. Not evaluated.
      */
     public static void main(String[] args) {
+        
+        if (!Boolean.getBoolean(SYSTEM_PROPERTY_LAF_DEFAULT)) {
+            Class lookAndFeelClass = com.incors.plaf.kunststoff.KunststoffLookAndFeel.class;
+            try {
+                UIManager.setLookAndFeel(lookAndFeelClass.getName());
+            } catch (Exception ex) {
+            }
+        }
 
         BrowserMDIFrame frame = new BrowserMDIFrame();
         frame.setVisible(true);
         
-        // JInternalFrame can only be slected in visible JDesktopPane
+        // JInternalFrame can only be selected in visible JDesktopPane
         JInternalFrame[] frames = frame.desktopPane.getAllFrames();
         if (frames.length > 0) {
             try {
