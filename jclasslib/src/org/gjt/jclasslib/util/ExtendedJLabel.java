@@ -16,16 +16,23 @@ import java.awt.*;
     for <tt>setText()</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2003-08-18 07:47:20 $
 */
 public class ExtendedJLabel extends JLabel implements Scrollable {
 
     private boolean underlined = false;
     private boolean autoTooltip = false;
-    
+
+    /**
+        Constructor.
+     */
     public ExtendedJLabel() {
     }
 
+    /**
+        Constructor.
+        @param text the label text.
+     */
     public ExtendedJLabel(String text) {
         super(text);
     }
@@ -158,8 +165,13 @@ public class ExtendedJLabel extends JLabel implements Scrollable {
                                 getText() == null ? 0 : ((Integer)UIManager.get("Button.textIconGap")).intValue()
                           );
 
+
+            int offset = 2;
+            if (UIManager.getLookAndFeel().isNativeLookAndFeel() && System.getProperty("os.name").startsWith("Windows")) {
+                offset = 1;
+            }
             g.fillRect(textRect.x + ((Integer)UIManager.get("Button.textShiftOffset")).intValue() ,
-                       textRect.y + fm.getAscent() + ((Integer)UIManager.get("Button.textShiftOffset")).intValue() + 2,
+                       textRect.y + fm.getAscent() + ((Integer)UIManager.get("Button.textShiftOffset")).intValue() + offset,
                        textRect.width,
                        1);
         }
