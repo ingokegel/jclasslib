@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-    Converts bytecode to a list of instructions as defined in the package
-    <tt>org.gjt.jclasslib.bytecode</tt>.
+    Converts code to a list of instructions as defined in the package
+    <tt>org.gjt.jclasslib.code</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.6 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ByteCodeReader implements Opcodes {
 
@@ -27,23 +27,21 @@ public class ByteCodeReader implements Opcodes {
     }
     
     /**
-        Converts the bytecode to a list of instructions.
-        @param code the bytecode as an array of bytes from which to read the instructions
+        Converts the code to a list of instructions.
+        @param code the code as an array of bytes from which to read the instructions
         @return the <tt>java.util.List</tt> with the instructions
-        @throws IOException if an exception occurs with the bytecode
-        @collectionType AbstractInstruction
+        @throws IOException if an exception occurs with the code
      */
     public static List readByteCode(byte[] code) throws IOException {
         return readByteCode(code, null);
     }
 
     /**
-        Converts the bytecode to a list of instructions.
-        @param code the bytecode as an array of bytes from which to read the instructions
+        Converts the code to a list of instructions.
+        @param code the code as an array of bytes from which to read the instructions
         @param prependInstructions an array of instructions that is prepended, may be <tt>null</tt>
         @return the <tt>java.util.List</tt> with the instructions
-        @throws IOException if an exception occurs with the bytecode
-        @collectionType AbstractInstruction
+        @throws IOException if an exception occurs with the code
      */
     public static List readByteCode(byte[] code,
                        AbstractInstruction[] prependInstructions)
@@ -74,14 +72,13 @@ public class ByteCodeReader implements Opcodes {
     private static AbstractInstruction readNextInstruction(ByteCodeInputStream bcis, boolean wide)
         throws IOException
     {
-        AbstractInstruction instruction = null;
+        AbstractInstruction instruction;
 
         int opcode = bcis.readUnsignedByte();
 
         switch (opcode) {
             
             case OPCODE_WIDE:
-                wide = true;
             case OPCODE_NOP:
             case OPCODE_ACONST_NULL:
             case OPCODE_ICONST_M1:
@@ -253,7 +250,6 @@ public class ByteCodeReader implements Opcodes {
             case OPCODE_NEWARRAY:
 
                 instruction = new ImmediateByteInstruction(opcode, wide);
-                wide = false;
                 break;
 
             case OPCODE_LDC_W:
@@ -306,7 +302,6 @@ public class ByteCodeReader implements Opcodes {
             case OPCODE_IINC: // subject to wide
 
                 instruction = new IncrementInstruction(opcode, wide);
-                wide = false;
                 break;
                 
             case OPCODE_TABLESWITCH:

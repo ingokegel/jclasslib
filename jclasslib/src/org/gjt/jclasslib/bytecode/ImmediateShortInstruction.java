@@ -16,7 +16,7 @@ import java.io.IOException;
     Describes an instruction that is followed by an immediate unsigned short.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class ImmediateShortInstruction extends AbstractInstruction {
 
@@ -26,10 +26,19 @@ public class ImmediateShortInstruction extends AbstractInstruction {
         return super.getSize() + 2;
     }
 
+    /**
+        Constructor.
+        @param opcode the opcode.
+     */
     public ImmediateShortInstruction(int opcode) {
         super(opcode); 
     }
     
+    /**
+        Constructor.
+        @param opcode the opcode.
+        @param immediateShort the immediate short value.
+     */
     public ImmediateShortInstruction(int opcode, int immediateShort) {
         super(opcode); 
         this.immediateShort = immediateShort;

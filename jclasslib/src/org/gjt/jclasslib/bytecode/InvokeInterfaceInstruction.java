@@ -16,16 +16,26 @@ import java.io.IOException;
     Describes the <tt>invokeinterface</tt> instruction.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
 
     private int count;
     
+    /**
+        Constructor.
+        @param opcode the opcode.
+     */
     public InvokeInterfaceInstruction(int opcode) {
         super(opcode); 
     }
     
+    /**
+        Constructor.
+        @param opcode the opcode
+        @param immediateShort the immediate short value.
+        @param count the argument count.
+     */
     public InvokeInterfaceInstruction(int opcode, int immediateShort, int count) {
         super(opcode, immediateShort); 
         this.count = count;
@@ -37,7 +47,7 @@ public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
     }
 
     /**
-        Get the argument count of this instruction 
+        Get the argument count of this instruction.
         @return the argument count
      */
     public int getCount() {
@@ -45,7 +55,7 @@ public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
     }
 
     /**
-        Set the argument count of this instruction 
+        Set the argument count of this instruction.
         @param count the argument count
      */
     public void setCount(int count) {

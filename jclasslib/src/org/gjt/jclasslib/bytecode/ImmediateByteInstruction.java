@@ -16,19 +16,31 @@ import java.io.IOException;
     Describes an instruction that is followed by an immediate unsigned byte.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class ImmediateByteInstruction extends AbstractInstruction {
 
-    private int immediateByte;
-    /** Indicates whether the instuction is subject to a wide instruction or not */
+    /** Indicates whether the instuction is subject to a wide instruction or not. */
     protected boolean wide;
     
+    private int immediateByte;
+
+    /**
+        Constructor.
+        @param opcode the opcode
+        @param wide whether the instruction is a wide instruction.
+     */
     public ImmediateByteInstruction(int opcode, boolean wide) {
         super(opcode); 
         this.wide = wide;
     }
-    
+
+    /**
+        Constructor.
+        @param opcode the opcode
+        @param wide whether the instruction is a wide instruction.
+        @param immediateByte the immediate byte value.
+     */
     public ImmediateByteInstruction(int opcode, boolean wide, int immediateByte) {
         this(opcode, wide); 
         this.immediateByte = immediateByte;

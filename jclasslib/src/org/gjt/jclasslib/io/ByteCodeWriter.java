@@ -16,10 +16,10 @@ import java.util.List;
 
 /**
     Converts a list of instructions as defined in the package
-    <tt>org.gjt.jclasslib.bytecode</tt> to bytecode.
+    <tt>org.gjt.jclasslib.code</tt> to code.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ByteCodeWriter {
 
@@ -27,11 +27,10 @@ public class ByteCodeWriter {
     }
     
     /**
-        Converts a list of instructions to bytecode.
+        Converts a list of instructions to code.
         @param instructions the <tt>java.util.List</tt> with the instructions
-        @return the bytecode as an array of bytes
-        @throws IOException if an exception occurs with the bytecode
-        @collectionType AbstractInstruction
+        @return the code as an array of bytes
+        @throws IOException if an exception occurs with the code
      */
     public static byte[] writeByteCode(List instructions) throws IOException {
 

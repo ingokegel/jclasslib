@@ -16,12 +16,16 @@ import java.io.IOException;
     Describes the <tt>multianewarray</tt> instruction.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class MultianewarrayInstruction extends ImmediateShortInstruction {
 
     private int dimensions;
     
+    /**
+        Constructor.
+        @param opcode the opcode.
+     */
     public MultianewarrayInstruction(int opcode) {
         super(opcode); 
     }

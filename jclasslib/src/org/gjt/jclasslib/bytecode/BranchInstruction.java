@@ -16,16 +16,25 @@ import java.io.IOException;
     Describes an instruction that branches to a different offset.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class BranchInstruction extends AbstractInstruction {
 
     private int branchOffset;
-   
+
+    /**
+        Constructor.
+        @param opcode the opcode.
+     */
     public BranchInstruction(int opcode) {
         super(opcode); 
     }
-    
+
+    /**
+        Constructor.
+        @param opcode the opcode.
+        @param branchOffset the branch offset.
+     */
     public BranchInstruction(int opcode, int branchOffset) {
         super(opcode); 
         this.branchOffset = branchOffset;

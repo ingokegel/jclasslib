@@ -16,16 +16,18 @@ import java.io.IOException;
     Base class for all opcode instruction wrappers.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public abstract class AbstractInstruction implements Opcodes {
 
-    /** The opcode of this instruction */
-    protected int opcode;
-    /** The offset of this instruction in its parent <tt>Code</tt> attribute */
-    protected int offset;
-    
-    public AbstractInstruction(int opcode) {
+    private int offset;
+    private int opcode;
+
+    /**
+        Constructor.
+        @param opcode the opcode.
+     */
+    protected AbstractInstruction(int opcode) {
         this.opcode = opcode; 
     }
     

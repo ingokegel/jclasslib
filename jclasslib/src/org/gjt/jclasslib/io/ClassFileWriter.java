@@ -17,7 +17,7 @@ import java.io.*;
     <tt>org.gjt.jclasslib.structures</tt> to class files.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ClassFileWriter {
 
@@ -28,7 +28,7 @@ public class ClassFileWriter {
         Converts <tt>ClassFile</tt> structure to a a class file.
         @param file the file to which to write the <tt>ClassFile</tt> structure
         @param classFile the <tt>ClassFile</tt> structure to be written
-        @throws InvalidByteCodeException if the bytecode is invalid
+        @throws InvalidByteCodeException if the code is invalid
         @throws IOException if an exception occurs while reading the file
      */
     public static void writeToFile(File file, ClassFile classFile)

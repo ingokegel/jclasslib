@@ -16,16 +16,28 @@ import java.io.IOException;
     Describes the <tt>iinc</tt> instruction.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class IncrementInstruction extends ImmediateByteInstruction {
 
     private int incrementConst;
     
+    /**
+        Constructor.
+        @param opcode the opcode
+        @param wide whether the instruction is a wide instruction.
+     */
     public IncrementInstruction(int opcode, boolean wide) {
         super(opcode, wide); 
     }
 
+    /**
+        Constructor.
+        @param opcode the opcode
+        @param wide whether the instruction is a wide instruction.
+        @param immediateByte the immediate byte value.
+        @param incrementConst the increment.
+     */
     public IncrementInstruction(int opcode, boolean wide, int immediateByte, int incrementConst) {
         super(opcode, wide, immediateByte); 
         this.incrementConst = incrementConst;

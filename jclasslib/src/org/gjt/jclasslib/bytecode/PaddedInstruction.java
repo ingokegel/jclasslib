@@ -14,20 +14,25 @@ import java.io.IOException;
 
 /**
     Base class for intstructions which need a four byte padding relative
-    to the start of the enclosing bytecode of the parent <tt>Code</tt>
+    to the start of the enclosing code of the parent <tt>Code</tt>
     attribute before reading immediate arguments.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class PaddedInstruction extends AbstractInstruction {
 
+    /**
+        Constructor.
+        @param opcode the opcode.
+     */
     public PaddedInstruction(int opcode) {
         super(opcode); 
     }
 
     /**
         Get the padded size in bytes of this instruction.
+        @param offset the offset at which this instruction is found.
         @return the padded size in bytes
      */
     public int getPaddedSize(int offset) {

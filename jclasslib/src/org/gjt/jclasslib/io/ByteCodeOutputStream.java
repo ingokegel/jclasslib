@@ -14,12 +14,16 @@ import java.io.OutputStream;
     <tt>DataOutputStream</tt> which extends <tt>ByteCodeOutput</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ByteCodeOutputStream extends DataOutputStream
                                   implements ByteCodeOutput
 {
 
+    /**
+        Constructor.
+        @param out the output stream.
+     */
     public ByteCodeOutputStream(OutputStream out) {
         super(new CountedOutputStream(out));
     }

@@ -18,7 +18,7 @@ import java.util.jar.JarFile;
     <tt>org.gjt.jclasslib.structures</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.7 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ClassFileReader {
 
@@ -32,7 +32,7 @@ public class ClassFileReader {
         @param packageName the name of the package in which the class resides
         @param className the simple name of the class
         @return the new <tt>ClassFile</tt> structure or <tt>null</tt> if it cannot be found
-        @throws InvalidByteCodeException if the bytecode is invalid
+        @throws InvalidByteCodeException if the code is invalid
         @throws IOException if an exception occurs while reading the file
      */
     public static ClassFile readFromClassPath(String[] classPath, String packageName, String className)
@@ -71,7 +71,7 @@ public class ClassFileReader {
         Converts a class file to a <tt>ClassFile</tt> structure.
         @param file the file from which to read the <tt>ClassFile</tt> structure
         @return the new <tt>ClassFile</tt> structure
-        @throws InvalidByteCodeException if the bytecode is invalid
+        @throws InvalidByteCodeException if the code is invalid
         @throws IOException if an exception occurs while reading the file
      */
     public static ClassFile readFromFile(File file)
@@ -86,7 +86,7 @@ public class ClassFileReader {
         @param is the input stream from which to read the
                   <tt>ClassFile</tt> structure
         @return the new <tt>ClassFile</tt> structure
-        @throws InvalidByteCodeException if the bytecode is invalid
+        @throws InvalidByteCodeException if the code is invalid
         @throws IOException if an exception occurs while reading from
                             the input stream
      */
@@ -103,6 +103,11 @@ public class ClassFileReader {
         return classFile;
     }
 
+    /**
+     * Test method.
+     * @param args arguments
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
 
         final int maxCount = 500;

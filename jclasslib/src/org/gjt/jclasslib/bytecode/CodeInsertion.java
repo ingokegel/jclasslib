@@ -13,12 +13,12 @@ import org.gjt.jclasslib.structures.attributes.*;
 import java.util.*;
 
 /**
-    Contains all information necessary to insert bytecode into a
+    Contains all information necessary to insert code into a
     method. Allows for pre and post insertions. The core method
     to perform code insertions is the static <tt>apply</tt> method.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.8 $ $Date: 2003-08-18 07:58:35 $
 */
 public class CodeInsertion {
 
@@ -100,9 +100,7 @@ public class CodeInsertion {
         @param codeAttribute the <tt>CodeAttribute</tt> pertaining to the supplied 
                              list of instructions.
         @return the resulting list of instructions
-        @collectionType AbstractInstruction
-        @collectionType AbstractInstruction
-        @collectionType CodeInsertion
+        @throws InvalidByteCodeException
      */
     public static List apply(List instructions,
                              List codeInsertions,
@@ -150,11 +148,6 @@ public class CodeInsertion {
         return newInstructions;
     }
 
-    /**
-         @collectionType AbstractInstruction
-         @collectionType AbstractInstruction
-         @collectionType CodeInsertion 
-     */
     private static List insertCode(List instructions,
                                    List codeInsertions,
                                    int[] transformedIndices)
@@ -189,10 +182,6 @@ public class CodeInsertion {
         return newInstructions;
     }
 
-    /**
-         @collectionType AbstractInstruction
-         @collectionType CodeInsertion 
-     */
     private static int calculateNewSize(List instructions, List codeInsertions) {
 
         int insertionCount = codeInsertions.size();
@@ -226,9 +215,6 @@ public class CodeInsertion {
         }
     }
 
-    /**
-         @collectionType AbstractInstruction
-     */
     private static int addInstructions(List newInstructions,
                                        AbstractInstruction[] insertedInstructions)
     {
@@ -242,9 +228,6 @@ public class CodeInsertion {
         }
     }
 
-    /**
-         @collectionType AbstractInstruction
-     */
     private static void calculateOffsets(List instructions,
                                          int[] offsets)
     {
@@ -265,9 +248,6 @@ public class CodeInsertion {
         }
     }
 
-    /**
-         @collectionType AbstractInstruction
-     */
     private static void applyOffsets(List instructions, int[] offsets) {
         int instructionCount = instructions.size();
         for (int i = 0; i < instructionCount; i++) {
@@ -276,10 +256,6 @@ public class CodeInsertion {
         }
     }
 
-    /**
-         @collectionType AbstractInstruction
-         @collectionType AbstractInstruction
-     */
     private static void adjustOffsets(List instructions,
                                       List newInstructions,
                                       int[] oldOffsets,
@@ -322,9 +298,6 @@ public class CodeInsertion {
         }
     }
 
-    /**
-         @collectionType AbstractInstruction
-     */
     private static int calculateNewBranchOffset(List newInstructions,
                                                 int sourceIndex,
                                                 int targetIndex,
@@ -369,9 +342,6 @@ public class CodeInsertion {
         }
     }
 
-    /**
-         @collectionType AbstractInstruction
-     */
     private static int getBranchTargetIndex(List instructions,
                                             int sourceIndex,
                                             int branchOffset)
