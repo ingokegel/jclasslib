@@ -15,7 +15,7 @@ import org.gjt.jclasslib.structures.constants.*;
     object.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2002-02-17 17:33:16 $
+    @version $Revision: 1.2 $ $Date: 2002-02-26 13:05:29 $
 */
 
 public class ConstantPoolUtil {
@@ -23,6 +23,17 @@ public class ConstantPoolUtil {
     private ConstantPoolUtil() {
     }
 
+    /**
+        Add a <tt>ConstantMethodRef</tt> constant pool entry to the constant pool
+        of a <tt>ClassFile</tt>.
+        @param classFile the class file whose constant pool is to be edited
+        @param className the name of the referenced class
+        @param methodName the name of the referenced method
+        @param methodSignature the signature of the references method
+        @param sizeDelta the minimum increment by which the array holding the
+                         constant pool is to be enlarged. Set to 0 if unsure.
+        @return the constant pool index of the added <tt>ConstantMethodRef</tt>
+     */
     public static int addConstantMethodrefInfo(ClassFile classFile,
                                                String className,
                                                String methodName,
@@ -40,6 +51,16 @@ public class ConstantPoolUtil {
         return addConstantPoolEntry(classFile, methodrefInfo, sizeDelta);
     }
 
+    /**
+        Add a <tt>ConstantNameAndTypeInfo</tt> constant pool entry to the 
+        constant pool of a <tt>ClassFile</tt>.
+        @param classFile the class file whose constant pool is to be edited
+        @param name the name
+        @param descriptor the descriptor
+        @param sizeDelta the minimum increment by which the array holding the
+                         constant pool is to be enlarged. Set to 0 if unsure.
+        @return the constant pool index of the added <tt>ConstantNameAndTypeInfo</tt>
+     */
     public static int addConstantNameAndTypeInfo(ClassFile classFile,
                                                  String name,
                                                  String descriptor,
@@ -56,6 +77,15 @@ public class ConstantPoolUtil {
         return addConstantPoolEntry(classFile, nameAndTypeInfo, sizeDelta);
     }
     
+    /**
+        Add a <tt>ConstantClassInfo</tt> constant pool entry to the 
+        constant pool of a <tt>ClassFile</tt>.
+        @param classFile the class file whose constant pool is to be edited
+        @param className the name of the referenced class
+        @param sizeDelta the minimum increment by which the array holding the
+                         constant pool is to be enlarged. Set to 0 if unsure.
+        @return the constant pool index of the added <tt>ConstantClassInfo</tt>
+     */
     public static int addConstantClassInfo(ClassFile classFile,
                                            String className,
                                            int sizeDelta)
@@ -69,6 +99,15 @@ public class ConstantPoolUtil {
         return addConstantPoolEntry(classFile, classInfo, sizeDelta);
     }
 
+    /**
+        Add a <tt>ConstantUTF8Info</tt> constant pool entry to the 
+        constant pool of a <tt>ClassFile</tt>.
+        @param classFile the class file whose constant pool is to be edited
+        @param string the string
+        @param sizeDelta the minimum increment by which the array holding the
+                         constant pool is to be enlarged. Set to 0 if unsure.
+        @return the constant pool index of the added <tt>ConstantUTF8Info</tt>
+     */
     public static int addConstantUTF8Info(ClassFile classFile,
                                           String string,
                                           int sizeDelta)
@@ -79,6 +118,15 @@ public class ConstantPoolUtil {
         return addConstantPoolEntry(classFile, utf8Info, sizeDelta);
     }
 
+    /**
+        Add a constant pool entry to the 
+        constant pool of a <tt>ClassFile</tt>.
+        @param classFile the class file whose constant pool is to be edited
+        @param newEntry the new constant pool entry
+        @param sizeDelta the minimum increment by which the array holding the
+                         constant pool is to be enlarged. Set to 0 if unsure.
+        @return the constant pool index of the added constant pool entry
+     */
     public static int addConstantPoolEntry(ClassFile classFile,
                                            CPInfo newEntry,
                                            int sizeDelta)

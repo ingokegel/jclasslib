@@ -14,14 +14,26 @@ import java.util.*;
 
 /**
     Contains all information necessary to insert bytecode into a
-    method. Allows for pre and post insertions.
+    method. Allows for pre and post insertions. The core method
+    to perform code insertions is the static <tt>apply</tt> method.
 
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2002-02-20 08:03:17 $
+    @version $Revision: 1.4 $ $Date: 2002-02-26 13:05:29 $
 */
 public class CodeInsertion {
 
 
+    /**
+        Merge two code insertions into one.
+        @param position the position of the resulting <tt>CodeInsertion</tt>
+        @param shiftTarget should offsets of branch instructions pointing to 
+                           the position of the resulting code insertion
+                           be shifted or point to the beginning of the 
+                           inserted code.
+        @param inner the inner <tt>CodeInsertion</tt>
+        @param outer the outer <tt>CodeInsertion</tt>
+        @return the resulting <tt>CodeInsertion</tt>
+    */
     public static CodeInsertion merge(int position,
                                       boolean shiftTarget,
                                       CodeInsertion inner,
@@ -47,6 +59,12 @@ public class CodeInsertion {
         return codeInsertion;
     }
 
+    /**
+        Merge two arrays of instructions into one.
+        @param firstInstructions the head array of type <tt>AbstractInstruction</tt>
+        @param lastInstructions the tail array of type <tt>AbstractInstruction</tt>
+        @return the merged array of type <tt>AbstractInstruction[]</tt>
+    */
     public static AbstractInstruction[] mergeInstructions(AbstractInstruction[] firstInstructions,
                                                           AbstractInstruction[] lastInstructions)
     {
@@ -64,6 +82,25 @@ public class CodeInsertion {
         return mergedInstructions;
     }
 
+    /**
+        Apply a list of <tt>CodeInsertion</tt>s to a list of instructions
+        such as the one supplied by a <tt>ByteCodeReader</tt>. Offsets
+        of branch instructions will be adapted to point to the original
+        instructions. Exception and line number tables in the associated 
+        <tt>CodeAttribute</tt>will also be updated.
+     
+        @param instructions the list of instructions which is to be treated
+                            with the <tt>CodeInsertion</tt>s. This list
+                            and the resulting instructions will not be usable
+                            after the method is finished. If you need to 
+                            reuse the original instructions, you have to pass
+                            a deep-cloned list into this method.
+        @param codeInsertions the list of codeInsertions which is to be applied to
+                              the list of instructions.
+        @param codeAttribute the <tt>CodeAttribute</tt> pertaining to the supplied 
+                             list of instructions.
+        @return the resulting list of instructions
+     */
     public static List apply(List instructions,
                              List codeInsertions,
                              CodeAttribute codeAttribute)
@@ -382,6 +419,22 @@ public class CodeInsertion {
     private AbstractInstruction[] postInstructions;
     private boolean shiftTarget;
 
+    /**
+        Create a code insertion.
+        @param position the instruction number to which this <tt>CodeInsertion</tt>
+                        is to be applied. Corresponds to the index in the list
+                        of instructions such as the one returned by a 
+                        <tt>ByteCodeReader</tt>.
+        @param preInstructions the instructions to be inserted <b>before</b>
+                               the insertion point.
+        @param postInstructions the instructions to be inserted <b>after</b>
+                                the insertion point.
+        @param shiftTarget should offsets of branch instructions pointing to 
+                           the position of this code insertion
+                           be shifted or point to the beginning of the 
+                           code inserted via the <tt>preInstructions</tt>
+                           parameters.
+     */
     public CodeInsertion(int position,
                          AbstractInstruction[] preInstructions,
                          AbstractInstruction[] postInstructions,
@@ -394,17 +447,22 @@ public class CodeInsertion {
     }
 
     /**
-        Get the insertion position.
-        @return insertion position
+        Get the insertion position, i.e the instruction number to which
+        this <tt>CodeInsertion</tt> is to be applied. Corresponds to the
+        index in the list of instructions such as the one returned by a 
+        <tt>ByteCodeReader</tt>.
+        @return the insertion position
      */
     public int getPosition() {
         return position;
     }
 
     /**
-        Set the insertion position
-        Must be a valid offset into the current method byteocde.
-        @param position insertion position
+        Set the insertion position, i.e the instruction number to which
+        this <tt>CodeInsertion</tt> is to be applied. Corresponds to the
+        index in the list of instructions such as the one returned by a 
+        <tt>ByteCodeReader</tt>.
+        @param position the insertion position
      */
     public void setPosition(int position) {
         this.position = position;
@@ -443,7 +501,9 @@ public class CodeInsertion {
     }
 
     /**
-        Get whether branch targets should be shifted to the first pre-instruction.
+        Get whether offsets of branch instructions pointing to the position of
+        the resulting code insertion should be shifted to the first pre-instruction
+        or continue to point at the original instruction.
         @return the boolean value
      */
     public boolean isShiftTarget() {
@@ -451,8 +511,10 @@ public class CodeInsertion {
     }
 
     /**
-        Set whether branch targets should be shifted to the first pre-instruction.
-        @param
+        Set whether offsets of branch instructions pointing to the position of
+        the resulting code insertion should be shifted to the first pre-instruction
+        or continue to point at the original instruction.
+        @param shiftTarget the boolean value.
      */
     public void setShiftTarget(boolean shiftTarget) {
         this.shiftTarget = shiftTarget;
