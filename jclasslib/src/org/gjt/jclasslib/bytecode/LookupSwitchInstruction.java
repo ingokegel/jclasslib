@@ -15,11 +15,12 @@ import java.util.*;
     Describes the <tt>lookupswitch</tt> instruction.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.5 $ $Date: 2002-05-29 15:53:39 $
 */
 public class LookupSwitchInstruction extends PaddedInstruction {
 
     private int defaultOffset;
+    /** @collectionType MatchOffsetPair */
     private List matchOffsetPairs = new ArrayList();
    
     public LookupSwitchInstruction(int opcode) {
@@ -48,9 +49,10 @@ public class LookupSwitchInstruction extends PaddedInstruction {
     
     /**
         Get the match-offset pairs of the branch of this instruction as
-        a <tt>java.util.List</tt> of <tt>LookupSwitchInstruction.MatchOffsetPair</tt>
+        a <tt>java.util.List</tt> of <tt>MatchOffsetPair</tt>
         elements.
         @return the list
+        @collectionType MatchOffsetPair
      */
     public List getMatchOffsetPairs() {
         return matchOffsetPairs;
@@ -61,6 +63,7 @@ public class LookupSwitchInstruction extends PaddedInstruction {
         a <tt>java.util.List</tt> of <tt>LookupSwitchInstruction.MatchOffsetPair</tt>
         elements.
         @param matchOffsetPairs the list
+        @collectionType MatchOffsetPair
      */
     public void setMatchOffsetPairs(List matchOffsetPairs) {
         this.matchOffsetPairs = matchOffsetPairs;

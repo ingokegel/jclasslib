@@ -19,9 +19,9 @@ import java.io.*;
 
 /**
     A child window of the class file browser application.
- 
+
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2002-02-27 16:47:42 $
+    @version $Revision: 1.5 $ $Date: 2002-05-29 15:53:38 $
 */
 public class BrowserInternalFrame extends BasicInternalFrame
                                   implements BrowserServices {
@@ -34,9 +34,9 @@ public class BrowserInternalFrame extends BasicInternalFrame
     private Exception exception;
 
     // Visual Components
-    
+
     private BrowserComponent browserComponent;
-    
+
     public BrowserInternalFrame(BasicDesktopManager desktopManager, String fileName) {
         this(desktopManager, new File(fileName));
     }
@@ -44,7 +44,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
     public BrowserInternalFrame(BasicDesktopManager desktopManager, File file) {
         super(desktopManager, file.getAbsolutePath());
         this.file = file;
-        
+
         readClassFile();
         setupInternalFrame();
     }
@@ -52,13 +52,13 @@ public class BrowserInternalFrame extends BasicInternalFrame
     public String getInitParam() {
         return file.getAbsolutePath();
     }
-    
+
     // Browser services
-    
+
     public ClassFile getClassFile() {
         return classFile;
     }
- 
+
     public void activate() {
 
         // force sync of toolbar state with this frame
@@ -76,7 +76,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
     public Action getActionForward() {
         return getParentFrame().actionForward;
     }
-    
+
     /**
         Reload class file.
      */
@@ -92,9 +92,9 @@ public class BrowserInternalFrame extends BasicInternalFrame
     public File getFile() {
         return file;
     }
-    
+
     protected void setupInternalFrame() {
-        
+
         setTitle(file.getAbsolutePath());
 
         Container contentPane = getContentPane();
@@ -102,7 +102,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
 
         browserComponent = new BrowserComponent(this);
         contentPane.add(browserComponent, BorderLayout.CENTER);
-        
+
         super.setupInternalFrame();
 
     }
@@ -110,17 +110,19 @@ public class BrowserInternalFrame extends BasicInternalFrame
     private BrowserMDIFrame getParentFrame() {
         return (BrowserMDIFrame)desktopManager.getParentFrame();
     }
-    
+
     private void readClassFile() {
         valid = false;
         try {
             classFile = ClassFileReader.readFromFile(file);
             valid = true;
         } catch (InvalidByteCodeException ex) {
+			ex.printStackTrace();
             exception = ex;
         } catch (IOException ex) {
+			ex.printStackTrace();
             exception = ex;
         }
     }
-    
+
 }

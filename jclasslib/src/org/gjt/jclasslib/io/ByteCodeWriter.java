@@ -16,7 +16,7 @@ import java.util.*;
     <tt>org.gjt.jclasslib.bytecode</tt> to bytecode.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2002-05-29 15:53:50 $
 */
 public class ByteCodeWriter {
 
@@ -28,6 +28,7 @@ public class ByteCodeWriter {
         @param instructions the <tt>java.util.List</tt> with the instructions
         @return the bytecode as an array of bytes
         @throws IOException if an exception occurs with the bytecode
+        @collectionType AbstractInstruction
      */
     public static byte[] writeByteCode(List instructions) throws IOException {
 
