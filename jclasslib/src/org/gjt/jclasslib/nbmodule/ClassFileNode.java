@@ -14,23 +14,35 @@ import org.openide.nodes.*;
     Node for a <tt>ClassFileViewer</tt> component.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:28 $
+    @version $Revision: 1.4 $ $Date: 2003-08-18 07:57:52 $
 */
 public class ClassFileNode extends AbstractNode {
 
     private FileObject fo;
 
+    /**
+        Constructor.
+        @param fo the file object.
+     */
     public ClassFileNode(FileObject fo) {
         super(Children.LEAF);
         this.fo = fo;
-        setIconBase("/images/nbmodule");
+        setIconBase("/org/gjt/jclasslib/nbmodule/nbmodule");
         setName(fo.getName());
     }
-    
+
+    /**
+     * Get the associated file object.
+     * @return the file object.
+     */
     public FileObject getFileObject() {
         return fo;
     }
-    
+
+    /**
+     * Get the associated node handle.
+     * @return the node handle.
+     */
     public Node.Handle getHandle() {
         return new ClassFileNodeHandle(this);
     }
@@ -38,7 +50,11 @@ public class ClassFileNode extends AbstractNode {
     /** Node handle for a <tt>ClassFileNode</tt>. */
     public static class ClassFileNodeHandle implements Node.Handle {
         private FileObject fo;
-        
+
+        /**
+            Constructor.
+            @param node the class file node.
+         */
         public ClassFileNodeHandle(ClassFileNode node) {
             fo = node.fo;
         }
