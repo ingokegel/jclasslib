@@ -16,7 +16,7 @@ import java.util.*;
     <tt>org.gjt.jclasslib.bytecode</tt>.
  
     @author <a href="mailto:jclasslib@gmx.net">Ingo Kegel</a>
-    @version $Revision: 1.1.1.1 $ $Date: 2001-05-14 16:49:21 $
+    @version $Revision: 1.2 $ $Date: 2002-02-18 17:04:40 $
 */
 public class ByteCodeReader implements Opcodes {
 
@@ -30,12 +30,30 @@ public class ByteCodeReader implements Opcodes {
         @throws IOException if an exception occurs with the bytecode
      */
     public static List readByteCode(byte[] code) throws IOException {
+        return readByteCode(code, null);
+    }
+
+    /**
+        Converts the bytecode to a list of instructions.
+        @param code the bytecode as an array of bytes from which to read the instructions
+        @param prependInstructions an array of instructions that is prepended, may be <tt>null</tt>
+        @return the <tt>java.util.List</tt> with the instructions
+        @throws IOException if an exception occurs with the bytecode
+     */
+    public static List readByteCode(byte[] code,
+                       AbstractInstruction[] prependInstructions)
+        throws IOException {
 
         ByteCodeInputStream bcis = new ByteCodeInputStream(
                                         new ByteArrayInputStream(code)
                                     );
         
         ArrayList instructions = new ArrayList();
+        if (prependInstructions != null) {
+            for (int i = 0; i < prependInstructions.length; i++) {
+                instructions.add(prependInstructions[i]);
+            }
+        }
         
         boolean wide = false;
         AbstractInstruction currentInstruction;
