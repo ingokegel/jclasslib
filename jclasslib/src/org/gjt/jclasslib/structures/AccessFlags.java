@@ -12,7 +12,7 @@ package org.gjt.jclasslib.structures;
  * the java access modifiers.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.4 $ $Date: 2004-12-28 13:04:32 $
+ * @version $Revision: 1.5 $ $Date: 2004-12-29 10:45:58 $
  */
 public interface AccessFlags {
 
@@ -96,7 +96,6 @@ public interface AccessFlags {
         ACC_PROTECTED,
         ACC_STATIC,
         ACC_FINAL,
-        ACC_SUPER,
         ACC_VOLATILE,
         ACC_TRANSIENT,
         ACC_SYNTHETIC,
@@ -120,6 +119,8 @@ public interface AccessFlags {
         ACC_STRICT,
         ACC_SYNTHETIC
     };
+
+    public static final String ACC_SUPER_VERBOSE = "";
 
     public static final String ACC_PUBLIC_VERBOSE = "public";
     public static final String ACC_PRIVATE_VERBOSE = "private";
@@ -146,6 +147,7 @@ public interface AccessFlags {
     public static final String[] CLASS_ACCESS_FLAGS_VERBOSE = new String[]{
         ACC_PUBLIC_VERBOSE,
         ACC_FINAL_VERBOSE,
+        ACC_SUPER_VERBOSE,
         ACC_INTERFACE_VERBOSE,
         ACC_ABSTRACT_VERBOSE,
         ACC_SYNTHETIC_VERBOSE,
