@@ -1,7 +1,0 @@
-#!/bin/sh
-#
-# Startup script for jclasslib
-
-DEFAULT_LAF=false
-
-java -Dclasslib.laf.default=$DEFAULT_LAF -jar jclasslib.jar
