@@ -31,12 +31,27 @@
   </table>
 </xsl:template>
 
-<!-- Applications are italic -->
+<!-- Application -->
 <xsl:template match="application">
   <xsl:call-template name="inline.italicseq"/>
 </xsl:template>
 
-<!-- Title is indented -->
+<!-- Menu -->
+<xsl:template match="guimenu">
+  <xsl:call-template name="inline.italicseq"/>
+</xsl:template>
+
+<!-- Menu item -->
+<xsl:template match="guimenuitem">
+  <xsl:call-template name="inline.italicseq"/>
+</xsl:template>
+
+<!-- Button -->
+<xsl:template match="guibutton">
+  <b><xsl:text>[</xsl:text></b><xsl:call-template name="inline.boldseq"/><b><xsl:text>]</xsl:text></b>
+</xsl:template>
+
+<!-- Title -->
 <xsl:attribute-set name="article.titlepage.recto.style">
   <xsl:attribute name="style">margin-left:18px</xsl:attribute>
 </xsl:attribute-set>
