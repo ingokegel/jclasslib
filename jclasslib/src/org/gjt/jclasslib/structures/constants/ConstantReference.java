@@ -16,23 +16,22 @@ import java.io.*;
     Base class for constant pool data structures which reference class members.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-07-08 14:04:29 $
+    @version $Revision: 1.5 $ $Date: 2003-08-18 07:50:25 $
 */
 public abstract class ConstantReference extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes */
+    /** Length of the constant pool data structure in bytes. */
     public static final int SIZE = 4;
 
-    /** <tt>class_index</tt> field */
+    /** <tt>class_index</tt> field. */
     protected int classIndex;
-    /** <tt>name_and_type_index</tt> field */
+    /** <tt>name_and_type_index</tt> field. */
     protected int nameAndTypeIndex;
     
     public String getVerbose() throws InvalidByteCodeException {
-        ConstantNameAndTypeInfo nameAndType = 
-            (ConstantNameAndTypeInfo)classFile.getConstantPoolEntry(nameAndTypeIndex,
-                                                                    ConstantNameAndTypeInfo.class);
-        
+
+        ConstantNameAndTypeInfo nameAndType = getNameAndTypeInfo();
+
         return classFile.getConstantPoolEntryName(classIndex) + "." +
                classFile.getConstantPoolEntryName(nameAndType.getNameIndex());
     }
@@ -73,6 +72,26 @@ public abstract class ConstantReference extends CPInfo {
         this.nameAndTypeIndex = nameAndTypeIndex;
     }
 
+    /**
+        Get the class info for this reference.
+        @return the class info.
+        @throws InvalidByteCodeException
+     */
+    public ConstantClassInfo getClassInfo() throws InvalidByteCodeException {
+        return (ConstantClassInfo)getClassFile().getConstantPoolEntry(classIndex, ConstantClassInfo.class);
+    }
+
+    /**
+        Get the name and type info for this reference.
+        @return the name and type info.
+        @throws InvalidByteCodeException
+     */
+    public ConstantNameAndTypeInfo getNameAndTypeInfo() throws InvalidByteCodeException {
+        return (ConstantNameAndTypeInfo)classFile.getConstantPoolEntry(
+                    nameAndTypeIndex,
+                    ConstantNameAndTypeInfo.class);
+    }
+
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
             
@@ -100,5 +119,5 @@ public abstract class ConstantReference extends CPInfo {
     public int hashCode() {
         return super.hashCode() ^ classIndex ^ nameAndTypeIndex;
     }
-    
+
 }
