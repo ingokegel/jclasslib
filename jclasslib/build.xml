@@ -79,6 +79,14 @@
     <delete dir="${doc.javadoc.dir}"/>
   </target>
 
+  <target name="run" description="Run the bytecode viewer" depends="compile">
+    <java classname="org.gjt.jclasslib.browser.BrowserApplication">
+      <classpath>
+        <pathelement location="${build.dir}"/>
+      </classpath>
+    </java>
+  </target>
+
   <target name="compile" depends="init" description="Compile source code">
     <javac srcdir="${src.dir}" destdir="${build.dir}">
       <classpath refid="project.classpath"/>
