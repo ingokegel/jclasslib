@@ -18,7 +18,7 @@ import java.util.*;
     to perform code insertions is the static <tt>apply</tt> method.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2003-08-18 07:58:35 $
+    @version $Revision: 1.9 $ $Date: 2005-06-22 13:56:37 $
 */
 public class CodeInsertion {
 
@@ -316,14 +316,12 @@ public class CodeInsertion {
     private static int getBranchOffset(AbstractInstruction instruction) {
 
         int branchOffset = 0;
-        if (instruction.getOpcode() == Opcodes.OPCODE_GOTO_W) {
-            branchOffset = ((ImmediateIntInstruction)instruction).getImmediateInt();
-        } else if (instruction instanceof TableSwitchInstruction) {
+        if (instruction instanceof TableSwitchInstruction) {
             branchOffset = ((TableSwitchInstruction)instruction).getDefaultOffset();
         } else if (instruction instanceof LookupSwitchInstruction) {
             branchOffset = ((LookupSwitchInstruction)instruction).getDefaultOffset();
-        } else if (instruction instanceof BranchInstruction) {
-            branchOffset = ((BranchInstruction)instruction).getBranchOffset();
+        } else if (instruction instanceof AbstractBranchInstruction) {
+            branchOffset = ((AbstractBranchInstruction)instruction).getBranchOffset();
         }
         return branchOffset;
     }
@@ -331,14 +329,12 @@ public class CodeInsertion {
     private static void setBranchOffset(AbstractInstruction instruction,
                                         int branchOffset)
     {
-        if (instruction.getOpcode() == Opcodes.OPCODE_GOTO_W) {
-            ((ImmediateIntInstruction)instruction).setImmediateInt(branchOffset);
-        } else if (instruction instanceof TableSwitchInstruction) {
+        if (instruction instanceof TableSwitchInstruction) {
             ((TableSwitchInstruction)instruction).setDefaultOffset(branchOffset);
         } else if (instruction instanceof LookupSwitchInstruction) {
             ((LookupSwitchInstruction)instruction).setDefaultOffset(branchOffset);
-        } else if (instruction instanceof BranchInstruction) {
-            ((BranchInstruction)instruction).setBranchOffset(branchOffset);
+        } else if (instruction instanceof AbstractBranchInstruction) {
+            ((AbstractBranchInstruction)instruction).setBranchOffset(branchOffset);
         }
     }
 

@@ -12,14 +12,13 @@ import org.gjt.jclasslib.bytecode.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
     Converts code to a list of instructions as defined in the package
     <tt>org.gjt.jclasslib.code</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-08-18 07:58:12 $
+    @version $Revision: 1.7 $ $Date: 2005-06-22 13:56:41 $
 */
 public class ByteCodeReader implements Opcodes {
 
@@ -32,7 +31,7 @@ public class ByteCodeReader implements Opcodes {
         @return the <tt>java.util.List</tt> with the instructions
         @throws IOException if an exception occurs with the code
      */
-    public static List readByteCode(byte[] code) throws IOException {
+    public static ArrayList readByteCode(byte[] code) throws IOException {
         return readByteCode(code, null);
     }
 
@@ -43,8 +42,7 @@ public class ByteCodeReader implements Opcodes {
         @return the <tt>java.util.List</tt> with the instructions
         @throws IOException if an exception occurs with the code
      */
-    public static List readByteCode(byte[] code,
-                       AbstractInstruction[] prependInstructions)
+    public static ArrayList readByteCode(byte[] code, AbstractInstruction[] prependInstructions)
         throws IOException {
 
         ByteCodeInputStream bcis = new ByteCodeInputStream(
@@ -296,7 +294,7 @@ public class ByteCodeReader implements Opcodes {
             case OPCODE_GOTO_W:
             case OPCODE_JSR_W:
 
-                instruction = new ImmediateIntInstruction(opcode);
+                instruction = new WideBranchInstruction(opcode);
                 break;
                 
             case OPCODE_IINC: // subject to wide

@@ -16,60 +16,41 @@ import java.io.IOException;
     Describes an instruction that is followed by an immediate int.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
+    @version $Revision: 1.1 $ $Date: 2005-06-22 13:56:37 $
 */
-public class ImmediateIntInstruction extends AbstractInstruction {
+public class WideBranchInstruction extends AbstractBranchInstruction {
 
-    private int immediateInt;
-   
     /**
         Constructor.
         @param opcode the opcode.
      */
-    public ImmediateIntInstruction(int opcode) {
+    public WideBranchInstruction(int opcode) {
         super(opcode); 
     }
 
     /**
         Constructor.
         @param opcode the opcode.
-        @param immediateInt the immediate int value.
+        @param branchOffset the immediate int value.
      */
-    public ImmediateIntInstruction(int opcode, int immediateInt) {
-        super(opcode); 
-        this.immediateInt = immediateInt;
+    public WideBranchInstruction(int opcode, int branchOffset) {
+        super(opcode, branchOffset);
     }
     
     public int getSize() {
         return super.getSize() + 4;
     }
 
-    /**
-        Get the immediate int of this instruction.
-        @return the int
-     */
-    public int getImmediateInt() {
-        return immediateInt;
-    }
-
-    /**
-        Set the immediate int of this instruction.
-        @param immediateInt the int
-     */
-    public void setImmediateInt(int immediateInt) {
-        this.immediateInt = immediateInt;
-    }
-    
     public void read(ByteCodeInput in) throws IOException {
         super.read(in);
 
-        immediateInt = in.readInt();
+        setBranchOffset(in.readInt());
     }
 
     public void write(ByteCodeOutput out) throws IOException {
         super.write(out);
 
-        out.writeInt(immediateInt);
+        out.writeInt(getBranchOffset());
     }
     
 }
