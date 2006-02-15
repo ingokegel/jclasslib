@@ -67,23 +67,6 @@
       </para>
     </sect2>
     <sect2>
-      <title>Installing as Netbeans module</title>
-      <para>
-        To install the bytecode viewer as a Netbeans module, double click on
-        <filename>jclasslib.nbm</filename> in Windows, or perform the following steps in
-        the Netbeans IDE:
-        <menuchoice>
-          <guimenu>Tools</guimenu>
-          <guimenuitem>Update Center</guimenuitem>
-        </menuchoice>
-        and select
-        <guibutton>Install Manually Downloaded Modules (*.nbm files)</guibutton>. Add
-        the file
-        <filename>jclasslib.nbm</filename> in the next step and complete the
-        remaining steps of the installation wizard.
-      </para>
-    </sect2>
-    <sect2>
       <title>Building
         <application>jclasslib</application> from source
       </title>
@@ -422,25 +405,6 @@
         it is useful to have the
         <ulink url="http://java.sun.com/docs/books/vmspec/">Java virtual machine
         specification</ulink> at hand.
-      </para>
-    </sect2>
-    <sect2>
-      <title>The bytecode viewer as a Netbeans module</title>
-      <para>
-        To open a class file in Netbeans, the first step is to either select a java source node
-        or a class file node in the explorer or to activate a Java source file in the source editor.
-        Java sources have to be compiled in order for the bytecode viewer menu entries to be 
-        available. The second step is to either right click and navigate to
-        <menuchoice>
-          <guimenu>Tools</guimenu>
-          <guimenuitem>View class file</guimenuitem>
-        </menuchoice>
-        in the popup menu or to execute
-        <menuchoice>
-          <guimenu>Tools</guimenu>
-          <guimenuitem>View class file</guimenuitem>
-        </menuchoice>
-        in the main Netbeans menu.
       </para>
     </sect2>
   </sect1>
