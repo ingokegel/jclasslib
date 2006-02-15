@@ -18,7 +18,7 @@ import java.util.jar.JarFile;
     Classpath entry for an archive.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
+    @version $Revision: 1.2 $ $Date: 2006-02-15 09:09:49 $
 */
 public class ClasspathArchiveEntry extends ClasspathEntry {
 
@@ -51,9 +51,9 @@ public class ClasspathArchiveEntry extends ClasspathEntry {
 
         try {
             JarFile jarFile = new JarFile(archive);
-            Enumeration enum = jarFile.entries();
-            while (enum.hasMoreElements()) {
-                JarEntry entry = (JarEntry)enum.nextElement();
+            Enumeration en = jarFile.entries();
+            while (en.hasMoreElements()) {
+                JarEntry entry = (JarEntry)en.nextElement();
                 if (!entry.isDirectory() && entry.getName().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
                     addEntry((stripClassSuffix(entry.getName())), model, reset);
                 }
