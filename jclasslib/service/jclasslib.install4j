@@ -20,7 +20,6 @@
     </mountPoints>
     <entries>
       <fileEntry mountPoint="683316172" file="../build/jclasslib.jar" overwrite="4" shared="false" mode="644" dontUninstall="false" />
-      <fileEntry mountPoint="683316172" file="../build/jclasslib.nbm" overwrite="4" shared="false" mode="644" dontUninstall="false" />
       <dirEntry mountPoint="319023622" file="../doc" overwrite="4" shared="false" mode="644" dontUninstall="false" excludeSuffixes="CVS, .cvsignore" dirMode="755">
         <exclude>
           <entry location="src/docbook" launcher="false" />

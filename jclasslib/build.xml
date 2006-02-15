@@ -2,16 +2,8 @@
 
 <project name="jclasslib" default="compile">
 
-  <!-- Properties can be overridden in this file -->
-  <property file="my.properties"/>
-
   <!-- Version -->
   <property name="jclasslib.version" value="3.0"/>
-
-  <!-- Keystore for signing -->
-  <property name="keystore.file" value="../jprofiler/.keystore"/>
-  <!-- Keystore password, empty if not signed -->
-  <property name="keystore.password" value=""/>
 
   <!-- Directory with miscellaneous files needed for the build process -->
   <property name="service.dir" value="service"/>
@@ -21,13 +13,7 @@
   <property name="build.jar" value="${build.dir}/jclasslib.jar"/>
   <property name="build.library.jar" value="${build.dir}/jclasslib-library.jar"/>
 
-  <property name="build.nbmodule.dir" value="${build.dir}/netbeans"/>
-  <property name="build.nbmodule.modules.dir" value="${build.nbmodule.dir}/modules"/>
-  <property name="build.nbmodule.jar" value="${build.nbmodule.modules.dir}/jclasslib.jar"/>
-  <property name="build.nbmodule.file" value="${build.dir}/jclasslib.nbm"/>
-
   <property name="jar.manifest.filename" value="${service.dir}/jclasslib.mf"/>
-  <property name="nbmodule.manifest.filename" value="${service.dir}/nbmodule.mf"/>
 
   <!-- Location of source code -->
   <property name="src.dir" value="src"/>
@@ -47,22 +33,12 @@
 
   <!-- Location of license file -->
   <property name="license.file" value="license"/>
-
-  <!-- Class path for compiling -->
-  <path id="project.classpath">
-    <pathelement location="${java.classes}"/>
-  </path>
-
-  <!-- Additional class path for compiling netbeans module-->
-  <path id="netbeans.classpath">
-    <pathelement location="${lib-compile.dir}/openide.jar"/>
-    <pathelement location="${lib-compile.dir}/java.jar"/>
-  </path>
+  <property name="install4j.classpath" value="/opt/install4j/bin/install4j.jar:/Program Files/install4j/bin/install4j.jar:/Programme/install4j/bin/install4j.jar"/>
 
   <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${lib-compile.dir}/antnbm.jar"/>
   <taskdef name="install4j"
     classname="com.install4j.Install4JTask"
-    classpath="/opt/install4j/bin/install4j.jar:/Program Files/install4j/bin/install4j.jar:/Programme/install4j/bin/install4j.jar"/>
+    classpath="${install4j.classpath}"/>
 
   <!-- Make all standard directories -->
   <target name="init">
@@ -70,7 +46,6 @@
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${doc.javadoc.dir}"/>
-    <mkdir dir="${build.nbmodule.modules.dir}"/>
   </target>
 
   <target name="clean" description="Delete all generated files and directories">
@@ -88,29 +63,11 @@
   </target>
 
   <target name="compile" depends="init" description="Compile source code">
-    <javac srcdir="${src.dir}" destdir="${build.dir}">
-      <classpath refid="project.classpath"/>
-      <exclude name="**/nbmodule/*"/>
-    </javac>
-    <copy todir="${build.dir}">
-      <fileset dir="${src.dir}">
-        <exclude name="**/nbmodule/*"/>
-        <include name="**/*.gif"/>
-        <include name="**/*.png"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="nb-compile" depends="init" description="Compile netbeans module">
-    <javac srcdir="${src.dir}" destdir="${build.dir}">
-      <classpath refid="project.classpath"/>
-      <classpath refid="netbeans.classpath"/>
-    </javac>
+    <javac srcdir="${src.dir}" destdir="${build.dir}"/>
     <copy todir="${build.dir}">
       <fileset dir="${src.dir}">
         <include name="**/*.gif"/>
         <include name="**/*.png"/>
-        <include name="**/*.xml"/>
       </fileset>
     </copy>
   </target>
@@ -121,8 +78,6 @@
       manifest="${jar.manifest.filename}"
       compress="false">
 
-
-      <exclude name="**/nbmodule/*"/>
       <include name="org/**"/>
       <exclude name="**/*.html"/>
     </jar>
@@ -138,28 +93,11 @@
     </jar>
   </target>
 
-  <target name="nb-module" depends="nb-compile" description="Generate Netbeans module">
-    <condition property="keystoreIsDefault" value="true">
-      <equals arg1="${keystore.password}" arg2=""/>
-    </condition>
-
-    <jar jarfile="${build.nbmodule.jar}"
-      basedir="${build.dir}"
-      manifest="${nbmodule.manifest.filename}">
-
-      <include name="org/**"/>
-      <exclude name="**/*.html"/>
-    </jar>
-    <makenbm file="${build.nbmodule.file}"
-      topdir="${build.dir}"
-      module="${build.nbmodule.jar}"
-      homepage="http://www.ej-technologies.com/"
-      distribution="http://www.ej-technologies.com/products/jclasslib/overview.html">
-      <license file="${license.file}"/>
-    </makenbm>
+  <target name="netbeans-module" depends="compile" description="Generate Netbeans module">
+    <!-- TODO -->
   </target>
 
-  <target name="dist" depends="clean,jar,doc,javadoc,nb-module" description="Create distribution with install4j">
+  <target name="dist" depends="clean,jar,doc,javadoc,netbeans-module" description="Create distribution with install4j">
   </target>
 
   <target name="media" depends="clean,dist" description="Create media files with install4j">
@@ -192,7 +130,6 @@
     <javadoc sourcepath="${src.dir}:"
       destdir="${doc.javadoc.dir}"
       packagenames="org.gjt.jclasslib.*"
-      classpathref="netbeans.classpath"
       overview="${doc.src.dir}/overview.html"
       stylesheetfile="${doc.dir}/doc.css"
       header="&lt;b&gt;&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;ej-technologies&lt;/a&gt;&lt;/b&gt;"
@@ -200,9 +137,6 @@
       doctitle="&lt;a target='_blank' href='http://www.ej-technologies.com' &gt;&lt;img border='0' src='../images/ej-technologies.gif' &gt;&lt;/a&gt;"
       >
 
-      <link offline="true"
-        href="http://www.netbeans.org/download/apis/"
-        packagelistLoc="${doc.src.dir}/offline-netbeans"/>
       <link offline="true"
         href="http://java.sun.com/products/jdk/1.4/docs/api/"
         packagelistLoc="${doc.src.dir}/offline-java"/>
