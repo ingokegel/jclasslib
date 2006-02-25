@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -24,6 +25,7 @@ import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
 import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.gjt.jclasslib.browser.config.window.CategoryHolder;
+import org.gjt.jclasslib.browser.config.window.PathComponent;
 import org.gjt.jclasslib.io.ClassFileReader;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
@@ -68,14 +70,17 @@ public class BytecodeBrowser extends TopComponent implements BrowserServices {
     
     static void openFileObject(FileObject clazz, final BrowserPath browserPath) {
         final BytecodeBrowser browser = BytecodeBrowser.getBytecodeBrowser(clazz);
-        if (!browser.isOpened()) {
-            browser.open();
-            browser.getBrowserComponent().setBrowserPath(
-                    (browserPath == null)  ? DEFAULT_PATH : browserPath);
-        }
         EventQueue.invokeLater(new Runnable() {
             public void run() {
+                // When opening first time and browser path is not set, set
+                // it do default. Otherwise set new or leave it as it is (null does nothing)
+                BrowserPath path = browser.isOpened() || browserPath != null
+                        ? browserPath : DEFAULT_PATH;
+                if (!browser.isOpened()) {
+                    browser.open();
+                }
                 browser.requestActive();
+                setBrowserPathSafely(browser, path);
             }
         });
     }
@@ -232,6 +237,27 @@ public class BytecodeBrowser extends TopComponent implements BrowserServices {
         toolBar.add(actionReload);
         toolBar.setFloatable(false);
         return toolBar;
+    }
+    
+    /**
+     * Since composing of {@link BrowserPath} is not safe yet, let's use this
+     * temporary workaround to not bother users too much in case the browser
+     * path is corrupted.
+     */
+    private static void setBrowserPathSafely(
+            final BytecodeBrowser browser, final BrowserPath browserPath) {
+        try {
+            browser.getBrowserComponent().setBrowserPath(browserPath);
+        } catch (Exception e) {
+            ErrorManager.getDefault().log(ErrorManager.WARNING, "Cannot set browser path automatically.");
+            if (browserPath != null) {
+                ErrorManager.getDefault().log(ErrorManager.WARNING, " browserPath: ");
+                for (Iterator it = browserPath.getPathComponents().iterator(); it.hasNext();) {
+                    PathComponent pc = (PathComponent) it.next();
+                    ErrorManager.getDefault().log(ErrorManager.WARNING, "  path component: \"" + pc + "\"");
+                }
+            }
+        }
     }
     
     private class DefaultAction extends AbstractAction {

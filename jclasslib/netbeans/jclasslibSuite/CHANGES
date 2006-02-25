@@ -1,5 +1,18 @@
+1.1 (Sat Feb 25 2006)
+---------------------
+
+  - Initial synchronization with NetBeans source code editor.
+    When the Browse Bytecode action is invoked, appropriate node in the Bytecode
+    Browser's tree is selected and opened automatically. Currently methods and
+    constructors are supported. Does not work with method descriptors containing
+    genererics and with inner classes yet (just General category is opened in
+    those cases).
+
+
 1.0 (Wed Feb 21 2006)
 ---------------------
 
   - Initial version
+
+# vi:tw=80:et:enc=utf-8
 

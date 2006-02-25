@@ -3,7 +3,7 @@
     modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
-*/
+ */
 
 package org.netbeans.modules.jclasslib;
 
@@ -11,6 +11,7 @@ import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Action;
+import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.queries.FileBuiltQuery;
@@ -48,6 +49,7 @@ public final class BrowseBytecodeAction extends CookieAction {
         } else if ("java".equals(compiledClazz.getExt())) { // NOI18N
             // called on source file
             final FileObject sourceFile = fileDO.getPrimaryFile();
+            final BrowserPath path = Util.getBrowserPath(sourceFile);
             // XXX check whether the sourceFile is compilable before proceed
             final FileBuiltQuery.Status status = FileBuiltQuery.getStatus(sourceFile);
             if (status == null) {
@@ -58,7 +60,7 @@ public final class BrowseBytecodeAction extends CookieAction {
                 } else {
                     showMessage(".class file was found. But it is not possible " + // XXX I18N
                             "to check whether it is up-to-date."); // XXX I18N
-                    BytecodeBrowser.openFileObject(compiledClazz, null);
+                    BytecodeBrowser.openFileObject(compiledClazz, path);
                 }
                 return;
             }
@@ -66,7 +68,7 @@ public final class BrowseBytecodeAction extends CookieAction {
                 tryToCompile(fileDO); // trigger compilation asynchronously
                 RequestProcessor.getDefault().post(new Runnable() {
                     public void run() {
-                        int i = 20000 / 100; // wait 20s
+                        int i = 40000 / 100; // wait 40s
                         while (!status.isBuilt() && i-- != 0) {
                             try {
                                 Thread.sleep(100); // Compiling
@@ -82,7 +84,7 @@ public final class BrowseBytecodeAction extends CookieAction {
                         }
                         EventQueue.invokeLater(new Runnable() {
                             public void run() {
-                                BytecodeBrowser.openFileObject(compiledClazz, null);
+                                BytecodeBrowser.openFileObject(compiledClazz, path);
                             }
                         });
                     }
@@ -92,7 +94,7 @@ public final class BrowseBytecodeAction extends CookieAction {
                 if (compiledClazz == null) {
                     showCannotFind();
                 } else {
-                    BytecodeBrowser.openFileObject(compiledClazz, null);
+                    BytecodeBrowser.openFileObject(compiledClazz, path);
                 }
                 
             }
@@ -105,8 +107,15 @@ public final class BrowseBytecodeAction extends CookieAction {
         ClassPath sourceCP = ClassPath.getClassPath(sourceFile, ClassPath.SOURCE);
         assert sourceCP != null;
         ClassPath cp = ClassPath.getClassPath(sourceFile, ClassPath.EXECUTE);
-        assert cp != null;
-        return findResource(cp, sourceCP.getResourceName(sourceFile, '/', false) + ".class"); // NOI18N
+        FileObject compiledClazz;
+        if (cp == null) {
+            ClassPath bootCP = ClassPath.getClassPath(sourceFile, ClassPath.BOOT);
+            assert bootCP != null;
+            compiledClazz = findResource(bootCP, sourceCP.getResourceName(sourceFile, '/', false) + ".class"); // NOI18N
+        } else {
+            compiledClazz = findResource(cp, sourceCP.getResourceName(sourceFile, '/', false) + ".class"); // NOI18N
+        }
+        return compiledClazz;
     }
     
     /** #72573: Workarounding bug in ClassPath. */
@@ -169,5 +178,6 @@ public final class BrowseBytecodeAction extends CookieAction {
                 "it manually (e.g.) in the Files view and invoke 'Browse " + // XXX I18N
                 "Bytecode' directly from its context menu."); // XXX I18N
     }
+    
 }
 
