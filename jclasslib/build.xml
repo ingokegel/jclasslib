@@ -35,11 +35,6 @@
   <property name="license.file" value="license"/>
   <property name="install4j.classpath" value="/opt/install4j/bin/install4j.jar:/Program Files/install4j/bin/install4j.jar:/Programme/install4j/bin/install4j.jar"/>
 
-  <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${lib-compile.dir}/antnbm.jar"/>
-  <taskdef name="install4j"
-    classname="com.install4j.Install4JTask"
-    classpath="${install4j.classpath}"/>
-
   <!-- Make all standard directories -->
   <target name="init">
     <tstamp/>
@@ -93,14 +88,13 @@
     </jar>
   </target>
 
-  <target name="netbeans-module" depends="compile" description="Generate Netbeans module">
-    <!-- TODO -->
-  </target>
-
-  <target name="dist" depends="clean,jar,doc,javadoc,netbeans-module" description="Create distribution with install4j">
+  <target name="dist" depends="clean,jar,doc,javadoc" description="Create distribution without install4j">
   </target>
 
   <target name="media" depends="clean,dist" description="Create media files with install4j">
+    <taskdef name="install4j"
+      classname="com.install4j.Install4JTask"
+      classpath="${install4j.classpath}"/>
     <install4j projectfile="${service.dir}/jclasslib.install4j" release="${jclasslib.version}"/>
   </target>
 
