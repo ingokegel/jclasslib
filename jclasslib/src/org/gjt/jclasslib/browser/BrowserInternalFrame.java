@@ -30,7 +30,7 @@ import java.util.jar.JarFile;
  * A child window of the class file browser application.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.9 $ $Date: 2004-12-28 13:04:31 $
+ * @version $Revision: 1.10 $ $Date: 2006-03-02 11:42:36 $
  */
 public class BrowserInternalFrame extends BasicInternalFrame
         implements BrowserServices {
@@ -123,21 +123,23 @@ public class BrowserInternalFrame extends BasicInternalFrame
         } else {
             WindowState windowState = new WindowState(findResult.getFileName(), browserPath);
             frame = new BrowserInternalFrame(desktopManager, windowState);
-            if (frame != null) {
-                if (isMaximum()) {
-                    try {
-                        frame.setMaximum(true);
-                    } catch (PropertyVetoException ex) {
-                    }
-                } else {
-                    desktopManager.scrollToVisible(frame);
+            if (isMaximum()) {
+                try {
+                    frame.setMaximum(true);
+                } catch (PropertyVetoException ex) {
                 }
+            } else {
+                desktopManager.scrollToVisible(frame);
             }
         }
     }
 
     public boolean canOpenClassFiles() {
         return true;
+    }
+
+    public void showURL(String urlSpec) {
+        GUIHelper.showURL(urlSpec);
     }
 
     /**

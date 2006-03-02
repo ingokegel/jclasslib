@@ -9,12 +9,13 @@ package org.gjt.jclasslib.util;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * Collection of GUI utility methods.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.2 $ $Date: 2005-03-04 16:36:00 $
+ * @version $Revision: 1.3 $ $Date: 2006-03-02 11:42:39 $
  */
 public class GUIHelper {
 
@@ -94,4 +95,21 @@ public class GUIHelper {
         scrollPane.getVerticalScrollBar().setUnitIncrement(unit);
     }
 
+    /**
+     * Show a URL in the browser
+     * @param urlSpec the URL as a string
+     */
+    public static void showURL(String urlSpec) {
+
+        String commandLine;
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            commandLine = "rundll32.exe url.dll,FileProtocolHandler " + urlSpec;
+        } else {
+            commandLine = "firefox " + urlSpec;
+        }
+        try {
+            Runtime.getRuntime().exec(commandLine);
+        } catch (IOException ex) {
+        }
+    }
 }

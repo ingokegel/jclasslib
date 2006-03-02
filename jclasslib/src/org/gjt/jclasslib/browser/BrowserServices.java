@@ -16,7 +16,7 @@ import javax.swing.*;
     Container services for a <tt>BrowserComponent</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2004-02-10 16:06:56 $
+    @version $Revision: 1.6 $ $Date: 2006-03-02 11:42:37 $
 */
 public interface BrowserServices {
     /**
@@ -62,6 +62,13 @@ public interface BrowserServices {
         Indicates whether <tt>openClassFile</tt> will be able to show class files or not.
         @return the value
      */
+
     boolean canOpenClassFiles();
+
+    /**
+        Show a URL in the browser.
+        @param urlSpec the URL as a browser
+     */
+    void showURL(String urlSpec);
 }
 

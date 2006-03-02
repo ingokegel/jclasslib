@@ -29,7 +29,7 @@ import java.util.prefs.Preferences;
  * MDI Frame and entry point for the class file browser application.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.10 $ $Date: 2005-01-14 15:01:03 $
+ * @version $Revision: 1.11 $ $Date: 2006-03-02 11:42:37 $
  */
 public class BrowserMDIFrame extends BasicMDIFrame {
 
@@ -627,20 +627,6 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         return classesFileChooser;
     }
 
-    private void doShowURL(String urlSpec) {
-
-        String commandLine;
-        if (System.getProperty("os.name").startsWith("Windows")) {
-            commandLine = "rundll32.exe url.dll,FileProtocolHandler " + urlSpec;
-        } else {
-            commandLine = "netscape " + urlSpec;
-        }
-        try {
-            Runtime.getRuntime().exec(commandLine);
-        } catch (IOException ex) {
-        }
-    }
-
     private void doAbout() {
         new BrowserAboutDialog(this).setVisible(true);
     }
@@ -676,12 +662,12 @@ public class BrowserMDIFrame extends BasicMDIFrame {
             } else if (this == actionReload) {
                 doReload();
             } else if (this == actionShowHomepage) {
-                doShowURL("http://www.ej-technologies.com/products/jclasslib/overview.html");
+                GUIHelper.showURL("http://www.ej-technologies.com/products/jclasslib/overview.html");
             } else if (this == actionShowEJT) {
-                doShowURL("http://www.ej-technologies.com");
+                GUIHelper.showURL("http://www.ej-technologies.com");
             } else if (this == actionShowHelp) {
                 try {
-                    doShowURL(new File("doc/help.html").getCanonicalFile().toURL().toExternalForm());
+                    GUIHelper.showURL(new File("doc/help.html").getCanonicalFile().toURL().toExternalForm());
                 } catch (IOException e) {
                 }
             } else if (this == actionAbout) {
