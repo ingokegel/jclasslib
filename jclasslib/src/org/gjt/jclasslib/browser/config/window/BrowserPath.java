@@ -13,14 +13,14 @@ import java.util.LinkedList;
     Description of the selected path in the tree of a <tt>BrowserComponent</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
+    @version $Revision: 1.2 $ $Date: 2006-03-02 19:23:10 $
 */
 public class BrowserPath {
 
     private LinkedList pathComponents = new LinkedList();
 
     /**
-     * Get the list of browser path components.
+     * Get the list of browser path {@link PathComponent component}s.
      * @return the list.
      */
     public LinkedList getPathComponents() {

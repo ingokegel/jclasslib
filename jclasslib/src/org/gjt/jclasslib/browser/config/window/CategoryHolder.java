@@ -11,7 +11,7 @@ package org.gjt.jclasslib.browser.config.window;
     Browser path component for a node category.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
+    @version $Revision: 1.2 $ $Date: 2006-03-02 19:23:10 $
 */
 public class CategoryHolder implements PathComponent {
 
@@ -46,4 +46,9 @@ public class CategoryHolder implements PathComponent {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public String toString() {
+        return "CategoryHolder[" + getCategory() + "]";
+    }
+
 }

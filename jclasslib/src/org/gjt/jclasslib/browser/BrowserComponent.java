@@ -22,7 +22,7 @@ import java.util.LinkedList;
  * Visual component displaying a class file.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.9 $ $Date: 2004-12-28 13:04:31 $
+ * @version $Revision: 1.10 $ $Date: 2006-03-02 19:23:13 $
  */
 public class BrowserComponent extends JComponent
         implements TreeSelectionListener {
@@ -114,6 +114,7 @@ public class BrowserComponent extends JComponent
 
     /**
      * Set the currently selected path in the tree by analyzing a <tt>BrowserPath</tt> object.
+     * In the case the given path is <code>null</code> nothing happens.
      *
      * @param browserPath the browser path
      */

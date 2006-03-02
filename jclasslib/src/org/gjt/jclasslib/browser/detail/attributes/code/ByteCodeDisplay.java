@@ -29,7 +29,7 @@ import java.util.*;
     Bytecode renderer.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2005-06-22 13:56:41 $
+    @version $Revision: 1.5 $ $Date: 2006-03-02 19:23:13 $
 */
 public class ByteCodeDisplay extends JPanel implements Scrollable {
 
@@ -391,6 +391,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
             verifyOffsets(instructions);
 
             calculateOffsetWidth(instructions);
+            detailPane.setCurrentInstructions(instructions);
 
             Iterator it = instructions.iterator();
             AbstractInstruction currentInstruction;
