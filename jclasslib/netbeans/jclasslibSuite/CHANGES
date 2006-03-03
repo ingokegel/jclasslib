@@ -1,3 +1,10 @@
+1.2 (Fri Mar 03 2006)
+---------------------
+
+  - Description for each instruction may be immediately shown in the IDE
+    preconfigured browser (linked with the JVM Specification).
+
+
 1.1 (Sat Feb 25 2006)
 ---------------------
 
@@ -13,6 +20,7 @@
 ---------------------
 
   - Initial version
+
 
 # vi:tw=80:et:enc=utf-8
 
