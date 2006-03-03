@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.gjt.jclasslib
 OpenIDE-Module-Localizing-Bundle: org/gjt/jclasslib/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.0
+OpenIDE-Module-Specification-Version: 3.0.0.1
 

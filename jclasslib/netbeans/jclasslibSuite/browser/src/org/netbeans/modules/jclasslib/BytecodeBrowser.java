@@ -12,6 +12,8 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,6 +35,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.DialogDisplayer;
 import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
@@ -257,6 +260,15 @@ public class BytecodeBrowser extends TopComponent implements BrowserServices {
                     ErrorManager.getDefault().log(ErrorManager.WARNING, "  path component: \"" + pc + "\"");
                 }
             }
+        }
+    }
+    
+    public void showURL(final String urlSpec) {
+        try {
+            URL url = new URL(urlSpec);
+            HtmlBrowser.URLDisplayer.getDefault().showURL(url);
+        } catch (MalformedURLException e) {
+            ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
         }
     }
     
