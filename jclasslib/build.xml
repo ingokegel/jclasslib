@@ -58,7 +58,7 @@
   </target>
 
   <target name="compile" depends="init" description="Compile source code">
-    <javac srcdir="${src.dir}" destdir="${build.dir}"/>
+    <javac srcdir="${src.dir}" destdir="${build.dir}" target="1.4" source="1.4"/>
     <copy todir="${build.dir}">
       <fileset dir="${src.dir}">
         <include name="**/*.gif"/>
