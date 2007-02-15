@@ -18,7 +18,7 @@ import java.util.HashMap;
  * The class file structure in which all other structures are hooked up.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.11 $ $Date: 2007-02-14 13:39:04 $
+ * @version $Revision: 1.12 $ $Date: 2007-02-15 09:51:55 $
  */
 public class ClassFile extends AbstractStructureWithAttributes {
 
@@ -731,7 +731,6 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
     private void checkMajorVersion(int majorVersion) {
 
-        System.out.println("majorVersion = " + majorVersion);
         if (majorVersion < 45 || majorVersion > 51) {
             Log.warning("major version should be between 45 and 51 for JDK <= 1.7");
         }
