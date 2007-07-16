@@ -23,7 +23,7 @@ import java.util.Map;
  * child window.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.11 $ $Date: 2005-03-04 16:36:00 $
+ * @version $Revision: 1.12 $ $Date: 2007-07-16 14:15:11 $
  */
 public class BrowserTreePane extends JPanel {
 
@@ -82,7 +82,7 @@ public class BrowserTreePane extends JPanel {
             BrowserTreeNode treeNode = (BrowserTreeNode)methodsNode.getChildAt(i);
             MethodInfo testMethod = methods[treeNode.getIndex()];
             try {
-                if (testMethod.getName().equals(methodName) && testMethod.getDescriptor().equals(methodSignature)) {
+                if (testMethod.getName().equals(methodName) && testMethod.getDescriptor().startsWith(methodSignature)) {
                     TreePath path = methodsPath.pathByAddingChild(treeNode);
                     BrowserTreeNode codeNode = findCodeNode(treeNode, testMethod);
                     if (codeNode != null) {
