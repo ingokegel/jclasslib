@@ -25,7 +25,7 @@ import java.util.HashMap;
  * subpackage and switches between the contained panes as required.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.6 $ $Date: 2004-12-28 13:04:31 $
+ * @version $Revision: 1.7 $ $Date: 2007-10-31 12:04:13 $
  */
 public class AttributeDetailPane extends AbstractDetailPane {
 
@@ -106,7 +106,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
         if (paneName == null) {
             layout.show(specificInfoPane, SCREEN_UNKNOWN);
         } else {
-            AbstractDetailPane pane = (AbstractDetailPane)attributeTypeToDetailPane.get(paneName);
+            AbstractDetailPane pane = getDetailPane(paneName);
             pane.show(treePath);
             layout.show(specificInfoPane, paneName);
         }
@@ -121,7 +121,53 @@ public class AttributeDetailPane extends AbstractDetailPane {
      * @return the <tt>CodeAttributeDetailPane</tt>
      */
     public CodeAttributeDetailPane getCodeAttributeDetailPane() {
-        return (CodeAttributeDetailPane)attributeTypeToDetailPane.get(SCREEN_CODE);
+        return (CodeAttributeDetailPane)getDetailPane(SCREEN_CODE);
+    }
+
+    private AbstractDetailPane getDetailPane(String attributeType) {
+        AbstractDetailPane detailPane = (AbstractDetailPane)attributeTypeToDetailPane.get(attributeType);
+        if (detailPane == null) {
+            detailPane = createDetailPanel(attributeType);
+            if (detailPane != null) {
+                if (detailPane instanceof FixedListDetailPane) {
+                    specificInfoPane.add(((FixedListDetailPane)detailPane).getScrollPane(), attributeType);
+                } else {
+                    specificInfoPane.add(detailPane, attributeType);
+                }
+                attributeTypeToDetailPane.put(attributeType, detailPane);
+            }
+        }
+        return detailPane;
+    }
+
+    private AbstractDetailPane createDetailPanel(String attributeType) {
+        if (attributeType.equals(SCREEN_CONSTANT_VALUE)) {
+            return new ConstantValueAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_CODE)) {
+            return new CodeAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_EXCEPTIONS)) {
+            return new ExceptionsAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_INNER_CLASSES)) {
+            return new InnerClassesAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_SOURCE_FILE)) {
+            return new SourceFileAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_LINE_NUMBER_TABLE)) {
+            return new LineNumberTableAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_LOCAL_VARIABLE_TABLE)) {
+            return new LocalVariableTableAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_ENCLOSING_METHOD)) {
+            return new EnclosingMethodAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_SIGNATURE)) {
+            return new SignatureAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_LOCAL_VARIABLE_TYPE_TABLE)) {
+            return new LocalVariableTypeTableAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_RUNTIME_ANNOTATIONS)) {
+            return new RuntimeAnnotationsAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_ANNOTATION_DEFAULT)) {
+            return new AnnotationDefaultAttributeDetailPane(services);
+        } else {
+            return null;
+        }
     }
 
     private void buildGenericInfoPane() {
@@ -142,58 +188,11 @@ public class AttributeDetailPane extends AbstractDetailPane {
         pane = new JPanel();
         specificInfoPane.add(pane, SCREEN_UNKNOWN);
 
-        addScreen(new ConstantValueAttributeDetailPane(services),
-                SCREEN_CONSTANT_VALUE);
-
-        addScreen(new CodeAttributeDetailPane(services),
-                SCREEN_CODE);
-
-        addScreen(new ExceptionsAttributeDetailPane(services),
-                SCREEN_EXCEPTIONS);
-
-        addScreen(new InnerClassesAttributeDetailPane(services),
-                SCREEN_INNER_CLASSES);
-
-        addScreen(new SourceFileAttributeDetailPane(services),
-                SCREEN_SOURCE_FILE);
-
-        addScreen(new LineNumberTableAttributeDetailPane(services),
-                SCREEN_LINE_NUMBER_TABLE);
-
-        addScreen(new LocalVariableTableAttributeDetailPane(services),
-                SCREEN_LOCAL_VARIABLE_TABLE);
-
-        addScreen(new EnclosingMethodAttributeDetailPane(services),
-                SCREEN_ENCLOSING_METHOD);
-
-        addScreen(new SignatureAttributeDetailPane(services),
-                SCREEN_SIGNATURE);
-
-        addScreen(new LocalVariableTypeTableAttributeDetailPane(services),
-                SCREEN_LOCAL_VARIABLE_TYPE_TABLE);
-
-        addScreen(new RuntimeAnnotationsAttributeDetailPane(services),
-                SCREEN_RUNTIME_ANNOTATIONS);
-
-        addScreen(new AnnotationDefaultAttributeDetailPane(services),
-                SCREEN_ANNOTATION_DEFAULT);
-    }
-
-    private void addScreen(AbstractDetailPane detailPane, String name) {
-
-        if (detailPane instanceof FixedListDetailPane) {
-            specificInfoPane.add(((FixedListDetailPane)detailPane).getScrollPane(), name);
-        } else {
-            specificInfoPane.add(detailPane, name);
-        }
-        attributeTypeToDetailPane.put(name, detailPane);
     }
 
     private Border createTitledBorder(String title) {
         Border simpleBorder = BorderFactory.createEtchedBorder();
-        Border titledBorder = BorderFactory.createTitledBorder(simpleBorder, title);
-
-        return titledBorder;
+        return BorderFactory.createTitledBorder(simpleBorder, title);
     }
 }
 
