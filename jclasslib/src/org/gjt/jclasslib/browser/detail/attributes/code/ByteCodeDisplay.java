@@ -29,7 +29,7 @@ import java.util.*;
     Bytecode renderer.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2006-03-02 19:23:13 $
+    @version $Revision: 1.6 $ $Date: 2008-04-03 08:33:20 $
 */
 public class ByteCodeDisplay extends JPanel implements Scrollable {
 
@@ -501,6 +501,9 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
             String verbose = OpcodesUtil.getArrayTypeVerbose(immediateByte);
             appendString(" " + immediateByte + " (" + verbose + ")",
                     STYLE_IMMEDIATE_VALUE);
+
+        } else if (opcode == Opcodes.OPCODE_BIPUSH) {
+            appendString(" " + (byte)immediateByte, STYLE_IMMEDIATE_VALUE);
 
         } else {
             appendString(" " + immediateByte,
