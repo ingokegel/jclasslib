@@ -12,7 +12,7 @@ package org.gjt.jclasslib.bytecode;
     for the <tt>newarray</tt> instruction.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
+    @version $Revision: 1.3 $ $Date: 2010-07-26 13:59:48 $
 */
 public interface Opcodes {
     
@@ -202,7 +202,7 @@ public interface Opcodes {
     public static final int OPCODE_INVOKESPECIAL = 0xb7; 
     public static final int OPCODE_INVOKESTATIC = 0xb8; 
     public static final int OPCODE_INVOKEINTERFACE = 0xb9; 
-    public static final int OPCODE_XXXUNUSEDXXX = 0xba; 
+    public static final int OPCODE_INVOKEDYNAMIC = 0xba; 
     public static final int OPCODE_NEW = 0xbb; 
     public static final int OPCODE_NEWARRAY = 0xbc; 
     public static final int OPCODE_ANEWARRAY = 0xbd; 

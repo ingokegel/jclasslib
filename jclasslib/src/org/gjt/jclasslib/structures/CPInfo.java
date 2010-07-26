@@ -16,7 +16,7 @@ import java.io.IOException;
  * Base class for all constant pool entries in the <tt>constants</tt> package.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.6 $ $Date: 2004-12-28 13:04:32 $
+ * @version $Revision: 1.7 $ $Date: 2010-07-26 14:00:12 $
  */
 public abstract class CPInfo extends AbstractStructure {
 
@@ -30,6 +30,8 @@ public abstract class CPInfo extends AbstractStructure {
     public static final byte CONSTANT_LONG = 5;
     public static final byte CONSTANT_DOUBLE = 6;
     public static final byte CONSTANT_NAME_AND_TYPE = 12;
+    public static final byte CONSTANT_METHOD_HANDLE = 15;
+    public static final byte CONSTANT_METHOD_TYPE = 16;
     public static final byte CONSTANT_UTF8 = 1;
 
     public static final String CONSTANT_CLASS_VERBOSE = "CONSTANT_Class_info";
@@ -42,6 +44,8 @@ public abstract class CPInfo extends AbstractStructure {
     public static final String CONSTANT_LONG_VERBOSE = "CONSTANT_Long_info";
     public static final String CONSTANT_DOUBLE_VERBOSE = "CONSTANT_Double_info";
     public static final String CONSTANT_NAME_AND_TYPE_VERBOSE = "CONSTANT_NameAndType_info";
+    public static final String CONSTANT_METHOD_HANDLE_VERBOSE = "CONSTANT_MethodHandle_info";
+    public static final String CONSTANT_METHOD_TYPE_VERBOSE = "CONSTANT_MethodType_info";
     public static final String CONSTANT_UTF8_VERBOSE = "CONSTANT_Utf8_info";
 
     /**
@@ -92,6 +96,12 @@ public abstract class CPInfo extends AbstractStructure {
                 break;
             case CONSTANT_NAME_AND_TYPE:
                 cpInfo = new ConstantNameAndTypeInfo();
+                break;
+            case CONSTANT_METHOD_TYPE:
+                cpInfo = new ConstantMethodTypeInfo();
+                break;
+            case CONSTANT_METHOD_HANDLE:
+                cpInfo = new ConstantMethodHandleInfo();
                 break;
             case CONSTANT_UTF8:
                 cpInfo = new ConstantUtf8Info();
@@ -169,6 +179,12 @@ public abstract class CPInfo extends AbstractStructure {
                 break;
             case CONSTANT_NAME_AND_TYPE:
                 in.skipBytes(ConstantNameAndTypeInfo.SIZE);
+                break;
+            case CONSTANT_METHOD_TYPE:
+                in.skipBytes(ConstantMethodTypeInfo.SIZE);
+                break;
+            case CONSTANT_METHOD_HANDLE:
+                in.skipBytes(ConstantMethodHandleInfo.SIZE);
                 break;
             case CONSTANT_UTF8:
                 // Length of the constant is determined by the length of the byte array

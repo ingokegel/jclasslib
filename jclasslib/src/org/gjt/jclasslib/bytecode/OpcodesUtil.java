@@ -11,7 +11,7 @@ package org.gjt.jclasslib.bytecode;
     Defines utility methods for dealing with opcodes.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2006-03-02 19:23:15 $
+    @version $Revision: 1.4 $ $Date: 2010-07-26 13:59:49 $
 */
 public class OpcodesUtil implements Opcodes {
 
@@ -216,7 +216,7 @@ public class OpcodesUtil implements Opcodes {
         opcodeVerbose[OPCODE_INVOKESPECIAL] = "invokespecial";
         opcodeVerbose[OPCODE_INVOKESTATIC] = "invokestatic";
         opcodeVerbose[OPCODE_INVOKEINTERFACE] = "invokeinterface";
-        opcodeVerbose[OPCODE_XXXUNUSEDXXX] = "xxxunusedxxx";
+        opcodeVerbose[OPCODE_INVOKEDYNAMIC] = "invokedynamic";
         opcodeVerbose[OPCODE_NEW] = "new";
         opcodeVerbose[OPCODE_NEWARRAY] = "newarray";
         opcodeVerbose[OPCODE_ANEWARRAY] = "anewarray";

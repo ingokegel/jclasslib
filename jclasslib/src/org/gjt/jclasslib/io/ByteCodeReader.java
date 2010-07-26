@@ -18,7 +18,7 @@ import java.util.ArrayList;
     <tt>org.gjt.jclasslib.code</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2005-06-22 13:56:41 $
+    @version $Revision: 1.8 $ $Date: 2010-07-26 14:00:11 $
 */
 public class ByteCodeReader implements Opcodes {
 
@@ -220,7 +220,6 @@ public class ByteCodeReader implements Opcodes {
             case OPCODE_DRETURN:
             case OPCODE_ARETURN:
             case OPCODE_RETURN:
-            case OPCODE_XXXUNUSEDXXX:
             case OPCODE_ARRAYLENGTH:
             case OPCODE_ATHROW:
             case OPCODE_MONITORENTER:
@@ -316,7 +315,12 @@ public class ByteCodeReader implements Opcodes {
 
                 instruction = new InvokeInterfaceInstruction(opcode);
                 break;
-                
+
+            case OPCODE_INVOKEDYNAMIC:
+
+                instruction = new InvokeDynamicInstruction(opcode);
+                break;
+
             case OPCODE_MULTIANEWARRAY:
             
                 instruction = new MultianewarrayInstruction(opcode);
