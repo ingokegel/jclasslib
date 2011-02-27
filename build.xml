@@ -3,7 +3,7 @@
 <project name="jclasslib" default="compile">
 
   <!-- Version -->
-  <property name="jclasslib.version" value="3.0.1"/>
+  <property name="jclasslib.version" value="3.1"/>
 
   <!-- Directory with miscellaneous files needed for the build process -->
   <property name="service.dir" value="service"/>

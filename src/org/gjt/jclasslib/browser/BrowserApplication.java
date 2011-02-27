@@ -30,7 +30,7 @@ public class BrowserApplication {
     /**
      * Version of the application.
      */
-    public static final String APPLICATION_VERSION = "3.0.1";
+    public static final String APPLICATION_VERSION = "3.1";
     /**
      * Suffix for workspace files.
      */
