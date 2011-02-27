@@ -14,7 +14,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -41,7 +42,7 @@ public class BasicMDIFrame extends JFrame {
     
     /** Action for selecting the next child window. */
     protected Action actionNextWindow;
-    /** Action for selecting the provious child window. */
+    /** Action for selecting the previous child window. */
     protected Action actionPreviousWindow;
     /** Action for tiling all child windows. */
     protected Action actionTileWindows;
@@ -334,6 +335,7 @@ public class BasicMDIFrame extends JFrame {
     private JComponent buildDesktop() {
 
         desktopPane = new JDesktopPane();
+        desktopPane.setBackground(Color.LIGHT_GRAY);
         desktopManager = createDesktopManager();
         desktopPane.setDesktopManager(desktopManager);
         scpDesktop = new JScrollPane(desktopPane);
