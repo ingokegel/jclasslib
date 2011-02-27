@@ -3,7 +3,7 @@
 <project name="jclasslib" default="compile">
 
   <!-- Version -->
-  <property name="jclasslib.version" value="3.0"/>
+  <property name="jclasslib.version" value="3.0.1"/>
 
   <!-- Directory with miscellaneous files needed for the build process -->
   <property name="service.dir" value="service"/>
@@ -33,7 +33,7 @@
 
   <!-- Location of license file -->
   <property name="license.file" value="license"/>
-  <property name="install4j.classpath" value="/opt/install4j/bin/install4j.jar:/Program Files/install4j/bin/install4j.jar:/Programme/install4j/bin/install4j.jar"/>
+  <property name="install4j.classpath" value="/opt/install4j5/bin/ant.jar:/Program Files/install4j5/bin/ant.jar:/Programme/install4j5/bin/ant.jar"/>
 
   <!-- Make all standard directories -->
   <target name="init">
@@ -58,7 +58,7 @@
   </target>
 
   <target name="compile" depends="init" description="Compile source code">
-    <javac srcdir="${src.dir}" destdir="${build.dir}" target="1.4" source="1.4"/>
+    <javac srcdir="${src.dir}" destdir="${build.dir}" target="1.6" source="1.6"/>
     <copy todir="${build.dir}">
       <fileset dir="${src.dir}">
         <include name="**/*.gif"/>
