@@ -68,9 +68,9 @@ public class IncrementInstruction extends ImmediateByteInstruction {
         super.read(in);
 
         if (wide) {
-            incrementConst = in.readUnsignedShort();
+            incrementConst = in.readShort();
         } else {
-            incrementConst = in.readUnsignedByte();
+            incrementConst = in.readByte();
         }
     }
 
@@ -82,6 +82,11 @@ public class IncrementInstruction extends ImmediateByteInstruction {
         } else {
             out.writeByte(incrementConst);
         }
+    }
+
+    public static void main(String[] args) {
+        byte b = -100;
+
     }
     
 }
