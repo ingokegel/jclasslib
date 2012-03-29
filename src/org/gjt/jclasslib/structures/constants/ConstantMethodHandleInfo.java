@@ -95,7 +95,7 @@ public class ConstantMethodHandleInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(CONSTANT_METHOD_TYPE);
+        out.writeByte(CONSTANT_METHOD_HANDLE);
         out.write(type);
         out.writeShort(referenceIndex);
         if (debug) debug("wrote ");

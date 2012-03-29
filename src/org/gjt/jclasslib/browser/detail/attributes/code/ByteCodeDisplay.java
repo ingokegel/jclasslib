@@ -609,7 +609,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
         try {
             String name = classFile.getConstantPoolEntryName(constantPoolIndex);
-            if (true /*name != null*/) {
+            if (name != null) {
                 if (name.length() > 0) {
                     appendString(" <" + name + ">", STYLE_SMALL);
                 }

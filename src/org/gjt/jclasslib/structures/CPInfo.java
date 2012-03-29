@@ -32,6 +32,7 @@ public abstract class CPInfo extends AbstractStructure {
     public static final byte CONSTANT_NAME_AND_TYPE = 12;
     public static final byte CONSTANT_METHOD_HANDLE = 15;
     public static final byte CONSTANT_METHOD_TYPE = 16;
+    public static final byte CONSTANT_INVOKE_DYNAMIC = 18;
     public static final byte CONSTANT_UTF8 = 1;
 
     public static final String CONSTANT_CLASS_VERBOSE = "CONSTANT_Class_info";
@@ -46,6 +47,7 @@ public abstract class CPInfo extends AbstractStructure {
     public static final String CONSTANT_NAME_AND_TYPE_VERBOSE = "CONSTANT_NameAndType_info";
     public static final String CONSTANT_METHOD_HANDLE_VERBOSE = "CONSTANT_MethodHandle_info";
     public static final String CONSTANT_METHOD_TYPE_VERBOSE = "CONSTANT_MethodType_info";
+    public static final String CONSTANT_INVOKE_DYNAMIC_VERBOSE = "CONSTANT_InvokeDynamic_info";
     public static final String CONSTANT_UTF8_VERBOSE = "CONSTANT_Utf8_info";
 
     /**
@@ -102,6 +104,9 @@ public abstract class CPInfo extends AbstractStructure {
                 break;
             case CONSTANT_METHOD_HANDLE:
                 cpInfo = new ConstantMethodHandleInfo();
+                break;
+            case CONSTANT_INVOKE_DYNAMIC:
+                cpInfo = new ConstantInvokeDynamicInfo();
                 break;
             case CONSTANT_UTF8:
                 cpInfo = new ConstantUtf8Info();
@@ -185,6 +190,9 @@ public abstract class CPInfo extends AbstractStructure {
                 break;
             case CONSTANT_METHOD_HANDLE:
                 in.skipBytes(ConstantMethodHandleInfo.SIZE);
+                break;
+            case CONSTANT_INVOKE_DYNAMIC:
+                in.skipBytes(ConstantInvokeDynamicInfo.SIZE);
                 break;
             case CONSTANT_UTF8:
                 // Length of the constant is determined by the length of the byte array
