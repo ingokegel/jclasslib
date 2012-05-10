@@ -37,7 +37,8 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     private static final String SCREEN_CONSTANT_NAME_AND_TYPE_INFO = "ConstantNameAndTypeInfo";
     private static final String SCREEN_CONSTANT_STRING_INFO = "ConstantStringInfo";
     private static final String SCREEN_CONSTANT_REFERENCE = "ConstantReference";
-    
+    private static final String SCREEN_CONSTANT_INVOKE_DYNAMIC = "ConstantInvokeDynamic";
+
     private HashMap constantTypeToDetailPane;
 
     /**
@@ -83,7 +84,10 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
                 
         addScreen(new ConstantReferenceDetailPane(services),
             SCREEN_CONSTANT_REFERENCE);
-                
+
+        addScreen(new ConstantInvokeDynamicInfoDetailPane(services),
+            SCREEN_CONSTANT_INVOKE_DYNAMIC);
+
     }
     
     public void show(TreePath treePath) {
@@ -110,6 +114,8 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
             paneName = SCREEN_CONSTANT_STRING_INFO;
         } else if (constantPoolEntry instanceof ConstantReference) {
             paneName = SCREEN_CONSTANT_REFERENCE;
+        } else if (constantPoolEntry instanceof ConstantInvokeDynamicInfo) {
+            paneName = SCREEN_CONSTANT_INVOKE_DYNAMIC;
         }
 
     
