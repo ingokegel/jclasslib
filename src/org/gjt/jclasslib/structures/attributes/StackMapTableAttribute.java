@@ -15,41 +15,41 @@ import java.io.*;
 /**
     Describes a <tt>BootstrapMethods</tt> attribute structure.
 */
-public class BootstrapMethodsAttribute extends AttributeInfo {
+public class StackMapTableAttribute extends AttributeInfo {
 
     /** Name of the attribute as in the corresponding constant pool entry. */
-    public static final String ATTRIBUTE_NAME = "BootstrapMethods";
+    public static final String ATTRIBUTE_NAME = "StackMapTable";
 
     private static final int INITIAL_LENGTH = 2;
     
-    private BootstrapMethodsEntry[] methods;
+    private StackMapFrameEntry[] entries;
     
     /**
-        Get the list of bootstrap method references in the <tt>BootstrapMethodsAttribute</tt> structure
+        Get the list of stackMapFrame entries in the <tt>StackMapTableAttribute</tt> structure
         as an array of <tt>BootstrapMethodsEntry</tt> structures.
         @return the array
      */
-      public BootstrapMethodsEntry[] getMethods() {
-        return methods;
+      public StackMapFrameEntry[] getEntries() {
+        return entries;
     }
 
     /**
-        Set the list of bootstrap method references in the <tt>BootstrapMethodsAttribute</tt> structure
-        as an array of <tt>BootstrapMethodsEntry</tt> structures.
+        Set the list of stackMapFrame entries in the <tt>StackMapTableAttribute</tt> structure
+        as an array of <tt>StackMapFrameEntry</tt> structures.
         @param methods the array
      */
-    public void setMethods(BootstrapMethodsEntry[] methods) {
-        this.methods = methods;
+    public void setMethods(StackMapFrameEntry[] entries) {
+        this.entries = entries;
     }
     
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
             
-        int numberOfRefs= in.readUnsignedShort();
-        methods = new BootstrapMethodsEntry[numberOfRefs];
+        int numberOfEntries= in.readUnsignedShort();
+        entries = new StackMapFrameEntry[numberOfEntries];
         
-        for (int i = 0; i < numberOfRefs; i++) {
-        	methods[i] = BootstrapMethodsEntry.create(in, classFile);
+        for (int i = 0; i < numberOfEntries; i++) {
+        	entries[i] = StackMapFrameEntry.create(in, classFile);
         }
 
         if (debug) debug("read ");
@@ -60,25 +60,25 @@ public class BootstrapMethodsAttribute extends AttributeInfo {
         
         super.write(out);
 
-        int numberOfRefs = getLength(methods);
+        int numberOfRefs = getLength(entries);
         
         out.writeShort(numberOfRefs);
         for (int i = 0 ; i < numberOfRefs; i++) {
-        	methods[i].write(out);
+        	entries[i].write(out);
         }
         if (debug) debug("wrote ");
     }
 
     public int getAttributeLength() {
     	int size = INITIAL_LENGTH;
-    	for (int i=0; i < methods.length; i++) {
-    		size += methods[i].getLength();
+    	for (int i=0; i < entries.length; i++) {
+    		size += entries[i].getLength();
     	}
         return size;
     }
 
     protected void debug(String message) {
-        super.debug(message + "BootstrapMethods attribute with " + getLength(methods) + " references");
+        super.debug(message + "StackMapTable attribute with " + getLength(entries) + " entries");
     }
 
 }

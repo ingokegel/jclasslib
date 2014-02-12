@@ -24,12 +24,12 @@ public class BootstrapMethodsEntry extends AbstractStructure {
     private int argumentRefs[];
 
     /**
-     * Factory method for creating <tt>InnerClassesEntry</tt> structures.
+     * Factory method for creating <tt>BootstrapMethodsEntry</tt> structures.
      *
      * @param in        the <tt>DataInput</tt> from which to read the
      *                  <tt>BootstrapMethodsEntry</tt> structure
      * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>BootstrapMethos</tt> structure
+     * @return the new <tt>BootstrapMethodsEntry</tt> structure
      * @throws InvalidByteCodeException if the byte code is invalid
      * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
      */

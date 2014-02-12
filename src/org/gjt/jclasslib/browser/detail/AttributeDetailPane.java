@@ -44,6 +44,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
     private static final String SCREEN_RUNTIME_ANNOTATIONS = "RuntimeAnnotations";
     private static final String SCREEN_ANNOTATION_DEFAULT = "AnnotationDefault";
     private static final String SCREEN_BOOTSTRAP_METHODS = "BootstrapMethods";
+    private static final String SCREEN_STACK_MAP_TABLE = "StackMapTable";
 
     private HashMap attributeTypeToDetailPane;
     
@@ -104,6 +105,8 @@ public class AttributeDetailPane extends AbstractDetailPane {
             paneName = SCREEN_ANNOTATION_DEFAULT;
         } else if (attribute instanceof BootstrapMethodsAttribute) {
         	paneName = SCREEN_BOOTSTRAP_METHODS;
+        } else if (attribute instanceof StackMapTableAttribute) {
+        	paneName = SCREEN_STACK_MAP_TABLE;
         }
 
         CardLayout layout = (CardLayout)specificInfoPane.getLayout();
@@ -171,6 +174,8 @@ public class AttributeDetailPane extends AbstractDetailPane {
             return new AnnotationDefaultAttributeDetailPane(services);
         } else if (attributeType.equals(SCREEN_BOOTSTRAP_METHODS)) {
             return new BootstrapMethodsAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_STACK_MAP_TABLE)) {
+        	return new StackMapTableAttributeDetailPane(services);
         } else {
             return null;
         }

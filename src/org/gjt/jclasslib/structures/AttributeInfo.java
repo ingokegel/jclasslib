@@ -111,6 +111,8 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
                 attributeInfo = new AnnotationDefaultAttribute();
             } else if (BootstrapMethodsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
             	attributeInfo = new BootstrapMethodsAttribute();
+            } else if (StackMapTableAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+            	attributeInfo = new StackMapTableAttribute();
             } else {
                 attributeInfo = new AttributeInfo(attributeLength);
             }
