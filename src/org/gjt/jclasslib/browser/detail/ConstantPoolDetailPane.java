@@ -38,6 +38,8 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     private static final String SCREEN_CONSTANT_STRING_INFO = "ConstantStringInfo";
     private static final String SCREEN_CONSTANT_REFERENCE = "ConstantReference";
     private static final String SCREEN_CONSTANT_INVOKE_DYNAMIC = "ConstantInvokeDynamic";
+    private static final String SCREEN_CONSTANT_METHOD_HANDLE = "ConstantMethodHandle";
+    private static final String SCREEN_CONSTANT_METHOD_TYPE = "ConstantMethodType";
 
     private HashMap constantTypeToDetailPane;
 
@@ -87,6 +89,11 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
 
         addScreen(new ConstantInvokeDynamicInfoDetailPane(services),
             SCREEN_CONSTANT_INVOKE_DYNAMIC);
+        
+        addScreen(new ConstantMethodHandleDetailPane(services),
+            	SCREEN_CONSTANT_METHOD_HANDLE);
+        addScreen(new ConstantMethodTypeDetailPane(services),
+                    	SCREEN_CONSTANT_METHOD_TYPE);
 
     }
     
@@ -116,6 +123,10 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
             paneName = SCREEN_CONSTANT_REFERENCE;
         } else if (constantPoolEntry instanceof ConstantInvokeDynamicInfo) {
             paneName = SCREEN_CONSTANT_INVOKE_DYNAMIC;
+        } else if (constantPoolEntry instanceof ConstantMethodHandleInfo) {
+        	paneName= SCREEN_CONSTANT_METHOD_HANDLE;
+        } else if (constantPoolEntry instanceof ConstantMethodTypeInfo) {
+        	paneName = SCREEN_CONSTANT_METHOD_TYPE;
         }
 
     
