@@ -16,6 +16,7 @@ import org.gjt.jclasslib.structures.attributes.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.util.HashMap;
 
@@ -42,6 +43,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
     private static final String SCREEN_LOCAL_VARIABLE_TYPE_TABLE = "LocalVariableTypeTable";
     private static final String SCREEN_RUNTIME_ANNOTATIONS = "RuntimeAnnotations";
     private static final String SCREEN_ANNOTATION_DEFAULT = "AnnotationDefault";
+    private static final String SCREEN_BOOTSTRAP_METHODS = "BootstrapMethods";
 
     private HashMap attributeTypeToDetailPane;
     
@@ -100,6 +102,8 @@ public class AttributeDetailPane extends AbstractDetailPane {
             paneName = SCREEN_RUNTIME_ANNOTATIONS;
         } else if (attribute instanceof AnnotationDefaultAttribute) {
             paneName = SCREEN_ANNOTATION_DEFAULT;
+        } else if (attribute instanceof BootstrapMethodsAttribute) {
+        	paneName = SCREEN_BOOTSTRAP_METHODS;
         }
 
         CardLayout layout = (CardLayout)specificInfoPane.getLayout();
@@ -165,6 +169,8 @@ public class AttributeDetailPane extends AbstractDetailPane {
             return new RuntimeAnnotationsAttributeDetailPane(services);
         } else if (attributeType.equals(SCREEN_ANNOTATION_DEFAULT)) {
             return new AnnotationDefaultAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_BOOTSTRAP_METHODS)) {
+            return new BootstrapMethodsAttributeDetailPane(services);
         } else {
             return null;
         }
