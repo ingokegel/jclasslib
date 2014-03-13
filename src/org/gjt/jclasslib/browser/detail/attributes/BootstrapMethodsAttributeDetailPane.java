@@ -45,7 +45,7 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
         private static final int BOOTSTAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 1;
      
         private static final int METHOD_REF_LINK_COLUMN_WIDTH = 200;
-        private static final int ARGUMENTS_REF_LINK_COLUMN_WIDTH = 50;
+        private static final int ARGUMENTS_REF_LINK_COLUMN_WIDTH = 250;
         
         private BootstrapMethodsEntry[] bootstrapMethods;
         

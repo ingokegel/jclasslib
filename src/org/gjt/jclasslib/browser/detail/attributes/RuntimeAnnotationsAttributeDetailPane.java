@@ -8,6 +8,7 @@ package org.gjt.jclasslib.browser.detail.attributes;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.detail.FixedListDetailPane;
+import org.gjt.jclasslib.structures.attributes.AnnotationHolder;
 import org.gjt.jclasslib.structures.attributes.RuntimeAnnotationsAttribute;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
@@ -40,10 +41,10 @@ public class RuntimeAnnotationsAttributeDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        RuntimeAnnotationsAttribute raa =
-                (RuntimeAnnotationsAttribute)findAttribute(treePath);
+        AnnotationHolder ah =
+                (AnnotationHolder)findAttribute(treePath);
 
-        lblAnnotationEntries.setText(String.valueOf(raa.getRuntimeAnnotations().length));
+        lblAnnotationEntries.setText(String.valueOf(ah.getNumberOfAnnotations()));
 
         super.show(treePath);
 

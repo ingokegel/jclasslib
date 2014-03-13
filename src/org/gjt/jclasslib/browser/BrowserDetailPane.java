@@ -8,9 +8,11 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.browser.detail.*;
+import org.gjt.jclasslib.browser.detail.attributes.BootstrapMethodAttributeDetailPane;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.util.HashMap;
 
@@ -107,12 +109,16 @@ public class BrowserDetailPane extends JPanel {
             return new AttributeDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ANNOTATION)) {
             return new AnnotationDetailPane(services);
+        } else if (nodeType.equals(BrowserTreeNode.NODE_TYPE_ANNOTATION)) {
+            return new TypeAnnotationDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUE)) {
             return new ElementValueDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUEPAIR)) {
             return new ElementValuePairDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ARRAYELEMENTVALUE)) {
             return new ArrayElementValueDetailPane(services);
+        } else if (nodeType.equals(BrowserTreeNode.BOOTSTRAP_METHOD_ANNOTATION)) {
+            return new BootstrapMethodAttributeDetailPane(services);
         } else {
             return null;
         }

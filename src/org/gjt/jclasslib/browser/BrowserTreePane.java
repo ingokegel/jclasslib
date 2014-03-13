@@ -14,6 +14,7 @@ import org.gjt.jclasslib.structures.elementvalues.*;
 
 import javax.swing.*;
 import javax.swing.tree.*;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class BrowserTreePane extends JPanel {
 
     private BrowserServices services;
     private JTree tree;
-    private Map categoryToPath = new HashMap();
+    private Map<String, TreePath> categoryToPath = new HashMap<String, TreePath>();
 
     /**
      * Constructor.
@@ -343,6 +344,10 @@ public class BrowserTreePane extends JPanel {
                     addRuntimeAnnotation(entryNode, (RuntimeAnnotationsAttribute)attribute);
                 } else if (attribute instanceof AnnotationDefaultAttribute) {
                     addSingleElementValueEntryNode(((AnnotationDefaultAttribute)attribute).getDefaultValue(), 0, 1, entryNode);
+                } else if (attribute instanceof RuntimeTypeAnnotationsAttribute) {
+                	addRuntimeTypeAnnotation(entryNode, (RuntimeTypeAnnotationsAttribute)attribute);
+                } else if (attribute instanceof BootstrapMethodsAttribute) {
+                	addBootstrapMethodAnnotation(entryNode, (BootstrapMethodsAttribute)attribute);
                 } else {
                     addAttributeNodes(entryNode, attribute);
                 }
@@ -415,6 +420,74 @@ public class BrowserTreePane extends JPanel {
             addElementValuePairEntry(entryNode, annotation);
         }
     }
+
+    
+	private void addRuntimeTypeAnnotation(BrowserTreeNode parentNode,
+			RuntimeTypeAnnotationsAttribute structure) {
+
+		TypeAnnotationElementValue[] annotations = structure
+				.getRuntimeAnnotations();
+		if (annotations == null) {
+			return;
+		}
+		int annotationsCount = annotations.length;
+		for (int i = 0; i < annotationsCount; i++) {
+			addSingleTypeAnnotationNode(annotations[i], i, annotationsCount,
+					parentNode);
+		}
+	}
+    
+	private void addSingleTypeAnnotationNode(
+			TypeAnnotationElementValue annotation, int index,
+			int attributesCount, BrowserTreeNode parentNode) {
+
+		if (annotation == null) {
+			parentNode.add(buildNullNode());
+		} else {
+			BrowserTreeNode entryNode = new BrowserTreeNode(getFormattedIndex(
+					index, attributesCount) + annotation.getEntryName(),
+					BrowserTreeNode.NODE_TYPE_ANNOTATION, index, annotation);
+			parentNode.add(entryNode);
+			addSingleAnnotationNode(annotation.getAnnotation(), 0, 1,
+					entryNode);
+		}
+	}
+	
+	private void addBootstrapMethodAnnotation(BrowserTreeNode parentNode,
+			BootstrapMethodsAttribute structure) {
+
+		BootstrapMethodsEntry[] annotations = structure
+				.getMethods();
+		if (annotations == null) {
+			return;
+		}
+		int annotationsCount = annotations.length;
+		for (int i = 0; i < annotationsCount; i++) {
+			addSingleBootstrapMethodNode(annotations[i], i, annotationsCount,
+					parentNode);
+		}
+	}
+    
+	private void addSingleBootstrapMethodNode(
+			BootstrapMethodsEntry annotation, int index,
+			int attributesCount, BrowserTreeNode parentNode) {
+
+		if (annotation == null) {
+			parentNode.add(buildNullNode());
+		} else {
+			String name = null;
+			try {
+				name = services.getClassFile().getConstantPool()[annotation.getMethodRefIndexIndex()].getVerbose();
+			} catch (InvalidByteCodeException e) {
+				e.printStackTrace();
+				name="UNKNOWN";
+			}
+			BrowserTreeNode entryNode = new BrowserTreeNode(getFormattedIndex(
+					index, attributesCount)+name,
+					BrowserTreeNode.BOOTSTRAP_METHOD_ANNOTATION, index, annotation);
+			parentNode.add(entryNode);
+		}
+	}
 
     private void addElementValuePairEntry(BrowserTreeNode parentNode,
                                           AnnotationElementValue annotation) {

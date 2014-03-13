@@ -9,19 +9,18 @@ package org.gjt.jclasslib.structures.attributes;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
+import org.gjt.jclasslib.structures.elementvalues.TypeAnnotationElementValue;
 
 import java.io.*;
 
 /**
- * Common class for runtime annotations.
+ * Common class for runtime type annotations.
  *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:32 $
  */
-public class RuntimeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder{
+public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder{
     private static final int INITIAL_LENGTH = 2;
 
-    protected AnnotationElementValue[] runtimeAnnotations;
+    protected TypeAnnotationElementValue[] runtimeTypeAnnotations;
 
 
     /**
@@ -30,8 +29,8 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
      *
      * @return the array
      */
-    public AnnotationElementValue[] getRuntimeAnnotations() {
-        return runtimeAnnotations;
+    public TypeAnnotationElementValue[] getRuntimeAnnotations() {
+        return runtimeTypeAnnotations;
     }
 
     /**
@@ -40,8 +39,8 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
      *
      * @param runtimeAnnotations the array
      */
-    public void setRuntimeAnnotations(AnnotationElementValue[] runtimeAnnotations) {
-        this.runtimeAnnotations = runtimeAnnotations;
+    public void setRuntimeAnnotations(TypeAnnotationElementValue[] runtimeAnnotations) {
+        this.runtimeTypeAnnotations = runtimeAnnotations;
     }
 
     public void read(DataInput in)
@@ -50,11 +49,11 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
         super.read(in);
 
         int runtimeVisibleAnnotationsLength = in.readUnsignedShort();
-        runtimeAnnotations = new AnnotationElementValue[runtimeVisibleAnnotationsLength];
+        runtimeTypeAnnotations = new TypeAnnotationElementValue[runtimeVisibleAnnotationsLength];
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i] = new AnnotationElementValue();
-            runtimeAnnotations[i].setClassFile(classFile);
-            runtimeAnnotations[i].read(in);
+            runtimeTypeAnnotations[i] = new TypeAnnotationElementValue();
+            runtimeTypeAnnotations[i].setClassFile(classFile);
+            runtimeTypeAnnotations[i].read(in);
         }
 
         if (debug) debug("read ");
@@ -65,11 +64,11 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
 
         super.write(out);
 
-        int runtimeVisibleAnnotationsLength = getLength(runtimeAnnotations);
+        int runtimeVisibleAnnotationsLength = getLength(runtimeTypeAnnotations);
 
         out.writeShort(runtimeVisibleAnnotationsLength);
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i].write(out);
+            runtimeTypeAnnotations[i].write(out);
         }
 
         if (debug) debug("wrote ");
@@ -77,15 +76,13 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
 
     public int getAttributeLength() {
         int length = INITIAL_LENGTH;
-        for (int i = 0; i < runtimeAnnotations.length; i++) {
-            length += runtimeAnnotations[i].getLength();
+        for (int i = 0; i < runtimeTypeAnnotations.length; i++) {
+            length += runtimeTypeAnnotations[i].getLength();
         }
         return length;
     }
-
+    
 	public int getNumberOfAnnotations() {
-		return runtimeAnnotations.length;
+		return runtimeTypeAnnotations.length;
 	}
-    
-    
 }

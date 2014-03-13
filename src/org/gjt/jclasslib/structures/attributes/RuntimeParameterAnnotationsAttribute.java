@@ -13,12 +13,9 @@ import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
 import java.io.*;
 
 /**
- * Common class for runtime annotations.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:32 $
+ * Common class for runtime parameter annotations.
  */
-public class RuntimeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder{
+public class RuntimeParameterAnnotationsAttribute extends AttributeInfo {
     private static final int INITIAL_LENGTH = 2;
 
     protected AnnotationElementValue[] runtimeAnnotations;
@@ -82,10 +79,4 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
         }
         return length;
     }
-
-	public int getNumberOfAnnotations() {
-		return runtimeAnnotations.length;
-	}
-    
-    
 }

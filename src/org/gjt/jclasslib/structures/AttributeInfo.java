@@ -103,9 +103,19 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
 
             } else if (RuntimeVisibleAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new RuntimeVisibleAnnotationsAttribute();
-
             } else if (RuntimeInvisibleAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new RuntimeInvisibleAnnotationsAttribute();
+
+//            } else if (RuntimeVisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+//                attributeInfo = new RuntimeVisibleParameterAnnotationsAttribute();
+//            } else if (RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+//                attributeInfo = new RuntimeInvisibleParameterAnnotationsAttribute();
+//                
+            } else if (RuntimeVisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+                attributeInfo = new RuntimeVisibleTypeAnnotationsAttribute();
+            } else if (RuntimeInvisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+                attributeInfo = new RuntimeInvisibleTypeAnnotationsAttribute();
+
 
             } else if (AnnotationDefaultAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new AnnotationDefaultAttribute();
