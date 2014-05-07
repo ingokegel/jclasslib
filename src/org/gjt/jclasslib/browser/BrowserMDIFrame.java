@@ -667,7 +667,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
                 GUIHelper.showURL("http://www.ej-technologies.com");
             } else if (this == actionShowHelp) {
                 try {
-                    GUIHelper.showURL(new File("doc/help.html").getCanonicalFile().toURL().toExternalForm());
+                    GUIHelper.showURL(new File("doc/help.html").getCanonicalFile().toURI().toURL().toExternalForm());
                 } catch (IOException e) {
                 }
             } else if (this == actionAbout) {

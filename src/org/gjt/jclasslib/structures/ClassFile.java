@@ -732,7 +732,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private void checkMajorVersion(int majorVersion) {
 
         if (majorVersion < 45 || majorVersion > 52) {
-            Log.warning("major version should be between 45 and 51 for JDK <= 1.8");
+            Log.warning("major version should be between 45 and 51 for JDK <= 1.8, was " + majorVersion);
         }
 
     }

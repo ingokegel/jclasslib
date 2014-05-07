@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.JavaMajorVersion;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -27,6 +28,7 @@ public class GeneralDetailPane extends FixedListDetailPane {
     
     private ExtendedJLabel lblMinorVersion;
     private ExtendedJLabel lblMajorVersion;
+    private ExtendedJLabel lblMajorVersionVerbose;
     private ExtendedJLabel lblConstantPoolCount;
     private ExtendedJLabel lblAccessFlags;
     private ExtendedJLabel lblAccessFlagsVerbose;
@@ -53,7 +55,8 @@ public class GeneralDetailPane extends FixedListDetailPane {
                            lblMinorVersion = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Major version:"),
-                           lblMajorVersion = highlightLabel());
+                           lblMajorVersion = highlightLabel(),
+                           lblMajorVersionVerbose = highlightLabel());
         
         addDetailPaneEntry(normalLabel("Constant pool count:"),
                            lblConstantPoolCount = highlightLabel());
@@ -90,6 +93,8 @@ public class GeneralDetailPane extends FixedListDetailPane {
         
         lblMinorVersion.setText(classFile.getMinorVersion());
         lblMajorVersion.setText(classFile.getMajorVersion());
+        JavaMajorVersion javaMajorVersion = JavaMajorVersion.valueOf(classFile.getMajorVersion());
+        lblMajorVersionVerbose.setText("[" + (javaMajorVersion != null ? javaMajorVersion : "unknown") + "]");
         lblConstantPoolCount.setText(classFile.getConstantPool().length);
 
         lblAccessFlags.setText(classFile.getFormattedAccessFlags());
@@ -110,6 +115,6 @@ public class GeneralDetailPane extends FixedListDetailPane {
 
         super.show(treePath);
     }
-    
+
 }
 
