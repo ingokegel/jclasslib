@@ -22,6 +22,7 @@ import java.awt.event.KeyEvent;
 import java.beans.*;
 import java.io.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.prefs.Preferences;
 
 
@@ -33,7 +34,8 @@ import java.util.prefs.Preferences;
  */
 public class BrowserMDIFrame extends BasicMDIFrame {
 
-    static final ImageIcon ICON_APPLICATION = loadIcon("jclasslib.gif");
+    static final ImageIcon ICON_APPLICATION_16 = loadIcon("jclasslib_16.png");
+    static final ImageIcon ICON_APPLICATION_32 = loadIcon("jclasslib_32.png");
 
     private static final String SETTINGS_WORKSPACE_CHOOSER_PATH = "workspaceChooserPath";
     private static final String SETTINGS_CLASSES_CHOOSER_PATH = "classesChooserPath";
@@ -365,7 +367,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         Container contentPane = getContentPane();
 
         contentPane.add(buildToolbar(), BorderLayout.NORTH);
-        setIconImage(ICON_APPLICATION.getImage());
+        setIconImages(Arrays.asList(ICON_APPLICATION_16.getImage(), ICON_APPLICATION_32.getImage()));
     }
 
     private void updateTitle() {

@@ -61,7 +61,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
         super(desktopManager, windowState.getFileName());
         this.fileName = windowState.getFileName();
 
-        setFrameIcon(BrowserMDIFrame.ICON_APPLICATION);
+        setFrameIcon(BrowserMDIFrame.ICON_APPLICATION_16);
         readClassFile();
         setupInternalFrame(windowState.getBrowserPath());
     }
