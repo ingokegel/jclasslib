@@ -11,7 +11,6 @@ import com.install4j.api.Util;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -50,7 +49,7 @@ public class GUIHelper {
         return JOptionPane.showOptionDialog(parent,
                 message,
                 MESSAGE_TITLE,
-                0,
+                JOptionPane.YES_NO_OPTION,
                 messageType,
                 null,
                 options,
@@ -90,7 +89,7 @@ public class GUIHelper {
      * Set reasonable unit increments for a scroll pane that does not contain a
      * <tt>Scrollable</tt>.
      *
-     * @param scrollPane
+     * @param scrollPane the scroll pane
      */
     public static void setDefaultScrollbarUnits(JScrollPane scrollPane) {
 

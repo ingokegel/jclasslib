@@ -17,22 +17,14 @@ import java.util.LinkedList;
 */
 public class BrowserPath {
 
-    private LinkedList pathComponents = new LinkedList();
+    private LinkedList<PathComponent> pathComponents = new LinkedList<PathComponent>();
 
     /**
      * Get the list of browser path {@link PathComponent component}s.
      * @return the list.
      */
-    public LinkedList getPathComponents() {
+    public LinkedList<PathComponent> getPathComponents() {
         return pathComponents;
-    }
-
-    /**
-     * Set the list of browser path components.
-     * @param pathComponents the list.
-     */
-    public void setPathComponents(LinkedList pathComponents) {
-        this.pathComponents = pathComponents;
     }
 
     /**

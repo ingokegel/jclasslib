@@ -26,12 +26,6 @@ public class CategoryHolder implements PathComponent {
     }
 
     /**
-     * Constructor.
-     */
-    public CategoryHolder() {
-    }
-
-    /**
      * Get the category.
      * @return the category.
      */

@@ -87,7 +87,7 @@ public abstract class AbstractInstruction implements Opcodes {
     /**
         Read this instruction from the given <tt>ByteCodeInput</tt>. <p>
      
-        Excpects <tt>ByteCodeInput</tt> to be in JVM class file format and just
+        Expects <tt>ByteCodeInput</tt> to be in JVM class file format and just
         before a instruction of this kind.
         @param in the <tt>ByteCodeInput</tt> from which to read
         @throws IOException if an exception occurs with the <tt>ByteCodeInput</tt>

@@ -12,6 +12,7 @@ import org.gjt.jclasslib.bytecode.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
     Converts code to a list of instructions as defined in the package
@@ -31,7 +32,7 @@ public class ByteCodeReader implements Opcodes {
         @return the <tt>java.util.List</tt> with the instructions
         @throws IOException if an exception occurs with the code
      */
-    public static ArrayList readByteCode(byte[] code) throws IOException {
+    public static ArrayList<AbstractInstruction> readByteCode(byte[] code) throws IOException {
         return readByteCode(code, null);
     }
 
@@ -42,18 +43,16 @@ public class ByteCodeReader implements Opcodes {
         @return the <tt>java.util.List</tt> with the instructions
         @throws IOException if an exception occurs with the code
      */
-    public static ArrayList readByteCode(byte[] code, AbstractInstruction[] prependInstructions)
+    public static ArrayList<AbstractInstruction> readByteCode(byte[] code, AbstractInstruction[] prependInstructions)
         throws IOException {
 
         ByteCodeInputStream bcis = new ByteCodeInputStream(
                                         new ByteArrayInputStream(code)
                                     );
         
-        ArrayList instructions = new ArrayList();
+        ArrayList<AbstractInstruction> instructions = new ArrayList<AbstractInstruction>();
         if (prependInstructions != null) {
-            for (int i = 0; i < prependInstructions.length; i++) {
-                instructions.add(prependInstructions[i]);
-            }
+            Collections.addAll(instructions, prependInstructions);
         }
         
         boolean wide = false;

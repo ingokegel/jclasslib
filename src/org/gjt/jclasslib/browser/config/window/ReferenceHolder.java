@@ -29,12 +29,6 @@ public class ReferenceHolder implements PathComponent {
     }
 
     /**
-     * Constructor.
-     */
-    public ReferenceHolder() {
-    }
-
-    /**
      * Get the name of the reference.
      * @return the name.
      */

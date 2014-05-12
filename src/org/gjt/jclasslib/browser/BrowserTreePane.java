@@ -8,9 +8,14 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.structures.attributes.*;
+import org.gjt.jclasslib.structures.attributes.AnnotationDefaultAttribute;
+import org.gjt.jclasslib.structures.attributes.CodeAttribute;
+import org.gjt.jclasslib.structures.attributes.RuntimeAnnotationsAttribute;
 import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
-import org.gjt.jclasslib.structures.elementvalues.*;
+import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
+import org.gjt.jclasslib.structures.elementvalues.ArrayElementValue;
+import org.gjt.jclasslib.structures.elementvalues.ElementValue;
+import org.gjt.jclasslib.structures.elementvalues.ElementValuePair;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -32,7 +37,7 @@ public class BrowserTreePane extends JPanel {
 
     private BrowserServices services;
     private JTree tree;
-    private Map categoryToPath = new HashMap();
+    private Map<String, TreePath> categoryToPath = new HashMap<String, TreePath>();
 
     /**
      * Constructor.
@@ -61,7 +66,7 @@ public class BrowserTreePane extends JPanel {
      * @return the tree path.
      */
     public TreePath getPathForCategory(String category) {
-        return (TreePath)categoryToPath.get(category);
+        return categoryToPath.get(category);
     }
 
     /**
@@ -72,7 +77,7 @@ public class BrowserTreePane extends JPanel {
      */
     public void showMethod(String methodName, String methodSignature) {
 
-        TreePath methodsPath = (TreePath)categoryToPath.get(BrowserTreeNode.NODE_METHOD);
+        TreePath methodsPath = categoryToPath.get(BrowserTreeNode.NODE_METHOD);
         if (methodsPath == null) {
             return;
         }
@@ -130,9 +135,7 @@ public class BrowserTreePane extends JPanel {
 
     private TreeModel buildTreeModel() {
         BrowserTreeNode rootNode = buildRootNode();
-        DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
-
-        return treeModel;
+        return new DefaultTreeModel(rootNode);
     }
 
     private BrowserTreeNode buildRootNode() {
@@ -356,7 +359,7 @@ public class BrowserTreePane extends JPanel {
 
     private String getFormattedIndex(int index, int maxIndex) {
 
-        StringBuffer buffer = new StringBuffer("[");
+        StringBuilder buffer = new StringBuilder("[");
         String indexString = String.valueOf(index);
         String maxIndexString = String.valueOf(maxIndex - 1);
         for (int i = 0; i < maxIndexString.length() - indexString.length(); i++) {
@@ -416,8 +419,7 @@ public class BrowserTreePane extends JPanel {
         }
     }
 
-    private void addElementValuePairEntry(BrowserTreeNode parentNode,
-                                          AnnotationElementValue annotation) {
+    private void addElementValuePairEntry(BrowserTreeNode parentNode, AnnotationElementValue annotation) {
 
         ElementValuePair[] entries = annotation.getElementValuePairEntries();
         if (entries == null) {
@@ -432,10 +434,9 @@ public class BrowserTreePane extends JPanel {
         }
     }
 
-    private void addArrayElementValueEntry(BrowserTreeNode parentNode,
-                                           ArrayElementValue aeve) {
+    private void addArrayElementValueEntry(BrowserTreeNode parentNode, ArrayElementValue elementValue) {
 
-        ElementValue[] entries = aeve.getElementValueEntries();
+        ElementValue[] entries = elementValue.getElementValueEntries();
         if (entries == null) {
             return;
         }
@@ -449,52 +450,52 @@ public class BrowserTreePane extends JPanel {
     }
 
 
-    private void addSingleElementValuePairEntryNode(ElementValuePair evep,
+    private void addSingleElementValuePairEntryNode(ElementValuePair elementValuePair,
                                                     int index,
                                                     int attributesCount,
                                                     BrowserTreeNode parentNode) {
 
 
-        if (evep == null) {
+        if (elementValuePair == null) {
             parentNode.add(buildNullNode());
         } else {
             BrowserTreeNode entryNode =
                     new BrowserTreeNode(getFormattedIndex(index, attributesCount) +
-                    evep.getEntryName(),
+                    elementValuePair.getEntryName(),
                             BrowserTreeNode.NODE_ELEMENTVALUEPAIR,
                             index,
-                            evep);
+                            elementValuePair);
             parentNode.add(entryNode);
-            addSingleElementValueEntryNode(evep.getElementValue(), 0, 1, entryNode);
+            addSingleElementValueEntryNode(elementValuePair.getElementValue(), 0, 1, entryNode);
         }
     }
 
-    private void addSingleElementValueEntryNode(ElementValue eve,
+    private void addSingleElementValueEntryNode(ElementValue elementValue,
                                                 int index,
                                                 int attributesCount,
                                                 BrowserTreeNode parentNode) {
 
-        if (eve == null) {
+        if (elementValue == null) {
             parentNode.add(buildNullNode());
         } else {
             String prefix = attributesCount > 1 ?
                     getFormattedIndex(index, attributesCount) : "";
             String nodeType = BrowserTreeNode.NODE_ELEMENTVALUE;
-            if (eve instanceof AnnotationElementValue) {
+            if (elementValue instanceof AnnotationElementValue) {
                 nodeType = BrowserTreeNode.NODE_ANNOTATION;
-            } else if (eve instanceof ArrayElementValue) {
+            } else if (elementValue instanceof ArrayElementValue) {
                 nodeType = BrowserTreeNode.NODE_ARRAYELEMENTVALUE;
             }
 
             BrowserTreeNode entryNode =
-                    new BrowserTreeNode(prefix + eve.getEntryName(),
-                            nodeType, index, eve);
+                    new BrowserTreeNode(prefix + elementValue.getEntryName(),
+                            nodeType, index, elementValue);
 
             parentNode.add(entryNode);
-            if (nodeType == BrowserTreeNode.NODE_ANNOTATION) {
-                addElementValuePairEntry(entryNode, (AnnotationElementValue)eve);
-            } else if (nodeType == BrowserTreeNode.NODE_ARRAYELEMENTVALUE) {
-                addArrayElementValueEntry(entryNode, (ArrayElementValue)eve);
+            if (elementValue instanceof AnnotationElementValue) {
+                addElementValuePairEntry(entryNode, (AnnotationElementValue)elementValue);
+            } else if (elementValue instanceof ArrayElementValue) {
+                addArrayElementValueEntry(entryNode, (ArrayElementValue)elementValue);
             }
         }
     }

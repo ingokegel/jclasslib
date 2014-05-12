@@ -25,7 +25,7 @@ public class InvalidByteCodeException extends Exception {
 
     /**
         Constructor.
-        @param message
+        @param message the message
      */
     public InvalidByteCodeException(String message) {
         super(message);

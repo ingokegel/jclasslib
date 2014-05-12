@@ -124,10 +124,8 @@ public class TableSwitchInstruction extends PaddedInstruction {
         out.writeInt(lowByte);
         out.writeInt(highByte);
 
-        int numberOfOffsets = jumpOffsets.length;
-        
-        for (int i = 0; i < numberOfOffsets; i++) {
-            out.writeInt(jumpOffsets[i]);
+        for (int jumpOffset : jumpOffsets) {
+            out.writeInt(jumpOffset);
         }
     }
 

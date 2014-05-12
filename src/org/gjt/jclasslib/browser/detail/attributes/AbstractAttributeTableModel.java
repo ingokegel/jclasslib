@@ -103,7 +103,7 @@ public abstract class AbstractAttributeTableModel extends AbstractTableModel {
     /**
      * Get the width of a specified column in pixels.
      *
-     * @param column the index ofthe column in the table model
+     * @param column the index of the column in the table model
      * @return the width
      */
     public abstract int getColumnWidth(int column);

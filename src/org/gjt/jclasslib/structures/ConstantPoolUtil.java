@@ -166,9 +166,10 @@ public class ConstantPoolUtil {
         }
 
         int lastFreeIndex;
-        for (lastFreeIndex = constantPool.length - 1;
-             lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null;
-             lastFreeIndex--) {}
+        lastFreeIndex = constantPool.length - 1;
+        while (lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null) {
+            lastFreeIndex--;
+        }
         if (lastFreeIndex == constantPool.length - 1) {
             CPInfo[] newConstantPool = new CPInfo[constantPool.length + Math.max(1, sizeDelta)];
             System.arraycopy(constantPool, 0, newConstantPool, 0, constantPool.length);

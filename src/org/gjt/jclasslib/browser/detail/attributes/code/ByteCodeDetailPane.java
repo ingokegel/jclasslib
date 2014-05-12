@@ -7,7 +7,9 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code;
 
-import org.gjt.jclasslib.browser.*;
+import org.gjt.jclasslib.browser.AbstractDetailPane;
+import org.gjt.jclasslib.browser.BrowserComponent;
+import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.bytecode.AbstractInstruction;
 import org.gjt.jclasslib.bytecode.OpcodesUtil;
 import org.gjt.jclasslib.structures.attributes.CodeAttribute;
@@ -28,7 +30,7 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
     
     private static final Rectangle RECT_ORIGIN = new Rectangle(0, 0, 0, 0);
 
-    private final Map/*<String, String>*/ instructionURL = new HashMap();
+    private final Map<String, String> instructionToURL = new HashMap<String, String>();
     
     // Visual components
     
@@ -78,7 +80,7 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
             public void actionPerformed(ActionEvent e) {
                 String opcode = (String) instructions.getSelectedItem();
                 if (opcode != null) {
-                    services.showURL((String) instructionURL.get(opcode));
+                    services.showURL(instructionToURL.get(opcode));
                 }
             }
         };
@@ -89,14 +91,14 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
         return instructionPanel;
     }
     
-    void setCurrentInstructions(final ArrayList/*<AbstractInstruction>*/ instructions) {
-        instructionURL.clear();
-        Set/*<String>*/ mnemonics = new TreeSet();
-        for (Iterator it = instructions.iterator(); it.hasNext();) {
-            AbstractInstruction instruction = (AbstractInstruction) it.next();
+    void setCurrentInstructions(final ArrayList<AbstractInstruction> instructions) {
+        instructionToURL.clear();
+        Set<String> mnemonics = new TreeSet<String>();
+        for (Object instruction1 : instructions) {
+            AbstractInstruction instruction = (AbstractInstruction)instruction1;
             if (mnemonics.add(instruction.getOpcodeVerbose())) {
-                instructionURL.put(instruction.getOpcodeVerbose(),
-                        OpcodesUtil.getURL(instruction.getOpcode()));
+                instructionToURL.put(instruction.getOpcodeVerbose(),
+                    OpcodesUtil.getURL(instruction.getOpcode()));
             }
         }
         this.instructions.setModel(new DefaultComboBoxModel(mnemonics.toArray()));

@@ -101,7 +101,7 @@ public class ExtendedTableCellRenderer extends ExtendedJLabel
     public void repaint(Rectangle r) { }
 
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        if (propertyName == "text") {
+        if (propertyName.equals("text")) {
             super.firePropertyChange(propertyName, oldValue, newValue);
         }
     }

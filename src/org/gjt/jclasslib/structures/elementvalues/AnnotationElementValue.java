@@ -8,7 +8,9 @@ package org.gjt.jclasslib.structures.elementvalues;
 
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Describes an  <tt>Annotation</tt> attribute structure.
@@ -103,8 +105,8 @@ public class AnnotationElementValue extends ElementValue {
 
     protected int getSpecificLength() {
         int length = INITIAL_LENGTH;
-        for (int i = 0; i < elementValuePairEntries.length; i++) {
-            length += elementValuePairEntries[i].getLength();
+        for (ElementValuePair elementValuePairEntry : elementValuePairEntries) {
+            length += elementValuePairEntry.getLength();
         }
         return length;
     }

@@ -38,11 +38,11 @@ public class GenericElementValueDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        ElementValue ceve = (ElementValue)
+        ElementValue element = (ElementValue)
                 ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
-        lblTag.setText(String.valueOf((char)ceve.getTag()));
-        lblTagVerbose.setText("<" + ElementValue.getTagDescription(ceve.getTag()) + ">");
+        lblTag.setText(String.valueOf((char)element.getTag()));
+        lblTagVerbose.setText("<" + ElementValue.getTagDescription(element.getTag()) + ">");
 
         super.show(treePath);
     }

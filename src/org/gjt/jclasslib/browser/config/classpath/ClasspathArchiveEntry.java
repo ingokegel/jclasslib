@@ -33,8 +33,7 @@ public class ClasspathArchiveEntry extends ClasspathEntry {
             JarFile jarFile = new JarFile(file);
             JarEntry entry = jarFile.getJarEntry(className);
             if (entry != null) {
-                FindResult findResult = new FindResult(this, file.getPath() + "!" + className);
-                return findResult;
+                return new FindResult(this, file.getPath() + "!" + className);
             }
         } catch (IOException e) {
         }

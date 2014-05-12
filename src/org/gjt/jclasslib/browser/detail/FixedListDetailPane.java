@@ -16,7 +16,6 @@ import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
     Base class for all detail panes with a structure of
@@ -29,7 +28,7 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
     
     // Visual components
 
-    private java.util.List detailPaneEntries;
+    private java.util.List<DetailPaneEntry> detailPaneEntries;
     private JScrollPane scrollPane;
 
     /**
@@ -61,14 +60,12 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
                                       ExtendedJLabel comment) {
                                           
         if (detailPaneEntries == null) {
-            detailPaneEntries = new ArrayList();
+            detailPaneEntries = new ArrayList<DetailPaneEntry>();
         }
         
-        detailPaneEntries.add(
-                new DetailPaneEntry(key, value, comment)
-            );
+        detailPaneEntries.add(new DetailPaneEntry(key, value, comment));
     }
-    
+
     protected void setupComponent() {
         
         setupLabels();
@@ -99,9 +96,7 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
         gRemainder.weightx = gRemainder.weighty = 1;
         gRemainder.fill = GridBagConstraints.BOTH;
 
-        Iterator it = detailPaneEntries.iterator();
-        while (it.hasNext()) {
-            DetailPaneEntry entry = (DetailPaneEntry)it.next();
+        for (DetailPaneEntry entry : detailPaneEntries) {
             if (entry == null) {
                 continue;
             }
@@ -118,7 +113,7 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
 
                 entry.comment.setAutoTooltip(true);
             }
-            
+
         }
 
         gRemainder.gridy = gKey.gridy + 1;
@@ -153,7 +148,7 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
 
     /**
         Hook for derived classes to add additional visual elements.
-        @param gridy the current <tt>gridy</tt> of the <tt>GridbagLayout</tt>.
+        @param gridy the current <tt>gridy</tt> of the <tt>GridBagLayout</tt>.
         @return the number of added rows.
      */
     protected int addSpecial(int gridy) {

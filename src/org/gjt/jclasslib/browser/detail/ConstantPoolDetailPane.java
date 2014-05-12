@@ -7,7 +7,9 @@
 
 package org.gjt.jclasslib.browser.detail;
 
-import org.gjt.jclasslib.browser.*;
+import org.gjt.jclasslib.browser.AbstractDetailPane;
+import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.browser.BrowserTreeNode;
 import org.gjt.jclasslib.browser.detail.constants.*;
 import org.gjt.jclasslib.structures.CPInfo;
 import org.gjt.jclasslib.structures.constants.*;
@@ -41,7 +43,7 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     private static final String SCREEN_CONSTANT_METHOD_HANDLE = "ConstantMethodHandle";
     private static final String SCREEN_CONSTANT_METHOD_TYPE = "ConstantMethodType";
 
-    private HashMap constantTypeToDetailPane;
+    private HashMap<String, AbstractDetailPane> constantTypeToDetailPane;
 
     /**
         Constructor.
@@ -53,7 +55,7 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
 
     protected void setupComponent() {
         setLayout(new CardLayout());
-        constantTypeToDetailPane = new HashMap();
+        constantTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
         JPanel pane;
         
         pane = new JPanel();
@@ -135,7 +137,7 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
         if (paneName == null) {
             layout.show(this, SCREEN_CONSTANT_UNKNOWN);
         } else {
-            AbstractDetailPane pane = (AbstractDetailPane)constantTypeToDetailPane.get(paneName);
+            AbstractDetailPane pane = constantTypeToDetailPane.get(paneName);
             pane.show(treePath);
             layout.show(this, paneName);
         }

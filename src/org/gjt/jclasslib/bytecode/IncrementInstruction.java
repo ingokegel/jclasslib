@@ -84,9 +84,4 @@ public class IncrementInstruction extends ImmediateByteInstruction {
         }
     }
 
-    public static void main(String[] args) {
-        byte b = -100;
-
-    }
-    
 }

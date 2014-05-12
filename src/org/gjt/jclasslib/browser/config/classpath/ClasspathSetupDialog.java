@@ -18,7 +18,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,9 +100,8 @@ public class ClasspathSetupDialog extends JDialog
     private void updateList() {
 
         listModel.clear();
-        Iterator it = frame.getConfig().getClasspath().iterator();
-        while (it.hasNext()) {
-            listModel.addElement(it.next());
+        for (Object o : frame.getConfig().getClasspath()) {
+            listModel.addElement(o);
         }
     }
 
@@ -271,23 +270,19 @@ public class ClasspathSetupDialog extends JDialog
 
     private void doOk() {
 
-        List newEntries = new ArrayList();
+        List<ClasspathEntry> newEntries = new ArrayList<ClasspathEntry>();
         for (int i = 0; i < listModel.getSize(); i++) {
-            newEntries.add(listModel.getElementAt(i));
+            newEntries.add((ClasspathEntry)listModel.getElementAt(i));
         }
         BrowserConfig config = frame.getConfig();
-        List oldEntries = new ArrayList(config.getClasspath());
+        List<ClasspathEntry> oldEntries = new ArrayList<ClasspathEntry>(config.getClasspath());
 
-        Iterator itOld = oldEntries.iterator();
-        while (itOld.hasNext()) {
-            ClasspathEntry entry = (ClasspathEntry)itOld.next();
+        for (ClasspathEntry entry : oldEntries) {
             if (!newEntries.contains(entry)) {
                 config.removeClasspathEntry(entry);
             }
         }
-        Iterator itNew = newEntries.iterator();
-        while (itNew.hasNext()) {
-            ClasspathEntry entry = (ClasspathEntry)itNew.next();
+        for (ClasspathEntry entry : newEntries) {
             if (!oldEntries.contains(entry)) {
                 config.addClasspathEntry(entry);
             }
@@ -310,8 +305,7 @@ public class ClasspathSetupDialog extends JDialog
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             frame.setClassesChooserPath(fileChooser.getCurrentDirectory().getAbsolutePath());
             File[] files = fileChooser.getSelectedFiles();
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (File file : files) {
                 ClasspathEntry entry;
                 if (file.isDirectory()) {
                     entry = new ClasspathDirectoryEntry();

@@ -48,7 +48,7 @@ public class ConstantValueAttributeDetailPane extends FixedListDetailPane {
 
         constantPoolHyperlink(lblValue,
                               lblVerbose,
-                              attribute.getConstantvalueIndex());
+                              attribute.getConstantValueIndex());
         
         super.show(treePath);
     }

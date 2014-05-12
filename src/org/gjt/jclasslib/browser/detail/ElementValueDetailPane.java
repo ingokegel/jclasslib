@@ -6,9 +6,17 @@
 */
 package org.gjt.jclasslib.browser.detail;
 
-import org.gjt.jclasslib.browser.*;
-import org.gjt.jclasslib.browser.detail.elementvalues.*;
-import org.gjt.jclasslib.structures.elementvalues.*;
+import org.gjt.jclasslib.browser.AbstractDetailPane;
+import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.browser.BrowserTreeNode;
+import org.gjt.jclasslib.browser.detail.elementvalues.ClassElementValueEntryDetailPane;
+import org.gjt.jclasslib.browser.detail.elementvalues.ConstElementValueEntryDetailPane;
+import org.gjt.jclasslib.browser.detail.elementvalues.EnumElementValueEntryDetailPane;
+import org.gjt.jclasslib.browser.detail.elementvalues.GenericElementValueDetailPane;
+import org.gjt.jclasslib.structures.elementvalues.ClassElementValue;
+import org.gjt.jclasslib.structures.elementvalues.ConstElementValue;
+import org.gjt.jclasslib.structures.elementvalues.ElementValue;
+import org.gjt.jclasslib.structures.elementvalues.EnumElementValue;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -31,7 +39,7 @@ public class ElementValueDetailPane extends AbstractDetailPane {
     private static final String SCREEN_ENUM_VALUE = "Enum";
 
 
-    private HashMap elementTypeToDetailPane;
+    private HashMap<String, AbstractDetailPane> elementTypeToDetailPane;
 
     // Visual components
 
@@ -69,7 +77,7 @@ public class ElementValueDetailPane extends AbstractDetailPane {
         if (paneName == null) {
             layout.show(specificInfoPane, SCREEN_UNKNOWN);
         } else {
-            AbstractDetailPane pane = (AbstractDetailPane)elementTypeToDetailPane.get(paneName);
+            AbstractDetailPane pane = elementTypeToDetailPane.get(paneName);
             pane.show(treePath);
             layout.show(specificInfoPane, paneName);
         }
@@ -87,7 +95,7 @@ public class ElementValueDetailPane extends AbstractDetailPane {
         specificInfoPane.setBorder(createTitledBorder("Specific info:"));
 
         specificInfoPane.setLayout(new CardLayout());
-        elementTypeToDetailPane = new HashMap();
+        elementTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
         JPanel pane;
 
         pane = new JPanel();
@@ -112,9 +120,7 @@ public class ElementValueDetailPane extends AbstractDetailPane {
 
     private Border createTitledBorder(String title) {
         Border simpleBorder = BorderFactory.createEtchedBorder();
-        Border titledBorder = BorderFactory.createTitledBorder(simpleBorder, title);
-
-        return titledBorder;
+        return BorderFactory.createTitledBorder(simpleBorder, title);
     }
 }
 

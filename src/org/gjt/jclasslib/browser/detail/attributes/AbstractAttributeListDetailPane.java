@@ -12,7 +12,9 @@ import org.gjt.jclasslib.browser.detail.ListDetailPane;
 import org.gjt.jclasslib.structures.AttributeInfo;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import javax.swing.tree.TreePath;
 import java.util.WeakHashMap;
 
@@ -37,7 +39,7 @@ public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
     private static final int COLUMN_MIN_WIDTH = 20;
     private static final int ROW_NUMBER_COLUMN_WIDTH = 35;
 
-    private static WeakHashMap attributeToTableModel = new WeakHashMap();
+    private static WeakHashMap<AttributeInfo, AbstractAttributeTableModel> attributeToTableModel = new WeakHashMap<AttributeInfo, AbstractAttributeTableModel>();
 
     private AbstractAttributeTableModel tableModel;
     
@@ -90,11 +92,11 @@ public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
         } else {
             table.setColumnModel(tableColumnModel);
         }
-        adjustColumns(table, tableColumnModel);
+        adjustColumns(tableColumnModel);
     }
     
     
-    private void adjustColumns(JTable table, TableColumnModel tableColumnModel) {
+    private void adjustColumns(TableColumnModel tableColumnModel) {
         
         TableColumn tableColumn;
         for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
@@ -112,8 +114,8 @@ public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
     
     private AbstractAttributeTableModel getCachedTableModel(AttributeInfo attribute) {
         
-        AbstractAttributeTableModel tableModel = 
-            (AbstractAttributeTableModel)attributeToTableModel.get(attribute);
+        AbstractAttributeTableModel tableModel =
+            attributeToTableModel.get(attribute);
 
         if (tableModel == null) {
             tableModel = createTableModel(attribute);

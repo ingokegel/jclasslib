@@ -14,7 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -32,7 +33,7 @@ public class RecentMenu extends JMenu implements ActionListener {
     private static final String ACTION_CLEAR_LIST = "clearList";
     private BrowserMDIFrame frame;
 
-    private LinkedList recentWorkspaces = new LinkedList();
+    private LinkedList<String> recentWorkspaces = new LinkedList<String>();
 
     /**
         Constructor.
@@ -66,7 +67,7 @@ public class RecentMenu extends JMenu implements ActionListener {
     }
 
     /**
-        Add a file to the list of recently useed workspaces.
+        Add a file to the list of recently used workspaces.
         @param file the workspace file.
      */
     public void addRecentWorkspace(File file) {
@@ -90,12 +91,11 @@ public class RecentMenu extends JMenu implements ActionListener {
 
         recentWorkspaces.clear();
 
-        TreeMap numberToFile = new TreeMap();
+        TreeMap<Integer, String> numberToFile = new TreeMap<Integer, String>();
         Preferences recentNode = preferences.node(SETTINGS_RECENT_WORKSPACES);
         try {
             String[] keys = recentNode.keys();
-            for (int i = 0; i < keys.length; i++) {
-                String key = keys[i];
+            for (String key : keys) {
                 String fileName = recentNode.get(key, null);
                 if (fileName != null) {
                     numberToFile.put(new Integer(key), fileName);
@@ -118,9 +118,7 @@ public class RecentMenu extends JMenu implements ActionListener {
         } catch (BackingStoreException e) {
         }
         int count = 0;
-        Iterator it = recentWorkspaces.iterator();
-        while (it.hasNext()) {
-            String fileName = (String)it.next();
+        for (String fileName : recentWorkspaces) {
             recentNode.put(String.valueOf(count++), fileName);
         }
     }
@@ -129,9 +127,7 @@ public class RecentMenu extends JMenu implements ActionListener {
 
         removeAll();
         if (recentWorkspaces.size() > 0) {
-            Iterator it = recentWorkspaces.iterator();
-            while (it.hasNext()) {
-                String fileName = (String)it.next();
+            for (String fileName : recentWorkspaces) {
                 JMenuItem menuItem = new JMenuItem(fileName);
                 menuItem.addActionListener(this);
                 add(menuItem);

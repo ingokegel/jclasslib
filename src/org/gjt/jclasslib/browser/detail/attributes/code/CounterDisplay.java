@@ -9,7 +9,9 @@ package org.gjt.jclasslib.browser.detail.attributes.code;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.HashMap;
@@ -23,15 +25,15 @@ import java.util.Map;
 */
 public class CounterDisplay extends JPanel {
 
-    private static final Map STYLE;
+    private static final Map<TextAttribute, Object> STYLE;
     private static final Color COLOR_BACKGROUND = UIManager.getColor("Panel.background");
 
     static {
         Font baseFont = UIManager.getFont("TextArea.font");
 
-        STYLE = new HashMap(3);
+        STYLE = new HashMap<TextAttribute, Object>(3);
         STYLE.put(TextAttribute.FAMILY, baseFont.getFamily());
-        STYLE.put(TextAttribute.SIZE, new Float(baseFont.getSize() - 2));
+        STYLE.put(TextAttribute.SIZE, (float)(baseFont.getSize() - 2));
         STYLE.put(TextAttribute.FOREGROUND, new Color(92, 92, 92));
     }
 

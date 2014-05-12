@@ -26,8 +26,7 @@ public class ClasspathDirectoryEntry extends ClasspathEntry {
         }
         File classFile = new File(file, className.replace('.', '/') + ".class");
         if (classFile.exists() && classFile.canRead()) {
-            FindResult findResult = new FindResult(this, classFile.getPath());
-            return findResult;
+            return new FindResult(this, classFile.getPath());
         }
 
         return null;
@@ -51,8 +50,7 @@ public class ClasspathDirectoryEntry extends ClasspathEntry {
         if (files == null) {
             return;
         }
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : files) {
             if (file.isDirectory()) {
                 ClassTreeNode directoryNode = addOrFindNode(file.getName(), parentNode, true, model, reset);
                 mergeDirectory(file, directoryNode, model, reset);
@@ -60,7 +58,7 @@ public class ClasspathDirectoryEntry extends ClasspathEntry {
                     int deletionIndex = parentNode.getIndex(directoryNode);
                     parentNode.remove(directoryNode);
                     if (!reset) {
-                        model.nodesWereRemoved(parentNode, new int[] {deletionIndex}, new Object[] {directoryNode});
+                        model.nodesWereRemoved(parentNode, new int[]{deletionIndex}, new Object[]{directoryNode});
                     }
                 }
             } else if (file.getName().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {

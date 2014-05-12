@@ -7,7 +7,9 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.AttributeInfo;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.*;
@@ -36,7 +38,7 @@ public abstract class AbstractDetailPane extends JPanel {
     /** Services for this detail pane. */
     protected BrowserServices services;
 
-    private HashMap labelToMouseListener = new HashMap();
+    private HashMap<ExtendedJLabel, MouseListener> labelToMouseListener = new HashMap<ExtendedJLabel, MouseListener>();
  
     /**
         Constructs a detail pane with a specified parent frame.
@@ -82,8 +84,7 @@ public abstract class AbstractDetailPane extends JPanel {
         @return the label
      */
     protected ExtendedJLabel normalLabel(String text) {
-        ExtendedJLabel label = new ExtendedJLabel(text);
-        return label;
+        return new ExtendedJLabel(text);
     }
 
     /**
@@ -164,7 +165,7 @@ public abstract class AbstractDetailPane extends JPanel {
     /**
         Construct a hyperlink into the constant pool.
         @param value the label for the hyperlink source
-        @param comment an oprional label whose text is automatically set to
+        @param comment an optional label whose text is automatically set to
                        the name of the constant pool entry
         @param constantPoolIndex the index of the constant pool entry for the
                                  target of the hyperlink
@@ -186,7 +187,7 @@ public abstract class AbstractDetailPane extends JPanel {
     
     private void setupMouseListener(ExtendedJLabel value, int constantPoolIndex) {
 
-        MouseListener oldListener = (MouseListener)labelToMouseListener.get(value);
+        MouseListener oldListener = labelToMouseListener.get(value);
         if (oldListener != null) {
             value.removeMouseListener(oldListener);
         }

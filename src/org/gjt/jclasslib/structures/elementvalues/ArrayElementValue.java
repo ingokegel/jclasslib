@@ -8,7 +8,9 @@ package org.gjt.jclasslib.structures.elementvalues;
 
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Describes an  <tt>ArrayElementValue</tt> attribute structure.
@@ -50,8 +52,8 @@ public class ArrayElementValue extends ElementValue {
 
     protected int getSpecificLength() {
         int length = INITIAL_LENGTH;
-        for (int i = 0; i < elementValueEntries.length; i++) {
-            length += elementValueEntries[i].getLength();
+        for (ElementValue elementValueEntry : elementValueEntries) {
+            length += elementValueEntry.getLength();
         }
         return length;
     }

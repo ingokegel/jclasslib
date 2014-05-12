@@ -13,7 +13,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput;
 import java.io.IOException;
 
 /**
-    Base class for intstructions which need a four byte padding relative
+    Base class for instructions which need a four byte padding relative
     to the start of the enclosing code of the parent <tt>Code</tt>
     attribute before reading immediate arguments.
  

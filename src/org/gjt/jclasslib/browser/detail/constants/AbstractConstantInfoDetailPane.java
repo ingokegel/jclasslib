@@ -32,7 +32,7 @@ public abstract class AbstractConstantInfoDetailPane extends FixedListDetailPane
     }
     
     /**
-        Get the constant pool index corrensponding to a selection in 
+        Get the constant pool index corresponding to a selection in
         <tt>BrowserTreePane</tt>.
         @param treePath the tree path
         @return the index

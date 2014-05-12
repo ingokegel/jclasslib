@@ -87,7 +87,7 @@ public abstract class ClasspathEntry implements ClasspathComponent {
      * @param packageNode whether the new node is a package node or not.
      * @param model the tree model.
      * @param reset whether a reset operation is in progress.
-     * @return the fould or created node.
+     * @return the found or created node.
      */
     protected ClassTreeNode addOrFindNode(String newNodeName,
                                           ClassTreeNode parentNode,

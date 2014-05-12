@@ -8,7 +8,9 @@
 package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.ClassMember;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 import org.gjt.jclasslib.util.GUIHelper;
 
@@ -91,9 +93,8 @@ public class ClassMemberContainerDetailPane extends FixedListDetailPane {
             classMembers = classFile.getMethods();
         }
 
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < classMembers.length; i++) {
-            ClassMember classMember = classMembers[i];
+        StringBuilder buffer = new StringBuilder();
+        for (ClassMember classMember : classMembers) {
             try {
                 if (mode == FIELDS) {
                     buffer.append(classMember.getDescriptor());

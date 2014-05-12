@@ -48,7 +48,7 @@ public class SourceFileAttributeDetailPane extends FixedListDetailPane {
 
         constantPoolHyperlink(lblSourceFile,
                               lblSourceFileVerbose,
-                              attribute.getSourcefileIndex());
+                              attribute.getSourceFileIndex());
         
         super.show(treePath);
     }

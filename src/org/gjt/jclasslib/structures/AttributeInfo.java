@@ -9,7 +9,9 @@ package org.gjt.jclasslib.structures;
 import org.gjt.jclasslib.structures.attributes.*;
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Base class for all attribute structures in the <tt>attribute</tt> package.
@@ -57,7 +59,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
             int attributeLength = in.readInt();
 
             ConstantUtf8Info cpInfoName = classFile.getConstantPoolUtf8Entry(attributeNameIndex);
-            String attributeName = null;
+            String attributeName;
 
             if (cpInfoName == null) {
                 return null;

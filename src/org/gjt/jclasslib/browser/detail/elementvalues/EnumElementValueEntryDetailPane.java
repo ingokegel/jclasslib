@@ -41,16 +41,16 @@ public class EnumElementValueEntryDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        EnumElementValue eeve = (EnumElementValue)
+        EnumElementValue element = (EnumElementValue)
                 ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
         constantPoolHyperlink(lblTypeNameIndex,
-                lblTypeNameIndexVerbose,
-                eeve.getTypeNameIndex());
+            lblTypeNameIndexVerbose,
+            element.getTypeNameIndex());
 
         constantPoolHyperlink(lblConstNameIndex,
-                lblConstNameIndexVerbose,
-                eeve.getConstNameIndex());
+            lblConstNameIndexVerbose,
+            element.getConstNameIndex());
 
         super.show(treePath);
     }

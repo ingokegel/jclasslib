@@ -14,7 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
-    Listens for mouse clicks and manages linking into the constat pool.
+    Listens for mouse clicks and manages linking into the constant pool.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
     @version $Revision: 1.6 $ $Date: 2003-08-18 08:02:07 $
@@ -27,7 +27,7 @@ public class ConstantPoolHyperlinkListener extends MouseAdapter {
     /**
         Constructor.
         @param services the browser services
-        @param constantPoolIndex the index of the constant pool to lonk to.
+        @param constantPoolIndex the index of the constant pool to link to.
      */
     public ConstantPoolHyperlinkListener(BrowserServices services, int constantPoolIndex) {
         
@@ -59,12 +59,9 @@ public class ConstantPoolHyperlinkListener extends MouseAdapter {
     private static TreePath linkPath(BrowserServices services, int constantPoolIndex) {
         
         TreePath constantPoolPath = services.getBrowserComponent().getTreePane().getPathForCategory(BrowserTreeNode.NODE_CONSTANT_POOL);
-        
         BrowserTreeNode constantPoolNode = (BrowserTreeNode)constantPoolPath.getLastPathComponent();
         TreeNode targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1);
-        TreePath linkPath = constantPoolPath.pathByAddingChild(targetNode);
-        
-        return linkPath;
+        return constantPoolPath.pathByAddingChild(targetNode);
     }
     
 }

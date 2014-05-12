@@ -54,7 +54,7 @@ public class ClasspathBrowser extends JDialog
      * Constructor.
      * @param frame the parent frame.
      * @param classpathComponent the classpath component to display initially.
-     * @param title the disalog title.
+     * @param title the dialog title.
      * @param setupVisible if the <i>setup classpath</i> button should be visible.
      */
     public ClasspathBrowser(BrowserMDIFrame frame, ClasspathComponent classpathComponent, String title, boolean setupVisible) {
@@ -272,7 +272,7 @@ public class ClasspathBrowser extends JDialog
 
     private void doOk() {
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         TreePath selectionPath = tree.getSelectionPath();
         for (int i = 1; i < selectionPath.getPathCount(); i++) {
             if (buffer.length() > 0) {

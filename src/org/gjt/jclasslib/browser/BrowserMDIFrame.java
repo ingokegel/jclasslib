@@ -8,9 +8,14 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.browser.config.BrowserConfig;
-import org.gjt.jclasslib.browser.config.classpath.*;
+import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry;
+import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser;
+import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog;
+import org.gjt.jclasslib.browser.config.classpath.FindResult;
 import org.gjt.jclasslib.browser.config.window.WindowState;
-import org.gjt.jclasslib.mdi.*;
+import org.gjt.jclasslib.mdi.BasicDesktopManager;
+import org.gjt.jclasslib.mdi.BasicFileFilter;
+import org.gjt.jclasslib.mdi.BasicMDIFrame;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.util.GUIHelper;
@@ -18,8 +23,11 @@ import org.gjt.jclasslib.util.GUIHelper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.beans.*;
+import java.beans.PropertyVetoException;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
 import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
@@ -206,7 +214,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
                 classpathBrowser.setClasspathComponent(config);
             }
         } catch (FileNotFoundException e) {
-            GUIHelper.showMessage(this, "An error occured while reading " + file.getPath(), JOptionPane.ERROR_MESSAGE);
+            GUIHelper.showMessage(this, "An error occurred while reading " + file.getPath(), JOptionPane.ERROR_MESSAGE);
         } finally {
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
@@ -339,13 +347,13 @@ public class BrowserMDIFrame extends BasicMDIFrame {
 
         JMenu menuBrowse = new JMenu("Browse");
         menuItem = menuBrowse.add(actionBackward);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.ALT_MASK));
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_MASK));
         menuItem = menuBrowse.add(actionForward);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.ALT_MASK));
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_MASK));
 
         menuBrowse.addSeparator();
         menuItem = menuBrowse.add(actionReload);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.CTRL_MASK));
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
 
         JMenu menuHelp = new JMenu("Help");
         menuItem = menuHelp.add(actionShowHelp);
@@ -466,7 +474,7 @@ public class BrowserMDIFrame extends BasicMDIFrame {
             encoder.close();
             recentMenu.addRecentWorkspace(file);
         } catch (FileNotFoundException e) {
-            GUIHelper.showMessage(this, "An error occured while saving to " + file.getPath(), JOptionPane.ERROR_MESSAGE);
+            GUIHelper.showMessage(this, "An error occurred while saving to " + file.getPath(), JOptionPane.ERROR_MESSAGE);
         }
         GUIHelper.showMessage(this, "Workspace saved to " + file.getPath(), JOptionPane.INFORMATION_MESSAGE);
         actionSaveWorkspaceAs.setEnabled(true);

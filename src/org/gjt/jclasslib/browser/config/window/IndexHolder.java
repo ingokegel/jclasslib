@@ -26,12 +26,6 @@ public class IndexHolder implements PathComponent {
     }
 
     /**
-     * Constructor.
-     */
-    public IndexHolder() {
-    }
-
-    /**
      * Get the index.
      * @return the index.
      */

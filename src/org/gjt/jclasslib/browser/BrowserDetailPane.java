@@ -28,7 +28,7 @@ public class BrowserDetailPane extends JPanel {
     private static final Dimension detailPreferredSize = new Dimension(150, 150);
 
     private BrowserServices services;
-    private HashMap nodeTypeToDetailPane = new HashMap();
+    private HashMap<String, AbstractDetailPane> nodeTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
 
     /**
      * Constructor.
@@ -73,7 +73,7 @@ public class BrowserDetailPane extends JPanel {
     }
 
     private AbstractDetailPane getDetailPane(String nodeType) {
-        AbstractDetailPane detailPane = (AbstractDetailPane)nodeTypeToDetailPane.get(nodeType);
+        AbstractDetailPane detailPane = nodeTypeToDetailPane.get(nodeType);
         if (detailPane == null) {
             detailPane = createDetailPanel(nodeType);
             if (detailPane != null) {

@@ -27,7 +27,7 @@ public class BrowserHistory {
     
     private BrowserServices services;
 
-    private LinkedList history = new LinkedList();
+    private LinkedList<BrowserHistoryEntry> history = new LinkedList<BrowserHistoryEntry>();
     private int historyPointer = -1;
 
     /**
@@ -121,7 +121,7 @@ public class BrowserHistory {
 
         if (historyPointer >= 0) {
 
-            BrowserHistoryEntry currentEntry = (BrowserHistoryEntry)history.get(historyPointer);
+            BrowserHistoryEntry currentEntry = history.get(historyPointer);
             if (currentEntry.getTreePath().equals(newEntry.getTreePath())) {
                 if (newEntry.getOffset() == null) {
                     // Ignore history event, since it is more unspecific than the current one
@@ -142,7 +142,7 @@ public class BrowserHistory {
     private void eliminateForwardEntries() {
         
         if (historyPointer < history.size() - 1) {
-            ListIterator it = history.listIterator(historyPointer + 1);
+            ListIterator<BrowserHistoryEntry> it = history.listIterator(historyPointer + 1);
             while (it.hasNext()) {
                 it.next();
                 it.remove();
@@ -152,7 +152,7 @@ public class BrowserHistory {
     
     private void syncWithHistory() {
         
-        BrowserHistoryEntry entry = (BrowserHistoryEntry)history.get(historyPointer);
+        BrowserHistoryEntry entry = history.get(historyPointer);
 
         JTree tree = services.getBrowserComponent().getTreePane().getTree();
         
@@ -170,7 +170,7 @@ public class BrowserHistory {
             codeAttributeDetailPane.selectByteCodeDetailPane();
 
             codeAttributeDetailPane.getCodeAttributeByteCodeDetailPane().
-                scrollToOffset(offset.intValue());
+                scrollToOffset(offset);
         }
         
         updateActions();
@@ -200,7 +200,7 @@ public class BrowserHistory {
         
         public boolean equals(Object object) {
             
-            if (object == null && !(object instanceof BrowserHistoryEntry)) {
+            if (object == null || !(object instanceof BrowserHistoryEntry)) {
                 return false;
             }
             BrowserHistoryEntry other = (BrowserHistoryEntry)object;

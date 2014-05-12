@@ -10,7 +10,9 @@ import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Common class for runtime annotations.
@@ -77,8 +79,8 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo {
 
     public int getAttributeLength() {
         int length = INITIAL_LENGTH;
-        for (int i = 0; i < runtimeAnnotations.length; i++) {
-            length += runtimeAnnotations[i].getLength();
+        for (AnnotationElementValue runtimeAnnotation : runtimeAnnotations) {
+            length += runtimeAnnotation.getLength();
         }
         return length;
     }

@@ -8,37 +8,43 @@
 package org.gjt.jclasslib.bytecode;
 
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.attributes.*;
+import org.gjt.jclasslib.structures.attributes.CodeAttribute;
+import org.gjt.jclasslib.structures.attributes.ExceptionTableEntry;
+import org.gjt.jclasslib.structures.attributes.LineNumberTableAttribute;
+import org.gjt.jclasslib.structures.attributes.LineNumberTableEntry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
-    Contains all information necessary to insert code into a
-    method. Allows for pre and post insertions. The core method
-    to perform code insertions is the static <tt>apply</tt> method.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.9 $ $Date: 2005-06-22 13:56:37 $
-*/
+ * Contains all information necessary to insert code into a
+ * method. Allows for pre and post insertions. The core method
+ * to perform code insertions is the static <tt>apply</tt> method.
+ *
+ * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+ * @version $Revision: 1.9 $ $Date: 2005-06-22 13:56:37 $
+ */
 public class CodeInsertion {
 
 
     /**
-        Merge two code insertions into one.
-        @param position the position of the resulting <tt>CodeInsertion</tt>
-        @param shiftTarget should offsets of branch instructions pointing to 
-                           the position of the resulting code insertion
-                           be shifted or point to the beginning of the 
-                           inserted code.
-        @param inner the inner <tt>CodeInsertion</tt>
-        @param outer the outer <tt>CodeInsertion</tt>
-        @return the resulting <tt>CodeInsertion</tt>
-    */
+     * Merge two code insertions into one.
+     *
+     * @param position    the position of the resulting <tt>CodeInsertion</tt>
+     * @param shiftTarget should offsets of branch instructions pointing to
+     *                    the position of the resulting code insertion
+     *                    be shifted or point to the beginning of the
+     *                    inserted code.
+     * @param inner       the inner <tt>CodeInsertion</tt>
+     * @param outer       the outer <tt>CodeInsertion</tt>
+     * @return the resulting <tt>CodeInsertion</tt>
+     */
     public static CodeInsertion merge(int position,
                                       boolean shiftTarget,
                                       CodeInsertion inner,
-                                      CodeInsertion outer)
-    {
+                                      CodeInsertion outer) {
 
         if (outer == null) {
             return inner;
@@ -50,25 +56,19 @@ public class CodeInsertion {
         AbstractInstruction[] preInstructions = mergeInstructions(outer.preInstructions, inner.preInstructions);
         AbstractInstruction[] postInstructions = mergeInstructions(inner.postInstructions, outer.postInstructions);
 
-        CodeInsertion codeInsertion =
-            new CodeInsertion(position,
-                              preInstructions,
-                              postInstructions,
-                              shiftTarget);
-
-        return codeInsertion;
+        return new CodeInsertion(position, preInstructions, postInstructions, shiftTarget);
     }
 
     /**
-        Merge two arrays of instructions into one.
-        @param firstInstructions the head array of type <tt>AbstractInstruction</tt>
-        @param lastInstructions the tail array of type <tt>AbstractInstruction</tt>
-        @return the merged array of type <tt>AbstractInstruction[]</tt>
-    */
+     * Merge two arrays of instructions into one.
+     *
+     * @param firstInstructions the head array of type <tt>AbstractInstruction</tt>
+     * @param lastInstructions  the tail array of type <tt>AbstractInstruction</tt>
+     * @return the merged array of type <tt>AbstractInstruction[]</tt>
+     */
     public static AbstractInstruction[] mergeInstructions(AbstractInstruction[] firstInstructions,
-                                                          AbstractInstruction[] lastInstructions)
-    {
-        if (firstInstructions== null) {
+                                                          AbstractInstruction[] lastInstructions) {
+        if (firstInstructions == null) {
             return lastInstructions;
         }
         if (lastInstructions == null) {
@@ -83,87 +83,83 @@ public class CodeInsertion {
     }
 
     /**
-        Apply a list of <tt>CodeInsertion</tt>s to a list of instructions
-        such as the one supplied by a <tt>ByteCodeReader</tt>. Offsets
-        of branch instructions will be adapted to point to the original
-        instructions. Exception and line number tables in the associated 
-        <tt>CodeAttribute</tt>will also be updated.
-     
-        @param instructions the list of instructions which is to be treated
-                            with the <tt>CodeInsertion</tt>s. This list
-                            and the resulting instructions will not be usable
-                            after the method is finished. If you need to 
-                            reuse the original instructions, you have to pass
-                            a deep-cloned list into this method.
-        @param codeInsertions the list of codeInsertions which is to be applied to
-                              the list of instructions.
-        @param codeAttribute the <tt>CodeAttribute</tt> pertaining to the supplied 
-                             list of instructions.
-        @return the resulting list of instructions
-        @throws InvalidByteCodeException
+     * Apply a list of <tt>CodeInsertion</tt>s to a list of instructions
+     * such as the one supplied by a <tt>ByteCodeReader</tt>. Offsets
+     * of branch instructions will be adapted to point to the original
+     * instructions. Exception and line number tables in the associated
+     * <tt>CodeAttribute</tt>will also be updated.
+     *
+     * @param instructions   the list of instructions which is to be treated
+     *                       with the <tt>CodeInsertion</tt>s. This list
+     *                       and the resulting instructions will not be usable
+     *                       after the method is finished. If you need to
+     *                       reuse the original instructions, you have to pass
+     *                       a deep-cloned list into this method.
+     * @param codeInsertions the list of codeInsertions which is to be applied to
+     *                       the list of instructions.
+     * @param codeAttribute  the <tt>CodeAttribute</tt> pertaining to the supplied
+     *                       list of instructions.
+     * @return the resulting list of instructions
+     * @throws InvalidByteCodeException
      */
-    public static List apply(List instructions,
-                             List codeInsertions,
-                             CodeAttribute codeAttribute)
+    public static List<AbstractInstruction> apply(List<? extends AbstractInstruction> instructions,
+                                                  List<? extends CodeInsertion> codeInsertions,
+                                                  CodeAttribute codeAttribute)
 
-        throws InvalidByteCodeException
-    {
+        throws InvalidByteCodeException {
         int instructionCount = instructions.size();
         int[] transformedIndices = new int[instructionCount];
         for (int i = 0; i < instructionCount; i++) {
             transformedIndices[i] = i;
         }
 
-        List newInstructions = insertCode(instructions,
-                                          codeInsertions,
-                                          transformedIndices);
+        List<AbstractInstruction> newInstructions = insertCode(instructions,
+            codeInsertions,
+            transformedIndices);
 
         int[] oldOffsets = new int[instructionCount];
         for (int i = 0; i < instructionCount; i++) {
-            oldOffsets[i] = ((AbstractInstruction)instructions.get(i)).getOffset();
+            oldOffsets[i] = (instructions.get(i)).getOffset();
         }
         int[] newOffsets = new int[newInstructions.size()];
         calculateOffsets(newInstructions, newOffsets);
 
 
         adjustOffsets(instructions,
-                      newInstructions,
-                      oldOffsets,
-                      newOffsets,
-                      transformedIndices);
+            newOffsets,
+            transformedIndices);
 
         if (codeAttribute != null) {
             adjustExceptionTable(oldOffsets,
-                                 newOffsets,
-                                 transformedIndices,
-                                 codeAttribute);
+                newOffsets,
+                transformedIndices,
+                codeAttribute);
 
             adjustLineNumberTable(oldOffsets,
-                                  newOffsets,
-                                  transformedIndices,
-                                  codeAttribute);
+                newOffsets,
+                transformedIndices,
+                codeAttribute);
         }
 
         applyOffsets(newInstructions, newOffsets);
         return newInstructions;
     }
 
-    private static List insertCode(List instructions,
-                                   List codeInsertions,
-                                   int[] transformedIndices)
-    {
+    private static List<AbstractInstruction> insertCode(List<? extends AbstractInstruction> instructions,
+                                                        List<? extends CodeInsertion> codeInsertions,
+                                                        int[] transformedIndices) {
         int instructionCount = instructions.size();
         int insertionCount = codeInsertions.size();
 
         int newSize = calculateNewSize(instructions, codeInsertions);
-        List newInstructions = new ArrayList(newSize);
+        List<AbstractInstruction> newInstructions = new ArrayList<AbstractInstruction>(newSize);
 
         int currentInsertionIndex = 0;
-        CodeInsertion currentInsertion = (CodeInsertion)codeInsertions.get(0);
+        CodeInsertion currentInsertion = codeInsertions.get(0);
         for (int i = 0; i < instructionCount; i++) {
             if (currentInsertion.getPosition() < i && currentInsertionIndex < insertionCount - 1) {
                 ++currentInsertionIndex;
-                currentInsertion = (CodeInsertion)codeInsertions.get(currentInsertionIndex);
+                currentInsertion = codeInsertions.get(currentInsertionIndex);
             }
             int addedBefore = 0;
             int addedAfter = 0;
@@ -182,13 +178,10 @@ public class CodeInsertion {
         return newInstructions;
     }
 
-    private static int calculateNewSize(List instructions, List codeInsertions) {
+    private static int calculateNewSize(List<? extends AbstractInstruction> instructions, List<? extends CodeInsertion> codeInsertions) {
 
-        int insertionCount = codeInsertions.size();
         int newSize = instructions.size();
-        for (int i = 0; i < insertionCount; i++) {
-            CodeInsertion insertion = (CodeInsertion)codeInsertions.get(i);
-
+        for (CodeInsertion insertion : codeInsertions) {
             AbstractInstruction[] preInstructions = insertion.getPreInstructions();
             if (preInstructions != null) {
                 newSize += preInstructions.length;
@@ -205,8 +198,7 @@ public class CodeInsertion {
                                      int addedBefore,
                                      int addedAfter,
                                      int[] transformedIndices,
-                                     boolean shiftTarget)
-    {
+                                     boolean shiftTarget) {
         if (!shiftTarget) {
             transformedIndices[currentIndex] += addedBefore;
         }
@@ -215,28 +207,24 @@ public class CodeInsertion {
         }
     }
 
-    private static int addInstructions(List newInstructions,
-                                       AbstractInstruction[] insertedInstructions)
-    {
+    private static int addInstructions(List<AbstractInstruction> newInstructions,
+                                       AbstractInstruction[] insertedInstructions) {
         if (insertedInstructions != null) {
-            for (int i = 0; i < insertedInstructions.length; i++) {
-                newInstructions.add(insertedInstructions[i]);
-            }
+            Collections.addAll(newInstructions, insertedInstructions);
             return insertedInstructions.length;
         } else {
             return 0;
         }
     }
 
-    private static void calculateOffsets(List instructions,
-                                         int[] offsets)
-    {
+    private static void calculateOffsets(List<AbstractInstruction> instructions,
+                                         int[] offsets) {
         int instructionCount = instructions.size();
         int currentOffset = 0;
         for (int i = 0; i < instructionCount; i++) {
             offsets[i] = currentOffset;
 
-            AbstractInstruction instr = (AbstractInstruction)instructions.get(i);
+            AbstractInstruction instr = instructions.get(i);
 
             int currentSize;
             if (instr instanceof PaddedInstruction) {
@@ -248,24 +236,21 @@ public class CodeInsertion {
         }
     }
 
-    private static void applyOffsets(List instructions, int[] offsets) {
+    private static void applyOffsets(List<AbstractInstruction> instructions, int[] offsets) {
         int instructionCount = instructions.size();
         for (int i = 0; i < instructionCount; i++) {
-            AbstractInstruction instr = (AbstractInstruction)instructions.get(i);
+            AbstractInstruction instr = instructions.get(i);
             instr.setOffset(offsets[i]);
         }
     }
 
-    private static void adjustOffsets(List instructions,
-                                      List newInstructions,
-                                      int[] oldOffsets,
+    private static void adjustOffsets(List<? extends AbstractInstruction> instructions,
                                       int[] newOffsets,
                                       int[] transformedIndices)
-        throws InvalidByteCodeException
-    {
+        throws InvalidByteCodeException {
         int instructionCount = instructions.size();
         for (int sourceIndex = 0; sourceIndex < instructionCount; sourceIndex++) {
-            AbstractInstruction currentInstruction = (AbstractInstruction)instructions.get(sourceIndex);
+            AbstractInstruction currentInstruction = instructions.get(sourceIndex);
             int branchOffset = getBranchOffset(currentInstruction);
             if (branchOffset == 0) {
                 continue;
@@ -275,16 +260,14 @@ public class CodeInsertion {
                 for (int i = 0; i < jumpOffsets.length; i++) {
                     int targetIndex = getBranchTargetIndex(instructions, sourceIndex, jumpOffsets[i]);
                     jumpOffsets[i] =
-                        calculateNewBranchOffset(newInstructions, sourceIndex, targetIndex, transformedIndices, newOffsets);
+                        calculateNewBranchOffset(sourceIndex, targetIndex, transformedIndices, newOffsets);
                 }
             } else if (currentInstruction instanceof LookupSwitchInstruction) {
-                List matchOffsetPairs = ((LookupSwitchInstruction)currentInstruction).getMatchOffsetPairs();
-                for (int i = 0; i < matchOffsetPairs.size(); i++) {
-                    MatchOffsetPair matchOffsetPair =
-                        (MatchOffsetPair)matchOffsetPairs.get(i);
+                List<MatchOffsetPair> matchOffsetPairs = ((LookupSwitchInstruction)currentInstruction).getMatchOffsetPairs();
+                for (MatchOffsetPair matchOffsetPair : matchOffsetPairs) {
                     int targetIndex = getBranchTargetIndex(instructions, sourceIndex, matchOffsetPair.getOffset());
                     matchOffsetPair.setOffset(
-                        calculateNewBranchOffset(newInstructions, sourceIndex, targetIndex, transformedIndices, newOffsets)
+                        calculateNewBranchOffset(sourceIndex, targetIndex, transformedIndices, newOffsets)
                     );
                 }
             }
@@ -292,24 +275,20 @@ public class CodeInsertion {
 
             setBranchOffset(
                 currentInstruction,
-                calculateNewBranchOffset(newInstructions, sourceIndex, targetIndex, transformedIndices, newOffsets)
+                calculateNewBranchOffset(sourceIndex, targetIndex, transformedIndices, newOffsets)
             );
 
         }
     }
 
-    private static int calculateNewBranchOffset(List newInstructions,
-                                                int sourceIndex,
+    private static int calculateNewBranchOffset(int sourceIndex,
                                                 int targetIndex,
                                                 int[] transformedIndices,
-                                                int[] newOffsets)
-{
-            int transformedSourceIndex = transformedIndices[sourceIndex];
-            int transformedTargetIndex = transformedIndices[targetIndex];
+                                                int[] newOffsets) {
+        int transformedSourceIndex = transformedIndices[sourceIndex];
+        int transformedTargetIndex = transformedIndices[targetIndex];
 
-            int newBranchOffset = newOffsets[transformedTargetIndex] - newOffsets[transformedSourceIndex];
-
-            return newBranchOffset;
+        return newOffsets[transformedTargetIndex] - newOffsets[transformedSourceIndex];
     }
 
 
@@ -327,8 +306,7 @@ public class CodeInsertion {
     }
 
     private static void setBranchOffset(AbstractInstruction instruction,
-                                        int branchOffset)
-    {
+                                        int branchOffset) {
         if (instruction instanceof TableSwitchInstruction) {
             ((TableSwitchInstruction)instruction).setDefaultOffset(branchOffset);
         } else if (instruction instanceof LookupSwitchInstruction) {
@@ -338,16 +316,15 @@ public class CodeInsertion {
         }
     }
 
-    private static int getBranchTargetIndex(List instructions,
+    private static int getBranchTargetIndex(List<? extends AbstractInstruction> instructions,
                                             int sourceIndex,
                                             int branchOffset)
-        throws InvalidByteCodeException
-    {
+        throws InvalidByteCodeException {
         int instructionsCount = instructions.size();
-        int startOffset = ((AbstractInstruction)instructions.get(sourceIndex)).getOffset();
+        int startOffset = (instructions.get(sourceIndex)).getOffset();
         int step = branchOffset > 0 ? 1 : -1;
         for (int i = sourceIndex + step; i >= 0 && i < instructionsCount; i += step) {
-            int targetOffset = ((AbstractInstruction)instructions.get(i)).getOffset();
+            int targetOffset = (instructions.get(i)).getOffset();
             if (targetOffset - startOffset == branchOffset) {
                 return i;
             }
@@ -359,24 +336,21 @@ public class CodeInsertion {
                                              int[] newOffsets,
                                              int[] transformedIndices,
                                              CodeAttribute codeAttribute)
-        throws InvalidByteCodeException
-    {
+        throws InvalidByteCodeException {
 
         ExceptionTableEntry[] exceptionTable = codeAttribute.getExceptionTable();
         if (exceptionTable == null) {
             return;
         }
 
-        for (int i = 0; i < exceptionTable.length; i++) {
-            ExceptionTableEntry currentEntry = exceptionTable[i];
+        for (ExceptionTableEntry currentEntry : exceptionTable) {
             int startPcIndex = Arrays.binarySearch(oldOffsets, currentEntry.getStartPc());
             int endPcIndex = Arrays.binarySearch(oldOffsets, currentEntry.getEndPc());
             int handlerPcIndex = Arrays.binarySearch(oldOffsets, currentEntry.getHandlerPc());
             if (startPcIndex < 0 || endPcIndex < 0 || handlerPcIndex < 0 ||
                 startPcIndex == oldOffsets.length ||
                 endPcIndex == oldOffsets.length ||
-                handlerPcIndex == oldOffsets.length)
-            {
+                handlerPcIndex == oldOffsets.length) {
                 throw new InvalidByteCodeException("Invalid exception table");
             }
             currentEntry.setStartPc(newOffsets[transformedIndices[startPcIndex]]);
@@ -384,14 +358,13 @@ public class CodeInsertion {
             currentEntry.setHandlerPc(newOffsets[transformedIndices[handlerPcIndex]]);
         }
 
-   }
+    }
 
     private static void adjustLineNumberTable(int[] oldOffsets,
                                               int[] newOffsets,
                                               int[] transformedIndices,
                                               CodeAttribute codeAttribute)
-        throws InvalidByteCodeException
-    {
+        throws InvalidByteCodeException {
 
         LineNumberTableAttribute lineNumberTableAttribute =
             (LineNumberTableAttribute)codeAttribute.findAttribute(LineNumberTableAttribute.class);
@@ -400,8 +373,7 @@ public class CodeInsertion {
         }
         LineNumberTableEntry[] lineNumberTable = lineNumberTableAttribute.getLineNumberTable();
 
-        for (int i = 0; i < lineNumberTable.length; i++) {
-            LineNumberTableEntry currentEntry = lineNumberTable[i];
+        for (LineNumberTableEntry currentEntry : lineNumberTable) {
             int startPcIndex = Arrays.binarySearch(oldOffsets, currentEntry.getStartPc());
             if (startPcIndex < 0 || startPcIndex == oldOffsets.length) {
                 throw new InvalidByteCodeException("Invalid line number table " + currentEntry.getStartPc());
@@ -409,7 +381,7 @@ public class CodeInsertion {
             currentEntry.setStartPc(newOffsets[transformedIndices[startPcIndex]]);
         }
 
-   }
+    }
 
     private int position;
     private AbstractInstruction[] preInstructions;
@@ -417,101 +389,109 @@ public class CodeInsertion {
     private boolean shiftTarget;
 
     /**
-        Create a code insertion.
-        @param position the instruction number to which this <tt>CodeInsertion</tt>
-                        is to be applied. Corresponds to the index in the list
-                        of instructions such as the one returned by a 
-                        <tt>ByteCodeReader</tt>.
-        @param preInstructions the instructions to be inserted <b>before</b>
-                               the insertion point.
-        @param postInstructions the instructions to be inserted <b>after</b>
-                                the insertion point.
-        @param shiftTarget should offsets of branch instructions pointing to 
-                           the position of this code insertion
-                           be shifted or point to the beginning of the 
-                           code inserted via the <tt>preInstructions</tt>
-                           parameters.
+     * Create a code insertion.
+     *
+     * @param position         the instruction number to which this <tt>CodeInsertion</tt>
+     *                         is to be applied. Corresponds to the index in the list
+     *                         of instructions such as the one returned by a
+     *                         <tt>ByteCodeReader</tt>.
+     * @param preInstructions  the instructions to be inserted <b>before</b>
+     *                         the insertion point.
+     * @param postInstructions the instructions to be inserted <b>after</b>
+     *                         the insertion point.
+     * @param shiftTarget      should offsets of branch instructions pointing to
+     *                         the position of this code insertion
+     *                         be shifted or point to the beginning of the
+     *                         code inserted via the <tt>preInstructions</tt>
+     *                         parameters.
      */
     public CodeInsertion(int position,
                          AbstractInstruction[] preInstructions,
                          AbstractInstruction[] postInstructions,
-                         boolean shiftTarget)
-    {
+                         boolean shiftTarget) {
         this.position = position;
         this.preInstructions = preInstructions;
-        this.postInstructions  = postInstructions;
+        this.postInstructions = postInstructions;
         this.shiftTarget = shiftTarget;
     }
 
     /**
-        Get the insertion position, i.e the instruction number to which
-        this <tt>CodeInsertion</tt> is to be applied. Corresponds to the
-        index in the list of instructions such as the one returned by a 
-        <tt>ByteCodeReader</tt>.
-        @return the insertion position
+     * Get the insertion position, i.e the instruction number to which
+     * this <tt>CodeInsertion</tt> is to be applied. Corresponds to the
+     * index in the list of instructions such as the one returned by a
+     * <tt>ByteCodeReader</tt>.
+     *
+     * @return the insertion position
      */
     public int getPosition() {
         return position;
     }
 
     /**
-        Set the insertion position, i.e the instruction number to which
-        this <tt>CodeInsertion</tt> is to be applied. Corresponds to the
-        index in the list of instructions such as the one returned by a 
-        <tt>ByteCodeReader</tt>.
-        @param position the insertion position
+     * Set the insertion position, i.e the instruction number to which
+     * this <tt>CodeInsertion</tt> is to be applied. Corresponds to the
+     * index in the list of instructions such as the one returned by a
+     * <tt>ByteCodeReader</tt>.
+     *
+     * @param position the insertion position
      */
     public void setPosition(int position) {
         this.position = position;
     }
 
     /**
-        Get the instructions to be inserted <b>before</b> the insertion point.
-        @return array of instructions
+     * Get the instructions to be inserted <b>before</b> the insertion point.
+     *
+     * @return array of instructions
      */
     public AbstractInstruction[] getPreInstructions() {
         return preInstructions;
     }
 
     /**
-        Set the instructions to be inserted <b>before</b> the insertion point.
-        @param preInstructions array of instructions
+     * Set the instructions to be inserted <b>before</b> the insertion point.
+     *
+     * @param preInstructions array of instructions
      */
     public void setPreInstructions(AbstractInstruction[] preInstructions) {
         this.preInstructions = preInstructions;
     }
 
     /**
-        Get the instructions to be inserted <b>after</b> the insertion point.
-        @return array of instructions
+     * Get the instructions to be inserted <b>after</b> the insertion point.
+     *
+     * @return array of instructions
      */
     public AbstractInstruction[] getPostInstructions() {
         return postInstructions;
     }
 
     /**
-        Set the instructions to be inserted <b>after</b> the insertion point.
-        @param postInstructions array of instructions
+     * Set the instructions to be inserted <b>after</b> the insertion point.
+     *
+     * @param postInstructions array of instructions
      */
     public void setPostInstructions(AbstractInstruction[] postInstructions) {
         this.postInstructions = postInstructions;
     }
 
     /**
-        Get whether offsets of branch instructions pointing to the position of
-        the resulting code insertion should be shifted to the first pre-instruction
-        or continue to point at the original instruction.
-        @return the boolean value
+     * Get whether offsets of branch instructions pointing to the position of
+     * the resulting code insertion should be shifted to the first pre-instruction
+     * or continue to point at the original instruction.
+     *
+     * @return the boolean value
      */
     public boolean isShiftTarget() {
         return shiftTarget;
     }
 
     /**
-        Set whether offsets of branch instructions pointing to the position of
-        the resulting code insertion should be shifted to the first pre-instruction
-        or continue to point at the original instruction.
-        @param shiftTarget the boolean value.
+     * Set whether offsets of branch instructions pointing to the position of
+     * the resulting code insertion should be shifted to the first pre-instruction
+     * or continue to point at the original instruction.
+     *
+     * @param shiftTarget the boolean value.
      */
     public void setShiftTarget(boolean shiftTarget) {
         this.shiftTarget = shiftTarget;

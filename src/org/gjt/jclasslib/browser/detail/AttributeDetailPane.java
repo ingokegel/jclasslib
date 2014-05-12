@@ -43,7 +43,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
     private static final String SCREEN_RUNTIME_ANNOTATIONS = "RuntimeAnnotations";
     private static final String SCREEN_ANNOTATION_DEFAULT = "AnnotationDefault";
 
-    private HashMap attributeTypeToDetailPane;
+    private HashMap<String, AbstractDetailPane> attributeTypeToDetailPane;
     
     // Visual components
     
@@ -125,7 +125,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
     }
 
     private AbstractDetailPane getDetailPane(String attributeType) {
-        AbstractDetailPane detailPane = (AbstractDetailPane)attributeTypeToDetailPane.get(attributeType);
+        AbstractDetailPane detailPane = attributeTypeToDetailPane.get(attributeType);
         if (detailPane == null) {
             detailPane = createDetailPanel(attributeType);
             if (detailPane != null) {
@@ -182,7 +182,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
         specificInfoPane.setBorder(createTitledBorder("Specific info:"));
 
         specificInfoPane.setLayout(new CardLayout());
-        attributeTypeToDetailPane = new HashMap();
+        attributeTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
         JPanel pane;
 
         pane = new JPanel();

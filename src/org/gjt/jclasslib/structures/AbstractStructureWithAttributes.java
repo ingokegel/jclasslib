@@ -7,7 +7,9 @@
 
 package org.gjt.jclasslib.structures;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
     Base class for all structures with attributes.
@@ -43,9 +45,9 @@ public abstract class AbstractStructureWithAttributes extends AbstractStructure 
      */
     public AttributeInfo findAttribute(Class attributeClass) {
         AttributeInfo foundAttribute = null;
-        for (int i = 0; i < attributes.length; i++) {
-            if (attributes[i].getClass() == attributeClass) {
-                foundAttribute = attributes[i];
+        for (AttributeInfo attribute : attributes) {
+            if (attribute.getClass() == attributeClass) {
+                foundAttribute = attribute;
                 break;
             }
         }
@@ -55,7 +57,7 @@ public abstract class AbstractStructureWithAttributes extends AbstractStructure 
     /**
         Read the attributes of this structure from the given <tt>DataInput</tt>. <p>
      
-        Excpects <tt>DataInput</tt> to be in JVM class file format and just
+        Expects <tt>DataInput</tt> to be in JVM class file format and just
         before an attribute length field.
         @param in the <tt>DataInput</tt> from which to read
         @throws InvalidByteCodeException if the byte code is invalid

@@ -8,7 +8,9 @@
 package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserTreeNode;
-import org.gjt.jclasslib.browser.config.window.*;
+import org.gjt.jclasslib.browser.config.window.BrowserPath;
+import org.gjt.jclasslib.browser.config.window.CategoryHolder;
+import org.gjt.jclasslib.browser.config.window.ReferenceHolder;
 import org.gjt.jclasslib.structures.CPInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.*;
@@ -97,7 +99,7 @@ public class ClassElementOpener implements ActionListener {
 
     /**
      * Set the constant pool info that is to be the source of the link.
-     * @param cpInfo the contant pool info.
+     * @param cpInfo the constant pool info.
      */
     public void setCPInfo(CPInfo cpInfo) {
 

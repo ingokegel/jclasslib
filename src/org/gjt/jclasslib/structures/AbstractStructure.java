@@ -9,7 +9,9 @@ package org.gjt.jclasslib.structures;
 
 import org.gjt.jclasslib.io.Log;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.lang.reflect.Array;
 
 /**
@@ -160,7 +162,7 @@ public abstract class AbstractStructure {
     }
 
     private String padHexString(String hexString, int length) {
-        StringBuffer buffer = new StringBuffer("0x");
+        StringBuilder buffer = new StringBuilder("0x");
 
         for (int i = hexString.length(); i < length; i++) {
             buffer.append('0');
@@ -192,7 +194,7 @@ public abstract class AbstractStructure {
      */
     protected String printAccessFlagsVerbose(int[] availableAccessFlags, String[] availableAccessFlagsVerbose,
                                              int accessFlags) {
-        StringBuffer accessFlagsVerbose = new StringBuffer();
+        StringBuilder accessFlagsVerbose = new StringBuilder();
 
 
         int all = 0;

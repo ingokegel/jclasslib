@@ -16,7 +16,7 @@ import javax.swing.tree.TreePath;
 /**
     Detail pane showing general information on the class file structure.
     All fields in the <tt>ClassFile</tt> structure without substructure 
-    are incorporated in theis pane.
+    are incorporated in this pane.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
     @version $Revision: 1.5 $ $Date: 2003-08-18 08:14:22 $

@@ -12,7 +12,10 @@ import org.gjt.jclasslib.mdi.MDIConfig;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,9 +29,9 @@ import java.util.regex.Pattern;
 public class BrowserConfig implements ClasspathComponent {
 
     private MDIConfig mdiConfig;
-    private List classpath = new ArrayList();
-    private Set mergedEntries = new HashSet();
-    private Set changeListeners = new HashSet();
+    private List<ClasspathEntry> classpath = new ArrayList<ClasspathEntry>();
+    private Set<ClasspathEntry> mergedEntries = new HashSet<ClasspathEntry>();
+    private Set<ClasspathChangeListener> changeListeners = new HashSet<ClasspathChangeListener>();
 
     /**
      * Get the associated MDI configuration object.
@@ -50,7 +53,7 @@ public class BrowserConfig implements ClasspathComponent {
      * Get the list of <tt>ClasspathEntry</tt> objects that define the classpath.
      * @return the list
      */
-    public List getClasspath() {
+    public List<ClasspathEntry> getClasspath() {
         return classpath;
     }
 
@@ -58,7 +61,7 @@ public class BrowserConfig implements ClasspathComponent {
      * Set the list of <tt>ClasspathEntry</tt> objects that define the classpath.
      * @param classpath the list
      */
-    public void setClasspath(List classpath) {
+    public void setClasspath(List<ClasspathEntry> classpath) {
         this.classpath = classpath;
     }
 
@@ -139,9 +142,7 @@ public class BrowserConfig implements ClasspathComponent {
 
     public FindResult findClass(String className) {
 
-        Iterator it = classpath.iterator();
-        while (it.hasNext()) {
-            ClasspathEntry entry = (ClasspathEntry)it.next();
+        for (ClasspathEntry entry : classpath) {
             FindResult findResult = entry.findClass(className);
             if (findResult != null) {
                 return findResult;
@@ -152,9 +153,7 @@ public class BrowserConfig implements ClasspathComponent {
 
     public void mergeClassesIntoTree(DefaultTreeModel model, boolean reset) {
 
-        Iterator it = classpath.iterator();
-        while (it.hasNext()) {
-            ClasspathEntry entry = (ClasspathEntry)it.next();
+        for (ClasspathEntry entry : classpath) {
             if (reset || !mergedEntries.contains(entry)) {
                 entry.mergeClassesIntoTree(model, reset);
                 mergedEntries.add(entry);
@@ -163,10 +162,8 @@ public class BrowserConfig implements ClasspathComponent {
     }
 
     private void fireClasspathChanged(boolean removal) {
-        Iterator it = changeListeners.iterator();
         ClasspathChangeEvent event = new ClasspathChangeEvent(this, removal);
-        while (it.hasNext()) {
-            ClasspathChangeListener listener = (ClasspathChangeListener)it.next();
+        for (ClasspathChangeListener listener : changeListeners) {
             listener.classpathChanged(event);
         }
     }

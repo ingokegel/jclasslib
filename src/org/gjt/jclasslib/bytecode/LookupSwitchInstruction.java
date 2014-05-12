@@ -23,7 +23,7 @@ import java.util.List;
 public class LookupSwitchInstruction extends PaddedInstruction {
 
     private int defaultOffset;
-    private List matchOffsetPairs = new ArrayList();
+    private List<MatchOffsetPair> matchOffsetPairs = new ArrayList<MatchOffsetPair>();
    
     /**
         Constructor.
@@ -59,7 +59,7 @@ public class LookupSwitchInstruction extends PaddedInstruction {
         elements.
         @return the list
      */
-    public List getMatchOffsetPairs() {
+    public List<MatchOffsetPair> getMatchOffsetPairs() {
         return matchOffsetPairs;
     }
     
@@ -69,7 +69,7 @@ public class LookupSwitchInstruction extends PaddedInstruction {
         elements.
         @param matchOffsetPairs the list
      */
-    public void setMatchOffsetPairs(List matchOffsetPairs) {
+    public void setMatchOffsetPairs(List<MatchOffsetPair> matchOffsetPairs) {
         this.matchOffsetPairs = matchOffsetPairs;
     }
 
@@ -100,8 +100,8 @@ public class LookupSwitchInstruction extends PaddedInstruction {
         out.writeInt(numberOfPairs);
         
         MatchOffsetPair currentMatchOffsetPair;
-        for (int i = 0; i < numberOfPairs; i++) {
-            currentMatchOffsetPair = (MatchOffsetPair)matchOffsetPairs.get(i);
+        for (MatchOffsetPair matchOffsetPair : matchOffsetPairs) {
+            currentMatchOffsetPair = matchOffsetPair;
             out.writeInt(currentMatchOffsetPair.getMatch());
             out.writeInt(currentMatchOffsetPair.getOffset());
         }

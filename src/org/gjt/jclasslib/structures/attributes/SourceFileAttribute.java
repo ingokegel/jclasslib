@@ -10,7 +10,9 @@ package org.gjt.jclasslib.structures.attributes;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
     Describes a <tt>SourceFile</tt> attribute structure.
@@ -25,28 +27,28 @@ public class SourceFileAttribute extends AttributeInfo {
 
     private static final int LENGTH = 2;
     
-    private int sourcefileIndex;
+    private int sourceFileIndex;
     
     /**
         Get the constant pool index of the name of the source file.
         @return the index
      */
-    public int getSourcefileIndex() {
-        return sourcefileIndex;
+    public int getSourceFileIndex() {
+        return sourceFileIndex;
     }
 
     /**
         Set the constant pool index of the name of the source file.
-        @param sourcefileIndex the index
+        @param sourceFileIndex the index
      */
-    public void setSourcefileIndex(int sourcefileIndex) {
-        this.sourcefileIndex = sourcefileIndex;
+    public void setSourceFileIndex(int sourceFileIndex) {
+        this.sourceFileIndex = sourceFileIndex;
     }
 
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
             
-        sourcefileIndex = in.readUnsignedShort();
+        sourceFileIndex = in.readUnsignedShort();
         if (debug) debug("read ");
     }
 
@@ -54,7 +56,7 @@ public class SourceFileAttribute extends AttributeInfo {
         throws InvalidByteCodeException, IOException {
         
         super.write(out);
-        out.writeShort(sourcefileIndex);
+        out.writeShort(sourceFileIndex);
         if (debug) debug("wrote ");
     }
 
@@ -63,7 +65,7 @@ public class SourceFileAttribute extends AttributeInfo {
     }
 
     protected void debug(String message) {
-        super.debug(message + "SourceFile attribute with sourcefile_index " + sourcefileIndex);
+        super.debug(message + "SourceFile attribute with sourcefile_index " + sourceFileIndex);
     }
 
 }

@@ -11,7 +11,9 @@ import org.gjt.jclasslib.io.Log;
 import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -36,7 +38,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private int minorVersion;
     private int majorVersion;
     private CPInfo[] constantPool;
-    private HashMap constantPoolEntryToIndex = new HashMap();
+    private HashMap<CPInfo, Integer> constantPoolEntryToIndex = new HashMap<CPInfo, Integer>();
     private int accessFlags;
     private int thisClass;
     private int superClass;
@@ -135,9 +137,9 @@ public class ClassFile extends AbstractStructureWithAttributes {
      * @return the index, -1 if no equivalent constant pool entry can be found
      */
     public int getConstantPoolIndex(CPInfo cpInfo) {
-        Integer index = (Integer)constantPoolEntryToIndex.get(cpInfo);
+        Integer index = constantPoolEntryToIndex.get(cpInfo);
         if (index != null) {
-            return index.intValue();
+            return index;
         } else {
             return -1;
         }
@@ -153,7 +155,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public void setConstantPool(CPInfo[] constantPool) {
         this.constantPool = constantPool;
         for (int i = 0; i < constantPool.length; i++) {
-            constantPoolEntryToIndex.put(constantPool[i], new Integer(i));
+            constantPoolEntryToIndex.put(constantPool[i], i);
         }
     }
 
@@ -169,7 +171,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         this.constantPool = enlargedConstantPool;
         for (int i = startIndex; i < constantPool.length; i++) {
             if (constantPool[i] != null) {
-                constantPoolEntryToIndex.put(constantPool[i], new Integer(i));
+                constantPoolEntryToIndex.put(constantPool[i], i);
             }
         }
     }
@@ -181,7 +183,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
      * @param index the index
      */
     public void registerConstantPoolEntry(int index) {
-        constantPoolEntryToIndex.put(constantPool[index], new Integer(index));
+        constantPoolEntryToIndex.put(constantPool[index], index);
     }
 
     /**
@@ -361,7 +363,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
      * @return the constant pool entry
      * @throws InvalidByteCodeException if the entry is of a different class than expected
      */
-    public CPInfo getConstantPoolEntry(int index, Class entryClass)
+    public CPInfo getConstantPoolEntry(int index, Class<? extends CPInfo> entryClass)
             throws InvalidByteCodeException {
 
         if (!checkValidConstantPoolIndex(index)) {
@@ -582,7 +584,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
                 // of the constant is not yet known
                 if (debug) debug("reading constant pool entry " + i);
                 constantPool[i] = CPInfo.create(in, this);
-                constantPoolEntryToIndex.put(constantPool[i], new Integer(i));
+                constantPoolEntryToIndex.put(constantPool[i], i);
                 if (constantPool[i] instanceof ConstantLargeNumeric) {
                     // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
                     // pool entries, the second entry is unusable (design mistake)
@@ -596,9 +598,9 @@ public class ClassFile extends AbstractStructureWithAttributes {
             throws InvalidByteCodeException, IOException {
 
         int lastFreeIndex;
-        for (lastFreeIndex = getLength(constantPool) - 1;
-             lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null;
-             lastFreeIndex--) {
+        lastFreeIndex = getLength(constantPool) - 1;
+        while (lastFreeIndex >= 0 && constantPool[lastFreeIndex] == null) {
+            lastFreeIndex--;
         }
 
         out.writeShort(lastFreeIndex + 1);

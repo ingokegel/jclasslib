@@ -10,7 +10,9 @@ package org.gjt.jclasslib.structures.attributes;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
     Describes a <tt>ConstantValue</tt> attribute structure.
@@ -25,28 +27,28 @@ public class ConstantValueAttribute extends AttributeInfo {
 
     private static final int LENGTH = 2;
 
-    private int constantvalueIndex;
+    private int constantValueIndex;
     
     /**
         Get the constant pool index of the constant value.
         @return the index
      */
-    public int getConstantvalueIndex() {
-        return constantvalueIndex;
+    public int getConstantValueIndex() {
+        return constantValueIndex;
     }
 
     /**
         Set the constant pool index of the constant value.
-        @param constantvalueIndex the index
+        @param constantValueIndex the index
      */
-    public void setConstantvalueIndex(int constantvalueIndex) {
-        this.constantvalueIndex = constantvalueIndex;
+    public void setConstantValueIndex(int constantValueIndex) {
+        this.constantValueIndex = constantValueIndex;
     }
 
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
             
-        constantvalueIndex = in.readUnsignedShort();
+        constantValueIndex = in.readUnsignedShort();
         if (debug) debug("read ");
     }
 
@@ -54,7 +56,7 @@ public class ConstantValueAttribute extends AttributeInfo {
         throws InvalidByteCodeException, IOException {
         
         super.write(out);
-        out.writeShort(constantvalueIndex);
+        out.writeShort(constantValueIndex);
         if (debug) debug("wrote ");
     }
 
@@ -63,7 +65,7 @@ public class ConstantValueAttribute extends AttributeInfo {
     }
 
     protected void debug(String message) {
-        super.debug(message + "ConstantValue attribute with constantvalue_index " + constantvalueIndex);
+        super.debug(message + "ConstantValue attribute with constantvalue_index " + constantValueIndex);
     }
 
 }

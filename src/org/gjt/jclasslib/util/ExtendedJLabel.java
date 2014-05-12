@@ -162,7 +162,7 @@ public class ExtendedJLabel extends JLabel implements Scrollable {
                                 viewRect,
                                 new Rectangle(),
                                 textRect,
-                                getText() == null ? 0 : ((Integer)UIManager.get("Button.textIconGap")).intValue()
+                                getText() == null ? 0 : (Integer)UIManager.get("Button.textIconGap")
                           );
 
 
@@ -170,8 +170,8 @@ public class ExtendedJLabel extends JLabel implements Scrollable {
             if (UIManager.getLookAndFeel().isNativeLookAndFeel() && System.getProperty("os.name").startsWith("Windows")) {
                 offset = 1;
             }
-            g.fillRect(textRect.x + ((Integer)UIManager.get("Button.textShiftOffset")).intValue() ,
-                       textRect.y + fm.getAscent() + ((Integer)UIManager.get("Button.textShiftOffset")).intValue() + offset,
+            g.fillRect(textRect.x + (Integer)UIManager.get("Button.textShiftOffset"),
+                       textRect.y + fm.getAscent() + (Integer)UIManager.get("Button.textShiftOffset") + offset,
                        textRect.width,
                        1);
         }

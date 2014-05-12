@@ -7,7 +7,9 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code;
 
-import org.gjt.jclasslib.browser.*;
+import org.gjt.jclasslib.browser.BrowserHistory;
+import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener;
 import org.gjt.jclasslib.bytecode.*;
 import org.gjt.jclasslib.io.ByteCodeReader;
 import org.gjt.jclasslib.structures.ClassFile;
@@ -20,10 +22,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.font.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextHitInfo;
+import java.awt.font.TextLayout;
 import java.io.IOException;
 import java.text.AttributedString;
 import java.util.*;
+import java.util.List;
 
 /**
     Bytecode renderer.
@@ -41,13 +47,13 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     /** Border for the renderer. */
     public static final Border BORDER = new EmptyBorder(MARGIN_Y, MARGIN_X, MARGIN_Y, MARGIN_X);
 
-    private static Map STYLE_BASE;
-    private static Map STYLE_NORMAL;
-    private static Map STYLE_SMALL;
-    private static Map STYLE_LINK;
-    private static Map STYLE_OFFSET;
-    private static Map STYLE_INSTRUCTION;
-    private static Map STYLE_IMMEDIATE_VALUE;
+    private static Map<TextAttribute, Object> STYLE_BASE;
+    private static Map<TextAttribute, Object> STYLE_NORMAL;
+    private static Map<TextAttribute, Object> STYLE_SMALL;
+    private static Map<TextAttribute, Object> STYLE_LINK;
+    private static Map<TextAttribute, Object> STYLE_OFFSET;
+    private static Map<TextAttribute, Object> STYLE_INSTRUCTION;
+    private static Map<TextAttribute, Object> STYLE_IMMEDIATE_VALUE;
 
     private static final String TAB_STRING = "        ";
 
@@ -57,7 +63,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
     public static void initStyles(Font baseFont) {
 
-        STYLE_BASE = new HashMap(2);
+        STYLE_BASE = new HashMap<TextAttribute, Object>(2);
         if (baseFont != null) {
             STYLE_BASE.put(TextAttribute.FAMILY, baseFont.getFamily());
         } else {
@@ -65,25 +71,25 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
             STYLE_BASE.put(TextAttribute.FAMILY, "MonoSpaced");
         }
 
-        STYLE_BASE.put(TextAttribute.SIZE, new Float(baseFont.getSize()));
+        STYLE_BASE.put(TextAttribute.SIZE, (float)baseFont.getSize());
 
-        STYLE_NORMAL = new HashMap(0);
+        STYLE_NORMAL = new HashMap<TextAttribute, Object>(0);
 
-        STYLE_SMALL = new HashMap(1);
-        STYLE_SMALL.put(TextAttribute.SIZE, new Float(baseFont.getSize() - 1));
+        STYLE_SMALL = new HashMap<TextAttribute, Object>(1);
+        STYLE_SMALL.put(TextAttribute.SIZE, (float)(baseFont.getSize() - 1));
 
-        STYLE_LINK = new HashMap(3);
+        STYLE_LINK = new HashMap<TextAttribute, Object>(3);
         STYLE_LINK.put(TextAttribute.FOREGROUND, new Color(0, 128, 0));
         STYLE_LINK.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
         STYLE_LINK.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 
-        STYLE_OFFSET = new HashMap(1);
+        STYLE_OFFSET = new HashMap<TextAttribute, Object>(1);
         STYLE_OFFSET.put(TextAttribute.FOREGROUND, new Color(128, 0, 0));
 
-        STYLE_INSTRUCTION = new HashMap(1);
+        STYLE_INSTRUCTION = new HashMap<TextAttribute, Object>(1);
         STYLE_INSTRUCTION.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
 
-        STYLE_IMMEDIATE_VALUE = new HashMap(2);
+        STYLE_IMMEDIATE_VALUE = new HashMap<TextAttribute, Object>(2);
         STYLE_IMMEDIATE_VALUE.put(TextAttribute.FOREGROUND, Color.magenta);
         STYLE_IMMEDIATE_VALUE.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
     }
@@ -95,14 +101,14 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
     private int offsetWidth;
     private String offsetBlank;
-    private HashMap offsetToLine = new HashMap();
-    private ArrayList lines = new ArrayList();
-    private ArrayList textLines = new ArrayList();
+    private HashMap<Integer, Integer> offsetToLine = new HashMap<Integer, Integer>();
+    private ArrayList<AttributedString> lines = new ArrayList<AttributedString>();
+    private ArrayList<String> textLines = new ArrayList<String>();
     private TextLayout[] textLayouts;
-    private Map lineToLink = new HashMap();
-    private Set invalidBranches = new HashSet();
+    private Map<Integer, BytecodeLink> lineToLink = new HashMap<Integer, BytecodeLink>();
+    private Set<AbstractInstruction> invalidBranches = new HashSet<AbstractInstruction>();
 
-    private LinkedList currentLineCache = new LinkedList();
+    private LinkedList<LineCacheEntry> currentLineCache = new LinkedList<LineCacheEntry>();
     private FontRenderContext frc;
     private float currentHeight;
     private float currentWidth;
@@ -118,7 +124,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
      */
     public static String getPaddedValue(int number, int width) {
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         String value = String.valueOf(number);
         int valueLength = value.length();
         for (int i = valueLength; i < width; i++) {
@@ -216,7 +222,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     }
 
     /**
-     * Get the curent line ascent.
+     * Get the current line ascent.
      * @return the line ascent.
      */
     public int getAscent() {
@@ -273,11 +279,11 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
      */
     public void scrollToOffset(int offset) {
 
-        Integer line = (Integer)offsetToLine.get(new Integer(offset));
+        Integer line = offsetToLine.get(new Integer(offset));
         if (line == null) {
             return;
         }
-        Rectangle target = new Rectangle(0, line.intValue() * lineHeight + MARGIN_Y + 1, 10, getParent().getHeight());
+        Rectangle target = new Rectangle(0, line * lineHeight + MARGIN_Y + 1, 10, getParent().getHeight());
         scrollRectToVisible(target);
     }
 
@@ -286,10 +292,8 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
      */
     public void copyToClipboard() {
 
-        StringBuffer buffer = new StringBuffer();
-        Iterator it = textLines.iterator();
-        while (it.hasNext()) {
-            String line = (String)it.next();
+        StringBuilder buffer = new StringBuilder();
+        for (String line : textLines) {
             buffer.append(line);
             buffer.append('\n');
         }
@@ -324,7 +328,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
         TextLayout textLayout = textLayouts[i];
         if (textLayout == null) {
-            textLayout = textLayouts[i] = new TextLayout(((AttributedString)lines.get(i)).getIterator(), frc);
+            textLayout = textLayouts[i] = new TextLayout((lines.get(i)).getIterator(), frc);
         }
         return textLayout;
     }
@@ -347,7 +351,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         int x = point.x - MARGIN_X;
         int y = point.y - MARGIN_Y;
         int line = y / lineHeight;
-        BytecodeLink link = (BytecodeLink)lineToLink.get(new Integer(line));
+        BytecodeLink link = lineToLink.get(line);
         if (link == null) {
             return null;
         }
@@ -368,7 +372,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         TreePath treePath = services.getBrowserComponent().getTreePane().getTree().getSelectionPath();
 
         BrowserHistory history = services.getBrowserComponent().getHistory();
-        history.updateHistory(treePath, new Integer(offset));
+        history.updateHistory(treePath, offset);
     }
 
     private void setupTextLayouts() {
@@ -387,17 +391,14 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         byte[] code = codeAttribute.getCode();
 
         try {
-            ArrayList instructions = ByteCodeReader.readByteCode(code);
+            ArrayList<AbstractInstruction> instructions = ByteCodeReader.readByteCode(code);
             verifyOffsets(instructions);
 
             calculateOffsetWidth(instructions);
             detailPane.setCurrentInstructions(instructions);
 
-            Iterator it = instructions.iterator();
-            AbstractInstruction currentInstruction;
-            while (it.hasNext()) {
-                currentInstruction = (AbstractInstruction)it.next();
-                addInstructionToDocument(currentInstruction);
+            for (AbstractInstruction instruction : instructions) {
+                addInstructionToDocument(instruction);
             }
             textLayouts = new TextLayout[lines.size()];
         } catch (IOException ex) {
@@ -406,10 +407,10 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         setPreferredSize(new Dimension((int)currentWidth + 2 * MARGIN_X, (int)currentHeight + 2 * MARGIN_Y));
     }
 
-    private void verifyOffsets(ArrayList instructions) {
+    private void verifyOffsets(ArrayList<AbstractInstruction> instructions) {
         int instructionsLength = instructions.size();
         for (int i = 0; i < instructionsLength; i++) {
-            AbstractInstruction instruction = (AbstractInstruction)instructions.get(i);
+            AbstractInstruction instruction = instructions.get(i);
             if (instruction instanceof AbstractBranchInstruction) {
                 int branchOffset = ((AbstractBranchInstruction)instruction).getBranchOffset();
                 int targetDistance = 0;
@@ -417,12 +418,12 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
                     branchOffset -= instruction.getSize();
                     while (branchOffset > 0 && i + targetDistance + 1 < instructionsLength) {
                         ++targetDistance;
-                        branchOffset -= ((AbstractInstruction)instructions.get(i + targetDistance)).getSize();
+                        branchOffset -= (instructions.get(i + targetDistance)).getSize();
                     }
                 } else {
                     while (branchOffset < 0 && i + targetDistance > 0) {
                         --targetDistance;
-                        branchOffset += ((AbstractInstruction)instructions.get(i + targetDistance)).getSize();
+                        branchOffset += (instructions.get(i + targetDistance)).getSize();
                     }
                 }
                 if (branchOffset != 0) {
@@ -432,17 +433,17 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         }
     }
 
-    private void calculateOffsetWidth(java.util.List instructions) {
+    private void calculateOffsetWidth(java.util.List<AbstractInstruction> instructions) {
 
         int numberOfInstructions = instructions.size();
 
         if (numberOfInstructions > 0) {
-            AbstractInstruction lastInstruction = (AbstractInstruction)instructions.get(numberOfInstructions - 1);
+            AbstractInstruction lastInstruction = instructions.get(numberOfInstructions - 1);
             offsetWidth = String.valueOf(lastInstruction.getOffset()).length();
         } else {
             offsetWidth = 1;
         }
-        StringBuffer buffer = new StringBuffer(offsetWidth);
+        StringBuilder buffer = new StringBuilder(offsetWidth);
         for (int i = 0; i  < offsetWidth; i++) {
             buffer.append(' ');
         }
@@ -469,9 +470,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     }
 
     private void addOffsetReference(int offset) {
-
-        offsetToLine.put(new Integer(offset),
-                new Integer(getCurrentLine()));
+        offsetToLine.put(offset, getCurrentLine());
     }
 
     private void addOpcodeSpecificInfo(AbstractInstruction instruction) {
@@ -579,17 +578,17 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     private void addLookupSwitchSpecificInfo(LookupSwitchInstruction instruction) {
 
         int instructionOffset = instruction.getOffset();
-        java.util.List matchOffsetPairs = instruction.getMatchOffsetPairs();
+        List matchOffsetPairs = instruction.getMatchOffsetPairs();
         int matchOffsetPairsCount = matchOffsetPairs.size();
 
         appendString(" " + matchOffsetPairsCount, STYLE_IMMEDIATE_VALUE);
         newLine();
 
         MatchOffsetPair matchOffsetPairEntry;
-        for (int i = 0; i < matchOffsetPairsCount; i++) {
-            matchOffsetPairEntry = (MatchOffsetPair)matchOffsetPairs.get(i);
+        for (Object matchOffsetPair : matchOffsetPairs) {
+            matchOffsetPairEntry = (MatchOffsetPair)matchOffsetPair;
             appendString(offsetBlank + TAB_STRING + matchOffsetPairEntry.getMatch() + ": ",
-                    STYLE_IMMEDIATE_VALUE);
+                STYLE_IMMEDIATE_VALUE);
             addOffsetLink(matchOffsetPairEntry.getOffset(), instructionOffset);
             newLine();
 
@@ -605,7 +604,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         int startCharIndex = getCurrentCharIndex();
         appendString("#" + constantPoolIndex, STYLE_LINK);
         int endCharIndex = getCurrentCharIndex();
-        lineToLink.put(new Integer(getCurrentLine()), new ConstantPoolLink(startCharIndex, endCharIndex, sourceOffset, constantPoolIndex));
+        lineToLink.put(getCurrentLine(), new ConstantPoolLink(startCharIndex, endCharIndex, sourceOffset, constantPoolIndex));
 
         try {
             String name = classFile.getConstantPoolEntryName(constantPoolIndex);
@@ -628,7 +627,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         int startCharIndex = getCurrentCharIndex();
         appendString(String.valueOf(targetOffset), STYLE_LINK);
         int endCharIndex = getCurrentCharIndex();
-        lineToLink.put(new Integer(getCurrentLine()), new OffsetLink(startCharIndex, endCharIndex, sourceOffset, targetOffset));
+        lineToLink.put(getCurrentLine(), new OffsetLink(startCharIndex, endCharIndex, sourceOffset, targetOffset));
 
         appendString(" (" + (branchOffset > 0 ? "+" : "") + String.valueOf(branchOffset) + ")",
                 STYLE_IMMEDIATE_VALUE);
@@ -636,10 +635,8 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
     private int getCurrentCharIndex() {
 
-        Iterator it = currentLineCache.iterator();
         int offset = 0;
-        while (it.hasNext()) {
-            LineCacheEntry entry = (LineCacheEntry)it.next();
+        for (LineCacheEntry entry : currentLineCache) {
             offset += entry.text.length();
         }
         return offset;
@@ -649,7 +646,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         return lines.size();
     }
 
-    private void appendString(String text, Map attributes) {
+    private void appendString(String text, Map<TextAttribute, Object> attributes) {
         currentLineCache.add(new LineCacheEntry(text, attributes));
     }
 
@@ -657,10 +654,8 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
         String text = getCurrentLineText();
         AttributedString attrString = new AttributedString(text, STYLE_BASE);
-        Iterator it = currentLineCache.iterator();
         int startCharIndex = 0;
-        while (it.hasNext()) {
-            LineCacheEntry entry = (LineCacheEntry)it.next();
+        for (LineCacheEntry entry : currentLineCache) {
             int endCharIndex = startCharIndex + entry.text.length();
             attrString.addAttributes(entry.attributes, startCharIndex, endCharIndex);
             startCharIndex = endCharIndex;
@@ -683,10 +678,8 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
     private String getCurrentLineText() {
 
-        StringBuffer buffer = new StringBuffer(getCurrentLineLength());
-        Iterator it = currentLineCache.iterator();
-        while (it.hasNext()) {
-            LineCacheEntry entry = (LineCacheEntry)it.next();
+        StringBuilder buffer = new StringBuilder(getCurrentLineLength());
+        for (LineCacheEntry entry : currentLineCache) {
             buffer.append(entry.text);
         }
         return buffer.toString();
@@ -695,9 +688,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     private int getCurrentLineLength() {
 
         int length = 0;
-        Iterator it = currentLineCache.iterator();
-        while (it.hasNext()) {
-            LineCacheEntry entry = (LineCacheEntry)it.next();
+        for (LineCacheEntry entry : currentLineCache) {
             length += entry.text.length();
         }
         return length;
@@ -706,9 +697,9 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     private static class LineCacheEntry {
 
         private String text;
-        private Map attributes;
+        private Map<TextAttribute, Object> attributes;
 
-        private LineCacheEntry(String text, Map attributes) {
+        private LineCacheEntry(String text, Map<TextAttribute, Object> attributes) {
             this.text = text;
             this.attributes = attributes;
         }

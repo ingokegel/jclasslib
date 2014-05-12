@@ -37,12 +37,12 @@ public class ClassElementValueEntryDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        ClassElementValue ceve = (ClassElementValue)
+        ClassElementValue element = (ClassElementValue)
                 ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
         constantPoolHyperlink(lblClassInfoIndex,
-                lblClassInfoIndexVerbose,
-                ceve.getClassInfoIndex());
+            lblClassInfoIndexVerbose,
+            element.getClassInfoIndex());
 
         super.show(treePath);
     }

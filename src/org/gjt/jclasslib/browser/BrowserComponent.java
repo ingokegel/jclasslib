@@ -8,7 +8,10 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.browser.config.window.*;
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.ClassMember;
+import org.gjt.jclasslib.structures.FieldInfo;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.MethodInfo;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -76,7 +79,7 @@ public class BrowserComponent extends JComponent
     }
 
     /**
-     * Construct a <tt>BrowserPath</tt> object for the curently selected path in the tree.
+     * Construct a <tt>BrowserPath</tt> object for the currently selected path in the tree.
      *
      * @return the browser path
      */

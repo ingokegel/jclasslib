@@ -67,8 +67,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
     }
 
     public Object getInitParam() {
-        WindowState windowState = new WindowState(fileName, browserComponent.getBrowserPath());
-        return windowState;
+        return new WindowState(fileName, browserComponent.getBrowserPath());
     }
 
     // Browser services

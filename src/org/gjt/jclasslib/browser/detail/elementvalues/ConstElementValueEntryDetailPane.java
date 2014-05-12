@@ -37,12 +37,12 @@ public class ConstElementValueEntryDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        ConstElementValue ceve = (ConstElementValue)
+        ConstElementValue element = (ConstElementValue)
                 ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
         constantPoolHyperlink(lblIndex,
-                lblIndexVerbose,
-                ceve.getConstValueIndex());
+            lblIndexVerbose,
+            element.getConstValueIndex());
 
         super.show(treePath);
     }

@@ -18,7 +18,7 @@ import javax.swing.tree.DefaultTreeModel;
 public interface ClasspathComponent {
 
     /**
-     * Find a class by name within thsi classpath component.
+     * Find a class by name within this classpath component.
      * @param className the name of the class
      * @return the <tt>FindResult</tt> object. <tt>null</tt> if no class could be found.
      */
