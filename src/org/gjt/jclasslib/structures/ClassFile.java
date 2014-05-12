@@ -81,6 +81,36 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     /**
+     * Get the verbose major version of the class file format.
+     *
+     * @return the major version as text
+     */
+    public String getMajorVersionVerbose() {
+        switch (majorVersion) {
+            case 45:
+                return "1.1";
+            case 46:
+                return "1.2";
+            case 47:
+                return "1.3";
+            case 48:
+                return "1.4";
+            case 49:
+                return "1.5";
+            case 50:
+                return "1.6";
+            case 51:
+                return "1.7";
+            case 52:
+                return "1.8";
+            case 53:
+                return "1.9";
+            default:
+                return "unknown value " + majorVersion;
+        }
+    }
+
+    /**
      * Set the major version of the class file format.
      *
      * @param majorVersion the major version

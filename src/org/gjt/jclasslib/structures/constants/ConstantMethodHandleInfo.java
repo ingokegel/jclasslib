@@ -75,6 +75,31 @@ public class ConstantMethodHandleInfo extends CPInfo {
         this.type = type;
     }
 
+    public String getTypeVerbose() {
+        switch (type) {
+            case TYPE_GET_FIELD:
+                return "REF_getField";
+            case TYPE_GET_STATIC:
+                return "REF_getStatic";
+            case TYPE_PUT_FIELD:
+                return "REF_putField";
+            case TYPE_PUT_STATIC:
+                return "REF_putStatic";
+            case TYPE_INVOKE_VIRTUAL:
+                return "REF_invokeVirtual";
+            case TYPE_INVOKE_STATIC:
+                return "REF_invokeStatic";
+            case TYPE_INVOKE_SPECIAL:
+                return "REF_invokeSpecial";
+            case TYPE_NEW_INVOKE_SPECIAL:
+                return "REF_newInvokeSpecial";
+            case TYPE_INVOKE_INTERFACE:
+                return "REF_invokeInterface";
+            default:
+                return "unknown value " + type;
+        }
+    }
+
     /**
         Get the descriptor.
         @return the descriptor

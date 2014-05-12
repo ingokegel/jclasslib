@@ -20,7 +20,7 @@ import javax.swing.tree.TreePath;
 */
 public abstract class AbstractConstantInfoDetailPane extends FixedListDetailPane {
 
-    /** Message which is diplayed if the constant pool entry is invalid. */
+    /** Message which is displayed if the constant pool entry is invalid. */
     protected static final String MESSAGE_INVALID_CONSTANT_POOL_ENTRY = "invalid constant pool entry";
 
     /**

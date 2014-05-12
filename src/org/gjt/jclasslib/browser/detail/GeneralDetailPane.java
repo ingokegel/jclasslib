@@ -9,7 +9,6 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.JavaMajorVersion;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -93,8 +92,7 @@ public class GeneralDetailPane extends FixedListDetailPane {
         
         lblMinorVersion.setText(classFile.getMinorVersion());
         lblMajorVersion.setText(classFile.getMajorVersion());
-        JavaMajorVersion javaMajorVersion = JavaMajorVersion.valueOf(classFile.getMajorVersion());
-        lblMajorVersionVerbose.setText("[" + (javaMajorVersion != null ? javaMajorVersion : "unknown") + "]");
+        lblMajorVersionVerbose.setText("[" + classFile.getMajorVersionVerbose() + "]");
         lblConstantPoolCount.setText(classFile.getConstantPool().length);
 
         lblAccessFlags.setText(classFile.getFormattedAccessFlags());
