@@ -106,7 +106,9 @@ public class ConstantMethodHandleInfo extends CPInfo {
         @throws org.gjt.jclasslib.structures.InvalidByteCodeException if the byte code is invalid
      */
     public String getName() throws InvalidByteCodeException {
-        return classFile.getConstantPoolUtf8Entry(referenceIndex).getString();
+        return getTypeVerbose() + " " +
+               classFile.getConstantPoolEntryName(referenceIndex);
+
     }
 
     public void read(DataInput in)
