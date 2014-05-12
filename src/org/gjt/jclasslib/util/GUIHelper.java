@@ -7,9 +7,13 @@
 
 package org.gjt.jclasslib.util;
 
+import com.install4j.api.Util;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Collection of GUI utility methods.
@@ -101,15 +105,10 @@ public class GUIHelper {
      */
     public static void showURL(String urlSpec) {
 
-        String commandLine;
-        if (System.getProperty("os.name").startsWith("Windows")) {
-            commandLine = "rundll32.exe url.dll,FileProtocolHandler " + urlSpec;
-        } else {
-            commandLine = "firefox " + urlSpec;
-        }
         try {
-            Runtime.getRuntime().exec(commandLine);
-        } catch (IOException ex) {
+            Util.showUrl(new URL(urlSpec));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 }
