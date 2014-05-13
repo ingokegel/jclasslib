@@ -1,0 +1,94 @@
+import com.install4j.gradle.Install4jTask
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'install4j'
+
+version = 4.0
+buildDir = file('build/gradle')
+mainClassName = 'org.gjt.jclasslib.browser.BrowserApplication'
+ext.mediaDir = file('media')
+
+buildscript {
+    repositories {
+        flatDir {
+            dirs 'lib-compile'
+        }
+    }
+    dependencies {
+        classpath ':i4jgradle'
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'lib-compile'
+    }
+}
+
+dependencies {
+    compile ':i4jruntime'
+}
+
+install4j {
+    installDir = file(install4jHomeDir)
+}
+
+
+clean << {
+    delete mediaDir
+}
+
+compileJava {
+    String java6Home = System.getenv()['JAVA_1_6_HOME']
+    if (java6Home) {
+        if (Os.isFamily(Os.FAMILY_MAC)) {
+            options.bootClasspath = "${java6Home}/../Classes/classes.jar"
+        } else {
+            options.bootClasspath = "${java6Home}/jre/lib/rt.jar"
+        }
+    } else {
+        println 'Warning: Set JAVA_1_6_HOME to a Java 6 JDK'
+    }
+
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+
+}
+
+jar {
+    archiveName = 'jclasslib.jar'
+    manifest {
+        attributes(
+            "Main-Class": mainClassName
+        )
+    }
+}
+
+task libraryJar(type: Jar) {
+    archiveName = 'jclasslib-library.jar'
+    from sourceSets.main.output
+    include 'org/gjt/jclasslib/bytecode/**'
+    include 'org/gjt/jclasslib/io/**'
+    include 'org/gjt/jclasslib/structures/**'
+}
+
+task dist {
+    dependsOn 'jar', 'libraryJar', 'javadoc'
+}
+
+task media(type: Install4jTask) {
+
+    dependsOn 'clean', 'dist'
+
+    projectFile = file('service/jclasslib.install4j')
+    release = version
+
+    doFirst {
+        if (!project.hasProperty('install4jHomeDir')) {
+            throw new RuntimeException('Specify install4jHomeDir in gradle.properties and set it to an install4j installation directory')
+        }
+    }
+
+}

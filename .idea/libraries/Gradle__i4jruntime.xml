@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: i4jruntime">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib-compile/i4jruntime.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
