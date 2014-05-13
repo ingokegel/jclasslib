@@ -7,12 +7,15 @@
 
 package org.gjt.jclasslib.browser;
 
+import com.install4j.api.launcher.Variables;
 import org.gjt.jclasslib.util.GUIHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * About dialog.
@@ -57,8 +60,8 @@ public class BrowserAboutDialog extends JDialog {
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         contentPane.add(label, gc);
         gc.insets.top = 5;
-        contentPane.add(new JLabel("Version " + BrowserApplication.APPLICATION_VERSION), gc);
-        contentPane.add(new JLabel("Copyright ej-technologies GmbH, 2001-2005"), gc);
+        contentPane.add(new JLabel("Version " + getVersion()), gc);
+        contentPane.add(new JLabel("Copyright ej-technologies GmbH, 2001-"+ Calendar.getInstance().get(Calendar.YEAR)), gc);
         contentPane.add(new JLabel("Licensed under the General Public License"), gc);
 
         gc.weighty = 0;
@@ -73,6 +76,14 @@ public class BrowserAboutDialog extends JDialog {
         pack();
         setResizable(false);
 
+    }
+
+    private String getVersion() {
+        try {
+            return Variables.getCompilerVariable("sys.version");
+        } catch (IOException e) {
+            return "<unknown>";
+        }
     }
 
     private void setupControls() {

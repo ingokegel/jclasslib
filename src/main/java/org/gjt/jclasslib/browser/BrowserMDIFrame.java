@@ -22,6 +22,8 @@ import org.gjt.jclasslib.util.GUIHelper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -31,6 +33,7 @@ import java.beans.XMLEncoder;
 import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 
@@ -257,6 +260,29 @@ public class BrowserMDIFrame extends BasicMDIFrame {
         return frame;
     }
 
+    /**
+     * Open an external file. Does nothing if extension is not supported.
+     * @param path the file path
+     */
+    public void openExternalFile(final String path) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                File file = new File(path);
+                if (file.exists()) {
+                    if (path.toLowerCase().endsWith("." + BrowserApplication.WORKSPACE_FILE_SUFFIX)) {
+                        openWorkspace(file);
+                    } else if (path.toLowerCase().endsWith(".class")) {
+                        BrowserInternalFrame internalFrame = openClassFromFile(file);
+                        try {
+                            internalFrame.setMaximum(true);
+                        } catch (PropertyVetoException e) {
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     protected void doQuit() {
         saveSettings();
         super.doQuit();
@@ -372,10 +398,42 @@ public class BrowserMDIFrame extends BasicMDIFrame {
 
     private void setupFrame() {
 
-        Container contentPane = getContentPane();
+        JComponent contentPane = (JComponent)getContentPane();
 
         contentPane.add(buildToolbar(), BorderLayout.NORTH);
         setIconImages(Arrays.asList(ICON_APPLICATION_16.getImage(), ICON_APPLICATION_32.getImage()));
+
+        contentPane.setTransferHandler(new TransferHandler() {
+            @Override
+            public boolean canImport(TransferSupport support) {
+                boolean supported = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
+                if (supported) {
+                    support.setDropAction(COPY);
+                }
+                return supported;
+            }
+
+            @Override
+            public boolean importData(TransferSupport support) {
+                Transferable transferable = support.getTransferable();
+                DataFlavor[] flavors = transferable.getTransferDataFlavors();
+                for (DataFlavor flavor : flavors) {
+                    try {
+                        if (flavor.isFlavorJavaFileListType()) {
+                            List files = (List)transferable.getTransferData(flavor);
+                            for (Object o : files) {
+                                File file = (File)o;
+                                openExternalFile(file.getPath());
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return false;
+            }
+        });
+
     }
 
     private void updateTitle() {
@@ -452,10 +510,10 @@ public class BrowserMDIFrame extends BasicMDIFrame {
                 selectedFile = new File(selectedFile.getPath() + "." + BrowserApplication.WORKSPACE_FILE_SUFFIX);
             }
             if (selectedFile.exists() &&
-                    GUIHelper.showOptionDialog(this,
-                            "The file " + selectedFile.getPath() + "\nexists. Do you want to overwrite this file?",
-                            GUIHelper.YES_NO_OPTIONS,
-                            JOptionPane.QUESTION_MESSAGE) != 0) {
+                GUIHelper.showOptionDialog(this,
+                    "The file " + selectedFile.getPath() + "\nexists. Do you want to overwrite this file?",
+                    GUIHelper.YES_NO_OPTIONS,
+                    JOptionPane.QUESTION_MESSAGE) != 0) {
                 return;
             }
             saveWorkspaceToFile(selectedFile);
