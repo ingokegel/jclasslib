@@ -19,7 +19,7 @@ import java.io.IOException;
  * Describes an entry in a <tt>LineNumberTable</tt> attribute structure.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.4 $ $Date: 2004-12-28 13:04:32 $
+ *
  */
 public class LineNumberTableEntry extends AbstractStructure {
 

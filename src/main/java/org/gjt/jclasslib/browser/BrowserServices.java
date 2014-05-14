@@ -16,7 +16,6 @@ import javax.swing.*;
     Container services for a <tt>BrowserComponent</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2006-03-02 11:42:37 $
 */
 public interface BrowserServices {
     /**

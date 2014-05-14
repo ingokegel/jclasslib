@@ -16,7 +16,7 @@ import org.gjt.jclasslib.structures.attributes.LocalVariableCommonEntry;
  * Contains common attributes to a local variable detail pane.
  *
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:30 $
+ *
  */
 public abstract class LocalVariableCommonAttributeDetailPane extends AbstractAttributeListDetailPane {
 

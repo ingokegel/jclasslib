@@ -18,7 +18,6 @@ import java.io.IOException;
     Describes an <tt>Exceptions</tt> attribute structure.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:05 $
 */
 public class ExceptionsAttribute extends AttributeInfo {
 

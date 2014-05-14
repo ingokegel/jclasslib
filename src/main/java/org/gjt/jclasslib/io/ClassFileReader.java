@@ -20,7 +20,6 @@ import java.util.jar.JarFile;
     <tt>org.gjt.jclasslib.structures</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.7 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ClassFileReader {
 

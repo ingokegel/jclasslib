@@ -16,7 +16,6 @@ import java.io.IOException;
     Describes an instruction that branches to a different offset.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2005-06-22 13:56:37 $
 */
 public class BranchInstruction extends AbstractBranchInstruction {
 

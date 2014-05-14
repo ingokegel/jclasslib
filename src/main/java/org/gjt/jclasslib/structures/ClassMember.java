@@ -17,7 +17,6 @@ import java.io.IOException;
     Base class for class members.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:52:54 $
 */
 public abstract class ClassMember extends AbstractStructureWithAttributes {
 

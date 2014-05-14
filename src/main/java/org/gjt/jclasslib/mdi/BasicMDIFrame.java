@@ -24,7 +24,6 @@ import java.util.prefs.Preferences;
     and supplies various utility methods.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2004-06-29 15:41:44 $
 */
 public class BasicMDIFrame extends JFrame {
 

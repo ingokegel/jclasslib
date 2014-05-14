@@ -11,7 +11,6 @@ package org.gjt.jclasslib.browser.config.window;
     Browser path component for named class member (field or method).
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2006-03-02 19:23:10 $
 */
 public class ReferenceHolder implements PathComponent {
 

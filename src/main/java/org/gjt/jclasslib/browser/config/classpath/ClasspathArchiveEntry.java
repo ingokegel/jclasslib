@@ -18,7 +18,6 @@ import java.util.jar.JarFile;
     Classpath entry for an archive.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2006-02-15 09:09:49 $
 */
 public class ClasspathArchiveEntry extends ClasspathEntry {
 

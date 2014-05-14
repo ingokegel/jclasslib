@@ -17,7 +17,7 @@ import java.io.IOException;
  * Contains common attributes to a local variable table entry structure.
  *
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:32 $
+ *
  */
 public abstract class LocalVariableCommonEntry extends AbstractStructure {
     /**

@@ -17,7 +17,7 @@ import java.io.IOException;
  * Base class for all attribute structures in the <tt>attribute</tt> package.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.6 $ $Date: 2004-12-28 13:04:32 $
+ *
  */
 public class AttributeInfo extends AbstractStructureWithAttributes {
 

@@ -19,7 +19,6 @@ import java.awt.*;
     a <tt>JLabel</tt> like the <tt>javax.swing.table.DefaultTableCellRenderer</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:48:28 $
 */
 public class ExtendedTableCellRenderer extends ExtendedJLabel
                                        implements TableCellRenderer {

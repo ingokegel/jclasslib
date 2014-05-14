@@ -17,7 +17,6 @@ import java.awt.event.MouseEvent;
     Listens for mouse clicks and manages linking into the constant pool.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-08-18 08:02:07 $
 */
 public class ConstantPoolHyperlinkListener extends MouseAdapter {
 

@@ -18,7 +18,7 @@ import java.net.URL;
  * Collection of GUI utility methods.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.3 $ $Date: 2006-03-02 11:42:39 $
+ *
  */
 public class GUIHelper {
 

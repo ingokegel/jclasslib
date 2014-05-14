@@ -18,7 +18,6 @@ import java.io.IOException;
     attribute before reading immediate arguments.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public class PaddedInstruction extends AbstractInstruction {
 

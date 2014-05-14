@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
  * <tt>InvisibleRuntimeAnnotations</tt> attribute.
  *
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:30 $
+ *
  */
 public class RuntimeAnnotationsAttributeDetailPane extends FixedListDetailPane {
 

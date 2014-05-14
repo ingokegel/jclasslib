@@ -28,7 +28,7 @@ import java.util.Map;
  * child window.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.12 $ $Date: 2007-07-16 14:15:11 $
+ *
  */
 public class BrowserTreePane extends JPanel {
 

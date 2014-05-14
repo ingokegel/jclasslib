@@ -13,7 +13,6 @@ import java.util.List;
     Serializable configuration object for the window state of an MDI frame.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 07:59:17 $
 */
 public class MDIConfig {
 

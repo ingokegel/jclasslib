@@ -19,7 +19,6 @@ import java.util.Collections;
     <tt>org.gjt.jclasslib.code</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.8 $ $Date: 2010-07-26 14:00:11 $
 */
 public class ByteCodeReader {
 

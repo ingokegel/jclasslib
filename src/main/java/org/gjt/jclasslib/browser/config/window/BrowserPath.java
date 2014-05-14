@@ -13,7 +13,6 @@ import java.util.LinkedList;
     Description of the selected path in the tree of a <tt>BrowserComponent</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2006-03-02 19:23:10 $
 */
 public class BrowserPath {
 

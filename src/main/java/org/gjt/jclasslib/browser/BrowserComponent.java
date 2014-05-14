@@ -25,7 +25,7 @@ import java.util.LinkedList;
  * Visual component displaying a class file.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.10 $ $Date: 2006-03-02 19:23:13 $
+ *
  */
 public class BrowserComponent extends JComponent
         implements TreeSelectionListener {

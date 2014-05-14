@@ -11,7 +11,6 @@ package org.gjt.jclasslib.bytecode;
     Holds a single match-offset pair.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2003-08-18 07:58:54 $
 */
 public class MatchOffsetPair {
 

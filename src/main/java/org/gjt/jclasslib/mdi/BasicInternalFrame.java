@@ -13,7 +13,6 @@ import javax.swing.*;
     Child frame for MDI application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:59:50 $
 */
 public abstract class BasicInternalFrame extends JInternalFrame {
 

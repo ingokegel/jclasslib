@@ -16,7 +16,6 @@ import javax.swing.tree.TreePath;
     Detail pane showing interface entries.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:14:22 $
 */
 public class InterfaceDetailPane extends FixedListDetailPane {
 

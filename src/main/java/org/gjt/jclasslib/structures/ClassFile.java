@@ -20,7 +20,7 @@ import java.util.HashMap;
  * The class file structure in which all other structures are hooked up.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.12 $ $Date: 2007-02-15 09:51:55 $
+ *
  */
 public class ClassFile extends AbstractStructureWithAttributes {
 

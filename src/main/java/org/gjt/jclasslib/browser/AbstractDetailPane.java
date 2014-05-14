@@ -23,7 +23,6 @@ import java.util.HashMap;
     a specific tree node selected in <tt>BrowserTreePane</tt>.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:06:31 $
 */
 public abstract class AbstractDetailPane extends JPanel {
     

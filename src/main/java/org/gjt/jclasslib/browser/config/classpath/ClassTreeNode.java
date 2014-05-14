@@ -13,7 +13,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
     Tree node for the tree in the <tt>ClasspathBrowser</tt> dialog.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
 */
 public class ClassTreeNode extends DefaultMutableTreeNode {
 

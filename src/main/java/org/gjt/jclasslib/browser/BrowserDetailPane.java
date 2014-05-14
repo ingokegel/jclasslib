@@ -20,7 +20,7 @@ import java.util.HashMap;
  * <tt>BrowserTreePane</tt>.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.9 $ $Date: 2007-10-31 12:04:15 $
+ *
  */
 public class BrowserDetailPane extends JPanel {
 

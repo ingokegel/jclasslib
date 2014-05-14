@@ -18,7 +18,6 @@ import java.io.IOException;
     Describes a <tt>CONSTANT_MethodType_info</tt> constant pool data structure.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Hannes Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2010-07-26 14:00:09 $
 */
 public class ConstantMethodTypeInfo extends CPInfo {
 

@@ -14,7 +14,7 @@ import java.util.EnumSet;
  * the java access modifiers.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.5 $ $Date: 2004-12-29 10:45:58 $
+ *
  */
 public enum AccessFlag {
 

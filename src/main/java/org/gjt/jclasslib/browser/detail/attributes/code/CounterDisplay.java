@@ -21,7 +21,6 @@ import java.util.Map;
     Line number renderer used as a row header view for a <tt>BytecodeDisplay</tt>.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:19:37 $
 */
 public class CounterDisplay extends JPanel {
 

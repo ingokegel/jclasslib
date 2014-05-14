@@ -23,7 +23,6 @@ import java.util.prefs.Preferences;
     Menu that holds recent workspace files.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:00:22 $
 */
 public class RecentMenu extends JMenu implements ActionListener {
 

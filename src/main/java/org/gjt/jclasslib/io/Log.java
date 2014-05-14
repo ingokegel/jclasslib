@@ -11,7 +11,6 @@ package org.gjt.jclasslib.io;
     Utility class to log errors, warnings and debug messages.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2002-02-27 16:47:43 $
 */
 public class Log {
 

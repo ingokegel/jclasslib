@@ -12,7 +12,6 @@ package org.gjt.jclasslib.structures;
     of the <tt>ClassFile</tt> structure and its substructures.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-08-18 07:52:54 $
 */
 public class InvalidByteCodeException extends Exception {
 

@@ -20,7 +20,7 @@ import java.util.EnumSet;
  * Provides common services such as reading, writing and debugging.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.5 $ $Date: 2004-12-28 13:04:32 $
+ *
  */
 public abstract class AbstractStructure {
 

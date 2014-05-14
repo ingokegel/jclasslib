@@ -19,7 +19,7 @@ import java.io.IOException;
  * Describes an exception table entry in a <tt>Code</tt> attribute structure.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.5 $ $Date: 2004-12-28 13:04:31 $
+ *
  */
 public class ExceptionTableEntry extends AbstractStructure {
 

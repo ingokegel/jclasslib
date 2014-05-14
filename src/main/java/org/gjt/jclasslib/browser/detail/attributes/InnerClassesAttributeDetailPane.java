@@ -17,7 +17,6 @@ import org.gjt.jclasslib.structures.attributes.InnerClassesEntry;
     Detail pane showing an <tt>InnerClasses</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:11 $
 */
 public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetailPane {
 

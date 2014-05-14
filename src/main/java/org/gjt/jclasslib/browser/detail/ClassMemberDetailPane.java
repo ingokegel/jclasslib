@@ -19,7 +19,6 @@ import javax.swing.tree.TreePath;
     Detail pane showing class members (methods or fields).
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-08-18 08:13:21 $
 */
 public class ClassMemberDetailPane extends FixedListDetailPane {
 

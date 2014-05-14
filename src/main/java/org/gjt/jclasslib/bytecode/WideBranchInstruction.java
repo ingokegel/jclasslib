@@ -16,7 +16,6 @@ import java.io.IOException;
     Describes an instruction that is followed by an immediate int.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2005-06-22 13:56:37 $
 */
 public class WideBranchInstruction extends AbstractBranchInstruction {
 

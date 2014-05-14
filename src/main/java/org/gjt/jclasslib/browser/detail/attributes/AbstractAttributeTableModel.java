@@ -18,7 +18,7 @@ import javax.swing.table.TableColumnModel;
  * <tt>AbstractAttributeListDetailPane</tt>.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.5 $ $Date: 2004-12-28 13:04:30 $
+ *
  */
 public abstract class AbstractAttributeTableModel extends AbstractTableModel {
 

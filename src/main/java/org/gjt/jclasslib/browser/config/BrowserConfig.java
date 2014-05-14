@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
     Workspace configuration object.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2003-08-21 14:40:45 $
 */
 public class BrowserConfig implements ClasspathComponent {
 

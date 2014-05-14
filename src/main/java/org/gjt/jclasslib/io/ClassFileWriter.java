@@ -17,7 +17,6 @@ import java.io.*;
     <tt>org.gjt.jclasslib.structures</tt> to class files.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ClassFileWriter {
 

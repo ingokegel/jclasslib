@@ -13,7 +13,6 @@ import java.util.EventListener;
     Listener that is informed of changes in the classpath.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
 */
 public interface ClasspathChangeListener extends EventListener {
 

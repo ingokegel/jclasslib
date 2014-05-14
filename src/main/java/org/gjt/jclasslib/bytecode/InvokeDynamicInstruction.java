@@ -16,7 +16,6 @@ import java.io.IOException;
     Describes the <tt>invokedynamic</tt> instruction.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Hannes Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2010-07-26 13:59:49 $
 */
 public class InvokeDynamicInstruction extends ImmediateShortInstruction {
 

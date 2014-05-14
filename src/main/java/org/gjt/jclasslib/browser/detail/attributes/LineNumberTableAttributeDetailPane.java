@@ -16,7 +16,6 @@ import org.gjt.jclasslib.structures.attributes.LineNumberTableEntry;
     Detail pane showing a <tt>LineNumberTable</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:35 $
 */
 public class LineNumberTableAttributeDetailPane extends AbstractAttributeListDetailPane {
 

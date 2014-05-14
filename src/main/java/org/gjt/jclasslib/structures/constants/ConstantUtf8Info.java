@@ -18,7 +18,7 @@ import java.io.IOException;
  * Describes a <tt>CONSTANT_Utf8_info</tt> constant pool data structure.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.7 $ $Date: 2004-12-28 13:04:32 $
+ *
  */
 public class ConstantUtf8Info extends CPInfo {
 

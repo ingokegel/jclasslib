@@ -35,7 +35,6 @@ import java.util.List;
     Bytecode renderer.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2008-04-03 08:33:20 $
 */
 public class ByteCodeDisplay extends JPanel implements Scrollable {
 

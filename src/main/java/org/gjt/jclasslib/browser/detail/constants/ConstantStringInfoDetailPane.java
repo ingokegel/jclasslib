@@ -18,7 +18,6 @@ import javax.swing.tree.TreePath;
     Detail pane showing a <tt>CONSTANT_String</tt> constant pool entry.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:16:34 $
 */
 public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane {
 

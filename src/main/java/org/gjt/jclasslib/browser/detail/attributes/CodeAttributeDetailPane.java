@@ -22,7 +22,6 @@ import java.awt.*;
     panes in its tabbed pane.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:19:03 $
 */
 public class CodeAttributeDetailPane extends AbstractDetailPane {
 

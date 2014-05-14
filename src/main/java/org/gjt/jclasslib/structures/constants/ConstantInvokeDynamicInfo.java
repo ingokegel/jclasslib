@@ -18,7 +18,6 @@ import java.io.IOException;
     Describes a <tt>CONSTANT_InvokeDynamic_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:51:15 $
 */
 public class ConstantInvokeDynamicInfo extends CPInfo {
 

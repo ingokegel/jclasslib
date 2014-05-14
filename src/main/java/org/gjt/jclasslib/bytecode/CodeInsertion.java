@@ -24,7 +24,7 @@ import java.util.List;
  * to perform code insertions is the static <tt>apply</tt> method.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.9 $ $Date: 2005-06-22 13:56:37 $
+ *
  */
 public class CodeInsertion {
 

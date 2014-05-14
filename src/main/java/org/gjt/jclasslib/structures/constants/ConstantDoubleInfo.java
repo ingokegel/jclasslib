@@ -17,7 +17,6 @@ import java.io.IOException;
     Describes a <tt>CONSTANT_Double_info</tt> constant pool data structure.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-20 17:14:37 $
 */
 public class ConstantDoubleInfo extends ConstantLargeNumeric {
 

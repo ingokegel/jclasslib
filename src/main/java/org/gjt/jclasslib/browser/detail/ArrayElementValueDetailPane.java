@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
  * Class for showing an array element value entry.
  *
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:31 $
+ *
  */
 public class ArrayElementValueDetailPane extends FixedListDetailPane {
 

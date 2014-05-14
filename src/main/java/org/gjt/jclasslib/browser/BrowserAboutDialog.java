@@ -21,7 +21,7 @@ import java.util.Calendar;
  * About dialog.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.2 $ $Date: 2005-01-14 15:01:03 $
+ *
  */
 public class BrowserAboutDialog extends JDialog {
 

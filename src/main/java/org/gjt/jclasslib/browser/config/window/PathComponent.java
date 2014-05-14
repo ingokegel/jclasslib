@@ -11,7 +11,6 @@ package org.gjt.jclasslib.browser.config.window;
     Marker interface for browser path components.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
 */
 public interface PathComponent {
 }

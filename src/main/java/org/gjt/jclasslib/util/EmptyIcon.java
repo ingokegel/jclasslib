@@ -14,7 +14,6 @@ import java.awt.*;
     Transparent icon with no content.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 07:46:43 $
 */
 public class EmptyIcon implements Icon {
 

@@ -14,7 +14,6 @@ import java.io.OutputStream;
     <tt>DataOutputStream</tt> which extends <tt>ByteCodeOutput</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ByteCodeOutputStream extends DataOutputStream
                                   implements ByteCodeOutput

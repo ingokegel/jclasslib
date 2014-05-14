@@ -16,7 +16,6 @@ import java.io.IOException;
     Base class for all opcode instruction wrappers.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
 public abstract class AbstractInstruction {
 

@@ -16,7 +16,6 @@ import java.awt.*;
     for <tt>setText()</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-08-18 07:47:20 $
 */
 public class ExtendedJLabel extends JLabel implements Scrollable {
 

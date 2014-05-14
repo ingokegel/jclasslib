@@ -24,7 +24,6 @@ import java.awt.event.MouseMotionListener;
     a variable number of row entries with the same number of columns.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:11:01 $
 */
 public abstract class ListDetailPane extends AbstractDetailPane {
 

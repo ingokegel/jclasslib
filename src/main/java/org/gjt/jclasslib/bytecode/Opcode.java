@@ -11,7 +11,6 @@ package org.gjt.jclasslib.bytecode;
     Defines all opcodes and their verbose representation.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2010-07-26 13:59:48 $
 */
 public enum Opcode {
     

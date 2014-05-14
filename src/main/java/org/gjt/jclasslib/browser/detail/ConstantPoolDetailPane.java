@@ -25,7 +25,6 @@ import java.util.HashMap;
     the contained panes as required.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:13:10 $
 */
 public class ConstantPoolDetailPane extends AbstractDetailPane {
 

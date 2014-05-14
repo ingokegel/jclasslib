@@ -15,7 +15,6 @@ import java.io.IOException;
     Base class for all structures with attributes.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:52:54 $
 */
 public abstract class AbstractStructureWithAttributes extends AbstractStructure {
 

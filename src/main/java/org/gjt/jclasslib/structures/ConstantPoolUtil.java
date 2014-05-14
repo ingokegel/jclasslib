@@ -14,7 +14,6 @@ import org.gjt.jclasslib.structures.constants.*;
     object.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-08-18 07:52:54 $
 */
 
 public class ConstantPoolUtil {

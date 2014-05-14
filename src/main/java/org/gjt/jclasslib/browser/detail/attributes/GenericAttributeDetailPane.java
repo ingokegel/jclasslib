@@ -18,7 +18,6 @@ import javax.swing.tree.TreePath;
     Detail pane showing the generic information which applies to all attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:18:35 $
 */
 public class GenericAttributeDetailPane extends FixedListDetailPane {
 

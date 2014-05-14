@@ -14,7 +14,6 @@ import java.io.File;
     Configurable file filter for a <tt>JFileChooser</tt>.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.4 $ $Date: 2003-08-18 07:59:50 $
 */
 public class BasicFileFilter extends FileFilter {
 

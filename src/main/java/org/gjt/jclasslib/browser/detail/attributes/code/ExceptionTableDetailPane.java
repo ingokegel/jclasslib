@@ -20,7 +20,6 @@ import org.gjt.jclasslib.structures.attributes.ExceptionTableEntry;
     Detail pane showing the exception table about a <tt>Code</tt> attribute.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:19:37 $
 */
 public class ExceptionTableDetailPane extends AbstractAttributeListDetailPane {
 

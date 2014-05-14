@@ -22,7 +22,6 @@ import java.util.ArrayList;
     a fixed number of key-value pairs arranged in a list.
     
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:12:02 $
 */
 public abstract class FixedListDetailPane extends AbstractDetailPane {
     

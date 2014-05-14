@@ -25,7 +25,7 @@ import java.util.HashMap;
  * subpackage and switches between the contained panes as required.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.7 $ $Date: 2007-10-31 12:04:13 $
+ *
  */
 public class AttributeDetailPane extends AbstractDetailPane {
 

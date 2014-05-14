@@ -17,7 +17,6 @@ import java.io.IOException;
     Describes a <tt>CONSTANT_Methodref_info</tt> constant pool data structure.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.3 $ $Date: 2003-07-08 14:04:29 $
 */
 public class ConstantMethodrefInfo extends ConstantReference {
 

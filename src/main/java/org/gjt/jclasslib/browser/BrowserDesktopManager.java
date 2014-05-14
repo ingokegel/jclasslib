@@ -15,7 +15,6 @@ import javax.swing.event.InternalFrameEvent;
     The desktop manager for the class file browser application.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.6 $ $Date: 2003-08-18 08:05:39 $
 */
 public class BrowserDesktopManager extends BasicDesktopManager {
 

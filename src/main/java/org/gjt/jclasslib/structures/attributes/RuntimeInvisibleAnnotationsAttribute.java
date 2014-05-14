@@ -10,7 +10,7 @@ package org.gjt.jclasslib.structures.attributes;
  * Describes an  <tt>RuntimeInvisibleAnnotations</tt> attribute structure.
  *
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:32 $
+ *
  */
 public class RuntimeInvisibleAnnotationsAttribute extends RuntimeAnnotationsAttribute {
     /**

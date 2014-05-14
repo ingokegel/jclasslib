@@ -19,7 +19,6 @@ import java.util.ListIterator;
     Manages the navigation history of a single child window.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 08:06:46 $
 */
 public class BrowserHistory {
 

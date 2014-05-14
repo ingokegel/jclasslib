@@ -16,7 +16,7 @@ import java.io.IOException;
  * Base class for all constant pool entries in the <tt>constants</tt> package.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.7 $ $Date: 2010-07-26 14:00:12 $
+ *
  */
 public abstract class CPInfo extends AbstractStructure {
 

@@ -18,7 +18,7 @@ import java.io.IOException;
  * Common class for runtime annotations.
  *
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:32 $
+ *
  */
 public class RuntimeAnnotationsAttribute extends AttributeInfo {
     private static final int INITIAL_LENGTH = 2;

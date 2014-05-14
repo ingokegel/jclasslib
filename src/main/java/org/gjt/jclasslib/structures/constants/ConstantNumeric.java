@@ -18,7 +18,6 @@ import java.io.IOException;
     Base class for numeric constant pool data structures.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:51:44 $
 */
 public abstract class ConstantNumeric extends CPInfo {
 

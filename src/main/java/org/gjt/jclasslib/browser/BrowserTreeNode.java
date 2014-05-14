@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * representing a structural element of the class file format.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.3 $ $Date: 2005-03-04 16:36:00 $
+ *
  */
 public class BrowserTreeNode extends DefaultMutableTreeNode {
 

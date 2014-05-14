@@ -25,7 +25,6 @@ import java.util.List;
     Dialog for viewing and modifying the classpath.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.1 $ $Date: 2003-08-18 08:10:15 $
 */
 public class ClasspathSetupDialog extends JDialog
                                   implements ActionListener, ListSelectionListener {

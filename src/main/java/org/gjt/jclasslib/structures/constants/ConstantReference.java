@@ -18,7 +18,6 @@ import java.io.IOException;
     Base class for constant pool data structures which reference class members.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:50:25 $
 */
 public abstract class ConstantReference extends CPInfo {
 

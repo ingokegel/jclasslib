@@ -18,7 +18,6 @@ import java.util.List;
     <tt>org.gjt.jclasslib.code</tt> to code.
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:12 $
 */
 public class ByteCodeWriter {
 

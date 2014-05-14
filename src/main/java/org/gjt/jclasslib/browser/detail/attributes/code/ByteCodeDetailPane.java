@@ -23,7 +23,6 @@ import java.util.*;
     Detail pane showing the code of a <tt>Code</tt> attribute.
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-    @version $Revision: 1.2 $ $Date: 2006-03-02 19:23:13 $
  */
 public class ByteCodeDetailPane extends AbstractDetailPane {
     

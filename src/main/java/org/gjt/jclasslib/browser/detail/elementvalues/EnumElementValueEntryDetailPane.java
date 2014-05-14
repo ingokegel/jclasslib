@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
  * Class for showing element value entry of type Enum.
  *
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- * @version $Revision: 1.1 $ $Date: 2004-12-28 13:04:30 $
+ *
  */
 public class EnumElementValueEntryDetailPane extends FixedListDetailPane {
 

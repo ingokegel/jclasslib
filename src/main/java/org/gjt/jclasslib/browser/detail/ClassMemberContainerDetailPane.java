@@ -25,7 +25,7 @@ import java.awt.event.ActionListener;
  * Detail pane showing aggregated information about class members.
  *
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- * @version $Revision: 1.1 $ $Date: 2005-03-04 16:35:57 $
+ *
  */
 public class ClassMemberContainerDetailPane extends FixedListDetailPane {
 
