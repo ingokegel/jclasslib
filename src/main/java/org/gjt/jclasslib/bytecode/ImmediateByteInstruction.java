@@ -20,7 +20,7 @@ import java.io.IOException;
 */
 public class ImmediateByteInstruction extends AbstractInstruction {
 
-    /** Indicates whether the instuction is subject to a wide instruction or not. */
+    /** Indicates whether the instruction is subject to a wide instruction or not. */
     protected boolean wide;
     
     private int immediateByte;
@@ -30,7 +30,7 @@ public class ImmediateByteInstruction extends AbstractInstruction {
         @param opcode the opcode
         @param wide whether the instruction is a wide instruction.
      */
-    public ImmediateByteInstruction(int opcode, boolean wide) {
+    public ImmediateByteInstruction(Opcode opcode, boolean wide) {
         super(opcode); 
         this.wide = wide;
     }
@@ -41,7 +41,7 @@ public class ImmediateByteInstruction extends AbstractInstruction {
         @param wide whether the instruction is a wide instruction.
         @param immediateByte the immediate byte value.
      */
-    public ImmediateByteInstruction(int opcode, boolean wide, int immediateByte) {
+    public ImmediateByteInstruction(Opcode opcode, boolean wide, int immediateByte) {
         this(opcode, wide); 
         this.immediateByte = immediateByte;
     }

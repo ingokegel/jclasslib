@@ -19,8 +19,7 @@ import java.io.IOException;
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
     @version $Revision: 1.5 $ $Date: 2003-08-18 07:52:54 $
 */
-public abstract class ClassMember extends AbstractStructureWithAttributes
-                                  implements AccessFlags {
+public abstract class ClassMember extends AbstractStructureWithAttributes {
 
     /** The access flags of this class member. */
     protected int accessFlags;

@@ -19,7 +19,7 @@ public class SimpleInstruction extends AbstractInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public SimpleInstruction(int opcode) {
+    public SimpleInstruction(Opcode opcode) {
         super(opcode); 
     }
     

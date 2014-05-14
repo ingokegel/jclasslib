@@ -29,7 +29,7 @@ public class LookupSwitchInstruction extends PaddedInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public LookupSwitchInstruction(int opcode) {
+    public LookupSwitchInstruction(Opcode opcode) {
         super(opcode); 
     }
     

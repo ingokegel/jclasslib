@@ -24,7 +24,7 @@ public class InvokeDynamicInstruction extends ImmediateShortInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public InvokeDynamicInstruction(int opcode) {
+    public InvokeDynamicInstruction(Opcode opcode) {
         super(opcode);
     }
 
@@ -33,7 +33,7 @@ public class InvokeDynamicInstruction extends ImmediateShortInstruction {
         @param opcode the opcode
         @param immediateShort the immediate short value.
      */
-    public InvokeDynamicInstruction(int opcode, int immediateShort) {
+    public InvokeDynamicInstruction(Opcode opcode, int immediateShort) {
         super(opcode, immediateShort); 
     }
     

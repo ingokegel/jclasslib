@@ -60,7 +60,7 @@ public class MethodInfo extends ClassMember {
     }
 
     protected String printAccessFlagsVerbose(int accessFlags) {
-        return printAccessFlagsVerbose(AccessFlags.METHOD_ACCESS_FLAGS, AccessFlags.METHOD_ACCESS_FLAGS_VERBOSE, accessFlags);
+        return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags);
     }
 
 }

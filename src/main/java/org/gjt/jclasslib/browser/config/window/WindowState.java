@@ -51,11 +51,27 @@ public class WindowState {
     }
 
     /**
+     * Set the file name of the displayed class.
+     * @param fileName the file name
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    /**
      * Get the browser path.
      * @return the browser path.
      */
     public BrowserPath getBrowserPath() {
         return browserPath;
+    }
+
+    /**
+     * Set the browser path.
+     * @param browserPath the browser path.
+     */
+    public void setBrowserPath(BrowserPath browserPath) {
+        this.browserPath = browserPath;
     }
 
     public boolean equals(Object other) {

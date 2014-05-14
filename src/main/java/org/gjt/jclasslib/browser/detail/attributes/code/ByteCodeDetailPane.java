@@ -11,7 +11,6 @@ import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserComponent;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.bytecode.AbstractInstruction;
-import org.gjt.jclasslib.bytecode.OpcodesUtil;
 import org.gjt.jclasslib.structures.attributes.CodeAttribute;
 
 import javax.swing.*;
@@ -96,9 +95,9 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
         Set<String> mnemonics = new TreeSet<String>();
         for (Object instruction1 : instructions) {
             AbstractInstruction instruction = (AbstractInstruction)instruction1;
-            if (mnemonics.add(instruction.getOpcodeVerbose())) {
-                instructionToURL.put(instruction.getOpcodeVerbose(),
-                    OpcodesUtil.getURL(instruction.getOpcode()));
+            String verbose = instruction.getOpcode().getVerbose();
+            if (mnemonics.add(verbose)) {
+                instructionToURL.put(verbose, instruction.getOpcode().getDocUrl());
             }
         }
         this.instructions.setModel(new DefaultComboBoxModel(mnemonics.toArray()));

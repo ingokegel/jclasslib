@@ -26,7 +26,7 @@ public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public InvokeInterfaceInstruction(int opcode) {
+    public InvokeInterfaceInstruction(Opcode opcode) {
         super(opcode); 
     }
     
@@ -36,7 +36,7 @@ public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
         @param immediateShort the immediate short value.
         @param count the argument count.
      */
-    public InvokeInterfaceInstruction(int opcode, int immediateShort, int count) {
+    public InvokeInterfaceInstruction(Opcode opcode, int immediateShort, int count) {
         super(opcode, immediateShort); 
         this.count = count;
     }

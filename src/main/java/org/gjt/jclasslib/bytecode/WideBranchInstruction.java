@@ -24,7 +24,7 @@ public class WideBranchInstruction extends AbstractBranchInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public WideBranchInstruction(int opcode) {
+    public WideBranchInstruction(Opcode opcode) {
         super(opcode); 
     }
 
@@ -33,7 +33,7 @@ public class WideBranchInstruction extends AbstractBranchInstruction {
         @param opcode the opcode.
         @param branchOffset the immediate int value.
      */
-    public WideBranchInstruction(int opcode, int branchOffset) {
+    public WideBranchInstruction(Opcode opcode, int branchOffset) {
         super(opcode, branchOffset);
     }
     

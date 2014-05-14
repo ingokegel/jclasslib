@@ -8,7 +8,7 @@
 package org.gjt.jclasslib.structures.attributes;
 
 import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.AccessFlags;
+import org.gjt.jclasslib.structures.AccessFlag;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
@@ -22,8 +22,7 @@ import java.io.IOException;
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
  * @version $Revision: 1.4 $ $Date: 2004-12-28 13:04:32 $
  */
-public class InnerClassesEntry extends AbstractStructure
-        implements AccessFlags {
+public class InnerClassesEntry extends AbstractStructure {
 
     /**
      * Length in bytes of an inner class entry.
@@ -180,8 +179,8 @@ public class InnerClassesEntry extends AbstractStructure
     }
 
     protected String printAccessFlagsVerbose(int accessFlags) {
-        return printAccessFlagsVerbose(AccessFlags.INNER_CLASS_ACCESS_FLAGS,
-                AccessFlags.INNER_CLASS_ACCESS_FLAGS_VERBOSE, accessFlags);
+        return printAccessFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS,
+            accessFlags);
     }
 
 }

@@ -26,7 +26,7 @@ public class MultianewarrayInstruction extends ImmediateShortInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public MultianewarrayInstruction(int opcode) {
+    public MultianewarrayInstruction(Opcode opcode) {
         super(opcode); 
     }
     

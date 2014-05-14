@@ -29,7 +29,7 @@ public class TableSwitchInstruction extends PaddedInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public TableSwitchInstruction(int opcode) {
+    public TableSwitchInstruction(Opcode opcode) {
         super(opcode); 
     }
     

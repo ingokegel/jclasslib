@@ -8,7 +8,7 @@ public abstract class AbstractBranchInstruction extends AbstractInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    protected AbstractBranchInstruction(int opcode) {
+    protected AbstractBranchInstruction(Opcode opcode) {
         super(opcode);
     }
 
@@ -17,7 +17,7 @@ public abstract class AbstractBranchInstruction extends AbstractInstruction {
         @param opcode the opcode.
         @param branchOffset the branch offset.
      */
-    protected AbstractBranchInstruction(int opcode, int branchOffset) {
+    protected AbstractBranchInstruction(Opcode opcode, int branchOffset) {
         super(opcode);
         this.branchOffset = branchOffset;
     }

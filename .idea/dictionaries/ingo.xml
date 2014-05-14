@@ -3,6 +3,7 @@
     <words>
       <w>aaload</w>
       <w>aastore</w>
+      <w>acmpcond</w>
       <w>acmpeq</w>
       <w>acmpne</w>
       <w>aconst</w>
@@ -27,6 +28,7 @@
       <w>dastore</w>
       <w>dcmpg</w>
       <w>dcmpl</w>
+      <w>dcmpop</w>
       <w>dconst</w>
       <w>ddiv</w>
       <w>dload</w>
@@ -43,6 +45,7 @@
       <w>fastore</w>
       <w>fcmpg</w>
       <w>fcmpl</w>
+      <w>fcmpop</w>
       <w>fconst</w>
       <w>fdiv</w>
       <w>fieldref</w>
@@ -60,6 +63,7 @@
       <w>iaload</w>
       <w>iand</w>
       <w>iastore</w>
+      <w>icmpcond</w>
       <w>icmpeq</w>
       <w>icmpge</w>
       <w>icmpgt</w>
@@ -68,6 +72,7 @@
       <w>icmpne</w>
       <w>iconst</w>
       <w>idiv</w>
+      <w>ifcond</w>
       <w>ifeq</w>
       <w>ifge</w>
       <w>ifgt</w>

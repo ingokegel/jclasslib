@@ -770,6 +770,6 @@ public class ClassFile extends AbstractStructureWithAttributes {
     }
 
     protected String printAccessFlagsVerbose(int accessFlags) {
-        return printAccessFlagsVerbose(AccessFlags.CLASS_ACCESS_FLAGS, AccessFlags.CLASS_ACCESS_FLAGS_VERBOSE, accessFlags);
+        return printAccessFlagsVerbose(AccessFlag.CLASS_ACCESS_FLAGS, accessFlags);
     }
 }

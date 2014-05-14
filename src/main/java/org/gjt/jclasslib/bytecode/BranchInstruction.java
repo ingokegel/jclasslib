@@ -24,7 +24,7 @@ public class BranchInstruction extends AbstractBranchInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public BranchInstruction(int opcode) {
+    public BranchInstruction(Opcode opcode) {
         super(opcode); 
     }
 
@@ -33,7 +33,7 @@ public class BranchInstruction extends AbstractBranchInstruction {
         @param opcode the opcode.
         @param branchOffset the branch offset.
      */
-    public BranchInstruction(int opcode, int branchOffset) {
+    public BranchInstruction(Opcode opcode, int branchOffset) {
         super(opcode, branchOffset);
     }
     

@@ -460,7 +460,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         appendString(getPaddedValue(offset, offsetWidth),
                 STYLE_OFFSET);
 
-        appendString(" " + instruction.getOpcodeVerbose(),
+        appendString(" " + instruction.getOpcode().getVerbose(),
                 STYLE_INSTRUCTION);
 
         addOpcodeSpecificInfo(instruction);
@@ -490,18 +490,19 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
     private void addImmediateByteSpecificInfo(ImmediateByteInstruction instruction) {
 
-        int opcode = instruction.getOpcode();
+        Opcode opcode = instruction.getOpcode();
         int sourceOffset = instruction.getOffset();
         int immediateByte = instruction.getImmediateByte();
 
-        if (opcode == Opcodes.OPCODE_LDC) {
+        if (opcode == Opcode.LDC) {
             addConstantPoolLink(immediateByte, sourceOffset);
-        } else if (opcode == Opcodes.OPCODE_NEWARRAY) {
-            String verbose = OpcodesUtil.getArrayTypeVerbose(immediateByte);
+        } else if (opcode == Opcode.NEWARRAY) {
+            NewArrayType newArrayType = NewArrayType.getFromCode(immediateByte);
+            String verbose = newArrayType == null ? "invalid array type" : newArrayType.getVerbose();
             appendString(" " + immediateByte + " (" + verbose + ")",
                     STYLE_IMMEDIATE_VALUE);
 
-        } else if (opcode == Opcodes.OPCODE_BIPUSH) {
+        } else if (opcode == Opcode.BIPUSH) {
             appendString(" " + (byte)immediateByte, STYLE_IMMEDIATE_VALUE);
 
         } else {
@@ -518,11 +519,11 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
     private void addImmediateShortSpecificInfo(ImmediateShortInstruction instruction) {
 
-        int opcode = instruction.getOpcode();
+        Opcode opcode = instruction.getOpcode();
         int sourceOffset = instruction.getOffset();
         int immediateShort = instruction.getImmediateShort();
 
-        if (opcode == Opcodes.OPCODE_SIPUSH) {
+        if (opcode == Opcode.SIPUSH) {
             appendString(" " + immediateShort,
                     STYLE_IMMEDIATE_VALUE);
         } else {

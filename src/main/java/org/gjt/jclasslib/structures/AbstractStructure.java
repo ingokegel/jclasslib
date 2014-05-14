@@ -13,6 +13,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.EnumSet;
 
 /**
  * Base class for all structures defined in the class file format. <p>
@@ -70,7 +71,7 @@ public abstract class AbstractStructure {
     /**
      * Read this structure from the given <tt>DataInput</tt>. <p>
      * <p/>
-     * Excpects <tt>DataInput</tt> to be in JVM class file format and just
+     * Expects <tt>DataInput</tt> to be in JVM class file format and just
      * before a structure of this kind. No look ahead parsing since
      * the class file format is deterministic.
      *
@@ -187,32 +188,29 @@ public abstract class AbstractStructure {
      *
      * @param availableAccessFlags        array with the access flags available
      *                                    for the derived structure
-     * @param availableAccessFlagsVerbose array with verbose description
-     *                                    of the access flags available for the derived structure
      * @param accessFlags                 the unsigned short value to print as a hex string
      * @return the access flags verbose description
      */
-    protected String printAccessFlagsVerbose(int[] availableAccessFlags, String[] availableAccessFlagsVerbose,
-                                             int accessFlags) {
-        StringBuilder accessFlagsVerbose = new StringBuilder();
-
+    protected String printAccessFlagsVerbose(EnumSet<AccessFlag> availableAccessFlags, int accessFlags) {
+        StringBuilder buffer = new StringBuilder();
 
         int all = 0;
-        for (int i = 0; i < availableAccessFlags.length; i++) {
-            all |= availableAccessFlags[i];
-            if ((accessFlags & availableAccessFlags[i]) != 0) {
-                accessFlagsVerbose.append(availableAccessFlagsVerbose[i]).append(' ');
+        for (AccessFlag accessFlag : availableAccessFlags) {
+            int flags = accessFlag.getFlag();
+            all |= flags;
+            if ((accessFlags & flags) != 0) {
+                if (buffer.length() > 0) {
+                    buffer.append(' ');
+                }
+                buffer.append(accessFlag.getVerbose()).append(' ');
             }
         }
         
         // Check if every possible flag has been processed
         if ((all | accessFlags) != all) {
-            accessFlagsVerbose.append("? ");
+            buffer.append('?');
         }
-        if (accessFlagsVerbose.length() > 0) {
-            accessFlagsVerbose.setLength(accessFlagsVerbose.length() - 1);
-        }
-        return accessFlagsVerbose.toString();
+        return buffer.toString();
     }
 
 }

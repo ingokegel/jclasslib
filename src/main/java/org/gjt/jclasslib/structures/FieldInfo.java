@@ -60,7 +60,7 @@ public class FieldInfo extends ClassMember {
     }
 
     protected String printAccessFlagsVerbose(int accessFlags) {
-        return printAccessFlagsVerbose(AccessFlags.FIELD_ACCESS_FLAGS, AccessFlags.FIELD_ACCESS_FLAGS_VERBOSE, accessFlags);
+        return printAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags);
     }
 
 }

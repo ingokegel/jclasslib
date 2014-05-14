@@ -18,16 +18,16 @@ import java.io.IOException;
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
     @version $Revision: 1.5 $ $Date: 2003-08-18 07:58:35 $
 */
-public abstract class AbstractInstruction implements Opcodes {
+public abstract class AbstractInstruction {
 
     private int offset;
-    private int opcode;
+    private Opcode opcode;
 
     /**
         Constructor.
         @param opcode the opcode.
      */
-    protected AbstractInstruction(int opcode) {
+    protected AbstractInstruction(Opcode opcode) {
         this.opcode = opcode; 
     }
     
@@ -43,7 +43,7 @@ public abstract class AbstractInstruction implements Opcodes {
         Get the opcode of this instruction.
         @return the opcode
      */
-    public int getOpcode() {
+    public Opcode getOpcode() {
         return opcode;
     }
 
@@ -51,23 +51,10 @@ public abstract class AbstractInstruction implements Opcodes {
         Set the opcode of this instruction.
         @param opcode the opcode
      */
-    public void setOpcode(int opcode) {
+    public void setOpcode(Opcode opcode) {
         this.opcode = opcode;
     }
 
-    /**
-        Get the verbose description of the opcode of this instruction.
-        @return the description
-     */
-    public String getOpcodeVerbose() {
-        String verbose = OpcodesUtil.getVerbose(opcode);
-        if (verbose == null) {
-            return "invalid opcode";
-        } else {
-            return verbose;
-        }
-    }
-    
     /**
         Get the offset of this instruction in its parent <tt>Code</tt> attribute.
         @return the offset
@@ -103,7 +90,7 @@ public abstract class AbstractInstruction implements Opcodes {
         @throws IOException if an exception occurs with the <tt>ByteCodeOutput</tt>
      */
     public void write(ByteCodeOutput out) throws IOException {
-        out.writeByte(opcode);
+        out.writeByte(opcode.getBytecode());
     }
     
 }

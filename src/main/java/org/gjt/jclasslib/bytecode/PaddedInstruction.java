@@ -26,7 +26,7 @@ public class PaddedInstruction extends AbstractInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public PaddedInstruction(int opcode) {
+    public PaddedInstruction(Opcode opcode) {
         super(opcode); 
     }
 

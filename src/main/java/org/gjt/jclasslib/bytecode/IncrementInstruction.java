@@ -27,7 +27,7 @@ public class IncrementInstruction extends ImmediateByteInstruction {
         @param opcode the opcode
         @param wide whether the instruction is a wide instruction.
      */
-    public IncrementInstruction(int opcode, boolean wide) {
+    public IncrementInstruction(Opcode opcode, boolean wide) {
         super(opcode, wide); 
     }
 
@@ -38,7 +38,7 @@ public class IncrementInstruction extends ImmediateByteInstruction {
         @param immediateByte the immediate byte value.
         @param incrementConst the increment.
      */
-    public IncrementInstruction(int opcode, boolean wide, int immediateByte, int incrementConst) {
+    public IncrementInstruction(Opcode opcode, boolean wide, int immediateByte, int incrementConst) {
         super(opcode, wide, immediateByte); 
         this.incrementConst = incrementConst;
     }

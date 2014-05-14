@@ -30,7 +30,7 @@ public class ImmediateShortInstruction extends AbstractInstruction {
         Constructor.
         @param opcode the opcode.
      */
-    public ImmediateShortInstruction(int opcode) {
+    public ImmediateShortInstruction(Opcode opcode) {
         super(opcode); 
     }
     
@@ -39,7 +39,7 @@ public class ImmediateShortInstruction extends AbstractInstruction {
         @param opcode the opcode.
         @param immediateShort the immediate short value.
      */
-    public ImmediateShortInstruction(int opcode, int immediateShort) {
+    public ImmediateShortInstruction(Opcode opcode, int immediateShort) {
         super(opcode); 
         this.immediateShort = immediateShort;
     }
