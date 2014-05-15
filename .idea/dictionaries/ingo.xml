@@ -17,6 +17,7 @@
       <w>baload</w>
       <w>bastore</w>
       <w>bcis</w>
+      <w>bintray</w>
       <w>bipush</w>
       <w>caload</w>
       <w>castore</w>

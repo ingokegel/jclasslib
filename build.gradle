@@ -4,6 +4,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'install4j'
+apply plugin: 'bintray'
 
 version = 4.0
 buildDir = file('build/gradle')
@@ -15,9 +16,21 @@ buildscript {
         flatDir {
             dirs 'lib-compile'
         }
+        maven {
+            url 'http://jcenter.bintray.com'
+        }
     }
     dependencies {
+        // Download after install4j 6
         classpath ':i4jgradle'
+
+        // remove the next two entries after gradle-bintray-plugin is updated with pull request
+        classpath ':gradle-bintray-plugin'
+        classpath('org.codehaus.groovy.modules.http-builder:http-builder:0.6') {
+            exclude(module: 'groovy')
+        }
+
+        //classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
     }
 }
 
@@ -28,16 +41,18 @@ repositories {
 }
 
 dependencies {
+    // Download after install4j 6
     compile ':i4jruntime'
 }
 
 install4j {
-    installDir = file(install4jHomeDir)
+    if (project.hasProperty('install4jHomeDir')) {
+        installDir = file(install4jHomeDir)
+    }
 }
 
-
 clean << {
-    delete mediaDir
+    project.delete mediaDir
 }
 
 compileJava {
@@ -66,6 +81,12 @@ jar {
     }
 }
 
+javadoc {
+    options {
+        links 'http://docs.oracle.com/javase/8/docs/api/'
+    }
+}
+
 task libraryJar(type: Jar) {
     archiveName = 'jclasslib-library.jar'
     from sourceSets.main.output
@@ -90,5 +111,30 @@ task media(type: Install4jTask) {
             throw new RuntimeException('Specify install4jHomeDir in gradle.properties and set it to an install4j installation directory')
         }
     }
+}
 
+task listMedia << {
+    println configurations.media.resolve()
+}
+
+bintray {
+    if (project.hasProperty('bintrayUser')) {
+        user = bintrayUser
+        key = bintrayApiKey
+        files = fileTree(dir: mediaDir)
+        pkg {
+            repo = 'generic'
+            name = 'jclasslib'
+            licenses = ['GPL-2.0']
+        }
+        dryRun = project.hasProperty('dryRun')
+    }
+}
+
+bintrayUpload {
+    doFirst {
+        if (!project.hasProperty('bintrayUser')) {
+            throw new RuntimeException('Specify bintrayUser and bintrayApiKey in gradle.properties')
+        }
+    }
 }
