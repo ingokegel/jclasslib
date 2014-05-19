@@ -16,6 +16,7 @@ import org.gjt.jclasslib.structures.attributes.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.util.HashMap;
 
@@ -42,6 +43,9 @@ public class AttributeDetailPane extends AbstractDetailPane {
     private static final String SCREEN_LOCAL_VARIABLE_TYPE_TABLE = "LocalVariableTypeTable";
     private static final String SCREEN_RUNTIME_ANNOTATIONS = "RuntimeAnnotations";
     private static final String SCREEN_ANNOTATION_DEFAULT = "AnnotationDefault";
+    private static final String SCREEN_BOOTSTRAP_METHODS = "BootstrapMethods";
+    private static final String SCREEN_STACK_MAP_TABLE = "StackMapTable";
+    private static final String SCREEN_METHOD_PARAMETERS = "MethodParameters";
 
     private HashMap<String, AbstractDetailPane> attributeTypeToDetailPane;
     
@@ -96,10 +100,16 @@ public class AttributeDetailPane extends AbstractDetailPane {
             paneName = SCREEN_SIGNATURE;
         } else if (attribute instanceof LocalVariableTypeTableAttribute) {
             paneName = SCREEN_LOCAL_VARIABLE_TYPE_TABLE;
-        } else if (attribute instanceof RuntimeAnnotationsAttribute) {
+        } else if (attribute instanceof RuntimeAnnotationsAttribute || attribute instanceof RuntimeTypeAnnotationsAttribute) {
             paneName = SCREEN_RUNTIME_ANNOTATIONS;
         } else if (attribute instanceof AnnotationDefaultAttribute) {
             paneName = SCREEN_ANNOTATION_DEFAULT;
+        } else if (attribute instanceof BootstrapMethodsAttribute) {
+        	paneName = SCREEN_BOOTSTRAP_METHODS;
+        } else if (attribute instanceof StackMapTableAttribute) {
+        	paneName = SCREEN_STACK_MAP_TABLE;
+        }	else if (attribute instanceof MethodParametersAttribute) {
+        	paneName = SCREEN_METHOD_PARAMETERS;
         }
 
         CardLayout layout = (CardLayout)specificInfoPane.getLayout();
@@ -165,6 +175,12 @@ public class AttributeDetailPane extends AbstractDetailPane {
             return new RuntimeAnnotationsAttributeDetailPane(services);
         } else if (attributeType.equals(SCREEN_ANNOTATION_DEFAULT)) {
             return new AnnotationDefaultAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_BOOTSTRAP_METHODS)) {
+            return new BootstrapMethodsAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_STACK_MAP_TABLE)) {
+        	return new StackMapTableAttributeDetailPane(services);
+        } else if (attributeType.equals(SCREEN_METHOD_PARAMETERS)) {
+        	return new MethodParametersAttributeDetailPane(services);
         } else {
             return null;
         }

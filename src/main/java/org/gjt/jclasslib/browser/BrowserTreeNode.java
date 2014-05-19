@@ -59,6 +59,14 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
      */
     public static final String NODE_ANNOTATION = "annotation";
     /**
+     * Node for an attribute entry  (<tt>VisibleRuntimeTypeAnnotation</tt>).
+     */
+    public static final String NODE_TYPE_ANNOTATION = "typeannotation";
+    /**
+     * Node for an attribute entry  (<tt>bootstrapmethod</tt>).
+     */
+    public static final String BOOTSTRAP_METHOD_ANNOTATION = "bootstrapmethod";
+    /**
      * Node for an <tt>ElementValuePair</tt> entry.
      */
     public static final String NODE_ELEMENTVALUEPAIR = "elementvaluepair";

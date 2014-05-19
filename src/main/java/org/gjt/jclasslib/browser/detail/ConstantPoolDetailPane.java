@@ -90,6 +90,11 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
 
         addScreen(new ConstantInvokeDynamicInfoDetailPane(services),
             SCREEN_CONSTANT_INVOKE_DYNAMIC);
+        
+        addScreen(new ConstantMethodHandleDetailPane(services),
+            	SCREEN_CONSTANT_METHOD_HANDLE);
+        addScreen(new ConstantMethodTypeDetailPane(services),
+                    	SCREEN_CONSTANT_METHOD_TYPE);
 
         addScreen(new ConstantMethodHandleInfoDetailPane(services),
             SCREEN_CONSTANT_METHOD_HANDLE);

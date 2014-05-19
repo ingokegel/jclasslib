@@ -10,17 +10,12 @@ import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.*;
 
 /**
- * Common class for runtime annotations.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Common class for runtime parameter annotations.
  */
-public class RuntimeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder{
+public class RuntimeParameterAnnotationsAttribute extends AttributeInfo {
     private static final int INITIAL_LENGTH = 2;
 
     protected AnnotationElementValue[] runtimeAnnotations;
@@ -79,15 +74,9 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
 
     public int getAttributeLength() {
         int length = INITIAL_LENGTH;
-        for (AnnotationElementValue runtimeAnnotation : runtimeAnnotations) {
-            length += runtimeAnnotation.getLength();
+        for (int i = 0; i < runtimeAnnotations.length; i++) {
+            length += runtimeAnnotations[i].getLength();
         }
         return length;
     }
-
-	public int getNumberOfAnnotations() {
-		return runtimeAnnotations.length;
-	}
-    
-    
 }
