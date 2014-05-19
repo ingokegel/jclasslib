@@ -15,7 +15,6 @@ package org.gjt.jclasslib.structures.attributes;
 
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.elementvalues.TypeAnnotationElementValue;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -26,9 +25,10 @@ import java.io.IOException;
  *
  */
 public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder {
+
     private static final int INITIAL_LENGTH = 2;
 
-    protected TypeAnnotationElementValue[] runtimeTypeAnnotations;
+    protected TypeAnnotation[] runtimeTypeAnnotations;
 
 
     /**
@@ -37,7 +37,7 @@ public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements An
      *
      * @return the array
      */
-    public TypeAnnotationElementValue[] getRuntimeAnnotations() {
+    public TypeAnnotation[] getRuntimeAnnotations() {
         return runtimeTypeAnnotations;
     }
 
@@ -47,16 +47,16 @@ public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements An
      *
      * @param runtimeAnnotations the array
      */
-    public void setRuntimeAnnotations(TypeAnnotationElementValue[] runtimeAnnotations) {
+    public void setRuntimeAnnotations(TypeAnnotation[] runtimeAnnotations) {
         this.runtimeTypeAnnotations = runtimeAnnotations;
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         int runtimeVisibleAnnotationsLength = in.readUnsignedShort();
-        runtimeTypeAnnotations = new TypeAnnotationElementValue[runtimeVisibleAnnotationsLength];
+        runtimeTypeAnnotations = new TypeAnnotation[runtimeVisibleAnnotationsLength];
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeTypeAnnotations[i] = new TypeAnnotationElementValue();
+            runtimeTypeAnnotations[i] = new TypeAnnotation();
             runtimeTypeAnnotations[i].setClassFile(classFile);
             runtimeTypeAnnotations[i].read(in);
         }
@@ -64,13 +64,10 @@ public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements An
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         int runtimeVisibleAnnotationsLength = getLength(runtimeTypeAnnotations);
-
         out.writeShort(runtimeVisibleAnnotationsLength);
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
             runtimeTypeAnnotations[i].write(out);
@@ -81,7 +78,7 @@ public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements An
 
     public int getAttributeLength() {
         int length = INITIAL_LENGTH;
-        for (TypeAnnotationElementValue runtimeTypeAnnotation : runtimeTypeAnnotations) {
+        for (TypeAnnotation runtimeTypeAnnotation : runtimeTypeAnnotations) {
             length += runtimeTypeAnnotation.getLength();
         }
         return length;

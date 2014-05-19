@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.path="C:\Users\ingo\projects.git\jclasslib" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="" external.system.module.version="4.0" type="JAVA_MODULE" version="4">
+<module external.linked.project.path="C:\Users\ingo\projects.git\jclasslib" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="" external.system.module.version="4.1" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -14,6 +14,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Gradle: i4jruntime" level="project" />
     <orderEntry type="library" exported="" name="Gradle: annotations-13.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: testng-6.8.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: bsh-2.0b4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: jcommander-1.27" level="project" />
   </component>
 </module>
 

@@ -20,7 +20,7 @@ import java.io.IOException;
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
  *
  */
-public class RuntimeAnnotationsAttribute extends AttributeInfo {
+public class RuntimeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder {
     private static final int INITIAL_LENGTH = 2;
 
     protected Annotation[] runtimeAnnotations;

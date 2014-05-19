@@ -15,7 +15,7 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
-import org.gjt.jclasslib.structures.elementvalues.TypeAnnotationElementValue;
+import org.gjt.jclasslib.structures.attributes.TypeAnnotation;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -45,13 +45,13 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        TypeAnnotationElementValue annotation = (TypeAnnotationElementValue)
+        TypeAnnotation annotation = (TypeAnnotation)
             ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
         lblType.setText(annotation.getTargetType().toString());
         lblTypeVerbose.setText("<" + annotation.getTargetType() + ">");
 
-        lblInfo.setText(annotation.getTargetInfo());
+        lblInfo.setText(annotation.getTargetInfo().getVerbose());
 
 
         super.show(treePath);

@@ -108,6 +108,8 @@ public class BrowserDetailPane extends JPanel {
             return new AttributeDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ANNOTATION)) {
             return new AnnotationDetailPane(services);
+        } else if (nodeType.equals(BrowserTreeNode.NODE_TYPE_ANNOTATION)) {
+            return new TypeAnnotationDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUE)) {
             return new ElementValueDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUEPAIR)) {

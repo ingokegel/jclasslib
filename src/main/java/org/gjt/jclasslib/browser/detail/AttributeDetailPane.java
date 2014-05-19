@@ -99,7 +99,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
             paneName = SCREEN_SIGNATURE;
         } else if (attribute instanceof LocalVariableTypeTableAttribute) {
             paneName = SCREEN_LOCAL_VARIABLE_TYPE_TABLE;
-        } else if (attribute instanceof RuntimeAnnotationsAttribute) {
+        } else if (attribute instanceof RuntimeAnnotationsAttribute || attribute instanceof RuntimeTypeAnnotationsAttribute) {
             paneName = SCREEN_RUNTIME_ANNOTATIONS;
         } else if (attribute instanceof AnnotationDefaultAttribute) {
             paneName = SCREEN_ANNOTATION_DEFAULT;
