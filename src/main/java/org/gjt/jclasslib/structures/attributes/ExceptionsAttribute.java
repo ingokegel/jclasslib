@@ -46,8 +46,7 @@ public class ExceptionsAttribute extends AttributeInfo {
         this.exceptionIndexTable = exceptionIndexTable;
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
             
         int numberOfExceptions = in.readUnsignedShort();
         exceptionIndexTable = new int[numberOfExceptions];
@@ -58,9 +57,7 @@ public class ExceptionsAttribute extends AttributeInfo {
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         int numberOfExceptions = getLength(exceptionIndexTable);

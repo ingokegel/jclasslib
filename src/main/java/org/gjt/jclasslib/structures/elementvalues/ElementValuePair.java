@@ -41,8 +41,7 @@ public class ElementValuePair extends AbstractStructure {
      *                             if the byte code is invalid
      * @throws java.io.IOException if an exception occurs with the <tt>DataInput</tt>
      */
-    public static ElementValuePair create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+    public static ElementValuePair create(DataInput in, ClassFile classFile) throws InvalidByteCodeException, IOException {
 
         ElementValuePair elementValuePairEntry = new ElementValuePair();
         elementValuePairEntry.setClassFile(classFile);
@@ -114,7 +113,7 @@ public class ElementValuePair extends AbstractStructure {
         return "";
     }
 
-    protected int getLength() {
+    public int getLength() {
         return INITIAL_LENGTH + elementValue.getLength();
     }
 

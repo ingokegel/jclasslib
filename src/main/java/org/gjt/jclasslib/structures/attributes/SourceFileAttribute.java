@@ -44,16 +44,13 @@ public class SourceFileAttribute extends AttributeInfo {
         this.sourceFileIndex = sourceFileIndex;
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
             
         sourceFileIndex = in.readUnsignedShort();
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
         out.writeShort(sourceFileIndex);
         if (debug) debug("wrote ");

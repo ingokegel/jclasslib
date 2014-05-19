@@ -8,9 +8,7 @@
 package org.gjt.jclasslib.browser;
 
 import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.structures.attributes.AnnotationDefaultAttribute;
-import org.gjt.jclasslib.structures.attributes.CodeAttribute;
-import org.gjt.jclasslib.structures.attributes.RuntimeAnnotationsAttribute;
+import org.gjt.jclasslib.structures.attributes.*;
 import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
 import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
 import org.gjt.jclasslib.structures.elementvalues.ArrayElementValue;
@@ -19,7 +17,6 @@ import org.gjt.jclasslib.structures.elementvalues.ElementValuePair;
 
 import javax.swing.*;
 import javax.swing.tree.*;
-
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -184,11 +181,7 @@ public class BrowserTreePane extends JPanel {
         return constantPoolNode;
     }
 
-    private int addConstantPoolEntry(CPInfo constantPoolEntry,
-                                     int index,
-                                     int constantPoolCount,
-                                     BrowserTreeNode constantPoolNode) {
-
+    private int addConstantPoolEntry(CPInfo constantPoolEntry, int index, int constantPoolCount, BrowserTreeNode constantPoolNode) {
 
         if (constantPoolEntry == null) {
             constantPoolNode.add(buildNullNode());
@@ -210,10 +203,7 @@ public class BrowserTreePane extends JPanel {
         return 0;
     }
 
-    private void addConstantPoolContinuedEntry(int index,
-                                               int constantPoolCount,
-                                               BrowserTreeNode constantPoolNode) {
-
+    private void addConstantPoolContinuedEntry(int index, int constantPoolCount, BrowserTreeNode constantPoolNode) {
         BrowserTreeNode entryNode =
                 new BrowserTreeNode(getFormattedIndex(index, constantPoolCount) +
                 "(large numeric continued)",
@@ -253,10 +243,7 @@ public class BrowserTreePane extends JPanel {
                 services.getClassFile().getMethods());
     }
 
-    private BrowserTreeNode buildClassMembersNode(String text,
-                                                  String containerType,
-                                                  String childType,
-                                                  ClassMember[] classMembers) {
+    private BrowserTreeNode buildClassMembersNode(String text, String containerType, String childType, ClassMember[] classMembers) {
 
         BrowserTreeNode classMemberNode = new BrowserTreeNode(text, containerType);
         int classMembersCount = classMembers.length;
@@ -272,11 +259,7 @@ public class BrowserTreePane extends JPanel {
         return classMemberNode;
     }
 
-    private void addClassMembersNode(ClassMember classMember,
-                                     int index,
-                                     int classMembersCount,
-                                     String type,
-                                     BrowserTreeNode classMemberNode) {
+    private void addClassMembersNode(ClassMember classMember, int index, int classMembersCount, String type, BrowserTreeNode classMemberNode) {
 
         if (classMember == null) {
             classMemberNode.add(buildNullNode());
@@ -310,8 +293,7 @@ public class BrowserTreePane extends JPanel {
         return new BrowserTreeNode("[error] null");
     }
 
-    private void addAttributeNodes(BrowserTreeNode parentNode,
-                                   AbstractStructureWithAttributes structure) {
+    private void addAttributeNodes(BrowserTreeNode parentNode, AbstractStructureWithAttributes structure) {
 
         AttributeInfo[] attributes = structure.getAttributes();
         if (attributes == null) {
@@ -326,11 +308,7 @@ public class BrowserTreePane extends JPanel {
         }
     }
 
-    private void addSingleAttributeNode(AttributeInfo attribute,
-                                        int index,
-                                        int attributesCount,
-                                        BrowserTreeNode parentNode) {
-
+    private void addSingleAttributeNode(AttributeInfo attribute, int index, int attributesCount, BrowserTreeNode parentNode) {
 
         if (attribute == null) {
             parentNode.add(buildNullNode());
@@ -345,10 +323,10 @@ public class BrowserTreePane extends JPanel {
                 parentNode.add(entryNode);
                 if (attribute instanceof RuntimeAnnotationsAttribute) {
                     addRuntimeAnnotation(entryNode, (RuntimeAnnotationsAttribute)attribute);
+                } else if (attribute instanceof RuntimeParameterAnnotationsAttribute) {
+                    addRuntimeParameterAnnotation(entryNode, ((RuntimeParameterAnnotationsAttribute)attribute));
                 } else if (attribute instanceof AnnotationDefaultAttribute) {
                     addSingleElementValueEntryNode(((AnnotationDefaultAttribute)attribute).getDefaultValue(), 0, 1, entryNode);
-                } else if (attribute instanceof RuntimeTypeAnnotationsAttribute) {
-                	addRuntimeTypeAnnotation(entryNode, (RuntimeTypeAnnotationsAttribute)attribute);
                 } else if (attribute instanceof BootstrapMethodsAttribute) {
                 	addBootstrapMethodAnnotation(entryNode, (BootstrapMethodsAttribute)attribute);
                 } else {
@@ -388,34 +366,58 @@ public class BrowserTreePane extends JPanel {
     }
 
 
-    private void addRuntimeAnnotation(BrowserTreeNode parentNode,
-                                      RuntimeAnnotationsAttribute structure) {
+    private void addRuntimeAnnotation(BrowserTreeNode parentNode, RuntimeAnnotationsAttribute attribute) {
 
-        AnnotationElementValue[] annotations = structure.getRuntimeAnnotations();
+        Annotation[] annotations = attribute.getRuntimeAnnotations();
         if (annotations == null) {
             return;
         }
         int annotationsCount = annotations.length;
         for (int i = 0; i < annotationsCount; i++) {
-            addSingleAnnotationNode(annotations[i],
-                    i,
-                    annotationsCount,
-                    parentNode);
+            addSingleAnnotationNode(annotations[i], i, annotationsCount, parentNode);
         }
     }
 
-    private void addSingleAnnotationNode(AnnotationElementValue annotation,
-                                         int index,
-                                         int attributesCount,
-                                         BrowserTreeNode parentNode) {
+    private void addRuntimeParameterAnnotation(BrowserTreeNode parentNode, RuntimeParameterAnnotationsAttribute attribute) {
+        ParameterAnnotations[] parameterAnnotations = attribute.getParameterAnnotations();
+        if (parameterAnnotations == null) {
+            return;
+        }
+        int annotationsCount = parameterAnnotations.length;
+        for (int i = 0; i < annotationsCount; i++) {
+            addParameterAnnotationNode(parameterAnnotations[i], i, annotationsCount, parentNode);
+        }
 
+    }
+
+    private void addParameterAnnotationNode(ParameterAnnotations parameterAnnotations, int index, int parameterAnnotationsCount, BrowserTreeNode parentNode) {
+
+        if (parameterAnnotations == null) {
+            parentNode.add(buildNullNode());
+        } else {
+            BrowserTreeNode containerNode =
+                    new BrowserTreeNode(getFormattedIndex(index, parameterAnnotationsCount) +
+                        "Parameter annotation",
+                            BrowserTreeNode.NODE_NO_CONTENT,
+                            index);
+            parentNode.add(containerNode);
+            Annotation[] annotations = parameterAnnotations.getRuntimeAnnotations();
+            int annotationsCount = annotations.length;
+            for (int i = 0; i < annotationsCount; i++) {
+                addSingleAnnotationNode(annotations[i], i, annotationsCount, containerNode);
+            }
+        }
+
+    }
+
+    private void addSingleAnnotationNode(Annotation annotation, int index, int attributesCount, BrowserTreeNode parentNode) {
 
         if (annotation == null) {
             parentNode.add(buildNullNode());
         } else {
             BrowserTreeNode entryNode =
                     new BrowserTreeNode(getFormattedIndex(index, attributesCount) +
-                    annotation.getEntryName(),
+                        "Annotation",
                             BrowserTreeNode.NODE_ANNOTATION,
                             index,
                             annotation);
@@ -424,43 +426,9 @@ public class BrowserTreePane extends JPanel {
         }
     }
 
-    
-	private void addRuntimeTypeAnnotation(BrowserTreeNode parentNode,
-			RuntimeTypeAnnotationsAttribute structure) {
+    private void addBootstrapMethodAnnotation(BrowserTreeNode parentNode, BootstrapMethodsAttribute structure) {
 
-		TypeAnnotationElementValue[] annotations = structure
-				.getRuntimeAnnotations();
-		if (annotations == null) {
-			return;
-		}
-		int annotationsCount = annotations.length;
-		for (int i = 0; i < annotationsCount; i++) {
-			addSingleTypeAnnotationNode(annotations[i], i, annotationsCount,
-					parentNode);
-		}
-	}
-    
-	private void addSingleTypeAnnotationNode(
-			TypeAnnotationElementValue annotation, int index,
-			int attributesCount, BrowserTreeNode parentNode) {
-
-		if (annotation == null) {
-			parentNode.add(buildNullNode());
-		} else {
-			BrowserTreeNode entryNode = new BrowserTreeNode(getFormattedIndex(
-					index, attributesCount) + annotation.getEntryName(),
-					BrowserTreeNode.NODE_TYPE_ANNOTATION, index, annotation);
-			parentNode.add(entryNode);
-			addSingleAnnotationNode(annotation.getAnnotation(), 0, 1,
-					entryNode);
-		}
-	}
-	
-	private void addBootstrapMethodAnnotation(BrowserTreeNode parentNode,
-			BootstrapMethodsAttribute structure) {
-
-		BootstrapMethodsEntry[] annotations = structure
-				.getMethods();
+		BootstrapMethodsEntry[] annotations = structure.getMethods();
 		if (annotations == null) {
 			return;
 		}
@@ -471,19 +439,16 @@ public class BrowserTreePane extends JPanel {
 		}
 	}
     
-	private void addSingleBootstrapMethodNode(
-			BootstrapMethodsEntry annotation, int index,
-			int attributesCount, BrowserTreeNode parentNode) {
-
-		if (annotation == null) {
+	private void addSingleBootstrapMethodNode(BootstrapMethodsEntry annotation, int index, int attributesCount, BrowserTreeNode parentNode) {
+        if (annotation == null) {
 			parentNode.add(buildNullNode());
 		} else {
-			String name = null;
+			String name;
 			try {
 				name = services.getClassFile().getConstantPool()[annotation.getMethodRefIndexIndex()].getVerbose();
 			} catch (InvalidByteCodeException e) {
 				e.printStackTrace();
-				name="UNKNOWN";
+				name = "UNKNOWN";
 			}
 			BrowserTreeNode entryNode = new BrowserTreeNode(getFormattedIndex(
 					index, attributesCount)+name,
@@ -492,7 +457,7 @@ public class BrowserTreePane extends JPanel {
 		}
 	}
 
-    private void addElementValuePairEntry(BrowserTreeNode parentNode, AnnotationElementValue annotation) {
+    private void addElementValuePairEntry(BrowserTreeNode parentNode, AnnotationData annotation) {
 
         ElementValuePair[] entries = annotation.getElementValuePairEntries();
         if (entries == null) {
@@ -523,11 +488,7 @@ public class BrowserTreePane extends JPanel {
     }
 
 
-    private void addSingleElementValuePairEntryNode(ElementValuePair elementValuePair,
-                                                    int index,
-                                                    int attributesCount,
-                                                    BrowserTreeNode parentNode) {
-
+    private void addSingleElementValuePairEntryNode(ElementValuePair elementValuePair, int index, int attributesCount, BrowserTreeNode parentNode) {
 
         if (elementValuePair == null) {
             parentNode.add(buildNullNode());
@@ -543,10 +504,7 @@ public class BrowserTreePane extends JPanel {
         }
     }
 
-    private void addSingleElementValueEntryNode(ElementValue elementValue,
-                                                int index,
-                                                int attributesCount,
-                                                BrowserTreeNode parentNode) {
+    private void addSingleElementValueEntryNode(ElementValue elementValue, int index, int attributesCount, BrowserTreeNode parentNode) {
 
         if (elementValue == null) {
             parentNode.add(buildNullNode());

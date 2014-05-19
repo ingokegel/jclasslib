@@ -97,9 +97,8 @@ public class CodeAttribute extends AttributeInfo {
         this.exceptionTable = exceptionTable;
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+
         maxStack = in.readUnsignedShort();
         maxLocals = in.readUnsignedShort();
         int codeLength = in.readInt();
@@ -111,9 +110,7 @@ public class CodeAttribute extends AttributeInfo {
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
         out.writeShort(maxStack);
         out.writeShort(maxLocals);

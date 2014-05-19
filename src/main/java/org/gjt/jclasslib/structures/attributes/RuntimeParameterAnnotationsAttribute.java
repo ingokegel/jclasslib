@@ -8,74 +8,73 @@ package org.gjt.jclasslib.structures.attributes;
 
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Common class for runtime parameter annotations.
  */
 public class RuntimeParameterAnnotationsAttribute extends AttributeInfo {
-    private static final int INITIAL_LENGTH = 2;
+    private static final int INITIAL_LENGTH = 1;
 
-    protected AnnotationElementValue[] runtimeAnnotations;
+    private ParameterAnnotations[] parameterAnnotations;
 
 
     /**
-     * Get the list of runtime annotations associations of the parent
-     * structure as an array of <tt>Annotation</tt> structures.
+     * Get the list of parameter annotations of the parent
+     * structure as an array of <tt>ParameterAnnotations</tt> structures.
      *
      * @return the array
      */
-    public AnnotationElementValue[] getRuntimeAnnotations() {
-        return runtimeAnnotations;
+    public ParameterAnnotations[] getParameterAnnotations() {
+        return parameterAnnotations;
     }
 
     /**
-     * Set the list of runtime annotations associations of the parent
-     * structure as an array of <tt>Annotation</tt> structures.
+     * Set the list of parameter annotations associations of the parent
+     * structure as an array of <tt>ParameterAnnotations</tt> structures.
      *
-     * @param runtimeAnnotations the array
+     * @param parameterAnnotations the array
      */
-    public void setRuntimeAnnotations(AnnotationElementValue[] runtimeAnnotations) {
-        this.runtimeAnnotations = runtimeAnnotations;
+    public void setParameterAnnotations(ParameterAnnotations[] parameterAnnotations) {
+        this.parameterAnnotations = parameterAnnotations;
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
-        super.read(in);
+        int numParameters = in.readUnsignedByte();
+        parameterAnnotations = new ParameterAnnotations[numParameters];
 
-        int runtimeVisibleAnnotationsLength = in.readUnsignedShort();
-        runtimeAnnotations = new AnnotationElementValue[runtimeVisibleAnnotationsLength];
-        for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i] = new AnnotationElementValue();
-            runtimeAnnotations[i].setClassFile(classFile);
-            runtimeAnnotations[i].read(in);
+        for (int i = 0; i < numParameters; i++) {
+            parameterAnnotations[i] = new ParameterAnnotations();
+            parameterAnnotations[i].read(in);
         }
 
-        if (debug) debug("read ");
+        if (debug) {
+            debug("read ");
+        }
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
-        int runtimeVisibleAnnotationsLength = getLength(runtimeAnnotations);
-
-        out.writeShort(runtimeVisibleAnnotationsLength);
-        for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i].write(out);
+        int parameterAnnotationsLength = getLength(parameterAnnotations);
+        out.writeByte(parameterAnnotationsLength);
+        for (int i = 0; i < parameterAnnotationsLength; i++) {
+            parameterAnnotations[i].write(out);
         }
 
-        if (debug) debug("wrote ");
+        if (debug) {
+            debug("wrote ");
+        }
     }
 
     public int getAttributeLength() {
         int length = INITIAL_LENGTH;
-        for (int i = 0; i < runtimeAnnotations.length; i++) {
-            length += runtimeAnnotations[i].getLength();
+        for (ParameterAnnotations parameterAnnotations : this.parameterAnnotations) {
+            length += parameterAnnotations.getLength();
         }
         return length;
     }

@@ -9,7 +9,6 @@ package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.constants.ConstantClassInfo;
 import org.gjt.jclasslib.structures.constants.ConstantMethodTypeInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 

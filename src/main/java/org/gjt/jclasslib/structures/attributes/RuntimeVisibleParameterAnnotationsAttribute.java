@@ -9,7 +9,6 @@ package org.gjt.jclasslib.structures.attributes;
 
 /**
  * Describes an  <tt>RuntimeVisibleParameterAnnotations</tt> attribute structure.
- *
  */
 public class RuntimeVisibleParameterAnnotationsAttribute extends RuntimeParameterAnnotationsAttribute {
     /**
@@ -20,7 +19,7 @@ public class RuntimeVisibleParameterAnnotationsAttribute extends RuntimeParamete
 
     protected void debug(String message) {
         super.debug(message + "RuntimeVisibleParameterAnnotations attribute with "
-                + getLength(runtimeAnnotations) + " entries");
+            + getLength(getParameterAnnotations()) + " entries");
     }
 
 }

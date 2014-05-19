@@ -1,4 +1,11 @@
 /*
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the license, or (at your option) any later version.
+ */
+
+/*
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
@@ -6,7 +13,6 @@
 */
 package org.gjt.jclasslib.structures;
 
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
 import org.gjt.jclasslib.structures.elementvalues.ElementValuePair;
 
 import java.io.DataInput;
@@ -19,23 +25,13 @@ import java.io.IOException;
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
  *
  */
-public class Annotation extends ElementValue {
+public class Annotation extends AbstractStructure implements AnnotationData {
 
-    public final static String ENTRY_NAME = "Annotation";
-
-    private static final int INITIAL_LENGTH = 3;
+    private static final int INITIAL_LENGTH = 4;
 
     private int typeIndex;
     private ElementValuePair[] elementValuePairEntries;
 
-
-    public Annotation() {
-        super(ANNOTATION_TAG);
-    }
-
-    public String getEntryName() {
-        return ENTRY_NAME;
-    }
 
     /**
      * Get the list of element value pair associations of the parent
@@ -90,6 +86,14 @@ public class Annotation extends ElementValue {
         if (debug) debug("read ");
     }
 
+    public int getLength() {
+        int length = INITIAL_LENGTH;
+        for (ElementValuePair elementValuePairEntry : elementValuePairEntries) {
+            length += elementValuePairEntry.getLength();
+        }
+        return length;
+    }
+
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
@@ -102,18 +106,17 @@ public class Annotation extends ElementValue {
         }
 
         if (debug) debug("wrote ");
-    }
 
-    protected int getSpecificLength() {
-        int length = INITIAL_LENGTH;
-        for (ElementValuePair elementValuePairEntry : elementValuePairEntries) {
-            length += elementValuePairEntry.getLength();
-        }
-        return length;
     }
 
     protected void debug(String message) {
         super.debug(message + "Annotation with " +
                 getLength(elementValuePairEntries) + " value pair elements");
+    }
+
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        if (accessFlags != 0)
+            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
+        return "";
     }
 }

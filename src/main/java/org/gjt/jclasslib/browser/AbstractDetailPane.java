@@ -11,6 +11,7 @@ import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.gjt.jclasslib.util.HtmlDisplayTextArea;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -28,8 +29,6 @@ public abstract class AbstractDetailPane extends JPanel {
     
     /** Text prepended to constant pool hyperlinks. */
     public static final String CPINFO_LINK_TEXT = "cp_info #";
-    /** Color for hyperlinks. */
-    public static final Color COLOR_LINK = new Color(0, 128, 0);
 
     /** Color for highlighted text (values in key-value pairs). */
     protected static final Color COLOR_HIGHLIGHT = new Color(128, 0, 0);
@@ -102,7 +101,7 @@ public abstract class AbstractDetailPane extends JPanel {
      */
     protected ExtendedJLabel linkLabel() {
         ExtendedJLabel label = normalLabel();
-        label.setForeground(COLOR_LINK);
+        label.setForeground(HtmlDisplayTextArea.COLOR_LINK);
         label.setRequestFocusEnabled(true);
         label.setUnderlined(true);
         return label;

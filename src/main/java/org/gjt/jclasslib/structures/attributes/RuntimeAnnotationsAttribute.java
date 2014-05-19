@@ -6,9 +6,9 @@
 */
 package org.gjt.jclasslib.structures.attributes;
 
+import org.gjt.jclasslib.structures.Annotation;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -20,10 +20,10 @@ import java.io.IOException;
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
  *
  */
-public class RuntimeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder{
+public class RuntimeAnnotationsAttribute extends AttributeInfo {
     private static final int INITIAL_LENGTH = 2;
 
-    protected AnnotationElementValue[] runtimeAnnotations;
+    protected Annotation[] runtimeAnnotations;
 
 
     /**
@@ -32,7 +32,7 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
      *
      * @return the array
      */
-    public AnnotationElementValue[] getRuntimeAnnotations() {
+    public Annotation[] getRuntimeAnnotations() {
         return runtimeAnnotations;
     }
 
@@ -42,19 +42,16 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
      *
      * @param runtimeAnnotations the array
      */
-    public void setRuntimeAnnotations(AnnotationElementValue[] runtimeAnnotations) {
+    public void setRuntimeAnnotations(Annotation[] runtimeAnnotations) {
         this.runtimeAnnotations = runtimeAnnotations;
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-        super.read(in);
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         int runtimeVisibleAnnotationsLength = in.readUnsignedShort();
-        runtimeAnnotations = new AnnotationElementValue[runtimeVisibleAnnotationsLength];
+        runtimeAnnotations = new Annotation[runtimeVisibleAnnotationsLength];
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i] = new AnnotationElementValue();
+            runtimeAnnotations[i] = new Annotation();
             runtimeAnnotations[i].setClassFile(classFile);
             runtimeAnnotations[i].read(in);
         }
@@ -62,13 +59,10 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         int runtimeVisibleAnnotationsLength = getLength(runtimeAnnotations);
-
         out.writeShort(runtimeVisibleAnnotationsLength);
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
             runtimeAnnotations[i].write(out);
@@ -79,7 +73,7 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
 
     public int getAttributeLength() {
         int length = INITIAL_LENGTH;
-        for (AnnotationElementValue runtimeAnnotation : runtimeAnnotations) {
+        for (Annotation runtimeAnnotation : runtimeAnnotations) {
             length += runtimeAnnotation.getLength();
         }
         return length;

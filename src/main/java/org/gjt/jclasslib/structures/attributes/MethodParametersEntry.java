@@ -7,13 +7,16 @@
 
 package org.gjt.jclasslib.structures.attributes;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.AbstractStructure;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Describes an entry in a <tt>BootstrapMethods</tt> attribute structure.
- *
  */
 public class MethodParametersEntry extends AbstractStructure {
 
@@ -33,7 +36,7 @@ public class MethodParametersEntry extends AbstractStructure {
      * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
      */
     public static MethodParametersEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+        throws InvalidByteCodeException, IOException {
 
         MethodParametersEntry bootStrapMethodsEntry = new MethodParametersEntry();
         bootStrapMethodsEntry.setClassFile(classFile);
@@ -44,46 +47,49 @@ public class MethodParametersEntry extends AbstractStructure {
 
 
     public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
+        throws InvalidByteCodeException, IOException {
 
-    	nameIndex = in.readUnsignedShort();
-    	accessFlags = in.readUnsignedShort();
+        nameIndex = in.readUnsignedShort();
+        accessFlags = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (debug) {
+            debug("read ");
+        }
     }
-    
-    
+
+
     public int getNameIndex() {
-    	return nameIndex;
+        return nameIndex;
     }
-    
+
     public int getAccessFlags() {
-    	return accessFlags;
+        return accessFlags;
     }
- 
-	public void write(DataOutput out) throws InvalidByteCodeException,
-			IOException {
 
-		super.write(out);
-		out.writeShort(nameIndex);
-		out.writeShort(accessFlags);
+    public void write(DataOutput out) throws InvalidByteCodeException,
+        IOException {
 
-        if (debug) debug("wrote ");
+        super.write(out);
+        out.writeShort(nameIndex);
+        out.writeShort(accessFlags);
+
+        if (debug) {
+            debug("wrote ");
+        }
     }
 
 
     protected void debug(String message) {
         super.debug(message + "MethodParams entry");
     }
-    
 
 
     public int getLength() {
-    	return 4;
+        return 4;
     }
-    
+
     protected String printAccessFlagsVerbose(int accessFlags) {
         return "";
     }
-    
+
 }

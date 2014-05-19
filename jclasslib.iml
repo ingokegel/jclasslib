@@ -13,6 +13,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Gradle: i4jruntime" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: annotations-13.0" level="project" />
   </component>
 </module>
 

@@ -26,15 +26,11 @@ public class SyntheticAttribute extends AttributeInfo {
 
     private static final int LENGTH = 0;
     
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
         if (debug) debug("wrote ");
     }

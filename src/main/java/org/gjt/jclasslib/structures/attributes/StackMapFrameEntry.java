@@ -7,27 +7,20 @@
 
 package org.gjt.jclasslib.structures.attributes;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.AbstractStructure;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Describes an entry in a <tt>BootstrapMethods</tt> attribute structure.
- *
  */
 public class StackMapFrameEntry extends AbstractStructure {
 
-	public static final int SAME_FRAME=63; //0-63
-	public static final int SAME_LOCALS_1_STACK_ITEM_FRAME=127;//64-127
-	public static final int SAME_LOCALS_1_STACK_ITEM_FRAME_EXT=247;//247
-	public static final int CHOP_FRAME=250;//248-250
-	public static final int SAME_FRAME_EXT=251;//251
-	public static final int APPEND_FRAME=254;//252-254
-	public static final int FULL_FRAME=255;//255
-
-    private int type, frameType;
-    private int delta, numLocals, numStacks;
-    private VerificationTypeInfoEntry local_vti[], stack_vti[];
+    private static final VerificationTypeInfoEntry[] NO_ENTRIES = new VerificationTypeInfoEntry[0];
 
     /**
      * Factory method for creating <tt>StackMapFrameEntry</tt> structures.
@@ -35,279 +28,352 @@ public class StackMapFrameEntry extends AbstractStructure {
      * @param in        the <tt>DataInput</tt> from which to read the
      *                  <tt>StackMapFrameEntry</tt> structure
      * @param classFile the parent class file of the structure to be created
+     * @param previousOffset the offset of the previous stack map frame
      * @return the new <tt>StackMapFrameEntry</tt> structure
      * @throws InvalidByteCodeException if the byte code is invalid
      * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
      */
-    public static StackMapFrameEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+    public static StackMapFrameEntry create(DataInput in, ClassFile classFile, int previousOffset)
+        throws InvalidByteCodeException, IOException {
 
-        StackMapFrameEntry bootStrapMethodsEntry = new StackMapFrameEntry();
-        bootStrapMethodsEntry.setClassFile(classFile);
-        bootStrapMethodsEntry.read(in);
+        StackMapFrameEntry entry = new StackMapFrameEntry();
+        entry.setClassFile(classFile);
+        entry.read(in);
 
-        return bootStrapMethodsEntry;
-    }
+        entry.offset = previousOffset + entry.getOffsetDelta();
 
-    public int getDelta() {
-    	return delta;
+        return entry;
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
+    private int tag;
+    private StackFrameType frameType;
+    private int offsetDelta;
+    private int offset;
+    private VerificationTypeInfoEntry localItems[] = NO_ENTRIES;
+    private VerificationTypeInfoEntry stackItems[] = NO_ENTRIES;
 
-    	type = in.readUnsignedByte();
-    	if (type <= SAME_FRAME) {
-    		readSame(in);
-    	} else if (type <= SAME_LOCALS_1_STACK_ITEM_FRAME) {
-    		readSameLocals(in);
-    	} else if (type == SAME_LOCALS_1_STACK_ITEM_FRAME_EXT) {
-    		readSameLocalsExt(in);
-    	} else if (type <= CHOP_FRAME) {
-    		readChop(in);
-    	} else if (type == SAME_FRAME_EXT) {
-    		readSameExt(in);
-    	} else if (type <= APPEND_FRAME) {
-    		readAppend(in);
-    	} else if (type == FULL_FRAME) {
-    		readFull(in);
-    	} else {
-    		throw new InvalidByteCodeException("Unsupported StackMapFrame type: "+type);
-    	}
-        if (debug) debug("read ");
-    }
-    
-    private void readSame(DataInput in)
-            throws InvalidByteCodeException, IOException {
-    	frameType=SAME_FRAME;
-    	delta=0;
-    	numLocals=0;
-    	local_vti = new VerificationTypeInfoEntry[numLocals];
-    	numStacks = 0;
-    	stack_vti = new VerificationTypeInfoEntry[numStacks];
-    }
-    private void readSameLocals(DataInput in)
-            throws InvalidByteCodeException, IOException {
-    	frameType = SAME_LOCALS_1_STACK_ITEM_FRAME;
-    	delta=0;
-    	numLocals=0;
-    	local_vti = new VerificationTypeInfoEntry[numLocals];
-    	numStacks = 1;
-    	stack_vti = new VerificationTypeInfoEntry[numStacks];
-    	stack_vti[0] = VerificationTypeInfoEntry.create(in, classFile);
-       }
-    private void readSameLocalsExt(DataInput in)
-            throws InvalidByteCodeException, IOException {
-    	frameType = SAME_LOCALS_1_STACK_ITEM_FRAME_EXT;
-    	delta=in.readUnsignedShort();
-    	numLocals=0;
-    	local_vti = new VerificationTypeInfoEntry[numLocals];
-    	numStacks = 1;
-    	stack_vti = new VerificationTypeInfoEntry[numStacks];
-    	stack_vti[0] = VerificationTypeInfoEntry.create(in, classFile);
-       }
-    private void readChop(DataInput in)
-            throws InvalidByteCodeException, IOException {
-    	frameType = CHOP_FRAME;
-    	delta=in.readUnsignedShort();
-    	numLocals=0;
-    	local_vti = new VerificationTypeInfoEntry[numLocals];
-    	numStacks = 0;
-    	stack_vti = new VerificationTypeInfoEntry[numStacks];
-    }
-    private void readSameExt(DataInput in)
-            throws InvalidByteCodeException, IOException {
-    	frameType = SAME_FRAME_EXT;
-    	delta=in.readUnsignedShort();
-    	numLocals=0;
-    	local_vti = new VerificationTypeInfoEntry[numLocals];
-    	numStacks = 0;
-    	stack_vti = new VerificationTypeInfoEntry[numStacks];;
-    }
-    private void readAppend(DataInput in)
-            throws InvalidByteCodeException, IOException {
-    	frameType = APPEND_FRAME;
-    	delta=in.readUnsignedShort();
-    	numLocals=type-251;
-    	local_vti = new VerificationTypeInfoEntry[numLocals];
-    	for (int i=0; i < numLocals; i++) {
-    		local_vti[i]= VerificationTypeInfoEntry.create(in, classFile);
-    	}
-    	numStacks = 0;
-    	stack_vti = new VerificationTypeInfoEntry[numStacks];
-    }
-    private void readFull(DataInput in)
-            throws InvalidByteCodeException, IOException {
-    	frameType = FULL_FRAME;
-    	delta=in.readUnsignedShort();
-    	numLocals=in.readUnsignedShort();
-    	local_vti = new VerificationTypeInfoEntry[numLocals];
-    	for (int i=0; i < numLocals; i++) {
-    		local_vti[i]= VerificationTypeInfoEntry.create(in, classFile);
-    	}
-    	numStacks = in.readShort();
-       	stack_vti = new VerificationTypeInfoEntry[numStacks];
-           	for (int i=0; i < numStacks; i++) {
-           		stack_vti[i]= VerificationTypeInfoEntry.create(in, classFile);
-    	}
+    /**
+     * Returns the frame tag
+     */
+    public int getTag() {
+        return tag;
     }
 
-	public void write(DataOutput out) throws InvalidByteCodeException,
-			IOException {
-
-		super.write(out);
-		out.writeByte(type);
-		switch (frameType) {
-		case SAME_FRAME:
-			writeSame(out);
-			break;
-		case SAME_LOCALS_1_STACK_ITEM_FRAME:
-			writeSameLocals(out);
-			break;
-		case SAME_LOCALS_1_STACK_ITEM_FRAME_EXT:
-			writeSameLocalsExt(out);
-			break;
-		case CHOP_FRAME:
-			writeChop(out);
-			break;
-		case SAME_FRAME_EXT:
-			writeSameExt(out);
-			break;
-		case APPEND_FRAME:
-			writeAppend(out);
-			break;
-		case FULL_FRAME:
-			writeFull(out);
-			break;
-		default:
-			throw new InvalidByteCodeException(
-					"Unsupported StackMapFrame type: " + type);
-
-		}
-        if (debug) debug("wrote ");
+    public void setTag(int tag) {
+        this.tag = tag;
     }
 
-    private void writeSame(DataOutput in)
-            throws InvalidByteCodeException, IOException {
-    	//nothing to write
+    /**
+     * Returns the frame type category
+     */
+    public StackFrameType getFrameType() {
+        return frameType;
     }
-    private void writeSameLocals(DataOutput in)
-            throws InvalidByteCodeException, IOException {
+
+    /**
+     * Sets the frame type
+     */
+    public void setFrameType(StackFrameType frameType) {
+        this.frameType = frameType;
     }
-    private void writeSameLocalsExt(DataOutput in)
-            throws InvalidByteCodeException, IOException {
+
+    /**
+     * Returns the offset delta
+     */
+    public int getOffsetDelta() {
+        return offsetDelta;
     }
-    private void writeChop(DataOutput in)
-            throws InvalidByteCodeException, IOException {
+
+    /**
+     * Sets the offset delta.
+     */
+    public void setOffsetDelta(int offsetDelta) {
+        this.offsetDelta = offsetDelta;
     }
-    private void writeSameExt(DataOutput in)
-            throws InvalidByteCodeException, IOException {
+
+    /**
+     * Returns the offset
+     */
+    public int getOffset() {
+        return offset;
     }
-    private void writeAppend(DataOutput in)
-            throws InvalidByteCodeException, IOException {
+
+    /**
+     * Sets the offset.
+     */
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
-    private void writeFull(DataOutput in)
-            throws InvalidByteCodeException, IOException {
+
+    /**
+     * Returns the local variable verifications
+     */
+    public VerificationTypeInfoEntry[] getLocalItems() {
+        return localItems;
     }
+
+    /**
+     * Sets the local verification items. No consistency check will be performed.
+     */
+    public void setLocalItems(VerificationTypeInfoEntry[] localItems) {
+        this.localItems = localItems;
+    }
+
+    /**
+     * Returns the stack variable verifications
+     */
+    public VerificationTypeInfoEntry[] getStackItems() {
+        return stackItems;
+    }
+
+    /**
+     * Sets the stack verification items. No consistency check will be performed.
+     */
+    public void setStackItems(VerificationTypeInfoEntry[] stackItems) {
+        this.stackItems = stackItems;
+    }
+
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+
+        tag = in.readUnsignedByte();
+        frameType = StackFrameType.getFromTag(tag);
+        switch (frameType) {
+            case SAME:
+                offsetDelta = tag;
+                break;
+            case SAME_LOCALS_1_STACK_ITEM:
+                readOneStackItem(in);
+                break;
+            case SAME_LOCALS_1_STACK_ITEM_EXT:
+                readOneStackItemExt(in);
+                break;
+            case CHOP:
+                readChop(in);
+                break;
+            case SAME_EXT:
+                readSameExt(in);
+                break;
+            case APPEND:
+                readAppend(in);
+                break;
+            case FULL:
+                readFull(in);
+                break;
+            default:
+                throw new IllegalStateException(frameType.toString());
+        }
+        if (debug) {
+            debug("read ");
+        }
+    }
+
+    private void readOneStackItem(DataInput in) throws InvalidByteCodeException, IOException {
+        offsetDelta = tag - 64;
+        stackItems = new VerificationTypeInfoEntry[1];
+        stackItems[0] = VerificationTypeInfoEntry.create(in, classFile);
+    }
+
+    private void readOneStackItemExt(DataInput in) throws InvalidByteCodeException, IOException {
+        offsetDelta = in.readUnsignedShort();
+        stackItems = new VerificationTypeInfoEntry[1];
+        stackItems[0] = VerificationTypeInfoEntry.create(in, classFile);
+    }
+
+    private void readChop(DataInput in) throws InvalidByteCodeException, IOException {
+        offsetDelta = in.readUnsignedShort();
+    }
+
+    private void readSameExt(DataInput in) throws InvalidByteCodeException, IOException {
+        offsetDelta = in.readUnsignedShort();
+    }
+
+    private void readAppend(DataInput in) throws InvalidByteCodeException, IOException {
+        offsetDelta = in.readUnsignedShort();
+        int numLocals = tag - 251;
+        localItems = new VerificationTypeInfoEntry[numLocals];
+        for (int i = 0; i < numLocals; i++) {
+            localItems[i] = VerificationTypeInfoEntry.create(in, classFile);
+        }
+    }
+
+    private void readFull(DataInput in) throws InvalidByteCodeException, IOException {
+        offsetDelta = in.readUnsignedShort();
+        int numLocals = in.readUnsignedShort();
+        localItems = new VerificationTypeInfoEntry[numLocals];
+        for (int i = 0; i < numLocals; i++) {
+            localItems[i] = VerificationTypeInfoEntry.create(in, classFile);
+        }
+        int numStacks = in.readUnsignedShort();
+        stackItems = new VerificationTypeInfoEntry[numStacks];
+        for (int i = 0; i < numStacks; i++) {
+            stackItems[i] = VerificationTypeInfoEntry.create(in, classFile);
+        }
+    }
+
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
+        out.writeByte(tag);
+        switch (frameType) {
+            case SAME:
+                break;
+            case SAME_LOCALS_1_STACK_ITEM:
+                writeOneStackItem(out);
+                break;
+            case SAME_LOCALS_1_STACK_ITEM_EXT:
+                writeOneStackItemExt(out);
+                break;
+            case CHOP:
+                writeChop(out);
+                break;
+            case SAME_EXT:
+                writeSameExt(out);
+                break;
+            case APPEND:
+                writeAppend(out);
+                break;
+            case FULL:
+                writeFull(out);
+                break;
+            default:
+                throw new IllegalStateException(frameType.name());
+        }
+        if (debug) {
+            debug("wrote ");
+        }
+
+    }
+
+    private void writeOneStackItem(DataOutput out) throws IOException, InvalidByteCodeException {
+        stackItems[0].write(out);
+    }
+
+    private void writeOneStackItemExt(DataOutput out) throws IOException, InvalidByteCodeException {
+        out.writeShort(offsetDelta);
+        stackItems[0].write(out);
+    }
+
+    private void writeChop(DataOutput out) throws IOException {
+        out.writeShort(offsetDelta);
+    }
+
+    private void writeSameExt(DataOutput out) throws IOException {
+        out.writeShort(offsetDelta);
+    }
+
+    private void writeAppend(DataOutput out) throws IOException, InvalidByteCodeException {
+        out.writeShort(offsetDelta);
+        for (VerificationTypeInfoEntry localItem : localItems) {
+            localItem.write(out);
+        }
+    }
+
+    private void writeFull(DataOutput out) throws IOException, InvalidByteCodeException {
+        out.writeShort(offsetDelta);
+        out.writeShort(localItems.length);
+        for (VerificationTypeInfoEntry localItem : localItems) {
+            localItem.write(out);
+        }
+        out.writeShort(stackItems.length);
+        for (VerificationTypeInfoEntry stackItem : stackItems) {
+            stackItem.write(out);
+        }
+    }
+
     protected void debug(String message) {
-        super.debug(message + "StackMapFrame entry of type " + type);
-    }
-    
-    public String printEntry() {
-    	StringBuffer sb = new StringBuffer();
-    	switch (frameType) {
-		case SAME_FRAME:
-			sb.append("Type ").append(type).append("(SAME): ");
-			break;
-		case SAME_LOCALS_1_STACK_ITEM_FRAME:
-			sb.append("TYPE ").append(type).append("(SAME_LOCAL_1_STACK): ");
-			appendStackVerificationTypeInfos(sb);
-			break;
-		case SAME_LOCALS_1_STACK_ITEM_FRAME_EXT:
-			sb.append("TYPE ").append(type).append("(SAME_LOCALS_1_STACK_EXT): ");
-			sb.append("(offset: "+delta+")\n");
-			appendStackVerificationTypeInfos(sb);
-			break;
-		case CHOP_FRAME:
-			sb.append("TYPE ").append(type).append("(CHOP): ");
-			sb.append("(offset: "+delta+")\n");
-			break;
-		case SAME_FRAME_EXT:
-			sb.append("TYPE ").append(type).append("(SAME_EXT): ");
-			sb.append("(offset: "+delta+")\n");
-			break;
-		case APPEND_FRAME:
-			sb.append("TYPE ").append(type).append("(APPEND): ");
-			sb.append("(offset: "+delta+")\n");
-			appendLocalsVerificationTypeInfos(sb);
-			break;
-		case FULL_FRAME:
-			sb.append("TYPE ").append(type).append("(FULL): ");
-			sb.append("(offset: "+delta+")\n");
-			appendLocalsVerificationTypeInfos(sb);
-			appendStackVerificationTypeInfos(sb);
-			break;
-    	}
-    	
-    	return sb.toString();
+        super.debug(message + "StackMapFrame entry of type " + frameType);
     }
 
-    private void appendStackVerificationTypeInfos(StringBuffer sb) {
-    	sb.append(" Stack Verification: { \n");
-    	for (int i=0; i < numStacks; i++) {
-    		sb.append(stack_vti[i].printEntry());
-    		if (i + 1 < numStacks) {
-    			sb.append(", ");
-    		}
-    	}
-    	sb.append("}");
-    }
-    
-    private void appendLocalsVerificationTypeInfos(StringBuffer sb) {
-    	sb.append(" Locals Verification: {\n");
-    	for (int i=0; i < numLocals; i++) {
-    		sb.append(local_vti[i].printEntry());
-    		if (i + 1 < numLocals) {
-    			sb.append(", ");
-    		}
-    	}
-    	sb.append("}");
+    /**
+     * Returns the verbose representation for display in the UI
+     */
+    public String getVerbose() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("<b>").append(frameType).append("</b> (").append(tag).append(')');
+        appendOffset(buffer);
+        switch (frameType) {
+            case SAME:
+            case CHOP:
+            case SAME_EXT:
+                break;
+            case SAME_LOCALS_1_STACK_ITEM:
+            case SAME_LOCALS_1_STACK_ITEM_EXT:
+                appendStack(buffer);
+                break;
+            case APPEND:
+                appendLocals(buffer);
+                break;
+            case FULL:
+                appendLocals(buffer);
+                appendStack(buffer);
+                break;
+        }
+        return buffer.toString().replace("\n", "<br>").replace(" ", "&nbsp;");
     }
 
+    private void appendOffset(StringBuilder buffer) {
+        buffer.append(", Offset: ").append(offset).append(" (+").append(offsetDelta).append(")");
+    }
+
+    private void appendStack(StringBuilder buffer) {
+        buffer.append("\n    Stack verifications:\n");
+        for (int i = 0; i < stackItems.length; i++) {
+            buffer.append("        ");
+            stackItems[i].appendTo(buffer);
+            if (i < stackItems.length - 1) {
+                buffer.append("\n");
+            }
+        }
+    }
+
+    private void appendLocals(StringBuilder buffer) {
+        buffer.append("\n    Local verifications:\n");
+        for (int i = 0; i < localItems.length; i++) {
+            buffer.append("        ");
+            localItems[i].appendTo(buffer);
+            if (i < localItems.length - 1) {
+                buffer.append("\n");
+            }
+        }
+    }
+
+    /**
+     * Returns the bytecode length of the entry
+     */
     public int getLength() {
-		switch (frameType) {
-		case SAME_FRAME:
-			return 1;
-		case SAME_LOCALS_1_STACK_ITEM_FRAME:
-			return 1 + getVerificationInfoLength(stack_vti);
-		case SAME_LOCALS_1_STACK_ITEM_FRAME_EXT:
-			return 3 + getVerificationInfoLength(stack_vti);
-		case CHOP_FRAME:
-		case SAME_FRAME_EXT:
-			return 3;
-		case APPEND_FRAME:
-			return 3 + getVerificationInfoLength(local_vti);
-		case FULL_FRAME:
-			return 7 + getVerificationInfoLength(local_vti)
-					+ getVerificationInfoLength(stack_vti);
+        switch (frameType) {
+            case SAME:
+                return 1;
+            case SAME_LOCALS_1_STACK_ITEM:
+                return 1 + getVerificationInfoLength(stackItems);
+            case SAME_LOCALS_1_STACK_ITEM_EXT:
+                return 3 + getVerificationInfoLength(stackItems);
+            case CHOP:
+            case SAME_EXT:
+                return 3;
+            case APPEND:
+                return 3 + getVerificationInfoLength(localItems);
+            case FULL:
+                return 7 + getVerificationInfoLength(localItems) + getVerificationInfoLength(stackItems);
 
-		}
-		return 0;
-    }
-    
-    private int getVerificationInfoLength(VerificationTypeInfoEntry vti[]) {
-    	int size = 0;
-    	int length = vti.length;
-    	for (int i =0; i < length; i++) {
-    		size += vti[i].getLength();
-    	}
-    	return size;
+        }
+        return 0;
     }
 
-	@Override
-	protected String printAccessFlagsVerbose(int accessFlags) {
-		return null;
-	}
+    private int getVerificationInfoLength(VerificationTypeInfoEntry entries[]) {
+        int size = 0;
+        for (VerificationTypeInfoEntry entry : entries) {
+            size += entry.getLength();
+        }
+        return size;
+    }
 
-    
+    @Override
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        if (accessFlags != 0) {
+            throw new RuntimeException("Access flags should be zero: " +
+                Integer.toHexString(accessFlags));
+        }
+        return "";
+    }
+
+
 }

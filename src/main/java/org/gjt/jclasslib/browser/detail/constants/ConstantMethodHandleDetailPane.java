@@ -7,21 +7,20 @@
 
 package org.gjt.jclasslib.browser.detail.constants;
 
-import javax.swing.tree.TreePath;
-
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.ConstantMethodHandleInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
+import javax.swing.tree.TreePath;
+
 /**
-    Detail pane showing a <tt>CONSTANT_MethodHandle</tt> constant pool entry.
- 
-*/
+ * Detail pane showing a <tt>CONSTANT_MethodHandle</tt> constant pool entry.
+ */
 public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPane {
 
     // Visual components
-    
+
     private ExtendedJLabel lblKind;
     private ExtendedJLabel lblKindVerbose;
     private ExtendedJLabel lblReference;
@@ -30,22 +29,23 @@ public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPa
     private ClassElementOpener classElementOpener;
 
     /**
-        Constructor.
-        @param services the associated browser services.
+     * Constructor.
+     *
+     * @param services the associated browser services.
      */
     public ConstantMethodHandleDetailPane(BrowserServices services) {
         super(services);
     }
-    
+
     protected void setupLabels() {
-        
+
         addDetailPaneEntry(normalLabel("Kind:"),
-        				lblKind = normalLabel(),
-        				lblKindVerbose = highlightLabel());
+            lblKind = normalLabel(),
+            lblKindVerbose = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Reference:"),
-        				lblReference = linkLabel(),
-        				lblReferenceVerbose = highlightLabel());
+            lblReference = linkLabel(),
+            lblReferenceVerbose = highlightLabel());
     }
 
     protected int addSpecial(int gridy) {
@@ -59,54 +59,54 @@ public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPa
     }
 
     public void show(TreePath treePath) {
-        
+
         int constantPoolIndex = constantPoolIndex(treePath);
 
         try {
             ConstantMethodHandleInfo entry = (ConstantMethodHandleInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantMethodHandleInfo.class);
             classElementOpener.setCPInfo(entry);
 
-           lblKind.setText(entry.getType());
-           switch (entry.getType()) {
-    	   case ConstantMethodHandleInfo.TYPE_GET_FIELD:
-    		   lblKindVerbose.setText("REF_getField");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_GET_STATIC:
-    		   lblKindVerbose.setText("REF_getStatic");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_PUT_FIELD:
-    		   lblKindVerbose.setText("REF_putField");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_PUT_STATIC:
-    		   lblKindVerbose.setText("REF_putStatic");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_INVOKE_VIRTUAL:
-    		   lblKindVerbose.setText("REF_invokeVirtual");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_INVOKE_STATIC:
-    		   lblKindVerbose.setText("REF_invokeStatic");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_INVOKE_SPECIAL:
-    		   lblKindVerbose.setText("REF_invokeSpecial");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_NEW_INVOKE_SPECIAL:
-    		   lblKindVerbose.setText("REF_newInvokeSpecial");
-    		   break;
-    	   case ConstantMethodHandleInfo.TYPE_INVOKE_INTERFACE:
-    		   lblKindVerbose.setText("REF_invokeInterface");
-    		   break;
-           }
-        
+            lblKind.setText(entry.getType());
+            switch (entry.getType()) {
+                case ConstantMethodHandleInfo.TYPE_GET_FIELD:
+                    lblKindVerbose.setText("REF_getField");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_GET_STATIC:
+                    lblKindVerbose.setText("REF_getStatic");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_PUT_FIELD:
+                    lblKindVerbose.setText("REF_putField");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_PUT_STATIC:
+                    lblKindVerbose.setText("REF_putStatic");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_INVOKE_VIRTUAL:
+                    lblKindVerbose.setText("REF_invokeVirtual");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_INVOKE_STATIC:
+                    lblKindVerbose.setText("REF_invokeStatic");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_INVOKE_SPECIAL:
+                    lblKindVerbose.setText("REF_invokeSpecial");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_NEW_INVOKE_SPECIAL:
+                    lblKindVerbose.setText("REF_newInvokeSpecial");
+                    break;
+                case ConstantMethodHandleInfo.TYPE_INVOKE_INTERFACE:
+                    lblKindVerbose.setText("REF_invokeInterface");
+                    break;
+            }
+
             constantPoolHyperlink(lblReference,
-                                  lblReferenceVerbose,
-                                  entry.getReferenceIndex());
-        
+                lblReferenceVerbose,
+                entry.getReferenceIndex());
+
         } catch (InvalidByteCodeException ex) {
-        	lblKindVerbose.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
+            lblKindVerbose.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
         }
-        
+
         super.show(treePath);
     }
-    
+
 }
 

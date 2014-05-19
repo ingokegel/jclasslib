@@ -6,7 +6,7 @@ apply plugin: 'application'
 apply plugin: 'install4j'
 apply plugin: 'bintray'
 
-version = 4.0
+version = 4.1
 buildDir = file('build/gradle')
 mainClassName = 'org.gjt.jclasslib.browser.BrowserApplication'
 ext.mediaDir = file('media')
@@ -38,11 +38,15 @@ repositories {
     flatDir {
         dirs 'lib-compile'
     }
+    maven {
+        url 'http://jcenter.bintray.com'
+    }
 }
 
 dependencies {
     // Download after install4j 6
     compile ':i4jruntime'
+    compile 'org.jetbrains:annotations:13.0'
 }
 
 install4j {
@@ -96,7 +100,12 @@ task libraryJar(type: Jar) {
 }
 
 task dist {
-    dependsOn 'jar', 'libraryJar', 'javadoc'
+    dependsOn 'jar', 'libraryJar', 'javadoc', 'copyDist'
+}
+
+task copyDist(type: Copy) {
+    from configurations.compile
+    into mkdir(file("$buildDir/externalLibs"))
 }
 
 task media(type: Install4jTask) {

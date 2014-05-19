@@ -19,11 +19,13 @@
       <w>bcis</w>
       <w>bintray</w>
       <w>bipush</w>
+      <w>bootstrapmethod</w>
       <w>caload</w>
       <w>castore</w>
       <w>checkcast</w>
       <w>classfile</w>
       <w>cpinfo</w>
+      <w>cpool</w>
       <w>dadd</w>
       <w>daload</w>
       <w>dastore</w>
@@ -100,6 +102,7 @@
       <w>isub</w>
       <w>iushr</w>
       <w>ixor</w>
+      <w>jcenter</w>
       <w>ladd</w>
       <w>laload</w>
       <w>lastore</w>
@@ -109,6 +112,7 @@
       <w>lload</w>
       <w>lmul</w>
       <w>lneg</w>
+      <w>localvar</w>
       <w>lookupswitch</w>
       <w>lrem</w>
       <w>lreturn</w>
@@ -119,6 +123,7 @@
       <w>lushr</w>
       <w>lxor</w>
       <w>methodref</w>
+      <w>methodreturn</w>
       <w>monitorenter</w>
       <w>monitorexit</w>
       <w>multianewarray</w>
@@ -129,7 +134,9 @@
       <w>saload</w>
       <w>sastore</w>
       <w>sipush</w>
+      <w>supertype</w>
       <w>tableswitch</w>
+      <w>typeannotation</w>
     </words>
   </dictionary>
 </component>

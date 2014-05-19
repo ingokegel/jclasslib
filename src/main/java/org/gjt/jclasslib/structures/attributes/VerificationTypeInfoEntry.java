@@ -7,29 +7,19 @@
 
 package org.gjt.jclasslib.structures.attributes;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.AbstractStructure;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Describes an entry in a <tt>BootstrapMethods</tt> attribute structure.
- *
  */
 public class VerificationTypeInfoEntry extends AbstractStructure {
 
-	public static final int ITEM_Top=0;
-	public static final int ITEM_Integer=1;
-	public static final int ITEM_Float=2;
-	public static final int ITEM_Double=3;
-	public static final int ITEM_Long=4;
-	public static final int ITEM_Null=5;
-	public static final int ITEM_UninitializedThis=6;
-	public static final int ITEM_Object=7;
-	public static final int ITEM_Uninitialized=8;
-	
-
-    private int type;
-    private int extra;//cpool_idx or offset;
 
     /**
      * Factory method for creating <tt>VerificationTypeInfoEntry</tt> structures.
@@ -41,90 +31,84 @@ public class VerificationTypeInfoEntry extends AbstractStructure {
      * @throws InvalidByteCodeException if the byte code is invalid
      * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
      */
-    public static VerificationTypeInfoEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+    public static VerificationTypeInfoEntry create(DataInput in, ClassFile classFile) throws InvalidByteCodeException, IOException {
 
-        VerificationTypeInfoEntry bootStrapMethodsEntry = new VerificationTypeInfoEntry();
-        bootStrapMethodsEntry.setClassFile(classFile);
-        bootStrapMethodsEntry.read(in);
+        int tag = in.readUnsignedByte();
 
-        return bootStrapMethodsEntry;
+        VerificationType verificationType = VerificationType.getFromTag(tag);
+        VerificationTypeInfoEntry entry = verificationType.createEntry();
+        entry.setClassFile(classFile);
+        entry.read(in);
+
+        return entry;
     }
 
+    private VerificationType type;
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-    	type = in.readUnsignedByte();
-    	if (type == ITEM_Object || type == ITEM_Uninitialized) {
-    		extra = in.readUnsignedShort();
-    	}
-
-        if (debug) debug("read ");
+    public VerificationTypeInfoEntry(VerificationType type) {
+        this.type = type;
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
+    /**
+     * Returns the verification type
+     */
+    public VerificationType getType() {
+        return type;
+    }
 
+    public final void read(DataInput in) throws InvalidByteCodeException, IOException {
+        super.read(in);
+        readExtra(in);
+        if (debug) {
+            debug("read ");
+        }
+    }
+
+    /**
+     * Read extra data in derived classes.
+     */
+    protected void readExtra(DataInput in) throws InvalidByteCodeException, IOException {
+
+    }
+
+    @Override
+    public final void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
-//        out.writeShort(methodRefIndex);
-//        out.writeShort(argumentNum);
-//        for (int i=0; i < argumentNum; i++) {
-//        	out.writeShort(argumentRefs[i]);
-//    	}
-//        if (debug) debug("wrote ");
+        out.writeByte(type.getTag());
+        writeExtra(out);
+        if (debug) debug("wrote ");
+    }
+
+    /**
+     * Write extra data in derived classes.
+     */
+    protected void writeExtra(DataOutput out) throws InvalidByteCodeException, IOException {
+
     }
 
     protected void debug(String message) {
         super.debug(message + "VerificationTypeInfo entry of type " + type);
     }
 
-    
-    public int getLength() {
-    	if (type == ITEM_Object || type == ITEM_Uninitialized) {
-    		return 3;
-    	}
-    	return 1;
-    }
-    
-    public String printEntry() {
-    	StringBuffer sb = new StringBuffer();
-    	switch(type) {
-    	case ITEM_Top:
-    		sb.append("ITEM_Top");
-    		break;
-    	case ITEM_Integer:
-    		sb.append("ITEM_Integer");
-    		break;
-    	case ITEM_Float:
-    		sb.append("ITEM_Float");
-    		break;
-    	case ITEM_Double:
-    		sb.append("ITEM_Double");
-    		break;
-    	case ITEM_Long:
-    		sb.append("ITEM_Long");
-    		break;
-    	case ITEM_Null:
-    		sb.append("ITEM_Null");
-    		break;
-    	case ITEM_UninitializedThis:
-    		sb.append("ITEM_UninitializedThis");
-    		break;
-    	case ITEM_Object:
-    		sb.append("ITEM_Object (CP_IDX: "+extra+")");
-    		break;
-    	case ITEM_Uninitialized:
-    		sb.append("ITEM_Uninitialized (Offset:"+extra+")");
-    		break;
-    	}
-    	return sb.toString();
-    }
-    
-	@Override
-	protected String printAccessFlagsVerbose(int accessFlags) {
-		return null;
-	}
 
-    
+    /**
+     * Returns the bytecode length of the entry.
+     */
+    public int getLength() {
+        return 1;
+    }
+
+    /**
+     * Append the verbose representation to a string builder.
+     */
+    public void appendTo(StringBuilder buffer) {
+        buffer.append(type);
+    }
+
+    @Override
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        return null;
+    }
+
+
 }

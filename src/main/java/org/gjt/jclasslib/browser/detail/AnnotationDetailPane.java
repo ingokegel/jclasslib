@@ -8,8 +8,7 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
-import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
+import org.gjt.jclasslib.structures.Annotation;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -22,9 +21,6 @@ import javax.swing.tree.TreePath;
  */
 public class AnnotationDetailPane extends FixedListDetailPane {
 
-    private ExtendedJLabel lblTag;
-    private ExtendedJLabel lblTagVerbose;
-
     private ExtendedJLabel lblType;
     private ExtendedJLabel lblTypeVerbose;
 
@@ -35,9 +31,6 @@ public class AnnotationDetailPane extends FixedListDetailPane {
     }
 
     protected void setupLabels() {
-        addDetailPaneEntry(normalLabel("Tag:"),
-                lblTag = highlightLabel(),
-                lblTagVerbose = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Type:"),
                 lblType = linkLabel(),
@@ -48,11 +41,7 @@ public class AnnotationDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        AnnotationElementValue annotation = (AnnotationElementValue)
-                ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
-
-        lblTag.setText(String.valueOf((char)annotation.getTag()));
-        lblTagVerbose.setText("<" + ElementValue.getTagDescription(annotation.getTag()) + ">");
+        Annotation annotation = (Annotation)((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
         constantPoolHyperlink(lblType,
                 lblTypeVerbose,

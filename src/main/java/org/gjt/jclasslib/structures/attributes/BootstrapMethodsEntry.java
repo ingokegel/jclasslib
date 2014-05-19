@@ -7,16 +7,18 @@
 
 package org.gjt.jclasslib.structures.attributes;
 
-import org.gjt.jclasslib.structures.*;
+import org.gjt.jclasslib.structures.AbstractStructure;
+import org.gjt.jclasslib.structures.ClassFile;
+import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
  * Describes an entry in a <tt>BootstrapMethods</tt> attribute structure.
- *
  */
 public class BootstrapMethodsEntry extends AbstractStructure {
-
 
 
     private int methodRefIndex;
@@ -34,7 +36,7 @@ public class BootstrapMethodsEntry extends AbstractStructure {
      * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
      */
     public static BootstrapMethodsEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+        throws InvalidByteCodeException, IOException {
 
         BootstrapMethodsEntry bootStrapMethodsEntry = new BootstrapMethodsEntry();
         bootStrapMethodsEntry.setClassFile(classFile);
@@ -104,53 +106,57 @@ public class BootstrapMethodsEntry extends AbstractStructure {
 
 
     public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
+        throws InvalidByteCodeException, IOException {
 
-    	methodRefIndex = in.readUnsignedShort();
-    	argumentNum = in.readUnsignedShort();
-    	argumentRefs = new int[argumentNum];
-    	for (int i=0; i < argumentNum; i++) {
-    		argumentRefs[i] = in.readUnsignedShort();
-    	}
-        if (debug) debug("read ");
+        methodRefIndex = in.readUnsignedShort();
+        argumentNum = in.readUnsignedShort();
+        argumentRefs = new int[argumentNum];
+        for (int i = 0; i < argumentNum; i++) {
+            argumentRefs[i] = in.readUnsignedShort();
+        }
+        if (debug) {
+            debug("read ");
+        }
     }
 
     public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
+        throws InvalidByteCodeException, IOException {
 
         super.write(out);
         out.writeShort(methodRefIndex);
         out.writeShort(argumentNum);
-        for (int i=0; i < argumentNum; i++) {
-        	out.writeShort(argumentRefs[i]);
-    	}
-        if (debug) debug("wrote ");
+        for (int i = 0; i < argumentNum; i++) {
+            out.writeShort(argumentRefs[i]);
+        }
+        if (debug) {
+            debug("wrote ");
+        }
     }
 
     protected void debug(String message) {
         super.debug(message + "BootstrapMethods entry with bootstrap_method_index " + methodRefIndex +
-                ", arguments (" + printArguments()+")");
+            ", arguments (" + printArguments() + ")");
     }
 
     public String printArguments() {
-    	StringBuffer sb = new StringBuffer();
-    	for (int i=0; i < argumentNum; i++) {
-    		sb.append(argumentRefs[i]);
-    		if (i+1 < argumentNum) {
-    			sb.append(", ");
-    		}
-    	}
-    	return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < argumentNum; i++) {
+            sb.append(argumentRefs[i]);
+            if (i + 1 < argumentNum) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
-    
+
     public int getLength() {
-    	return 4+argumentNum*2;
+        return 4 + argumentNum * 2;
     }
 
-	@Override
-	protected String printAccessFlagsVerbose(int accessFlags) {
-		return null;
-	}
+    @Override
+    protected String printAccessFlagsVerbose(int accessFlags) {
+        return null;
+    }
 
-    
+
 }

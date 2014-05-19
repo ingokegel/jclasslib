@@ -69,56 +69,36 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
 
             if (ConstantValueAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new ConstantValueAttribute();
-
             } else if (CodeAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new CodeAttribute();
-
             } else if (ExceptionsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new ExceptionsAttribute();
-
             } else if (InnerClassesAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new InnerClassesAttribute();
-
             } else if (SyntheticAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new SyntheticAttribute();
-
             } else if (SourceFileAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new SourceFileAttribute();
-
             } else if (LineNumberTableAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new LineNumberTableAttribute();
-
             } else if (LocalVariableTableAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new LocalVariableTableAttribute();
-
             } else if (DeprecatedAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new DeprecatedAttribute();
-
             } else if (EnclosingMethodAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new EnclosingMethodAttribute();
-
             } else if (SignatureAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new SignatureAttribute();
-
             } else if (LocalVariableTypeTableAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new LocalVariableTypeTableAttribute();
-
             } else if (RuntimeVisibleAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new RuntimeVisibleAnnotationsAttribute();
             } else if (RuntimeInvisibleAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new RuntimeInvisibleAnnotationsAttribute();
-
-//            } else if (RuntimeVisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
-//                attributeInfo = new RuntimeVisibleParameterAnnotationsAttribute();
-//            } else if (RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
-//                attributeInfo = new RuntimeInvisibleParameterAnnotationsAttribute();
-//                
-            } else if (RuntimeVisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
-                attributeInfo = new RuntimeVisibleTypeAnnotationsAttribute();
-            } else if (RuntimeInvisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
-                attributeInfo = new RuntimeInvisibleTypeAnnotationsAttribute();
-
-
+            } else if (RuntimeVisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+                attributeInfo = new RuntimeVisibleParameterAnnotationsAttribute();
+            } else if (RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+                attributeInfo = new RuntimeInvisibleParameterAnnotationsAttribute();
             } else if (AnnotationDefaultAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
                 attributeInfo = new AnnotationDefaultAttribute();
             } else if (BootstrapMethodsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
@@ -198,8 +178,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
         return classFile.getConstantPoolUtf8Entry(attributeNameIndex).getString();
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         info = new byte[attributeLength];
         in.readFully(info);
@@ -207,8 +186,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
         if (debug) debug("read " + getDebugMessage());
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
 
         out.writeShort(attributeNameIndex);
         out.writeInt(getAttributeLength());

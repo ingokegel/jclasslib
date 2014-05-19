@@ -79,8 +79,7 @@ public abstract class AbstractStructure {
      * @throws InvalidByteCodeException if the byte code is invalid
      * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
      */
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
     }
 
     /**
@@ -92,8 +91,7 @@ public abstract class AbstractStructure {
      * @throws InvalidByteCodeException if the structure is internally inconsistent
      * @throws IOException              if an exception occurs with the <tt>DataOutput</tt>
      */
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
     }
 
     /**

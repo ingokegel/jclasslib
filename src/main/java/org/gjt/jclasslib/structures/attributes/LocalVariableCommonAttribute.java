@@ -43,9 +43,7 @@ public abstract class LocalVariableCommonAttribute extends AttributeInfo {
         this.localVariableTable = localVariableEntries;
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         int localVariableTableLength = getLength(localVariableTable);

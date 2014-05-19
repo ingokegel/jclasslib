@@ -46,17 +46,14 @@ public class AnnotationDefaultAttribute extends AttributeInfo {
         this.defaultValue = defaultValue;
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-        super.read(in);
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         defaultValue = ElementValue.create(in, classFile);
 
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         defaultValue.write(out);

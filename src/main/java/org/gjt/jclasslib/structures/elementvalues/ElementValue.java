@@ -69,8 +69,7 @@ public abstract class ElementValue extends AbstractStructure {
      *                             if the byte code is invalid
      * @throws java.io.IOException if an exception occurs with the <tt>DataInput</tt>
      */
-    public static ElementValue create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+    public static ElementValue create(DataInput in, ClassFile classFile) throws InvalidByteCodeException, IOException {
 
         int tagType = in.readUnsignedByte();
 
@@ -117,10 +116,9 @@ public abstract class ElementValue extends AbstractStructure {
         if (debug) debug("wrote ");
     }
 
-
     protected abstract int getSpecificLength();
 
-    final public int getLength() {
+    public final int getLength() {
         return INITIAL_LENGTH + getSpecificLength();
     }
 

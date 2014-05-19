@@ -66,7 +66,7 @@ public class ImmediateByteInstruction extends AbstractInstruction {
     }
     
     /**
-        Check whether the instuction is subject to a wide instruction or not.
+        Check whether the instruction is subject to a wide instruction or not.
         @return wide or not
      */
     public boolean isWide() {
@@ -74,7 +74,7 @@ public class ImmediateByteInstruction extends AbstractInstruction {
     }
     
     /**
-        Set whether the instuction is subject to a wide instruction or not.
+        Set whether the instruction is subject to a wide instruction or not.
         @param wide wide or not
      */
     public void setWide(boolean wide) {

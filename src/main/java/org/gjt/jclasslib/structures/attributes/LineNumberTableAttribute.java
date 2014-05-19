@@ -46,8 +46,7 @@ public class LineNumberTableAttribute extends AttributeInfo {
         this.lineNumberTable = lineNumberTable;
     }
     
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
             
         int lineNumberTableLength = in.readUnsignedShort();
         lineNumberTable = new LineNumberTableEntry[lineNumberTableLength];
@@ -58,9 +57,7 @@ public class LineNumberTableAttribute extends AttributeInfo {
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         int lineNumberTableLength = getLength(lineNumberTable);

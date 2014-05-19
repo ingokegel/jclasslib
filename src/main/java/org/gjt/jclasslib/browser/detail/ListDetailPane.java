@@ -10,13 +10,19 @@ package org.gjt.jclasslib.browser.detail;
 import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer;
+import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 
 /**
@@ -54,11 +60,59 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         TableLinkListener linkListener = new TableLinkListener();
         table.addMouseListener(linkListener);
         table.addMouseMotionListener(linkListener);
+        table.setGridColor(UIManager.getColor("control"));
+        table.setAutoResizeMode(getAutoResizeMode());
+
+        table.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int col = table.columnAtPoint(e.getPoint());
+                int row = table.rowAtPoint(e.getPoint());
+                if (col >= 0 && table.getModel().isCellEditable(row, col)) {
+                    table.editCellAt(row, col);
+                }
+            }
+        });
+
+        if (isVariableRowHeight()) {
+            table.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+                @Override
+                public void columnAdded(TableColumnModelEvent e) {
+
+                }
+
+                @Override
+                public void columnRemoved(TableColumnModelEvent e) {
+
+                }
+
+                @Override
+                public void columnMoved(TableColumnModelEvent e) {
+
+                }
+
+                @Override
+                public void columnMarginChanged(ChangeEvent e) {
+                    updateRowHeights();
+                }
+
+                @Override
+                public void columnSelectionChanged(ListSelectionEvent e) {
+
+                }
+            });
+        }
 
 
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.getViewport().setBackground(Color.WHITE);
 
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    @MagicConstant(intValues = {JTable.AUTO_RESIZE_OFF, JTable.AUTO_RESIZE_ALL_COLUMNS, JTable.AUTO_RESIZE_ALL_COLUMNS, JTable.AUTO_RESIZE_NEXT_COLUMN, JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS, JTable.AUTO_RESIZE_LAST_COLUMN})
+    protected int getAutoResizeMode() {
+        return JTable.AUTO_RESIZE_OFF;
     }
 
     public void show(TreePath treePath) {
@@ -70,6 +124,30 @@ public abstract class ListDetailPane extends AbstractDetailPane {
         ((JLabel)table.getDefaultRenderer(String.class)).setVerticalAlignment(JLabel.TOP);
         table.setDefaultRenderer(Link.class, new LinkRenderer());
 
+        if (isVariableRowHeight()) {
+            updateRowHeights();
+        }
+    }
+
+    protected boolean isVariableRowHeight() {
+        return false;
+    }
+
+    private void updateRowHeights() {
+        for (int row = 0; row < table.getRowCount(); row++) {
+            int rowHeight = table.getRowHeight();
+
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                JComponent c = (JComponent)table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+
+                Dimension initialSize = c.getPreferredSize();
+                initialSize.width = table.getColumnModel().getColumn(column).getWidth();
+                c.setSize(initialSize);
+                rowHeight = Math.max(rowHeight, c.getPreferredSize().height);
+            }
+
+            table.setRowHeight(row, rowHeight);
+        }
     }
 
     /**
@@ -117,7 +195,7 @@ public abstract class ListDetailPane extends AbstractDetailPane {
      */
     protected void link(int row, int column) {
     }
-    
+
     /**
         Class for caching dynamically computed values in a read only table.
      */

@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.browser.detail.attributes;
 
-import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.detail.ListDetailPane;
 import org.gjt.jclasslib.util.ExtendedTableCellRenderer;
+import org.gjt.jclasslib.util.HtmlDisplayTextArea;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -52,7 +52,7 @@ public class LinkRenderer implements TableCellRenderer  {
     {
 
         boolean standardLabel = value.toString().equals(ListDetailPane.CPINFO_LINK_TEXT + "0");
-        linkLineRenderer.setForeground(standardLabel ? standardForeground : AbstractDetailPane.COLOR_LINK);
+        linkLineRenderer.setForeground(standardLabel ? standardForeground : HtmlDisplayTextArea.COLOR_LINK);
         linkLineRenderer.setUnderlined(!standardLabel);
         linkLineRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 

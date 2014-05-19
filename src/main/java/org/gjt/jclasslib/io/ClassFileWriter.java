@@ -24,7 +24,7 @@ public class ClassFileWriter {
     }
 
     /**
-        Converts <tt>ClassFile</tt> structure to a a class file.
+        Converts a <tt>ClassFile</tt> structure to a class file.
         @param file the file to which to write the <tt>ClassFile</tt> structure
         @param classFile the <tt>ClassFile</tt> structure to be written
         @throws InvalidByteCodeException if the code is invalid
@@ -41,5 +41,22 @@ public class ClassFileWriter {
         out.flush();
         out.close();
     }
-    
+
+    /**
+     * Converts a <tt>ClassFile</tt> structure to a byte array.
+     * @param classFile the class file
+     */
+    public static byte[] writeToByteArray(ClassFile classFile)
+        throws InvalidByteCodeException, IOException {
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(result);
+
+        classFile.write(out);
+        out.flush();
+        out.close();
+
+        return result.toByteArray();
+    }
+
 }

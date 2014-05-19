@@ -6,6 +6,7 @@
 */
 package org.gjt.jclasslib.structures.elementvalues;
 
+import org.gjt.jclasslib.structures.AnnotationData;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -18,7 +19,7 @@ import java.io.IOException;
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
  *
  */
-public class AnnotationElementValue extends ElementValue {
+public class AnnotationElementValue extends ElementValue implements AnnotationData {
 
     public final static String ENTRY_NAME = "Annotation";
 

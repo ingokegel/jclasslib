@@ -44,9 +44,7 @@ public class LocalVariableTypeTableAttribute extends LocalVariableCommonAttribut
         this.localVariableTable = localVariableTypeTable;
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-        super.read(in);
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         int localVariableTypeTableLength = in.readUnsignedShort();
         localVariableTable = new LocalVariableTypeTableEntry[localVariableTypeTableLength];

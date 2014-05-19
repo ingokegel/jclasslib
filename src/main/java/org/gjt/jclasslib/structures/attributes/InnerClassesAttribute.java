@@ -46,8 +46,7 @@ public class InnerClassesAttribute extends AttributeInfo {
         this.classes = classes;
     }
     
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
             
         int numberOfClasses = in.readUnsignedShort();
         classes = new InnerClassesEntry[numberOfClasses];
@@ -59,9 +58,7 @@ public class InnerClassesAttribute extends AttributeInfo {
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         int numberOfClasses = getLength(classes);

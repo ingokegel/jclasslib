@@ -44,15 +44,13 @@ public class ConstantValueAttribute extends AttributeInfo {
         this.constantValueIndex = constantValueIndex;
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
             
         constantValueIndex = in.readUnsignedShort();
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         
         super.write(out);
         out.writeShort(constantValueIndex);

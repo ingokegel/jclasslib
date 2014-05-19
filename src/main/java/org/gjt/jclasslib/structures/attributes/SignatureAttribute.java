@@ -39,17 +39,14 @@ public class SignatureAttribute extends AttributeInfo {
         return signatureIndex;
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-        super.read(in);
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         signatureIndex = in.readUnsignedShort();
 
         if (debug) debug("read ");
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
+    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
         out.writeShort(signatureIndex);

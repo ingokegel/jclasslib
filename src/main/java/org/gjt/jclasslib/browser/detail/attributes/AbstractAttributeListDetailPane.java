@@ -98,19 +98,22 @@ public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
     private void adjustColumns(TableColumnModel tableColumnModel) {
         
         TableColumn tableColumn;
-        for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
-            tableColumn = tableColumnModel.getColumn(i);
-            tableColumn.setMinWidth(COLUMN_MIN_WIDTH);
-            
-            int width = (i == 0) ? ROW_NUMBER_COLUMN_WIDTH : getColumnWidth(i);
-            
-            tableColumn.setWidth(width);
-            tableColumn.setPreferredWidth(width);
-            
-        }
+        for (int column = 0; column < tableColumnModel.getColumnCount(); column++) {
+            tableColumn = tableColumnModel.getColumn(column);
+            adjustColumn(tableColumn, column);
 
+        }
     }
-    
+
+    protected void adjustColumn(TableColumn tableColumn, int column) {
+        tableColumn.setMinWidth(COLUMN_MIN_WIDTH);
+
+        int width = (column == 0) ? ROW_NUMBER_COLUMN_WIDTH : getColumnWidth(column);
+
+        tableColumn.setWidth(width);
+        tableColumn.setPreferredWidth(width);
+    }
+
     private AbstractAttributeTableModel getCachedTableModel(AttributeInfo attribute) {
         
         AbstractAttributeTableModel tableModel =

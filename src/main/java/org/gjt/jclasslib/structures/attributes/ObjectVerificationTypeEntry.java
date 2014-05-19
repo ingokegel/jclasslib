@@ -10,11 +10,16 @@ package org.gjt.jclasslib.structures.attributes;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 public class ObjectVerificationTypeEntry extends VerificationTypeInfoEntry {
 
     private int cpIndex;
+
+    public ObjectVerificationTypeEntry() {
+        super(VerificationType.OBJECT);
+    }
 
     public int getCpIndex() {
         return cpIndex;
@@ -24,19 +29,33 @@ public class ObjectVerificationTypeEntry extends VerificationTypeInfoEntry {
         this.cpIndex = cpIndex;
     }
 
+    public void readExtra(DataInput in) throws InvalidByteCodeException, IOException {
+        super.readExtra(in);
+        cpIndex = in.readUnsignedShort();
+    }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    @Override
+    public void writeExtra(DataOutput out) throws InvalidByteCodeException, IOException {
+        super.writeExtra(out);
+        out.writeShort(cpIndex);
+    }
 
-        type = in.readUnsignedByte();
-        if (type == ITEM_Object || type == ITEM_Uninitialized) {
-            extra = in.readUnsignedShort();
-        }
+    @Override
+    public void appendTo(StringBuilder buffer) {
+        super.appendTo(buffer);
+        buffer.append(" <a href=\"").append(cpIndex).append("\">").append(getVerboseIndex()).append("</a>");
+    }
 
-        if (debug) {
-            debug("read ");
+    private String getVerboseIndex()  {
+        try {
+            return getClassFile().getConstantPoolEntryName(cpIndex);
+        } catch (InvalidByteCodeException e) {
+            return "invalid constant pool index " + cpIndex;
         }
     }
 
-
+    @Override
+    public int getLength() {
+        return super.getLength() + 2;
+    }
 }

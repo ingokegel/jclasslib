@@ -16,7 +16,6 @@ import org.gjt.jclasslib.structures.attributes.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.TreePath;
-
 import java.awt.*;
 import java.util.HashMap;
 
@@ -100,7 +99,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
             paneName = SCREEN_SIGNATURE;
         } else if (attribute instanceof LocalVariableTypeTableAttribute) {
             paneName = SCREEN_LOCAL_VARIABLE_TYPE_TABLE;
-        } else if (attribute instanceof RuntimeAnnotationsAttribute || attribute instanceof RuntimeTypeAnnotationsAttribute) {
+        } else if (attribute instanceof RuntimeAnnotationsAttribute) {
             paneName = SCREEN_RUNTIME_ANNOTATIONS;
         } else if (attribute instanceof AnnotationDefaultAttribute) {
             paneName = SCREEN_ANNOTATION_DEFAULT;

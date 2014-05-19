@@ -52,9 +52,7 @@ public class EnclosingMethodAttribute extends AttributeInfo {
         return methodInfoIndex;
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-        super.read(in);
+    public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         classInfoIndex = in.readUnsignedShort();
         methodInfoIndex = in.readUnsignedShort();
