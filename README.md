@@ -13,6 +13,16 @@ jclasslib bytecode viewer is released under the [GPL, Version 2.0](https://www.g
 
 Installers can be downloaded from [bintray](https://bintray.com/ingokegel/generic/jclasslib/view).
 
+## Changes in 4.1
+
+**Features**
+
+New attributes: StackMapTable, BootstrapMethods, MethodParameters, RuntimeParameterAnnotations
+
+**Bugs**
+
+Writing was broken for certain attributes containing annotations
+
 ## Changes in 4.0
 
 **Features**
