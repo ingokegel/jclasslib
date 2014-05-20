@@ -1,4 +1,11 @@
 /*
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the license, or (at your option) any later version.
+ */
+
+/*
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
@@ -6,7 +13,6 @@
 */
 package org.gjt.jclasslib.structures.attributes;
 
-import org.gjt.jclasslib.structures.Annotation;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
@@ -15,15 +21,14 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
- * Common class for runtime annotations.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
+ * Common class for runtime type annotations.
  *
  */
-public class RuntimeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder {
+public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder {
+
     private static final int INITIAL_LENGTH = 2;
 
-    protected Annotation[] runtimeAnnotations;
+    protected TypeAnnotation[] runtimeTypeAnnotations;
 
 
     /**
@@ -32,8 +37,8 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
      *
      * @return the array
      */
-    public Annotation[] getRuntimeAnnotations() {
-        return runtimeAnnotations;
+    public TypeAnnotation[] getRuntimeAnnotations() {
+        return runtimeTypeAnnotations;
     }
 
     /**
@@ -42,18 +47,18 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
      *
      * @param runtimeAnnotations the array
      */
-    public void setRuntimeAnnotations(Annotation[] runtimeAnnotations) {
-        this.runtimeAnnotations = runtimeAnnotations;
+    public void setRuntimeAnnotations(TypeAnnotation[] runtimeAnnotations) {
+        this.runtimeTypeAnnotations = runtimeAnnotations;
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         int runtimeVisibleAnnotationsLength = in.readUnsignedShort();
-        runtimeAnnotations = new Annotation[runtimeVisibleAnnotationsLength];
+        runtimeTypeAnnotations = new TypeAnnotation[runtimeVisibleAnnotationsLength];
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i] = new Annotation();
-            runtimeAnnotations[i].setClassFile(classFile);
-            runtimeAnnotations[i].read(in);
+            runtimeTypeAnnotations[i] = new TypeAnnotation();
+            runtimeTypeAnnotations[i].setClassFile(classFile);
+            runtimeTypeAnnotations[i].read(in);
         }
 
         if (debug) debug("read ");
@@ -62,10 +67,10 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
 
-        int runtimeVisibleAnnotationsLength = getLength(runtimeAnnotations);
+        int runtimeVisibleAnnotationsLength = getLength(runtimeTypeAnnotations);
         out.writeShort(runtimeVisibleAnnotationsLength);
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i].write(out);
+            runtimeTypeAnnotations[i].write(out);
         }
 
         if (debug) debug("wrote ");
@@ -73,15 +78,13 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
 
     public int getAttributeLength() {
         int length = INITIAL_LENGTH;
-        for (Annotation runtimeAnnotation : runtimeAnnotations) {
-            length += runtimeAnnotation.getLength();
+        for (TypeAnnotation runtimeTypeAnnotation : runtimeTypeAnnotations) {
+            length += runtimeTypeAnnotation.getLength();
         }
         return length;
     }
-
+    
 	public int getNumberOfAnnotations() {
-		return runtimeAnnotations.length;
+		return runtimeTypeAnnotations.length;
 	}
-    
-    
 }

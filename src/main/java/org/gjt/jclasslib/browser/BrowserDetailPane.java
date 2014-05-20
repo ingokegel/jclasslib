@@ -30,6 +30,7 @@ public class BrowserDetailPane extends JPanel {
 
     private BrowserServices services;
     private HashMap<String, AbstractDetailPane> nodeTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
+    private AbstractDetailPane currentDetailPane;
 
     /**
      * Constructor.
@@ -54,12 +55,16 @@ public class BrowserDetailPane extends JPanel {
             return;
         }
         CardLayout layout = (CardLayout)getLayout();
-        AbstractDetailPane detailPane = getDetailPane(nodeType);
-        if (detailPane != null) {
-            detailPane.show(treePath);
+        currentDetailPane = getDetailPane(nodeType);
+        if (currentDetailPane != null) {
+            currentDetailPane.show(treePath);
         }
 
         layout.show(this, nodeType);
+    }
+
+    public AbstractDetailPane getCurrentDetailPane() {
+        return currentDetailPane;
     }
 
     /**
@@ -108,6 +113,8 @@ public class BrowserDetailPane extends JPanel {
             return new AttributeDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ANNOTATION)) {
             return new AnnotationDetailPane(services);
+        } else if (nodeType.equals(BrowserTreeNode.NODE_TYPE_ANNOTATION)) {
+            return new TypeAnnotationDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUE)) {
             return new ElementValueDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUEPAIR)) {

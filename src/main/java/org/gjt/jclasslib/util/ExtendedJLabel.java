@@ -17,7 +17,7 @@ import java.awt.*;
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ExtendedJLabel extends JLabel implements Scrollable {
+public class ExtendedJLabel extends JLabel implements Scrollable, TextDisplay {
 
     private boolean underlined = false;
     private boolean autoTooltip = false;

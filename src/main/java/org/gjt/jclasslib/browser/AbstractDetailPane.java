@@ -96,6 +96,16 @@ public abstract class AbstractDetailPane extends JPanel {
     }
     
     /**
+        Create a highlighted text area for HTML display (values in key-value pairs).
+        @return the text area
+     */
+    protected HtmlDisplayTextArea highlightTextArea() {
+        HtmlDisplayTextArea textArea = new HtmlDisplayTextArea();
+        textArea.setForeground(COLOR_HIGHLIGHT);
+        return textArea;
+    }
+
+    /**
         Create a label with the appearance of a hyperlink.
         @return the label
      */

@@ -14,6 +14,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Gradle: i4jruntime" level="project" />
     <orderEntry type="library" exported="" name="Gradle: annotations-13.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: testng-6.8.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: bsh-2.0b4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: jcommander-1.27" level="project" />
   </component>
 </module>
 

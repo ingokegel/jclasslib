@@ -197,6 +197,17 @@ public abstract class ListDetailPane extends AbstractDetailPane {
     }
 
     /**
+     * Select a particular row
+     * @param index the row index
+     */
+    public void selectIndex(int index) {
+        if (index < 0 || index >= table.getRowCount()) {
+            throw new IllegalArgumentException("Invalid index: " + index);
+        }
+        table.getSelectionModel().setSelectionInterval(index, index);
+    }
+
+    /**
         Class for caching dynamically computed values in a read only table.
      */
     public static class ColumnCache {

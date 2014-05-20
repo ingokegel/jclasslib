@@ -47,6 +47,7 @@ dependencies {
     // Download after install4j 6
     compile ':i4jruntime'
     compile 'org.jetbrains:annotations:13.0'
+    testCompile 'org.testng:testng:6.8.8'
 }
 
 install4j {
@@ -97,6 +98,11 @@ task libraryJar(type: Jar) {
     include 'org/gjt/jclasslib/bytecode/**'
     include 'org/gjt/jclasslib/io/**'
     include 'org/gjt/jclasslib/structures/**'
+}
+
+test {
+    useTestNG()
+    testLogging.showStandardStreams = true
 }
 
 task dist {
