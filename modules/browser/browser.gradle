@@ -19,13 +19,14 @@ jar {
     }
 }
 
-task copyDist(type: Copy) {
+task copyDist(type: Copy, dependsOn: jar) {
     from configurations.compile
+    from jar.archivePath
     into externalLibsDir
 }
 
 task dist {
-    dependsOn copyDist, jar
+    dependsOn copyDist
 }
 
 

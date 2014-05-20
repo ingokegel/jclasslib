@@ -13,6 +13,16 @@ jclasslib bytecode viewer is released under the [GPL, Version 2.0](https://www.g
 
 Installers can be downloaded from [bintray](https://bintray.com/ingokegel/generic/jclasslib/view).
 
+## Changes in 4.2
+
+**Features**
+
+Support for runtime type annotations. All Java 8 class file attributes are now displayed.
+
+**Bugs**
+
+When an opening a class file did not succeed, the internal frame was in an undefined state
+
 ## Changes in 4.1
 
 **Features**

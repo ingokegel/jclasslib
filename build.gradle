@@ -1,17 +1,11 @@
-import com.install4j.gradle.Install4jTask
 import org.apache.tools.ant.taskdefs.condition.Os
-
-apply plugin: 'install4j'
-apply plugin: 'bintray'
 
 version = 4.2
 ext.mediaDir = file('media')
-ext.distDir = mkdir('dist')
 ext.libCompileDir = file('lib-compile')
 
 buildDir = file('build/gradle')
-ext.libsDir = mkdir("$buildDir/libs")
-ext.externalLibsDir = mkdir("$buildDir/externalLibs")
+ext.externalLibsDir = file("$buildDir/externalLibs")
 
 buildscript {
     repositories {
@@ -39,6 +33,7 @@ buildscript {
 allprojects {
 
     buildDir = new File(rootProject.buildDir, path.substring(1).replaceAll(':', '/'))
+    version = rootProject.version
 
     repositories {
         flatDir {
@@ -80,46 +75,12 @@ allprojects {
     }
 }
 
-install4j {
-    if (project.hasProperty('install4jHomeDir')) {
-        installDir = file(install4jHomeDir)
-    }
-}
-
 task clean << {
-    delete mediaDir
-    delete libsDir
     delete externalLibsDir
 }
 
-
-task jar(type: Jar) {
-    destinationDir = libsDir
-    archiveName = 'jclasslib.jar'
-    gradle.projectsEvaluated {
-        from zipTree(project(':data').jar.archivePath)
-        from zipTree(project(':browser').jar.archivePath)
-        manifest = project(':browser').jar.manifest
-    }
-}
-
 task test()
-
-task dist(dependsOn: jar)
-
-task media(type: Install4jTask) {
-
-    dependsOn 'clean', 'dist'
-
-    projectFile = file('service/jclasslib.install4j')
-    release = version
-
-    doFirst {
-        if (!project.hasProperty('install4jHomeDir')) {
-            throw new RuntimeException('Specify install4jHomeDir in gradle.properties and set it to an install4j installation directory')
-        }
-    }
-}
+task dist()
 
 gradle.projectsEvaluated {
     getTasksByName('clean', true).each {task ->
@@ -132,36 +93,9 @@ gradle.projectsEvaluated {
             dist.dependsOn(task)
         }
     }
-    getTasksByName('jar', true).each {task ->
-        if (task != jar) {
-            jar.dependsOn(task)
-        }
-    }
     getTasksByName('test', true).each {task ->
         if (task != test) {
             test.dependsOn(task)
-        }
-    }
-}
-
-bintray {
-    if (project.hasProperty('bintrayUser')) {
-        user = bintrayUser
-        key = bintrayApiKey
-        files = fileTree(dir: mediaDir, include: "*${version.toString().replace('.', '_')}.*")
-        pkg {
-            repo = 'generic'
-            name = 'jclasslib'
-            licenses = ['GPL-2.0']
-        }
-        dryRun = project.hasProperty('dryRun')
-    }
-}
-
-bintrayUpload {
-    doFirst {
-        if (!project.hasProperty('bintrayUser')) {
-            throw new RuntimeException('Specify bintrayUser and bintrayApiKey in gradle.properties')
         }
     }
 }

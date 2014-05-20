@@ -10,6 +10,12 @@ javadoc {
     }
 }
 
+task copyDist(type: Copy, dependsOn: jar) {
+    from configurations.compile
+    from jar.archivePath
+    into externalLibsDir
+}
+
 task dist {
-    dependsOn javadoc, jar
+    dependsOn javadoc, copyDist
 }
