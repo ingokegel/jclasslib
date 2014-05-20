@@ -9,6 +9,8 @@
         <option name="modules">
           <set>
             <option value="C:\Users\ingo\projects.git\jclasslib" />
+            <option value="C:\Users\ingo\projects.git\jclasslib\modules\browser" />
+            <option value="C:\Users\ingo\projects.git\jclasslib\modules\data" />
           </set>
         </option>
       </GradleProjectSettings>

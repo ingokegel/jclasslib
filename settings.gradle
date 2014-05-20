@@ -1,0 +1,9 @@
+file('modules').listFiles()
+  .findAll {it.isDirectory() && !it.name.startsWith('.')}
+  .each { File dir ->
+    include dir.name
+    ProjectDescriptor project = findProject(':' + dir.name)
+    project.projectDir = dir
+    project.buildFileName = "${dir.name}.gradle"
+}
+

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/browser/browser.iml" filepath="$PROJECT_DIR$/modules/browser/browser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/data/data.iml" filepath="$PROJECT_DIR$/modules/data/data.iml" />
       <module fileurl="file://$PROJECT_DIR$/jclasslib.iml" filepath="$PROJECT_DIR$/jclasslib.iml" />
     </modules>
   </component>

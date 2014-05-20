@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+jar {
+    archiveName = 'jclasslib-library.jar'
+}
+
+javadoc {
+    options {
+        links 'http://docs.oracle.com/javase/8/docs/api/'
+    }
+}
+
+task dist {
+    dependsOn javadoc, jar
+}

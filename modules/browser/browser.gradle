@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'org.gjt.jclasslib.browser.BrowserApplication'
+
+dependencies {
+    // Download after install4j 6
+    compile ':i4jruntime'
+    compile 'org.jetbrains:annotations:13.0'
+    compile project(':data')
+}
+
+jar {
+    archiveName = 'jclasslib-browser.jar'
+    manifest {
+        attributes(
+            "Main-Class": mainClassName
+        )
+    }
+}
+
+task copyDist(type: Copy) {
+    from configurations.compile
+    into externalLibsDir
+}
+
+task dist {
+    dependsOn copyDist, jar
+}
+
+

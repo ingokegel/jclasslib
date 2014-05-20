@@ -1,15 +1,17 @@
 import com.install4j.gradle.Install4jTask
 import org.apache.tools.ant.taskdefs.condition.Os
 
-apply plugin: 'java'
-apply plugin: 'application'
 apply plugin: 'install4j'
 apply plugin: 'bintray'
 
-version = 4.1
-buildDir = file('build/gradle')
-mainClassName = 'org.gjt.jclasslib.browser.BrowserApplication'
+version = 4.2
 ext.mediaDir = file('media')
+ext.distDir = mkdir('dist')
+ext.libCompileDir = file('lib-compile')
+
+buildDir = file('build/gradle')
+ext.libsDir = mkdir("$buildDir/libs")
+ext.externalLibsDir = mkdir("$buildDir/externalLibs")
 
 buildscript {
     repositories {
@@ -34,20 +36,48 @@ buildscript {
     }
 }
 
-repositories {
-    flatDir {
-        dirs 'lib-compile'
-    }
-    maven {
-        url 'http://jcenter.bintray.com'
-    }
-}
+allprojects {
 
-dependencies {
-    // Download after install4j 6
-    compile ':i4jruntime'
-    compile 'org.jetbrains:annotations:13.0'
-    testCompile 'org.testng:testng:6.8.8'
+    buildDir = new File(rootProject.buildDir, path.substring(1).replaceAll(':', '/'))
+
+    repositories {
+        flatDir {
+            dirs libCompileDir
+        }
+        maven {
+            url 'http://jcenter.bintray.com'
+        }
+    }
+
+    plugins.withType(JavaPlugin).whenPluginAdded {
+        dependencies {
+            testCompile 'org.testng:testng:6.8.8'
+        }
+
+        tasks.withType(JavaCompile).each {JavaCompile compileJava ->
+            compileJava.with {
+                String java6Home = System.getenv()['JAVA_1_6_HOME']
+                if (java6Home) {
+                    if (Os.isFamily(Os.FAMILY_MAC)) {
+                        options.bootClasspath = "${java6Home}/../Classes/classes.jar"
+                    } else {
+                        options.bootClasspath = "${java6Home}/jre/lib/rt.jar"
+                    }
+                } else {
+                    println 'Warning: Set JAVA_1_6_HOME to a Java 6 JDK'
+                }
+
+                sourceCompatibility = '1.6'
+                targetCompatibility = '1.6'
+            }
+        }
+
+        tasks.withType(Test).each {Test test ->
+            test.with {
+                useTestNG()
+            }
+        }
+    }
 }
 
 install4j {
@@ -56,63 +86,26 @@ install4j {
     }
 }
 
-clean << {
-    project.delete mediaDir
+task clean << {
+    delete mediaDir
+    delete libsDir
+    delete externalLibsDir
 }
 
-compileJava {
-    String java6Home = System.getenv()['JAVA_1_6_HOME']
-    if (java6Home) {
-        if (Os.isFamily(Os.FAMILY_MAC)) {
-            options.bootClasspath = "${java6Home}/../Classes/classes.jar"
-        } else {
-            options.bootClasspath = "${java6Home}/jre/lib/rt.jar"
-        }
-    } else {
-        println 'Warning: Set JAVA_1_6_HOME to a Java 6 JDK'
-    }
 
-    sourceCompatibility = '1.6'
-    targetCompatibility = '1.6'
-
-}
-
-jar {
+task jar(type: Jar) {
+    destinationDir = libsDir
     archiveName = 'jclasslib.jar'
-    manifest {
-        attributes(
-            "Main-Class": mainClassName
-        )
+    gradle.projectsEvaluated {
+        from zipTree(project(':data').jar.archivePath)
+        from zipTree(project(':browser').jar.archivePath)
+        manifest = project(':browser').jar.manifest
     }
 }
 
-javadoc {
-    options {
-        links 'http://docs.oracle.com/javase/8/docs/api/'
-    }
-}
+task test()
 
-task libraryJar(type: Jar) {
-    archiveName = 'jclasslib-library.jar'
-    from sourceSets.main.output
-    include 'org/gjt/jclasslib/bytecode/**'
-    include 'org/gjt/jclasslib/io/**'
-    include 'org/gjt/jclasslib/structures/**'
-}
-
-test {
-    useTestNG()
-    testLogging.showStandardStreams = true
-}
-
-task dist {
-    dependsOn 'jar', 'libraryJar', 'javadoc', 'copyDist'
-}
-
-task copyDist(type: Copy) {
-    from configurations.compile
-    into mkdir(file("$buildDir/externalLibs"))
-}
+task dist(dependsOn: jar)
 
 task media(type: Install4jTask) {
 
@@ -128,8 +121,27 @@ task media(type: Install4jTask) {
     }
 }
 
-task listMedia << {
-    println configurations.media.resolve()
+gradle.projectsEvaluated {
+    getTasksByName('clean', true).each {task ->
+        if (task != clean) {
+            clean.dependsOn(task)
+        }
+    }
+    getTasksByName('dist', true).each {task ->
+        if (task != dist) {
+            dist.dependsOn(task)
+        }
+    }
+    getTasksByName('jar', true).each {task ->
+        if (task != jar) {
+            jar.dependsOn(task)
+        }
+    }
+    getTasksByName('test', true).each {task ->
+        if (task != test) {
+            test.dependsOn(task)
+        }
+    }
 }
 
 bintray {
