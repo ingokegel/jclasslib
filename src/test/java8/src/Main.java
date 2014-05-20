@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
 
-public class Main<@Test T extends @Test Object> implements @Test TestInterface {
+public class Main<@Test T extends @Test Object> extends @Test Object implements @Test TestInterface {
 
     private List<@Test String> strings;
 
@@ -10,9 +10,13 @@ public class Main<@Test T extends @Test Object> implements @Test TestInterface {
     public static void main(String[] args) throws @Test Exception {
         new @Test Main();
 
-        @Test int i = 0;
+        @Test int i = 0, j, k;
         Object o = "";
-        String s = (@Test String)o;
+        @Test String s = (@Test String)o;
+        @Test String s2 = (@Test String)o;
+        @Test String s3 = (@Test String)o;
+
+        String a = s + s2 + s3;
 
         TestInterface t = Arrays::<@Test int[]>sort;
         handleTest(t);

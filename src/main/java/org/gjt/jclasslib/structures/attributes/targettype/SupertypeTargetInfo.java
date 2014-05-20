@@ -13,6 +13,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Target info for a <tt>TypeAnnotation</tt> structure with a super class target.
+ */
 public class SupertypeTargetInfo extends TargetInfo {
 
     private int supertypeIndex;
@@ -44,6 +47,10 @@ public class SupertypeTargetInfo extends TargetInfo {
 
     @Override
     public String getVerbose() {
-        return "Supertype Index: " + supertypeIndex;
+        if (supertypeIndex == 65535) {
+            return "Super class (" + supertypeIndex + ")";
+        } else {
+            return "<a href=\"I" + supertypeIndex + "\">interface index " + supertypeIndex + "</a>";
+        }
     }
 }

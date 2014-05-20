@@ -13,6 +13,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Target info for a <tt>TypeAnnotation</tt> structure with a parameter index an a bound index.
+ */
 public class TypeParameterBoundTargetInfo extends TargetInfo {
 
     private int typeParameterIndex;
@@ -55,6 +58,6 @@ public class TypeParameterBoundTargetInfo extends TargetInfo {
 
     @Override
     public String getVerbose() {
-        return "Parameter Index: " + typeParameterIndex + ", Bound Index: " + boundIndex;
+        return "parameter index " + typeParameterIndex + ", bound index " + boundIndex;
     }
 }

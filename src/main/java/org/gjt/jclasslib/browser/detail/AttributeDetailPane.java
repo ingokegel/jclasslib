@@ -77,40 +77,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
     public void show(TreePath treePath) {
 
         AttributeInfo attribute = findAttribute(treePath);
-
-        String paneName = null;
-        if (attribute instanceof ConstantValueAttribute) {
-            paneName = SCREEN_CONSTANT_VALUE;
-        } else if (attribute instanceof CodeAttribute) {
-            paneName = SCREEN_CODE;
-        } else if (attribute instanceof ExceptionsAttribute) {
-            paneName = SCREEN_EXCEPTIONS;
-        } else if (attribute instanceof InnerClassesAttribute) {
-            paneName = SCREEN_INNER_CLASSES;
-        } else if (attribute instanceof SourceFileAttribute) {
-            paneName = SCREEN_SOURCE_FILE;
-        } else if (attribute instanceof LineNumberTableAttribute) {
-            paneName = SCREEN_LINE_NUMBER_TABLE;
-        } else if (attribute instanceof LocalVariableTableAttribute) {
-            paneName = SCREEN_LOCAL_VARIABLE_TABLE;
-        } else if (attribute instanceof EnclosingMethodAttribute) {
-            paneName = SCREEN_ENCLOSING_METHOD;
-        } else if (attribute instanceof SignatureAttribute) {
-            paneName = SCREEN_SIGNATURE;
-        } else if (attribute instanceof LocalVariableTypeTableAttribute) {
-            paneName = SCREEN_LOCAL_VARIABLE_TYPE_TABLE;
-        } else if (attribute instanceof RuntimeAnnotationsAttribute || attribute instanceof RuntimeTypeAnnotationsAttribute) {
-            paneName = SCREEN_RUNTIME_ANNOTATIONS;
-        } else if (attribute instanceof AnnotationDefaultAttribute) {
-            paneName = SCREEN_ANNOTATION_DEFAULT;
-        } else if (attribute instanceof BootstrapMethodsAttribute) {
-        	paneName = SCREEN_BOOTSTRAP_METHODS;
-        } else if (attribute instanceof StackMapTableAttribute) {
-        	paneName = SCREEN_STACK_MAP_TABLE;
-        }	else if (attribute instanceof MethodParametersAttribute) {
-        	paneName = SCREEN_METHOD_PARAMETERS;
-        }
-
+        String paneName = getPaneName(attribute.getClass());
         CardLayout layout = (CardLayout)specificInfoPane.getLayout();
         if (paneName == null) {
             layout.show(specificInfoPane, SCREEN_UNKNOWN);
@@ -123,6 +90,43 @@ public class AttributeDetailPane extends AbstractDetailPane {
         genericInfoPane.show(treePath);
     }
 
+    private String getPaneName(Class<? extends AttributeInfo> attributeInfoClass) {
+        
+        if (ConstantValueAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_CONSTANT_VALUE;
+        } else if (CodeAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_CODE;
+        } else if (ExceptionsAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_EXCEPTIONS;
+        } else if (InnerClassesAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_INNER_CLASSES;
+        } else if (SourceFileAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_SOURCE_FILE;
+        } else if (LineNumberTableAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_LINE_NUMBER_TABLE;
+        } else if (LocalVariableTableAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_LOCAL_VARIABLE_TABLE;
+        } else if (EnclosingMethodAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_ENCLOSING_METHOD;
+        } else if (SignatureAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_SIGNATURE;
+        } else if (LocalVariableTypeTableAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_LOCAL_VARIABLE_TYPE_TABLE;
+        } else if (AnnotationHolder.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_RUNTIME_ANNOTATIONS;
+        } else if (AnnotationDefaultAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_ANNOTATION_DEFAULT;
+        } else if (BootstrapMethodsAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_BOOTSTRAP_METHODS;
+        } else if (StackMapTableAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_STACK_MAP_TABLE;
+        } else if (MethodParametersAttribute.class.isAssignableFrom(attributeInfoClass)) {
+            return SCREEN_METHOD_PARAMETERS;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Get the <tt>CodeAttributeDetailPane</tt> showing the details of a
      * <tt>Code</tt> attribute.
@@ -131,6 +135,16 @@ public class AttributeDetailPane extends AbstractDetailPane {
      */
     public CodeAttributeDetailPane getCodeAttributeDetailPane() {
         return (CodeAttributeDetailPane)getDetailPane(SCREEN_CODE);
+    }
+
+    /**
+     * Get the <tt>AbstractDetailPane</tt> showing the details of a
+     * specified attribute.
+     *
+     * @return the detail pane
+     */
+    public AbstractDetailPane getAttributeDetailPane(Class<? extends AttributeInfo> attributeInfoClass) {
+        return getDetailPane(getPaneName(attributeInfoClass));
     }
 
     private AbstractDetailPane getDetailPane(String attributeType) {

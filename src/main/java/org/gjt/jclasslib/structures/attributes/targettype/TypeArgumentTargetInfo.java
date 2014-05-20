@@ -13,6 +13,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Target info for a <tt>TypeAnnotation</tt> structure with an offset and an argument index.
+ */
 public class TypeArgumentTargetInfo extends TargetInfo {
     private int offset;
     private int typeArgumentIndex;
@@ -54,6 +57,6 @@ public class TypeArgumentTargetInfo extends TargetInfo {
 
     @Override
     public String getVerbose() {
-        return "offset: " + offset + ", type Argument Index: " + typeArgumentIndex;
+        return "offset " + offset + ", type argument index " + typeArgumentIndex;
     }
 }

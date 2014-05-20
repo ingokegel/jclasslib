@@ -13,6 +13,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Target info for a <tt>TypeAnnotation</tt> structure with local variable table links.
+ */
 public class LocalVarTargetInfo extends TargetInfo {
 
     private LocalVarTarget[] localVarTargets;
@@ -58,7 +61,7 @@ public class LocalVarTargetInfo extends TargetInfo {
             LocalVarTarget target = localVarTargets[i];
             buffer.append("[").append(i).append("] start: ").append(target.startPc);
             buffer.append(", length: ").append(target.length);
-            buffer.append(", index: ").append(target.index);
+            buffer.append(", <a href=\"L").append(target.index).append("\">local variable with index ").append(target.index).append("</a>");
             buffer.append("\n");
         }
         return buffer.toString();

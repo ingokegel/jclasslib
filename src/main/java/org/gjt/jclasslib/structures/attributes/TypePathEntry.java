@@ -14,16 +14,19 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Type path entry for a <tt>TypeAnnotation</tt> structure.
+ */
 public class TypePathEntry extends AbstractStructure {
 
-    private int typePathKind;
+    private TypePathKind typePathKind;
     private int typeArgumentIndex;
 
-    public int getTypePathKind() {
+    public TypePathKind getTypePathKind() {
         return typePathKind;
     }
 
-    public void setTypePathKind(int typePathKind) {
+    public void setTypePathKind(TypePathKind typePathKind) {
         this.typePathKind = typePathKind;
     }
 
@@ -38,14 +41,14 @@ public class TypePathEntry extends AbstractStructure {
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
         super.read(in);
-        typePathKind = in.readUnsignedByte();
+        typePathKind = TypePathKind.getFromTag(in.readUnsignedByte());
         typeArgumentIndex = in.readUnsignedByte();
     }
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
-        out.writeByte(typePathKind);
+        out.writeByte(typePathKind.getTag());
         out.writeByte(typeArgumentIndex);
     }
 

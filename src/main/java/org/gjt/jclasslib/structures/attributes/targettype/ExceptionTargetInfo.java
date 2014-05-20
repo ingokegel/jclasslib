@@ -13,6 +13,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Target info for a <tt>TypeAnnotation</tt> structure with an exception table link.
+ */
 public class ExceptionTargetInfo extends TargetInfo {
 
     private int exceptionTableIndex;
@@ -44,6 +47,6 @@ public class ExceptionTargetInfo extends TargetInfo {
 
     @Override
     public String getVerbose() {
-        return "Exception table index: " + exceptionTableIndex;
+        return "<a href=\"E" + exceptionTableIndex + "\">exception table entry " + exceptionTableIndex + "</a>";
     }
 }

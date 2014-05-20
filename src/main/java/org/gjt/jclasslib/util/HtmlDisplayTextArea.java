@@ -18,7 +18,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 
-public class HtmlDisplayTextArea extends JEditorPane {
+public class HtmlDisplayTextArea extends JEditorPane implements TextDisplay {
 
     public static final Color COLOR_LINK = new Color(0, 128, 0);
 

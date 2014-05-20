@@ -7,6 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype;
 
+/**
+ * Target info for a <tt>TypeAnnotation</tt> structure with empty content.
+ */
 public class EmptyTargetInfo extends TargetInfo {
 
     @Override
@@ -16,6 +19,6 @@ public class EmptyTargetInfo extends TargetInfo {
 
     @Override
     public String getVerbose() {
-        return "";
+        return "<none>";
     }
 }

@@ -13,6 +13,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Target info for a <tt>TypeAnnotation</tt> structure with a bytecode offset.
+ */
 public class OffsetTargetInfo extends TargetInfo {
 
     private int offset;
@@ -44,6 +47,6 @@ public class OffsetTargetInfo extends TargetInfo {
 
     @Override
     public String getVerbose() {
-        return "Offset: " + offset;
+        return "offset " + offset;
     }
 }

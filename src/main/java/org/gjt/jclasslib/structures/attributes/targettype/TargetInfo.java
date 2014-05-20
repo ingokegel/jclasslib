@@ -9,6 +9,9 @@ package org.gjt.jclasslib.structures.attributes.targettype;
 
 import org.gjt.jclasslib.structures.AbstractStructure;
 
+/**
+ * Base class for target infos in a <tt>TypeAnnotation</tt> structure.
+ */
 public abstract class TargetInfo extends AbstractStructure {
 
     protected TargetInfo() {

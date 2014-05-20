@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 import org.gjt.jclasslib.util.GUIHelper;
+import org.gjt.jclasslib.util.TextDisplay;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -43,7 +44,7 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
         @param key the key label
         @param value the value label
      */
-    protected void addDetailPaneEntry(ExtendedJLabel key, ExtendedJLabel value) {
+    protected void addDetailPaneEntry(ExtendedJLabel key, TextDisplay value) {
         addDetailPaneEntry(key, value, null);
     }
 
@@ -55,8 +56,8 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
         @param comment the comment
      */
     protected void addDetailPaneEntry(ExtendedJLabel key,
-                                      ExtendedJLabel value,
-                                      ExtendedJLabel comment) {
+                                      TextDisplay value,
+                                      TextDisplay comment) {
                                           
         if (detailPaneEntries == null) {
             detailPaneEntries = new ArrayList<DetailPaneEntry>();
@@ -105,12 +106,13 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
                 add(entry.key, gKey);
             }
             if (entry.value != null) {
-                add(entry.value, gValue);
+                add((JComponent)entry.value, gValue);
             }
             if (entry.comment != null) {
-                add(entry.comment, (entry.value == null) ? gCommentOnly : gComment);
-
-                entry.comment.setAutoTooltip(true);
+                add((JComponent)entry.comment, (entry.value == null) ? gCommentOnly : gComment);
+                if (entry.comment instanceof ExtendedJLabel) {
+                    ((ExtendedJLabel)entry.comment).setAutoTooltip(true);
+                }
             }
 
         }
@@ -156,12 +158,12 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
 
     private static class DetailPaneEntry {
         public final ExtendedJLabel key;
-        public final ExtendedJLabel value;
-        public final ExtendedJLabel comment;
+        public final TextDisplay value;
+        public final TextDisplay comment;
         
         private DetailPaneEntry(ExtendedJLabel key,
-                                ExtendedJLabel value,
-                                ExtendedJLabel comment) {
+                                TextDisplay value,
+                                TextDisplay comment) {
             this.key = key;
             this.value = value;
             this.comment = comment;

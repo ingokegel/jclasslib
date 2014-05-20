@@ -190,7 +190,7 @@ public class BrowserTreePane extends JPanel {
                     new BrowserTreeNode(getFormattedIndex(index, constantPoolCount) +
                     constantPoolEntry.getTagVerbose(),
                             BrowserTreeNode.NODE_CONSTANT_POOL,
-                            index);
+                            index, constantPoolEntry);
 
             constantPoolNode.add(entryNode);
             if (constantPoolEntry instanceof ConstantLargeNumeric) {
@@ -269,7 +269,7 @@ public class BrowserTreePane extends JPanel {
                         new BrowserTreeNode(getFormattedIndex(index, classMembersCount) +
                         classMember.getName(),
                                 type,
-                                index);
+                                index, classMember);
 
                 classMemberNode.add(entryNode);
                 addAttributeNodes(entryNode, classMember);
@@ -318,7 +318,7 @@ public class BrowserTreePane extends JPanel {
                         new BrowserTreeNode(getFormattedIndex(index, attributesCount) +
                         attribute.getName(),
                                 BrowserTreeNode.NODE_ATTRIBUTE,
-                                index);
+                                index, attribute);
 
                 parentNode.add(entryNode);
                 if (attribute instanceof RuntimeAnnotationsAttribute) {
@@ -401,7 +401,7 @@ public class BrowserTreePane extends JPanel {
                     new BrowserTreeNode(getFormattedIndex(index, parameterAnnotationsCount) +
                         "Parameter annotation",
                             BrowserTreeNode.NODE_NO_CONTENT,
-                            index);
+                            index, parameterAnnotations);
             parentNode.add(containerNode);
             Annotation[] annotations = parameterAnnotations.getRuntimeAnnotations();
             int annotationsCount = annotations.length;
@@ -429,17 +429,15 @@ public class BrowserTreePane extends JPanel {
     }
 
 
-	private void addRuntimeTypeAnnotation(BrowserTreeNode parentNode, RuntimeTypeAnnotationsAttribute structure) {
+	private void addRuntimeTypeAnnotation(BrowserTreeNode parentNode, RuntimeTypeAnnotationsAttribute attribute) {
 
-		TypeAnnotation[] annotations = structure
-				.getRuntimeAnnotations();
+		TypeAnnotation[] annotations = attribute.getRuntimeAnnotations();
 		if (annotations == null) {
 			return;
 		}
 		int annotationsCount = annotations.length;
 		for (int i = 0; i < annotationsCount; i++) {
-			addSingleTypeAnnotationNode(annotations[i], i, annotationsCount,
-					parentNode);
+			addSingleTypeAnnotationNode(annotations[i], i, annotationsCount, parentNode);
 		}
 	}
 
@@ -452,8 +450,7 @@ public class BrowserTreePane extends JPanel {
 					index, attributesCount) + annotation.getTargetType().toString(),
 					BrowserTreeNode.NODE_TYPE_ANNOTATION, index, annotation);
 			parentNode.add(entryNode);
-			addSingleAnnotationNode(annotation.getAnnotation(), 0, 1,
-					entryNode);
+			addSingleAnnotationNode(annotation.getAnnotation(), 0, 1, entryNode);
 		}
 	}
 

@@ -30,6 +30,7 @@ public class BrowserDetailPane extends JPanel {
 
     private BrowserServices services;
     private HashMap<String, AbstractDetailPane> nodeTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
+    private AbstractDetailPane currentDetailPane;
 
     /**
      * Constructor.
@@ -54,12 +55,16 @@ public class BrowserDetailPane extends JPanel {
             return;
         }
         CardLayout layout = (CardLayout)getLayout();
-        AbstractDetailPane detailPane = getDetailPane(nodeType);
-        if (detailPane != null) {
-            detailPane.show(treePath);
+        currentDetailPane = getDetailPane(nodeType);
+        if (currentDetailPane != null) {
+            currentDetailPane.show(treePath);
         }
 
         layout.show(this, nodeType);
+    }
+
+    public AbstractDetailPane getCurrentDetailPane() {
+        return currentDetailPane;
     }
 
     /**

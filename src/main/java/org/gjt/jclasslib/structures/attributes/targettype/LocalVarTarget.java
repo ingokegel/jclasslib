@@ -14,6 +14,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * Local variable target for the <tt>LocalVarTargetInfo</tt> structure.
+ */
 public class LocalVarTarget extends AbstractStructure {
 
     public int startPc;
