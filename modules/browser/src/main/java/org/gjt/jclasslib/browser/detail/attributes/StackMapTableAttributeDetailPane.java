@@ -62,8 +62,6 @@ public class StackMapTableAttributeDetailPane extends AbstractAttributeListDetai
                 }
             });
             tableColumn.setCellEditor(cellHandler);
-        } else {
-            tableColumn.setMaxWidth(tableColumn.getWidth());
         }
     }
 

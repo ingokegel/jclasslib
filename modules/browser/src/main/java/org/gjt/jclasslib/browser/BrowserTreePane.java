@@ -329,8 +329,6 @@ public class BrowserTreePane extends JPanel {
                     addSingleElementValueEntryNode(((AnnotationDefaultAttribute)attribute).getDefaultValue(), 0, 1, entryNode);
                 } else if (attribute instanceof RuntimeTypeAnnotationsAttribute) {
                     addRuntimeTypeAnnotation(entryNode, (RuntimeTypeAnnotationsAttribute)attribute);
-                } else if (attribute instanceof BootstrapMethodsAttribute) {
-                	addBootstrapMethodAnnotation(entryNode, (BootstrapMethodsAttribute)attribute);
                 } else {
                     addAttributeNodes(entryNode, attribute);
                 }
@@ -451,37 +449,6 @@ public class BrowserTreePane extends JPanel {
 					BrowserTreeNode.NODE_TYPE_ANNOTATION, index, annotation);
 			parentNode.add(entryNode);
 			addSingleAnnotationNode(annotation.getAnnotation(), 0, 1, entryNode);
-		}
-	}
-
-    private void addBootstrapMethodAnnotation(BrowserTreeNode parentNode, BootstrapMethodsAttribute structure) {
-
-		BootstrapMethodsEntry[] annotations = structure.getMethods();
-		if (annotations == null) {
-			return;
-		}
-		int annotationsCount = annotations.length;
-		for (int i = 0; i < annotationsCount; i++) {
-			addSingleBootstrapMethodNode(annotations[i], i, annotationsCount,
-					parentNode);
-		}
-	}
-    
-	private void addSingleBootstrapMethodNode(BootstrapMethodsEntry annotation, int index, int attributesCount, BrowserTreeNode parentNode) {
-        if (annotation == null) {
-			parentNode.add(buildNullNode());
-		} else {
-			String name;
-			try {
-				name = services.getClassFile().getConstantPool()[annotation.getMethodRefIndexIndex()].getVerbose();
-			} catch (InvalidByteCodeException e) {
-				e.printStackTrace();
-				name = "UNKNOWN";
-			}
-			BrowserTreeNode entryNode = new BrowserTreeNode(getFormattedIndex(
-					index, attributesCount)+name,
-					BrowserTreeNode.BOOTSTRAP_METHOD_ANNOTATION, index, annotation);
-			parentNode.add(entryNode);
 		}
 	}
 

@@ -20,10 +20,8 @@ import java.io.IOException;
  */
 public class BootstrapMethodsEntry extends AbstractStructure {
 
-
     private int methodRefIndex;
-    private int argumentNum;
-    private int argumentRefs[];
+    private int argumentIndices[];
 
     /**
      * Factory method for creating <tt>BootstrapMethodsEntry</tt> structures.
@@ -51,7 +49,7 @@ public class BootstrapMethodsEntry extends AbstractStructure {
      *
      * @return the index
      */
-    public int getMethodRefIndexIndex() {
+    public int getMethodRefIndex() {
         return methodRefIndex;
     }
 
@@ -61,47 +59,27 @@ public class BootstrapMethodsEntry extends AbstractStructure {
      *
      * @param methodRefIndex the index
      */
-    public void setMethodRefIndexIndex(int methodRefIndex) {
+    public void setMethodRefIndex(int methodRefIndex) {
         this.methodRefIndex = methodRefIndex;
     }
 
-
-    /**
-     * Get the number of arguments for the bootstrap method
-     * inner class of this <tt>BootstrapMethodsEntry</tt>.
-     *
-     * @return the number of arguments
-     */
-    public int getArgumentNumber() {
-        return argumentNum;
-    }
-
-    /**
-     * set the number of arguments for the bootstrap method
-     * inner class of this <tt>BootstrapMethodsEntry</tt>.
-     *
-     * @param argumentNum the number of arguments
-     */
-    public void setArgumentNumber(int argumentNum) {
-        this.argumentNum = argumentNum;
-    }
 
     /**
      * Get the array of argument references of this  <tt>BootstrapMethodsEntry</tt>.
      *
      * @return the argument references
      */
-    public int[] getArgumentRefs() {
-        return argumentRefs;
+    public int[] getArgumentIndices() {
+        return argumentIndices;
     }
 
     /**
      * Set the array of argument references of this  <tt>BootstrapMethodsEntry</tt>.
      *
-     * @param argumentRefs the argument references
+     * @param argumentIndices the argument references
      */
-    public void setArgumentRefs(int argumentRefs[]) {
-        this.argumentRefs = argumentRefs;
+    public void setArgumentIndices(int argumentIndices[]) {
+        this.argumentIndices = argumentIndices;
     }
 
 
@@ -109,10 +87,10 @@ public class BootstrapMethodsEntry extends AbstractStructure {
         throws InvalidByteCodeException, IOException {
 
         methodRefIndex = in.readUnsignedShort();
-        argumentNum = in.readUnsignedShort();
-        argumentRefs = new int[argumentNum];
-        for (int i = 0; i < argumentNum; i++) {
-            argumentRefs[i] = in.readUnsignedShort();
+        int argumentRefsCount = in.readUnsignedShort();
+        argumentIndices = new int[argumentRefsCount];
+        for (int i = 0; i < argumentRefsCount; i++) {
+            argumentIndices[i] = in.readUnsignedShort();
         }
         if (debug) {
             debug("read ");
@@ -124,9 +102,10 @@ public class BootstrapMethodsEntry extends AbstractStructure {
 
         super.write(out);
         out.writeShort(methodRefIndex);
-        out.writeShort(argumentNum);
-        for (int i = 0; i < argumentNum; i++) {
-            out.writeShort(argumentRefs[i]);
+        int argumentRefsCount = getLength(argumentIndices);
+        out.writeShort(argumentRefsCount);
+        for (int i = 0; i < argumentRefsCount; i++) {
+            out.writeShort(argumentIndices[i]);
         }
         if (debug) {
             debug("wrote ");
@@ -135,22 +114,32 @@ public class BootstrapMethodsEntry extends AbstractStructure {
 
     protected void debug(String message) {
         super.debug(message + "BootstrapMethods entry with bootstrap_method_index " + methodRefIndex +
-            ", arguments (" + printArguments() + ")");
+            ", arguments (" + getVerbose() + ")");
     }
 
-    public String printArguments() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < argumentNum; i++) {
-            sb.append(argumentRefs[i]);
-            if (i + 1 < argumentNum) {
-                sb.append(", ");
+    public String getVerbose() {
+        StringBuilder buffer = new StringBuilder();
+        int argumentRefsCount = getLength(argumentIndices);
+        for (int i = 0; i < argumentRefsCount; i++) {
+            if (i > 0) {
+                buffer.append("\n");
             }
+            int argumentIndex = argumentIndices[i];
+            buffer.append("<a href=\"").append(argumentIndex).append("\">cp_info #").append(argumentIndex).append("</a> &lt;").append(getVerboseIndex(argumentIndex)).append("&gt;");
         }
-        return sb.toString();
+        return buffer.toString();
+    }
+
+    private String getVerboseIndex(int index)  {
+        try {
+            return getClassFile().getConstantPoolEntryName(index);
+        } catch (InvalidByteCodeException e) {
+            return "invalid constant pool index " + index;
+        }
     }
 
     public int getLength() {
-        return 4 + argumentNum * 2;
+        return 4 + getLength(argumentIndices) * 2;
     }
 
     @Override

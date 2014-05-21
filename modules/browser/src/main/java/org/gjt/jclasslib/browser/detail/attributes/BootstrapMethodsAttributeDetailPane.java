@@ -12,6 +12,12 @@ import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute;
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsEntry;
+import org.gjt.jclasslib.util.MultiLineHtmlCellHandler;
+
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.table.TableColumn;
 
 /**
  * Detail pane showing an <tt>BootstrapMethods</tt> attribute.
@@ -31,8 +37,32 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
         return new AttributeTableModel(attribute);
     }
 
-    protected float getRowHeightFactor() {
-        return 2f;
+    @Override
+    protected boolean isVariableRowHeight() {
+        return true;
+    }
+
+    @Override
+    protected int getAutoResizeMode() {
+        return JTable.AUTO_RESIZE_LAST_COLUMN;
+    }
+
+    @Override
+    protected void adjustColumn(TableColumn tableColumn, int column) {
+        super.adjustColumn(tableColumn, column);
+        if (column == AttributeTableModel.BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX) {
+            tableColumn.setCellRenderer(new MultiLineHtmlCellHandler());
+            MultiLineHtmlCellHandler cellHandler = new MultiLineHtmlCellHandler();
+            cellHandler.addHyperlinkListener(new HyperlinkListener() {
+                @Override
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                        ConstantPoolHyperlinkListener.link(getBrowserServices(), Integer.parseInt(e.getDescription()));
+                    }
+                }
+            });
+            tableColumn.setCellEditor(cellHandler);
+        }
     }
 
     private class AttributeTableModel extends AbstractAttributeTableModel {
@@ -42,8 +72,8 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
         private static final int BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT;
         private static final int BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 1;
 
-        private static final int METHOD_REF_LINK_COLUMN_WIDTH = 200;
-        private static final int ARGUMENTS_REF_LINK_COLUMN_WIDTH = 250;
+        private static final int METHOD_REF_LINK_COLUMN_WIDTH = 300;
+        private static final int ARGUMENTS_REF_LINK_COLUMN_WIDTH = 400;
 
         private BootstrapMethodsEntry[] bootstrapMethods;
 
@@ -69,7 +99,7 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
             int constantPoolIndex;
             switch (column) {
                 case BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX:
-                    constantPoolIndex = bootstrapMethods[row].getMethodRefIndexIndex();
+                    constantPoolIndex = bootstrapMethods[row].getMethodRefIndex();
                     break;
                 default:
                     return;
@@ -111,12 +141,17 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
             BootstrapMethodsEntry bootstrapMethodsEntry = bootstrapMethods[row];
             switch (column) {
                 case BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX:
-                    return createCommentLink(bootstrapMethodsEntry.getMethodRefIndexIndex());
+                    return createCommentLink(bootstrapMethodsEntry.getMethodRefIndex());
                 case BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX:
-                    return bootstrapMethodsEntry.printArguments();
+                    return bootstrapMethodsEntry.getVerbose().replace("\n", "<br>");
                 default:
                     return "";
             }
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return columnIndex == BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX;
         }
     }
 }

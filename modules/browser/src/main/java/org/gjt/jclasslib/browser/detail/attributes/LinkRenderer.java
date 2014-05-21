@@ -33,14 +33,26 @@ public class LinkRenderer implements TableCellRenderer  {
     public LinkRenderer() {
 
         linkLineRenderer = new ExtendedTableCellRenderer();
-        linkLineRenderer.setVerticalAlignment(JLabel.TOP);
         infoLineRenderer = new ExtendedTableCellRenderer();
 
         standardForeground = linkLineRenderer.getForeground();
 
-        panel = new JPanel(new BorderLayout());
-        panel.add(linkLineRenderer, BorderLayout.NORTH);
-        panel.add(infoLineRenderer, BorderLayout.SOUTH);
+        panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.anchor = GridBagConstraints.NORTHWEST;
+        gc.gridx = 0;
+        gc.gridy = GridBagConstraints.RELATIVE;
+        gc.insets = new Insets(0, 0, 0, 0);
+
+        panel.add(linkLineRenderer, gc);
+        panel.add(infoLineRenderer, gc);
+        gc.weighty = 1;
+        gc.weightx = 1;
+        gc.fill = GridBagConstraints.BOTH;
+        JPanel dummyPanel = new JPanel();
+        dummyPanel.setOpaque(false);
+        panel.add(dummyPanel, gc);
+
     }
 
     public Component getTableCellRendererComponent(JTable table,
@@ -58,14 +70,14 @@ public class LinkRenderer implements TableCellRenderer  {
 
         if (value instanceof LinkCommentValue) {
             infoLineRenderer.getTableCellRendererComponent(table, ((LinkCommentValue)value).commentValue, isSelected, false, row, column);
-            panel.setBorder(linkLineRenderer.getBorder());
-            linkLineRenderer.setBorder(infoLineRenderer.getBorder());
             infoLineRenderer.setVisible(true);
         } else {
             infoLineRenderer.setVisible(false);
         }
 
         panel.setBackground(linkLineRenderer.getBackground());
+        panel.setBorder(linkLineRenderer.getBorder());
+        linkLineRenderer.setBorder(null);
 
         return panel;
     }

@@ -46,7 +46,7 @@ public class ObjectVerificationTypeEntry extends VerificationTypeInfoEntry {
     @Override
     public void appendTo(StringBuilder buffer) {
         super.appendTo(buffer);
-        buffer.append(" <a href=\"").append(cpIndex).append("\">").append(getVerboseIndex()).append("</a>");
+        buffer.append(" <a href=\"").append(cpIndex).append("\">cp_info #").append(cpIndex).append("</a> &lt;").append(getVerboseIndex()).append("&gt;");
     }
 
     private String getVerboseIndex()  {

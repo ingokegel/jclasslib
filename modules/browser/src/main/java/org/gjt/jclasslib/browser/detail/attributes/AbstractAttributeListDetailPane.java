@@ -96,7 +96,9 @@ public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
     
     
     private void adjustColumns(TableColumnModel tableColumnModel) {
-        
+        TableColumn indexColumn = tableColumnModel.getColumn(0);
+        indexColumn.setMaxWidth(indexColumn.getWidth());
+
         TableColumn tableColumn;
         for (int column = 0; column < tableColumnModel.getColumnCount(); column++) {
             tableColumn = tableColumnModel.getColumn(column);
