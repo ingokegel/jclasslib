@@ -38,8 +38,7 @@ public class ConstantInvokeDynamicInfo extends CPInfo {
     public String getVerbose() throws InvalidByteCodeException {
         ConstantNameAndTypeInfo nameAndType = getNameAndTypeInfo();
 
-        return "bootstrap method attribute index " + bootstrapMethodAttributeIndex + ", " +
-                classFile.getConstantPoolEntryName(nameAndType.getNameIndex());
+        return nameAndType.getName() + ", BootstrapMethods #" + bootstrapMethodAttributeIndex;
     }
 
     public int getBootstrapMethodAttributeIndex() {

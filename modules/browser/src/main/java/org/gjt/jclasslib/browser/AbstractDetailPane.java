@@ -183,28 +183,41 @@ public abstract class AbstractDetailPane extends JPanel {
                                          int constantPoolIndex) {
                                          
         value.setText(CPINFO_LINK_TEXT + constantPoolIndex);
-        setupMouseListener(value, constantPoolIndex);
+        setupMouseListener(value, new ConstantPoolHyperlinkListener(services, constantPoolIndex));
         value.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
+        applyComment(comment, constantPoolIndex);
+
+    }
+
+    protected void classAttributeIndexHyperlink(ExtendedJLabel value,
+                                                ExtendedJLabel comment,
+                                                int index,
+                                                Class<? extends AttributeInfo> attributeInfoClass,
+                                                String text) {
+
+        value.setText(text + index);
+        setupMouseListener(value, new ClassAttributeHyperlinkListener(services, index, attributeInfoClass));
+        value.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        applyComment(comment, index);
+    }
+
+    private void applyComment(ExtendedJLabel comment, int constantPoolIndex) {
         if (comment != null) {
             comment.setToolTipText(comment.getText());
             comment.setText("<" + getConstantPoolEntryName(constantPoolIndex) + ">");
         }
-
     }
-    
-    private void setupMouseListener(ExtendedJLabel value, int constantPoolIndex) {
+
+    private void setupMouseListener(ExtendedJLabel value, MouseListener mouseListener) {
 
         MouseListener oldListener = labelToMouseListener.get(value);
         if (oldListener != null) {
             value.removeMouseListener(oldListener);
         }
-        MouseListener newListener = new ConstantPoolHyperlinkListener(
-                                        services,
-                                        constantPoolIndex);
-
-        value.addMouseListener(newListener);
-        labelToMouseListener.put(value, newListener);
+        value.addMouseListener(mouseListener);
+        labelToMouseListener.put(value, mouseListener);
     }
 }
 

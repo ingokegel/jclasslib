@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute;
 import org.gjt.jclasslib.structures.constants.ConstantInvokeDynamicInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
@@ -26,7 +27,6 @@ public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDet
     private ExtendedJLabel lblNameAndType;
     private ExtendedJLabel lblNameAndTypeVerbose;
     private ExtendedJLabel lblBootstrap;
-    private ExtendedJLabel lblBootstrapVerbose;
 
     /**
         Constructor.
@@ -43,8 +43,7 @@ public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDet
                            lblNameAndTypeVerbose = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Bootstrap method:"),
-                           lblBootstrap = linkLabel(),
-                           lblBootstrapVerbose = highlightLabel());
+                           lblBootstrap = linkLabel());
     }
 
     public void show(TreePath treePath) {
@@ -58,9 +57,9 @@ public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDet
                 lblNameAndTypeVerbose,
                 entry.getNameAndTypeIndex());
 
-            constantPoolHyperlink(lblBootstrap,
-                lblBootstrapVerbose,
-                entry.getBootstrapMethodAttributeIndex());
+            classAttributeIndexHyperlink(lblBootstrap,
+                null,
+                entry.getBootstrapMethodAttributeIndex(), BootstrapMethodsAttribute.class, "BootstrapMethods #");
 
         } catch (InvalidByteCodeException ex) {
             lblNameAndTypeVerbose.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
