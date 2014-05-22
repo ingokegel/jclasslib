@@ -297,10 +297,20 @@ public abstract class ListDetailPane extends AbstractDetailPane {
 
             return row >= 0 && column >= 0 &&
                    table.getColumnClass(column).equals(Link.class) &&
-                   !table.getModel().getValueAt(row, column).toString().equals(CPINFO_LINK_TEXT + "0");
+                   !table.getModel().getValueAt(row, column).toString().equals(CPINFO_LINK_TEXT + "0") &&
+                   isLinkLabelHit(point, row, column);
         }
 
-        
+        private boolean isLinkLabelHit(Point point, int row, int column) {
+
+            LinkRenderer renderer = (LinkRenderer)table.getCellRenderer(row, column);
+            renderer.getTableCellRendererComponent(table, table.getModel().getValueAt(row, column), false, false, row, column);
+            Rectangle cellRect = table.getCellRect(row, column, false);
+            Point translatedPoint = new Point(point.x - cellRect.x, point.y - cellRect.y);
+            return renderer.isLinkLabelHit(translatedPoint);
+        }
+
+
     }
     
 }

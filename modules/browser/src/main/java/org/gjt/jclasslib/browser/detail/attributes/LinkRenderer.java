@@ -82,6 +82,10 @@ public class LinkRenderer implements TableCellRenderer  {
         return panel;
     }
 
+    public boolean isLinkLabelHit(Point point) {
+        return linkLineRenderer.getBounds().contains(point);
+    }
+
     /**
      * Value object for a link with a comment.
      */
