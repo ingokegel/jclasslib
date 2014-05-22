@@ -13,6 +13,13 @@ jclasslib bytecode viewer is released under the [GPL, Version 2.0](https://www.g
 
 Installers can be downloaded from [bintray](https://bintray.com/ingokegel/generic/jclasslib/view).
 
+## Changes in 4.3
+
+**Features**
+
+* Improved display of CONSTANT_InvokeDynamic_info, now links into BootstrapMethods attribute
+* Improved display of BootstrapMethods attribute, now displays single table with all attributes
+
 ## Changes in 4.2
 
 **Features**
