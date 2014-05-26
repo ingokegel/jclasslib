@@ -5,13 +5,13 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$USER_HOME$/progs/gradle-1.10" />
+        <option name="gradleHome" value="$USER_HOME$/progs/gradle-1.12" />
         <option name="modules">
           <set>
-            <option value="C:\Users\ingo\projects.git\jclasslib" />
-            <option value="C:\Users\ingo\projects.git\jclasslib\modules\browser" />
-            <option value="C:\Users\ingo\projects.git\jclasslib\modules\data" />
-            <option value="C:\Users\ingo\projects.git\jclasslib\modules\installer" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/modules/browser" />
+            <option value="$PROJECT_DIR$/modules/data" />
+            <option value="$PROJECT_DIR$/modules/installer" />
           </set>
         </option>
       </GradleProjectSettings>
