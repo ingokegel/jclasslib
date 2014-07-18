@@ -229,7 +229,7 @@ public enum Opcode {
     private static final String JVM_SPEC_URL = "http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.";
 
     public static Opcode getFromBytecode(int bytecode) {
-        if (bytecode < 256 && bytecode > 0) {
+        if (bytecode < 256 && bytecode >= 0) {
             return LOOKUP[bytecode];
         } else {
             return null;
