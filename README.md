@@ -13,6 +13,12 @@ jclasslib bytecode viewer is released under the [GPL, Version 2.0](https://www.g
 
 Installers can be downloaded from [bintray](https://bintray.com/ingokegel/generic/jclasslib/view).
 
+## Changes in 4.3.1
+
+**Bug fixes**
+
+Regression: NOP opcodes broke the bytecode display
+
 ## Changes in 4.3
 
 **Features**
@@ -26,7 +32,7 @@ Installers can be downloaded from [bintray](https://bintray.com/ingokegel/generi
 
 Support for runtime type annotations. All Java 8 class file attributes are now displayed.
 
-**Bugs**
+**Bug fixes**
 
 When an opening a class file did not succeed, the internal frame was in an undefined state
 
@@ -36,7 +42,7 @@ When an opening a class file did not succeed, the internal frame was in an undef
 
 New attributes: StackMapTable, BootstrapMethods, MethodParameters, RuntimeParameterAnnotations
 
-**Bugs**
+**Bug fixes**
 
 Writing was broken for certain attributes containing annotations
 
@@ -52,7 +58,7 @@ Writing was broken for certain attributes containing annotations
 * Code base was changed to use Java language features up to Java 6. Opcodes and access flags are now implemented as 
 enums instead of interfaces. This has caused some incompatible changes to the API. 
 
-**Bugs**
+**Bug fixes**
 
 * The iinc instruction was read incorrectly for negative arguments
 * The CONSTANT_InvokeDynamic_info constant pool entry was missing
@@ -68,7 +74,7 @@ enums instead of interfaces. This has caused some incompatible changes to the AP
 * Offsets are now verified and invalid branch instructions are tagged in the bytecode display
 
 
-**Bugs**
+**Bug fixes**
 
 * Wide branch instructions were not displayed correctly in the bytecode
 * Negative values of bipush instruction were printed as 256-value
