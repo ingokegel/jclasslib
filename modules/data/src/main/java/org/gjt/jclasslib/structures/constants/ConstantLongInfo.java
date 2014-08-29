@@ -37,7 +37,7 @@ public class ConstantLongInfo extends ConstantLargeNumeric {
         @return the value
      */
     public long getLong() {
-        return (long)highBytes << 32 | ((long)lowBytes & 0x7FFFFFFF);
+        return ((long)highBytes << 32) | ((long)lowBytes & 0xFFFFFFFF);
     }
 
     /**
@@ -46,7 +46,7 @@ public class ConstantLongInfo extends ConstantLargeNumeric {
      */
     public void setLong(long number) {
         highBytes = (int)(number >>> 32);
-        lowBytes = (int)(number & 0x0000FFFF);
+        lowBytes = (int)(number & 0xFFFFFFFF);
     }
 
     public void read(DataInput in)
