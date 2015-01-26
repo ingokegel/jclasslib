@@ -92,6 +92,10 @@ public class CodeAttributeDetailPane extends AbstractDetailPane {
         byteCodePane.show(treePath);
         miscPane.show(treePath);
     }
-    
+
+    @Override
+    public String getClipboardText() {
+        return byteCodePane.getClipboardText();
+    }
 }
 

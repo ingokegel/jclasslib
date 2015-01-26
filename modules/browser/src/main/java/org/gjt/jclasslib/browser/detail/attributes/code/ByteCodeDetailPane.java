@@ -128,10 +128,14 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
         @param offset the offset
      */
     public void scrollToOffset(int offset) {
-        
         byteCodeDisplay.scrollToOffset(offset);
     }
-    
+
+    @Override
+    public String getClipboardText() {
+        return byteCodeDisplay.getClipboardText();
+    }
+
     private JScrollPane buildByteCodeScrollPane() {
         
         byteCodeDisplay = new ByteCodeDisplay(this);

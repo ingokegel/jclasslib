@@ -9,8 +9,6 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.ClassMember;
-import org.gjt.jclasslib.structures.FieldInfo;
-import org.gjt.jclasslib.structures.MethodInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -20,15 +18,8 @@ import javax.swing.tree.TreePath;
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ClassMemberDetailPane extends FixedListDetailPane {
+public class ClassMemberDetailPane extends FixedListWithSignatureDetailPane {
 
-    /** Constant which indicates that a <tt>ClassMemberDetailPane</tt> shows fields. */
-    public static final int FIELDS = 1;
-    /** Constant which indicates that a <tt>ClassMemberDetailPane</tt> shows methods. */
-    public static final int METHODS = 2;
-    
-    private int mode;
-    
     // Visual components
     
     private ExtendedJLabel lblName;
@@ -40,17 +31,29 @@ public class ClassMemberDetailPane extends FixedListDetailPane {
     private ExtendedJLabel lblAccessFlags;
     private ExtendedJLabel lblAccessFlagsVerbose;
 
+    private ClassMember lastClassMember;
+
     /**
         Construct a <tt>ClassMemberDetailPane</tt> with a specified mode which is
         either <tt>FIELDS</tt> or <tt>METHODS</tt>.
         @param services browser services
-        @param mode the mode
+        @param signatureMode the mode
      */
-    public ClassMemberDetailPane(BrowserServices services, int mode) {
-        super(services);
-        this.mode = mode;
+    public ClassMemberDetailPane(BrowserServices services, SignatureMode signatureMode) {
+        super(services, signatureMode);
     }
-    
+
+    @Override
+    protected String getSignatureVerbose() {
+        if (lastClassMember == null) {
+            return null;
+        }
+        StringBuilder buffer = new StringBuilder();
+        getSignatureMode().appendSignature(lastClassMember, buffer);
+
+        return buffer.toString();
+    }
+
     protected void setupLabels() {
         
         addDetailPaneEntry(normalLabel("Name:"),
@@ -67,37 +70,39 @@ public class ClassMemberDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        
-        int index = getIndex(treePath);
-        ClassMember classMember;
-        if (mode == FIELDS) {
-            FieldInfo[] fields = services.getClassFile().getFields();
-            if (index >= fields.length) {
-                return;
-            }
-            classMember = fields[index];
-        } else {
-            MethodInfo[] methods = services.getClassFile().getMethods();
-            if (index >= methods.length) {
-                return;
-            }
-            classMember = methods[index];
+
+        lastClassMember = getClassMember(treePath);
+        if (lastClassMember == null) {
+            return;
         }
-        
+
         constantPoolHyperlink(lblName,
                               lblNameVerbose,
-                              classMember.getNameIndex());
+                              lastClassMember.getNameIndex());
         
         constantPoolHyperlink(lblDescriptor,
                               lblDescriptorVerbose,
-                              classMember.getDescriptorIndex());
+                              lastClassMember.getDescriptorIndex());
         
-        lblAccessFlags.setText(classMember.getFormattedAccessFlags());
-        lblAccessFlagsVerbose.setText("[" + classMember.getAccessFlagsVerbose() + "]");
+        lblAccessFlags.setText(lastClassMember.getFormattedAccessFlags());
+        lblAccessFlagsVerbose.setText("[" + lastClassMember.getAccessFlagsVerbose() + "]");
 
         super.show(treePath);
         
     }
-    
+
+    private ClassMember getClassMember(TreePath treePath) {
+        int index = getIndex(treePath);
+        ClassMember[] classMembers = getSignatureMode().getClassMembers(services.getClassFile());
+        if (index < classMembers.length) {
+            return classMembers[index];
+        } else {
+            return null;
+        }
+    }
+
+    protected String getSignatureButtonText() {
+        return "Copy signature to clipboard";
+    }
 }
 

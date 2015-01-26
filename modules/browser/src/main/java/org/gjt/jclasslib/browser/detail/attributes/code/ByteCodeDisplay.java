@@ -290,14 +290,17 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
      * Copy the view text to the clipboard.
      */
     public void copyToClipboard() {
+        StringSelection stringSelection = new StringSelection(getClipboardText());
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, stringSelection);
+    }
 
+    public String getClipboardText() {
         StringBuilder buffer = new StringBuilder();
         for (String line : textLines) {
             buffer.append(line);
             buffer.append('\n');
         }
-        StringSelection stringSelection = new StringSelection(buffer.toString());
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, stringSelection);
+        return buffer.toString();
     }
 
     protected void paintComponent(Graphics graphics) {

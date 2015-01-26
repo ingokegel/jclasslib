@@ -101,13 +101,13 @@ public class BrowserDetailPane extends JPanel {
         } else if (nodeType.equals(BrowserTreeNode.NODE_INTERFACE)) {
             return new InterfaceDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_FIELDS)) {
-            return new ClassMemberContainerDetailPane(services, ClassMemberContainerDetailPane.FIELDS);
+            return new ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD);
         } else if (nodeType.equals(BrowserTreeNode.NODE_METHODS)) {
-            return new ClassMemberContainerDetailPane(services, ClassMemberContainerDetailPane.METHODS);
+            return new ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD);
         } else if (nodeType.equals(BrowserTreeNode.NODE_FIELD)) {
-            return new ClassMemberDetailPane(services, ClassMemberDetailPane.FIELDS);
+            return new ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD);
         } else if (nodeType.equals(BrowserTreeNode.NODE_METHOD)) {
-            return new ClassMemberDetailPane(services, ClassMemberDetailPane.METHODS);
+            return new ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ATTRIBUTE)) {
             return new AttributeDetailPane(services);
         } else if (nodeType.equals(BrowserTreeNode.NODE_ANNOTATION)) {

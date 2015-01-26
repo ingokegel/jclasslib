@@ -52,6 +52,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
     
     private JPanel specificInfoPane;
     private GenericAttributeDetailPane genericInfoPane;
+    private AbstractDetailPane lastSpecificPane;
 
     /**
      * Constructor.
@@ -74,6 +75,15 @@ public class AttributeDetailPane extends AbstractDetailPane {
 
     }
 
+    @Override
+    public String getClipboardText() {
+        if (lastSpecificPane != null) {
+            return lastSpecificPane.getClipboardText();
+        } else {
+            return null;
+        }
+    }
+
     public void show(TreePath treePath) {
 
         AttributeInfo attribute = findAttribute(treePath);
@@ -81,9 +91,10 @@ public class AttributeDetailPane extends AbstractDetailPane {
         CardLayout layout = (CardLayout)specificInfoPane.getLayout();
         if (paneName == null) {
             layout.show(specificInfoPane, SCREEN_UNKNOWN);
+            lastSpecificPane = null;
         } else {
-            AbstractDetailPane pane = getDetailPane(paneName);
-            pane.show(treePath);
+            lastSpecificPane = getDetailPane(paneName);
+            lastSpecificPane.show(treePath);
             layout.show(specificInfoPane, paneName);
         }
 

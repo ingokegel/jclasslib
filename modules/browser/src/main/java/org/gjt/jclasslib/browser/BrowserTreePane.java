@@ -73,6 +73,7 @@ public class BrowserTreePane extends JPanel {
      * @param methodName      the name of the method
      * @param methodSignature the signature of the method (in class file format)
      */
+    @SuppressWarnings("UnusedDeclaration")
     public void showMethod(String methodName, String methodSignature) {
 
         TreePath methodsPath = categoryToPath.get(BrowserTreeNode.NODE_METHOD);
@@ -127,6 +128,7 @@ public class BrowserTreePane extends JPanel {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);
+        tree.setTransferHandler(new BrowserNodeTransferHandler(services));
 
         return tree;
     }

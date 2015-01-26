@@ -63,6 +63,10 @@ public abstract class AbstractDetailPane extends JPanel {
      */
     public abstract void show(TreePath treePath);
 
+    public String getClipboardText() {
+        return null;
+    }
+
     /**
         Setup the detail pane at the beginning of its life cycle.
      */
