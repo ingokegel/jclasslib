@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: testng-6.8.8">
+  <library name="Gradle: org.testng:testng:6.8.8">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.8.8/c4fb20cf89d278d71667d7273fa6e6cff8b97ca9/testng-6.8.8.jar!/" />
     </CLASSES>
