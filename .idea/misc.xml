@@ -6,16 +6,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
-  <component name="IvyIDEA.ProjectSettings">
-    <option name="artifactTypeSettings">
-      <ArtifactTypeSettings />
-    </option>
-    <option name="propertiesSettings">
-      <PropertiesSettings />
-    </option>
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/idea" />
   </component>
 </project>
-

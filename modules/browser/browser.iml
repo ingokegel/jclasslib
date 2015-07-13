@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="data" exported="" />
+    <orderEntry type="module" module-name="data" />
     <orderEntry type="library" exported="" name="Gradle: :i4jruntime:" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.testng:testng:6.8.8" level="project" />
