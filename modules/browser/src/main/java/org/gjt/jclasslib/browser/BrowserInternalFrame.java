@@ -185,8 +185,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
         try {
             File file = new File(fileName);
             
-            String fileName = file.getName(); 
-            int index = fileName.indexOf('!');
+            int index = fileName.indexOf('|');
             if (index > -1) {
                 String jarFileName = fileName.substring(0, index);
                 String classFileName = fileName.substring(index + 1);
