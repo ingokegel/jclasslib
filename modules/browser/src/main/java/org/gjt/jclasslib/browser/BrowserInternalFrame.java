@@ -183,6 +183,9 @@ public class BrowserInternalFrame extends BasicInternalFrame
 
     private void readClassFile() throws IOException {
         try {
+            File file = new File(fileName);
+            
+            String fileName = file.getName(); 
             int index = fileName.indexOf('!');
             if (index > -1) {
                 String jarFileName = fileName.substring(0, index);
@@ -193,7 +196,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
                     classFile = ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry));
                 }
             } else {
-                classFile = ClassFileReader.readFromFile(new File(fileName));
+                classFile = ClassFileReader.readFromFile(file);
             }
         } catch (FileNotFoundException ex) {
             throw new IOException("The file " + fileName + " was not found");
