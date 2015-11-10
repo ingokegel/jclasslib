@@ -6,7 +6,16 @@
         <option name="distributionType" value="WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$GRADLE_HOME$" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/modules/browser" />
+            <option value="$PROJECT_DIR$/modules/data" />
+            <option value="$PROJECT_DIR$/modules/installer" />
+          </set>
+        </option>
+        <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/modules/browser" />

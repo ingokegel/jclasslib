@@ -7,6 +7,7 @@ jar {
 javadoc {
     options {
         links 'http://docs.oracle.com/javase/8/docs/api/'
+        addStringOption('Xdoclint:none', '-quiet')
     }
 }
 
