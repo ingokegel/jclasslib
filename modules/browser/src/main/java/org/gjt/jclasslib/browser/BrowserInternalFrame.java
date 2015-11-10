@@ -183,19 +183,18 @@ public class BrowserInternalFrame extends BasicInternalFrame
 
     private void readClassFile() throws IOException {
         try {
-            File file = new File(fileName);
+           
+            MyFileName fileName = new MyFileName(this.fileName);
             
-            int index = fileName.indexOf('|');
-            if (index > -1) {
-                String jarFileName = fileName.substring(0, index);
-                String classFileName = fileName.substring(index + 1);
-                JarFile jarFile = new JarFile(jarFileName);
-                JarEntry jarEntry = jarFile.getJarEntry(classFileName);
-                if (jarEntry != null) {
-                    classFile = ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry));
-                }
+
+            if (fileName.is_zip) {
+                
+                JarFile jarFile = new JarFile(fileName.jar);
+                JarEntry jarEntry = jarFile.getJarEntry(fileName.class_);
+                classFile = ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry));
+
             } else {
-                classFile = ClassFileReader.readFromFile(file);
+                classFile = ClassFileReader.readFromFile(new File(fileName.class_));
             }
         } catch (FileNotFoundException ex) {
             throw new IOException("The file " + fileName + " was not found");
@@ -207,3 +206,23 @@ public class BrowserInternalFrame extends BasicInternalFrame
     }
 
 }
+    class MyFileName {
+            public final String jar;
+            public final String class_;
+            public final boolean is_zip;
+
+            public MyFileName(String fileName) {
+                int index = fileName.indexOf('!');
+
+                is_zip = (index > -1);
+                if (is_zip) {
+                    jar   = fileName.substring(0, index);
+                    class_ = fileName.substring(index + 1);
+                } else {
+                    jar   = "";
+                    class_ = fileName;
+                }
+                
+            }
+        }
+
