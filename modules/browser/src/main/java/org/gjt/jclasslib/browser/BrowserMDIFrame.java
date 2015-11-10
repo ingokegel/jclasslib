@@ -241,7 +241,9 @@ public class BrowserMDIFrame extends BasicMDIFrame {
             try {
                 String className = classFile.getThisClassName();
                 String[] pathComponents = className.split("/");
-                File currentDirectory = file.getParentFile();
+                
+                File currentDirectory = file.getAbsoluteFile().getParentFile();
+               
                 boolean validClasspathEntry = true;
                 for (int i = pathComponents.length - 2; i >= 0; i--) {
                     String pathComponent = pathComponents[i];
