@@ -5,86 +5,57 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
+
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
+import java.io.IOException
 
 /**
-    Base class for all opcode instruction wrappers.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class AbstractInstruction {
+ * Base class for all opcode instruction wrappers.
 
-    private int offset;
-    private Opcode opcode;
-
-    /**
-        Constructor.
-        @param opcode the opcode.
-     */
-    protected AbstractInstruction(Opcode opcode) {
-        this.opcode = opcode; 
-    }
-    
-    /**
-        Get the size in bytes of this instruction.
-        @return the size in bytes
-     */
-    public int getSize() {
-        return 1;
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+abstract class AbstractInstruction(
+        /**
+         * Opcode of this instruction.
+         */
+        val opcode: Opcode
+) {
 
     /**
-        Get the opcode of this instruction.
-        @return the opcode
+     * Offset of this instruction in its parent Code attribute.
      */
-    public Opcode getOpcode() {
-        return opcode;
-    }
+    var offset: Int = 0
 
     /**
-        Set the opcode of this instruction.
-        @param opcode the opcode
+     * Size in bytes of this instruction.
      */
-    public void setOpcode(Opcode opcode) {
-        this.opcode = opcode;
-    }
+    open val size: Int
+        get() = 1
 
     /**
-        Get the offset of this instruction in its parent <tt>Code</tt> attribute.
-        @return the offset
+     * Read this instruction from the given ByteCodeInput.
+     *
+     *
+
+     * Expects ByteCodeInput to be in JVM class file format and just
+     * before a instruction of this kind.
+     * @param input the ByteCodeInput from which to read
      */
-    public int getOffset() {
-        return offset;
-    }
-    
-    /**
-        Set the offset of this instruction in its parent <tt>Code</tt> attribute.
-        @param offset the offset
-     */
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-    
-    /**
-        Read this instruction from the given <tt>ByteCodeInput</tt>. <p>
-     
-        Expects <tt>ByteCodeInput</tt> to be in JVM class file format and just
-        before a instruction of this kind.
-        @param in the <tt>ByteCodeInput</tt> from which to read
-        @throws IOException if an exception occurs with the <tt>ByteCodeInput</tt>
-     */
-    public void read(ByteCodeInput in) throws IOException {
+    @Throws(IOException::class)
+    open fun read(input: ByteCodeInput) {
         // The opcode has already been read
-        offset = in.getBytesRead() - 1;
+        offset = input.getBytesRead() - 1
     }
 
     /**
-        Write this instruction to the given <tt>ByteCodeOutput</tt>.
-        @param out the <tt>ByteCodeOutput</tt> to which to write
-        @throws IOException if an exception occurs with the <tt>ByteCodeOutput</tt>
+     * Write this instruction to the given ByteCodeOutput.
+     * @param output the ByteCodeOutput to which to write
      */
-    public void write(ByteCodeOutput out) throws IOException {
-        out.writeByte(opcode.getBytecode());
+    @Throws(IOException::class)
+    open fun write(output: ByteCodeOutput) {
+        output.writeByte(opcode.bytecode)
     }
-    
+
 }
