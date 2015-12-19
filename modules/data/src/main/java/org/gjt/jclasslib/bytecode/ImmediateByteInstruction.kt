@@ -5,100 +5,56 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput;
-import org.gjt.jclasslib.io.ByteCodeOutput;
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException;
+import java.io.IOException
 
 /**
-    Describes an instruction that is followed by an immediate unsigned byte.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ImmediateByteInstruction extends AbstractInstruction {
+ * Describes an instruction that is followed by an immediate unsigned byte.
 
-    /** Indicates whether the instruction is subject to a wide instruction or not. */
-    protected boolean wide;
-    
-    private int immediateByte;
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+open class ImmediateByteInstruction
+@JvmOverloads
+constructor (
+        opcode: Opcode,
+        /**
+         * Indicates whether the instruction is subject to a wide instruction or not.
+         */
+        var isWide: Boolean,
+        /**
+         * Immediate unsigned byte of this instruction.
+         */
+        var immediateByte: Int = 0
 
-    /**
-        Constructor.
-        @param opcode the opcode
-        @param wide whether the instruction is a wide instruction.
-     */
-    public ImmediateByteInstruction(Opcode opcode, boolean wide) {
-        super(opcode); 
-        this.wide = wide;
-    }
+) : AbstractInstruction(opcode) {
 
-    /**
-        Constructor.
-        @param opcode the opcode
-        @param wide whether the instruction is a wide instruction.
-        @param immediateByte the immediate byte value.
-     */
-    public ImmediateByteInstruction(Opcode opcode, boolean wide, int immediateByte) {
-        this(opcode, wide); 
-        this.immediateByte = immediateByte;
-    }
-    
-    public int getSize() {
-        return super.getSize() + (wide ? 2 : 1);
-    }
+    override val size: Int
+        get() = super.size + (if (isWide) 2 else 1)
 
-    /**
-        Get the immediate unsigned byte of this instruction.
-        @return the byte
-     */
-    public int getImmediateByte() {
-        return immediateByte;
-    }
+    @Throws(IOException::class)
+    override fun read(input: ByteCodeInput) {
+        super.read(input)
 
-    /**
-        Set the immediate unsigned byte of this instruction.
-        @param immediateByte the byte
-     */
-     public void setImmediateByte(int immediateByte) {
-        this.immediateByte = immediateByte;
-    }
-    
-    /**
-        Check whether the instruction is subject to a wide instruction or not.
-        @return wide or not
-     */
-    public boolean isWide() {
-        return wide;
-    }
-    
-    /**
-        Set whether the instruction is subject to a wide instruction or not.
-        @param wide wide or not
-     */
-    public void setWide(boolean wide) {
-        this.wide = wide;
-    }
-    
-    public void read(ByteCodeInput in) throws IOException {
-        super.read(in);
-
-        if (wide) {
-            immediateByte = in.readUnsignedShort();
+        if (isWide) {
+            immediateByte = input.readUnsignedShort()
         } else {
-            immediateByte = in.readUnsignedByte();
+            immediateByte = input.readUnsignedByte()
         }
     }
 
-    public void write(ByteCodeOutput out) throws IOException {
-        super.write(out);
+    @Throws(IOException::class)
+    override fun write(output: ByteCodeOutput) {
+        super.write(output)
 
-        if (wide) {
-            out.writeShort(immediateByte);
+        if (isWide) {
+            output.writeShort(immediateByte)
         } else {
-            out.writeByte(immediateByte);
+            output.writeByte(immediateByte)
         }
     }
-    
+
 }

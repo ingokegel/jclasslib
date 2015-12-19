@@ -9,6 +9,7 @@ package org.gjt.jclasslib.bytecode;
 
 import org.gjt.jclasslib.io.ByteCodeInput;
 import org.gjt.jclasslib.io.ByteCodeOutput;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -44,7 +45,7 @@ public class IncrementInstruction extends ImmediateByteInstruction {
     
     
     public int getSize() {
-        return super.getSize() + (wide ? 2 : 1);
+        return super.getSize() + (isWide() ? 2 : 1);
     }
 
     /**
@@ -63,23 +64,31 @@ public class IncrementInstruction extends ImmediateByteInstruction {
         this.incrementConst = incrementConst;
     }
     
-    public void read(ByteCodeInput in) throws IOException {
-        super.read(in);
+    public void read(@NotNull ByteCodeInput input) throws IOException{
+        try {
+            super.read(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        if (wide) {
-            incrementConst = in.readShort();
+        if (isWide()) {
+            incrementConst = input.readShort();
         } else {
-            incrementConst = in.readByte();
+            incrementConst = input.readByte();
         }
     }
 
-    public void write(ByteCodeOutput out) throws IOException {
-        super.write(out);
+    public void write(@NotNull ByteCodeOutput output) throws IOException{
+        try {
+            super.write(output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        if (wide) {
-            out.writeShort(incrementConst);
+        if (isWide()) {
+            output.writeShort(incrementConst);
         } else {
-            out.writeByte(incrementConst);
+            output.writeByte(incrementConst);
         }
     }
 
