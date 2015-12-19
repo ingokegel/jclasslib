@@ -5,12 +5,21 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
 /**
- * Enum for the possible values of the immediate byte of the {@link org.gjt.jclasslib.bytecode.Opcode#NEWARRAY} opcode.
+ * Enum for the possible values of the immediate byte of the [org.gjt.jclasslib.bytecode.Opcode.NEWARRAY] opcode.
  */
-public enum NewArrayType {
+enum class NewArrayType (
+        /**
+         * Immediate byte value.
+         */
+        val code: Int,
+        /**
+         * Verbose representation.
+         */
+        val verbose: String
+) {
 
     BOOLEAN(4, "boolean"),
     CHAR(5, "char"),
@@ -21,36 +30,10 @@ public enum NewArrayType {
     INT(10, "int"),
     LONG(11, "long");
 
-    public static NewArrayType getFromCode(int code) {
-        for (NewArrayType newArrayType : values()) {
-            if (newArrayType.code == code) {
-                return newArrayType;
-            }
+
+    companion object {
+        fun getFromCode(code: Int): NewArrayType? {
+            return values().find { it.code == code }
         }
-        return null;
-    }
-
-    private int code;
-    private String verbose;
-
-    NewArrayType(int code, String verbose) {
-        this.code = code;
-        this.verbose = verbose;
-    }
-
-    /**
-     * Returns the immediate byte value.
-     * @return the value
-     */
-    public int getCode() {
-        return code;
-    }
-
-    /**
-     * Returns the verbose representation.
-     * @return the text
-     */
-    public String getVerbose() {
-        return verbose;
     }
 }
