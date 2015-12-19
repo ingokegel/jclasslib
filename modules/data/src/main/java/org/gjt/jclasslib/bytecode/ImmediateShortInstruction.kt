@@ -25,7 +25,7 @@ constructor(
          * Immediate unsigned short of this instruction.
          */
         var immediateShort: Int = 0
-) : AbstractInstruction(opcode) {
+) : Instruction(opcode) {
 
 
     override val size: Int

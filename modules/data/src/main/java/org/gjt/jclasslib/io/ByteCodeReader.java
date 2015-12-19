@@ -31,7 +31,7 @@ public class ByteCodeReader {
         @return the <tt>java.util.List</tt> with the instructions
         @throws IOException if an exception occurs with the code
      */
-    public static ArrayList<AbstractInstruction> readByteCode(byte[] code) throws IOException {
+    public static ArrayList<Instruction> readByteCode(byte[] code) throws IOException {
         return readByteCode(code, null);
     }
 
@@ -42,20 +42,20 @@ public class ByteCodeReader {
         @return the <tt>java.util.List</tt> with the instructions
         @throws IOException if an exception occurs with the code
      */
-    public static ArrayList<AbstractInstruction> readByteCode(byte[] code, AbstractInstruction[] prependInstructions)
+    public static ArrayList<Instruction> readByteCode(byte[] code, Instruction[] prependInstructions)
         throws IOException {
 
         ByteCodeInputStream bcis = new ByteCodeInputStream(
                                         new ByteArrayInputStream(code)
                                     );
         
-        ArrayList<AbstractInstruction> instructions = new ArrayList<AbstractInstruction>();
+        ArrayList<Instruction> instructions = new ArrayList<Instruction>();
         if (prependInstructions != null) {
             Collections.addAll(instructions, prependInstructions);
         }
         
         boolean wide = false;
-        AbstractInstruction currentInstruction;
+        Instruction currentInstruction;
         while (bcis.getBytesRead() < code.length) {
             currentInstruction = readNextInstruction(bcis, wide);
             wide = (currentInstruction.getOpcode() == Opcode.WIDE);
@@ -65,10 +65,10 @@ public class ByteCodeReader {
         return instructions;
     }
     
-    private static AbstractInstruction readNextInstruction(ByteCodeInputStream bcis, boolean wide)
+    private static Instruction readNextInstruction(ByteCodeInputStream bcis, boolean wide)
         throws IOException
     {
-        AbstractInstruction instruction;
+        Instruction instruction;
 
         int bytecode = bcis.readUnsignedByte();
         Opcode opcode = Opcode.getFromBytecode(bytecode);
@@ -230,7 +230,7 @@ public class ByteCodeReader {
             case IMPDEP1:
             case IMPDEP2:
                 
-                instruction = new SimpleInstruction(opcode);
+                instruction = new Instruction(opcode);
                 break;
 
             case BIPUSH:

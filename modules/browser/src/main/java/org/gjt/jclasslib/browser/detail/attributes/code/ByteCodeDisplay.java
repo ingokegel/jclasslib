@@ -105,7 +105,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     private ArrayList<String> textLines = new ArrayList<String>();
     private TextLayout[] textLayouts;
     private Map<Integer, BytecodeLink> lineToLink = new HashMap<Integer, BytecodeLink>();
-    private Set<AbstractInstruction> invalidBranches = new HashSet<AbstractInstruction>();
+    private Set<Instruction> invalidBranches = new HashSet<Instruction>();
 
     private LinkedList<LineCacheEntry> currentLineCache = new LinkedList<LineCacheEntry>();
     private FontRenderContext frc;
@@ -393,13 +393,13 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         byte[] code = codeAttribute.getCode();
 
         try {
-            ArrayList<AbstractInstruction> instructions = ByteCodeReader.readByteCode(code);
+            ArrayList<Instruction> instructions = ByteCodeReader.readByteCode(code);
             verifyOffsets(instructions);
 
             calculateOffsetWidth(instructions);
             detailPane.setCurrentInstructions(instructions);
 
-            for (AbstractInstruction instruction : instructions) {
+            for (Instruction instruction : instructions) {
                 addInstructionToDocument(instruction);
             }
             textLayouts = new TextLayout[lines.size()];
@@ -409,10 +409,10 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         setPreferredSize(new Dimension((int)currentWidth + 2 * MARGIN_X, (int)currentHeight + 2 * MARGIN_Y));
     }
 
-    private void verifyOffsets(ArrayList<AbstractInstruction> instructions) {
+    private void verifyOffsets(ArrayList<Instruction> instructions) {
         int instructionsLength = instructions.size();
         for (int i = 0; i < instructionsLength; i++) {
-            AbstractInstruction instruction = instructions.get(i);
+            Instruction instruction = instructions.get(i);
             if (instruction instanceof AbstractBranchInstruction) {
                 int branchOffset = ((AbstractBranchInstruction)instruction).getBranchOffset();
                 int targetDistance = 0;
@@ -435,12 +435,12 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         }
     }
 
-    private void calculateOffsetWidth(java.util.List<AbstractInstruction> instructions) {
+    private void calculateOffsetWidth(java.util.List<Instruction> instructions) {
 
         int numberOfInstructions = instructions.size();
 
         if (numberOfInstructions > 0) {
-            AbstractInstruction lastInstruction = instructions.get(numberOfInstructions - 1);
+            Instruction lastInstruction = instructions.get(numberOfInstructions - 1);
             offsetWidth = String.valueOf(lastInstruction.getOffset()).length();
         } else {
             offsetWidth = 1;
@@ -453,7 +453,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
     }
 
 
-    private void addInstructionToDocument(AbstractInstruction instruction) {
+    private void addInstructionToDocument(Instruction instruction) {
 
         int offset = instruction.getOffset();
 
@@ -475,7 +475,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         offsetToLine.put(offset, getCurrentLine());
     }
 
-    private void addOpcodeSpecificInfo(AbstractInstruction instruction) {
+    private void addOpcodeSpecificInfo(Instruction instruction) {
 
         if (instruction instanceof ImmediateByteInstruction) {
             addImmediateByteSpecificInfo((ImmediateByteInstruction)instruction);

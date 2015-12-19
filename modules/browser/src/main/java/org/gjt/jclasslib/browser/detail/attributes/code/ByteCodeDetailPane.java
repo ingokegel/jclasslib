@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail.attributes.code;
 import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserComponent;
 import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.bytecode.AbstractInstruction;
+import org.gjt.jclasslib.bytecode.Instruction;
 import org.gjt.jclasslib.structures.attributes.CodeAttribute;
 
 import javax.swing.*;
@@ -89,11 +89,11 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
         return instructionPanel;
     }
     
-    void setCurrentInstructions(final ArrayList<AbstractInstruction> instructions) {
+    void setCurrentInstructions(final ArrayList<Instruction> instructions) {
         instructionToURL.clear();
         Set<String> mnemonics = new TreeSet<String>();
         for (Object instruction1 : instructions) {
-            AbstractInstruction instruction = (AbstractInstruction)instruction1;
+            Instruction instruction = (Instruction)instruction1;
             String verbose = instruction.getOpcode().getVerbose();
             if (mnemonics.add(verbose)) {
                 instructionToURL.put(verbose, instruction.getOpcode().getDocUrl());

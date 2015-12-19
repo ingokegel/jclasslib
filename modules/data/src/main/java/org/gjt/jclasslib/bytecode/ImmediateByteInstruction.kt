@@ -30,7 +30,7 @@ constructor (
          */
         var immediateByte: Int = 0
 
-) : AbstractInstruction(opcode) {
+) : Instruction(opcode) {
 
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)

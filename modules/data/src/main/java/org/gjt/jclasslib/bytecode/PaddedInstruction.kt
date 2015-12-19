@@ -19,7 +19,7 @@ import java.io.IOException
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-open class PaddedInstruction(opcode: Opcode) : AbstractInstruction(opcode) {
+open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
 
     /**
      * Get the padded size in bytes of this instruction.

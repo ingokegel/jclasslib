@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.io;
 
-import org.gjt.jclasslib.bytecode.AbstractInstruction;
+import org.gjt.jclasslib.bytecode.Instruction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,12 +30,12 @@ public class ByteCodeWriter {
         @return the code as an array of bytes
         @throws IOException if an exception occurs with the code
      */
-    public static byte[] writeByteCode(List<AbstractInstruction> instructions) throws IOException {
+    public static byte[] writeByteCode(List<Instruction> instructions) throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ByteCodeOutputStream bcos = new ByteCodeOutputStream(baos);
 
-        for (AbstractInstruction instruction : instructions) {
+        for (Instruction instruction : instructions) {
             writeNextInstruction(bcos, instruction);
         }
         bcos.close();
@@ -43,7 +43,7 @@ public class ByteCodeWriter {
     }
     
     private static void writeNextInstruction(ByteCodeOutputStream bcos,
-                                             AbstractInstruction instruction)
+                                             Instruction instruction)
         throws IOException
     {
         instruction.write(bcos);

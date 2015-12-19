@@ -16,7 +16,7 @@ import java.io.IOException
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-abstract class AbstractInstruction(
+open class Instruction(
         /**
          * Opcode of this instruction.
          */
@@ -59,5 +59,3 @@ abstract class AbstractInstruction(
     }
 
 }
-
-class SimpleInstruction(opcode: Opcode) : AbstractInstruction(opcode)
