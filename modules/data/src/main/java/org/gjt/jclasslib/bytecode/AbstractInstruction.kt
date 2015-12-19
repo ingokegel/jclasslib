@@ -59,3 +59,5 @@ abstract class AbstractInstruction(
     }
 
 }
+
+class SimpleInstruction(opcode: Opcode) : AbstractInstruction(opcode)
