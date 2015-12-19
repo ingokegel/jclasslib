@@ -5,53 +5,41 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput;
-import org.gjt.jclasslib.io.ByteCodeOutput;
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException;
+import java.io.IOException
 
 /**
-    Describes the <tt>invokedynamic</tt> instruction.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Hannes Kegel</a>
-*/
-public class InvokeDynamicInstruction extends ImmediateShortInstruction {
+ * Describes the invokedynamic instruction.
 
-    /**
-        Constructor.
-        @param opcode the opcode.
-     */
-    public InvokeDynamicInstruction(Opcode opcode) {
-        super(opcode);
-    }
+ * @author [Hannes Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class InvokeDynamicInstruction
+@JvmOverloads
+constructor(
+        opcode: Opcode,
+        immediateShort: Int = 0
+) : ImmediateShortInstruction(opcode, immediateShort) {
 
-    /**
-        Constructor.
-        @param opcode the opcode
-        @param immediateShort the immediate short value.
-     */
-    public InvokeDynamicInstruction(Opcode opcode, int immediateShort) {
-        super(opcode, immediateShort); 
-    }
-    
-    
-    public int getSize() {
-        return super.getSize() + 2;
-    }
+    override val size: Int
+        get() = super.size + 2
 
-    public void read(ByteCodeInput in) throws IOException {
-        super.read(in);
+    @Throws(IOException::class)
+    override fun read(input: ByteCodeInput) {
+        super.read(input)
 
         // Next two bytes are always 0 and thus discarded
-        in.readUnsignedShort();
+        input.readUnsignedShort()
     }
 
-    public void write(ByteCodeOutput out) throws IOException {
-        super.write(out);
+    @Throws(IOException::class)
+    override fun write(output: ByteCodeOutput) {
+        super.write(output)
 
-        out.writeShort(0);
+        output.writeShort(0)
     }
-    
+
 }
