@@ -5,90 +5,52 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput;
-import org.gjt.jclasslib.io.ByteCodeOutput;
-import org.jetbrains.annotations.NotNull;
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException;
+import java.io.IOException
 
 /**
-    Describes the <tt>iinc</tt> instruction.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class IncrementInstruction extends ImmediateByteInstruction {
+ * Describes the iinc instruction.
 
-    private int incrementConst;
-    
-    /**
-        Constructor.
-        @param opcode the opcode
-        @param wide whether the instruction is a wide instruction.
-     */
-    public IncrementInstruction(Opcode opcode, boolean wide) {
-        super(opcode, wide); 
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class IncrementInstruction
+@JvmOverloads
+constructor(
+        opcode: Opcode,
+        wide: Boolean,
+        immediateByte: Int = 0,
+        /**
+         * Increment of this instruction.
+         */
+        var incrementConst: Int = 0
+) : ImmediateByteInstruction(opcode, wide, immediateByte) {
 
-    /**
-        Constructor.
-        @param opcode the opcode
-        @param wide whether the instruction is a wide instruction.
-        @param immediateByte the immediate byte value.
-        @param incrementConst the increment.
-     */
-    public IncrementInstruction(Opcode opcode, boolean wide, int immediateByte, int incrementConst) {
-        super(opcode, wide, immediateByte); 
-        this.incrementConst = incrementConst;
-    }
-    
-    
-    public int getSize() {
-        return super.getSize() + (isWide() ? 2 : 1);
-    }
+    override val size: Int
+        get() = super.size + (if (isWide) 2 else 1)
 
-    /**
-        Get the increment of this instruction.
-        @return the increment
-     */
-    public int getIncrementConst() {
-        return incrementConst;
-    }
+    @Throws(IOException::class)
+    override fun read(input: ByteCodeInput) {
+        super.read(input)
 
-    /**
-        Set the increment of this instruction.
-        @param incrementConst the increment
-     */
-    public void setIncrementConst(int incrementConst) {
-        this.incrementConst = incrementConst;
-    }
-    
-    public void read(@NotNull ByteCodeInput input) throws IOException{
-        try {
-            super.read(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (isWide()) {
-            incrementConst = input.readShort();
+        if (isWide) {
+            incrementConst = input.readShort().toInt()
         } else {
-            incrementConst = input.readByte();
+            incrementConst = input.readByte().toInt()
         }
     }
 
-    public void write(@NotNull ByteCodeOutput output) throws IOException{
-        try {
-            super.write(output);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Throws(IOException::class)
+    override fun write(output: ByteCodeOutput) {
+        super.write(output)
 
-        if (isWide()) {
-            output.writeShort(incrementConst);
+        if (isWide) {
+            output.writeShort(incrementConst)
         } else {
-            output.writeByte(incrementConst);
+            output.writeByte(incrementConst)
         }
     }
 
