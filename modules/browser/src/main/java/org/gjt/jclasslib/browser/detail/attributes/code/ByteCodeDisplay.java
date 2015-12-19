@@ -499,7 +499,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         if (opcode == Opcode.LDC) {
             addConstantPoolLink(immediateByte, sourceOffset);
         } else if (opcode == Opcode.NEWARRAY) {
-            NewArrayType newArrayType = NewArrayType.getFromCode(immediateByte);
+            NewArrayType newArrayType = NewArrayType.Companion.getFromCode(immediateByte);
             String verbose = newArrayType == null ? "invalid array type" : newArrayType.getVerbose();
             appendString(" " + immediateByte + " (" + verbose + ")",
                     STYLE_IMMEDIATE_VALUE);
