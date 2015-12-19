@@ -5,106 +5,68 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput;
-import org.gjt.jclasslib.io.ByteCodeOutput;
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException
+import java.util.ArrayList
 
 /**
-    Describes the <tt>lookupswitch</tt> instruction.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class LookupSwitchInstruction extends PaddedInstruction {
+ * Describes the lookupswitch instruction.
 
-    private int defaultOffset;
-    private List<MatchOffsetPair> matchOffsetPairs = new ArrayList<MatchOffsetPair>();
-   
-    /**
-        Constructor.
-        @param opcode the opcode.
-     */
-    public LookupSwitchInstruction(Opcode opcode) {
-        super(opcode); 
-    }
-    
-    public int getSize() {
-        return super.getSize() + 8 + 8 * matchOffsetPairs.size();
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class LookupSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
 
     /**
-        Get the default offset of the branch of this instruction.
-        @return the offset
+     * Default offset of the branch of this instruction.
      */
-    public int getDefaultOffset() {
-        return defaultOffset;
-    }
+    var defaultOffset: Int = 0
 
     /**
-        Set the default offset of the branch of this instruction.
-        @param defaultOffset the offset
+     * Match-offset pairs of the branch of this instruction as
+     * a java.util.List of MatchOffsetPair
+     * elements.
+     * @return the list
      */
-    public void setDefaultOffset(int defaultOffset) {
-        this.defaultOffset = defaultOffset;
-    }
-    
-    /**
-        Get the match-offset pairs of the branch of this instruction as
-        a <tt>java.util.List</tt> of <tt>MatchOffsetPair</tt>
-        elements.
-        @return the list
-     */
-    public List<MatchOffsetPair> getMatchOffsetPairs() {
-        return matchOffsetPairs;
-    }
-    
-    /**
-        Set the match-offset pairs of the branch of this instruction as
-        a <tt>java.util.List</tt> of <tt>LookupSwitchInstruction.MatchOffsetPair</tt>
-        elements.
-        @param matchOffsetPairs the list
-     */
-    public void setMatchOffsetPairs(List<MatchOffsetPair> matchOffsetPairs) {
-        this.matchOffsetPairs = matchOffsetPairs;
-    }
+    var matchOffsetPairs: MutableList<MatchOffsetPair> = ArrayList()
 
-    public void read(ByteCodeInput in) throws IOException {
-        super.read(in);
+    override val size: Int
+        get() = super.size + 8 + 8 * matchOffsetPairs.size
 
-        matchOffsetPairs.clear();
-        
-        defaultOffset = in.readInt();
-        int numberOfPairs = in.readInt();
-        
-        int match, offset;
-        for (int i = 0; i < numberOfPairs; i++) {
-            match = in.readInt();
-            offset = in.readInt();
-            
-            matchOffsetPairs.add(new MatchOffsetPair(match, offset));
+    @Throws(IOException::class)
+    override fun read(input: ByteCodeInput) {
+        super.read(input)
+
+        matchOffsetPairs.clear()
+
+        defaultOffset = input.readInt()
+        val numberOfPairs = input.readInt()
+
+        for (i in 0..numberOfPairs - 1) {
+            val match = input.readInt()
+            val offset = input.readInt()
+
+            matchOffsetPairs.add(MatchOffsetPair(match, offset))
         }
-        
+
     }
 
-    public void write(ByteCodeOutput out) throws IOException {
-        super.write(out);
+    @Throws(IOException::class)
+    override fun write(output: ByteCodeOutput) {
+        super.write(output)
 
-        out.writeInt(defaultOffset);
+        output.writeInt(defaultOffset)
 
-        int numberOfPairs = matchOffsetPairs.size();
-        out.writeInt(numberOfPairs);
-        
-        MatchOffsetPair currentMatchOffsetPair;
-        for (MatchOffsetPair matchOffsetPair : matchOffsetPairs) {
-            currentMatchOffsetPair = matchOffsetPair;
-            out.writeInt(currentMatchOffsetPair.getMatch());
-            out.writeInt(currentMatchOffsetPair.getOffset());
+        val numberOfPairs = matchOffsetPairs.size
+        output.writeInt(numberOfPairs)
+
+        for (matchOffsetPair in matchOffsetPairs) {
+            output.writeInt(matchOffsetPair.match)
+            output.writeInt(matchOffsetPair.offset)
         }
     }
 
-    
 }
