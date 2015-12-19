@@ -5,51 +5,36 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput;
-import org.gjt.jclasslib.io.ByteCodeOutput;
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException;
+import java.io.IOException
 
 /**
-    Describes an instruction that branches to a different offset.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class BranchInstruction extends AbstractBranchInstruction {
+ * Describes an instruction that branches to a different offset.
 
-    /**
-        Constructor.
-        @param opcode the opcode.
-     */
-    public BranchInstruction(Opcode opcode) {
-        super(opcode); 
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+
+class BranchInstruction @JvmOverloads constructor(opcode: Opcode, branchOffset: Int = 0) : AbstractBranchInstruction(opcode, branchOffset) {
+
+    override val size: Int
+        get() = super.size + 2
+
+    @Throws(IOException::class)
+    override fun read(input: ByteCodeInput) {
+        super.read(input)
+
+        branchOffset = input.readShort().toInt()
     }
 
-    /**
-        Constructor.
-        @param opcode the opcode.
-        @param branchOffset the branch offset.
-     */
-    public BranchInstruction(Opcode opcode, int branchOffset) {
-        super(opcode, branchOffset);
-    }
-    
-    public int getSize() {
-        return super.getSize() + 2;
+    @Throws(IOException::class)
+    override fun write(output: ByteCodeOutput) {
+        super.write(output)
+
+        output.writeShort(branchOffset)
     }
 
-    public void read(ByteCodeInput in) throws IOException {
-        super.read(in);
-
-        setBranchOffset(in.readShort());
-    }
-
-    public void write(ByteCodeOutput out) throws IOException {
-        super.write(out);
-
-        out.writeShort(getBranchOffset());
-    }
-    
 }
