@@ -5,75 +5,47 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput;
-import org.gjt.jclasslib.io.ByteCodeOutput;
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException;
+import java.io.IOException
 
 /**
-    Describes the <tt>invokeinterface</tt> instruction.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class InvokeInterfaceInstruction extends ImmediateShortInstruction {
+ * Describes the invokeinterface instruction.
 
-    private int count;
-    
-    /**
-        Constructor.
-        @param opcode the opcode.
-     */
-    public InvokeInterfaceInstruction(Opcode opcode) {
-        super(opcode); 
-    }
-    
-    /**
-        Constructor.
-        @param opcode the opcode
-        @param immediateShort the immediate short value.
-        @param count the argument count.
-     */
-    public InvokeInterfaceInstruction(Opcode opcode, int immediateShort, int count) {
-        super(opcode, immediateShort); 
-        this.count = count;
-    }
-    
-    
-    public int getSize() {
-        return super.getSize() + 2;
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class InvokeInterfaceInstruction
+@JvmOverloads
+constructor(
+        opcode: Opcode,
+        immediateShort: Int = 0,
+        /**
+         * Argument count of this instruction.
+         */
+        var count: Int = 0
+) : ImmediateShortInstruction(opcode, immediateShort) {
 
-    /**
-        Get the argument count of this instruction.
-        @return the argument count
-     */
-    public int getCount() {
-        return count;
-    }
+    override val size: Int
+        get() = super.size + 2
 
-    /**
-        Set the argument count of this instruction.
-        @param count the argument count
-     */
-    public void setCount(int count) {
-        this.count = count;
-    }
+    @Throws(IOException::class)
+    override fun read(input: ByteCodeInput) {
+        super.read(input)
 
-    public void read(ByteCodeInput in) throws IOException {
-        super.read(in);
-
-        count = in.readUnsignedByte();
+        count = input.readUnsignedByte()
         // Next byte is always 0 and thus discarded
-        in.readByte();
+        input.readByte()
     }
 
-    public void write(ByteCodeOutput out) throws IOException {
-        super.write(out);
+    @Throws(IOException::class)
+    override fun write(output: ByteCodeOutput) {
+        super.write(output)
 
-        out.writeByte(count);
-        out.writeByte(0);
+        output.writeByte(count)
+        output.writeByte(0)
     }
-    
+
 }
