@@ -1,42 +1,14 @@
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-public abstract class AbstractBranchInstruction extends AbstractInstruction {
+abstract class AbstractBranchInstruction(opcode: Opcode) : AbstractInstruction(opcode) {
 
-    private int branchOffset;
-
-    /**
-        Constructor.
-        @param opcode the opcode.
-     */
-    protected AbstractBranchInstruction(Opcode opcode) {
-        super(opcode);
+    constructor(opcode: Opcode, branchOffset: Int) : this(opcode) {
+        this.branchOffset = branchOffset
     }
 
     /**
-        Constructor.
-        @param opcode the opcode.
-        @param branchOffset the branch offset.
+     * Relative offset of the branch of this instruction.
      */
-    protected AbstractBranchInstruction(Opcode opcode, int branchOffset) {
-        super(opcode);
-        this.branchOffset = branchOffset;
-    }
-
-    /**
-        Get the relative offset of the branch of this instruction.
-        @return the offset
-     */
-    public int getBranchOffset() {
-        return branchOffset;
-    }
-
-    /**
-        Set the relative offset of the branch of this instruction.
-        @param branchOffset the offset
-     */
-    public void setBranchOffset(int branchOffset) {
-        this.branchOffset = branchOffset;
-    }
-
+    var branchOffset: Int = 0
 
 }
