@@ -5,60 +5,40 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.bytecode;
+package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput;
-import org.gjt.jclasslib.io.ByteCodeOutput;
+import org.gjt.jclasslib.io.ByteCodeInput
+import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException;
+import java.io.IOException
 
 /**
-    Describes the <tt>multianewarray</tt> instruction.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class MultianewarrayInstruction extends ImmediateShortInstruction {
+ * Describes the multianewarray instruction.
 
-    private int dimensions;
-    
-    /**
-        Constructor.
-        @param opcode the opcode.
-     */
-    public MultianewarrayInstruction(Opcode opcode) {
-        super(opcode); 
-    }
-    
-    public int getSize() {
-        return super.getSize() + 1;
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class MultianewarrayInstruction(opcode: Opcode) : ImmediateShortInstruction(opcode) {
 
     /**
-        Get the number of dimensions for the new array.
-        @return the number of dimensions
+     * Number of dimensions for the new array.
      */
-    public int getDimensions() {
-        return dimensions;
+    var dimensions: Int = 0
+
+    override val size: Int
+        get() = super.size + 1
+
+    @Throws(IOException::class)
+    override fun read(input: ByteCodeInput) {
+        super.read(input)
+
+        dimensions = input.readUnsignedByte()
     }
 
-    /**
-        Set the number of dimensions for the new array.
-        @param dimensions the number of dimensions
-     */
-    public void setDimensions(int dimensions) {
-        this.dimensions = dimensions;
+    @Throws(IOException::class)
+    override fun write(output: ByteCodeOutput) {
+        super.write(output)
+
+        output.writeByte(dimensions)
     }
 
-    public void read(ByteCodeInput in) throws IOException {
-        super.read(in);
-
-        dimensions = in.readUnsignedByte();
-    }
-
-    public void write(ByteCodeOutput out) throws IOException {
-        super.write(out);
-
-        out.writeByte(dimensions);
-    }
-    
 }
