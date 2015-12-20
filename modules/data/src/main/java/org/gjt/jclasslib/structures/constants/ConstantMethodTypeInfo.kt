@@ -5,87 +5,66 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>CONSTANT_MethodType_info</tt> constant pool data structure.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Hannes Kegel</a>
-*/
-public class ConstantMethodTypeInfo extends CPInfo {
+ * Describes a CONSTANT_MethodType_info constant pool data structure.
 
-    private int descriptorIndex;
-
-    public ConstantType getConstantType() {
-        return ConstantType.METHOD_TYPE;
-    }
-
-    public String getVerbose() throws InvalidByteCodeException {
-        return getName();
-    }
+ * @author [Hannes Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ConstantMethodTypeInfo : CPInfo() {
 
     /**
-        Get the index of the constant pool entry containing the descriptor of the method.
-        @return the index
+     * Index of the constant pool entry containing the descriptor of the method.
      */
-    public int getDescriptorIndex() {
-        return descriptorIndex;
-    }
+    var descriptorIndex: Int = 0
+
+    override val constantType: ConstantType
+        get() = ConstantType.METHOD_TYPE
+
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = name
 
     /**
-        Set the index of the constant pool entry containing the descriptor of the method.
-        @param descriptorIndex the index
+     * The descriptor.
      */
-    public void setDescriptorIndex(int descriptorIndex) {
-        this.descriptorIndex = descriptorIndex;
+    val name: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(descriptorIndex).string
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        descriptorIndex = input.readUnsignedShort()
+        if (isDebug) debug("read")
     }
 
-    /**
-        Get the descriptor.
-        @return the descriptor
-        @throws org.gjt.jclasslib.structures.InvalidByteCodeException if the byte code is invalid
-     */
-    public String getName() throws InvalidByteCodeException {
-        return getClassFile().getConstantPoolUtf8Entry(descriptorIndex).getString();
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(ConstantType.METHOD_TYPE.tag)
+        output.writeShort(descriptorIndex)
+        if (isDebug) debug("wrote")
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        descriptorIndex = in.readUnsignedShort();
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        out.writeByte(ConstantType.METHOD_TYPE.getTag());
-        out.writeShort(descriptorIndex);
-        if (isDebug()) debug("wrote ");
-    }
-    
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantMethodTypeInfo)) {
-            return false;
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantMethodTypeInfo) {
+            return false
         }
-        ConstantMethodTypeInfo constantMethodTypeInfo = (ConstantMethodTypeInfo)object;
-        return super.equals(object) && constantMethodTypeInfo.descriptorIndex == descriptorIndex;
+        return super.equals(other) && other.descriptorIndex == descriptorIndex
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ descriptorIndex;
+    override fun hashCode(): Int = super.hashCode() xor descriptorIndex
+
+    override fun debug(message: String) {
+        super.debug("$message $constantType with descriptor_index $descriptorIndex")
     }
-    
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with descriptor_index " + descriptorIndex);
-    }
-    
+
 }
