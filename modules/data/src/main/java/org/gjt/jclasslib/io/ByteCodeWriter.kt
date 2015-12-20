@@ -5,49 +5,42 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.io;
+package org.gjt.jclasslib.io
 
-import org.gjt.jclasslib.bytecode.Instruction;
+import org.gjt.jclasslib.bytecode.Instruction
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 /**
-    Converts a list of instructions as defined in the package
-    <tt>org.gjt.jclasslib.code</tt> to code.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ByteCodeWriter {
+ * Converts a list of instructions as defined in the package
+ * org.gjt.jclasslib.code to code.
 
-    private ByteCodeWriter() {
-    }
-    
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+object ByteCodeWriter {
+
     /**
-        Converts a list of instructions to code.
-        @param instructions the <tt>java.util.List</tt> with the instructions
-        @return the code as an array of bytes
-        @throws IOException if an exception occurs with the code
+     * Converts a list of instructions to code.
+     * @param instructions the list of instructions
+     * @return the code as an array of bytes
      */
-    public static byte[] writeByteCode(List<Instruction> instructions) throws IOException {
+    @Throws(IOException::class)
+    @JvmStatic
+    fun writeByteCode(instructions: List<Instruction>): ByteArray {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ByteCodeOutputStream bcos = new ByteCodeOutputStream(baos);
-
-        for (Instruction instruction : instructions) {
-            writeNextInstruction(bcos, instruction);
+        val result = ByteArrayOutputStream()
+        ByteCodeOutputStream(result).use {
+            for (instruction in instructions) {
+                writeNextInstruction(it, instruction)
+            }
         }
-        bcos.close();
-        return baos.toByteArray();
+        return result.toByteArray()
     }
-    
-    private static void writeNextInstruction(ByteCodeOutputStream bcos,
-                                             Instruction instruction)
-        throws IOException
-    {
-        instruction.write(bcos);
-        
+
+    @Throws(IOException::class)
+    private fun writeNextInstruction(output: ByteCodeOutputStream, instruction: Instruction) {
+        instruction.write(output)
     }
-    
+
 }
