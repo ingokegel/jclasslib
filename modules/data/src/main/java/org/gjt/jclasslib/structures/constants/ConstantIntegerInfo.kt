@@ -5,63 +5,53 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>CONSTANT_Integer_info</tt> constant pool data structure.
+ * Describes a CONSTANT_Integer_info constant pool data structure.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantIntegerInfo extends ConstantNumeric {
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ConstantIntegerInfo : ConstantNumeric() {
 
-    public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_INTEGER;
-    }
+    override val constantType: ConstantType
+        get() = ConstantType.CONSTANT_INTEGER
 
-    public String getVerbose() throws InvalidByteCodeException {
-        return String.valueOf(getInt());
-    }
-
-    /**
-        Get the int value of this constant pool entry.
-        @return the value
-     */
-    public int getInt() {
-        return getBytes();
-    }
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = int.toString()
 
     /**
-        Set the int value of this constant pool entry.
-        @param number the value
+     * Int value of this constant pool entry.
      */
-    public void setInt(int number) {
-        setBytes(number);
+    var int: Int
+        get() = bytes
+        set(number) {
+            bytes = number
+        }
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        super.read(input)
+        if (isDebug) debug("read")
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-        
-        super.read(in);
-        if (isDebug()) debug("read ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(ConstantType.CONSTANT_INTEGER.tag)
+        super.write(output)
+        if (isDebug) debug("wrote")
     }
-    
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        out.writeByte(ConstantType.CONSTANT_INTEGER.getTag());
-        super.write(out);
-        if (isDebug()) debug("wrote ");
-    }
-    
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with bytes " + getBytes());
+
+    override fun debug(message: String) {
+        super.debug("$message $constantType with bytes $bytes")
     }
 
 }
