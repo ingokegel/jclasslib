@@ -5,80 +5,62 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>CONSTANT_String_info</tt> constant pool data structure.
+ * Describes a CONSTANT_String_info constant pool data structure.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantStringInfo extends CPInfo {
-
-    private int stringIndex;
-    
-    public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_STRING;
-    }
-
-    public String getVerbose() throws InvalidByteCodeException {
-        return getClassFile().getConstantPoolEntryName(stringIndex);
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ConstantStringInfo : CPInfo() {
 
     /**
-        Get the index of the constant pool entry containing the
-        string of this entry.
-        @return the index
+     * Index of the constant pool entry containing the
+     * string of this entry.
      */
-    public int getStringIndex() {
-        return stringIndex;
+    var stringIndex: Int = 0
+
+    override val constantType: ConstantType
+        get() = ConstantType.CONSTANT_STRING
+
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntryName(stringIndex)
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        stringIndex = input.readUnsignedShort()
+        if (isDebug) debug("read")
     }
 
-    /**
-        Set the index of the constant pool entry containing the
-        string of this entry.
-        @param stringIndex the index
-     */
-    public void setStringIndex(int stringIndex) {
-        this.stringIndex = stringIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(ConstantType.CONSTANT_STRING.tag)
+        output.writeShort(stringIndex)
+        if (isDebug) debug("wrote")
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        stringIndex = in.readUnsignedShort();
-        if (isDebug()) debug("read ");
-    }
-    
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-
-        out.writeByte(ConstantType.CONSTANT_STRING.getTag());
-        out.writeShort(stringIndex);
-        if (isDebug()) debug("wrote ");
+    override fun debug(message: String) {
+        super.debug("$message$ constantType with string_index $stringIndex")
     }
 
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with string_index " + stringIndex);
-    }
-
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantStringInfo)) {
-            return false;
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantStringInfo) {
+            return false
         }
-        ConstantStringInfo constantStringInfo = (ConstantStringInfo)object;
-        return super.equals(object) && constantStringInfo.stringIndex == stringIndex;
+        return super.equals(other) && other.stringIndex == stringIndex
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ stringIndex;
+    override fun hashCode(): Int {
+        return super.hashCode() xor stringIndex
     }
-    
+
 }
