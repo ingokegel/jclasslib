@@ -5,103 +5,66 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes a <tt>CONSTANT_Utf8_info</tt> constant pool data structure.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- *
+ * Describes a CONSTANT_Utf8_info constant pool data structure.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-public class ConstantUtf8Info extends CPInfo {
-
-    private String string;
-
-    public ConstantType getConstantType() {
-        return ConstantType.UTF8;
-    }
-
-    public String getVerbose() throws InvalidByteCodeException {
-        return string;
-    }
+class ConstantUtf8Info : CPInfo() {
 
     /**
-     * Get the byte array of the string in this entry.
-     *
-     * @return the array
+     * The string in this entry.
      */
-    public byte[] getBytes() {
-        return string.getBytes();
-    }
+    var string: String = ""
+
+    override val constantType: ConstantType
+        get() = ConstantType.UTF8
+
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = string
 
     /**
-     * Get the string in this entry.
-     *
-     * @return the string
+     * The byte array of the string in this entry.
+     * *
      */
-    public String getString() {
-        return string;
+    val bytes: ByteArray
+        get() = string.toByteArray()
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        string = input.readUTF()
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Set the byte array of the string in this entry.
-     *
-     * @param bytes the array
-     * @deprecated use <tt>setString</tt> instead
-     */
-    public void setBytes(byte[] bytes) {
-        string = new String(bytes);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(ConstantType.UTF8.tag)
+        output.writeUTF(string)
+        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Set the string in this entry.
-     *
-     * @param string the string
-     */
-    public void setString(String string) {
-        this.string = string;
+    override fun debug(message: String) {
+        super.debug("$message $constantType with length ${string.length} (\"$string\")")
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-        string = in.readUTF();
-
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
-        out.writeByte(ConstantType.UTF8.getTag());
-        out.writeUTF(string);
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with length " + string.length() +
-                " (\"" + string + "\")");
-    }
-
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantUtf8Info)) {
-            return false;
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantUtf8Info) {
+            return false
         }
-        ConstantUtf8Info constantUtf8Info = (ConstantUtf8Info)object;
-        return super.equals(object) && constantUtf8Info.string.equals(string);
+        return super.equals(other) && other.string == string
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ string.hashCode();
-    }
-
+    override fun hashCode(): Int = super.hashCode() xor string.hashCode()
 
 }
