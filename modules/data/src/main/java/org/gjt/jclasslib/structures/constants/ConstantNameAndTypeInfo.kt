@@ -5,119 +5,85 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>CONSTANT_NameAndType_info</tt> constant pool data structure.
+ * Describes a CONSTANT_NameAndType_info constant pool data structure.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantNameAndTypeInfo extends CPInfo {
-
-    private int nameIndex;
-    private int descriptorIndex;
-    
-    public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_NAME_AND_TYPE;
-    }
-
-    public String getVerbose() throws InvalidByteCodeException {
-        return getName() + getDescriptor();
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ConstantNameAndTypeInfo : CPInfo() {
 
     /**
-        Get the index of the constant pool entry containing the name of this entry.
-        @return the index
+     * Index of the constant pool entry containing the name of this entry.
      */
-    public int getNameIndex() {
-        return nameIndex;
-    }
+    var nameIndex: Int = 0
 
     /**
-        Set the index of the constant pool entry containing the name of this entry.
-        @param nameIndex the index
+     * Index of the constant pool entry containing the descriptor of this entry.
      */
-    public void setNameIndex(int nameIndex) {
-        this.nameIndex = nameIndex;
-    }
+    var descriptorIndex: Int = 0
+
+    override val constantType: ConstantType
+        get() = ConstantType.CONSTANT_NAME_AND_TYPE
+
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = name + descriptor
 
     /**
-        Get the index of the constant pool entry containing the descriptor of this entry.
-        @return the index
+     * The name of this entry.
      */
-    public int getDescriptorIndex() {
-        return descriptorIndex;
-    }
+    val name: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntryName(nameIndex)
 
     /**
-        Set the index of the constant pool entry containing the descriptor of this entry.
-        @param descriptorIndex the index
+     * The descriptor string.
      */
-    public void setDescriptorIndex(int descriptorIndex) {
-        this.descriptorIndex = descriptorIndex;
+    val descriptor: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntryName(descriptorIndex)
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+
+        nameIndex = input.readUnsignedShort()
+        descriptorIndex = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    /**
-        Get the name.
-        @return the name.
-        @throws InvalidByteCodeException
-     */
-    public String getName() throws InvalidByteCodeException {
-        return getClassFile().getConstantPoolEntryName(nameIndex);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+
+        output.writeByte(ConstantType.CONSTANT_NAME_AND_TYPE.tag)
+        output.writeShort(nameIndex)
+        output.writeShort(descriptorIndex)
+        if (isDebug) debug("wrote")
     }
 
-    /**
-        Get the descriptor string.
-        @return the string.
-        @throws InvalidByteCodeException
-     */
-    public String getDescriptor() throws InvalidByteCodeException {
-        return getClassFile().getConstantPoolEntryName(descriptorIndex);
+    override fun debug(message: String) {
+        super.debug("$message $constantType with name_index $nameIndex and descriptor_index $descriptorIndex")
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        nameIndex = in.readUnsignedShort();
-        descriptorIndex = in.readUnsignedShort();
-        
-        if (isDebug()) debug("read ");
-    }
-    
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-
-        out.writeByte(ConstantType.CONSTANT_NAME_AND_TYPE.getTag());
-        out.writeShort(nameIndex);
-        out.writeShort(descriptorIndex);
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with name_index " + nameIndex +
-              " and descriptor_index " + descriptorIndex);
-    }
-
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantNameAndTypeInfo)) {
-            return false;
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantNameAndTypeInfo) {
+            return false
         }
-        ConstantNameAndTypeInfo constantNameAndTypeInfo = (ConstantNameAndTypeInfo)object;
-        return super.equals(object) &&
-               constantNameAndTypeInfo.nameIndex == nameIndex &&
-               constantNameAndTypeInfo.descriptorIndex == descriptorIndex;
+        return super.equals(other) && other.nameIndex == nameIndex && other.descriptorIndex == descriptorIndex
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ nameIndex ^ descriptorIndex;
+    override fun hashCode(): Int {
+        return super.hashCode() xor nameIndex xor descriptorIndex
     }
-    
+
 }
