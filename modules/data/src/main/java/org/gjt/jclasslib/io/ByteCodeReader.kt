@@ -5,335 +5,317 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.io;
+package org.gjt.jclasslib.io
 
-import org.gjt.jclasslib.bytecode.*;
+import org.gjt.jclasslib.bytecode.*
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.util.ArrayList
+import java.util.Collections
 
 /**
-    Converts code to a list of instructions as defined in the package
-    <tt>org.gjt.jclasslib.code</tt>.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ByteCodeReader {
+ * Converts code to a list of instructions as defined in the package
+ * org.gjt.jclasslib.code.
 
-    private ByteCodeReader() {
-    }
-    
-    /**
-        Converts the code to a list of instructions.
-        @param code the code as an array of bytes from which to read the instructions
-        @return the <tt>java.util.List</tt> with the instructions
-        @throws IOException if an exception occurs with the code
-     */
-    public static ArrayList<Instruction> readByteCode(byte[] code) throws IOException {
-        return readByteCode(code, null);
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+object ByteCodeReader {
 
     /**
-        Converts the code to a list of instructions.
-        @param code the code as an array of bytes from which to read the instructions
-        @param prependInstructions an array of instructions that is prepended, may be <tt>null</tt>
-        @return the <tt>java.util.List</tt> with the instructions
-        @throws IOException if an exception occurs with the code
+     * Converts the code to a list of instructions.
+     * @param code the code as an array of bytes from which to read the instructions
+     * @param prependInstructions an array of instructions that is prepended, may be null
+     * @return the list of instructions
      */
-    public static ArrayList<Instruction> readByteCode(byte[] code, Instruction[] prependInstructions)
-        throws IOException {
+    @Throws(IOException::class)
+    @JvmStatic
+    @JvmOverloads fun readByteCode(code: ByteArray, prependInstructions: Array<Instruction>? = null): ArrayList<Instruction> {
 
-        ByteCodeInputStream bcis = new ByteCodeInputStream(
-                                        new ByteArrayInputStream(code)
-                                    );
-        
-        ArrayList<Instruction> instructions = new ArrayList<Instruction>();
+        val bcis = ByteCodeInputStream(ByteArrayInputStream(code))
+
+        val instructions = ArrayList<Instruction>()
         if (prependInstructions != null) {
-            Collections.addAll(instructions, prependInstructions);
+            instructions.addAll(prependInstructions);
         }
-        
-        boolean wide = false;
-        Instruction currentInstruction;
-        while (bcis.getBytesRead() < code.length) {
-            currentInstruction = readNextInstruction(bcis, wide);
-            wide = (currentInstruction.getOpcode() == Opcode.WIDE);
-            instructions.add(currentInstruction);
+
+        var nextWide = false
+        while (bcis.bytesRead < code.size) {
+            val instruction = readNextInstruction(bcis, nextWide)
+            instructions.add(instruction)
+            nextWide = (instruction.opcode === Opcode.WIDE)
         }
-        
-        return instructions;
+
+        return instructions
     }
-    
-    private static Instruction readNextInstruction(ByteCodeInputStream bcis, boolean wide)
-        throws IOException
-    {
-        Instruction instruction;
 
-        int bytecode = bcis.readUnsignedByte();
-        Opcode opcode = Opcode.getFromBytecode(bytecode);
-        if (opcode == null) {
-            throw new IOException("invalid opcode 0x" + Integer.toHexString(bytecode));
+    @Throws(IOException::class)
+    private fun readNextInstruction(bcis: ByteCodeInputStream, wide: Boolean): Instruction {
+        val instruction: Instruction
+
+        val bytecode = bcis.readUnsignedByte()
+        val opcode = Opcode.getFromBytecode(bytecode) ?: throw IOException("invalid opcode 0x" + Integer.toHexString(bytecode))
+
+        when (opcode) {
+
+            Opcode.WIDE,
+            Opcode.NOP,
+            Opcode.ACONST_NULL,
+            Opcode.ICONST_M1,
+            Opcode.ICONST_0,
+            Opcode.ICONST_1,
+            Opcode.ICONST_2,
+            Opcode.ICONST_3,
+            Opcode.ICONST_4,
+            Opcode.ICONST_5,
+            Opcode.LCONST_0,
+            Opcode.LCONST_1,
+            Opcode.FCONST_0,
+            Opcode.FCONST_1,
+            Opcode.FCONST_2,
+            Opcode.DCONST_0,
+            Opcode.DCONST_1,
+            Opcode.ILOAD_0,
+            Opcode.ILOAD_1,
+            Opcode.ILOAD_2,
+            Opcode.ILOAD_3,
+            Opcode.LLOAD_0,
+            Opcode.LLOAD_1,
+            Opcode.LLOAD_2,
+            Opcode.LLOAD_3,
+            Opcode.FLOAD_0,
+            Opcode.FLOAD_1,
+            Opcode.FLOAD_2,
+            Opcode.FLOAD_3,
+            Opcode.DLOAD_0,
+            Opcode.DLOAD_1,
+            Opcode.DLOAD_2,
+            Opcode.DLOAD_3,
+            Opcode.ALOAD_0,
+            Opcode.ALOAD_1,
+            Opcode.ALOAD_2,
+            Opcode.ALOAD_3,
+            Opcode.IALOAD,
+            Opcode.LALOAD,
+            Opcode.FALOAD,
+            Opcode.DALOAD,
+            Opcode.AALOAD,
+            Opcode.BALOAD,
+            Opcode.CALOAD,
+            Opcode.SALOAD,
+            Opcode.ISTORE_0,
+            Opcode.ISTORE_1,
+            Opcode.ISTORE_2,
+            Opcode.ISTORE_3,
+            Opcode.LSTORE_0,
+            Opcode.LSTORE_1,
+            Opcode.LSTORE_2,
+            Opcode.LSTORE_3,
+            Opcode.FSTORE_0,
+            Opcode.FSTORE_1,
+            Opcode.FSTORE_2,
+            Opcode.FSTORE_3,
+            Opcode.DSTORE_0,
+            Opcode.DSTORE_1,
+            Opcode.DSTORE_2,
+            Opcode.DSTORE_3,
+            Opcode.ASTORE_0,
+            Opcode.ASTORE_1,
+            Opcode.ASTORE_2,
+            Opcode.ASTORE_3,
+            Opcode.IASTORE,
+            Opcode.LASTORE,
+            Opcode.FASTORE,
+            Opcode.DASTORE,
+            Opcode.AASTORE,
+            Opcode.BASTORE,
+            Opcode.CASTORE,
+            Opcode.SASTORE,
+            Opcode.POP,
+            Opcode.POP2,
+            Opcode.DUP,
+            Opcode.DUP_X1,
+            Opcode.DUP_X2,
+            Opcode.DUP2,
+            Opcode.DUP2_X1,
+            Opcode.DUP2_X2,
+            Opcode.SWAP,
+            Opcode.IADD,
+            Opcode.LADD,
+            Opcode.FADD,
+            Opcode.DADD,
+            Opcode.ISUB,
+            Opcode.LSUB,
+            Opcode.FSUB,
+            Opcode.DSUB,
+            Opcode.IMUL,
+            Opcode.LMUL,
+            Opcode.FMUL,
+            Opcode.DMUL,
+            Opcode.IDIV,
+            Opcode.LDIV,
+            Opcode.FDIV,
+            Opcode.DDIV,
+            Opcode.IREM,
+            Opcode.LREM,
+            Opcode.FREM,
+            Opcode.DREM,
+            Opcode.INEG,
+            Opcode.LNEG,
+            Opcode.FNEG,
+            Opcode.DNEG,
+            Opcode.ISHL,
+            Opcode.LSHL,
+            Opcode.ISHR,
+            Opcode.LSHR,
+            Opcode.IUSHR,
+            Opcode.LUSHR,
+            Opcode.IAND,
+            Opcode.LAND,
+            Opcode.IOR,
+            Opcode.LOR,
+            Opcode.IXOR,
+            Opcode.LXOR,
+            Opcode.I2L,
+            Opcode.I2F,
+            Opcode.I2D,
+            Opcode.L2I,
+            Opcode.L2F,
+            Opcode.L2D,
+            Opcode.F2I,
+            Opcode.F2L,
+            Opcode.F2D,
+            Opcode.D2I,
+            Opcode.D2L,
+            Opcode.D2F,
+            Opcode.I2B,
+            Opcode.I2C,
+            Opcode.I2S,
+            Opcode.LCMP,
+            Opcode.FCMPL,
+            Opcode.FCMPG,
+            Opcode.DCMPL,
+            Opcode.DCMPG,
+            Opcode.IRETURN,
+            Opcode.LRETURN,
+            Opcode.FRETURN,
+            Opcode.DRETURN,
+            Opcode.ARETURN,
+            Opcode.RETURN,
+            Opcode.ARRAYLENGTH,
+            Opcode.ATHROW,
+            Opcode.MONITORENTER,
+            Opcode.MONITOREXIT,
+            Opcode.BREAKPOINT,
+            Opcode.IMPDEP1,
+            Opcode.IMPDEP2 ->
+
+                instruction = Instruction(opcode)
+
+            Opcode.BIPUSH,
+            Opcode.LDC,
+            // subject to wide
+            Opcode.ILOAD,
+            // subject to wide
+            Opcode.LLOAD,
+            // subject to wide
+            Opcode.FLOAD,
+            // subject to wide
+            Opcode.DLOAD,
+            // subject to wide
+            Opcode.ALOAD,
+            // subject to wide
+            Opcode.ISTORE,
+            // subject to wide
+            Opcode.LSTORE,
+            // subject to wide
+            Opcode.FSTORE,
+            // subject to wide
+            Opcode.DSTORE,
+            // subject to wide
+            Opcode.ASTORE,
+            // subject to wide
+            Opcode.RET,
+            Opcode.NEWARRAY ->
+
+                instruction = ImmediateByteInstruction(opcode, wide)
+
+            Opcode.LDC_W,
+            Opcode.LDC2_W,
+            Opcode.GETSTATIC,
+            Opcode.PUTSTATIC,
+            Opcode.GETFIELD,
+            Opcode.PUTFIELD,
+            Opcode.INVOKEVIRTUAL,
+            Opcode.INVOKESPECIAL,
+            Opcode.INVOKESTATIC,
+            Opcode.NEW,
+            Opcode.ANEWARRAY,
+            Opcode.CHECKCAST,
+            Opcode.INSTANCEOF,
+            // the only immediate short instruction that does
+            // not have an immediate constant pool reference
+            Opcode.SIPUSH
+            ->
+
+                instruction = ImmediateShortInstruction(opcode)
+
+            Opcode.IFEQ,
+            Opcode.IFNE,
+            Opcode.IFLT,
+            Opcode.IFGE,
+            Opcode.IFGT,
+            Opcode.IFLE,
+            Opcode.IF_ICMPEQ,
+            Opcode.IF_ICMPNE,
+            Opcode.IF_ICMPLT,
+            Opcode.IF_ICMPGE,
+            Opcode.IF_ICMPGT,
+            Opcode.IF_ICMPLE,
+            Opcode.IF_ACMPEQ,
+            Opcode.IF_ACMPNE,
+            Opcode.GOTO,
+            Opcode.JSR,
+            Opcode.IFNULL,
+            Opcode.IFNONNULL ->
+
+                instruction = BranchInstruction(opcode)
+
+            Opcode.GOTO_W,
+            Opcode.JSR_W ->
+
+                instruction = WideBranchInstruction(opcode)
+
+            // subject to wide
+            Opcode.IINC ->
+
+                instruction = IncrementInstruction(opcode, wide)
+
+            Opcode.TABLESWITCH ->
+
+                instruction = TableSwitchInstruction(opcode)
+
+            Opcode.LOOKUPSWITCH ->
+
+                instruction = LookupSwitchInstruction(opcode)
+
+            Opcode.INVOKEINTERFACE ->
+
+                instruction = InvokeInterfaceInstruction(opcode)
+
+            Opcode.INVOKEDYNAMIC ->
+
+                instruction = InvokeDynamicInstruction(opcode)
+
+            Opcode.MULTIANEWARRAY ->
+
+                instruction = MultianewarrayInstruction(opcode)
+
+            else -> throw IOException("unhandled opcode " + opcode)
         }
 
-        switch (opcode) {
-            
-            case WIDE:
-            case NOP:
-            case ACONST_NULL:
-            case ICONST_M1:
-            case ICONST_0:
-            case ICONST_1:
-            case ICONST_2:
-            case ICONST_3:
-            case ICONST_4:
-            case ICONST_5:
-            case LCONST_0:
-            case LCONST_1:
-            case FCONST_0:
-            case FCONST_1:
-            case FCONST_2:
-            case DCONST_0:
-            case DCONST_1:
-            case ILOAD_0:
-            case ILOAD_1:
-            case ILOAD_2:
-            case ILOAD_3:
-            case LLOAD_0:
-            case LLOAD_1:
-            case LLOAD_2:
-            case LLOAD_3:
-            case FLOAD_0:
-            case FLOAD_1:
-            case FLOAD_2:
-            case FLOAD_3:
-            case DLOAD_0:
-            case DLOAD_1:
-            case DLOAD_2:
-            case DLOAD_3:
-            case ALOAD_0:
-            case ALOAD_1:
-            case ALOAD_2:
-            case ALOAD_3:
-            case IALOAD:
-            case LALOAD:
-            case FALOAD:
-            case DALOAD:
-            case AALOAD:
-            case BALOAD:
-            case CALOAD:
-            case SALOAD:
-            case ISTORE_0:
-            case ISTORE_1:
-            case ISTORE_2:
-            case ISTORE_3:
-            case LSTORE_0:
-            case LSTORE_1:
-            case LSTORE_2:
-            case LSTORE_3:
-            case FSTORE_0:
-            case FSTORE_1:
-            case FSTORE_2:
-            case FSTORE_3:
-            case DSTORE_0:
-            case DSTORE_1:
-            case DSTORE_2:
-            case DSTORE_3:
-            case ASTORE_0:
-            case ASTORE_1:
-            case ASTORE_2:
-            case ASTORE_3:
-            case IASTORE:
-            case LASTORE:
-            case FASTORE:
-            case DASTORE:
-            case AASTORE:
-            case BASTORE:
-            case CASTORE:
-            case SASTORE:
-            case POP:
-            case POP2:
-            case DUP:
-            case DUP_X1:
-            case DUP_X2:
-            case DUP2:
-            case DUP2_X1:
-            case DUP2_X2:
-            case SWAP:
-            case IADD:
-            case LADD:
-            case FADD:
-            case DADD:
-            case ISUB:
-            case LSUB:
-            case FSUB:
-            case DSUB:
-            case IMUL:
-            case LMUL:
-            case FMUL:
-            case DMUL:
-            case IDIV:
-            case LDIV:
-            case FDIV:
-            case DDIV:
-            case IREM:
-            case LREM:
-            case FREM:
-            case DREM:
-            case INEG:
-            case LNEG:
-            case FNEG:
-            case DNEG:
-            case ISHL:
-            case LSHL:
-            case ISHR:
-            case LSHR:
-            case IUSHR:
-            case LUSHR:
-            case IAND:
-            case LAND:
-            case IOR:
-            case LOR:
-            case IXOR:
-            case LXOR:
-            case I2L:
-            case I2F:
-            case I2D:
-            case L2I:
-            case L2F:
-            case L2D:
-            case F2I:
-            case F2L:
-            case F2D:
-            case D2I:
-            case D2L:
-            case D2F:
-            case I2B:
-            case I2C:
-            case I2S:
-            case LCMP:
-            case FCMPL:
-            case FCMPG:
-            case DCMPL:
-            case DCMPG:
-            case IRETURN:
-            case LRETURN:
-            case FRETURN:
-            case DRETURN:
-            case ARETURN:
-            case RETURN:
-            case ARRAYLENGTH:
-            case ATHROW:
-            case MONITORENTER:
-            case MONITOREXIT:
-            case BREAKPOINT:
-            case IMPDEP1:
-            case IMPDEP2:
-                
-                instruction = new Instruction(opcode);
-                break;
-
-            case BIPUSH:
-            case LDC:
-            case ILOAD:  // subject to wide
-            case LLOAD:  // subject to wide
-            case FLOAD:  // subject to wide
-            case DLOAD:  // subject to wide
-            case ALOAD:  // subject to wide
-            case ISTORE: // subject to wide
-            case LSTORE: // subject to wide
-            case FSTORE: // subject to wide
-            case DSTORE: // subject to wide
-            case ASTORE: // subject to wide
-            case RET:    // subject to wide
-            case NEWARRAY:
-
-                instruction = new ImmediateByteInstruction(opcode, wide);
-                break;
-
-            case LDC_W:
-            case LDC2_W:
-            case GETSTATIC:
-            case PUTSTATIC:
-            case GETFIELD:
-            case PUTFIELD:
-            case INVOKEVIRTUAL:
-            case INVOKESPECIAL:
-            case INVOKESTATIC:
-            case NEW:
-            case ANEWARRAY:
-            case CHECKCAST:
-            case INSTANCEOF:
-            case SIPUSH: // the only immediate short instruction that does
-                                // not have an immediate constant pool reference
-
-                instruction = new ImmediateShortInstruction(opcode);
-                break;
-
-            case IFEQ:
-            case IFNE:
-            case IFLT:
-            case IFGE:
-            case IFGT:
-            case IFLE:
-            case IF_ICMPEQ:
-            case IF_ICMPNE:
-            case IF_ICMPLT:
-            case IF_ICMPGE:
-            case IF_ICMPGT:
-            case IF_ICMPLE:
-            case IF_ACMPEQ:
-            case IF_ACMPNE:
-            case GOTO:
-            case JSR:
-            case IFNULL:
-            case IFNONNULL:
-
-                instruction = new BranchInstruction(opcode);
-                break;
-
-            case GOTO_W:
-            case JSR_W:
-
-                instruction = new WideBranchInstruction(opcode);
-                break;
-                
-            case IINC: // subject to wide
-
-                instruction = new IncrementInstruction(opcode, wide);
-                break;
-                
-            case TABLESWITCH:
-
-                instruction = new TableSwitchInstruction(opcode);
-                break;
-                
-            case LOOKUPSWITCH:
-
-                instruction = new LookupSwitchInstruction(opcode);
-                break;
-                
-            case INVOKEINTERFACE:
-
-                instruction = new InvokeInterfaceInstruction(opcode);
-                break;
-
-            case INVOKEDYNAMIC:
-
-                instruction = new InvokeDynamicInstruction(opcode);
-                break;
-
-            case MULTIANEWARRAY:
-            
-                instruction = new MultianewarrayInstruction(opcode);
-                break;
-                
-            default:
-                throw new IOException("unhandled opcode " + opcode);
-        }
-        
-        instruction.read(bcis);
-        return instruction;
+        instruction.read(bcis)
+        return instruction
     }
-    
+
 }
