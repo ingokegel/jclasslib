@@ -5,117 +5,72 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Base class for constant pool data structures which reference class members.
+ * Base class for constant pool data structures which reference class members.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class ConstantReference extends CPInfo {
-
-    /** <tt>class_index</tt> field. */
-    protected int classIndex;
-    /** <tt>name_and_type_index</tt> field. */
-    protected int nameAndTypeIndex;
-    
-    public String getVerbose() throws InvalidByteCodeException {
-
-        ConstantNameAndTypeInfo nameAndType = getNameAndTypeInfo();
-
-        return getClassFile().getConstantPoolEntryName(classIndex) + "." +
-               getClassFile().getConstantPoolEntryName(nameAndType.getNameIndex());
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+abstract class ConstantReference : CPInfo() {
 
     /**
-        Get the index of the constant pool entry containing the
-        <tt>CONSTANT_Class_info</tt> of this entry.
-        @return the index
+     * Index of the constant pool entry containing the
+     * CONSTANT_Class_info of this entry.
      */
-    public int getClassIndex() {
-        return classIndex;
-    }
-    
-    /**
-        Set the index of the constant pool entry containing the
-        <tt>CONSTANT_Class_info</tt> of this entry.
-        @param classIndex the index
-     */
-    public void setClassIndex(int classIndex) {
-        this.classIndex = classIndex;
-    }
-    
-    /**
-        Get the index of the constant pool entry containing the
-         <tt>CONSTANT_NameAndType_info</tt> of this entry.
-        @return the index
-     */
-    public int getNameAndTypeIndex() {
-        return nameAndTypeIndex;
-    }
+    var classIndex: Int = 0
 
     /**
-        Set the index of the constant pool entry containing the
-         <tt>CONSTANT_NameAndType_info</tt> of this entry.
-        @param nameAndTypeIndex the index
+     * Index of the constant pool entry containing the
+     * CONSTANT_NameAndType_info of this entry.
      */
-    public void setNameAndTypeIndex(int nameAndTypeIndex) {
-        this.nameAndTypeIndex = nameAndTypeIndex;
-    }
+    var nameAndTypeIndex: Int = 0
+
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntryName(classIndex) + "." + classFile.getConstantPoolEntryName(nameAndTypeInfo.nameIndex)
 
     /**
-        Get the class info for this reference.
-        @return the class info.
-        @throws InvalidByteCodeException
+     * Class info for this reference.
      */
-    public ConstantClassInfo getClassInfo() throws InvalidByteCodeException {
-        return (ConstantClassInfo)getClassFile().getConstantPoolEntry(classIndex, ConstantClassInfo.class);
-    }
+    val classInfo: ConstantClassInfo
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(classIndex, ConstantClassInfo::class.java)
 
     /**
-        Get the name and type info for this reference.
-        @return the name and type info.
-        @throws InvalidByteCodeException
+     * Name and type info for this reference.
+     * @throws InvalidByteCodeException
      */
-    public ConstantNameAndTypeInfo getNameAndTypeInfo() throws InvalidByteCodeException {
-        return (ConstantNameAndTypeInfo)getClassFile().getConstantPoolEntry(
-                    nameAndTypeIndex,
-                    ConstantNameAndTypeInfo.class);
+    val nameAndTypeInfo: ConstantNameAndTypeInfo
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(nameAndTypeIndex, ConstantNameAndTypeInfo::class.java)
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        classIndex = input.readUnsignedShort()
+        nameAndTypeIndex = input.readUnsignedShort()
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        classIndex = in.readUnsignedShort();
-        nameAndTypeIndex = in.readUnsignedShort();
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(classIndex)
+        output.writeShort(nameAndTypeIndex)
     }
-    
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        out.writeShort(classIndex);
-        out.writeShort(nameAndTypeIndex);
-    }
-    
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantReference)) {
-            return false;
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantReference) {
+            return false
         }
-        ConstantReference constantReference = (ConstantReference)object;
-        return super.equals(object) &&
-               constantReference.classIndex == classIndex &&
-               constantReference.nameAndTypeIndex == nameAndTypeIndex;
+        return super.equals(other) && other.classIndex == classIndex && other.nameAndTypeIndex == nameAndTypeIndex
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ classIndex ^ nameAndTypeIndex;
-    }
+    override fun hashCode(): Int = super.hashCode() xor classIndex xor nameAndTypeIndex
 
 }

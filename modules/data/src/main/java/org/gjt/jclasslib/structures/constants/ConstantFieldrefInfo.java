@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -41,8 +42,8 @@ public class ConstantFieldrefInfo extends ConstantReference {
     }
     
     protected void debug(String message) {
-        super.debug(message + getConstantType() + " with class_index " + classIndex +
-              " and name_and_type_index " + nameAndTypeIndex);
+        super.debug(message + getConstantType() + " with class_index " + getClassIndex() +
+              " and name_and_type_index " + getNameAndTypeIndex());
     }
 
 }

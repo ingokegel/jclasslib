@@ -30,9 +30,7 @@ class ConstantInvokeDynamicInfo : CPInfo() {
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
-        get() {
-            return "${nameAndTypeInfo.name}, BootstrapMethods #$bootstrapMethodAttributeIndex"
-        }
+        get() = "${nameAndTypeInfo.name}, BootstrapMethods #$bootstrapMethodAttributeIndex"
 
     val nameAndTypeInfo: ConstantNameAndTypeInfo
         @Throws(InvalidByteCodeException::class)
