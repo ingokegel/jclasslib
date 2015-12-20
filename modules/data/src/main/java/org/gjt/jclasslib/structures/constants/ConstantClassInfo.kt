@@ -5,87 +5,66 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>CONSTANT_Class_info</tt> constant pool data structure.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantClassInfo extends CPInfo {
+ * Describes a CONSTANT_Class_info constant pool data structure.
 
-    private int nameIndex;
-    
-    public ConstantType getConstantType() {
-        return ConstantType.CLASS;
-    }
-
-    public String getVerbose() throws InvalidByteCodeException {
-        return getName();
-    }
-    
-    /**
-        Get the index of the constant pool entry containing the name of the class.
-        @return the index
-     */
-    public int getNameIndex() {
-        return nameIndex;
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ConstantClassInfo : CPInfo() {
 
     /**
-        Set the index of the constant pool entry containing the name of the class.
-        @param nameIndex the index
+     * Index of the constant pool entry containing the name of the class.
      */
-    public void setNameIndex(int nameIndex) {
-        this.nameIndex = nameIndex;
-    }
-    
+    var nameIndex: Int = 0
+
+    override val constantType: ConstantType
+        get() = ConstantType.CLASS
+
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = name
+
     /**
-        Get the name of the class.
-        @return the tag
-        @throws InvalidByteCodeException if the byte code is invalid
+     * Name of the class.
      */
-    public String getName() throws InvalidByteCodeException {
-        return getClassFile().getConstantPoolUtf8Entry(nameIndex).getString();
+    val name: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(nameIndex).string
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        nameIndex = input.readUnsignedShort()
+        if (isDebug) debug("read")
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        nameIndex = in.readUnsignedShort();
-        if (isDebug()) debug("read ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(ConstantType.CLASS.tag)
+        output.writeShort(nameIndex)
+        if (isDebug) debug("wrote")
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        out.writeByte(ConstantType.CLASS.getTag());
-        out.writeShort(nameIndex);
-        if (isDebug()) debug("wrote ");
-    }
-    
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantClassInfo)) {
-            return false;
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantClassInfo) {
+            return false
         }
-        ConstantClassInfo constantClassInfo = (ConstantClassInfo)object;
-        return super.equals(object) && constantClassInfo.nameIndex == nameIndex;
+        return super.equals(other) && other.nameIndex == nameIndex
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ nameIndex;
+    override fun hashCode(): Int = super.hashCode() xor nameIndex
+
+    override fun debug(message: String) {
+        super.debug("$message $constantType with name_index $nameIndex")
     }
-    
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with name_index " + nameIndex);
-    }
-    
+
 }
