@@ -51,11 +51,11 @@ public class ParameterAnnotations extends AbstractStructure {
         runtimeAnnotations = new Annotation[runtimeVisibleAnnotationsLength];
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
             runtimeAnnotations[i] = new Annotation();
-            runtimeAnnotations[i].setClassFile(classFile);
+            runtimeAnnotations[i].setClassFile(getClassFile());
             runtimeAnnotations[i].read(in);
         }
 
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -70,7 +70,7 @@ public class ParameterAnnotations extends AbstractStructure {
             runtimeAnnotations[i].write(out);
         }
 
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

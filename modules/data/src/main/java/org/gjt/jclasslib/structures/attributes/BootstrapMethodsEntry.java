@@ -92,7 +92,7 @@ public class BootstrapMethodsEntry extends AbstractStructure {
         for (int i = 0; i < argumentRefsCount; i++) {
             argumentIndices[i] = in.readUnsignedShort();
         }
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -107,7 +107,7 @@ public class BootstrapMethodsEntry extends AbstractStructure {
         for (int i = 0; i < argumentRefsCount; i++) {
             out.writeShort(argumentIndices[i]);
         }
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

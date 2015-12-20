@@ -57,11 +57,11 @@ public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements An
         runtimeTypeAnnotations = new TypeAnnotation[runtimeVisibleAnnotationsLength];
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
             runtimeTypeAnnotations[i] = new TypeAnnotation();
-            runtimeTypeAnnotations[i].setClassFile(classFile);
+            runtimeTypeAnnotations[i].setClassFile(getClassFile());
             runtimeTypeAnnotations[i].read(in);
         }
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -73,7 +73,7 @@ public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements An
             runtimeTypeAnnotations[i].write(out);
         }
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

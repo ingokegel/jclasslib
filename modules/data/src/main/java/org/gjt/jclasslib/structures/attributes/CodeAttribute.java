@@ -107,7 +107,7 @@ public class CodeAttribute extends AttributeInfo {
         
         readExceptionTable(in);
         readAttributes(in);
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -120,7 +120,7 @@ public class CodeAttribute extends AttributeInfo {
         writeExceptionTable(out);
         writeAttributes(out);
       
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     private void readExceptionTable(DataInput in)
@@ -129,7 +129,7 @@ public class CodeAttribute extends AttributeInfo {
         int exceptionTableLength = in.readUnsignedShort();
         exceptionTable = new ExceptionTableEntry[exceptionTableLength];
         for (int i = 0; i < exceptionTableLength; i++) {
-            exceptionTable[i] = ExceptionTableEntry.create(in, classFile);
+            exceptionTable[i] = ExceptionTableEntry.create(in, getClassFile());
         }
     
     }

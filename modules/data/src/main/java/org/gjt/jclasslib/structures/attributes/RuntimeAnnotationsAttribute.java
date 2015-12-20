@@ -52,11 +52,11 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
         runtimeAnnotations = new Annotation[runtimeVisibleAnnotationsLength];
         for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
             runtimeAnnotations[i] = new Annotation();
-            runtimeAnnotations[i].setClassFile(classFile);
+            runtimeAnnotations[i].setClassFile(getClassFile());
             runtimeAnnotations[i].read(in);
         }
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -68,7 +68,7 @@ public class RuntimeAnnotationsAttribute extends AttributeInfo implements Annota
             runtimeAnnotations[i].write(out);
         }
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

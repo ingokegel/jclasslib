@@ -153,7 +153,7 @@ public class ExceptionTableEntry extends AbstractStructure {
         endPc = in.readUnsignedShort();
         handlerPc = in.readUnsignedShort();
         catchType = in.readUnsignedShort();
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -164,7 +164,7 @@ public class ExceptionTableEntry extends AbstractStructure {
         out.writeShort(endPc);
         out.writeShort(handlerPc);
         out.writeShort(catchType);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

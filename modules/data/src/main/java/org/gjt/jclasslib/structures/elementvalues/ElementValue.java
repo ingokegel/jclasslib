@@ -113,7 +113,7 @@ public abstract class ElementValue extends AbstractStructure {
 
         out.writeByte(tag);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected abstract int getSpecificLength();

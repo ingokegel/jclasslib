@@ -32,7 +32,7 @@ public class ConstantFieldrefInfo extends ConstantReference {
         throws InvalidByteCodeException, IOException {
         
         super.read(in);
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -40,7 +40,7 @@ public class ConstantFieldrefInfo extends ConstantReference {
         
         out.writeByte(CONSTANT_FIELDREF);
         super.write(out);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {

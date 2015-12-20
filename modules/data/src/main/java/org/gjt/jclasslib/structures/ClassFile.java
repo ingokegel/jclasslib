@@ -533,22 +533,22 @@ public class ClassFile extends AbstractStructureWithAttributes {
                     Integer.toHexString(MAGIC_NUMBER));
         }
 
-        if (debug) debug("read magic number");
+        if (isDebug()) debug("read magic number");
     }
 
     private void writeMagicNumber(DataOutput out) throws IOException {
 
         out.writeInt(MAGIC_NUMBER);
-        if (debug) debug("wrote magic number");
+        if (isDebug()) debug("wrote magic number");
     }
 
     private void readVersion(DataInput in) throws IOException {
 
         minorVersion = in.readUnsignedShort();
-        if (debug) debug("read minor version " + minorVersion);
+        if (isDebug()) debug("read minor version " + minorVersion);
 
         majorVersion = in.readUnsignedShort();
-        if (debug) debug("read major version " + majorVersion);
+        if (isDebug()) debug("read major version " + majorVersion);
 
         checkMajorVersion(majorVersion);
     }
@@ -556,10 +556,10 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private void writeVersion(DataOutput out) throws IOException {
 
         out.writeShort(minorVersion);
-        if (debug) debug("wrote minor version " + minorVersion);
+        if (isDebug()) debug("wrote minor version " + minorVersion);
 
         out.writeShort(majorVersion);
-        if (debug) debug("wrote major version " + majorVersion);
+        if (isDebug()) debug("wrote major version " + majorVersion);
 
         checkMajorVersion(majorVersion);
     }
@@ -569,7 +569,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
 
         constantPoolEntryToIndex.clear();
         int constantPoolCount = in.readUnsignedShort();
-        if (debug) debug("read constant pool count " + constantPoolCount);
+        if (isDebug()) debug("read constant pool count " + constantPoolCount);
 
         constantPool = new CPInfo[constantPoolCount];
 
@@ -582,7 +582,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
             } else {
                 // create CPInfos via factory method since the actual type
                 // of the constant is not yet known
-                if (debug) debug("reading constant pool entry " + i);
+                if (isDebug()) debug("reading constant pool entry " + i);
                 constantPool[i] = CPInfo.create(in, this);
                 constantPoolEntryToIndex.put(constantPool[i], i);
                 if (constantPool[i] instanceof ConstantLargeNumeric) {
@@ -604,14 +604,14 @@ public class ClassFile extends AbstractStructureWithAttributes {
         }
 
         out.writeShort(lastFreeIndex + 1);
-        if (debug) debug("wrote constant pool count " + (lastFreeIndex + 1));
+        if (isDebug()) debug("wrote constant pool count " + (lastFreeIndex + 1));
 
         // constantPool[0] defaults to null and is not written into the class file
         for (int i = 1; i <= lastFreeIndex; i++) {
             if (constantPool[i] == null) {
                 throw new InvalidByteCodeException("constant pool entry " + i + " is null");
             }
-            if (debug) debug("writing constant pool entry " + i);
+            if (isDebug()) debug("writing constant pool entry " + i);
             constantPool[i].write(out);
             if (constantPool[i] instanceof ConstantLargeNumeric) {
                 // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
@@ -624,49 +624,49 @@ public class ClassFile extends AbstractStructureWithAttributes {
     private void readAccessFlags(DataInput in) throws IOException {
 
         accessFlags = in.readUnsignedShort();
-        if (debug) debug("read access flags " + printAccessFlags(accessFlags));
+        if (isDebug()) debug("read access flags " + printAccessFlags(accessFlags));
     }
 
     private void writeAccessFlags(DataOutput out) throws IOException {
 
         out.writeShort(accessFlags);
-        if (debug) debug("wrote access flags " + printAccessFlags(accessFlags));
+        if (isDebug()) debug("wrote access flags " + printAccessFlags(accessFlags));
     }
 
     private void readThisClass(DataInput in) throws IOException {
 
         thisClass = in.readUnsignedShort();
-        if (debug) debug("read this_class index " + thisClass);
+        if (isDebug()) debug("read this_class index " + thisClass);
     }
 
     private void writeThisClass(DataOutput out) throws IOException {
 
         out.writeShort(thisClass);
-        if (debug) debug("wrote this_class index " + thisClass);
+        if (isDebug()) debug("wrote this_class index " + thisClass);
     }
 
     private void readSuperClass(DataInput in) throws IOException {
 
         superClass = in.readUnsignedShort();
-        if (debug) debug("read super_class index " + superClass);
+        if (isDebug()) debug("read super_class index " + superClass);
     }
 
     private void writeSuperClass(DataOutput out) throws IOException {
 
         out.writeShort(superClass);
-        if (debug) debug("wrote super_class index " + superClass);
+        if (isDebug()) debug("wrote super_class index " + superClass);
     }
 
     private void readInterfaces(DataInput in) throws IOException {
 
         int interfacesCount = in.readUnsignedShort();
-        if (debug) debug("read interfaces count " + interfacesCount);
+        if (isDebug()) debug("read interfaces count " + interfacesCount);
 
         interfaces = new int[interfacesCount];
 
         for (int i = 0; i < interfacesCount; i++) {
             interfaces[i] = in.readUnsignedShort();
-            if (debug) debug("read interface index " + interfaces[i]);
+            if (isDebug()) debug("read interface index " + interfaces[i]);
         }
 
     }
@@ -676,11 +676,11 @@ public class ClassFile extends AbstractStructureWithAttributes {
         int interfacesCount = getLength(interfaces);
 
         out.writeShort(interfacesCount);
-        if (debug) debug("wrote interfaces count " + interfacesCount);
+        if (isDebug()) debug("wrote interfaces count " + interfacesCount);
 
         for (int i = 0; i < interfacesCount; i++) {
             out.writeShort(interfaces[i]);
-            if (debug) debug("wrote interface index " + interfaces[i]);
+            if (isDebug()) debug("wrote interface index " + interfaces[i]);
         }
 
     }
@@ -689,7 +689,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
             throws InvalidByteCodeException, IOException {
 
         int fieldsCount = in.readUnsignedShort();
-        if (debug) debug("read fields count " + fieldsCount);
+        if (isDebug()) debug("read fields count " + fieldsCount);
 
         fields = new FieldInfo[fieldsCount];
 
@@ -705,7 +705,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         int fieldsCount = getLength(fields);
 
         out.writeShort(fieldsCount);
-        if (debug) debug("wrote fields count " + fieldsCount);
+        if (isDebug()) debug("wrote fields count " + fieldsCount);
 
         for (int i = 0; i < fieldsCount; i++) {
             if (fields[i] == null) {
@@ -720,7 +720,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
             throws InvalidByteCodeException, IOException {
 
         int methodsCount = in.readUnsignedShort();
-        if (debug) debug("read methods count " + methodsCount);
+        if (isDebug()) debug("read methods count " + methodsCount);
 
         methods = new MethodInfo[methodsCount];
 
@@ -736,7 +736,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         int methodsCount = getLength(methods);
 
         out.writeShort(methodsCount);
-        if (debug) debug("wrote methods count " + methodsCount);
+        if (isDebug()) debug("wrote methods count " + methodsCount);
 
         for (int i = 0; i < methodsCount; i++) {
             if (methods[i] == null) {
@@ -751,14 +751,14 @@ public class ClassFile extends AbstractStructureWithAttributes {
             throws InvalidByteCodeException, IOException {
 
         super.readAttributes(in);
-        if (debug) debug("read " + getLength(attributes) + " attributes for the ClassFile structure");
+        if (isDebug()) debug("read " + getLength(attributes) + " attributes for the ClassFile structure");
     }
 
     protected void writeAttributes(DataOutput out)
             throws InvalidByteCodeException, IOException {
 
         super.writeAttributes(out);
-        if (debug) debug("wrote " + getLength(attributes) + " attributes for the ClassFile structure");
+        if (isDebug()) debug("wrote " + getLength(attributes) + " attributes for the ClassFile structure");
     }
 
     private void checkMajorVersion(int majorVersion) {

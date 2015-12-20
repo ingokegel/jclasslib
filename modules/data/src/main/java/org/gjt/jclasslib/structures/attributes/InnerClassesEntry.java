@@ -158,7 +158,7 @@ public class InnerClassesEntry extends AbstractStructure {
         innerNameIndex = in.readUnsignedShort();
         innerClassAccessFlags = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -169,7 +169,7 @@ public class InnerClassesEntry extends AbstractStructure {
         out.writeShort(outerClassInfoIndex);
         out.writeShort(innerNameIndex);
         out.writeShort(innerClassAccessFlags);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

@@ -60,14 +60,14 @@ public class ConstantMethodTypeInfo extends CPInfo {
         @throws org.gjt.jclasslib.structures.InvalidByteCodeException if the byte code is invalid
      */
     public String getName() throws InvalidByteCodeException {
-        return classFile.getConstantPoolUtf8Entry(descriptorIndex).getString();
+        return getClassFile().getConstantPoolUtf8Entry(descriptorIndex).getString();
     }
 
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
             
         descriptorIndex = in.readUnsignedShort();
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -75,7 +75,7 @@ public class ConstantMethodTypeInfo extends CPInfo {
         
         out.writeByte(CONSTANT_METHOD_TYPE);
         out.writeShort(descriptorIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
     
     public boolean equals(Object object) {

@@ -162,7 +162,7 @@ public class StackMapFrameEntry extends AbstractStructure {
             default:
                 throw new IllegalStateException(frameType.toString());
         }
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -170,13 +170,13 @@ public class StackMapFrameEntry extends AbstractStructure {
     private void readOneStackItem(DataInput in) throws InvalidByteCodeException, IOException {
         offsetDelta = tag - 64;
         stackItems = new VerificationTypeInfoEntry[1];
-        stackItems[0] = VerificationTypeInfoEntry.create(in, classFile);
+        stackItems[0] = VerificationTypeInfoEntry.create(in, getClassFile());
     }
 
     private void readOneStackItemExt(DataInput in) throws InvalidByteCodeException, IOException {
         offsetDelta = in.readUnsignedShort();
         stackItems = new VerificationTypeInfoEntry[1];
-        stackItems[0] = VerificationTypeInfoEntry.create(in, classFile);
+        stackItems[0] = VerificationTypeInfoEntry.create(in, getClassFile());
     }
 
     private void readChop(DataInput in) throws InvalidByteCodeException, IOException {
@@ -192,7 +192,7 @@ public class StackMapFrameEntry extends AbstractStructure {
         int numLocals = tag - 251;
         localItems = new VerificationTypeInfoEntry[numLocals];
         for (int i = 0; i < numLocals; i++) {
-            localItems[i] = VerificationTypeInfoEntry.create(in, classFile);
+            localItems[i] = VerificationTypeInfoEntry.create(in, getClassFile());
         }
     }
 
@@ -201,12 +201,12 @@ public class StackMapFrameEntry extends AbstractStructure {
         int numLocals = in.readUnsignedShort();
         localItems = new VerificationTypeInfoEntry[numLocals];
         for (int i = 0; i < numLocals; i++) {
-            localItems[i] = VerificationTypeInfoEntry.create(in, classFile);
+            localItems[i] = VerificationTypeInfoEntry.create(in, getClassFile());
         }
         int numStacks = in.readUnsignedShort();
         stackItems = new VerificationTypeInfoEntry[numStacks];
         for (int i = 0; i < numStacks; i++) {
-            stackItems[i] = VerificationTypeInfoEntry.create(in, classFile);
+            stackItems[i] = VerificationTypeInfoEntry.create(in, getClassFile());
         }
     }
 
@@ -236,7 +236,7 @@ public class StackMapFrameEntry extends AbstractStructure {
             default:
                 throw new IllegalStateException(frameType.name());
         }
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
 

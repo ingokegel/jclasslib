@@ -43,7 +43,7 @@ public class SignatureAttribute extends AttributeInfo {
 
         signatureIndex = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -51,7 +51,7 @@ public class SignatureAttribute extends AttributeInfo {
 
         out.writeShort(signatureIndex);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

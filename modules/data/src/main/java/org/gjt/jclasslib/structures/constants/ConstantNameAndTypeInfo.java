@@ -77,7 +77,7 @@ public class ConstantNameAndTypeInfo extends CPInfo {
         @throws InvalidByteCodeException
      */
     public String getName() throws InvalidByteCodeException {
-        return classFile.getConstantPoolEntryName(nameIndex);
+        return getClassFile().getConstantPoolEntryName(nameIndex);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ConstantNameAndTypeInfo extends CPInfo {
         @throws InvalidByteCodeException
      */
     public String getDescriptor() throws InvalidByteCodeException {
-        return classFile.getConstantPoolEntryName(descriptorIndex);
+        return getClassFile().getConstantPoolEntryName(descriptorIndex);
     }
 
     public void read(DataInput in)
@@ -95,7 +95,7 @@ public class ConstantNameAndTypeInfo extends CPInfo {
         nameIndex = in.readUnsignedShort();
         descriptorIndex = in.readUnsignedShort();
         
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
     
     public void write(DataOutput out)
@@ -104,7 +104,7 @@ public class ConstantNameAndTypeInfo extends CPInfo {
         out.writeByte(CONSTANT_NAME_AND_TYPE);
         out.writeShort(nameIndex);
         out.writeShort(descriptorIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

@@ -52,7 +52,7 @@ public class MethodParametersEntry extends AbstractStructure {
         nameIndex = in.readUnsignedShort();
         accessFlags = in.readUnsignedShort();
 
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -73,7 +73,7 @@ public class MethodParametersEntry extends AbstractStructure {
         out.writeShort(nameIndex);
         out.writeShort(accessFlags);
 
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

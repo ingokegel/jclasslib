@@ -93,7 +93,7 @@ public class LineNumberTableEntry extends AbstractStructure {
         startPc = in.readUnsignedShort();
         lineNumber = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -102,7 +102,7 @@ public class LineNumberTableEntry extends AbstractStructure {
         super.write(out);
         out.writeShort(startPc);
         out.writeShort(lineNumber);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

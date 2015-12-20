@@ -55,11 +55,11 @@ public class StackMapTableAttribute extends AttributeInfo {
 
         int previousOffset = 0;
         for (int i = 0; i < numberOfEntries; i++) {
-            entries[i] = StackMapFrameEntry.create(in, classFile, previousOffset);
+            entries[i] = StackMapFrameEntry.create(in, getClassFile(), previousOffset);
             previousOffset += entries[i].getOffsetDelta() + 1;
         }
 
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -72,7 +72,7 @@ public class StackMapTableAttribute extends AttributeInfo {
         for (int i = 0; i < numberOfRefs; i++) {
             entries[i].write(out);
         }
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

@@ -73,10 +73,10 @@ public class AnnotationElementValue extends ElementValue implements AnnotationDa
         elementValuePairEntries = new ElementValuePair[elementValuePairEntriesLength];
 
         for (int i = 0; i < elementValuePairEntriesLength; i++) {
-            elementValuePairEntries[i] = ElementValuePair.create(in, classFile);
+            elementValuePairEntries[i] = ElementValuePair.create(in, getClassFile());
         }
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -90,7 +90,7 @@ public class AnnotationElementValue extends ElementValue implements AnnotationDa
             elementValuePairEntries[i].write(out);
         }
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected int getSpecificLength() {

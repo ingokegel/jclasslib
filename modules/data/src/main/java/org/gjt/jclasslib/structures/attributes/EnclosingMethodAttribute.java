@@ -57,7 +57,7 @@ public class EnclosingMethodAttribute extends AttributeInfo {
         classInfoIndex = in.readUnsignedShort();
         methodInfoIndex = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -67,7 +67,7 @@ public class EnclosingMethodAttribute extends AttributeInfo {
         out.writeShort(classInfoIndex);
         out.writeShort(methodInfoIndex);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

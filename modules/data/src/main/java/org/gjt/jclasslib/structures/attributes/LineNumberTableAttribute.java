@@ -51,10 +51,10 @@ public class LineNumberTableAttribute extends AttributeInfo {
         int lineNumberTableLength = in.readUnsignedShort();
         lineNumberTable = new LineNumberTableEntry[lineNumberTableLength];
         for (int i = 0 ; i < lineNumberTableLength; i++) {
-            lineNumberTable[i] = LineNumberTableEntry.create(in, classFile);
+            lineNumberTable[i] = LineNumberTableEntry.create(in, getClassFile());
         }
         
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -66,7 +66,7 @@ public class LineNumberTableAttribute extends AttributeInfo {
         for (int i = 0 ; i < lineNumberTableLength; i++) {
             lineNumberTable[i].write(out);
         }
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

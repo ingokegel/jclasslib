@@ -52,7 +52,7 @@ public class RuntimeParameterAnnotationsAttribute extends AttributeInfo {
             parameterAnnotations[i].read(in);
         }
 
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -66,7 +66,7 @@ public class RuntimeParameterAnnotationsAttribute extends AttributeInfo {
             parameterAnnotations[i].write(out);
         }
 
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

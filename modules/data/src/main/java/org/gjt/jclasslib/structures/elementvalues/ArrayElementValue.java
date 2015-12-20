@@ -64,10 +64,10 @@ public class ArrayElementValue extends ElementValue {
         int elementValueEntriesLength = in.readUnsignedShort();
         elementValueEntries = new ElementValue[elementValueEntriesLength];
         for (int i = 0; i < elementValueEntries.length; i++) {
-            elementValueEntries[i] = ElementValue.create(in, classFile);
+            elementValueEntries[i] = ElementValue.create(in, getClassFile());
         }
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -80,7 +80,7 @@ public class ArrayElementValue extends ElementValue {
             elementValueEntries[i].write(out);
         }
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

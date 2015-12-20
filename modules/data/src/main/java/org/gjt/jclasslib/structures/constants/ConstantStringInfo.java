@@ -35,7 +35,7 @@ public class ConstantStringInfo extends CPInfo {
     }
     
     public String getVerbose() throws InvalidByteCodeException {
-        return classFile.getConstantPoolEntryName(stringIndex);
+        return getClassFile().getConstantPoolEntryName(stringIndex);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ConstantStringInfo extends CPInfo {
         throws InvalidByteCodeException, IOException {
             
         stringIndex = in.readUnsignedShort();
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
     
     public void write(DataOutput out)
@@ -68,7 +68,7 @@ public class ConstantStringInfo extends CPInfo {
 
         out.writeByte(CONSTANT_STRING);
         out.writeShort(stringIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

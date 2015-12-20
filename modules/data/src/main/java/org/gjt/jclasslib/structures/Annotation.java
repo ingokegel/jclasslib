@@ -69,10 +69,10 @@ public class Annotation extends AbstractStructure implements AnnotationData {
         elementValuePairEntries = new ElementValuePair[elementValuePairEntriesLength];
 
         for (int i = 0; i < elementValuePairEntriesLength; i++) {
-            elementValuePairEntries[i] = ElementValuePair.create(in, classFile);
+            elementValuePairEntries[i] = ElementValuePair.create(in, getClassFile());
         }
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public int getLength() {
@@ -94,7 +94,7 @@ public class Annotation extends AbstractStructure implements AnnotationData {
             elementValuePairEntries[i].write(out);
         }
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
 
     }
 

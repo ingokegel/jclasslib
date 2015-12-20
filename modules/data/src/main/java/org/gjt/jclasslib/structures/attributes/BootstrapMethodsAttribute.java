@@ -53,10 +53,10 @@ public class BootstrapMethodsAttribute extends AttributeInfo {
         methods = new BootstrapMethodsEntry[numberOfRefs];
 
         for (int i = 0; i < numberOfRefs; i++) {
-            methods[i] = BootstrapMethodsEntry.create(in, classFile);
+            methods[i] = BootstrapMethodsEntry.create(in, getClassFile());
         }
 
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -70,7 +70,7 @@ public class BootstrapMethodsAttribute extends AttributeInfo {
         for (int i = 0; i < numberOfRefs; i++) {
             methods[i].write(out);
         }
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

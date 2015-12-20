@@ -59,7 +59,7 @@ public class VerificationTypeInfoEntry extends AbstractStructure {
     public final void read(DataInput in) throws InvalidByteCodeException, IOException {
         super.read(in);
         readExtra(in);
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -76,7 +76,7 @@ public class VerificationTypeInfoEntry extends AbstractStructure {
         super.write(out);
         out.writeByte(type.getTag());
         writeExtra(out);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     /**

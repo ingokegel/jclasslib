@@ -134,7 +134,7 @@ public abstract class LocalVariableCommonEntry extends AbstractStructure {
         descriptorOrSignatureIndex = in.readUnsignedShort();
         index = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     final public void write(DataOutput out)
@@ -147,7 +147,7 @@ public abstract class LocalVariableCommonEntry extends AbstractStructure {
         out.writeShort(descriptorOrSignatureIndex);
         out.writeShort(index);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected String printAccessFlagsVerbose(int accessFlags) {

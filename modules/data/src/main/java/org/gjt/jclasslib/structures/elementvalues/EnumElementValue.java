@@ -76,7 +76,7 @@ public class EnumElementValue extends ElementValue {
         typeNameIndex = in.readUnsignedShort();
         constNameIndex = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -84,7 +84,7 @@ public class EnumElementValue extends ElementValue {
         out.writeShort(typeNameIndex);
         out.writeShort(constNameIndex);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

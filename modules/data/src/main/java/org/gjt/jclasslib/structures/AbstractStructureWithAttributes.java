@@ -69,7 +69,7 @@ public abstract class AbstractStructureWithAttributes extends AbstractStructure 
         attributes = new AttributeInfo[attributesCount];
         
         for (int i = 0; i < attributesCount; i++) {
-            attributes[i] = AttributeInfo.createOrSkip(in, classFile);
+            attributes[i] = AttributeInfo.createOrSkip(in, getClassFile());
         }
     }
 

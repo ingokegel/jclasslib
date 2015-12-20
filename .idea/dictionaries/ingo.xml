@@ -21,6 +21,7 @@
       <w>bipush</w>
       <w>bootstrapmethod</w>
       <w>caload</w>
+      <w>carreira</w>
       <w>castore</w>
       <w>checkcast</w>
       <w>classfile</w>
@@ -137,6 +138,7 @@
       <w>supertype</w>
       <w>tableswitch</w>
       <w>typeannotation</w>
+      <w>vitor</w>
     </words>
   </dictionary>
 </component>

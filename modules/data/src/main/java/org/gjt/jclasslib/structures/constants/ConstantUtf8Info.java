@@ -78,7 +78,7 @@ public class ConstantUtf8Info extends CPInfo {
 
         string = in.readUTF();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -86,7 +86,7 @@ public class ConstantUtf8Info extends CPInfo {
 
         out.writeByte(CONSTANT_UTF8);
         out.writeUTF(string);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

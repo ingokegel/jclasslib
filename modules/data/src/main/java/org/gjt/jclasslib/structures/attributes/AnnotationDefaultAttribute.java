@@ -48,9 +48,9 @@ public class AnnotationDefaultAttribute extends AttributeInfo {
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
-        defaultValue = ElementValue.create(in, classFile);
+        defaultValue = ElementValue.create(in, getClassFile());
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -58,7 +58,7 @@ public class AnnotationDefaultAttribute extends AttributeInfo {
 
         defaultValue.write(out);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

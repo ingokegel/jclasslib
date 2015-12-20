@@ -47,13 +47,13 @@ public class SourceFileAttribute extends AttributeInfo {
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
             
         sourceFileIndex = in.readUnsignedShort();
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
         out.writeShort(sourceFileIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

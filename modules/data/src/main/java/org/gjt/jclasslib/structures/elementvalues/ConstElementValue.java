@@ -56,7 +56,7 @@ public class ConstElementValue extends ElementValue {
 
         constValueIndex = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -64,7 +64,7 @@ public class ConstElementValue extends ElementValue {
 
         out.writeShort(constValueIndex);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

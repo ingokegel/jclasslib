@@ -47,14 +47,14 @@ public class ConstantValueAttribute extends AttributeInfo {
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
             
         constantValueIndex = in.readUnsignedShort();
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         
         super.write(out);
         out.writeShort(constantValueIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

@@ -76,7 +76,7 @@ public class TypeAnnotation extends AbstractStructure {
         }
         annotation = new Annotation();
         annotation.read(in);
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -92,7 +92,7 @@ public class TypeAnnotation extends AbstractStructure {
             typePathEntries[i].write(out);
         }
         annotation.write(out);
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

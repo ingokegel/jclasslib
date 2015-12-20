@@ -33,8 +33,8 @@ public abstract class ConstantReference extends CPInfo {
 
         ConstantNameAndTypeInfo nameAndType = getNameAndTypeInfo();
 
-        return classFile.getConstantPoolEntryName(classIndex) + "." +
-               classFile.getConstantPoolEntryName(nameAndType.getNameIndex());
+        return getClassFile().getConstantPoolEntryName(classIndex) + "." +
+               getClassFile().getConstantPoolEntryName(nameAndType.getNameIndex());
     }
 
     /**
@@ -88,7 +88,7 @@ public abstract class ConstantReference extends CPInfo {
         @throws InvalidByteCodeException
      */
     public ConstantNameAndTypeInfo getNameAndTypeInfo() throws InvalidByteCodeException {
-        return (ConstantNameAndTypeInfo)classFile.getConstantPoolEntry(
+        return (ConstantNameAndTypeInfo)getClassFile().getConstantPoolEntry(
                     nameAndTypeIndex,
                     ConstantNameAndTypeInfo.class);
     }

@@ -56,7 +56,7 @@ public class ClassElementValue extends ElementValue {
 
         classInfoIndex = in.readUnsignedShort();
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -64,7 +64,7 @@ public class ClassElementValue extends ElementValue {
 
         out.writeShort(classInfoIndex);
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

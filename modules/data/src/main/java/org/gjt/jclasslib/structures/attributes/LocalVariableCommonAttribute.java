@@ -52,6 +52,6 @@ public abstract class LocalVariableCommonAttribute extends AttributeInfo {
             localVariableTable[i].write(out);
         }
 
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 }

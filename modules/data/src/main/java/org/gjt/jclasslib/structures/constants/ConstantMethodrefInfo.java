@@ -32,7 +32,7 @@ public class ConstantMethodrefInfo extends ConstantReference {
         throws InvalidByteCodeException, IOException {
         
         super.read(in);
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
     
     public void write(DataOutput out)
@@ -40,7 +40,7 @@ public class ConstantMethodrefInfo extends ConstantReference {
         
         out.writeByte(CONSTANT_METHODREF);
         super.write(out);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {

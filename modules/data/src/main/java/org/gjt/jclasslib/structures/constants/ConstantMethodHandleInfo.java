@@ -106,7 +106,7 @@ public class ConstantMethodHandleInfo extends CPInfo {
      */
     public String getName() throws InvalidByteCodeException {
         return getTypeVerbose() + " " +
-               classFile.getConstantPoolEntryName(referenceIndex);
+               getClassFile().getConstantPoolEntryName(referenceIndex);
 
     }
 
@@ -115,7 +115,7 @@ public class ConstantMethodHandleInfo extends CPInfo {
 
         type = in.readByte();
         referenceIndex = in.readUnsignedShort();
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -124,7 +124,7 @@ public class ConstantMethodHandleInfo extends CPInfo {
         out.writeByte(CONSTANT_METHOD_HANDLE);
         out.write(type);
         out.writeShort(referenceIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
     
     public boolean equals(Object object) {

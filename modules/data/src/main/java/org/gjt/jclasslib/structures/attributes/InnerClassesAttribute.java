@@ -52,10 +52,10 @@ public class InnerClassesAttribute extends AttributeInfo {
         classes = new InnerClassesEntry[numberOfClasses];
         
         for (int i = 0; i < numberOfClasses; i++) {
-            classes[i] = InnerClassesEntry.create(in, classFile);
+            classes[i] = InnerClassesEntry.create(in, getClassFile());
         }
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -67,7 +67,7 @@ public class InnerClassesAttribute extends AttributeInfo {
         for (int i = 0 ; i < numberOfClasses; i++) {
             classes[i].write(out);
         }
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

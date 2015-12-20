@@ -52,7 +52,7 @@ public class ConstantFloatInfo extends ConstantNumeric {
         throws InvalidByteCodeException, IOException {
         
         super.read(in);
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
     
      public void write(DataOutput out)
@@ -60,7 +60,7 @@ public class ConstantFloatInfo extends ConstantNumeric {
         
         out.writeByte(CONSTANT_FLOAT);
         super.write(out);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {

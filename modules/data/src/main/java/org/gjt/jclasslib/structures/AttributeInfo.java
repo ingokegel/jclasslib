@@ -179,7 +179,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
      * @throws InvalidByteCodeException if the byte code is invalid
      */
     public String getName() throws InvalidByteCodeException {
-        return classFile.getConstantPoolUtf8Entry(attributeNameIndex).getString();
+        return getClassFile().getConstantPoolUtf8Entry(attributeNameIndex).getString();
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
@@ -187,7 +187,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
         info = new byte[attributeLength];
         in.readFully(info);
 
-        if (debug) debug("read " + getDebugMessage());
+        if (isDebug()) debug("read " + getDebugMessage());
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
@@ -196,7 +196,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
         out.writeInt(getAttributeLength());
         if (getClass().equals(AttributeInfo.class)) {
             out.write(info);
-            if (debug) debug("wrote " + getDebugMessage());
+            if (isDebug()) debug("wrote " + getDebugMessage());
         }
     }
 
@@ -214,7 +214,7 @@ public class AttributeInfo extends AbstractStructureWithAttributes {
     private String getDebugMessage() {
         String type;
         try {
-            type = classFile.getConstantPoolUtf8Entry(attributeNameIndex).getString();
+            type = getClassFile().getConstantPoolUtf8Entry(attributeNameIndex).getString();
         } catch (InvalidByteCodeException ex) {
             type = "(unknown)";
         }

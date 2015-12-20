@@ -60,14 +60,14 @@ public class ConstantClassInfo extends CPInfo {
         @throws InvalidByteCodeException if the byte code is invalid
      */
     public String getName() throws InvalidByteCodeException {
-        return classFile.getConstantPoolUtf8Entry(nameIndex).getString();
+        return getClassFile().getConstantPoolUtf8Entry(nameIndex).getString();
     }
 
     public void read(DataInput in)
         throws InvalidByteCodeException, IOException {
             
         nameIndex = in.readUnsignedShort();
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out)
@@ -75,7 +75,7 @@ public class ConstantClassInfo extends CPInfo {
         
         out.writeByte(CONSTANT_CLASS);
         out.writeShort(nameIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
     
     public boolean equals(Object object) {

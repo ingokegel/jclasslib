@@ -81,7 +81,7 @@ public abstract class ClassMember extends AbstractStructureWithAttributes {
         @throws InvalidByteCodeException if the entry is invalid
      */
     public String getName() throws InvalidByteCodeException {
-        ConstantUtf8Info cpinfo = classFile.getConstantPoolUtf8Entry(nameIndex);
+        ConstantUtf8Info cpinfo = getClassFile().getConstantPoolUtf8Entry(nameIndex);
         if (cpinfo == null) {
             return "invalid constant pool index";
         } else {
@@ -95,7 +95,7 @@ public abstract class ClassMember extends AbstractStructureWithAttributes {
         @throws InvalidByteCodeException if the entry is invalid
      */
     public String getDescriptor() throws InvalidByteCodeException {
-        ConstantUtf8Info cpinfo = classFile.getConstantPoolUtf8Entry(descriptorIndex);
+        ConstantUtf8Info cpinfo = getClassFile().getConstantPoolUtf8Entry(descriptorIndex);
         if (cpinfo == null) {
             return "invalid constant pool index";
         } else {

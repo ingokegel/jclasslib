@@ -50,10 +50,10 @@ public class LocalVariableTableAttribute extends LocalVariableCommonAttribute {
         int localVariableTableLength = in.readUnsignedShort();
         localVariableTable = new LocalVariableTableEntry[localVariableTableLength];
         for (int i = 0; i < localVariableTableLength; i++) {
-            localVariableTable[i] = LocalVariableTableEntry.create(in, classFile);
+            localVariableTable[i] = LocalVariableTableEntry.create(in, getClassFile());
         }
 
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public int getAttributeLength() {

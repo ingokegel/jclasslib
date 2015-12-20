@@ -54,10 +54,10 @@ public class MethodParametersAttribute extends AttributeInfo {
         entries = new MethodParametersEntry[numberOfEntries];
 
         for (int i = 0; i < numberOfEntries; i++) {
-            entries[i] = MethodParametersEntry.create(in, classFile);
+            entries[i] = MethodParametersEntry.create(in, getClassFile());
         }
 
-        if (debug) {
+        if (isDebug()) {
             debug("read ");
         }
     }
@@ -71,7 +71,7 @@ public class MethodParametersAttribute extends AttributeInfo {
         for (int i = 0; i < numberOfRefs; i++) {
             entries[i].write(out);
         }
-        if (debug) {
+        if (isDebug()) {
             debug("wrote ");
         }
     }

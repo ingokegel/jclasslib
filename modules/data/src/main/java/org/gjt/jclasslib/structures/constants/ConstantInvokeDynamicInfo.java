@@ -58,7 +58,7 @@ public class ConstantInvokeDynamicInfo extends CPInfo {
     }
 
     public ConstantNameAndTypeInfo getNameAndTypeInfo() throws InvalidByteCodeException {
-        return (ConstantNameAndTypeInfo)classFile.getConstantPoolEntry(
+        return (ConstantNameAndTypeInfo)getClassFile().getConstantPoolEntry(
                 nameAndTypeIndex,
                 ConstantNameAndTypeInfo.class);
     }
@@ -69,7 +69,7 @@ public class ConstantInvokeDynamicInfo extends CPInfo {
         bootstrapMethodAttributeIndex = in.readUnsignedShort();
         nameAndTypeIndex = in.readUnsignedShort();
         
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
     
     public void write(DataOutput out)
@@ -78,7 +78,7 @@ public class ConstantInvokeDynamicInfo extends CPInfo {
         out.writeByte(CONSTANT_INVOKE_DYNAMIC);
         out.writeShort(bootstrapMethodAttributeIndex);
         out.writeShort(nameAndTypeIndex);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {

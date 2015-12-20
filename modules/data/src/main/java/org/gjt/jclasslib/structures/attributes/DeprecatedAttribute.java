@@ -27,12 +27,12 @@ public class DeprecatedAttribute extends AttributeInfo {
     private static final int LENGTH = 0;
     
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         super.write(out);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
 
     public int getAttributeLength() {

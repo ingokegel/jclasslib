@@ -53,7 +53,7 @@ public class ConstantLongInfo extends ConstantLargeNumeric {
         throws InvalidByteCodeException, IOException {
         
         super.read(in);
-        if (debug) debug("read ");
+        if (isDebug()) debug("read ");
     }
     
     public void write(DataOutput out)
@@ -61,7 +61,7 @@ public class ConstantLongInfo extends ConstantLargeNumeric {
         
         out.writeByte(CONSTANT_LONG);
         super.write(out);
-        if (debug) debug("wrote ");
+        if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {
