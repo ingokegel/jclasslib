@@ -22,9 +22,6 @@ import java.io.IOException;
 */
 public class ConstantStringInfo extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes. */
-    public static final int SIZE = 2;
-    
     private int stringIndex;
     
     public ConstantType getConstantType() {

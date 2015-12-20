@@ -22,9 +22,6 @@ import java.io.IOException;
 */
 public class ConstantMethodHandleInfo extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes. */
-    public static final int SIZE = 3;
-
     public static final int TYPE_GET_FIELD = 1;
     public static final int TYPE_GET_STATIC = 2;
     public static final int TYPE_PUT_FIELD = 3;

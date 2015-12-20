@@ -22,9 +22,6 @@ import java.io.IOException;
 */
 public class ConstantInvokeDynamicInfo extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes. */
-    public static final int SIZE = 4;
-
     private int bootstrapMethodAttributeIndex;
     private int nameAndTypeIndex;
 

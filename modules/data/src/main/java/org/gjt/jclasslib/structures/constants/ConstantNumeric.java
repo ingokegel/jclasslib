@@ -21,9 +21,6 @@ import java.io.IOException;
 */
 public abstract class ConstantNumeric extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes. */
-    public static final int SIZE = 4;
-    
     /** <tt>bytes</tt> field. */
     protected int bytes;
     

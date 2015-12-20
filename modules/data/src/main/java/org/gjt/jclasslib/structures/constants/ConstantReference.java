@@ -21,9 +21,6 @@ import java.io.IOException;
 */
 public abstract class ConstantReference extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes. */
-    public static final int SIZE = 4;
-
     /** <tt>class_index</tt> field. */
     protected int classIndex;
     /** <tt>name_and_type_index</tt> field. */

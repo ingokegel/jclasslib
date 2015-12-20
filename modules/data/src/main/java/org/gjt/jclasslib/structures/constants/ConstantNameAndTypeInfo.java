@@ -22,9 +22,6 @@ import java.io.IOException;
 */
 public class ConstantNameAndTypeInfo extends CPInfo {
 
-    /** Length of the constant pool data structure in bytes. */
-    public static final int SIZE = 4;
-    
     private int nameIndex;
     private int descriptorIndex;
     
