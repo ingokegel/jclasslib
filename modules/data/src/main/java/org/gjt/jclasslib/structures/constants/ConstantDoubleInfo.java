@@ -34,7 +34,7 @@ public class ConstantDoubleInfo extends ConstantLargeNumeric {
         @return the value
      */
     public double getDouble() {
-        long longBits = (long)highBytes << 32 | (long)lowBytes & 0xFFFFFFFFL;
+        long longBits = (long)getHighBytes() << 32 | (long)getLowBytes() & 0xFFFFFFFFL;
         return Double.longBitsToDouble(longBits);
     }
 
@@ -44,8 +44,8 @@ public class ConstantDoubleInfo extends ConstantLargeNumeric {
      */
     public void setDouble(double number) {
         long longBits = Double.doubleToLongBits(number);
-        highBytes = (int)(longBits >>> 32 & 0xFFFFFFFFL);
-        lowBytes = (int)(longBits & 0xFFFFFFFFL);
+        setHighBytes((int)(longBits >>> 32 & 0xFFFFFFFFL));
+        setLowBytes((int)(longBits & 0xFFFFFFFFL));
     }
 
     public void read(DataInput in)
@@ -64,7 +64,7 @@ public class ConstantDoubleInfo extends ConstantLargeNumeric {
     }
     
     protected void debug(String message) {
-        super.debug(message + getConstantType() + " with high_bytes " + highBytes +
-              " and low_bytes " + lowBytes);
+        super.debug(message + getConstantType() + " with high_bytes " + getHighBytes() +
+              " and low_bytes " + getLowBytes());
     }
 }

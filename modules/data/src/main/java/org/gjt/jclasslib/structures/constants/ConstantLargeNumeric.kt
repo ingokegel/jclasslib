@@ -5,103 +5,67 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Base class for large numeric constant pool data structures.
+ * Base class for large numeric constant pool data structures.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class ConstantLargeNumeric extends CPInfo {
-
-    /** <tt>high_bytes</tt> field. */
-    protected int highBytes;
-    /** <tt>low_bytes</tt> field. */
-    protected int lowBytes;
-    
-    /**
-        Get the <tt>high_bytes</tt> field of this constant pool entry.
-        @return the <tt>high_bytes</tt> field
-     */
-    public int getHighBytes() {
-        return highBytes;
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+abstract class ConstantLargeNumeric : CPInfo() {
 
     /**
-        Set the <tt>high_bytes</tt> field of this constant pool entry.
-        @param highBytes the <tt>high_bytes</tt> field
+     * The high_bytes field of this constant pool entry.
      */
-    public void setHighBytes(int highBytes) {
-        this.highBytes = highBytes;
-    }
+    var highBytes: Int = 0
 
     /**
-        Get the <tt>low_bytes</tt> field of this constant pool entry.
-        @return the <tt>low_bytes</tt> field
+     * The low_bytes field of this constant pool entry.
      */
-    public int getLowBytes() {
-        return lowBytes;
-    }
+    var lowBytes: Int = 0
 
     /**
-        Set the <tt>low_bytes</tt> field of this constant pool entry.
-        @param lowBytes the <tt>low_bytes</tt> field
+     * Get the the high_bytes field of this constant pool
+     * entry as a hex string.
      */
-    public void setLowBytes(int lowBytes) {
-        this.lowBytes = lowBytes;
-    }
-    
-    /**
-        Get the the <tt>high_bytes</tt> field of this constant pool
-        entry as a hex string.
-        @return the hex string
-     */
-    public String getFormattedHighBytes() {
-        return printBytes(highBytes);
-    }
+    val formattedHighBytes: String
+        get() = printBytes(highBytes)
 
     /**
-        Get the the <tt>low_bytes</tt> field of this constant pool
-        entry as a hex string.
-        @return the hex string
+     * Get the the low_bytes field of this constant pool
+     * entry as a hex string.
      */
-    public String getFormattedLowBytes() {
-        return printBytes(lowBytes);
+    val formattedLowBytes: String
+        get() = printBytes(lowBytes)
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+
+        highBytes = input.readInt()
+        lowBytes = input.readInt()
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        highBytes = in.readInt();
-        lowBytes = in.readInt();
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+
+        output.writeInt(highBytes)
+        output.writeInt(lowBytes)
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        out.writeInt(highBytes);
-        out.writeInt(lowBytes);
-    }
-    
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantLargeNumeric)) {
-            return false;
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantLargeNumeric) {
+            return false
         }
-        ConstantLargeNumeric constantLargeNumeric = (ConstantLargeNumeric)object;
-        return super.equals(object) &&
-               constantLargeNumeric.highBytes == highBytes &&
-               constantLargeNumeric.lowBytes == lowBytes;
+        return super.equals(other) && other.highBytes == highBytes && other.lowBytes == lowBytes
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ highBytes ^ lowBytes;
-    }
-    
+    override fun hashCode(): Int = super.hashCode() xor highBytes xor lowBytes
+
 }

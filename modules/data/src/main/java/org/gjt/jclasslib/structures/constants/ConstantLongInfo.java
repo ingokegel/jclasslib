@@ -34,7 +34,7 @@ public class ConstantLongInfo extends ConstantLargeNumeric {
         @return the value
      */
     public long getLong() {
-        return ((long)highBytes << 32) | ((long)lowBytes & 0xFFFFFFFF);
+        return ((long)getHighBytes() << 32) | ((long)getLowBytes() & 0xFFFFFFFF);
     }
 
     /**
@@ -42,8 +42,8 @@ public class ConstantLongInfo extends ConstantLargeNumeric {
         @param number the value
      */
     public void setLong(long number) {
-        highBytes = (int)(number >>> 32);
-        lowBytes = (int)(number & 0xFFFFFFFF);
+        setHighBytes((int)(number >>> 32));
+        setLowBytes((int)(number & 0xFFFFFFFF));
     }
 
     public void read(DataInput in)
@@ -62,8 +62,8 @@ public class ConstantLongInfo extends ConstantLargeNumeric {
     }
     
     protected void debug(String message) {
-        super.debug(message + getConstantType() + " with high_bytes " + highBytes +
-              " and low_bytes " + lowBytes);
+        super.debug(message + getConstantType() + " with high_bytes " + getHighBytes() +
+              " and low_bytes " + getLowBytes());
     }
 
 }
