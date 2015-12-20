@@ -22,7 +22,7 @@ import java.io.IOException
 class ConstantInterfaceMethodrefInfo : ConstantReference() {
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_INTERFACE_METHODREF
+        get() = ConstantType.INTERFACE_METHODREF
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
@@ -32,7 +32,7 @@ class ConstantInterfaceMethodrefInfo : ConstantReference() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        output.writeByte(ConstantType.CONSTANT_INTERFACE_METHODREF.tag)
+        output.writeByte(ConstantType.INTERFACE_METHODREF.tag)
         super.write(output)
         if (isDebug) debug("wrote")
     }

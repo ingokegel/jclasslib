@@ -22,7 +22,7 @@ import java.io.IOException
 class ConstantLongInfo : ConstantLargeNumeric() {
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_LONG
+        get() = ConstantType.LONG
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
@@ -47,7 +47,7 @@ class ConstantLongInfo : ConstantLargeNumeric() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        output.writeByte(ConstantType.CONSTANT_LONG.tag)
+        output.writeByte(ConstantType.LONG.tag)
         super.write(output)
         if (isDebug) debug("wrote")
     }

@@ -11,46 +11,46 @@ import org.gjt.jclasslib.structures.constants.*
 
 enum class ConstantType(val tag: Int, val verbose: String, val size : Int) {
 
-    CONSTANT_CLASS(7, "CONSTANT_Class_info", 2) {
+    CLASS(7, "CONSTANT_Class_info", 2) {
         override fun create(): CPInfo = ConstantClassInfo()
     },
-    CONSTANT_FIELDREF(9, "CONSTANT_Fieldref_info", 4) {
+    FIELDREF(9, "CONSTANT_Fieldref_info", 4) {
         override fun create(): CPInfo = ConstantFieldrefInfo()
     },
-    CONSTANT_METHODREF(10, "CONSTANT_Methodref_info", 4) {
+    METHODREF(10, "CONSTANT_Methodref_info", 4) {
         override fun create(): CPInfo = ConstantMethodrefInfo()
     },
-    CONSTANT_INTERFACE_METHODREF(11, "CONSTANT_InterfaceMethodref_info", 4) {
+    INTERFACE_METHODREF(11, "CONSTANT_InterfaceMethodref_info", 4) {
         override fun create(): CPInfo = ConstantInterfaceMethodrefInfo()
     },
-    CONSTANT_STRING(8, "CONSTANT_String_info", 2) {
+    STRING(8, "CONSTANT_String_info", 2) {
         override fun create(): CPInfo = ConstantStringInfo()
     },
-    CONSTANT_INTEGER(3, "CONSTANT_Integer_info", 4) {
+    INTEGER(3, "CONSTANT_Integer_info", 4) {
         override fun create(): CPInfo = ConstantIntegerInfo()
     },
-    CONSTANT_FLOAT(4, "CONSTANT_Float_info", 4) {
+    FLOAT(4, "CONSTANT_Float_info", 4) {
         override fun create(): CPInfo = ConstantFloatInfo()
     },
-    CONSTANT_LONG(5, "CONSTANT_Long_info", 8) {
+    LONG(5, "CONSTANT_Long_info", 8) {
         override fun create(): CPInfo = ConstantLongInfo()
     },
-    CONSTANT_DOUBLE(6, "CONSTANT_Double_info", 8) {
+    DOUBLE(6, "CONSTANT_Double_info", 8) {
         override fun create(): CPInfo = ConstantDoubleInfo()
     },
-    CONSTANT_NAME_AND_TYPE(12, "CONSTANT_NameAndType_info", 4) {
+    NAME_AND_TYPE(12, "CONSTANT_NameAndType_info", 4) {
         override fun create(): CPInfo = ConstantNameAndTypeInfo()
     },
-    CONSTANT_METHOD_TYPE(16, "CONSTANT_MethodType_info", 2) {
+    METHOD_TYPE(16, "CONSTANT_MethodType_info", 2) {
         override fun create(): CPInfo = ConstantMethodTypeInfo()
     },
-    CONSTANT_METHOD_HANDLE(15, "CONSTANT_MethodHandle_info", 3) {
+    METHOD_HANDLE(15, "CONSTANT_MethodHandle_info", 3) {
         override fun create(): CPInfo = ConstantMethodHandleInfo()
     },
-    CONSTANT_INVOKE_DYNAMIC(18, "CONSTANT_InvokeDynamic_info", 4) {
+    INVOKE_DYNAMIC(18, "CONSTANT_InvokeDynamic_info", 4) {
         override fun create(): CPInfo = ConstantInvokeDynamicInfo()
     },
-    CONSTANT_UTF8(1, "CONSTANT_Utf8_info", 0) {
+    UTF8(1, "CONSTANT_Utf8_info", 0) {
         override fun create(): CPInfo = ConstantUtf8Info()
     };
 
@@ -58,7 +58,7 @@ enum class ConstantType(val tag: Int, val verbose: String, val size : Int) {
 
     val extraEntryCount: Int
         get() = when(this) {
-            CONSTANT_LONG, CONSTANT_DOUBLE -> 1
+            LONG, DOUBLE -> 1
             else -> 0
         }
 

@@ -66,33 +66,33 @@ public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPa
             ConstantMethodHandleInfo entry = (ConstantMethodHandleInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantMethodHandleInfo.class);
             classElementOpener.setCPInfo(entry);
 
-            lblKind.setText(entry.getType());
+            lblKind.setText(entry.getType().getTag());
             switch (entry.getType()) {
-                case ConstantMethodHandleInfo.TYPE_GET_FIELD:
+                case GET_FIELD:
                     lblKindVerbose.setText("REF_getField");
                     break;
-                case ConstantMethodHandleInfo.TYPE_GET_STATIC:
+                case GET_STATIC:
                     lblKindVerbose.setText("REF_getStatic");
                     break;
-                case ConstantMethodHandleInfo.TYPE_PUT_FIELD:
+                case PUT_FIELD:
                     lblKindVerbose.setText("REF_putField");
                     break;
-                case ConstantMethodHandleInfo.TYPE_PUT_STATIC:
+                case PUT_STATIC:
                     lblKindVerbose.setText("REF_putStatic");
                     break;
-                case ConstantMethodHandleInfo.TYPE_INVOKE_VIRTUAL:
+                case INVOKE_VIRTUAL:
                     lblKindVerbose.setText("REF_invokeVirtual");
                     break;
-                case ConstantMethodHandleInfo.TYPE_INVOKE_STATIC:
+                case INVOKE_STATIC:
                     lblKindVerbose.setText("REF_invokeStatic");
                     break;
-                case ConstantMethodHandleInfo.TYPE_INVOKE_SPECIAL:
+                case INVOKE_SPECIAL:
                     lblKindVerbose.setText("REF_invokeSpecial");
                     break;
-                case ConstantMethodHandleInfo.TYPE_NEW_INVOKE_SPECIAL:
+                case NEW_INVOKE_SPECIAL:
                     lblKindVerbose.setText("REF_newInvokeSpecial");
                     break;
-                case ConstantMethodHandleInfo.TYPE_INVOKE_INTERFACE:
+                case INVOKE_INTERFACE:
                     lblKindVerbose.setText("REF_invokeInterface");
                     break;
             }

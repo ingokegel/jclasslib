@@ -26,7 +26,7 @@ public class ConstantUtf8Info extends CPInfo {
     private String string;
 
     public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_UTF8;
+        return ConstantType.UTF8;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -81,7 +81,7 @@ public class ConstantUtf8Info extends CPInfo {
     public void write(DataOutput out)
             throws InvalidByteCodeException, IOException {
 
-        out.writeByte(ConstantType.CONSTANT_UTF8.getTag());
+        out.writeByte(ConstantType.UTF8.getTag());
         out.writeUTF(string);
         if (isDebug()) debug("wrote ");
     }

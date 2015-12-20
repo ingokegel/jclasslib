@@ -25,7 +25,7 @@ public class ConstantClassInfo extends CPInfo {
     private int nameIndex;
     
     public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_CLASS;
+        return ConstantType.CLASS;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -67,7 +67,7 @@ public class ConstantClassInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(ConstantType.CONSTANT_CLASS.getTag());
+        out.writeByte(ConstantType.CLASS.getTag());
         out.writeShort(nameIndex);
         if (isDebug()) debug("wrote ");
     }

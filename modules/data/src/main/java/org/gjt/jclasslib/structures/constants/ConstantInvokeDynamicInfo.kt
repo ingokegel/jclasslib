@@ -26,7 +26,7 @@ class ConstantInvokeDynamicInfo : CPInfo() {
     var nameAndTypeIndex: Int = 0
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_INVOKE_DYNAMIC
+        get() = ConstantType.INVOKE_DYNAMIC
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
@@ -48,7 +48,7 @@ class ConstantInvokeDynamicInfo : CPInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
 
-        output.writeByte(ConstantType.CONSTANT_INVOKE_DYNAMIC.tag)
+        output.writeByte(ConstantType.INVOKE_DYNAMIC.tag)
         output.writeShort(bootstrapMethodAttributeIndex)
         output.writeShort(nameAndTypeIndex)
 

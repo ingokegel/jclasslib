@@ -22,7 +22,7 @@ import java.io.IOException
 class ConstantIntegerInfo : ConstantNumeric() {
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_INTEGER
+        get() = ConstantType.INTEGER
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
@@ -45,7 +45,7 @@ class ConstantIntegerInfo : ConstantNumeric() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        output.writeByte(ConstantType.CONSTANT_INTEGER.tag)
+        output.writeByte(ConstantType.INTEGER.tag)
         super.write(output)
         if (isDebug) debug("wrote")
     }

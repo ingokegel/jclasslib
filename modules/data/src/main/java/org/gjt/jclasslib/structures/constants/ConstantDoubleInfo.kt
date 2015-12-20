@@ -24,7 +24,7 @@ import java.lang.Double.longBitsToDouble
 class ConstantDoubleInfo : ConstantLargeNumeric() {
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_DOUBLE
+        get() = ConstantType.DOUBLE
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
@@ -52,7 +52,7 @@ class ConstantDoubleInfo : ConstantLargeNumeric() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        output.writeByte(ConstantType.CONSTANT_DOUBLE.tag)
+        output.writeByte(ConstantType.DOUBLE.tag)
         super.write(output)
         if (isDebug) debug("wrote")
     }

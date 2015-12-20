@@ -29,7 +29,7 @@ class ConstantStringInfo : CPInfo() {
     var stringIndex: Int = 0
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_STRING
+        get() = ConstantType.STRING
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
@@ -43,7 +43,7 @@ class ConstantStringInfo : CPInfo() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        output.writeByte(ConstantType.CONSTANT_STRING.tag)
+        output.writeByte(ConstantType.STRING.tag)
         output.writeShort(stringIndex)
         if (isDebug) debug("wrote")
     }

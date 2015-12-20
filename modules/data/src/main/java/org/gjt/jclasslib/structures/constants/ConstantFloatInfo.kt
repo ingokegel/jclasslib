@@ -24,7 +24,7 @@ import java.lang.Float.floatToIntBits
 class ConstantFloatInfo : ConstantNumeric() {
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_FLOAT
+        get() = ConstantType.FLOAT
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
@@ -48,7 +48,7 @@ class ConstantFloatInfo : ConstantNumeric() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
 
-        output.writeByte(ConstantType.CONSTANT_FLOAT.tag)
+        output.writeByte(ConstantType.FLOAT.tag)
         super.write(output)
         if (isDebug) debug("wrote")
     }

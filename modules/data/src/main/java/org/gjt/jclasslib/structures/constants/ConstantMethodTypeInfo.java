@@ -25,7 +25,7 @@ public class ConstantMethodTypeInfo extends CPInfo {
     private int descriptorIndex;
 
     public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_METHOD_TYPE;
+        return ConstantType.METHOD_TYPE;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -67,7 +67,7 @@ public class ConstantMethodTypeInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(ConstantType.CONSTANT_METHOD_TYPE.getTag());
+        out.writeByte(ConstantType.METHOD_TYPE.getTag());
         out.writeShort(descriptorIndex);
         if (isDebug()) debug("wrote ");
     }

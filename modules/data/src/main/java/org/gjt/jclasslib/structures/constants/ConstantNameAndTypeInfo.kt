@@ -33,7 +33,7 @@ class ConstantNameAndTypeInfo : CPInfo() {
     var descriptorIndex: Int = 0
 
     override val constantType: ConstantType
-        get() = ConstantType.CONSTANT_NAME_AND_TYPE
+        get() = ConstantType.NAME_AND_TYPE
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
@@ -65,7 +65,7 @@ class ConstantNameAndTypeInfo : CPInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
 
-        output.writeByte(ConstantType.CONSTANT_NAME_AND_TYPE.tag)
+        output.writeByte(ConstantType.NAME_AND_TYPE.tag)
         output.writeShort(nameIndex)
         output.writeShort(descriptorIndex)
         if (isDebug) debug("wrote")

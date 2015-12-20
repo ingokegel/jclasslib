@@ -74,7 +74,7 @@ abstract class CPInfo : AbstractStructure() {
             val constantType = ConstantType.getFromTag(input.readByte())
             when (constantType) {
 
-                ConstantType.CONSTANT_UTF8 -> // Length of the constant is determined by the length of the byte array
+                ConstantType.UTF8 -> // Length of the constant is determined by the length of the byte array
                     input.skipBytes(input.readUnsignedShort())
                 else -> input.skipBytes(constantType.size)
             }

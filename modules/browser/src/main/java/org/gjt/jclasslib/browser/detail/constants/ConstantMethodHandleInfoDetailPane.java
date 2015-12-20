@@ -45,7 +45,7 @@ public class ConstantMethodHandleInfoDetailPane extends AbstractConstantInfoDeta
             ClassFile classFile = services.getClassFile();
             ConstantMethodHandleInfo entry = (ConstantMethodHandleInfo)classFile.getConstantPoolEntry(constantPoolIndex, ConstantMethodHandleInfo.class);
 
-            lblKind.setText(entry.getTypeVerbose());
+            lblKind.setText(entry.type.getVerbose());
             constantPoolHyperlink(lblReference,
                 lblReferenceVerbose,
                 entry.getReferenceIndex());
