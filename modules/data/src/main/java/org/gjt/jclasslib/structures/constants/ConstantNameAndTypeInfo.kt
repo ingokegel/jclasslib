@@ -82,8 +82,6 @@ class ConstantNameAndTypeInfo : CPInfo() {
         return super.equals(other) && other.nameIndex == nameIndex && other.descriptorIndex == descriptorIndex
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode() xor nameIndex xor descriptorIndex
-    }
+    override fun hashCode(): Int = super.hashCode() xor nameIndex xor descriptorIndex
 
 }

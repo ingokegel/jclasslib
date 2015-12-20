@@ -5,72 +5,51 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Base class for numeric constant pool data structures.
+ * Base class for numeric constant pool data structures.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class ConstantNumeric extends CPInfo {
-
-    /** <tt>bytes</tt> field. */
-    protected int bytes;
-    
-    /**
-        Get the <tt>bytes</tt> field of this constant pool entry.
-        @return the <tt>bytes</tt> field
-     */
-    public int getBytes() {
-        return bytes;
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+abstract class ConstantNumeric : CPInfo() {
 
     /**
-        Set the <tt>bytes</tt> field of this constant pool entry.
-        @param bytes the <tt>bytes</tt> field
+     * Bytes field of this constant pool entry.
      */
-    public void setBytes(int bytes) {
-        this.bytes = bytes;
-    }
+    var bytes: Int = 0
 
     /**
-        Get the the <tt>bytes</tt> field of this constant pool
-        entry as a hex string.
-        @return the hex string
+     * Get the the bytes field of this constant pool
+     * entry as a hex string.
      */
-    public String getFormattedBytes() {
-        return printBytes(bytes);
+    val formattedBytes: String
+        get() = printBytes(bytes)
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        bytes = input.readInt()
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        bytes = in.readInt();
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeInt(bytes)
     }
-    
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        out.writeInt(bytes);
-    }
-    
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantNumeric)) {
-            return false;
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantNumeric) {
+            return false
         }
-        ConstantNumeric constantNumeric = (ConstantNumeric)object;
-        return super.equals(object) && constantNumeric.bytes == bytes;
+        return super.equals(other) && other.bytes == bytes
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ bytes;
-    }
-    
+    override fun hashCode(): Int = super.hashCode() xor bytes
+
 }

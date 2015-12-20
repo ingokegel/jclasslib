@@ -59,8 +59,6 @@ class ConstantStringInfo : CPInfo() {
         return super.equals(other) && other.stringIndex == stringIndex
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode() xor stringIndex
-    }
+    override fun hashCode(): Int = super.hashCode() xor stringIndex
 
 }

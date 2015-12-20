@@ -68,8 +68,6 @@ class ConstantInvokeDynamicInfo : CPInfo() {
         return super.equals(other) && other.bootstrapMethodAttributeIndex == bootstrapMethodAttributeIndex && other.nameAndTypeIndex == nameAndTypeIndex
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode() xor bootstrapMethodAttributeIndex xor nameAndTypeIndex
-    }
+    override fun hashCode(): Int = super.hashCode() xor bootstrapMethodAttributeIndex xor nameAndTypeIndex
 
 }

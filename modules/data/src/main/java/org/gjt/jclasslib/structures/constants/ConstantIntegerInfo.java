@@ -34,7 +34,7 @@ public class ConstantIntegerInfo extends ConstantNumeric {
         @return the value
      */
     public int getInt() {
-        return bytes;
+        return getBytes();
     }
 
     /**
@@ -42,7 +42,7 @@ public class ConstantIntegerInfo extends ConstantNumeric {
         @param number the value
      */
     public void setInt(int number) {
-        bytes = number;
+        setBytes(number);
     }
 
     public void read(DataInput in)
@@ -61,7 +61,7 @@ public class ConstantIntegerInfo extends ConstantNumeric {
     }
     
     protected void debug(String message) {
-        super.debug(message + getConstantType() + " with bytes " + bytes);
+        super.debug(message + getConstantType() + " with bytes " + getBytes());
     }
 
 }

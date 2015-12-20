@@ -29,13 +29,9 @@ abstract class CPInfo : AbstractStructure() {
         @Throws(InvalidByteCodeException::class)
         get() = ""
 
-    override fun equals(other: Any?): Boolean {
-        return other is CPInfo
-    }
+    override fun equals(other: Any?): Boolean = other is CPInfo
 
-    override fun hashCode(): Int {
-        return 0
-    }
+    override fun hashCode(): Int = 0
 
     override fun printAccessFlagsVerbose(accessFlags: Int): String {
         if (accessFlags != 0)

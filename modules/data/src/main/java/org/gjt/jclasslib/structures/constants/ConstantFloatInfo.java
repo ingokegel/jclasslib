@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -16,7 +17,7 @@ import java.io.IOException;
 
 /**
     Describes a <tt>CONSTANT_Float_info</tt> constant pool data structure.
- 
+
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
 public class ConstantFloatInfo extends ConstantNumeric {
@@ -28,13 +29,13 @@ public class ConstantFloatInfo extends ConstantNumeric {
     public String getVerbose() throws InvalidByteCodeException {
         return String.valueOf(getFloat());
     }
-    
+
     /**
         Get the float value of this constant pool entry.
         @return the value
      */
     public float getFloat() {
-        return Float.intBitsToFloat(bytes);
+        return Float.intBitsToFloat(getBytes());
     }
 
     /**
@@ -42,7 +43,7 @@ public class ConstantFloatInfo extends ConstantNumeric {
         @param number the value
      */
     public void setFloat(float number) {
-        bytes = Float.floatToIntBits(number);
+        setBytes(Float.floatToIntBits(number));
     }
 
     public void read(DataInput in)
@@ -61,7 +62,7 @@ public class ConstantFloatInfo extends ConstantNumeric {
     }
     
     protected void debug(String message) {
-        super.debug(message + getConstantType() + " with bytes " + bytes);
+        super.debug(message + getConstantType() + " with bytes " + getBytes());
     }
 
 }
