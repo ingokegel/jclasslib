@@ -20,36 +20,6 @@ import java.io.IOException;
  */
 public abstract class CPInfo extends AbstractStructure {
 
-    public static final byte CONSTANT_CLASS = 7;
-    public static final byte CONSTANT_FIELDREF = 9;
-    public static final byte CONSTANT_METHODREF = 10;
-    public static final byte CONSTANT_INTERFACE_METHODREF = 11;
-    public static final byte CONSTANT_STRING = 8;
-    public static final byte CONSTANT_INTEGER = 3;
-    public static final byte CONSTANT_FLOAT = 4;
-    public static final byte CONSTANT_LONG = 5;
-    public static final byte CONSTANT_DOUBLE = 6;
-    public static final byte CONSTANT_NAME_AND_TYPE = 12;
-    public static final byte CONSTANT_METHOD_HANDLE = 15;
-    public static final byte CONSTANT_METHOD_TYPE = 16;
-    public static final byte CONSTANT_INVOKE_DYNAMIC = 18;
-    public static final byte CONSTANT_UTF8 = 1;
-
-    public static final String CONSTANT_CLASS_VERBOSE = "CONSTANT_Class_info";
-    public static final String CONSTANT_FIELDREF_VERBOSE = "CONSTANT_Fieldref_info";
-    public static final String CONSTANT_METHODREF_VERBOSE = "CONSTANT_Methodref_info";
-    public static final String CONSTANT_INTERFACE_METHODREF_VERBOSE = "CONSTANT_InterfaceMethodref_info";
-    public static final String CONSTANT_STRING_VERBOSE = "CONSTANT_String_info";
-    public static final String CONSTANT_INTEGER_VERBOSE = "CONSTANT_Integer_info";
-    public static final String CONSTANT_FLOAT_VERBOSE = "CONSTANT_Float_info";
-    public static final String CONSTANT_LONG_VERBOSE = "CONSTANT_Long_info";
-    public static final String CONSTANT_DOUBLE_VERBOSE = "CONSTANT_Double_info";
-    public static final String CONSTANT_NAME_AND_TYPE_VERBOSE = "CONSTANT_NameAndType_info";
-    public static final String CONSTANT_METHOD_HANDLE_VERBOSE = "CONSTANT_MethodHandle_info";
-    public static final String CONSTANT_METHOD_TYPE_VERBOSE = "CONSTANT_MethodType_info";
-    public static final String CONSTANT_INVOKE_DYNAMIC_VERBOSE = "CONSTANT_InvokeDynamic_info";
-    public static final String CONSTANT_UTF8_VERBOSE = "CONSTANT_Utf8_info";
-
     /**
      * Factory method for creating <tt>CPInfo</tt> structures. <p>
      * A <tt>CPInfo</tt> of the appropriate subtype from the <tt>constants</tt> package
@@ -66,9 +36,9 @@ public abstract class CPInfo extends AbstractStructure {
 
         CPInfo cpInfo;
 
-        byte tag = in.readByte();
+        ConstantType constantType = ConstantType.getFromTag(in.readByte());
 
-        switch (tag) {
+        switch (constantType) {
             case CONSTANT_CLASS:
                 cpInfo = new ConstantClassInfo();
                 break;
@@ -112,7 +82,7 @@ public abstract class CPInfo extends AbstractStructure {
                 cpInfo = new ConstantUtf8Info();
                 break;
             default:
-                throw new InvalidByteCodeException("invalid constant pool entry with unknown tag " + tag);
+                throw new InvalidByteCodeException("unhandled constant pool entry type " + constantType);
         }
         cpInfo.setClassFile(classFile);
         cpInfo.read(in);
@@ -126,15 +96,8 @@ public abstract class CPInfo extends AbstractStructure {
      *
      * @return the tag
      */
-    public abstract byte getTag();
+    public abstract ConstantType getConstantType();
 
-    /**
-     * Get the verbose description of the <tt>tag</tt> field of the
-     * <tt>cp_info</tt> structure.
-     *
-     * @return the verbose description
-     */
-    public abstract String getTagVerbose();
 
     /**
      * Get the verbose description of the content of the constant pool entry.
@@ -159,9 +122,9 @@ public abstract class CPInfo extends AbstractStructure {
 
         int offset = 0;
 
-        byte tag = in.readByte();
+        ConstantType constantType = ConstantType.getFromTag(in.readByte());
 
-        switch (tag) {
+        switch (constantType) {
             case CONSTANT_CLASS:
                 in.skipBytes(ConstantClassInfo.SIZE);
                 break;
@@ -199,7 +162,7 @@ public abstract class CPInfo extends AbstractStructure {
                 in.skipBytes(in.readUnsignedShort());
                 break;
             default:
-                throw new InvalidByteCodeException("invalid constant pool entry with unknown tag " + tag);
+                throw new InvalidByteCodeException("unhandled constant pool entry type " + constantType);
         }
 
         return offset;
