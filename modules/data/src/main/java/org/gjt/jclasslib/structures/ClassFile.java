@@ -363,7 +363,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
      * @return the constant pool entry
      * @throws InvalidByteCodeException if the entry is of a different class than expected
      */
-    public CPInfo getConstantPoolEntry(int index, Class<? extends CPInfo> entryClass)
+    public <T extends CPInfo> T getConstantPoolEntry(int index, Class<T> entryClass)
             throws InvalidByteCodeException {
 
         if (!checkValidConstantPoolIndex(index)) {
@@ -377,7 +377,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         }
 
         if (entryClass.isAssignableFrom(cpInfo.getClass())) {
-            return cpInfo;
+            return entryClass.cast(cpInfo);
         } else {
             throw new InvalidByteCodeException("constant pool entry at " + index +
                     " is not assignable to " +

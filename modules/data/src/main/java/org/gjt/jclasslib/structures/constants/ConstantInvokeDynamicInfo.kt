@@ -5,93 +5,71 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo;
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>CONSTANT_InvokeDynamic_info</tt> constant pool data structure.
+ * Describes a CONSTANT_InvokeDynamic_info constant pool data structure.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantInvokeDynamicInfo extends CPInfo {
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ConstantInvokeDynamicInfo : CPInfo() {
 
-    private int bootstrapMethodAttributeIndex;
-    private int nameAndTypeIndex;
+    var bootstrapMethodAttributeIndex: Int = 0
+    var nameAndTypeIndex: Int = 0
 
-    public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_INVOKE_DYNAMIC;
-    }
+    override val constantType: ConstantType
+        get() = ConstantType.CONSTANT_INVOKE_DYNAMIC
 
-    public String getVerbose() throws InvalidByteCodeException {
-        ConstantNameAndTypeInfo nameAndType = getNameAndTypeInfo();
-
-        return nameAndType.getName() + ", BootstrapMethods #" + bootstrapMethodAttributeIndex;
-    }
-
-    public int getBootstrapMethodAttributeIndex() {
-        return bootstrapMethodAttributeIndex;
-    }
-
-    public void setBootstrapMethodAttributeIndex(int bootstrapMethodAttributeIndex) {
-        this.bootstrapMethodAttributeIndex = bootstrapMethodAttributeIndex;
-    }
-
-    public int getNameAndTypeIndex() {
-        return nameAndTypeIndex;
-    }
-
-    public void setNameAndTypeIndex(int nameAndTypeIndex) {
-        this.nameAndTypeIndex = nameAndTypeIndex;
-    }
-
-    public ConstantNameAndTypeInfo getNameAndTypeInfo() throws InvalidByteCodeException {
-        return (ConstantNameAndTypeInfo)getClassFile().getConstantPoolEntry(
-                nameAndTypeIndex,
-                ConstantNameAndTypeInfo.class);
-    }
-
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-            
-        bootstrapMethodAttributeIndex = in.readUnsignedShort();
-        nameAndTypeIndex = in.readUnsignedShort();
-        
-        if (isDebug()) debug("read ");
-    }
-    
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-
-        out.writeByte(ConstantType.CONSTANT_INVOKE_DYNAMIC.getTag());
-        out.writeShort(bootstrapMethodAttributeIndex);
-        out.writeShort(nameAndTypeIndex);
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with bootstrap method attr index " + bootstrapMethodAttributeIndex +
-              " and name and type index " + nameAndTypeIndex);
-    }
-
-    public boolean equals(Object object) {
-        if (!(object instanceof ConstantInvokeDynamicInfo)) {
-            return false;
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() {
+            return "${nameAndTypeInfo.name}, BootstrapMethods #$bootstrapMethodAttributeIndex"
         }
-        ConstantInvokeDynamicInfo constantNameAndTypeInfo = (ConstantInvokeDynamicInfo)object;
-        return super.equals(object) &&
-               constantNameAndTypeInfo.bootstrapMethodAttributeIndex == bootstrapMethodAttributeIndex &&
-               constantNameAndTypeInfo.nameAndTypeIndex == nameAndTypeIndex;
+
+    val nameAndTypeInfo: ConstantNameAndTypeInfo
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(nameAndTypeIndex, ConstantNameAndTypeInfo::class.java)
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+
+        bootstrapMethodAttributeIndex = input.readUnsignedShort()
+        nameAndTypeIndex = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    public int hashCode() {
-        return super.hashCode() ^ bootstrapMethodAttributeIndex ^ nameAndTypeIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+
+        output.writeByte(ConstantType.CONSTANT_INVOKE_DYNAMIC.tag)
+        output.writeShort(bootstrapMethodAttributeIndex)
+        output.writeShort(nameAndTypeIndex)
+
+        if (isDebug) debug("wrote")
     }
-    
+
+    override fun debug(message: String) {
+        super.debug("$message $constantType with bootstrap method attr index $bootstrapMethodAttributeIndex and name and type index $nameAndTypeIndex")
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is ConstantInvokeDynamicInfo) {
+            return false
+        }
+        return super.equals(other) && other.bootstrapMethodAttributeIndex == bootstrapMethodAttributeIndex && other.nameAndTypeIndex == nameAndTypeIndex
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode() xor bootstrapMethodAttributeIndex xor nameAndTypeIndex
+    }
+
 }
