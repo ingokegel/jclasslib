@@ -5,64 +5,56 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.constants;
+package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.ConstantType;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.jetbrains.annotations.NotNull;
+import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
+import java.lang.Float.intBitsToFloat
+import java.lang.Float.floatToIntBits
 
 /**
-    Describes a <tt>CONSTANT_Float_info</tt> constant pool data structure.
+ * Describes a CONSTANT_Float_info constant pool data structure.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantFloatInfo extends ConstantNumeric {
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ConstantFloatInfo : ConstantNumeric() {
 
-    public ConstantType getConstantType() {
-        return ConstantType.CONSTANT_FLOAT;
-    }
+    override val constantType: ConstantType
+        get() = ConstantType.CONSTANT_FLOAT
 
-    public String getVerbose() throws InvalidByteCodeException {
-        return String.valueOf(getFloat());
-    }
-
-    /**
-        Get the float value of this constant pool entry.
-        @return the value
-     */
-    public float getFloat() {
-        return Float.intBitsToFloat(getBytes());
-    }
+    override val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = float.toString()
 
     /**
-        Set the float value of this constant pool entry.
-        @param number the value
+     * Float value of this constant pool entry.
      */
-    public void setFloat(float number) {
-        setBytes(Float.floatToIntBits(number));
+    var float: Float
+        get() = intBitsToFloat(bytes)
+        set(number) {
+            bytes = floatToIntBits(number)
+        }
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        super.read(input)
+        if (isDebug) debug("read")
     }
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-        
-        super.read(in);
-        if (isDebug()) debug("read ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+
+        output.writeByte(ConstantType.CONSTANT_FLOAT.tag)
+        super.write(output)
+        if (isDebug) debug("wrote")
     }
-    
-     public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
-        
-        out.writeByte(ConstantType.CONSTANT_FLOAT.getTag());
-        super.write(out);
-        if (isDebug()) debug("wrote ");
-    }
-    
-    protected void debug(String message) {
-        super.debug(message + getConstantType() + " with bytes " + getBytes());
+
+    override fun debug(message: String) {
+        super.debug("$message$ constantType with bytes $bytes")
     }
 
 }
