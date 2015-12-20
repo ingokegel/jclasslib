@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -27,12 +28,8 @@ public class ConstantInvokeDynamicInfo extends CPInfo {
     private int bootstrapMethodAttributeIndex;
     private int nameAndTypeIndex;
 
-    public byte getTag() {
-        return CONSTANT_INVOKE_DYNAMIC;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_INVOKE_DYNAMIC_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_INVOKE_DYNAMIC;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -75,14 +72,14 @@ public class ConstantInvokeDynamicInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
 
-        out.writeByte(CONSTANT_INVOKE_DYNAMIC);
+        out.writeByte(ConstantType.CONSTANT_INVOKE_DYNAMIC.getTag());
         out.writeShort(bootstrapMethodAttributeIndex);
         out.writeShort(nameAndTypeIndex);
         if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with bootstrap method attr index " + bootstrapMethodAttributeIndex +
+        super.debug(message + getConstantType() + " with bootstrap method attr index " + bootstrapMethodAttributeIndex +
               " and name and type index " + nameAndTypeIndex);
     }
 

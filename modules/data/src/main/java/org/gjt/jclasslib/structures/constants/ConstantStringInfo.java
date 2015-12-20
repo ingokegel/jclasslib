@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -26,14 +27,10 @@ public class ConstantStringInfo extends CPInfo {
     
     private int stringIndex;
     
-    public byte getTag() {
-        return CONSTANT_STRING;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_STRING;
     }
 
-    public String getTagVerbose() {
-        return CONSTANT_STRING_VERBOSE;
-    }
-    
     public String getVerbose() throws InvalidByteCodeException {
         return getClassFile().getConstantPoolEntryName(stringIndex);
     }
@@ -66,13 +63,13 @@ public class ConstantStringInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
 
-        out.writeByte(CONSTANT_STRING);
+        out.writeByte(ConstantType.CONSTANT_STRING.getTag());
         out.writeShort(stringIndex);
         if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with string_index " + stringIndex);
+        super.debug(message + getConstantType() + " with string_index " + stringIndex);
     }
 
     public boolean equals(Object object) {

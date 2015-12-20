@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -24,12 +25,8 @@ public class ConstantUtf8Info extends CPInfo {
 
     private String string;
 
-    public byte getTag() {
-        return CONSTANT_UTF8;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_UTF8_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_UTF8;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -84,13 +81,13 @@ public class ConstantUtf8Info extends CPInfo {
     public void write(DataOutput out)
             throws InvalidByteCodeException, IOException {
 
-        out.writeByte(CONSTANT_UTF8);
+        out.writeByte(ConstantType.CONSTANT_UTF8.getTag());
         out.writeUTF(string);
         if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with length " + string.length() +
+        super.debug(message + getConstantType() + " with length " + string.length() +
                 " (\"" + string + "\")");
     }
 

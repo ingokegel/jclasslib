@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures.constants;
 
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -20,12 +21,8 @@ import java.io.IOException;
 */
 public class ConstantFieldrefInfo extends ConstantReference {
     
-    public byte getTag() {
-        return CONSTANT_FIELDREF;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_FIELDREF_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_FIELDREF;
     }
 
     public void read(DataInput in)
@@ -38,13 +35,13 @@ public class ConstantFieldrefInfo extends ConstantReference {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(CONSTANT_FIELDREF);
+        out.writeByte(ConstantType.CONSTANT_FIELDREF.getTag());
         super.write(out);
         if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with class_index " + classIndex +
+        super.debug(message + getConstantType() + " with class_index " + classIndex +
               " and name_and_type_index " + nameAndTypeIndex);
     }
 

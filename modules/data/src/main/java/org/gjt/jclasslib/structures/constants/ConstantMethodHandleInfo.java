@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -38,12 +39,8 @@ public class ConstantMethodHandleInfo extends CPInfo {
     private int type;
 
 
-    public byte getTag() {
-        return CONSTANT_METHOD_HANDLE;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_METHOD_HANDLE_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_METHOD_HANDLE;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -105,7 +102,7 @@ public class ConstantMethodHandleInfo extends CPInfo {
         @throws org.gjt.jclasslib.structures.InvalidByteCodeException if the byte code is invalid
      */
     public String getName() throws InvalidByteCodeException {
-        return getTypeVerbose() + " " +
+        return getConstantType().getVerbose() + " " +
                getClassFile().getConstantPoolEntryName(referenceIndex);
 
     }
@@ -121,7 +118,7 @@ public class ConstantMethodHandleInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(CONSTANT_METHOD_HANDLE);
+        out.writeByte(ConstantType.CONSTANT_METHOD_HANDLE.getTag());
         out.write(type);
         out.writeShort(referenceIndex);
         if (isDebug()) debug("wrote ");
@@ -140,7 +137,7 @@ public class ConstantMethodHandleInfo extends CPInfo {
     }
     
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with reference_index " + referenceIndex + " and type " + type);
+        super.debug(message + getConstantType() + " with reference_index " + referenceIndex + " and type " + type);
     }
     
 }

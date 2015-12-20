@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures.constants;
 
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -20,12 +21,8 @@ import java.io.IOException;
 */
 public class ConstantFloatInfo extends ConstantNumeric {
 
-    public byte getTag() {
-        return CONSTANT_FLOAT;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_FLOAT_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_FLOAT;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -58,13 +55,13 @@ public class ConstantFloatInfo extends ConstantNumeric {
      public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(CONSTANT_FLOAT);
+        out.writeByte(ConstantType.CONSTANT_FLOAT.getTag());
         super.write(out);
         if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with bytes " + bytes);
+        super.debug(message + getConstantType() + " with bytes " + bytes);
     }
 
 }

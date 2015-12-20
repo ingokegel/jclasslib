@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -27,14 +28,10 @@ public class ConstantNameAndTypeInfo extends CPInfo {
     private int nameIndex;
     private int descriptorIndex;
     
-    public byte getTag() {
-        return CONSTANT_NAME_AND_TYPE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_NAME_AND_TYPE;
     }
 
-    public String getTagVerbose() {
-        return CONSTANT_NAME_AND_TYPE_VERBOSE;
-    }
-    
     public String getVerbose() throws InvalidByteCodeException {
         return getName() + getDescriptor();
     }
@@ -101,14 +98,14 @@ public class ConstantNameAndTypeInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
 
-        out.writeByte(CONSTANT_NAME_AND_TYPE);
+        out.writeByte(ConstantType.CONSTANT_NAME_AND_TYPE.getTag());
         out.writeShort(nameIndex);
         out.writeShort(descriptorIndex);
         if (isDebug()) debug("wrote ");
     }
 
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with name_index " + nameIndex + 
+        super.debug(message + getConstantType() + " with name_index " + nameIndex +
               " and descriptor_index " + descriptorIndex);
     }
 

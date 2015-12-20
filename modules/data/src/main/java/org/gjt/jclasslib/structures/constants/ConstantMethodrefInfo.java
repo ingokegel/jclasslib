@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures.constants;
 
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -20,12 +21,8 @@ import java.io.IOException;
 */
 public class ConstantMethodrefInfo extends ConstantReference {
 
-    public byte getTag() {
-        return CONSTANT_METHODREF;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_METHODREF_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_METHODREF;
     }
 
     public void read(DataInput in)
@@ -38,13 +35,13 @@ public class ConstantMethodrefInfo extends ConstantReference {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(CONSTANT_METHODREF);
+        out.writeByte(ConstantType.CONSTANT_METHODREF.getTag());
         super.write(out);
         if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with class_index " + classIndex +
+        super.debug(message + getConstantType() + " with class_index " + classIndex +
               " and name_and_type_index " + nameAndTypeIndex);
     }
 

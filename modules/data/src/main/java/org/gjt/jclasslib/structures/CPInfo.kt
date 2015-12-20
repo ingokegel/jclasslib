@@ -5,180 +5,84 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures;
+package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.structures.constants.*;
-
-import java.io.DataInput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.IOException
 
 /**
- * Base class for all constant pool entries in the <tt>constants</tt> package.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Base class for all constant pool entries in the constants package.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public abstract class CPInfo extends AbstractStructure {
+abstract class CPInfo : AbstractStructure() {
 
     /**
-     * Factory method for creating <tt>CPInfo</tt> structures. <p>
-     * A <tt>CPInfo</tt> of the appropriate subtype from the <tt>constants</tt> package
-     * is created. <p>
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the <tt>CPInfo</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>CPInfo</tt> structure
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     * Type of the cp_info structure.
      */
-    public static CPInfo create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
-
-        CPInfo cpInfo;
-
-        ConstantType constantType = ConstantType.getFromTag(in.readByte());
-
-        switch (constantType) {
-            case CONSTANT_CLASS:
-                cpInfo = new ConstantClassInfo();
-                break;
-            case CONSTANT_FIELDREF:
-                cpInfo = new ConstantFieldrefInfo();
-                break;
-            case CONSTANT_METHODREF:
-                cpInfo = new ConstantMethodrefInfo();
-                break;
-            case CONSTANT_INTERFACE_METHODREF:
-                cpInfo = new ConstantInterfaceMethodrefInfo();
-                break;
-            case CONSTANT_STRING:
-                cpInfo = new ConstantStringInfo();
-                break;
-            case CONSTANT_INTEGER:
-                cpInfo = new ConstantIntegerInfo();
-                break;
-            case CONSTANT_FLOAT:
-                cpInfo = new ConstantFloatInfo();
-                break;
-            case CONSTANT_LONG:
-                cpInfo = new ConstantLongInfo();
-                break;
-            case CONSTANT_DOUBLE:
-                cpInfo = new ConstantDoubleInfo();
-                break;
-            case CONSTANT_NAME_AND_TYPE:
-                cpInfo = new ConstantNameAndTypeInfo();
-                break;
-            case CONSTANT_METHOD_TYPE:
-                cpInfo = new ConstantMethodTypeInfo();
-                break;
-            case CONSTANT_METHOD_HANDLE:
-                cpInfo = new ConstantMethodHandleInfo();
-                break;
-            case CONSTANT_INVOKE_DYNAMIC:
-                cpInfo = new ConstantInvokeDynamicInfo();
-                break;
-            case CONSTANT_UTF8:
-                cpInfo = new ConstantUtf8Info();
-                break;
-            default:
-                throw new InvalidByteCodeException("unhandled constant pool entry type " + constantType);
-        }
-        cpInfo.setClassFile(classFile);
-        cpInfo.read(in);
-
-        return cpInfo;
-    }
-
+    abstract val constantType: ConstantType
 
     /**
-     * Get the value of the <tt>tag</tt> field of the <tt>cp_info</tt> structure.
-     *
-     * @return the tag
+     * Verbose description of the content of the constant pool entry.
      */
-    public abstract ConstantType getConstantType();
+    open val verbose: String
+        @Throws(InvalidByteCodeException::class)
+        get() = ""
 
-
-    /**
-     * Get the verbose description of the content of the constant pool entry.
-     *
-     * @return the verbose description
-     * @throws InvalidByteCodeException if the byte code is invalid
-     */
-    public String getVerbose() throws InvalidByteCodeException {
-        return "";
+    override fun equals(other: Any?): Boolean {
+        return other is CPInfo
     }
 
-    /**
-     * Skip a <tt>CPInfo</tt> structure in a <tt>DataInput</tt>. <p>
-     *
-     * @param in the <tt>DataInput</tt> from which to read the <tt>CPInfo</tt> structure
-     * @return the number of bytes skipped
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
-     */
-    public static int skip(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-        int offset = 0;
-
-        ConstantType constantType = ConstantType.getFromTag(in.readByte());
-
-        switch (constantType) {
-            case CONSTANT_CLASS:
-                in.skipBytes(ConstantClassInfo.SIZE);
-                break;
-            case CONSTANT_FIELDREF:
-            case CONSTANT_METHODREF:
-            case CONSTANT_INTERFACE_METHODREF:
-                in.skipBytes(ConstantReference.SIZE);
-                break;
-            case CONSTANT_STRING:
-                in.skipBytes(ConstantStringInfo.SIZE);
-                break;
-            case CONSTANT_INTEGER:
-            case CONSTANT_FLOAT:
-                in.skipBytes(ConstantNumeric.SIZE);
-                break;
-            case CONSTANT_LONG:
-            case CONSTANT_DOUBLE:
-                in.skipBytes(ConstantLargeNumeric.SIZE);
-                offset = 1;
-                break;
-            case CONSTANT_NAME_AND_TYPE:
-                in.skipBytes(ConstantNameAndTypeInfo.SIZE);
-                break;
-            case CONSTANT_METHOD_TYPE:
-                in.skipBytes(ConstantMethodTypeInfo.SIZE);
-                break;
-            case CONSTANT_METHOD_HANDLE:
-                in.skipBytes(ConstantMethodHandleInfo.SIZE);
-                break;
-            case CONSTANT_INVOKE_DYNAMIC:
-                in.skipBytes(ConstantInvokeDynamicInfo.SIZE);
-                break;
-            case CONSTANT_UTF8:
-                // Length of the constant is determined by the length of the byte array
-                in.skipBytes(in.readUnsignedShort());
-                break;
-            default:
-                throw new InvalidByteCodeException("unhandled constant pool entry type " + constantType);
-        }
-
-        return offset;
+    override fun hashCode(): Int {
+        return 0
     }
 
-    public boolean equals(Object object) {
-        return object instanceof CPInfo;
-    }
-
-    public int hashCode() {
-        return 0;
-    }
-
-    protected String printAccessFlagsVerbose(int accessFlags) {
+    override fun printAccessFlagsVerbose(accessFlags: Int): String {
         if (accessFlags != 0)
-            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
-        return "";
+            throw RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags))
+        return ""
+    }
+
+    companion object {
+
+        /**
+         * Factory method for creating CPInfo structures.
+         *
+         * A CPInfo of the appropriate subtype from the constants package
+         * is created.
+         *
+         * @param input the DataInput from which to read the CPInfo structure
+         * @param classFile the parent class file of the structure to be created
+         * @return the new CPInfo structure
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        @JvmStatic
+        fun create(input: DataInput, classFile: ClassFile): CPInfo {
+            val constantType = ConstantType.getFromTag(input.readByte())
+            val cpInfo: CPInfo = constantType.create()
+            cpInfo.classFile = classFile
+            cpInfo.read(input)
+
+            return cpInfo
+        }
+
+        /**
+         * Skip a CPInfo structure in a DataInput.
+         * @param input the DataInput from which to read the CPInfo structure
+         * @return the number of bytes skipped
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        @JvmStatic
+        fun skip(input: DataInput): Int {
+
+            val constantType = ConstantType.getFromTag(input.readByte())
+            when (constantType) {
+
+                ConstantType.CONSTANT_UTF8 -> // Length of the constant is determined by the length of the byte array
+                    input.skipBytes(input.readUnsignedShort())
+                else -> input.skipBytes(constantType.size)
+            }
+            return constantType.extraEntryCount
+        }
     }
 }

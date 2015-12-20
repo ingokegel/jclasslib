@@ -190,7 +190,7 @@ public class BrowserTreePane extends JPanel {
         } else {
             BrowserTreeNode entryNode =
                     new BrowserTreeNode(getFormattedIndex(index, constantPoolCount) +
-                    constantPoolEntry.getTagVerbose(),
+                    constantPoolEntry.getConstantType().getVerbose(),
                             BrowserTreeNode.NODE_CONSTANT_POOL,
                             index, constantPoolEntry);
 

@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures.constants;
 
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -20,12 +21,8 @@ import java.io.IOException;
 */
 public class ConstantDoubleInfo extends ConstantLargeNumeric {
 
-    public byte getTag() {
-        return CONSTANT_DOUBLE;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_DOUBLE_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_DOUBLE;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -61,13 +58,13 @@ public class ConstantDoubleInfo extends ConstantLargeNumeric {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(CONSTANT_DOUBLE);
+        out.writeByte(ConstantType.CONSTANT_DOUBLE.getTag());
         super.write(out);
         if (isDebug()) debug("wrote ");
     }
     
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with high_bytes " + highBytes + 
+        super.debug(message + getConstantType() + " with high_bytes " + highBytes +
               " and low_bytes " + lowBytes);
     }
 }

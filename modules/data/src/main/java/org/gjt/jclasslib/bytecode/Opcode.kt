@@ -7,6 +7,9 @@
 
 package org.gjt.jclasslib.bytecode
 
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import java.io.IOException
+
 /**
  * Defines all opcodes and their verbose representation.
 
@@ -247,12 +250,15 @@ enum class Opcode (
         private val JVM_SPEC_URL = "http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5."
 
         @JvmStatic
-        fun getFromBytecode(bytecode: Int): Opcode? {
+        @Throws(InvalidByteCodeException::class)
+        fun getFromBytecode(bytecode: Int): Opcode {
             if (bytecode < 256 && bytecode >= 0) {
-                return LOOKUP[bytecode]
-            } else {
-                return null
+                val opcode = LOOKUP[bytecode]
+                if (opcode != null) {
+                    return opcode;
+                }
             }
+            throw InvalidByteCodeException("invalid opcode 0x" + Integer.toHexString(bytecode))
         }
     }
 

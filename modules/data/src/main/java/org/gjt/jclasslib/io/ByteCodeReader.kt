@@ -54,7 +54,7 @@ object ByteCodeReader {
         val instruction: Instruction
 
         val bytecode = bcis.readUnsignedByte()
-        val opcode = Opcode.getFromBytecode(bytecode) ?: throw IOException("invalid opcode 0x" + Integer.toHexString(bytecode))
+        val opcode = Opcode.getFromBytecode(bytecode)
 
         when (opcode) {
 

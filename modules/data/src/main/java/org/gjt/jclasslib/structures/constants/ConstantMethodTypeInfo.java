@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.structures.constants;
 
 import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.ConstantType;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
 import java.io.DataInput;
@@ -26,12 +27,8 @@ public class ConstantMethodTypeInfo extends CPInfo {
 
     private int descriptorIndex;
 
-    public byte getTag() {
-        return CONSTANT_METHOD_TYPE;
-    }
-
-    public String getTagVerbose() {
-        return CONSTANT_METHOD_TYPE_VERBOSE;
+    public ConstantType getConstantType() {
+        return ConstantType.CONSTANT_METHOD_TYPE;
     }
 
     public String getVerbose() throws InvalidByteCodeException {
@@ -73,7 +70,7 @@ public class ConstantMethodTypeInfo extends CPInfo {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
         
-        out.writeByte(CONSTANT_METHOD_TYPE);
+        out.writeByte(ConstantType.CONSTANT_METHOD_TYPE.getTag());
         out.writeShort(descriptorIndex);
         if (isDebug()) debug("wrote ");
     }
@@ -91,7 +88,7 @@ public class ConstantMethodTypeInfo extends CPInfo {
     }
     
     protected void debug(String message) {
-        super.debug(message + getTagVerbose() + " with descriptor_index " + descriptorIndex);
+        super.debug(message + getConstantType() + " with descriptor_index " + descriptorIndex);
     }
     
 }
