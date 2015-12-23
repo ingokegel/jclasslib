@@ -751,14 +751,14 @@ public class ClassFile extends AbstractStructureWithAttributes {
             throws InvalidByteCodeException, IOException {
 
         super.readAttributes(in);
-        if (isDebug()) debug("read " + getLength(attributes) + " attributes for the ClassFile structure");
+        if (isDebug()) debug("read " + getAttributes().length + " attributes for the ClassFile structure");
     }
 
     protected void writeAttributes(DataOutput out)
             throws InvalidByteCodeException, IOException {
 
         super.writeAttributes(out);
-        if (isDebug()) debug("wrote " + getLength(attributes) + " attributes for the ClassFile structure");
+        if (isDebug()) debug("wrote " + getAttributes().length + " attributes for the ClassFile structure");
     }
 
     private void checkMajorVersion(int majorVersion) {

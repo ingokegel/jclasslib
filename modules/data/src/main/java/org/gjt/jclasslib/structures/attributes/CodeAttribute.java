@@ -149,7 +149,7 @@ public class CodeAttribute extends AttributeInfo {
     public int getAttributeLength() {
         return INITIAL_LENGTH + getLength(code) + 
                getLength(exceptionTable) * ExceptionTableEntry.LENGTH +
-               6 * getLength(attributes) + 
+               6 * getLength(getAttributes()) +
                getTotalAttributesLength() ;
     }
 
