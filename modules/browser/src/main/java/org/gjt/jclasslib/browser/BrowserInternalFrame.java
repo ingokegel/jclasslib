@@ -200,6 +200,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
         } catch (IOException ex) {
             throw new IOException("An error occurred while reading " + fileName);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new IOException("The file " + fileName + " does not seem to contain a class file");
         }
     }

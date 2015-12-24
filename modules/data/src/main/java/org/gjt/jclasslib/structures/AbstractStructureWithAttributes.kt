@@ -39,8 +39,13 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
     protected open fun readAttributes(input: DataInput) {
 
         val attributesCount = input.readUnsignedShort()
-        attributes = Array<AttributeInfo>(attributesCount) {
-            AttributeInfo.createOrSkip(input, classFile)
+        if (java.lang.Boolean.getBoolean(AttributeInfo.SYSTEM_PROPERTY_SKIP_ATTRIBUTES)) {
+            input.skipBytes(2)
+            input.skipBytes(input.readInt())
+        } else {
+            attributes = Array(attributesCount) {
+                AttributeInfo.create(input, classFile)
+            }
         }
     }
 
@@ -61,5 +66,5 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
      * Get the length of all attributes as a number of bytes.
      */
     protected val totalAttributesLength: Int
-        get() = attributes.sumBy { it.attributeLength }
+        get() = attributes.sumBy { it.getAttributeLength() }
 }

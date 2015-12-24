@@ -62,23 +62,5 @@ abstract class CPInfo : AbstractStructure() {
             return cpInfo
         }
 
-        /**
-         * Skip a CPInfo structure in a DataInput.
-         * @param input the DataInput from which to read the CPInfo structure
-         * @return the number of bytes skipped
-         */
-        @Throws(InvalidByteCodeException::class, IOException::class)
-        @JvmStatic
-        fun skip(input: DataInput): Int {
-
-            val constantType = ConstantType.getFromTag(input.readByte())
-            when (constantType) {
-
-                ConstantType.UTF8 -> // Length of the constant is determined by the length of the byte array
-                    input.skipBytes(input.readUnsignedShort())
-                else -> input.skipBytes(constantType.size)
-            }
-            return constantType.extraEntryCount
-        }
     }
 }

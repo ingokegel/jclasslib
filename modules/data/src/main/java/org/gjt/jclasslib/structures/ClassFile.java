@@ -24,16 +24,8 @@ import java.util.HashMap;
  */
 public class ClassFile extends AbstractStructureWithAttributes {
 
-    /**
-     * Set this JVM System property to true to skip reading of constant pool
-     * entries. This is not advisable, since most sunsequent operations on the
-     * class file structure will fail.
-     */
-    public static final String SYSTEM_PROPERTY_SKIP_CONSTANT_POOL = "jclasslib.io.skipConstantPool";
 
     private static final int MAGIC_NUMBER = 0xcafebabe;
-
-    private final boolean skipConstantPool;
 
     private int minorVersion;
     private int majorVersion;
@@ -51,7 +43,6 @@ public class ClassFile extends AbstractStructureWithAttributes {
      * Constructor.
      */
     public ClassFile() {
-        skipConstantPool = Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_CONSTANT_POOL);
         setClassFile(this);
     }
 
@@ -352,7 +343,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
     public ConstantUtf8Info getConstantPoolUtf8Entry(int index)
             throws InvalidByteCodeException {
 
-        return (ConstantUtf8Info)getConstantPoolEntry(index, ConstantUtf8Info.class);
+        return getConstantPoolEntry(index, ConstantUtf8Info.class);
     }
 
     /**
@@ -367,15 +358,10 @@ public class ClassFile extends AbstractStructureWithAttributes {
             throws InvalidByteCodeException {
 
         if (!checkValidConstantPoolIndex(index)) {
-            return null;
+            throw new InvalidByteCodeException("contant pool entry at " + index + " is out of bounds");
         }
 
         CPInfo cpInfo = constantPool[index];
-
-        if (cpInfo == null) {
-            return null;
-        }
-
         if (entryClass.isAssignableFrom(cpInfo.getClass())) {
             return entryClass.cast(cpInfo);
         } else {
@@ -576,20 +562,15 @@ public class ClassFile extends AbstractStructureWithAttributes {
         // constantPool has effective length constantPoolCount - 1
         // constantPool[0] defaults to null
         for (int i = 1; i < constantPoolCount; i++) {
-            if (skipConstantPool) {
-                // see below for i++
-                i += CPInfo.skip(in);
-            } else {
-                // create CPInfos via factory method since the actual type
-                // of the constant is not yet known
-                if (isDebug()) debug("reading constant pool entry " + i);
-                constantPool[i] = CPInfo.create(in, this);
-                constantPoolEntryToIndex.put(constantPool[i], i);
-                if (constantPool[i] instanceof ConstantLargeNumeric) {
-                    // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
-                    // pool entries, the second entry is unusable (design mistake)
-                    i++;
-                }
+            // create CPInfos via factory method since the actual type
+            // of the constant is not yet known
+            if (isDebug()) debug("reading constant pool entry " + i);
+            constantPool[i] = CPInfo.create(in, this);
+            constantPoolEntryToIndex.put(constantPool[i], i);
+            if (constantPool[i] instanceof ConstantLargeNumeric) {
+                // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
+                // pool entries, the second entry is unusable (design mistake)
+                i++;
             }
         }
     }
