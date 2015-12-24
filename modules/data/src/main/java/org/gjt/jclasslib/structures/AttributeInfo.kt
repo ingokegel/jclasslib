@@ -48,7 +48,6 @@ abstract class AttributeInfo : AbstractStructureWithAttributes() {
          * Set this JVM System property to true to skip reading of all attributes.
          * Some class file operations may fail in this case.
          */
-        @JvmStatic
         val SYSTEM_PROPERTY_SKIP_ATTRIBUTES = "jclasslib.io.skipAttributes"
 
         /**
