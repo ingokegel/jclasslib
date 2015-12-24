@@ -5,42 +5,42 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>Deprecated</tt> attribute structure.
+ * Describes a Deprecated attribute structure.
 
- @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class DeprecatedAttribute extends AttributeInfo {
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class DeprecatedAttribute : AttributeInfo() {
 
-    /** Name of the attribute as in the corresponding constant pool entry. */
-    public static final String ATTRIBUTE_NAME = "Deprecated";
-
-    private static final int LENGTH = 0;
-    
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        if (isDebug()) debug("read ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
-        if (isDebug()) debug("wrote ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        super.write(output)
+        if (isDebug) debug("wrote")
     }
 
-    public int getAttributeLength() {
-        return LENGTH;
+    override fun getAttributeLength(): Int = 0
+
+    override fun debug(message: String) {
+        super.debug("$message Deprecated attribute")
     }
 
-    protected void debug(String message) {
-        super.debug(message + "Deprecated attribute");
+    companion object {
+        /** Name of the attribute as in the corresponding constant pool entry.  */
+        val ATTRIBUTE_NAME = "Deprecated"
     }
 
 }
