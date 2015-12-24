@@ -4,84 +4,57 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Annotation;
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.Annotation
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Common class for runtime annotations.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Base class for runtime annotations.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class RuntimeAnnotationsAttribute extends AttributeInfo implements AnnotationHolder {
-    private static final int INITIAL_LENGTH = 2;
-
-    protected Annotation[] runtimeAnnotations;
-
+abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
 
     /**
-     * Get the list of runtime annotations associations of the parent
-     * structure as an array of <tt>Annotation</tt> structures.
-     *
-     * @return the array
+     * Runtime annotations associations of the parent
      */
-    public Annotation[] getRuntimeAnnotations() {
-        return runtimeAnnotations;
-    }
+    var runtimeAnnotations: Array<Annotation> = emptyArray()
 
-    /**
-     * Set the list of runtime annotations associations of the parent
-     * structure as an array of <tt>Annotation</tt> structures.
-     *
-     * @param runtimeAnnotations the array
-     */
-    public void setRuntimeAnnotations(Annotation[] runtimeAnnotations) {
-        this.runtimeAnnotations = runtimeAnnotations;
-    }
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+        val runtimeVisibleAnnotationsLength = input.readUnsignedShort()
+        runtimeAnnotations = Array(runtimeVisibleAnnotationsLength) {
+            Annotation().apply {
+                this.classFile = classFile
+                this.read(input)
 
-        int runtimeVisibleAnnotationsLength = in.readUnsignedShort();
-        runtimeAnnotations = new Annotation[runtimeVisibleAnnotationsLength];
-        for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i] = new Annotation();
-            runtimeAnnotations[i].setClassFile(getClassFile());
-            runtimeAnnotations[i].read(in);
+            }
         }
-
-        if (isDebug()) debug("read ");
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        super.write(output)
 
-        int runtimeVisibleAnnotationsLength = getLength(runtimeAnnotations);
-        out.writeShort(runtimeVisibleAnnotationsLength);
-        for (int i = 0; i < runtimeVisibleAnnotationsLength; i++) {
-            runtimeAnnotations[i].write(out);
-        }
-
-        if (isDebug()) debug("wrote ");
+        val runtimeVisibleAnnotationsLength = runtimeAnnotations.size
+        output.writeShort(runtimeVisibleAnnotationsLength)
+        runtimeAnnotations.forEach { it.write(output) }
+        if (isDebug) debug("wrote")
     }
 
-    public int getAttributeLength() {
-        int length = INITIAL_LENGTH;
-        for (Annotation runtimeAnnotation : runtimeAnnotations) {
-            length += runtimeAnnotation.getLength();
-        }
-        return length;
-    }
+    override fun getAttributeLength(): Int = INITIAL_LENGTH + runtimeAnnotations.sumBy { it.length }
 
-	public int getNumberOfAnnotations() {
-		return runtimeAnnotations.length;
-	}
-    
-    
+    override fun getNumberOfAnnotations(): Int = runtimeAnnotations.size
+
+    companion object {
+        private val INITIAL_LENGTH = 2
+    }
 }

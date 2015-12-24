@@ -22,7 +22,7 @@ public class RuntimeVisibleAnnotationsAttribute extends RuntimeAnnotationsAttrib
 
     protected void debug(String message) {
         super.debug(message + "RuntimeVisibleAnnotations attribute with "
-                + getLength(runtimeAnnotations) + " entries");
+                + getLength(getRuntimeAnnotations()) + " entries");
     }
 
 }

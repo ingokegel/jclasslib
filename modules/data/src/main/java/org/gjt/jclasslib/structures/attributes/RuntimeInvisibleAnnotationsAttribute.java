@@ -20,6 +20,6 @@ public class RuntimeInvisibleAnnotationsAttribute extends RuntimeAnnotationsAttr
 
 
     protected void debug(String message) {
-        super.debug(message + "RuntimeInvisibleAnnotations attribute with " + getLength(runtimeAnnotations) + " entries");
+        super.debug(message + "RuntimeInvisibleAnnotations attribute with " + getLength(getRuntimeAnnotations()) + " entries");
     }
 }
