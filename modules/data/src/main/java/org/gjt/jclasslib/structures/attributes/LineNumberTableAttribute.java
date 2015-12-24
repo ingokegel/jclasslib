@@ -58,8 +58,6 @@ public class LineNumberTableAttribute extends AttributeInfo {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
-
         int lineNumberTableLength = getLength(lineNumberTable);
         
         out.writeShort(lineNumberTableLength);

@@ -49,7 +49,6 @@ public class LocalVarTarget extends AbstractStructure {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         startPc = in.readUnsignedShort();
         length = in.readUnsignedShort();
         index = in.readUnsignedShort();
@@ -57,7 +56,6 @@ public class LocalVarTarget extends AbstractStructure {
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeShort(startPc);
         out.writeShort(length);
         out.writeShort(index);

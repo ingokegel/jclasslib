@@ -39,14 +39,12 @@ public class TypeParameterBoundTargetInfo extends TargetInfo {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         typeParameterIndex = in.readUnsignedByte();
         boundIndex = in.readUnsignedByte();
     }
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeByte(typeParameterIndex);
         out.writeByte(boundIndex);
     }

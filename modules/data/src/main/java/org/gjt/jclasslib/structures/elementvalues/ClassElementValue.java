@@ -52,7 +52,6 @@ public class ClassElementValue extends ElementValue {
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         classInfoIndex = in.readUnsignedShort();
 

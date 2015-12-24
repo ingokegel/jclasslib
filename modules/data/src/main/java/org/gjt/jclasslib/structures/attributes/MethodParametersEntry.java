@@ -69,7 +69,6 @@ public class MethodParametersEntry extends AbstractStructure {
     public void write(DataOutput out) throws InvalidByteCodeException,
         IOException {
 
-        super.write(out);
         out.writeShort(nameIndex);
         out.writeShort(accessFlags);
 

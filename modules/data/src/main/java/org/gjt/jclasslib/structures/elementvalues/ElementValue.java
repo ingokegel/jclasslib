@@ -109,8 +109,6 @@ public abstract class ElementValue extends AbstractStructure {
 
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
-
         out.writeByte(tag);
 
         if (isDebug()) debug("wrote ");

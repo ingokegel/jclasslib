@@ -58,7 +58,6 @@ public class RuntimeParameterAnnotationsAttribute extends AttributeInfo {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         int parameterAnnotationsLength = getLength(parameterAnnotations);
         out.writeByte(parameterAnnotationsLength);

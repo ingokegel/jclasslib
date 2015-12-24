@@ -40,14 +40,12 @@ public class TypePathEntry extends AbstractStructure {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         typePathKind = TypePathKind.getFromTag(in.readUnsignedByte());
         typeArgumentIndex = in.readUnsignedByte();
     }
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeByte(typePathKind.getTag());
         out.writeByte(typeArgumentIndex);
     }

@@ -65,7 +65,6 @@ public class AnnotationElementValue extends ElementValue implements AnnotationDa
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         typeIndex = in.readUnsignedShort();
         int elementValuePairEntriesLength = in.readUnsignedShort();

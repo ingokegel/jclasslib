@@ -100,7 +100,6 @@ public class BootstrapMethodsEntry extends AbstractStructure {
     public void write(DataOutput out)
         throws InvalidByteCodeException, IOException {
 
-        super.write(out);
         out.writeShort(methodRefIndex);
         int argumentRefsCount = getLength(argumentIndices);
         out.writeShort(argumentRefsCount);

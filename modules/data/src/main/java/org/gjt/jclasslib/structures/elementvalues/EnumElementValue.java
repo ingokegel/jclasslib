@@ -72,7 +72,6 @@ public class EnumElementValue extends ElementValue {
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         typeNameIndex = in.readUnsignedShort();
         constNameIndex = in.readUnsignedShort();
 

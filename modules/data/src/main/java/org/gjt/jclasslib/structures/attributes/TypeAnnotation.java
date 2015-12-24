@@ -62,7 +62,6 @@ public class TypeAnnotation extends AbstractStructure {
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         targetType = TypeAnnotationTargetType.getFromTag(in.readUnsignedByte());
         targetInfo = targetType.createTargetInfo();
@@ -82,7 +81,6 @@ public class TypeAnnotation extends AbstractStructure {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         out.writeByte(targetType.getTag());
         targetInfo.write(out);

@@ -54,7 +54,6 @@ public class AnnotationDefaultAttribute extends AttributeInfo {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         defaultValue.write(out);
 

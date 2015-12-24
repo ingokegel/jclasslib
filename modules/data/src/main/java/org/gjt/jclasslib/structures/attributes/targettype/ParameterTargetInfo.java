@@ -30,13 +30,11 @@ public class ParameterTargetInfo extends TargetInfo {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         typeParameterIndex = in.readUnsignedByte();
     }
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeByte(typeParameterIndex);
     }
 

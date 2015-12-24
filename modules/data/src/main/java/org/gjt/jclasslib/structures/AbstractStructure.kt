@@ -49,9 +49,7 @@ abstract class AbstractStructure {
      * @param input the DataInput from which to read
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
-    open fun read(input: DataInput) {
-    }
-
+    abstract fun read(input: DataInput)
     /**
      * Write this structure to the given DataOutput.
      * The written bytes are in JVM class file format.
@@ -59,8 +57,7 @@ abstract class AbstractStructure {
      * @param output the DataOutput to which to write
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
-    open fun write(output: DataOutput) {
-    }
+    abstract fun write(output: DataOutput)
 
     /**
      * Utility method for derived structures. Get the

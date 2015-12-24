@@ -65,7 +65,6 @@ public class StackMapTableAttribute extends AttributeInfo {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         int numberOfRefs = getLength(entries);
         out.writeShort(numberOfRefs);

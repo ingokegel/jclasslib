@@ -28,7 +28,6 @@ class SyntheticAttribute : AttributeInfo() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        super.write(output)
         if (isDebug) debug("wrote")
     }
 

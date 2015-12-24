@@ -126,7 +126,6 @@ public abstract class LocalVariableCommonEntry extends AbstractStructure {
 
     final public void read(DataInput in)
             throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         startPc = in.readUnsignedShort();
         length = in.readUnsignedShort();
@@ -139,7 +138,6 @@ public abstract class LocalVariableCommonEntry extends AbstractStructure {
 
     final public void write(DataOutput out)
             throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         out.writeShort(startPc);
         out.writeShort(length);

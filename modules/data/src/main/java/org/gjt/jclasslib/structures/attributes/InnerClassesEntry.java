@@ -164,7 +164,6 @@ public class InnerClassesEntry extends AbstractStructure {
     public void write(DataOutput out)
             throws InvalidByteCodeException, IOException {
 
-        super.write(out);
         out.writeShort(innerClassInfoIndex);
         out.writeShort(outerClassInfoIndex);
         out.writeShort(innerNameIndex);

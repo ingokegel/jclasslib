@@ -63,7 +63,6 @@ public class MethodParametersAttribute extends AttributeInfo {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         int numberOfRefs = getLength(entries);
 

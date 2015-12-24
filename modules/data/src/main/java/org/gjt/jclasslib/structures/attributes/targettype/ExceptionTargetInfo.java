@@ -30,13 +30,11 @@ public class ExceptionTargetInfo extends TargetInfo {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         exceptionTableIndex = in.readUnsignedShort();
     }
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeShort(exceptionTableIndex);
     }
 

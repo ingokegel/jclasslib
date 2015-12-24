@@ -5,86 +5,53 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes a <tt>BootstrapMethods</tt> attribute structure.
+ * Describes a BootstrapMethods attribute structure.
  */
-public class BootstrapMethodsAttribute extends AttributeInfo {
+class BootstrapMethodsAttribute : AttributeInfo() {
 
     /**
-     * Name of the attribute as in the corresponding constant pool entry.
+     * Bootstrap method references in the BootstrapMethodsAttribute structure
      */
-    public static final String ATTRIBUTE_NAME = "BootstrapMethods";
+    var methods: Array<BootstrapMethodsEntry> = emptyArray()
 
-    private static final int INITIAL_LENGTH = 2;
-
-    private BootstrapMethodsEntry[] methods;
-
-    /**
-     * Get the list of bootstrap method references in the <tt>BootstrapMethodsAttribute</tt> structure
-     * as an array of <tt>BootstrapMethodsEntry</tt> structures.
-     *
-     * @return the array
-     */
-    public BootstrapMethodsEntry[] getMethods() {
-        return methods;
-    }
-
-    /**
-     * Set the list of bootstrap method references in the <tt>BootstrapMethodsAttribute</tt> structure
-     * as an array of <tt>BootstrapMethodsEntry</tt> structures.
-     *
-     * @param methods the array
-     */
-    public void setMethods(BootstrapMethodsEntry[] methods) {
-        this.methods = methods;
-    }
-
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        int numberOfRefs = in.readUnsignedShort();
-        methods = new BootstrapMethodsEntry[numberOfRefs];
-
-        for (int i = 0; i < numberOfRefs; i++) {
-            methods[i] = BootstrapMethodsEntry.create(in, getClassFile());
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        val numberOfRefs = input.readUnsignedShort()
+        methods = Array(numberOfRefs) {
+            BootstrapMethodsEntry.create(input, classFile)
         }
-
-        if (isDebug()) {
-            debug("read ");
-        }
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
-
-        int numberOfRefs = getLength(methods);
-
-        out.writeShort(numberOfRefs);
-        for (int i = 0; i < numberOfRefs; i++) {
-            methods[i].write(out);
-        }
-        if (isDebug()) {
-            debug("wrote ");
-        }
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        val numberOfRefs = getLength(methods)
+        output.writeShort(numberOfRefs)
+        methods.forEach { it.write(output) }
+        if (isDebug) debug("wrote ")
     }
 
-    public int getAttributeLength() {
-        int size = INITIAL_LENGTH;
-        for (BootstrapMethodsEntry method : methods) {
-            size += method.getLength();
-        }
-        return size;
+    override fun getAttributeLength(): Int = 2 + methods.sumBy { it.length }
+
+    override fun debug(message: String) {
+        super.debug("$message BootstrapMethods attribute with ${getLength(methods)} references")
     }
 
-    protected void debug(String message) {
-        super.debug(message + "BootstrapMethods attribute with " + getLength(methods) + " references");
-    }
+    companion object {
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
+        val ATTRIBUTE_NAME = "BootstrapMethods"
 
+    }
 }

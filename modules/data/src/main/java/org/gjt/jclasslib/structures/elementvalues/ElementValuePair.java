@@ -88,7 +88,6 @@ public class ElementValuePair extends AbstractStructure {
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         elementNameIndex = in.readUnsignedShort();
         elementValue = ElementValue.create(in, getClassFile());
@@ -97,7 +96,6 @@ public class ElementValuePair extends AbstractStructure {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         out.writeShort(elementNameIndex);
         elementValue.write(out);

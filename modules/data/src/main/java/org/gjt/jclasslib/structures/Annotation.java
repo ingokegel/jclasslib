@@ -61,7 +61,6 @@ public class Annotation extends AbstractStructure implements AnnotationData {
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         typeIndex = in.readUnsignedShort();
         int elementValuePairEntriesLength = in.readUnsignedShort();
@@ -84,7 +83,6 @@ public class Annotation extends AbstractStructure implements AnnotationData {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         out.writeShort(typeIndex);
         int elementValuePairEntriesLength = getLength(elementValuePairEntries);

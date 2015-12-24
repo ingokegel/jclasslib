@@ -34,7 +34,6 @@ class SignatureAttribute : AttributeInfo() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        super.write(output)
         output.writeShort(signatureIndex)
         if (isDebug) debug("wrote")
     }

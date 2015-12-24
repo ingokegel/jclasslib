@@ -30,13 +30,11 @@ public class OffsetTargetInfo extends TargetInfo {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         offset = in.readUnsignedShort();
     }
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeShort(offset);
     }
 

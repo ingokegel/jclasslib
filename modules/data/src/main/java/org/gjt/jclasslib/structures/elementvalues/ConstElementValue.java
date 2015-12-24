@@ -52,7 +52,6 @@ public class ConstElementValue extends ElementValue {
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         constValueIndex = in.readUnsignedShort();
 

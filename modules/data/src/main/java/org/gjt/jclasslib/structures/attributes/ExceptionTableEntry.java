@@ -159,7 +159,6 @@ public class ExceptionTableEntry extends AbstractStructure {
     public void write(DataOutput out)
             throws InvalidByteCodeException, IOException {
 
-        super.write(out);
         out.writeShort(startPc);
         out.writeShort(endPc);
         out.writeShort(handlerPc);

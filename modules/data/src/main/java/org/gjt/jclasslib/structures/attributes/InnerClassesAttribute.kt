@@ -37,8 +37,6 @@ class InnerClassesAttribute : AttributeInfo() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        super.write(output)
-
         val numberOfClasses = getLength(classes)
         output.writeShort(numberOfClasses)
         classes.forEach { it.write(output) }

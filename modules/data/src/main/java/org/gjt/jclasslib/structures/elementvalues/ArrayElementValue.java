@@ -59,7 +59,6 @@ public class ArrayElementValue extends ElementValue {
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
 
         int elementValueEntriesLength = in.readUnsignedShort();
         elementValueEntries = new ElementValue[elementValueEntriesLength];

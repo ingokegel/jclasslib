@@ -38,14 +38,12 @@ public class TypeArgumentTargetInfo extends TargetInfo {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         offset = in.readUnsignedShort();
         typeArgumentIndex = in.readByte();
     }
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeShort(offset);
         out.writeByte(typeArgumentIndex);
     }

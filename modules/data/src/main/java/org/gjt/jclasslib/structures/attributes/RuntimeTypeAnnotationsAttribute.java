@@ -65,7 +65,6 @@ public class RuntimeTypeAnnotationsAttribute extends AttributeInfo implements An
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         int runtimeVisibleAnnotationsLength = getLength(runtimeTypeAnnotations);
         out.writeShort(runtimeVisibleAnnotationsLength);

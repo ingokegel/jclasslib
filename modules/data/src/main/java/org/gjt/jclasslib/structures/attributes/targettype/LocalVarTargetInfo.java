@@ -30,7 +30,6 @@ public class LocalVarTargetInfo extends TargetInfo {
 
     @Override
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        super.read(in);
         int count = in.readUnsignedShort();
         localVarTargets = new LocalVarTarget[count];
         for (int i = 0; i < count; i++) {
@@ -41,7 +40,6 @@ public class LocalVarTargetInfo extends TargetInfo {
 
     @Override
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         int count = getLength(localVarTargets);
         out.writeShort(count);
         for (int i = 0; i < count; i++) {

@@ -61,7 +61,6 @@ public class ParameterAnnotations extends AbstractStructure {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         int runtimeVisibleAnnotationsLength = getLength(runtimeAnnotations);
 
