@@ -51,7 +51,6 @@ public class SourceFileAttribute extends AttributeInfo {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
         out.writeShort(sourceFileIndex);
         if (isDebug()) debug("wrote ");
     }

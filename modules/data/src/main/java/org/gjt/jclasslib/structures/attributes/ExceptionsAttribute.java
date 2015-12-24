@@ -58,7 +58,6 @@ public class ExceptionsAttribute extends AttributeInfo {
     }
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
 
         int numberOfExceptions = getLength(exceptionIndexTable);
 

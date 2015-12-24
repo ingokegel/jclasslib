@@ -52,7 +52,6 @@ public class ConstantValueAttribute extends AttributeInfo {
 
     public void write(DataOutput out) throws InvalidByteCodeException, IOException {
         
-        super.write(out);
         out.writeShort(constantValueIndex);
         if (isDebug()) debug("wrote ");
     }
