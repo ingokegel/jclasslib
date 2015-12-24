@@ -39,7 +39,7 @@ class SignatureAttribute : AttributeInfo() {
         if (isDebug) debug("wrote")
     }
 
-    override fun getAttributeLength(): Int = LENGTH
+    override fun getAttributeLength(): Int = 2
 
     override fun debug(message: String) {
         super.debug("$message Signature attribute with signature index $signatureIndex")
@@ -50,7 +50,5 @@ class SignatureAttribute : AttributeInfo() {
          * Name of the attribute as in the corresponding constant pool entry.
          */
         val ATTRIBUTE_NAME = "Signature"
-
-        private val LENGTH = 2
     }
 }

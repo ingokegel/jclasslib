@@ -50,11 +50,8 @@ abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
         if (isDebug) debug("wrote")
     }
 
-    override fun getAttributeLength(): Int = INITIAL_LENGTH + runtimeAnnotations.sumBy { it.length }
+    override fun getAttributeLength(): Int = 2 + runtimeAnnotations.sumBy { it.length }
 
     override fun getNumberOfAnnotations(): Int = runtimeAnnotations.size
 
-    companion object {
-        private val INITIAL_LENGTH = 2
-    }
 }

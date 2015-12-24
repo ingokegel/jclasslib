@@ -46,7 +46,7 @@ class InnerClassesAttribute : AttributeInfo() {
     }
 
     override fun getAttributeLength(): Int {
-        return INITIAL_LENGTH + classes.size * InnerClassesEntry.LENGTH
+        return 2 + classes.size * InnerClassesEntry.LENGTH
     }
 
     override fun debug(message: String) {
@@ -57,8 +57,6 @@ class InnerClassesAttribute : AttributeInfo() {
 
         /** Name of the attribute as in the corresponding constant pool entry.  */
         val ATTRIBUTE_NAME = "InnerClasses"
-
-        private val INITIAL_LENGTH = 2
     }
 
 }
