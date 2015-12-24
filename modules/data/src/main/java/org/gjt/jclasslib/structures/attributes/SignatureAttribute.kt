@@ -4,62 +4,53 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>Signature</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  Signature attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class SignatureAttribute extends AttributeInfo {
-    /**
-     * Name of the attribute as in the corresponding constant pool entry.
-     */
-    public static final String ATTRIBUTE_NAME = "Signature";
-
-    private static final int LENGTH = 2;
-
-    private int signatureIndex;
+class SignatureAttribute : AttributeInfo() {
 
     /**
-     * Get the constant pool index of the <tt>CONSTANT_Utf8_info</tt>
+     * Constant pool index of the CONSTANT_Utf8_info
      * structure representing the signature.
-     *
-     * @return the index
      */
-    public int getSignatureIndex() {
-        return signatureIndex;
+    var signatureIndex: Int = 0
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        signatureIndex = input.readUnsignedShort()
+        if (isDebug) debug("read")
     }
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-
-        signatureIndex = in.readUnsignedShort();
-
-        if (isDebug()) debug("read ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        super.write(output)
+        output.writeShort(signatureIndex)
+        if (isDebug) debug("wrote")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
+    override fun getAttributeLength(): Int = LENGTH
 
-        out.writeShort(signatureIndex);
-
-        if (isDebug()) debug("wrote ");
+    override fun debug(message: String) {
+        super.debug("$message Signature attribute with signature index $signatureIndex")
     }
 
-    public int getAttributeLength() {
-        return LENGTH;
-    }
+    companion object {
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
+        val ATTRIBUTE_NAME = "Signature"
 
-    protected void debug(String message) {
-        super.debug(message +
-                "Signature attribute with signature index " + signatureIndex);
+        private val LENGTH = 2
     }
 }
