@@ -4,77 +4,43 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
  * Common class for runtime parameter annotations.
  */
-public class RuntimeParameterAnnotationsAttribute extends AttributeInfo {
-    private static final int INITIAL_LENGTH = 1;
-
-    private ParameterAnnotations[] parameterAnnotations;
-
+open class RuntimeParameterAnnotationsAttribute : AttributeInfo() {
 
     /**
-     * Get the list of parameter annotations of the parent
-     * structure as an array of <tt>ParameterAnnotations</tt> structures.
-     *
-     * @return the array
+     * Parameter annotations
      */
-    public ParameterAnnotations[] getParameterAnnotations() {
-        return parameterAnnotations;
-    }
+    var parameterAnnotations: Array<ParameterAnnotations> = emptyArray()
 
-    /**
-     * Set the list of parameter annotations associations of the parent
-     * structure as an array of <tt>ParameterAnnotations</tt> structures.
-     *
-     * @param parameterAnnotations the array
-     */
-    public void setParameterAnnotations(ParameterAnnotations[] parameterAnnotations) {
-        this.parameterAnnotations = parameterAnnotations;
-    }
-
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-
-        int numParameters = in.readUnsignedByte();
-        parameterAnnotations = new ParameterAnnotations[numParameters];
-
-        for (int i = 0; i < numParameters; i++) {
-            parameterAnnotations[i] = new ParameterAnnotations();
-            parameterAnnotations[i].read(in);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        val numParameters = input.readUnsignedByte()
+        parameterAnnotations = Array(numParameters) {
+            ParameterAnnotations().apply { read(input) }
         }
 
-        if (isDebug()) {
-            debug("read ");
-        }
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(parameterAnnotations.size)
+        parameterAnnotations.forEach { it.write(output) }
 
-        int parameterAnnotationsLength = getLength(parameterAnnotations);
-        out.writeByte(parameterAnnotationsLength);
-        for (int i = 0; i < parameterAnnotationsLength; i++) {
-            parameterAnnotations[i].write(out);
-        }
-
-        if (isDebug()) {
-            debug("wrote ");
-        }
+        if (isDebug) debug("wrote")
     }
 
-    public int getAttributeLength() {
-        int length = INITIAL_LENGTH;
-        for (ParameterAnnotations parameterAnnotations : this.parameterAnnotations) {
-            length += parameterAnnotations.getLength();
-        }
-        return length;
-    }
+    override fun getAttributeLength(): Int = 1 + parameterAnnotations.sumBy { it.length }
+
 }
