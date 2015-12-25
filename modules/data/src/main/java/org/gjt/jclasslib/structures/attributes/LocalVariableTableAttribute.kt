@@ -5,76 +5,44 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.jetbrains.annotations.NotNull;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.IOException
 
 /**
- * Describes an <tt>LocalVariableTable</tt> attribute structure.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an LocalVariableTable attribute structure.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class LocalVariableTableAttribute extends LocalVariableCommonAttribute {
+class LocalVariableTableAttribute : LocalVariableCommonAttribute<LocalVariableTableEntry>() {
 
-    @NotNull
-    @Override
-    public LocalVariableCommonEntry[] getLocalVariableEntries() {
-        return new LocalVariableCommonEntry[0];
-    }
+    override var localVariableEntries: Array<LocalVariableTableEntry> = emptyArray()
 
-    @Override
-    public void setLocalVariableEntries(@NotNull LocalVariableCommonEntry[] localVariableCommonEntries) {
-
-    }
-
-    /**
-     * Name of the attribute as in the corresponding constant pool entry.
-     */
-    public static final String ATTRIBUTE_NAME = "LocalVariableTable";
-
-    /**
-     * Get the list of local variable associations of the parent <tt>Code</tt>
-     * structure as an array of <tt>LocalVariableTableEntry</tt> structures.
-     *
-     * @return the array
-     */
-    public LocalVariableTableEntry[] getLocalVariableTable() {
-        return (LocalVariableTableEntry[])getLocalVariableEntries();
-    }
-
-    /**
-     * Set the list of local variable associations of the parent <tt>Code</tt>
-     * structure as an array of <tt>LocalVariableTableEntry</tt> structures.
-     *
-     * @param localVariableTable the index
-     */
-    public void setLocalVariableTable(LocalVariableTableEntry[] localVariableTable) {
-        this.setLocalVariableEntries(localVariableTable);
-    }
-
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-
-        int localVariableTableLength = in.readUnsignedShort();
-        setLocalVariableEntries(new LocalVariableTableEntry[localVariableTableLength]);
-        for (int i = 0; i < localVariableTableLength; i++) {
-            getLocalVariableEntries()[i] = LocalVariableTableEntry.create(in, getClassFile());
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        val localVariableTableLength = input.readUnsignedShort()
+        localVariableEntries = Array(localVariableTableLength) {
+            LocalVariableTableEntry.create(input, classFile)
         }
 
-        if (isDebug()) debug("read ");
+        if (isDebug) debug("read")
     }
 
-    public int getAttributeLength() {
-        return super.getAttributeLength() + getLength(getLocalVariableEntries()) * LocalVariableTableEntry.LENGTH;
+    override fun getAttributeLength(): Int {
+        return super.getAttributeLength() + localVariableEntries.size * LocalVariableTableEntry.LENGTH
     }
 
-
-    protected void debug(String message) {
-        super.debug(message + "LocalVariableTable attribute with " + getLength(getLocalVariableEntries()) + " entries");
+    override fun debug(message: String) {
+        super.debug("$message LocalVariableTable attribute with ${localVariableEntries.size} entries")
     }
 
+    companion object {
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
+        val ATTRIBUTE_NAME = "LocalVariableTable"
+    }
 }
