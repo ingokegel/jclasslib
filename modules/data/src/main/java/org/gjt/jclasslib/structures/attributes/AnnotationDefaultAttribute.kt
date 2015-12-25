@@ -4,67 +4,53 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.elementvalues.ElementValue
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>AnnotationDefault</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  AnnotationDefault attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class AnnotationDefaultAttribute extends AttributeInfo {
-    /**
-     * Name of the attribute as in the corresponding constant pool entry.
-     */
-    public static final String ATTRIBUTE_NAME = "AnnotationDefault";
-
-    private ElementValue defaultValue;
+class AnnotationDefaultAttribute constructor(): AttributeInfo() {
 
     /**
-     * Get the <tt>default_value</tt> of this attribute.
-     *
-     * @return the <tt>default_value</tt>
+     * The default_value of this attribute.
      */
-    public ElementValue getDefaultValue() {
-        return this.defaultValue;
+    lateinit var defaultValue: ElementValue
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        defaultValue = ElementValue.create(input, classFile)
+
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Set the <tt>default_value</tt> of this attribute.
-     *
-     * @param defaultValue the <tt>default_value</tt>
-     */
-    public void setDefaultValue(ElementValue defaultValue) {
-        this.defaultValue = defaultValue;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+
+        defaultValue.write(output)
+
+        if (isDebug) debug("wrote")
     }
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+    override fun getAttributeLength(): Int = defaultValue.length
 
-        defaultValue = ElementValue.create(in, getClassFile());
-
-        if (isDebug()) debug("read ");
+    override fun debug(message: String) {
+        super.debug("$message AnnotationDefaultAttribute")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-
-        defaultValue.write(out);
-
-        if (isDebug()) debug("wrote ");
-    }
-
-    public int getAttributeLength() {
-        return defaultValue.getLength();
-    }
-
-    protected void debug(String message) {
-        super.debug(message + "AnnotationDefaultAttribute");
+    companion object {
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
+        val ATTRIBUTE_NAME = "AnnotationDefault"
     }
 }
