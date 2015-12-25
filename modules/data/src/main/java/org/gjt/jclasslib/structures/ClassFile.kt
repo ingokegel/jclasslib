@@ -472,7 +472,7 @@ class ClassFile : AbstractStructureWithAttributes() {
 
     private fun checkMajorVersion(majorVersion: Int) {
         if (majorVersion < 45 || majorVersion > 53) {
-            Log.warning("major version should be between 45 and 51 for JDK <= 1.9, was " + majorVersion)
+            Log.warning("major version should be between 45 and 53 for JDK <= 1.9, was " + majorVersion)
         }
     }
 
