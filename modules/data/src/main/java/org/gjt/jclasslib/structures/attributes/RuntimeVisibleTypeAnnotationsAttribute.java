@@ -26,7 +26,7 @@ public class RuntimeVisibleTypeAnnotationsAttribute extends RuntimeTypeAnnotatio
 
     protected void debug(String message) {
         super.debug(message + "RuntimeVisibleTypeAnnotations attribute with "
-            + getLength(runtimeTypeAnnotations) + " entries");
+            + getLength(getRuntimeAnnotations()) + " entries");
     }
 
 }
