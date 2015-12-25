@@ -15,7 +15,7 @@ package org.gjt.jclasslib.structures.attributes;
 
 
 /**
- * Describes an  <tt>RuntimeVisibleTypeAnnotations</tt> attribute structure.
+ * Describes an  <tt>RuntimeInvisibleTypeAnnotations</tt> attribute structure.
  */
 public class RuntimeInvisibleTypeAnnotationsAttribute extends RuntimeTypeAnnotationsAttribute {
     /**
