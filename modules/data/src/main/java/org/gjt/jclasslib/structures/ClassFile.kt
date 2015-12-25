@@ -95,7 +95,7 @@ class ClassFile : AbstractStructureWithAttributes() {
             51 -> "1.7"
             52 -> "1.8"
             53 -> "1.9"
-            else -> "unknown value " + majorVersion
+            else -> "unknown value $majorVersion"
         }
 
     /**
@@ -310,20 +310,20 @@ class ClassFile : AbstractStructureWithAttributes() {
 
     private fun readVersion(input: DataInput) {
         minorVersion = input.readUnsignedShort()
-        if (isDebug) debug("read minor version " + minorVersion)
+        if (isDebug) debug("read minor version $minorVersion")
 
         majorVersion = input.readUnsignedShort()
-        if (isDebug) debug("read major version " + majorVersion)
+        if (isDebug) debug("read major version $majorVersion")
 
         checkMajorVersion(majorVersion)
     }
 
     private fun writeVersion(out: DataOutput) {
         out.writeShort(minorVersion)
-        if (isDebug) debug("wrote minor version " + minorVersion)
+        if (isDebug) debug("wrote minor version $minorVersion")
 
         out.writeShort(majorVersion)
-        if (isDebug) debug("wrote major version " + majorVersion)
+        if (isDebug) debug("wrote major version $majorVersion")
 
         checkMajorVersion(majorVersion)
     }
@@ -331,7 +331,7 @@ class ClassFile : AbstractStructureWithAttributes() {
     private fun readConstantPool(input: DataInput) {
         constantPoolEntryToIndex.clear()
         val constantPoolCount = input.readUnsignedShort()
-        if (isDebug) debug("read constant pool count " + constantPoolCount)
+        if (isDebug) debug("read constant pool count $constantPoolCount")
 
         // constantPool[0] is not used
         var placeholderIndex = 0
@@ -339,7 +339,7 @@ class ClassFile : AbstractStructureWithAttributes() {
             when (i) {
                 placeholderIndex -> ConstantPlaceholder
                 else -> {
-                    if (isDebug) debug("reading constant pool entry " + i)
+                    if (isDebug) debug("reading constant pool entry $i")
                     CPInfo.create(input, this).apply {
                         constantPoolEntryToIndex.put(this, i)
                         if (this is ConstantLargeNumeric) {
@@ -359,7 +359,7 @@ class ClassFile : AbstractStructureWithAttributes() {
 
         constantPool.forEachIndexed { i, cpInfo ->
             if (cpInfo !is ConstantPlaceholder) {
-                if (isDebug) debug("writing constant pool entry " + i)
+                if (isDebug) debug("writing constant pool entry $i")
                 cpInfo.write(out)
             }
         }
@@ -392,7 +392,7 @@ class ClassFile : AbstractStructureWithAttributes() {
 
     private fun writeSuperClass(output: DataOutput) {
         output.writeShort(superClass)
-        if (isDebug) debug("wrote super_class index " + superClass)
+        if (isDebug) debug("wrote super_class index $superClass")
     }
 
     private fun readInterfaces(input: DataInput) {
@@ -401,7 +401,7 @@ class ClassFile : AbstractStructureWithAttributes() {
 
         interfaces = IntArray(interfacesCount) {
             val index = input.readUnsignedShort()
-            if (isDebug) debug("read interface index " + index)
+            if (isDebug) debug("read interface index $index")
             index
         }
     }
@@ -409,7 +409,7 @@ class ClassFile : AbstractStructureWithAttributes() {
     private fun writeInterfaces(out: DataOutput) {
         val interfacesCount = interfaces.size
         out.writeShort(interfacesCount)
-        if (isDebug) debug("wrote interfaces count " + interfacesCount)
+        if (isDebug) debug("wrote interfaces count $interfacesCount")
 
         interfaces.forEach {
             out.writeShort(it)
@@ -419,7 +419,7 @@ class ClassFile : AbstractStructureWithAttributes() {
 
     private fun readFields(input: DataInput) {
         val fieldsCount = input.readUnsignedShort()
-        if (isDebug) debug("read fields count " + fieldsCount)
+        if (isDebug) debug("read fields count $fieldsCount")
 
         fields = Array(fieldsCount) {
             FieldInfo().apply {
@@ -432,7 +432,7 @@ class ClassFile : AbstractStructureWithAttributes() {
     private fun writeFields(out: DataOutput) {
         val fieldsCount = fields.size
         out.writeShort(fieldsCount)
-        if (isDebug) debug("wrote fields count " + fieldsCount)
+        if (isDebug) debug("wrote fields count $fieldsCount")
 
         fields.forEach { it.write(out) }
     }
@@ -440,7 +440,7 @@ class ClassFile : AbstractStructureWithAttributes() {
     private fun readMethods(input: DataInput) {
 
         val methodsCount = input.readUnsignedShort()
-        if (isDebug) debug("read methods count " + methodsCount)
+        if (isDebug) debug("read methods count $methodsCount")
 
         methods = Array(methodsCount) {
             MethodInfo().apply {
@@ -453,7 +453,7 @@ class ClassFile : AbstractStructureWithAttributes() {
     private fun writeMethods(out: DataOutput) {
         val methodsCount = methods.size
         out.writeShort(methodsCount)
-        if (isDebug) debug("wrote methods count " + methodsCount)
+        if (isDebug) debug("wrote methods count $methodsCount")
 
         methods.forEach { it.write(out) }
     }
@@ -472,7 +472,7 @@ class ClassFile : AbstractStructureWithAttributes() {
 
     private fun checkMajorVersion(majorVersion: Int) {
         if (majorVersion < 45 || majorVersion > 53) {
-            Log.warning("major version should be between 45 and 53 for JDK <= 1.9, was " + majorVersion)
+            Log.warning("major version should be between 45 and 53 for JDK <= 1.9, was $majorVersion")
         }
     }
 
