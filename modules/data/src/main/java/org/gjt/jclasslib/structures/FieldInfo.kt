@@ -40,19 +40,4 @@ class FieldInfo : ClassMember() {
         return printAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)
     }
 
-    companion object {
-
-        /**
-         * Factory method for creating FieldInfo structures from a DataInput.
-         * @param input the DataInput from which to read the FieldInfo structure
-         * @param classFile the parent class file of the structure to be created
-         * @return the new FieldInfo structure
-         */
-        @Throws(InvalidByteCodeException::class, IOException::class)
-        fun create(input: DataInput, classFile: ClassFile) = FieldInfo().apply {
-            this.classFile = classFile
-            this.read(input)
-        }
-    }
-
 }

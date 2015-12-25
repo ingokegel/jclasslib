@@ -40,20 +40,4 @@ class MethodInfo : ClassMember() {
         return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)
     }
 
-    companion object {
-
-        /**
-         * Factory method for creating MethodInfo structures from a DataInput.
-         *
-         * @param input        the DataInput from which to read the MethodInfo structure
-         * @param classFile the parent class file of the structure to be created
-         * @return the new MethodInfo structure
-         */
-        @Throws(InvalidByteCodeException::class, IOException::class)
-        fun create(input: DataInput, classFile: ClassFile) = MethodInfo().apply {
-            this.classFile = classFile
-            this.read(input)
-        }
-    }
-
 }
