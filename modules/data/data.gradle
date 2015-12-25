@@ -1,7 +1,7 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-3594'
+    compile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584'
 }
 
 apply plugin: 'java'

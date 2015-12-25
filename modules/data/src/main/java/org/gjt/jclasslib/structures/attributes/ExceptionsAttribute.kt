@@ -29,10 +29,8 @@ class ExceptionsAttribute : AttributeInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         val numberOfExceptions = input.readUnsignedShort()
-        exceptionIndexTable = IntArray(numberOfExceptions)
-        //TODO move to IntArray initializer when fixed in Kotlin
-        for (i in 0..numberOfExceptions - 1) {
-            exceptionIndexTable[i] = input.readUnsignedShort()
+        exceptionIndexTable = IntArray(numberOfExceptions) {
+            input.readUnsignedShort()
         }
 
         if (isDebug) debug("read")
