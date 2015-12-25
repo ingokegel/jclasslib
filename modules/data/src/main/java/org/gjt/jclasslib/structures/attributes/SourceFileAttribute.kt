@@ -5,62 +5,49 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes a <tt>SourceFile</tt> attribute structure.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class SourceFileAttribute extends AttributeInfo {
+ * Describes a SourceFile attribute structure.
 
-    /** Name of the attribute as in the corresponding constant pool entry. */
-    public static final String ATTRIBUTE_NAME = "SourceFile";
-
-    private static final int LENGTH = 2;
-    
-    private int sourceFileIndex;
-    
-    /**
-        Get the constant pool index of the name of the source file.
-        @return the index
-     */
-    public int getSourceFileIndex() {
-        return sourceFileIndex;
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class SourceFileAttribute : AttributeInfo() {
 
     /**
-        Set the constant pool index of the name of the source file.
-        @param sourceFileIndex the index
+     * Constant pool index of the name of the source file.
      */
-    public void setSourceFileIndex(int sourceFileIndex) {
-        this.sourceFileIndex = sourceFileIndex;
+    var sourceFileIndex: Int = 0
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        sourceFileIndex = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-            
-        sourceFileIndex = in.readUnsignedShort();
-        if (isDebug()) debug("read ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(sourceFileIndex)
+
+        if (isDebug) debug("wrote")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeShort(sourceFileIndex);
-        if (isDebug()) debug("wrote ");
+    override fun getAttributeLength(): Int = 2
+
+    override fun debug(message: String) {
+        super.debug("$message SourceFile attribute with sourcefile_index $sourceFileIndex")
     }
 
-    public int getAttributeLength() {
-        return LENGTH;
+    companion object {
+        /** Name of the attribute as in the corresponding constant pool entry.  */
+        val ATTRIBUTE_NAME = "SourceFile"
     }
-
-    protected void debug(String message) {
-        super.debug(message + "SourceFile attribute with sourcefile_index " + sourceFileIndex);
-    }
-
 }
