@@ -5,86 +5,55 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes a <tt>MethodParameter</tt> attribute structure.
+ * Describes a MethodParameter attribute structure.
  */
-public class MethodParametersAttribute extends AttributeInfo {
+class MethodParametersAttribute : AttributeInfo() {
 
     /**
-     * Name of the attribute as in the corresponding constant pool entry.
+     * List of stackMapFrame entries in the StackMapTableAttribute structure
      */
-    public static final String ATTRIBUTE_NAME = "MethodParameters";
+    var entries: Array<MethodParametersEntry> = emptyArray()
 
-    private static final int INITIAL_LENGTH = 1;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
 
-    private MethodParametersEntry[] entries;
-
-    /**
-     * Get the list of stackMapFrame entries in the <tt>StackMapTableAttribute</tt> structure
-     * as an array of <tt>BootstrapMethodsEntry</tt> structures.
-     *
-     * @return the array
-     */
-    public MethodParametersEntry[] getEntries() {
-        return entries;
-    }
-
-    /**
-     * Set the list of stackMapFrame entries in the <tt>StackMapTableAttribute</tt> structure
-     * as an array of <tt>StackMapFrameEntry</tt> structures.
-     *
-     * @param entries the array
-     */
-    public void setMethods(MethodParametersEntry[] entries) {
-        this.entries = entries;
-    }
-
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-
-        int numberOfEntries = in.readUnsignedByte();
-        entries = new MethodParametersEntry[numberOfEntries];
-
-        for (int i = 0; i < numberOfEntries; i++) {
-            entries[i] = MethodParametersEntry.create(in, getClassFile());
+        val numberOfEntries = input.readUnsignedByte()
+        entries = Array(numberOfEntries) {
+            MethodParametersEntry.create(input, classFile)
         }
 
-        if (isDebug()) {
-            debug("read ");
-        }
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(entries.size)
+        entries.forEach { it.write(output) }
 
-        int numberOfRefs = getLength(entries);
-
-        out.writeShort(numberOfRefs);
-        for (int i = 0; i < numberOfRefs; i++) {
-            entries[i].write(out);
-        }
-        if (isDebug()) {
-            debug("wrote ");
-        }
+        if (isDebug) debug("wrote")
     }
 
-    public int getAttributeLength() {
-        int size = INITIAL_LENGTH;
-        for (MethodParametersEntry entry : entries) {
-            size += entry.getLength();
-        }
-        return size;
+    override fun getAttributeLength(): Int = 1 + entries.sumBy { it.length }
+
+    override fun debug(message: String) {
+        super.debug("$message MethodParametersEntry attribute with ${entries.size} entries")
     }
 
-    protected void debug(String message) {
-        super.debug(message + "MethodParametersEntry attribute with " + getLength(entries) + " entries");
-    }
+    companion object {
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
+        val ATTRIBUTE_NAME = "MethodParameters"
 
+    }
 }
