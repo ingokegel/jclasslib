@@ -32,7 +32,7 @@ public class LocalVariableTableAttribute extends LocalVariableCommonAttribute {
      * @return the array
      */
     public LocalVariableTableEntry[] getLocalVariableTable() {
-        return (LocalVariableTableEntry[])localVariableTable;
+        return (LocalVariableTableEntry[])getLocalVariableEntries();
     }
 
     /**
@@ -42,27 +42,27 @@ public class LocalVariableTableAttribute extends LocalVariableCommonAttribute {
      * @param localVariableTable the index
      */
     public void setLocalVariableTable(LocalVariableTableEntry[] localVariableTable) {
-        this.localVariableTable = localVariableTable;
+        this.setLocalVariableEntries(localVariableTable);
     }
 
     public void read(DataInput in) throws InvalidByteCodeException, IOException {
 
         int localVariableTableLength = in.readUnsignedShort();
-        localVariableTable = new LocalVariableTableEntry[localVariableTableLength];
+        setLocalVariableEntries(new LocalVariableTableEntry[localVariableTableLength]);
         for (int i = 0; i < localVariableTableLength; i++) {
-            localVariableTable[i] = LocalVariableTableEntry.create(in, getClassFile());
+            getLocalVariableEntries()[i] = LocalVariableTableEntry.create(in, getClassFile());
         }
 
         if (isDebug()) debug("read ");
     }
 
     public int getAttributeLength() {
-        return INITIAL_LENGTH + getLength(localVariableTable) * LocalVariableTableEntry.LENGTH;
+        return INITIAL_LENGTH + getLength(getLocalVariableEntries()) * LocalVariableTableEntry.LENGTH;
     }
 
 
     protected void debug(String message) {
-        super.debug(message + "LocalVariableTable attribute with " + getLength(localVariableTable) + " entries");
+        super.debug(message + "LocalVariableTable attribute with " + getLength(getLocalVariableEntries()) + " entries");
     }
 
 }

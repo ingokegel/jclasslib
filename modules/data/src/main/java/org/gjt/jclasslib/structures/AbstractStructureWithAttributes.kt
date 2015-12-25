@@ -55,10 +55,7 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     protected open fun writeAttributes(output: DataOutput) {
-
-        val attributesCount = attributes.size
-        output.writeShort(attributesCount)
-
+        output.writeShort(attributes.size)
         attributes.forEach { it.write(output) }
     }
 

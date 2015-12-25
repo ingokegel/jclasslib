@@ -78,6 +78,7 @@ class CodeAttribute : AttributeInfo() {
     }
 
     private fun writeExceptionTable(output: DataOutput) {
+        output.writeShort(exceptionTable.size)
         exceptionTable.forEach { it.write(output) }
     }
 

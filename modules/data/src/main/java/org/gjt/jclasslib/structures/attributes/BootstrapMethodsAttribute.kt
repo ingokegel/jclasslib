@@ -30,14 +30,15 @@ class BootstrapMethodsAttribute : AttributeInfo() {
         methods = Array(numberOfRefs) {
             BootstrapMethodsEntry.create(input, classFile)
         }
+
         if (isDebug) debug("read")
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        val numberOfRefs = getLength(methods)
-        output.writeShort(numberOfRefs)
+        output.writeShort(methods.size)
         methods.forEach { it.write(output) }
+
         if (isDebug) debug("wrote ")
     }
 

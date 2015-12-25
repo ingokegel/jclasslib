@@ -38,6 +38,7 @@ class LineNumberTableAttribute : AttributeInfo() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
+        output.writeShort(lineNumberTable.size)
         lineNumberTable.forEach { it.write(output) }
 
         if (isDebug) debug("wrote")

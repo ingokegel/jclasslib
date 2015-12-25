@@ -32,14 +32,15 @@ class InnerClassesAttribute : AttributeInfo() {
         classes = Array(numberOfClasses) {
             InnerClassesEntry.create(input, classFile)
         }
+
         if (isDebug) debug("read")
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        val numberOfClasses = getLength(classes)
-        output.writeShort(numberOfClasses)
+        output.writeShort(classes.size)
         classes.forEach { it.write(output) }
+
         if (isDebug) debug("wrote")
     }
 
