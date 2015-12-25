@@ -17,7 +17,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4583'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584'
         // Download after install4j 6
         classpath ':i4jgradle'
 
