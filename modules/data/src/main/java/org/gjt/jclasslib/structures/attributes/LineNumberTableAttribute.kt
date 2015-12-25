@@ -5,74 +5,55 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Describes an <tt>LineNumberTable</tt> attribute structure.
+ * Describes an LineNumberTable attribute structure.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class LineNumberTableAttribute extends AttributeInfo {
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class LineNumberTableAttribute : AttributeInfo() {
 
-    /** Name of the attribute as in the corresponding constant pool entry. */
-    public static final String ATTRIBUTE_NAME = "LineNumberTable";
-
-    private static final int INITIAL_LENGTH = 2;
-    
-    private LineNumberTableEntry[] lineNumberTable;
-    
     /**
-        Get the list of line number associations of the parent
-        <tt>Code</tt> structure as an array of <tt>LineNumberTableEntry</tt> structures.
-        @return the array
+     * Line number associations of the parent
      */
-    public LineNumberTableEntry[] getLineNumberTable() {
-        return lineNumberTable;
-    }
-    
-    /**
-        Set the list of line number associations of the parent
-        <tt>Code</tt> structure as an array of <tt>LineNumberTableEntry</tt> structures.
-        @param lineNumberTable the index
-     */
-    public void setLineNumberTable(LineNumberTableEntry[] lineNumberTable) {
-        this.lineNumberTable = lineNumberTable;
-    }
-    
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-            
-        int lineNumberTableLength = in.readUnsignedShort();
-        lineNumberTable = new LineNumberTableEntry[lineNumberTableLength];
-        for (int i = 0 ; i < lineNumberTableLength; i++) {
-            lineNumberTable[i] = LineNumberTableEntry.create(in, getClassFile());
+    var lineNumberTable: Array<LineNumberTableEntry> = emptyArray()
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        val lineNumberTableLength = input.readUnsignedShort()
+        lineNumberTable = Array(lineNumberTableLength) {
+            LineNumberTableEntry.create(input, classFile)
         }
-        
-        if (isDebug()) debug("read ");
+
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        int lineNumberTableLength = getLength(lineNumberTable);
-        
-        out.writeShort(lineNumberTableLength);
-        for (int i = 0 ; i < lineNumberTableLength; i++) {
-            lineNumberTable[i].write(out);
-        }
-        if (isDebug()) debug("wrote ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        lineNumberTable.forEach { it.write(output) }
+
+        if (isDebug) debug("wrote")
     }
 
-    public int getAttributeLength() {
-        return INITIAL_LENGTH + getLength(lineNumberTable) * LineNumberTableEntry.LENGTH;
+    override fun getAttributeLength(): Int {
+        return 2 + lineNumberTable.size * LineNumberTableEntry.LENGTH
     }
 
-    protected void debug(String message) {
-        super.debug(message + "LineNumberTable attribute with " + getLength(lineNumberTable) + " entries");
+    override fun debug(message: String) {
+        super.debug("$message LineNumberTable attribute with ${lineNumberTable.size} entries")
     }
 
+    companion object {
+
+        /** Name of the attribute as in the corresponding constant pool entry.  */
+        val ATTRIBUTE_NAME = "LineNumberTable"
+    }
 }
