@@ -675,7 +675,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         fields = new FieldInfo[fieldsCount];
 
         for (int i = 0; i < fieldsCount; i++) {
-            fields[i] = FieldInfo.create(in, this);
+            fields[i] = FieldInfo.Companion.create(in, this);
         }
 
     }
