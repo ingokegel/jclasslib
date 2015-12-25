@@ -54,8 +54,8 @@ public class FieldInfo extends ClassMember {
     }
 
     protected void debug(String message) {
-        super.debug(message + "field with access flags " + printAccessFlags(accessFlags) +
-                ", name_index " + nameIndex + ", descriptor_index " + descriptorIndex +
+        super.debug(message + "field with access flags " + printAccessFlags(getAccessFlags()) +
+                ", name_index " + getNameIndex() + ", descriptor_index " + getDescriptorIndex() +
                 ", " + getAttributes().length + " attributes");
     }
 

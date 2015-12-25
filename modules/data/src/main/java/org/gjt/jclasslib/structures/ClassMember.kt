@@ -5,139 +5,79 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures;
+package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
-
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
-    Base class for class members.
+ * Base class for class members.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class ClassMember extends AbstractStructureWithAttributes {
-
-    /** The access flags of this class member. */
-    protected int accessFlags;
-    /** the constant pool index of the name of this class member. */
-    protected int nameIndex;
-    /** the constant pool index of the descriptor of this class member. */
-    protected int descriptorIndex;
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+abstract class ClassMember : AbstractStructureWithAttributes() {
 
     /**
-        Get the access flags of this class member.
-        @return the access flags
+     * Access flags of this class member.
      */
-    public int getAccessFlags() {
-        return accessFlags;
-    }
+    var accessFlags: Int = 0
 
     /**
-        Set the access flags of this class member.
-        @param accessFlags the access flags
+     * The constant pool index of the name of this class member.
      */
-    public void setAccessFlags(int accessFlags) {
-        this.accessFlags = accessFlags;
-    }
+    var nameIndex: Int = 0
 
     /**
-        Get the constant pool index of the name of this class member.
-        @return the index
+     * The constant pool index of the descriptor of this class member.
      */
-    public int getNameIndex() {
-        return nameIndex;
-    }
+    var descriptorIndex: Int = 0
 
     /**
-        Set the constant pool index of the name of this class member.
-        @param nameIndex the index
+     * Get the Name of the class member.
      */
-    public void setNameIndex(int nameIndex) {
-        this.nameIndex = nameIndex;
-    }
+    val name: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(nameIndex).string
 
     /**
-        Get the constant pool index of the descriptor of this class member.
-        @return the index
+     * Verbose descriptor of the class member.
      */
-    public int getDescriptorIndex() {
-        return descriptorIndex;
-    }
+    val descriptor: String
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(descriptorIndex).string
 
     /**
-        Set the constant pool index of the descriptor of this class member.
-        @param descriptorIndex the index
+     * Access flags of this class as a hex string.
      */
-    public void setDescriptorIndex(int descriptorIndex) {
-        this.descriptorIndex = descriptorIndex;
-    }
+    val formattedAccessFlags: String
+        get() = printAccessFlags(accessFlags)
 
     /**
-        Get the name of the class member.
-        @return the name
-        @throws InvalidByteCodeException if the entry is invalid
+     * Verbose description of the access flags of this class.
      */
-    public String getName() throws InvalidByteCodeException {
-        ConstantUtf8Info cpinfo = getClassFile().getConstantPoolUtf8Entry(nameIndex);
-        if (cpinfo == null) {
-            return "invalid constant pool index";
-        } else {
-            return cpinfo.getString();
-        }
-    }
+    val accessFlagsVerbose: String
+        get() = printAccessFlagsVerbose(accessFlags)
 
-    /**
-        Get the verbose descriptor of the class member.
-        @return the descriptor
-        @throws InvalidByteCodeException if the entry is invalid
-     */
-    public String getDescriptor() throws InvalidByteCodeException {
-        ConstantUtf8Info cpinfo = getClassFile().getConstantPoolUtf8Entry(descriptorIndex);
-        if (cpinfo == null) {
-            return "invalid constant pool index";
-        } else {
-            return cpinfo.getString();
-        }
-    }
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
 
-    /**
-        Get the the access flags of this class as a hex string.
-        @return the hex string
-     */
-    public String getFormattedAccessFlags() {
-        return printAccessFlags(accessFlags);
-    }
+        accessFlags = input.readUnsignedShort()
+        nameIndex = input.readUnsignedShort()
+        descriptorIndex = input.readUnsignedShort()
 
-    /**
-        Get the verbose description of the access flags of this class.
-        @return the description
-     */
-    public String getAccessFlagsVerbose() {
-        return printAccessFlagsVerbose(accessFlags);
-    }
-
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
-
-        accessFlags = in.readUnsignedShort();
-        nameIndex = in.readUnsignedShort();
-        descriptorIndex = in.readUnsignedShort();
-
-        readAttributes(in);
+        readAttributes(input)
 
     }
 
-    public void write(DataOutput out)
-        throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
 
-        out.writeShort(accessFlags);
-        out.writeShort(nameIndex);
-        out.writeShort(descriptorIndex);
+        output.writeShort(accessFlags)
+        output.writeShort(nameIndex)
+        output.writeShort(descriptorIndex)
 
-        writeAttributes(out);
+        writeAttributes(output)
     }
 
 }
