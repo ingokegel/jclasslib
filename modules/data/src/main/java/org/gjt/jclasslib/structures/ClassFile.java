@@ -706,7 +706,7 @@ public class ClassFile extends AbstractStructureWithAttributes {
         methods = new MethodInfo[methodsCount];
 
         for (int i = 0; i < methodsCount; i++) {
-            methods[i] = MethodInfo.create(in, this);
+            methods[i] = MethodInfo.Companion.create(in, this);
         }
 
     }

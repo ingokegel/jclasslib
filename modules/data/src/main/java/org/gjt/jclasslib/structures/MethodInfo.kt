@@ -5,62 +5,55 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures;
+package org.gjt.jclasslib.structures
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes a method in a <tt>ClassFile</tt> structure.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes a method in a ClassFile structure.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class MethodInfo extends ClassMember {
+class MethodInfo : ClassMember() {
 
-    /**
-     * Factory method for creating <tt>MethodInfo</tt> structures from a <tt>DataInput</tt>.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the <tt>MethodInfo</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>MethodInfo</tt> structure
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
-     */
-    public static MethodInfo create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        super.read(input)
 
-        MethodInfo methodInfo = new MethodInfo();
-        methodInfo.setClassFile(classFile);
-        methodInfo.read(in);
-
-        return methodInfo;
+        if (isDebug) debug("read")
     }
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        super.write(output)
 
-        super.read(in);
-
-        if (isDebug()) debug("read ");
+        if (isDebug) debug("wrote")
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
-        super.write(out);
-        if (isDebug()) debug("wrote ");
+    override fun debug(message: String) {
+        super.debug("$message method with access flags $accessFlagsVerbose, name_index $nameIndex, descriptor_index $descriptorIndex, ${attributes.size} attributes")
     }
 
-    protected void debug(String message) {
-        super.debug(message + "method with access flags " + printAccessFlags(getAccessFlags()) +
-                ", name_index " + getNameIndex() + ", descriptor_index " + getDescriptorIndex() +
-                ", " + getAttributes().length + " attributes");
+    override fun printAccessFlagsVerbose(accessFlags: Int): String {
+        return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)
     }
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags);
+    companion object {
+
+        /**
+         * Factory method for creating MethodInfo structures from a DataInput.
+         *
+         * @param input        the DataInput from which to read the MethodInfo structure
+         * @param classFile the parent class file of the structure to be created
+         * @return the new MethodInfo structure
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(input: DataInput, classFile: ClassFile) = MethodInfo().apply {
+            this.classFile = classFile
+            this.read(input)
+        }
     }
 
 }
