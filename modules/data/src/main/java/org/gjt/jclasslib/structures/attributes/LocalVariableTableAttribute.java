@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.structures.attributes;
 
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -19,6 +20,17 @@ import java.io.IOException;
  *
  */
 public class LocalVariableTableAttribute extends LocalVariableCommonAttribute {
+
+    @NotNull
+    @Override
+    public LocalVariableCommonEntry[] getLocalVariableEntries() {
+        return new LocalVariableCommonEntry[0];
+    }
+
+    @Override
+    public void setLocalVariableEntries(@NotNull LocalVariableCommonEntry[] localVariableCommonEntries) {
+
+    }
 
     /**
      * Name of the attribute as in the corresponding constant pool entry.
@@ -57,7 +69,7 @@ public class LocalVariableTableAttribute extends LocalVariableCommonAttribute {
     }
 
     public int getAttributeLength() {
-        return INITIAL_LENGTH + getLength(getLocalVariableEntries()) * LocalVariableTableEntry.LENGTH;
+        return super.getAttributeLength() + getLength(getLocalVariableEntries()) * LocalVariableTableEntry.LENGTH;
     }
 
 

@@ -17,12 +17,12 @@ import java.io.IOException
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class LocalVariableCommonAttribute : AttributeInfo() {
+abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry> : AttributeInfo() {
 
     /**
      * Local variable associations of the parent code attribute
      */
-    var localVariableEntries: Array<LocalVariableCommonEntry> = emptyArray()
+    abstract var localVariableEntries: Array<T>
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
@@ -32,7 +32,6 @@ abstract class LocalVariableCommonAttribute : AttributeInfo() {
         if (isDebug) debug("wrote ")
     }
 
-    companion object {
-        protected val INITIAL_LENGTH = 2
-    }
+    override fun getAttributeLength(): Int = 2
+
 }
