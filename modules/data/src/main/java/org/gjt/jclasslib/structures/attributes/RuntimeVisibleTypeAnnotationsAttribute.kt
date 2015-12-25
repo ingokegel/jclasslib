@@ -11,22 +11,23 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
 
 /**
- * Describes an  <tt>RuntimeVisibleTypeAnnotations</tt> attribute structure.
+ * Describes an  RuntimeVisibleTypeAnnotations attribute structure.
  */
-public class RuntimeVisibleTypeAnnotationsAttribute extends RuntimeTypeAnnotationsAttribute {
-    /**
-     * Name of the attribute as in the corresponding constant pool entry.
-     */
-    public static final String ATTRIBUTE_NAME = "RuntimeVisibleTypeAnnotations";
+class RuntimeVisibleTypeAnnotationsAttribute : RuntimeTypeAnnotationsAttribute() {
 
+    override fun debug(message: String) {
+        super.debug("$message RuntimeVisibleTypeAnnotations attribute with ${runtimeAnnotations.size} entries")
+    }
 
-    protected void debug(String message) {
-        super.debug(message + "RuntimeVisibleTypeAnnotations attribute with "
-            + getLength(getRuntimeAnnotations()) + " entries");
+    companion object {
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
+        val ATTRIBUTE_NAME = "RuntimeVisibleTypeAnnotations"
     }
 
 }
