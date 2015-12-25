@@ -4,77 +4,62 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>EnclosingMethod</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  EnclosingMethod attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class EnclosingMethodAttribute extends AttributeInfo {
-    /**
-     * Name of the attribute as in the corresponding constant pool entry.
-     */
-    public static final String ATTRIBUTE_NAME = "EnclosingMethod";
-
-    private static final int LENGTH = 4;
-
-    private int classInfoIndex;
-    private int methodInfoIndex;
+class EnclosingMethodAttribute : AttributeInfo() {
 
     /**
-     * Get the constant pool index of the <tt>CONSTANT_Class_info</tt>
+     * Constant pool index of the CONSTANT_Class_info
      * structure representing the innermost class that encloses the
      * declaration of the current class.
-     *
-     * @return the index
      */
-    public int getClassInfoIndex() {
-        return classInfoIndex;
-    }
+    var classInfoIndex: Int = 0
 
     /**
-     * Get the constant pool index of the <tt>CONSTANT_NameAndType_info</tt>
+     * Constant pool index of the CONSTANT_NameAndType_info
      * structure representing the name and type of a method in the class
      * referenced by the class info index above.
-     *
-     * @return the index
      */
-    public int getMethodInfoIndex() {
-        return methodInfoIndex;
+    var methodInfoIndex: Int = 0
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        classInfoIndex = input.readUnsignedShort()
+        methodInfoIndex = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(classInfoIndex)
+        output.writeShort(methodInfoIndex)
 
-        classInfoIndex = in.readUnsignedShort();
-        methodInfoIndex = in.readUnsignedShort();
-
-        if (isDebug()) debug("read ");
+        if (isDebug) debug("wrote")
     }
 
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
+    override fun getAttributeLength(): Int = 4
 
-        out.writeShort(classInfoIndex);
-        out.writeShort(methodInfoIndex);
-
-        if (isDebug()) debug("wrote ");
+    override fun debug(message: String) {
+        super.debug("$message EnclosingMethod attribute with class index $classInfoIndex and method index $methodInfoIndex")
     }
 
-    public int getAttributeLength() {
-        return LENGTH;
-    }
-
-    protected void debug(String message) {
-        super.debug(message + "EnclosingMethod attribute with class index " +
-                classInfoIndex + " and method index " + methodInfoIndex);
+    companion object {
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
+        val ATTRIBUTE_NAME = "EnclosingMethod"
     }
 }
