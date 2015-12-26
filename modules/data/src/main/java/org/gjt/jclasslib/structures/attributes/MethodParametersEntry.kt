@@ -5,86 +5,59 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an entry in a <tt>BootstrapMethods</tt> attribute structure.
+ * Describes an entry in a BootstrapMethods attribute structure.
  */
-public class MethodParametersEntry extends AbstractStructure {
+class MethodParametersEntry : AbstractStructure() {
 
+    var nameIndex: Int = 0
+    var accessFlags: Int = 0
 
-    private int nameIndex;
-    private int accessFlags;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        nameIndex = input.readUnsignedShort()
+        accessFlags = input.readUnsignedShort()
 
+        if (isDebug) debug("read")
+    }
 
-    /**
-     * Factory method for creating <tt>StackMapFrameEntry</tt> structures.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the
-     *                  <tt>StackMapFrameEntry</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>StackMapFrameEntry</tt> structure
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
-     */
-    public static MethodParametersEntry create(DataInput in, ClassFile classFile)
-        throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(nameIndex)
+        output.writeShort(accessFlags)
 
-        MethodParametersEntry bootStrapMethodsEntry = new MethodParametersEntry();
-        bootStrapMethodsEntry.setClassFile(classFile);
-        bootStrapMethodsEntry.read(in);
-
-        return bootStrapMethodsEntry;
+        if (isDebug) debug("wrote")
     }
 
 
-    public void read(DataInput in)
-        throws InvalidByteCodeException, IOException {
+    override fun debug(message: String) {
+        super.debug("$message MethodParams entry")
+    }
 
-        nameIndex = in.readUnsignedShort();
-        accessFlags = in.readUnsignedShort();
+    val length: Int
+        get() = 4
 
-        if (isDebug()) {
-            debug("read ");
+    companion object {
+        /**
+         * Factory method for creating StackMapFrameEntry structures.
+         * @param input the DataInput from which to read the
+         * @param classFile the parent class file of the structure to be created
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(input: DataInput, classFile: ClassFile) = MethodParametersEntry().apply {
+            this.classFile = classFile
+            this.read(input)
         }
-    }
-
-
-    public int getNameIndex() {
-        return nameIndex;
-    }
-
-    public int getAccessFlags() {
-        return accessFlags;
-    }
-
-    public void write(DataOutput out) throws InvalidByteCodeException,
-        IOException {
-
-        out.writeShort(nameIndex);
-        out.writeShort(accessFlags);
-
-        if (isDebug()) {
-            debug("wrote ");
-        }
-    }
-
-
-    protected void debug(String message) {
-        super.debug(message + "MethodParams entry");
-    }
-
-
-    public int getLength() {
-        return 4;
     }
 
 }
