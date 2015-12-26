@@ -5,60 +5,41 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an entry of type <tt>VerificationType.OBJECT</tt> in a <tt>BootstrapMethods</tt> attribute structure.
+ * Describes an entry of type VerificationType.OBJECT in a StackMapFrameEntry attribute structure.
  */
-public class ObjectVerificationTypeEntry extends VerificationTypeInfoEntry {
+class ObjectVerificationTypeEntry : VerificationTypeInfoEntry(VerificationType.OBJECT) {
 
-    private int cpIndex;
+    var cpIndex: Int = 0
 
-    public ObjectVerificationTypeEntry() {
-        super(VerificationType.OBJECT);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    public override fun readExtra(input: DataInput) {
+        super.readExtra(input)
+        cpIndex = input.readUnsignedShort()
     }
 
-    public int getCpIndex() {
-        return cpIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    public override fun writeExtra(output: DataOutput) {
+        super.writeExtra(output)
+        output.writeShort(cpIndex)
     }
 
-    public void setCpIndex(int cpIndex) {
-        this.cpIndex = cpIndex;
+    override fun appendTo(buffer: StringBuilder) {
+        super.appendTo(buffer)
+        buffer.append(" <a href=\"").append(cpIndex).append("\">cp_info #").append(cpIndex).append("</a> &lt;").append(verboseIndex).append("&gt;")
     }
 
-    public void readExtra(DataInput in) throws InvalidByteCodeException, IOException {
-        super.readExtra(in);
-        cpIndex = in.readUnsignedShort();
-    }
+    private val verboseIndex: String
+        get() = classFile.getConstantPoolEntryName(cpIndex)
 
-    @Override
-    public void writeExtra(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.writeExtra(out);
-        out.writeShort(cpIndex);
-    }
-
-    @Override
-    public void appendTo(StringBuilder buffer) {
-        super.appendTo(buffer);
-        buffer.append(" <a href=\"").append(cpIndex).append("\">cp_info #").append(cpIndex).append("</a> &lt;").append(getVerboseIndex()).append("&gt;");
-    }
-
-    private String getVerboseIndex()  {
-        try {
-            return getClassFile().getConstantPoolEntryName(cpIndex);
-        } catch (InvalidByteCodeException e) {
-            return "invalid constant pool index " + cpIndex;
-        }
-    }
-
-    @Override
-    public int getLength() {
-        return super.getLength() + 2;
-    }
+    override val length: Int
+        get() = super.length + 2
 }

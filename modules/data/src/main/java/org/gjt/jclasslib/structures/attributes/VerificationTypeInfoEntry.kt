@@ -16,7 +16,7 @@ import java.io.DataOutput
 import java.io.IOException
 
 /**
- * Describes an entry in a BootstrapMethods attribute structure.
+ * Describes an entry in a StackMapFrameEntry attribute structure.
  */
 open class VerificationTypeInfoEntry(
         /**
@@ -50,7 +50,7 @@ open class VerificationTypeInfoEntry(
      * Write extra data in derived classes.
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
-    protected open fun writeExtra(out: DataOutput) {
+    protected open fun writeExtra(output: DataOutput) {
 
     }
 

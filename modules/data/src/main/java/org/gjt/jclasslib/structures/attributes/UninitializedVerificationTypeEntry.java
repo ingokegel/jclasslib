@@ -22,7 +22,7 @@ import java.io.IOException;
 
 
 /**
- * Describes an entry of type <tt>VerificationType.UNINITIALIZED</tt> in a <tt>BootstrapMethods</tt> attribute structure.
+ * Describes an entry of type VerificationType.UNINITIALIZED in a StackMapFrameEntry attribute structure.
  */
 public class UninitializedVerificationTypeEntry extends VerificationTypeInfoEntry {
 
