@@ -12,7 +12,7 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 /**
  * Represents the available stack frame types in a stack map entry attribute.
  */
-enum class StackFrameType private constructor(private val boundary: Int) {
+enum class StackFrameType(private val boundary: Int) {
     SAME(63), //0-63
     SAME_LOCALS_1_STACK_ITEM(127), //64-127
     SAME_LOCALS_1_STACK_ITEM_EXT(247), //247
