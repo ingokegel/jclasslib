@@ -4,67 +4,37 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.IOException
 
 /**
- * Describes an  <tt>LocalVariableTypeTableEntry</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  LocalVariableTypeTableEntry attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class LocalVariableTypeTableEntry extends LocalVariableCommonEntry {
-    /**
-     * Factory method for creating <tt>LocalVariableTypeTableEntry</tt> structures.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the
-     *                  <tt>LocalVariableTypeTableEntry</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>LocalVariableTypeTableEntry</tt> structure
-     * @throws org.gjt.jclasslib.structures.InvalidByteCodeException
-     *                             if the byte code is invalid
-     * @throws java.io.IOException if an exception occurs with the <tt>DataInput</tt>
-     */
-    public static LocalVariableTypeTableEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+class LocalVariableTypeTableEntry : LocalVariableCommonEntry() {
 
-        LocalVariableTypeTableEntry localVariableTypeTableEntry = new LocalVariableTypeTableEntry();
-        localVariableTypeTableEntry.setClassFile(classFile);
-        localVariableTypeTableEntry.read(in);
 
-        return localVariableTypeTableEntry;
+    override fun debug(message: String) {
+        super.debug("$message LocalVariableTypeTable entry with start_pc $startPc, length $length, name_index $nameIndex, signature_index $descriptorOrSignatureIndex, index $index")
     }
 
-    /**
-     * Get the index of the constant pool entry containing the signature of
-     * this local variable.
-     *
-     * @return the index
-     */
-    public int getSignatureIndex() {
-        return getDescriptorOrSignatureIndex();
-    }
+    companion object {
+        /**
+         * Factory method for creating LocalVariableTypeTableEntry structures.
+         * @param input  the DataInput from which to read the
+         * @param classFile the parent class file of the structure to be created
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(input: DataInput, classFile: ClassFile) = LocalVariableTypeTableEntry().apply {
+            this.classFile = classFile
+            this.read(input)
 
-    /**
-     * Get the index of the constant pool entry containing the signature of
-     * this local variable.
-     *
-     * @param signatureIndex the index
-     */
-    public void setSignatureIndex(int signatureIndex) {
-        this.setDescriptorOrSignatureIndex(signatureIndex);
-    }
-
-    protected void debug(String message) {
-        super.debug(message +
-                "LocalVariableTypeTable entry with start_pc " + getStartPc() +
-                ", length " + getLength() + ", name_index " + getNameIndex() +
-                ", signature_index " + getDescriptorOrSignatureIndex() +
-                ", index " + getIndex());
+        }
     }
 }
