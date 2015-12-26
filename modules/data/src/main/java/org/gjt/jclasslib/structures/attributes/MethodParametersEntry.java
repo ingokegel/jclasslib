@@ -87,8 +87,4 @@ public class MethodParametersEntry extends AbstractStructure {
         return 4;
     }
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return "";
-    }
-
 }

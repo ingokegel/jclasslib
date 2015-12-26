@@ -82,10 +82,4 @@ public class ParameterAnnotations extends AbstractStructure {
         return length;
     }
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        if (accessFlags != 0)
-            throw new RuntimeException("Access flags should be zero: " +
-                    Integer.toHexString(accessFlags));
-        return "";
-    }
 }

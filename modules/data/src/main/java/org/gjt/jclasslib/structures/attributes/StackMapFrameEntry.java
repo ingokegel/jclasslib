@@ -170,13 +170,13 @@ public class StackMapFrameEntry extends AbstractStructure {
     private void readOneStackItem(DataInput in) throws InvalidByteCodeException, IOException {
         offsetDelta = tag - 64;
         stackItems = new VerificationTypeInfoEntry[1];
-        stackItems[0] = VerificationTypeInfoEntry.create(in, getClassFile());
+        stackItems[0] = VerificationTypeInfoEntry.Companion.create(in, getClassFile());
     }
 
     private void readOneStackItemExt(DataInput in) throws InvalidByteCodeException, IOException {
         offsetDelta = in.readUnsignedShort();
         stackItems = new VerificationTypeInfoEntry[1];
-        stackItems[0] = VerificationTypeInfoEntry.create(in, getClassFile());
+        stackItems[0] = VerificationTypeInfoEntry.Companion.create(in, getClassFile());
     }
 
     private void readChop(DataInput in) throws InvalidByteCodeException, IOException {
@@ -192,7 +192,7 @@ public class StackMapFrameEntry extends AbstractStructure {
         int numLocals = tag - 251;
         localItems = new VerificationTypeInfoEntry[numLocals];
         for (int i = 0; i < numLocals; i++) {
-            localItems[i] = VerificationTypeInfoEntry.create(in, getClassFile());
+            localItems[i] = VerificationTypeInfoEntry.Companion.create(in, getClassFile());
         }
     }
 
@@ -201,12 +201,12 @@ public class StackMapFrameEntry extends AbstractStructure {
         int numLocals = in.readUnsignedShort();
         localItems = new VerificationTypeInfoEntry[numLocals];
         for (int i = 0; i < numLocals; i++) {
-            localItems[i] = VerificationTypeInfoEntry.create(in, getClassFile());
+            localItems[i] = VerificationTypeInfoEntry.Companion.create(in, getClassFile());
         }
         int numStacks = in.readUnsignedShort();
         stackItems = new VerificationTypeInfoEntry[numStacks];
         for (int i = 0; i < numStacks; i++) {
-            stackItems[i] = VerificationTypeInfoEntry.create(in, getClassFile());
+            stackItems[i] = VerificationTypeInfoEntry.Companion.create(in, getClassFile());
         }
     }
 
@@ -364,15 +364,6 @@ public class StackMapFrameEntry extends AbstractStructure {
             size += entry.getLength();
         }
         return size;
-    }
-
-    @Override
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        if (accessFlags != 0) {
-            throw new RuntimeException("Access flags should be zero: " +
-                Integer.toHexString(accessFlags));
-        }
-        return "";
     }
 
 

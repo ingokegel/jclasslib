@@ -61,9 +61,4 @@ public class LocalVarTarget extends AbstractStructure {
         out.writeShort(index);
     }
 
-    @Override
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return "";
-    }
-
 }

@@ -33,12 +33,6 @@ abstract class CPInfo : AbstractStructure() {
 
     override fun hashCode(): Int = 0
 
-    override fun printAccessFlagsVerbose(accessFlags: Int): String {
-        if (accessFlags != 0)
-            throw RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags))
-        return ""
-    }
-
     companion object {
 
         /**

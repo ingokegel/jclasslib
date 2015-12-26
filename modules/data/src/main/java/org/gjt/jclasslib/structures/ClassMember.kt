@@ -59,6 +59,8 @@ abstract class ClassMember : AbstractStructureWithAttributes() {
     val accessFlagsVerbose: String
         get() = printAccessFlagsVerbose(accessFlags)
 
+    protected abstract fun printAccessFlagsVerbose(accessFlags: Int): String
+
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
 

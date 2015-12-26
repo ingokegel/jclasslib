@@ -106,8 +106,4 @@ public class TypeAnnotation extends AbstractStructure {
             annotation.getLength();
     }
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return "";
-    }
-
 }

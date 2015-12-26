@@ -101,9 +101,4 @@ public class Annotation extends AbstractStructure implements AnnotationData {
                 getLength(elementValuePairEntries) + " value pair elements");
     }
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        if (accessFlags != 0)
-            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
-        return "";
-    }
 }

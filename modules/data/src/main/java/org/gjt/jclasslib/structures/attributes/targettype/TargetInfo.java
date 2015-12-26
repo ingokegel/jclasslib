@@ -20,8 +20,4 @@ public abstract class TargetInfo extends AbstractStructure {
     public abstract int getLength();
     public abstract String getVerbose();
 
-    @Override
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return "";
-    }
 }

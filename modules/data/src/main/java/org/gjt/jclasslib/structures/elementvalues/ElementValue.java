@@ -122,12 +122,6 @@ public abstract class ElementValue extends AbstractStructure {
 
     public abstract String getEntryName();
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        if (accessFlags != 0)
-            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
-        return "";
-    }
-
     public int getTag() {
         return tag;
     }

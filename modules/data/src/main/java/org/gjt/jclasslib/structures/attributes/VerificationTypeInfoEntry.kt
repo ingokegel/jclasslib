@@ -5,107 +5,87 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an entry in a <tt>BootstrapMethods</tt> attribute structure.
+ * Describes an entry in a BootstrapMethods attribute structure.
  */
-public class VerificationTypeInfoEntry extends AbstractStructure {
+open class VerificationTypeInfoEntry(
+        /**
+         * The verification type
+         */
+        val type: VerificationType
+) : AbstractStructure() {
 
-
-    /**
-     * Factory method for creating <tt>VerificationTypeInfoEntry</tt> structures.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the
-     *                  <tt>VerificationTypeInfoEntry</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>VerificationTypeInfoEntry</tt> structure
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
-     */
-    public static VerificationTypeInfoEntry create(DataInput in, ClassFile classFile) throws InvalidByteCodeException, IOException {
-
-        int tag = in.readUnsignedByte();
-
-        VerificationType verificationType = VerificationType.getFromTag(tag);
-        VerificationTypeInfoEntry entry = verificationType.createEntry();
-        entry.setClassFile(classFile);
-        entry.read(in);
-
-        return entry;
-    }
-
-    private VerificationType type;
-
-    public VerificationTypeInfoEntry(VerificationType type) {
-        this.type = type;
-    }
-
-    /**
-     * Returns the verification type
-     */
-    public VerificationType getType() {
-        return type;
-    }
-
-    public final void read(DataInput in) throws InvalidByteCodeException, IOException {
-        readExtra(in);
-        if (isDebug()) {
-            debug("read ");
-        }
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        readExtra(input)
+        if (isDebug) debug("read")
     }
 
     /**
      * Read extra data in derived classes.
      */
-    protected void readExtra(DataInput in) throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    protected open fun readExtra(input: DataInput) {
 
     }
 
-    @Override
-    public final void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeByte(type.getTag());
-        writeExtra(out);
-        if (isDebug()) debug("wrote ");
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(type.tag)
+        writeExtra(output)
+        if (isDebug) debug("wrote")
     }
 
     /**
      * Write extra data in derived classes.
      */
-    protected void writeExtra(DataOutput out) throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    protected open fun writeExtra(out: DataOutput) {
 
     }
 
-    protected void debug(String message) {
-        super.debug(message + "VerificationTypeInfo entry of type " + type);
+    override fun debug(message: String) {
+        super.debug("$message VerificationTypeInfo entry of type $type")
     }
-
 
     /**
      * Returns the bytecode length of the entry.
      */
-    public int getLength() {
-        return 1;
-    }
+    open val length: Int
+        get() = 1
 
     /**
      * Append the verbose representation to a string builder.
      */
-    public void appendTo(StringBuilder buffer) {
-        buffer.append(type);
+    open fun appendTo(buffer: StringBuilder) {
+        buffer.append(type)
     }
 
-    @Override
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return null;
+    companion object {
+        /**
+         * Factory method for creating VerificationTypeInfoEntry structures.
+         * @param input the DataInput from which to read the VerificationTypeInfoEntry structure
+         * @param classFile the parent class file of the structure to be created
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(input: DataInput, classFile: ClassFile): VerificationTypeInfoEntry {
+            val tag = input.readUnsignedByte()
+            val verificationType = VerificationType.getFromTag(tag)
+            return verificationType.createEntry().apply {
+                this.classFile = classFile
+                this.read(input)
+            }
+        }
     }
 
 

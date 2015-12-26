@@ -50,8 +50,4 @@ public class TypePathEntry extends AbstractStructure {
         out.writeByte(typeArgumentIndex);
     }
 
-    @Override
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return "";
-    }
 }

@@ -165,7 +165,7 @@ class ClassFile : AbstractStructureWithAttributes() {
      * The verbose description of the access flags of this class.
      */
     val accessFlagsVerbose: String
-        get() = printAccessFlagsVerbose(accessFlags)
+        get() = printAccessFlagsVerbose(AccessFlag.CLASS_ACCESS_FLAGS, accessFlags)
 
     /**
      * The ConstantUtf8Info constant pool entry at the specified index.
@@ -474,10 +474,6 @@ class ClassFile : AbstractStructureWithAttributes() {
         if (majorVersion < 45 || majorVersion > 53) {
             Log.warning("major version should be between 45 and 53 for JDK <= 1.9, was $majorVersion")
         }
-    }
-
-    override fun printAccessFlagsVerbose(accessFlags: Int): String {
-        return printAccessFlagsVerbose(AccessFlag.CLASS_ACCESS_FLAGS, accessFlags)
     }
 
     companion object {

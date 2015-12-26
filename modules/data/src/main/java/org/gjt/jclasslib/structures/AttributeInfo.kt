@@ -36,12 +36,6 @@ abstract class AttributeInfo : AbstractStructureWithAttributes() {
      */
     abstract fun getAttributeLength(): Int
 
-    override fun printAccessFlagsVerbose(accessFlags: Int): String {
-        if (accessFlags != 0)
-            throw RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags))
-        return ""
-    }
-
     companion object {
 
         /**

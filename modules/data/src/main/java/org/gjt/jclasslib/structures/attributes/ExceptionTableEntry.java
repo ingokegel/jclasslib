@@ -172,10 +172,4 @@ public class ExceptionTableEntry extends AbstractStructure {
                 ", catch_type index " + catchType);
     }
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        if (accessFlags != 0)
-            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
-        return "";
-    }
-
 }

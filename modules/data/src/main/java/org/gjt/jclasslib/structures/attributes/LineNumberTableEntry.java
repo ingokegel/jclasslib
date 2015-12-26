@@ -109,10 +109,4 @@ public class LineNumberTableEntry extends AbstractStructure {
                 ", line_number " + lineNumber);
     }
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        if (accessFlags != 0)
-            throw new RuntimeException("Access flags should be zero: " + Integer.toHexString(accessFlags));
-        return "";
-    }
-
 }

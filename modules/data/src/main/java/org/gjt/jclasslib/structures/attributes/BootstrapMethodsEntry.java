@@ -141,10 +141,5 @@ public class BootstrapMethodsEntry extends AbstractStructure {
         return 4 + getLength(argumentIndices) * 2;
     }
 
-    @Override
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return null;
-    }
-
 
 }

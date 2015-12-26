@@ -104,13 +104,6 @@ public class ElementValuePair extends AbstractStructure {
     }
 
 
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        if (accessFlags != 0)
-            throw new RuntimeException("Access flags should be zero: " +
-                    Integer.toHexString(accessFlags));
-        return "";
-    }
-
     public int getLength() {
         return INITIAL_LENGTH + elementValue.getLength();
     }

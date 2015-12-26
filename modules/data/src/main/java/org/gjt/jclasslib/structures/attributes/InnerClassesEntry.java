@@ -147,7 +147,7 @@ public class InnerClassesEntry extends AbstractStructure {
      * @return the description
      */
     public String getInnerClassAccessFlagsVerbose() {
-        return printAccessFlagsVerbose(innerClassAccessFlags);
+        return printAccessFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS, innerClassAccessFlags);
     }
 
     public void read(DataInput in)
@@ -175,11 +175,6 @@ public class InnerClassesEntry extends AbstractStructure {
         super.debug(message + "InnerClasses entry with inner_class_info_index " + innerClassInfoIndex +
                 ", outer_class_info_index " + outerClassInfoIndex + ", inner_name_index " + innerNameIndex +
                 ", access flags " + printAccessFlags(innerClassAccessFlags));
-    }
-
-    protected String printAccessFlagsVerbose(int accessFlags) {
-        return printAccessFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS,
-            accessFlags);
     }
 
 }

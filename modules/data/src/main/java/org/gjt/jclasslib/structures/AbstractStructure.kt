@@ -110,14 +110,6 @@ abstract class AbstractStructure {
     /**
      * Utility method for derived structures. Print an access flag as
      * a space separated list of verbose java access modifiers.
-     * @param accessFlags the unsigned short value to print as a hex string
-     * @return the hex string
-     */
-    protected abstract fun printAccessFlagsVerbose(accessFlags: Int): String
-
-    /**
-     * Utility method for derived structures. Print an access flag as
-     * a space separated list of verbose java access modifiers.
      * @param availableAccessFlags array with the access flags available for the derived structure
      * @param accessFlags the unsigned short value to print as a hex string
      * @return the access flags verbose description
