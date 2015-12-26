@@ -7,11 +7,8 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an entry of type VerificationType.OBJECT in a StackMapFrameEntry attribute structure.
@@ -20,16 +17,16 @@ class ObjectVerificationTypeEntry : VerificationTypeInfoEntry(VerificationType.O
 
     var cpIndex: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    public override fun readExtra(input: DataInput) {
-        super.readExtra(input)
+    override fun read(input: DataInput) {
+        super.read(input)
         cpIndex = input.readUnsignedShort()
+        if (isDebug) debug("read")
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    public override fun writeExtra(output: DataOutput) {
-        super.writeExtra(output)
+    override fun write(output: DataOutput) {
+        super.write(output)
         output.writeShort(cpIndex)
+        if (isDebug) debug("wrote")
     }
 
     override fun appendTo(buffer: StringBuilder) {

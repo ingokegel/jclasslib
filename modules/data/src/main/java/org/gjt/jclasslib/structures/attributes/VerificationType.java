@@ -49,7 +49,7 @@ public enum VerificationType {
             case UNINITIALIZED:
                 return new UninitializedVerificationTypeEntry();
             default:
-                return new VerificationTypeInfoEntry(this);
+                return new DefaultVerificationTypeEntry(this);
         }
     }
 }

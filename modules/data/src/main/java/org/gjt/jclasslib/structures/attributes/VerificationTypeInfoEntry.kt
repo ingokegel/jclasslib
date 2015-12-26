@@ -18,42 +18,22 @@ import java.io.IOException
 /**
  * Describes an entry in a StackMapFrameEntry attribute structure.
  */
-open class VerificationTypeInfoEntry(
+abstract class VerificationTypeInfoEntry(
         /**
          * The verification type
          */
         val type: VerificationType
 ) : AbstractStructure() {
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-        readExtra(input)
-        if (isDebug) debug("read")
-    }
-
-    /**
-     * Read extra data in derived classes.
-     */
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    protected open fun readExtra(input: DataInput) {
-
-    }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeByte(type.tag)
-        writeExtra(output)
-        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Write extra data in derived classes.
-     */
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    protected open fun writeExtra(output: DataOutput) {
+    override fun read(input: DataInput) {
 
     }
-
     override fun debug(message: String) {
         super.debug("$message VerificationTypeInfo entry of type $type")
     }

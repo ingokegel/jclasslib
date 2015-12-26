@@ -12,54 +12,36 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
 
 
 /**
  * Describes an entry of type VerificationType.UNINITIALIZED in a StackMapFrameEntry attribute structure.
  */
-public class UninitializedVerificationTypeEntry extends VerificationTypeInfoEntry {
+class UninitializedVerificationTypeEntry : VerificationTypeInfoEntry(VerificationType.UNINITIALIZED) {
 
-    public UninitializedVerificationTypeEntry() {
-        super(VerificationType.UNINITIALIZED);
+    var offset: Int = 0
+
+    override fun read(input: DataInput) {
+        super.read(input)
+        offset = input.readUnsignedShort()
+        if (isDebug) debug("read")
     }
 
-    private int offset;
-
-    public int getOffset() {
-        return offset;
+    override fun write(output: DataOutput) {
+        super.write(output)
+        output.writeShort(offset)
+        if (isDebug) debug("wrote")
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
+    override fun appendTo(buffer: StringBuilder) {
+        super.appendTo(buffer)
+        buffer.append(" (offset: ").append(offset).append(")")
     }
 
-    @Override
-    protected void readExtra(DataInput in) throws InvalidByteCodeException, IOException {
-        super.readExtra(in);
-        offset = in.readUnsignedShort();
-    }
-
-    @Override
-    public void writeExtra(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.writeExtra(out);
-        out.writeShort(offset);
-    }
-
-    @Override
-    public void appendTo(StringBuilder buffer) {
-        super.appendTo(buffer);
-        buffer.append(" (offset: ").append(offset).append(")");
-    }
-
-    @Override
-    public int getLength() {
-        return super.getLength() + 2;
-    }
+    override val length: Int
+        get() = super.length + 2
 }
