@@ -5,15 +5,15 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
 /**
  * Represents the verification type of a bootstrap entry.
  */
-public enum VerificationType {
-    
+enum class VerificationType(val tag: Int) {
+
     TOP(0),
     INTEGER(1),
     FLOAT(2),
@@ -24,32 +24,22 @@ public enum VerificationType {
     OBJECT(7),
     UNINITIALIZED(8);
 
-    public static VerificationType getFromTag(int tag) throws InvalidByteCodeException {
-        VerificationType[] values = values();
-        if (tag < 0 || tag >= values.length) {
-            throw new InvalidByteCodeException("Invalid verification tag " + tag);
+    fun createEntry(): VerificationTypeInfoEntry {
+        when (this) {
+            OBJECT -> return ObjectVerificationTypeEntry()
+            UNINITIALIZED -> return UninitializedVerificationTypeEntry()
+            else -> return DefaultVerificationTypeEntry(this)
         }
-        return values[tag];
     }
 
-    private final int tag;
-
-    VerificationType(int tag) {
-        this.tag = tag;
-    }
-
-    public int getTag() {
-        return tag;
-    }
-
-    public VerificationTypeInfoEntry createEntry() {
-        switch (this) {
-            case OBJECT:
-                return new ObjectVerificationTypeEntry();
-            case UNINITIALIZED:
-                return new UninitializedVerificationTypeEntry();
-            default:
-                return new DefaultVerificationTypeEntry(this);
+    companion object {
+        @Throws(InvalidByteCodeException::class)
+        fun getFromTag(tag: Int): VerificationType {
+            val values = values()
+            if (tag < 0 || tag >= values.size) {
+                throw InvalidByteCodeException("Invalid verification tag " + tag)
+            }
+            return values[tag]
         }
     }
 }
