@@ -32,7 +32,7 @@ class LocalVariableTableAttribute : LocalVariableCommonAttribute<LocalVariableTa
     }
 
     override fun getAttributeLength(): Int {
-        return super.getAttributeLength() + localVariableEntries.size * LocalVariableTableEntry.LENGTH
+        return super.getAttributeLength() + localVariableEntries.size * LocalVariableCommonEntry.LENGTH
     }
 
     override fun debug(message: String) {

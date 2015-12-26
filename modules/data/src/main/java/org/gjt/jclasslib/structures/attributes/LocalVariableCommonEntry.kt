@@ -4,148 +4,76 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
  * Contains common attributes to a local variable table entry structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public abstract class LocalVariableCommonEntry extends AbstractStructure {
+abstract class LocalVariableCommonEntry : AbstractStructure() {
+
     /**
-     * Length in bytes of a local variable association.
+     * start_pc of this local variable association.
      */
-    public static final int LENGTH = 10;
-
-    protected int startPc;
-    protected int length;
-    protected int nameIndex;
-    protected int descriptorOrSignatureIndex;
-    protected int index;
+    var startPc: Int = 0
 
     /**
-     * Get the <tt>start_pc</tt> of this local variable association.
-     *
-     * @return the <tt>start_pc</tt>
+     * Length in bytes of this local variable association.
      */
-    final public int getStartPc() {
-        return startPc;
-    }
+    var length: Int = 0
 
     /**
-     * Set the <tt>start_pc</tt> of this local variable association.
-     *
-     * @param startPc the <tt>start_pc</tt>
-     */
-    final public void setStartPc(int startPc) {
-        this.startPc = startPc;
-    }
-
-    /**
-     * Get the length in bytes of this local variable association.
-     *
-     * @return the length
-     */
-    final public int getLength() {
-        return length;
-    }
-
-    /**
-     * Set the length in bytes of this local variable association.
-     *
-     * @param length the length
-     */
-    final public void setLength(int length) {
-        this.length = length;
-    }
-
-    /**
-     * Get the index of the constant pool entry containing the name of this
+     * Index of the constant pool entry containing the name of this
      * local variable.
-     *
-     * @return the index
      */
-    final public int getNameIndex() {
-        return nameIndex;
-    }
+    var nameIndex: Int = 0
 
     /**
-     * Set the index of the constant pool entry containing the name of this
+     * Index of the constant pool entry containing the descriptor of this
      * local variable.
-     *
-     * @param nameIndex the index
      */
-    final public void setNameIndex(int nameIndex) {
-        this.nameIndex = nameIndex;
-    }
+    var descriptorOrSignatureIndex: Int = 0
 
     /**
-     * Get the index of the constant pool entry containing the descriptor of this
-     * local variable.
-     *
-     * @return the index
+     * Index of this local variable.
      */
-    final public int getDescriptorOrSignatureIndex() {
-        return descriptorOrSignatureIndex;
+    var index: Int = 0
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        startPc = input.readUnsignedShort()
+        length = input.readUnsignedShort()
+        nameIndex = input.readUnsignedShort()
+        descriptorOrSignatureIndex = input.readUnsignedShort()
+        index = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Get the index of the constant pool entry containing the descriptor of this
-     * local variable.
-     *
-     * @param descriptorIndex the index
-     */
-    final public void setDescriptorOrSignatureIndex(int descriptorIndex) {
-        this.descriptorOrSignatureIndex = descriptorIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(startPc)
+        output.writeShort(length)
+        output.writeShort(nameIndex)
+        output.writeShort(descriptorOrSignatureIndex)
+        output.writeShort(index)
+
+        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Get the index of this local variable.
-     *
-     * @return the index
-     */
-    final public int getIndex() {
-        return index;
-    }
-
-    /**
-     * Set the index of this local variable.
-     * Set the index of this local variable.
-     */
-    final public void setIndex(int index) {
-        this.index = index;
-    }
-
-    final public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-        startPc = in.readUnsignedShort();
-        length = in.readUnsignedShort();
-        nameIndex = in.readUnsignedShort();
-        descriptorOrSignatureIndex = in.readUnsignedShort();
-        index = in.readUnsignedShort();
-
-        if (isDebug()) debug("read ");
-    }
-
-    final public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
-        out.writeShort(startPc);
-        out.writeShort(length);
-        out.writeShort(nameIndex);
-        out.writeShort(descriptorOrSignatureIndex);
-        out.writeShort(index);
-
-        if (isDebug()) debug("wrote ");
+    companion object {
+        /**
+         * Length in bytes of a local variable association.
+         */
+        val LENGTH = 10
     }
 
 }

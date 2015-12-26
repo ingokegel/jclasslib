@@ -30,7 +30,7 @@ class LocalVariableTypeTableAttribute : LocalVariableCommonAttribute<LocalVariab
         if (isDebug) debug("read")
     }
 
-    override fun getAttributeLength(): Int = super.getAttributeLength() + localVariableEntries.size * LocalVariableTypeTableEntry.LENGTH
+    override fun getAttributeLength(): Int = super.getAttributeLength() + localVariableEntries.size * LocalVariableCommonEntry.LENGTH
 
     override fun debug(message: String) {
         super.debug("$message LocalVariableTypeTable attribute with ${localVariableEntries.size} entries")

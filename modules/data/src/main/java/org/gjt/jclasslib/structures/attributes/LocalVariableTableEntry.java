@@ -48,7 +48,7 @@ public class LocalVariableTableEntry extends LocalVariableCommonEntry {
      * @return the index
      */
     public int getDescriptorIndex() {
-        return descriptorOrSignatureIndex;
+        return getDescriptorOrSignatureIndex();
     }
 
     /**
@@ -64,7 +64,7 @@ public class LocalVariableTableEntry extends LocalVariableCommonEntry {
 
     protected void debug(String message) {
         super.debug(message + "LocalVariableTable entry with start_pc " +
-                startPc + ", length " + length + ", name_index " + nameIndex +
-                ", descriptor_index " + descriptorOrSignatureIndex + ", index " + index);
+                getStartPc() + ", length " + getLength() + ", name_index " + getNameIndex() +
+                ", descriptor_index " + getDescriptorOrSignatureIndex() + ", index " + getIndex());
     }
 }
