@@ -5,50 +5,40 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes.targettype;
+package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Target info for a <tt>TypeAnnotation</tt> structure with a super class target.
+ * Target info for a TypeAnnotation structure with a super class target.
  */
-public class SupertypeTargetInfo extends TargetInfo {
+class SupertypeTargetInfo : TargetInfo() {
 
-    private int supertypeIndex;
+    var supertypeIndex: Int = 0
 
-    public int getSupertypeIndex() {
-        return supertypeIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        supertypeIndex = input.readUnsignedShort()
     }
 
-    public void setSupertypeIndex(int supertypeIndex) {
-        this.supertypeIndex = supertypeIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(supertypeIndex)
     }
 
-    @Override
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        supertypeIndex = in.readUnsignedShort();
-    }
+    override val length: Int
+        get() = 2
 
-    @Override
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeShort(supertypeIndex);
-    }
-
-    @Override
-    public int getLength() {
-        return 2;
-    }
-
-    @Override
-    public String getVerbose() {
-        if (supertypeIndex == 65535) {
-            return "Super class (" + supertypeIndex + ")";
-        } else {
-            return "<a href=\"I" + supertypeIndex + "\">interface index " + supertypeIndex + "</a>";
+    override val verbose: String
+        get() {
+            if (supertypeIndex == 65535) {
+                return "Super class ($supertypeIndex)"
+            } else {
+                return "<a href=\"I$supertypeIndex\">interface index $supertypeIndex</a>"
+            }
         }
-    }
 }
