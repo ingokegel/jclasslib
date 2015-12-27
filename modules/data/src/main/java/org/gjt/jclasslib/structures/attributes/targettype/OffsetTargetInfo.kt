@@ -5,46 +5,34 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes.targettype;
+package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Target info for a <tt>TypeAnnotation</tt> structure with a bytecode offset.
+ * Target info for a TypeAnnotation structure with a bytecode offset.
  */
-public class OffsetTargetInfo extends TargetInfo {
+class OffsetTargetInfo : TargetInfo() {
 
-    private int offset;
+    var offset: Int = 0
 
-    public int getOffset() {
-        return offset;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        offset = input.readUnsignedShort()
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(offset)
     }
 
-    @Override
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        offset = in.readUnsignedShort();
-    }
+    override val length: Int
+        get() = 2
 
-    @Override
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeShort(offset);
-    }
-
-    @Override
-    public int getLength() {
-        return 2;
-    }
-
-    @Override
-    public String getVerbose() {
-        return "offset " + offset;
-    }
+    override val verbose: String
+        get() = "offset $offset"
 }
