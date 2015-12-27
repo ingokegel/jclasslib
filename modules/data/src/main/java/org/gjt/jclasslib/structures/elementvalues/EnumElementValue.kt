@@ -4,97 +4,55 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.elementvalues;
+package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>EnumElementValue</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  EnumElementValue attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class EnumElementValue extends ElementValue {
-
-    public final static String ENTRY_NAME = "EnumElement";
-
-    private static final int LENGTH = 4;
-    private int typeNameIndex;
-    private int constNameIndex;
-
-    protected EnumElementValue() {
-        super(ElementValueType.ENUM);
-    }
+class EnumElementValue : ElementValue(ElementValueType.ENUM) {
+    /**
+     * type_name_index of this element value entry.
+     */
+    var typeNameIndex: Int = 0
 
     /**
-     * Get the <tt>type_name_index</tt> of this element value entry.
-     *
-     * @return the <tt>type_name_index</tt>
+     * const_name_index of this element value entry.
      */
-    public int getTypeNameIndex() {
-        return this.typeNameIndex;
+    var constNameIndex: Int = 0
+
+    override val specificLength: Int
+        get() = 4
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        typeNameIndex = input.readUnsignedShort()
+        constNameIndex = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Set the <tt>type_name_index</tt> of this element value entry.
-     *
-     * @param typeNameIndex the <tt>type_name_index</tt>
-     */
-    public void setTypeNameIndex(int typeNameIndex) {
-        this.typeNameIndex = typeNameIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        super.write(output)
+        output.writeShort(typeNameIndex)
+        output.writeShort(constNameIndex)
+
+        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Get the <tt>const_name_index</tt> of this element value entry.
-     *
-     * @return the <tt>const_name_index</tt>
-     */
-    public int getConstNameIndex() {
-        return this.constNameIndex;
+    override fun debug(message: String) {
+        super.debug("$message EnumElementValue with type_name_index $typeNameIndex, const_name_index $constNameIndex")
     }
 
-    /**
-     * Set the <tt>const_name_index</tt> of this element value entry.
-     *
-     * @param constNameIndex the <tt>const_name_index</tt>
-     */
-    public void setConstNameIndex(int constNameIndex) {
-        this.constNameIndex = constNameIndex;
-    }
-
-
-    protected int getSpecificLength() {
-        return LENGTH;
-    }
-
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        typeNameIndex = in.readUnsignedShort();
-        constNameIndex = in.readUnsignedShort();
-
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
-        out.writeShort(typeNameIndex);
-        out.writeShort(constNameIndex);
-
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message +
-                "EnumElementValue with type_name_index " +
-                typeNameIndex + ", const_name_index " + constNameIndex);
-
-    }
-
-    public String getEntryName() {
-        return ENTRY_NAME;
-    }
+    override val entryName: String
+        get() = "EnumElement"
 
 }
