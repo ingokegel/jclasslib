@@ -5,49 +5,33 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Type path entry for a <tt>TypeAnnotation</tt> structure.
+ * Type path entry for a TypeAnnotation structure.
  */
-public class TypePathEntry extends AbstractStructure {
+class TypePathEntry : AbstractStructure() {
 
-    private TypePathKind typePathKind;
-    private int typeArgumentIndex;
+    lateinit var typePathKind: TypePathKind
+    var typeArgumentIndex: Int = 0
 
-    public TypePathKind getTypePathKind() {
-        return typePathKind;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        typePathKind = TypePathKind.getFromTag(input.readUnsignedByte())
+        typeArgumentIndex = input.readUnsignedByte()
     }
 
-    public void setTypePathKind(TypePathKind typePathKind) {
-        this.typePathKind = typePathKind;
-    }
-
-    public int getTypeArgumentIndex() {
-        return typeArgumentIndex;
-    }
-
-    public void setTypeArgumentIndex(int typeArgumentIndex) {
-        this.typeArgumentIndex = typeArgumentIndex;
-    }
-
-    @Override
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        typePathKind = TypePathKind.getFromTag(in.readUnsignedByte());
-        typeArgumentIndex = in.readUnsignedByte();
-    }
-
-    @Override
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeByte(typePathKind.getTag());
-        out.writeByte(typeArgumentIndex);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(typePathKind.tag)
+        output.writeByte(typeArgumentIndex)
     }
 
 }
