@@ -5,71 +5,63 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.attributes.targettype.*;
+import org.gjt.jclasslib.structures.ClassFileEnum
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.Lookup
+import org.gjt.jclasslib.structures.attributes.targettype.*
+import kotlin.reflect.KClass
 
 /**
  * Represents the target type of a type annotation.
  */
-public enum TypeAnnotationTargetType {
+enum class TypeAnnotationTargetType(override val tag: Int, private val targetInfoClass: KClass<out TargetInfo>) : ClassFileEnum {
 
-    UNDEFINED(-1, UndefinedTargetInfo.class),
-    GENERIC_PARAMETER_CLASS(0x00, ParameterTargetInfo.class),
-    GENERIC_PARAMETER_METHOD(0x01, ParameterTargetInfo.class),
-    SUPERTYPE(0x10, SupertypeTargetInfo.class),
-    BOUND_GENERIC_PARAMETER_CLASS(0x11, TypeParameterBoundTargetInfo.class),
-    BOUND_GENERIC_PARAMETER_METHOD(0x12, TypeParameterBoundTargetInfo.class),
-    FIELD(0x13, EmptyTargetInfo.class),
-    RETURN_TYPE_METHOD(0x14, EmptyTargetInfo.class),
-    RECEIVER_TYPE_METHOD(0x15, EmptyTargetInfo.class),
-    FORMAL_PARAMETER_METHOD(0x16, ParameterTargetInfo.class),
-    THROWS(0x17, ExceptionTargetInfo.class),
-    LOCAL_VARIABLE(0x40, LocalVarTargetInfo.class),
-    LOCAL_RESOURCE(0x41, LocalVarTargetInfo.class),
-    CATCH(0x42, ExceptionTargetInfo.class),
-    INSTANCEOF(0x43, OffsetTargetInfo.class),
-    NEW(0x44, OffsetTargetInfo.class),
-    METHODREF_NEW(0x45, OffsetTargetInfo.class),
-    METHODREF_IDENTIFIER_NEW(0x46, OffsetTargetInfo.class),
-    CAST(0x47, TypeArgumentTargetInfo.class),
-    TYPE_ARGUMENT_CONSTRUCTOR_INVOCATION(0x48, TypeArgumentTargetInfo.class),
-    TYPE_ARGUMENT_METHOD_INVOCATION(0x49, TypeArgumentTargetInfo.class),
-    TYPE_ARGUMENT_METHODREF_NEW(0x4A, TypeArgumentTargetInfo.class),
-    TYPE_ARGUMENT_METHODREF_IDENTIFIER(0x4B, TypeArgumentTargetInfo.class);
+    UNDEFINED(-1, UndefinedTargetInfo::class),
+    GENERIC_PARAMETER_CLASS(0, ParameterTargetInfo::class),
+    GENERIC_PARAMETER_METHOD(1, ParameterTargetInfo::class),
+    SUPERTYPE(16, SupertypeTargetInfo::class),
+    BOUND_GENERIC_PARAMETER_CLASS(17, TypeParameterBoundTargetInfo::class),
+    BOUND_GENERIC_PARAMETER_METHOD(18, TypeParameterBoundTargetInfo::class),
+    FIELD(19, EmptyTargetInfo::class),
+    RETURN_TYPE_METHOD(20, EmptyTargetInfo::class),
+    RECEIVER_TYPE_METHOD(21, EmptyTargetInfo::class),
+    FORMAL_PARAMETER_METHOD(22, ParameterTargetInfo::class),
+    THROWS(23, ExceptionTargetInfo::class),
+    LOCAL_VARIABLE(64, LocalVarTargetInfo::class),
+    LOCAL_RESOURCE(65, LocalVarTargetInfo::class),
+    CATCH(66, ExceptionTargetInfo::class),
+    INSTANCEOF(67, OffsetTargetInfo::class),
+    NEW(68, OffsetTargetInfo::class),
+    METHODREF_NEW(69, OffsetTargetInfo::class),
+    METHODREF_IDENTIFIER_NEW(70, OffsetTargetInfo::class),
+    CAST(71, TypeArgumentTargetInfo::class),
+    TYPE_ARGUMENT_CONSTRUCTOR_INVOCATION(72, TypeArgumentTargetInfo::class),
+    TYPE_ARGUMENT_METHOD_INVOCATION(73, TypeArgumentTargetInfo::class),
+    TYPE_ARGUMENT_METHODREF_NEW(74, TypeArgumentTargetInfo::class),
+    TYPE_ARGUMENT_METHODREF_IDENTIFIER(75, TypeArgumentTargetInfo::class);
 
-    static TypeAnnotationTargetType[] targetTypes = new TypeAnnotationTargetType[values()[values().length - 1].getTag() + 1];
-    static {
-        for (TypeAnnotationTargetType typeAnnotationTargetType : values()) {
-            targetTypes[typeAnnotationTargetType.getTag()] = typeAnnotationTargetType;
+    fun createTargetInfo(): TargetInfo {
+        val objectInstance = targetInfoClass.objectInstance
+        if (objectInstance != null) {
+            return objectInstance
+        } else {
+            try {
+                return targetInfoClass.java.newInstance()
+            } catch (e: Exception) {
+                throw RuntimeException(e)
+            }
         }
     }
 
-    public static TypeAnnotationTargetType getFromTag(int tag) throws InvalidByteCodeException {
-        if (tag < 0 || tag >= targetTypes.length) {
-            throw new InvalidByteCodeException("Invalid type annotation target type: " + tag);
-        }
-        return targetTypes[tag];
-    }
+    companion object : Lookup<TypeAnnotationTargetType>() {
 
-    private int tag;
-    private Class<? extends TargetInfo> targetInfoClass;
+        override val enumClass: Class<TypeAnnotationTargetType>
+            get() = TypeAnnotationTargetType::class.java
 
-    TypeAnnotationTargetType(int tag, Class<? extends TargetInfo> targetInfoClass) {
-        this.tag = tag;
-        this.targetInfoClass = targetInfoClass;
-    }
+        override val name: String
+            get() = "type annotation target type"
 
-    public int getTag() {
-        return tag;
-    }
-
-    public TargetInfo createTargetInfo() {
-        try {
-            return targetInfoClass.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

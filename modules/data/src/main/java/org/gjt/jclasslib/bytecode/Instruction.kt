@@ -55,7 +55,7 @@ open class Instruction(
      */
     @Throws(IOException::class)
     open fun write(output: ByteCodeOutput) {
-        output.writeByte(opcode.bytecode)
+        output.writeByte(opcode.tag)
     }
 
 }

@@ -7,9 +7,10 @@
 
 package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.ClassFileEnum
+import org.gjt.jclasslib.structures.Lookup
 
-enum class MethodHandleType(val tag: Int, val verbose: String) {
+enum class MethodHandleType(override val tag: Int, val verbose: String) : ClassFileEnum {
 
     GET_FIELD(1, "REF_getField"),
     GET_STATIC(2, "REF_getStatic"),
@@ -21,26 +22,12 @@ enum class MethodHandleType(val tag: Int, val verbose: String) {
     NEW_INVOKE_SPECIAL(8, "REF_newInvokeSpecial"),
     INVOKE_INTERFACE(9, "REF_invokeInterface");
 
-    companion object {
-        private val LOOKUP = arrayOfNulls<MethodHandleType>(MethodHandleType.values().maxBy { it.tag }!!.tag + 1)
+    companion object : Lookup<MethodHandleType>() {
 
-        init {
-            for (methodHandleType in MethodHandleType.values()) {
-                LOOKUP[methodHandleType.tag] = methodHandleType
-            }
-        }
-
-        @JvmStatic
-        @Throws(InvalidByteCodeException::class)
-        fun getFromTag(tag: Byte): MethodHandleType {
-            if (tag < LOOKUP.size && tag >= 0) {
-                val methodHandleType = LOOKUP[tag.toInt()]
-                if (methodHandleType != null) {
-                    return methodHandleType
-                }
-            }
-            throw InvalidByteCodeException("invalid method handle entry with unknown tag " + tag)
-        }
+        override val enumClass: Class<MethodHandleType>
+            get() = MethodHandleType::class.java
+        override val name: String
+            get() = "method handle entry"
 
     }
 

@@ -7,26 +7,26 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.IOException
+import org.gjt.jclasslib.structures.ClassFileEnum
+import org.gjt.jclasslib.structures.Lookup
 
 /**
  * Defines all opcodes and their verbose representation.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-enum class Opcode (
+enum class Opcode(
         /**
          * Bytecode value.
          */
-        val bytecode: Int,
+        override val tag: Int,
         /**
          * Verbose representation.
          */
         val verbose: String,
 
         private val docAnchorSuffix: String = verbose
-) {
+) : ClassFileEnum {
 
     NOP(0, "nop"),
     ACONST_NULL(1, "aconst_null"),
@@ -237,29 +237,15 @@ enum class Opcode (
     val docUrl: String
         get() = JVM_SPEC_URL + docAnchorSuffix
 
-    companion object {
-
-        private val LOOKUP = arrayOfNulls<Opcode>(256)
-
-        init {
-            for (opcode in values()) {
-                LOOKUP[opcode.bytecode] = opcode
-            }
-        }
+    companion object : Lookup<Opcode>() {
 
         private val JVM_SPEC_URL = "http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5."
 
-        @JvmStatic
-        @Throws(InvalidByteCodeException::class)
-        fun getFromBytecode(bytecode: Int): Opcode {
-            if (bytecode < 256 && bytecode >= 0) {
-                val opcode = LOOKUP[bytecode]
-                if (opcode != null) {
-                    return opcode;
-                }
-            }
-            throw InvalidByteCodeException("invalid opcode 0x" + Integer.toHexString(bytecode))
-        }
+        override val enumClass: Class<Opcode>
+            get() = Opcode::class.java
+        override val name: String
+            get() = "opcode"
+
     }
 
 }

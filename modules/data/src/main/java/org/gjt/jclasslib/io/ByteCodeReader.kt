@@ -54,7 +54,7 @@ object ByteCodeReader {
         val instruction: Instruction
 
         val bytecode = bcis.readUnsignedByte()
-        val opcode = Opcode.getFromBytecode(bytecode)
+        val opcode = Opcode.getFromTag(bytecode)
 
         when (opcode) {
 

@@ -50,7 +50,7 @@ class ConstantMethodHandleInfo : CPInfo() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
-        type = MethodHandleType.getFromTag(input.readByte())
+        type = MethodHandleType.getFromTag(input.readByte().toInt())
         referenceIndex = input.readUnsignedShort()
         if (isDebug) debug("read")
     }

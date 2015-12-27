@@ -65,10 +65,10 @@ enum class ConstantType(val tag: Int, val verbose: String, val size : Int) {
     override fun toString(): String = verbose
 
     companion object {
-        private val LOOKUP = arrayOfNulls<ConstantType>(ConstantType.values().maxBy { it.tag }!!.tag + 1)
+        private val LOOKUP = arrayOfNulls<ConstantType>(values().maxBy { it.tag }!!.tag + 1)
 
         init {
-            for (constantType in ConstantType.values()) {
+            for (constantType in values()) {
                 LOOKUP[constantType.tag] = constantType
             }
         }
