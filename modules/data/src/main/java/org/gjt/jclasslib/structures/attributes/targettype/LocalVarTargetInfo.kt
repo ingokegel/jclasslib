@@ -5,63 +5,47 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes.targettype;
+package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Target info for a <tt>TypeAnnotation</tt> structure with local variable table links.
+ * Target info for a TypeAnnotation structure with local variable table links.
  */
-public class LocalVarTargetInfo extends TargetInfo {
+class LocalVarTargetInfo : TargetInfo() {
 
-    private LocalVarTarget[] localVarTargets;
+    var localVarTargets: Array<LocalVarTarget> = emptyArray()
 
-    public LocalVarTarget[] getLocalVarTargets() {
-        return localVarTargets;
-    }
-
-    public void setLocalVarTargets(LocalVarTarget[] localVarTargets) {
-        this.localVarTargets = localVarTargets;
-    }
-
-    @Override
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        int count = in.readUnsignedShort();
-        localVarTargets = new LocalVarTarget[count];
-        for (int i = 0; i < count; i++) {
-            localVarTargets[i] = new LocalVarTarget();
-            localVarTargets[i].read(in);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        val count = input.readUnsignedShort()
+        localVarTargets = Array(count) {
+            LocalVarTarget().apply { read(input) }
         }
     }
 
-    @Override
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        int count = getLength(localVarTargets);
-        out.writeShort(count);
-        for (int i = 0; i < count; i++) {
-            localVarTargets[i].write(out);
-        }
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(localVarTargets.size)
+        localVarTargets.forEach { it.write(output) }
     }
 
-    @Override
-    public int getLength() {
-        return 2 + localVarTargets.length * 6;
-    }
+    override val length: Int
+        get() = 2 + localVarTargets.size * 6
 
-    @Override
-    public String getVerbose() {
-        StringBuilder buffer = new StringBuilder();
-        for (int i = 0; i < localVarTargets.length; i++) {
-            LocalVarTarget target = localVarTargets[i];
-            buffer.append("[").append(i).append("] start: ").append(target.startPc);
-            buffer.append(", length: ").append(target.length);
-            buffer.append(", <a href=\"L").append(target.index).append("\">local variable with index ").append(target.index).append("</a>");
-            buffer.append("\n");
+    override val verbose: String
+        get() {
+            val buffer = StringBuilder()
+            localVarTargets.forEachIndexed { i, localVarTarget ->
+                buffer.append("[").append(i).append("] start: ").append(localVarTarget.startPc)
+                buffer.append(", length: ").append(localVarTarget.length)
+                buffer.append(", <a href=\"L").append(localVarTarget.index).append("\">local variable with index ").append(localVarTarget.index).append("</a>")
+                buffer.append("\n")
+            }
+            return buffer.toString()
         }
-        return buffer.toString();
-    }
 }
