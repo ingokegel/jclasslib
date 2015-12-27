@@ -4,92 +4,52 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.elementvalues;
+package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>ArrayElementValue</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  ArrayElementValue attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class ArrayElementValue extends ElementValue {
-
-    public final static String ENTRY_NAME = "ArrayElement";
-
-    private static final int INITIAL_LENGTH = 2;
-    private ElementValue[] elementValueEntries;
-
-
-    protected ArrayElementValue() {
-        super(ElementValueType.ARRAY);
-    }
-
+class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     /**
-     * Get the list of element values associations of the this array
-     * element value entry.
-     *
-     * @return the array
+     * Element values associations of this entry.
      */
-    public ElementValue[] getElementValueEntries() {
-        return this.elementValueEntries;
-    }
+    var elementValueEntries: Array<ElementValue> = emptyArray()
 
-    /**
-     * Set the list of element values associations of this array
-     * element value entry.
-     *
-     * @param elementValueEntries the array
-     */
-    public void setConstValueIndex(ElementValue[] elementValueEntries) {
-        this.elementValueEntries = elementValueEntries;
-    }
+    override val specificLength: Int
+        get() = 2 + elementValueEntries.sumBy { it.length }
 
-    protected int getSpecificLength() {
-        int length = INITIAL_LENGTH;
-        for (ElementValue elementValueEntry : elementValueEntries) {
-            length += elementValueEntry.getLength();
-        }
-        return length;
-    }
-
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-
-        int elementValueEntriesLength = in.readUnsignedShort();
-        elementValueEntries = new ElementValue[elementValueEntriesLength];
-        for (int i = 0; i < elementValueEntries.length; i++) {
-            elementValueEntries[i] = ElementValue.Companion.create(in, getClassFile());
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        val elementValueEntriesLength = input.readUnsignedShort()
+        elementValueEntries = Array(elementValueEntriesLength) {
+            ElementValue.create(input, classFile)
         }
 
-        if (isDebug()) debug("read ");
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        super.write(output)
+        output.writeShort(elementValueEntries.size)
+        elementValueEntries.forEach { it.write(output) }
 
-        int elementValueEntriesLength = getLength(elementValueEntries);
-
-        out.writeShort(elementValueEntriesLength);
-        for (int i = 0; i < elementValueEntriesLength; i++) {
-            elementValueEntries[i].write(out);
-        }
-
-        if (isDebug()) debug("wrote ");
+        if (isDebug) debug("wrote")
     }
 
-    protected void debug(String message) {
-        super.debug(message +
-                "ArrayElementValue with " +
-                getLength(elementValueEntries) + " entries");
+    override fun debug(message: String) {
+        super.debug("$message ArrayElementValue with ${getLength(elementValueEntries)} entries")
     }
 
-    public String getEntryName() {
-        return ENTRY_NAME;
-    }
+    override val entryName: String
+        get() = "ArrayElement"
 
 }

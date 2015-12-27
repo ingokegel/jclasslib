@@ -66,6 +66,7 @@ abstract class AbstractStructure {
      * @param array the array for which the length is requested
      * @return the length
      */
+    //TODO remove
     protected fun getLength(array: Any?): Int {
         if (array == null || !array.javaClass.isArray) {
             return 0
