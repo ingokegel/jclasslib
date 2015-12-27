@@ -237,14 +237,9 @@ enum class Opcode(
     val docUrl: String
         get() = JVM_SPEC_URL + docAnchorSuffix
 
-    companion object : Lookup<Opcode>() {
+    companion object : Lookup<Opcode>(Opcode::class.java, "opcode") {
 
         private val JVM_SPEC_URL = "http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5."
-
-        override val enumClass: Class<Opcode>
-            get() = Opcode::class.java
-        override val name: String
-            get() = "opcode"
 
     }
 

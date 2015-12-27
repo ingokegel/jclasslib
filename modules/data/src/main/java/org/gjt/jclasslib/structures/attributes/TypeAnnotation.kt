@@ -11,7 +11,6 @@ import org.gjt.jclasslib.structures.AbstractStructure
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo
-import org.gjt.jclasslib.structures.attributes.targettype.UndefinedTargetInfo
 
 import java.io.DataInput
 import java.io.DataOutput
@@ -23,8 +22,8 @@ import java.io.IOException
  */
 class TypeAnnotation : AbstractStructure() {
 
-    var targetType: TypeAnnotationTargetType = TypeAnnotationTargetType.UNDEFINED
-    var targetInfo: TargetInfo = UndefinedTargetInfo
+    lateinit var targetType: TypeAnnotationTargetType
+    lateinit var targetInfo: TargetInfo
     var typePathEntries: Array<TypePathEntry> = emptyArray()
     var annotation: Annotation = Annotation()
 
