@@ -5,25 +5,22 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures;
+package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.structures.elementvalues.ElementValuePair;
+import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
 
 /**
  * Base class for annotation content.
  */
-public interface AnnotationData {
+interface AnnotationData {
     /**
-     * Get the list of element value pair associations of the parent
-     * structure as an array of <tt>ElementValuePair</tt> structures.
-     *
-     * @return the array
+     * Element value pair associations of the parent
+     * structure
      */
-    ElementValuePair[] getElementValuePairEntries();
+    var elementValuePairEntries: Array<ElementValuePair>
+
     /**
-     * Get the <tt>type_index</tt> of this annotation.
-     *
-     * @return the <tt>type_index</tt>
+     * type_index of this annotation.
      */
-    int getTypeIndex();
+    var typeIndex: Int
 }

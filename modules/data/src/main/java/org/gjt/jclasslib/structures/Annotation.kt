@@ -26,36 +26,8 @@ import java.io.IOException
  */
 class Annotation : AbstractStructure(), AnnotationData {
 
-    private var typeIndex: Int = 0
-    private var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
-
-
-    override fun getElementValuePairEntries(): Array<ElementValuePair> {
-        return elementValuePairEntries
-    }
-
-    /**
-     * Set the list of element value pair  associations of the parent
-     * structure as an array of ElementValuePair structures.
-
-     * @param elementValuePairEntries the array
-     */
-    fun setElementValuePairEntries(elementValuePairEntries: Array<ElementValuePair>) {
-        this.elementValuePairEntries = elementValuePairEntries
-    }
-
-    override fun getTypeIndex(): Int {
-        return typeIndex
-    }
-
-    /**
-     * Set the type_index of this annotation.
-
-     * @param typeIndex the type_index
-     */
-    fun setTypeIndex(typeIndex: Int) {
-        this.typeIndex = typeIndex
-    }
+    override var typeIndex: Int = 0
+    override var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
