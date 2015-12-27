@@ -12,9 +12,11 @@ import java.io.DataOutput
 
 object UndefinedTargetInfo : TargetInfo() {
 
-    override fun getLength(): Int {
-        throw UnsupportedOperationException()
-    }
+    override val length: Int
+        get() = throw UnsupportedOperationException()
+
+    override val verbose: String
+        get() = throw UnsupportedOperationException()
 
     override fun read(input: DataInput) {
         throw UnsupportedOperationException()
@@ -24,7 +26,4 @@ object UndefinedTargetInfo : TargetInfo() {
         throw UnsupportedOperationException()
     }
 
-    override fun getVerbose(): String {
-        throw UnsupportedOperationException()
-    }
 }

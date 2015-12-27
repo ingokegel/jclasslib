@@ -5,19 +5,16 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes.targettype;
+package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.AbstractStructure;
+import org.gjt.jclasslib.structures.AbstractStructure
 
 /**
- * Base class for target infos in a <tt>TypeAnnotation</tt> structure.
+ * Base class for target infos in a TypeAnnotation structure.
  */
-public abstract class TargetInfo extends AbstractStructure {
+abstract class TargetInfo : AbstractStructure() {
 
-    protected TargetInfo() {
-    }
-
-    public abstract int getLength();
-    public abstract String getVerbose();
+    abstract val length: Int
+    abstract val verbose: String
 
 }
