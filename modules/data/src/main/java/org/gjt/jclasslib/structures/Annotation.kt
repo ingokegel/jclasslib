@@ -11,94 +11,80 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures;
+package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.structures.elementvalues.ElementValuePair;
+import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>Annotation</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  Annotation attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class Annotation extends AbstractStructure implements AnnotationData {
+class Annotation : AbstractStructure(), AnnotationData {
 
-    private static final int INITIAL_LENGTH = 4;
-
-    private int typeIndex;
-    private ElementValuePair[] elementValuePairEntries;
+    private var typeIndex: Int = 0
+    private var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
 
 
-    public ElementValuePair[] getElementValuePairEntries() {
-        return elementValuePairEntries;
+    override fun getElementValuePairEntries(): Array<ElementValuePair> {
+        return elementValuePairEntries
     }
 
     /**
      * Set the list of element value pair  associations of the parent
-     * structure as an array of <tt>ElementValuePair</tt> structures.
-     *
+     * structure as an array of ElementValuePair structures.
+
      * @param elementValuePairEntries the array
      */
-    public void setElementValuePairEntries(ElementValuePair[] elementValuePairEntries) {
-        this.elementValuePairEntries = elementValuePairEntries;
+    fun setElementValuePairEntries(elementValuePairEntries: Array<ElementValuePair>) {
+        this.elementValuePairEntries = elementValuePairEntries
     }
 
-    public int getTypeIndex() {
-        return typeIndex;
+    override fun getTypeIndex(): Int {
+        return typeIndex
     }
 
     /**
-     * Set the <tt>type_index</tt> of this annotation.
-     *
-     * @param typeIndex the <tt>type_index</tt>
+     * Set the type_index of this annotation.
+
+     * @param typeIndex the type_index
      */
-    public void setTypeIndex(int typeIndex) {
-        this.typeIndex = typeIndex;
+    fun setTypeIndex(typeIndex: Int) {
+        this.typeIndex = typeIndex
     }
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
 
-        typeIndex = in.readUnsignedShort();
-        int elementValuePairEntriesLength = in.readUnsignedShort();
+        typeIndex = input.readUnsignedShort()
+        val elementValuePairEntriesLength = input.readUnsignedShort()
 
-        elementValuePairEntries = new ElementValuePair[elementValuePairEntriesLength];
-
-        for (int i = 0; i < elementValuePairEntriesLength; i++) {
-            elementValuePairEntries[i] = ElementValuePair.create(in, getClassFile());
+        elementValuePairEntries = Array(elementValuePairEntriesLength) {
+            ElementValuePair.create(input, classFile)
         }
 
-        if (isDebug()) debug("read ");
+        if (isDebug) debug("read")
     }
 
-    public int getLength() {
-        int length = INITIAL_LENGTH;
-        for (ElementValuePair elementValuePairEntry : elementValuePairEntries) {
-            length += elementValuePairEntry.getLength();
-        }
-        return length;
+    val length: Int
+        get() = 4 + elementValuePairEntries.sumBy { it.length }
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+
+        output.writeShort(typeIndex)
+        output.writeShort(elementValuePairEntries.size)
+        elementValuePairEntries.forEach { it.write(output) }
+
+        if (isDebug) debug("wrote")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-
-        out.writeShort(typeIndex);
-        int elementValuePairEntriesLength = getLength(elementValuePairEntries);
-
-        out.writeShort(elementValuePairEntriesLength);
-        for (int i = 0; i < elementValuePairEntriesLength; i++) {
-            elementValuePairEntries[i].write(out);
-        }
-
-        if (isDebug()) debug("wrote ");
-
-    }
-
-    protected void debug(String message) {
-        super.debug(message + "Annotation with " +
-                getLength(elementValuePairEntries) + " value pair elements");
+    override fun debug(message: String) {
+        super.debug("$message Annotation with ${getLength(elementValuePairEntries)} value pair elements")
     }
 
 }
