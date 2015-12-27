@@ -5,60 +5,36 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes.targettype;
+package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Local variable target for the <tt>LocalVarTargetInfo</tt> structure.
+ * Local variable target for the LocalVarTargetInfo structure.
  */
-public class LocalVarTarget extends AbstractStructure {
+class LocalVarTarget : AbstractStructure() {
 
-    public int startPc;
-    public int length;
-    public int index;
+    var startPc: Int = 0
+    var length: Int = 0
+    var index: Int = 0
 
-    public int getStartPc() {
-        return startPc;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        startPc = input.readUnsignedShort()
+        length = input.readUnsignedShort()
+        index = input.readUnsignedShort()
     }
 
-    public void setStartPc(int startPc) {
-        this.startPc = startPc;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    @Override
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        startPc = in.readUnsignedShort();
-        length = in.readUnsignedShort();
-        index = in.readUnsignedShort();
-    }
-
-    @Override
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeShort(startPc);
-        out.writeShort(length);
-        out.writeShort(index);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(startPc)
+        output.writeShort(length)
+        output.writeShort(index)
     }
 
 }
