@@ -4,75 +4,48 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.elementvalues;
+package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>ConstElementValue</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  ConstElementValue attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class ConstElementValue extends ElementValue {
-
-    public final static String ENTRY_NAME = "ConstElement";
-
-    private static final int LENGTH = 2;
-    private int constValueIndex;
-
-    protected ConstElementValue(ElementValueType elementValueType) {
-        super(elementValueType);
-    }
-
+class ConstElementValue(elementValueType: ElementValueType) : ElementValue(elementValueType) {
     /**
-     * Get the <tt>const_value_index</tt> of this element value entry.
-     *
-     * @return the <tt>const_value_index</tt>
+     * const_value_index of this element value entry.
      */
-    public int getConstValueIndex() {
-        return this.constValueIndex;
+    var constValueIndex: Int = 0
+
+    override val specificLength: Int
+        get() = 2
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        constValueIndex = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Set the <tt>const_value_index</tt> of this element value entry.
-     *
-     * @param constValueIndex the <tt>const_value_index</tt>
-     */
-    public void setConstValueIndex(int constValueIndex) {
-        this.constValueIndex = constValueIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        super.write(output)
+        output.writeShort(constValueIndex)
+
+        if (isDebug) debug("wrote")
     }
 
-    protected int getSpecificLength() {
-        return LENGTH;
+    override fun debug(message: String) {
+        super.debug("$message ConstElementValue with const_value_index $constValueIndex")
     }
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+    override val entryName: String
+        get() = "ConstElement"
 
-        constValueIndex = in.readUnsignedShort();
-
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        super.write(out);
-
-        out.writeShort(constValueIndex);
-
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message +
-                "ConstElementValue with const_value_index " +
-                constValueIndex);
-    }
-
-    public String getEntryName() {
-        return ENTRY_NAME;
-    }
 }
