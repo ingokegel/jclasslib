@@ -32,6 +32,7 @@ class TypeAnnotation : AbstractStructure() {
     override fun read(input: DataInput) {
         targetType = TypeAnnotationTargetType.getFromTag(input.readUnsignedByte())
         targetInfo = targetType.createTargetInfo()
+        targetInfo.classFile = classFile
         targetInfo.read(input)
 
         val typePathLength = input.readUnsignedByte()
