@@ -5,46 +5,34 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes.targettype;
+package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Target info for a <tt>TypeAnnotation</tt> structure with a parameter target.
+ * Target info for a TypeAnnotation structure with a parameter target.
  */
-public class ParameterTargetInfo extends TargetInfo {
+class ParameterTargetInfo : TargetInfo() {
 
-    private int typeParameterIndex;
+    var typeParameterIndex: Int = 0
 
-    public int getTypeParameterIndex() {
-        return typeParameterIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        typeParameterIndex = input.readUnsignedByte()
     }
 
-    public void setTypeParameterIndex(int typeParameterIndex) {
-        this.typeParameterIndex = typeParameterIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(typeParameterIndex)
     }
 
-    @Override
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        typeParameterIndex = in.readUnsignedByte();
-    }
+    override val length: Int
+        get() = 1
 
-    @Override
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeByte(typeParameterIndex);
-    }
-
-    @Override
-    public int getLength() {
-        return 1;
-    }
-
-    @Override
-    public String getVerbose() {
-        return "parameter index " + typeParameterIndex;
-    }
+    override val verbose: String
+        get() = "parameter index $typeParameterIndex"
 }
