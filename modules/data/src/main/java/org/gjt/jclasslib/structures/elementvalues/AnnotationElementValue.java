@@ -72,7 +72,7 @@ public class AnnotationElementValue extends ElementValue implements AnnotationDa
         elementValuePairEntries = new ElementValuePair[elementValuePairEntriesLength];
 
         for (int i = 0; i < elementValuePairEntriesLength; i++) {
-            elementValuePairEntries[i] = ElementValuePair.create(in, getClassFile());
+            elementValuePairEntries[i] = ElementValuePair.Companion.create(in, getClassFile());
         }
 
         if (isDebug()) debug("read ");

@@ -4,111 +4,67 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.structures.elementvalues;
+package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an  <tt>ElementValuePair</tt> attribute structure.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an  ElementValuePair attribute structure.
+
+ * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class ElementValuePair extends AbstractStructure {
-
-    public final static String ENTRY_NAME = "ElementValuePair";
-
-    private static final int INITIAL_LENGTH = 2;
-
-    private int elementNameIndex;
-    private ElementValue elementValue;
-
+class ElementValuePair : AbstractStructure() {
 
     /**
-     * Factory for creating <tt>ElementValuePair</tt> structures.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the
-     *                  <tt>ElementValuePair</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>ElementValue</tt> structure
-     * @throws org.gjt.jclasslib.structures.InvalidByteCodeException
-     *                             if the byte code is invalid
-     * @throws java.io.IOException if an exception occurs with the <tt>DataInput</tt>
+     * element_name_index of this element value pair.
      */
-    public static ElementValuePair create(DataInput in, ClassFile classFile) throws InvalidByteCodeException, IOException {
-
-        ElementValuePair elementValuePairEntry = new ElementValuePair();
-        elementValuePairEntry.setClassFile(classFile);
-        elementValuePairEntry.read(in);
-
-        return elementValuePairEntry;
-    }
-
+    var elementNameIndex: Int = 0
 
     /**
-     * Get the <tt>element_value</tt> of this element value pair.
-     *
-     * @return the <tt>element_value</tt>
+     * element_value of this element value pair.
      */
-    public ElementValue getElementValue() {
-        return this.elementValue;
+    lateinit var elementValue: ElementValue
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        elementNameIndex = input.readUnsignedShort()
+        elementValue = ElementValue.create(input, classFile)
+
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Set the <tt>element_value</tt> of this element value pair.
-     *
-     * @param elementValue the <tt>element_value</tt>
-     */
-    public void setElementValue(ElementValue elementValue) {
-        this.elementValue = elementValue;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(elementNameIndex)
+        elementValue.write(output)
+
+        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Get the <tt>element_name_index</tt> of this element value pair.
-     *
-     * @return the <tt>element_name_index</tt>
-     */
-    public int getElementNameIndex() {
-        return elementNameIndex;
-    }
+    val length: Int
+        get() = 2 + elementValue.length
 
-    /**
-     * Set the <tt>element_name_index</tt> of this element value pair.
-     *
-     * @param elementNameIndex the <tt>element_name_index</tt>
-     */
-    public void setElementNameIndex(int elementNameIndex) {
-        this.elementNameIndex = elementNameIndex;
-    }
+    val entryName: String
+        get() = "ElementValuePair"
 
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
+    companion object {
 
-        elementNameIndex = in.readUnsignedShort();
-        elementValue = ElementValue.create(in, getClassFile());
+        /**
+         * Factory for creating ElementValuePair structures.
+         * @param in the DataInput from which to read the ElementValuePair structure
+         * @param classFile the parent class file of the structure to be created
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(`in`: DataInput, classFile: ClassFile) = ElementValuePair().apply {
+            this.classFile = classFile
+            this.read(`in`)
 
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-
-        out.writeShort(elementNameIndex);
-        elementValue.write(out);
-
-        if (isDebug()) debug("wrote ");
-    }
-
-
-    public int getLength() {
-        return INITIAL_LENGTH + elementValue.getLength();
-    }
-
-    public String getEntryName() {
-        return ENTRY_NAME;
+        }
     }
 }
