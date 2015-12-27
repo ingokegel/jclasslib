@@ -5,46 +5,34 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes.targettype;
+package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Target info for a <tt>TypeAnnotation</tt> structure with an exception table link.
+ * Target info for a TypeAnnotation structure with an exception table link.
  */
-public class ExceptionTargetInfo extends TargetInfo {
+class ExceptionTargetInfo : TargetInfo() {
 
-    private int exceptionTableIndex;
+    var exceptionTableIndex: Int = 0
 
-    public int getExceptionTableIndex() {
-        return exceptionTableIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        exceptionTableIndex = input.readUnsignedShort()
     }
 
-    public void setExceptionTableIndex(int exceptionTableIndex) {
-        this.exceptionTableIndex = exceptionTableIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(exceptionTableIndex)
     }
 
-    @Override
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-        exceptionTableIndex = in.readUnsignedShort();
-    }
+    override val length: Int
+        get() = 2
 
-    @Override
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
-        out.writeShort(exceptionTableIndex);
-    }
-
-    @Override
-    public int getLength() {
-        return 2;
-    }
-
-    @Override
-    public String getVerbose() {
-        return "<a href=\"E" + exceptionTableIndex + "\">exception table entry " + exceptionTableIndex + "</a>";
-    }
+    override val verbose: String
+        get() = "<a href=\"E$exceptionTableIndex\">exception table entry $exceptionTableIndex</a>"
 }
