@@ -5,105 +5,60 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.Annotation;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Annotation
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo
+import org.gjt.jclasslib.structures.attributes.targettype.UndefinedTargetInfo
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an entry in a <tt>RuntimeVisibleTypeAnnotations</tt> or <tt>RuntimeInvisibleTypeAnnotations</tt>
+ * Describes an entry in a RuntimeVisibleTypeAnnotations or RuntimeInvisibleTypeAnnotations
  * attribute structure.
  */
-public class TypeAnnotation extends AbstractStructure {
+class TypeAnnotation : AbstractStructure() {
 
-    private static final int INITIAL_LENGTH = 2;
+    var targetType: TypeAnnotationTargetType = TypeAnnotationTargetType.UNDEFINED
+    var targetInfo: TargetInfo = UndefinedTargetInfo
+    var typePathEntries: Array<TypePathEntry> = emptyArray()
+    var annotation: Annotation = Annotation()
 
-    private TypeAnnotationTargetType targetType;
-    private TargetInfo targetInfo;
-    private TypePathEntry typePathEntries[];
-    private Annotation annotation;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        targetType = TypeAnnotationTargetType.getFromTag(input.readUnsignedByte())
+        targetInfo = targetType.createTargetInfo()
+        targetInfo.read(input)
 
-    public TypeAnnotationTargetType getTargetType() {
-        return targetType;
-    }
-
-    public void setTargetType(TypeAnnotationTargetType targetType) {
-        this.targetType = targetType;
-    }
-
-    public TargetInfo getTargetInfo() {
-        return targetInfo;
-    }
-
-    public void setTargetInfo(TargetInfo targetInfo) {
-        this.targetInfo = targetInfo;
-    }
-
-    public TypePathEntry[] getTypePathEntries() {
-        return typePathEntries;
-    }
-
-    public void setTypePathEntries(TypePathEntry[] typePathEntries) {
-        this.typePathEntries = typePathEntries;
-    }
-
-    public Annotation getAnnotation() {
-        return annotation;
-    }
-
-    public void setAnnotation(Annotation annotation) {
-        this.annotation = annotation;
-    }
-
-    public void read(DataInput in) throws InvalidByteCodeException, IOException {
-
-        targetType = TypeAnnotationTargetType.getFromTag(in.readUnsignedByte());
-        targetInfo = targetType.createTargetInfo();
-        targetInfo.read(in);
-
-        int typePathLength = in.readUnsignedByte();
-        typePathEntries = new TypePathEntry[typePathLength];
-        for (int i = 0; i < typePathLength; i++) {
-            typePathEntries[i] = new TypePathEntry();
-            typePathEntries[i].read(in);
+        val typePathLength = input.readUnsignedByte()
+        typePathEntries = Array(typePathLength) {
+            TypePathEntry().apply { read(input) }
         }
-        annotation = new Annotation();
-        annotation.read(in);
-        if (isDebug()) {
-            debug("read ");
-        }
+        annotation.read(input)
+
+        if (isDebug) debug("read")
     }
 
-    public void write(DataOutput out) throws InvalidByteCodeException, IOException {
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeByte(targetType.tag)
+        targetInfo.write(output)
+        output.writeByte(typePathEntries.size)
+        typePathEntries.forEach { it.write(output) }
+        annotation.write(output)
 
-        out.writeByte(targetType.getTag());
-        targetInfo.write(out);
-        int typePathLength = getLength(typePathEntries);
-        out.writeByte(typePathLength);
-        for (int i = 0; i < typePathLength; i++) {
-            typePathEntries[i].write(out);
-        }
-        annotation.write(out);
-        if (isDebug()) {
-            debug("wrote ");
-        }
+        if (isDebug) debug("wrote")
     }
 
-    protected void debug(String message) {
-        super.debug(message + "TypeAnnotation entry");
+    override fun debug(message: String) {
+        super.debug("$message TypeAnnotation entry")
     }
 
-    public int getLength() {
-        return INITIAL_LENGTH +
-            targetInfo.getLength() +
-            typePathEntries.length * 2 +
-            annotation.getLength();
-    }
+    val length: Int
+        get() = 2 + targetInfo.length + typePathEntries.size * 2 + annotation.length
 
 }

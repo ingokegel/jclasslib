@@ -15,6 +15,7 @@ import org.gjt.jclasslib.structures.attributes.targettype.*;
  */
 public enum TypeAnnotationTargetType {
 
+    UNDEFINED(-1, UndefinedTargetInfo.class),
     GENERIC_PARAMETER_CLASS(0x00, ParameterTargetInfo.class),
     GENERIC_PARAMETER_METHOD(0x01, ParameterTargetInfo.class),
     SUPERTYPE(0x10, SupertypeTargetInfo.class),
