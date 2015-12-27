@@ -31,10 +31,8 @@ class Annotation : AbstractStructure(), AnnotationData {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
-
         typeIndex = input.readUnsignedShort()
         val elementValuePairEntriesLength = input.readUnsignedShort()
-
         elementValuePairEntries = Array(elementValuePairEntriesLength) {
             ElementValuePair.create(input, classFile)
         }
@@ -47,7 +45,6 @@ class Annotation : AbstractStructure(), AnnotationData {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-
         output.writeShort(typeIndex)
         output.writeShort(elementValuePairEntries.size)
         elementValuePairEntries.forEach { it.write(output) }
@@ -56,7 +53,7 @@ class Annotation : AbstractStructure(), AnnotationData {
     }
 
     override fun debug(message: String) {
-        super.debug("$message Annotation with ${getLength(elementValuePairEntries)} value pair elements")
+        super.debug("$message Annotation with ${elementValuePairEntries.size} value pair elements")
     }
 
 }
