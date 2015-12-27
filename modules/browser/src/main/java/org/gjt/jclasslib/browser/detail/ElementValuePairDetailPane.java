@@ -8,7 +8,6 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
 import org.gjt.jclasslib.structures.elementvalues.ElementValuePair;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
@@ -51,8 +50,8 @@ public class ElementValuePairDetailPane extends FixedListDetailPane {
                 lblElementNameVerbose,
                 evp.getElementNameIndex());
 
-        lblValueTag.setText(String.valueOf((char)evp.getElementValue().getTag()));
-        lblValueTagVerbose.setText("<" + ElementValue.getTagDescription(evp.getElementValue().getTag()) + ">");
+        lblValueTag.setText(String.valueOf(evp.getElementValue().getElementValueType().getCharTag()));
+        lblValueTagVerbose.setText("<" + evp.getElementValue().getElementValueType().getVerbose() + ">");
 
         super.show(treePath);
     }

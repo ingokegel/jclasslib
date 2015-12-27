@@ -25,8 +25,8 @@ public class ConstElementValue extends ElementValue {
     private static final int LENGTH = 2;
     private int constValueIndex;
 
-    protected ConstElementValue(int tag) {
-        super(tag);
+    protected ConstElementValue(ElementValueType elementValueType) {
+        super(elementValueType);
     }
 
     /**

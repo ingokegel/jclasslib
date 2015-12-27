@@ -9,7 +9,6 @@ package org.gjt.jclasslib.browser.detail;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
 import org.gjt.jclasslib.structures.elementvalues.ArrayElementValue;
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -44,9 +43,8 @@ public class ArrayElementValueDetailPane extends FixedListDetailPane {
         ArrayElementValue aev = (ArrayElementValue)
                 ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
-        lblTag.setText(String.valueOf((char)aev.getTag()));
-        lblTagVerbose.setText("<" + ElementValue.getTagDescription(aev.getTag()) + ">");
-
+        lblTag.setText(String.valueOf(aev.getElementValueType().getCharTag()));
+        lblTagVerbose.setText("<" + aev.getElementValueType().getVerbose() + ">");
         lblValueCount.setText(String.valueOf(aev.getElementValueEntries().length));
 
         super.show(treePath);

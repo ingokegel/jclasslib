@@ -27,7 +27,7 @@ public class ArrayElementValue extends ElementValue {
 
 
     protected ArrayElementValue() {
-        super(ARRAY_TAG);
+        super(ElementValueType.ARRAY);
     }
 
     /**
@@ -63,7 +63,7 @@ public class ArrayElementValue extends ElementValue {
         int elementValueEntriesLength = in.readUnsignedShort();
         elementValueEntries = new ElementValue[elementValueEntriesLength];
         for (int i = 0; i < elementValueEntries.length; i++) {
-            elementValueEntries[i] = ElementValue.create(in, getClassFile());
+            elementValueEntries[i] = ElementValue.Companion.create(in, getClassFile());
         }
 
         if (isDebug()) debug("read ");

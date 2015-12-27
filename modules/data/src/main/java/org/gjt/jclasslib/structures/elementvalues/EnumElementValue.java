@@ -27,7 +27,7 @@ public class EnumElementValue extends ElementValue {
     private int constNameIndex;
 
     protected EnumElementValue() {
-        super(ENUM_TAG);
+        super(ElementValueType.ENUM);
     }
 
     /**

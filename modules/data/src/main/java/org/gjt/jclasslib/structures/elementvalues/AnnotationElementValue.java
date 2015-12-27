@@ -30,7 +30,7 @@ public class AnnotationElementValue extends ElementValue implements AnnotationDa
 
 
     public AnnotationElementValue() {
-        super(ANNOTATION_TAG);
+        super(ElementValueType.ANNOTATION);
     }
 
     public String getEntryName() {

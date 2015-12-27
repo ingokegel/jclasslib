@@ -41,8 +41,8 @@ public class GenericElementValueDetailPane extends FixedListDetailPane {
         ElementValue element = (ElementValue)
                 ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
-        lblTag.setText(String.valueOf((char)element.getTag()));
-        lblTagVerbose.setText("<" + ElementValue.getTagDescription(element.getTag()) + ">");
+        lblTag.setText(String.valueOf(element.getElementValueType().getCharTag()));
+        lblTagVerbose.setText("<" + element.getElementValueType().getVerbose() + ">");
 
         super.show(treePath);
     }

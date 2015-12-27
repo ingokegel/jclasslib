@@ -9,7 +9,6 @@ package org.gjt.jclasslib.browser.detail.attributes;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.detail.FixedListDetailPane;
 import org.gjt.jclasslib.structures.attributes.AnnotationDefaultAttribute;
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -38,10 +37,9 @@ public class AnnotationDefaultAttributeDetailPane extends FixedListDetailPane {
     public void show(TreePath treePath) {
         AnnotationDefaultAttribute ada = (AnnotationDefaultAttribute)findAttribute(treePath);
 
-        int tag = ada.getDefaultValue().getTag();
         String name = ada.getDefaultValue().getEntryName();
         lblTag.setText(name);
-        lblTagVerbose.setText("<" + ElementValue.getTagDescription(tag) + ">");
+        lblTagVerbose.setText("<" + ada.getDefaultValue().getElementValueType().getVerbose() + ">");
 
         super.show(treePath);
     }

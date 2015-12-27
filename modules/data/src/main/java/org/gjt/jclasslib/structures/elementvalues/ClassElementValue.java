@@ -26,7 +26,7 @@ public class ClassElementValue extends ElementValue {
     private int classInfoIndex;
 
     protected ClassElementValue() {
-        super(CLASS_TAG);
+        super(ElementValueType.CLASS);
     }
 
     /**
