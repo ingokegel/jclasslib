@@ -5,176 +5,102 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.AccessFlag;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.AccessFlag
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an entry in a <tt>InnerClasses</tt> attribute structure.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an entry in a InnerClasses attribute structure.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class InnerClassesEntry extends AbstractStructure {
+class InnerClassesEntry : AbstractStructure() {
 
     /**
-     * Length in bytes of an inner class entry.
+     * Constant pool index of the CONSTANT_Class_info structure
+     * describing the inner class of this InnerClassEntry.
      */
-    public static final int LENGTH = 8;
-
-    private int innerClassInfoIndex;
-    private int outerClassInfoIndex;
-    private int innerNameIndex;
-    private int innerClassAccessFlags;
+    var innerClassInfoIndex: Int = 0
 
     /**
-     * Factory method for creating <tt>InnerClassesEntry</tt> structures.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the
-     *                  <tt>InnerClassesEntry</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>InnerClassesEntry</tt> structure
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     * Constant pool index of the CONSTANT_Class_info structure
+     * describing the outer class of this InnerClassEntry.
      */
-    public static InnerClassesEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
-
-        InnerClassesEntry innerClassesEntry = new InnerClassesEntry();
-        innerClassesEntry.setClassFile(classFile);
-        innerClassesEntry.read(in);
-
-        return innerClassesEntry;
-    }
+    var outerClassInfoIndex: Int = 0
 
     /**
-     * Get the constant pool index of the <tt>CONSTANT_Class_info</tt> structure
-     * describing the inner class of this <tt>InnerClassEntry</tt>.
-     *
-     * @return the index
+     * Constant pool index containing the simple name of the
+     * inner class of this InnerClassEntry.
      */
-    public int getInnerClassInfoIndex() {
-        return innerClassInfoIndex;
-    }
+    var innerNameIndex: Int = 0
 
     /**
-     * Set the constant pool index of the <tt>CONSTANT_Class_info</tt> structure
-     * describing the inner class of this <tt>InnerClassEntry</tt>.
-     *
-     * @param innerClassInfoIndex the index
+     * Access flags of the inner class.
      */
-    public void setInnerClassInfoIndex(int innerClassInfoIndex) {
-        this.innerClassInfoIndex = innerClassInfoIndex;
-    }
+    var innerClassAccessFlags: Int = 0
 
     /**
-     * Get the constant pool index of the <tt>CONSTANT_Class_info</tt> structure
-     * describing the outer class of this <tt>InnerClassEntry</tt>.
-     *
-     * @return the index
+     * Access flags of the inner class as a hex string.
      */
-    public int getOuterClassInfoIndex() {
-        return outerClassInfoIndex;
-    }
+    val innerClassFormattedAccessFlags: String
+        get() = printAccessFlags(innerClassAccessFlags)
 
     /**
-     * Set the constant pool index of the <tt>CONSTANT_Class_info</tt> structure
-     * describing the outer class of this <tt>InnerClassEntry</tt>.
-     *
-     * @param outerClassInfoIndex the index
+     * Verbose description of the access flags of the inner class.
      */
-    public void setOuterClassInfoIndex(int outerClassInfoIndex) {
-        this.outerClassInfoIndex = outerClassInfoIndex;
+    val innerClassAccessFlagsVerbose: String
+        get() = printAccessFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS, innerClassAccessFlags)
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        innerClassInfoIndex = input.readUnsignedShort()
+        outerClassInfoIndex = input.readUnsignedShort()
+        innerNameIndex = input.readUnsignedShort()
+        innerClassAccessFlags = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Get the constant pool index containing the simple name of the
-     * inner class of this <tt>InnerClassEntry</tt>.
-     *
-     * @return the index
-     */
-    public int getInnerNameIndex() {
-        return innerNameIndex;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(innerClassInfoIndex)
+        output.writeShort(outerClassInfoIndex)
+        output.writeShort(innerNameIndex)
+        output.writeShort(innerClassAccessFlags)
+
+        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Set the constant pool index containing the simple name of the
-     * inner class of this <tt>InnerClassEntry</tt>.
-     *
-     * @param innerNameIndex the index
-     */
-    public void setInnerNameIndex(int innerNameIndex) {
-        this.innerNameIndex = innerNameIndex;
+    override fun debug(message: String) {
+        super.debug("$message InnerClasses entry with inner_class_info_index $innerClassInfoIndex, " +
+                "outer_class_info_index $outerClassInfoIndex, inner_name_index $innerNameIndex, " +
+                "access flags ${printAccessFlags(innerClassAccessFlags)}")
     }
 
-    /**
-     * Get the access flags of the inner class.
-     *
-     * @return the access flags
-     */
-    public int getInnerClassAccessFlags() {
-        return innerClassAccessFlags;
-    }
+    companion object {
 
-    /**
-     * Set the access flags of the inner class.
-     *
-     * @param innerClassAccessFlags the access flags
-     */
-    public void setInnerClassAccessFlags(int innerClassAccessFlags) {
-        this.innerClassAccessFlags = innerClassAccessFlags;
-    }
+        /**
+         * Length in bytes of an inner class entry.
+         */
+        val LENGTH = 8
 
-    /**
-     * Get the the access flags of the inner class as a hex string.
-     *
-     * @return the hex string
-     */
-    public String getInnerClassFormattedAccessFlags() {
-        return printAccessFlags(innerClassAccessFlags);
-    }
-
-    /**
-     * Get the verbose description of the access flags of the inner class.
-     *
-     * @return the description
-     */
-    public String getInnerClassAccessFlagsVerbose() {
-        return printAccessFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS, innerClassAccessFlags);
-    }
-
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-        innerClassInfoIndex = in.readUnsignedShort();
-        outerClassInfoIndex = in.readUnsignedShort();
-        innerNameIndex = in.readUnsignedShort();
-        innerClassAccessFlags = in.readUnsignedShort();
-
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
-        out.writeShort(innerClassInfoIndex);
-        out.writeShort(outerClassInfoIndex);
-        out.writeShort(innerNameIndex);
-        out.writeShort(innerClassAccessFlags);
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message + "InnerClasses entry with inner_class_info_index " + innerClassInfoIndex +
-                ", outer_class_info_index " + outerClassInfoIndex + ", inner_name_index " + innerNameIndex +
-                ", access flags " + printAccessFlags(innerClassAccessFlags));
+        /**
+         * Factory method for creating InnerClassesEntry structures.
+         * @param input the DataInput from which to read the InnerClassesEntry structure
+         * @param classFile the parent class file of the structure to be created
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(input: DataInput, classFile: ClassFile) = InnerClassesEntry().apply {
+            this.classFile = classFile
+            this.read(input)
+        }
     }
 
 }
