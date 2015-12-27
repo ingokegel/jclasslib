@@ -5,108 +5,70 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an entry in a <tt>LineNumberTable</tt> attribute structure.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an entry in a LineNumberTable attribute structure.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class LineNumberTableEntry extends AbstractStructure {
+class LineNumberTableEntry : AbstractStructure() {
 
     /**
-     * Length in bytes of a line number association.
+     * start_pc of this line number association.
      */
-    public static final int LENGTH = 4;
-
-    private int startPc;
-    private int lineNumber;
+    var startPc: Int = 0
 
     /**
-     * Factory method for creating <tt>LineNumberTableEntry</tt> structures.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the
-     *                  <tt>LineNumberTableEntry</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>LineNumberTableEntry</tt> structure
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     * Line number of this line number association.
      */
-    public static LineNumberTableEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
+    var lineNumber: Int = 0
 
-        LineNumberTableEntry lineNumberTableEntry = new LineNumberTableEntry();
-        lineNumberTableEntry.setClassFile(classFile);
-        lineNumberTableEntry.read(in);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        startPc = input.readUnsignedShort()
+        lineNumber = input.readUnsignedShort()
 
-        return lineNumberTableEntry;
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Get the <tt>start_pc</tt> of this line number association.
-     *
-     * @return the <tt>start_pc</tt>
-     */
-    public int getStartPc() {
-        return startPc;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(startPc)
+        output.writeShort(lineNumber)
+
+        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Set the <tt>start_pc</tt> of this line number association.
-     *
-     * @param startPc the <tt>start_pc</tt>
-     */
-    public void setStartPc(int startPc) {
-        this.startPc = startPc;
+    override fun debug(message: String) {
+        super.debug("$message LineNumberTable entry with start_pc $startPc, line_number $lineNumber")
     }
 
-    /**
-     * Get the line number of this line number association.
-     *
-     * @return the line number
-     */
-    public int getLineNumber() {
-        return lineNumber;
-    }
+    companion object {
 
-    /**
-     * Set the line number of this line number association.
-     *
-     * @param lineNumber the line number
-     */
-    public void setLineNumber(int lineNumber) {
-        this.lineNumber = lineNumber;
-    }
+        /**
+         * Length in bytes of a line number association.
+         */
+        val LENGTH = 4
 
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-        startPc = in.readUnsignedShort();
-        lineNumber = in.readUnsignedShort();
-
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
-        out.writeShort(startPc);
-        out.writeShort(lineNumber);
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message + "LineNumberTable entry with start_pc " + startPc +
-                ", line_number " + lineNumber);
+        /**
+         * Factory method for creating LineNumberTableEntry structures.
+         * @param input the DataInput from which to read the LineNumberTableEntry structure
+         * @param classFile the parent class file of the structure to be created
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(input: DataInput, classFile: ClassFile) = LineNumberTableEntry().apply {
+            this.classFile = classFile
+            this.read(input)
+        }
     }
 
 }
