@@ -5,16 +5,16 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
 /**
  * Interface for attributes that contain annotations.
  */
-public interface AnnotationHolder {
+interface AnnotationHolder {
 
     /**
      * Returns the number of contained annotations.
      */
-    public int getNumberOfAnnotations();
+    val numberOfAnnotations: Int
 
 }

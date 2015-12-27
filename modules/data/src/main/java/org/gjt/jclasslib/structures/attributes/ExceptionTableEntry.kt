@@ -5,171 +5,85 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures.attributes;
+package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
 /**
- * Describes an exception table entry in a <tt>Code</tt> attribute structure.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
+ * Describes an exception table entry in a Code attribute structure.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-public class ExceptionTableEntry extends AbstractStructure {
+class ExceptionTableEntry : AbstractStructure() {
 
     /**
-     * Length in bytes of an exception table entry.
+     * start_pc of this exception table entry.
      */
-    public static final int LENGTH = 8;
-
-    private int startPc;
-    private int endPc;
-    private int handlerPc;
-    private int catchType;
+    var startPc: Int = 0
 
     /**
-     * Factory method for creating <tt>ExceptionTableEntry</tt> structures.
-     *
-     * @param in        the <tt>DataInput</tt> from which to read the
-     *                  <tt>ExceptionTableEntry</tt> structure
-     * @param classFile the parent class file of the structure to be created
-     * @return the new <tt>ExceptionTableEntry</tt> structure
-     * @throws InvalidByteCodeException if the byte code is invalid
-     * @throws IOException              if an exception occurs with the <tt>DataInput</tt>
+     * end_pc of this exception table entry.
      */
-    public static ExceptionTableEntry create(DataInput in, ClassFile classFile)
-            throws InvalidByteCodeException, IOException {
-
-        ExceptionTableEntry exceptionTableEntry = new ExceptionTableEntry();
-        exceptionTableEntry.setClassFile(classFile);
-        exceptionTableEntry.read(in);
-
-        return exceptionTableEntry;
-    }
+    var endPc: Int = 0
 
     /**
-     * Constructor.
+     * handler_pc of this exception table entry.
      */
-    public ExceptionTableEntry() {
-    }
+    var handlerPc: Int = 0
 
     /**
-     * Constructor.
-     *
-     * @param startPc   the <tt>start_pc</tt>
-     * @param endPc     the <tt>end_pc</tt>
-     * @param handlerPc the <tt>handler_pc</tt>
-     * @param catchType the constant pool index for the catch type of this exception table entry
+     * Constant pool index for the catch type of this exception table entry.
      */
-    public ExceptionTableEntry(int startPc, int endPc, int handlerPc, int catchType) {
-        this.startPc = startPc;
-        this.endPc = endPc;
-        this.handlerPc = handlerPc;
-        this.catchType = catchType;
+    var catchType: Int = 0
+
+
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun read(input: DataInput) {
+        startPc = input.readUnsignedShort()
+        endPc = input.readUnsignedShort()
+        handlerPc = input.readUnsignedShort()
+        catchType = input.readUnsignedShort()
+
+        if (isDebug) debug("read")
     }
 
-    /**
-     * Get the <tt>start_pc</tt> of this exception table entry.
-     *
-     * @return the <tt>start_pc</tt>
-     */
-    public int getStartPc() {
-        return startPc;
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    override fun write(output: DataOutput) {
+        output.writeShort(startPc)
+        output.writeShort(endPc)
+        output.writeShort(handlerPc)
+        output.writeShort(catchType)
+
+        if (isDebug) debug("wrote")
     }
 
-    /**
-     * Set the <tt>start_pc</tt> of this exception table entry.
-     *
-     * @param startPc the <tt>start_pc</tt>
-     */
-    public void setStartPc(int startPc) {
-        this.startPc = startPc;
+    override fun debug(message: String) {
+        super.debug("$message exception table entry with start_pc $startPc, end_pc $endPc, handler_pc $handlerPc, catch_type index $catchType")
     }
 
-    /**
-     * Get the <tt>end_pc</tt> of this exception table entry.
-     *
-     * @return the <tt>end_pc</tt>
-     */
-    public int getEndPc() {
-        return endPc;
-    }
+    companion object {
 
-    /**
-     * Set the <tt>end_pc</tt> of this exception table entry.
-     *
-     * @param endPc the <tt>end_pc</tt>
-     */
-    public void setEndPc(int endPc) {
-        this.endPc = endPc;
-    }
+        /**
+         * Length in bytes of an exception table entry.
+         */
+        val LENGTH = 8
 
-    /**
-     * Get the <tt>handler_pc</tt> of this exception table entry.
-     *
-     * @return the <tt>handler_pc</tt>
-     */
-    public int getHandlerPc() {
-        return handlerPc;
-    }
-
-    /**
-     * Set the <tt>handler_pc</tt> of this exception table entry.
-     *
-     * @param handlerPc the <tt>handler_pc</tt>
-     */
-    public void setHandlerPc(int handlerPc) {
-        this.handlerPc = handlerPc;
-    }
-
-    /**
-     * Get the constant pool index for the catch type of this exception table entry.
-     *
-     * @return the index
-     */
-    public int getCatchType() {
-        return catchType;
-    }
-
-    /**
-     * Set the constant pool index for the catch type of this exception table entry.
-     *
-     * @param catchType the index
-     */
-    public void setCatchType(int catchType) {
-        this.catchType = catchType;
-    }
-
-    public void read(DataInput in)
-            throws InvalidByteCodeException, IOException {
-
-        startPc = in.readUnsignedShort();
-        endPc = in.readUnsignedShort();
-        handlerPc = in.readUnsignedShort();
-        catchType = in.readUnsignedShort();
-        if (isDebug()) debug("read ");
-    }
-
-    public void write(DataOutput out)
-            throws InvalidByteCodeException, IOException {
-
-        out.writeShort(startPc);
-        out.writeShort(endPc);
-        out.writeShort(handlerPc);
-        out.writeShort(catchType);
-        if (isDebug()) debug("wrote ");
-    }
-
-    protected void debug(String message) {
-        super.debug(message + "exception table entry with start_pc " + startPc +
-                ", end_pc " + endPc + ", handler_pc " + handlerPc +
-                ", catch_type index " + catchType);
+        /**
+         * Factory method for creating ExceptionTableEntry structures.
+         * @param input the DataInput from which to read the ExceptionTableEntry structure
+         * @param classFile the parent class file of the structure to be created
+         */
+        @Throws(InvalidByteCodeException::class, IOException::class)
+        fun create(input: DataInput, classFile: ClassFile) = ExceptionTableEntry().apply {
+            this.classFile = classFile
+            this.read(input)
+        }
     }
 
 }
