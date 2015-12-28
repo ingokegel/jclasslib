@@ -13,8 +13,8 @@ package org.gjt.jclasslib.structures.attributes
 interface AnnotationHolder {
 
     /**
-     * Returns the number of contained annotations.
+     * Number of contained annotations.
      */
-    val numberOfAnnotations: Int
+    fun getNumberOfAnnotations(): Int
 
 }
