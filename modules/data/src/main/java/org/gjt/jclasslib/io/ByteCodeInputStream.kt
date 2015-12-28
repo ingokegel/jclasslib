@@ -5,30 +5,19 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.io;
+package org.gjt.jclasslib.io
 
-import java.io.DataInputStream;
-import java.io.InputStream;
+import java.io.DataInputStream
+import java.io.InputStream
 
 /**
-    <tt>DataInputStream</tt> which extends <tt>ByteCodeInput</tt>.
+ * DataInputStream which extends ByteCodeInput.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ByteCodeInputStream extends DataInputStream
-                                 implements ByteCodeInput
-{
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ByteCodeInputStream(input: InputStream) : DataInputStream(CountedInputStream(input)), ByteCodeInput {
 
-    /**
-        Constructor.
-        @param in the input stream.
-     */
-    public ByteCodeInputStream(InputStream in) {
-        super(new CountedInputStream(in));
+    override fun getBytesRead(): Int {
+        return (`in` as CountedInputStream).bytesRead
     }
-    
-    public int getBytesRead() {
-        return ((CountedInputStream)in).getBytesRead();
-    }
-    
 }
