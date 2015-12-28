@@ -5,22 +5,21 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.io;
+package org.gjt.jclasslib.io
 
-import java.io.DataOutput;
+import java.io.DataOutput
 
 /**
-    Extends <tt>DataOutput</tt> to accommodate for a method to retrieve the number
-    of bytes written.
+ * Extends DataOutput to accommodate for a method to retrieve the number
+ * of bytes written.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public interface ByteCodeOutput extends DataOutput {
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+interface ByteCodeOutput : DataOutput {
 
     /**
-        Get the number of bytes written.
-        @return the number of bytes
+     * Get the number of bytes written.
      */
-    public int getBytesWritten();
-    
+    val bytesWritten: Int
+
 }

@@ -17,7 +17,7 @@ import java.io.InputStream
  */
 class ByteCodeInputStream(input: InputStream) : DataInputStream(CountedInputStream(input)), ByteCodeInput {
 
-    override fun getBytesRead(): Int {
-        return (`in` as CountedInputStream).bytesRead
-    }
+    override val bytesRead: Int
+        get() = (`in` as CountedInputStream).bytesRead
+
 }

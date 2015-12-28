@@ -20,6 +20,6 @@ interface ByteCodeInput : DataInput {
     /**
      * Get the number of bytes read.
      */
-    fun getBytesRead(): Int
+    val bytesRead: Int
 
 }

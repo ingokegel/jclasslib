@@ -46,7 +46,7 @@ open class Instruction(
     @Throws(IOException::class)
     open fun read(input: ByteCodeInput) {
         // The opcode has already been read
-        offset = input.getBytesRead() - 1
+        offset = input.bytesRead - 1
     }
 
     /**
