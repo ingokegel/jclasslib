@@ -5,28 +5,12 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.structures;
+package org.gjt.jclasslib.structures
 
 /**
-    Exception relating to errors in the class file format of internal state
-    of the <tt>ClassFile</tt> structure and its substructures.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class InvalidByteCodeException extends Exception {
+ * Exception relating to errors in the class file format of internal state
+ * of the ClassFile structure and its substructures.
 
-    /**
-        Constructor.
-     */
-    public InvalidByteCodeException() {
-        super();
-    }
-
-    /**
-        Constructor.
-        @param message the message
-     */
-    public InvalidByteCodeException(String message) {
-        super(message);
-    }
-}
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class InvalidByteCodeException(message: String) : Exception(message)
