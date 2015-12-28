@@ -5,22 +5,21 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.io;
+package org.gjt.jclasslib.io
 
-import java.io.DataInput;
+import java.io.DataInput
 
 /**
-    Extends <tt>DataInput</tt> to accomodate for a method to retrieve the number
-    of bytes read.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public interface ByteCodeInput extends DataInput {
+ * Extends DataInput to accommodate for a method to retrieve the number
+ * of bytes read.
+
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+interface ByteCodeInput : DataInput {
 
     /**
-        Get the number of bytes read.
-        @return the number of bytes
+     * Get the number of bytes read.
      */
-    public int getBytesRead();
-    
+    fun getBytesRead(): Int
+
 }
