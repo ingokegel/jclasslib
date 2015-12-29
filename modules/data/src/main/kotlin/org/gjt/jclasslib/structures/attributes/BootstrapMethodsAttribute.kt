@@ -45,7 +45,7 @@ class BootstrapMethodsAttribute : AttributeInfo() {
     override fun getAttributeLength(): Int = 2 + methods.sumBy { it.length }
 
     override fun debug(message: String) {
-        super.debug("$message BootstrapMethods attribute with ${getLength(methods)} references")
+        super.debug("$message BootstrapMethods attribute with ${methods.size} references")
     }
 
     companion object {

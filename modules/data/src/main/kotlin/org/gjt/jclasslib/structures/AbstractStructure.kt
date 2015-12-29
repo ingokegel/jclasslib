@@ -60,22 +60,6 @@ abstract class AbstractStructure {
     abstract fun write(output: DataOutput)
 
     /**
-     * Utility method for derived structures. Get the
-     * length of an arbitrary array which may hold
-     * primitive types or reference types or may be null.
-     * @param array the array for which the length is requested
-     * @return the length
-     */
-    //TODO remove
-    protected fun getLength(array: Any?): Int {
-        if (array == null || !array.javaClass.isArray) {
-            return 0
-        } else {
-            return Array.getLength(array)
-        }
-    }
-
-    /**
      * Utility method for derived structures. Dump a specific debug message.
      * @param message the debug message
      */

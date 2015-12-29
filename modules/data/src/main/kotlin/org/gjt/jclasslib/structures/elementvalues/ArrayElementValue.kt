@@ -46,7 +46,7 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     }
 
     override fun debug(message: String) {
-        super.debug("$message ArrayElementValue with ${getLength(elementValueEntries)} entries")
+        super.debug("$message ArrayElementValue with ${elementValueEntries.size} entries")
     }
 
     override val entryName: String

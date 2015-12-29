@@ -60,7 +60,7 @@ class CodeAttribute : AttributeInfo() {
     override fun write(output: DataOutput) {
         output.writeShort(maxStack)
         output.writeShort(maxLocals)
-        output.writeInt(getLength(code))
+        output.writeInt(code.size)
         output.write(code)
 
         writeExceptionTable(output)

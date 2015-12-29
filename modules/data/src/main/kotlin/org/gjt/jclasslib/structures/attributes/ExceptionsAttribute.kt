@@ -47,7 +47,7 @@ class ExceptionsAttribute : AttributeInfo() {
     override fun getAttributeLength(): Int = 2 + 2 * exceptionIndexTable.size
 
     override fun debug(message: String) {
-        super.debug("$message Exception attribute with ${getLength(exceptionIndexTable)} exceptions")
+        super.debug("$message Exception attribute with ${exceptionIndexTable.size} exceptions")
     }
 
     companion object {

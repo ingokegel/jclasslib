@@ -49,7 +49,7 @@ class InnerClassesAttribute : AttributeInfo() {
     }
 
     override fun debug(message: String) {
-        super.debug("${message} InnerClasses attribute with ${getLength(classes)} classes")
+        super.debug("${message} InnerClasses attribute with ${classes.size} classes")
     }
 
     companion object {
