@@ -5,137 +5,80 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.io;
+package org.gjt.jclasslib.io
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-
-import java.io.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import java.io.*
+import java.util.jar.JarFile
 
 /**
-    Converts class files to a class file structure <tt>ClassFile</tt> as defined in
-    <tt>org.gjt.jclasslib.structures</tt>.
+ * Converts class files to a class file structure ClassFile as defined in
+ * org.gjt.jclasslib.structures.
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ClassFileReader {
-
-    private ClassFileReader() {
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+object ClassFileReader {
 
     /**
-        Looks up a class file in the specified class path and converts it 
-        to a <tt>ClassFile</tt> structure.
-        @param classPath the class path from which to read the <tt>ClassFile</tt> structure
-        @param packageName the name of the package in which the class resides
-        @param className the simple name of the class
-        @return the new <tt>ClassFile</tt> structure or <tt>null</tt> if it cannot be found
-        @throws InvalidByteCodeException if the code is invalid
-        @throws IOException if an exception occurs while reading the file
+     * Looks up a class file in the specified class path and converts it
+     * to a ClassFile structure.
+     * @param classPath the class path from which to read the ClassFile structure
+     * @param packageName the name of the package in which the class resides
+     * @param className the simple name of the class
+     * @return the new ClassFile structure or null if it cannot be found
      */
-    public static ClassFile readFromClassPath(String[] classPath, String packageName, String className)
-        throws InvalidByteCodeException, IOException
-    {
-        
-        String relativePath = packageName.replace('.', File.separatorChar) + (packageName.length() == 0 ? "" : File.separator) + className + ".class";
-        String jarRelativePath = relativePath.replace(File.separatorChar, '/');
-        for (String singlePath : classPath) {
-            File currentClassPathEntry = new File(singlePath);
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    @JvmStatic
+    fun readFromClassPath(classPath: Array<String>, packageName: String, className: String): ClassFile? {
+
+        val relativePath = packageName.replace('.', File.separatorChar) + (if (packageName.length == 0) "" else File.separator) + className + ".class"
+        val jarRelativePath = relativePath.replace(File.separatorChar, '/')
+        for (singlePath in classPath) {
+            val currentClassPathEntry = File(singlePath)
             if (!currentClassPathEntry.exists()) {
-                continue;
+                continue
             }
-            if (currentClassPathEntry.isDirectory()) {
-                File testFile = new File(currentClassPathEntry, relativePath);
+            if (currentClassPathEntry.isDirectory) {
+                val testFile = File(currentClassPathEntry, relativePath)
                 if (testFile.exists()) {
-                    return readFromFile(testFile);
+                    return readFromFile(testFile)
                 }
-            } else if (currentClassPathEntry.isFile()) {
-                JarFile jarFile = new JarFile(currentClassPathEntry);
-                try {
-                    JarEntry jarEntry = jarFile.getJarEntry(jarRelativePath);
+            } else if (currentClassPathEntry.isFile) {
+                JarFile(currentClassPathEntry).use { jarFile ->
+                    val jarEntry = jarFile.getJarEntry(jarRelativePath)
                     if (jarEntry != null) {
-                        return readFromInputStream(jarFile.getInputStream(jarEntry));
+                        return readFromInputStream(jarFile.getInputStream(jarEntry))
                     }
-                } finally {
-                    jarFile.close();
                 }
             }
         }
 
-        return null;
+        return null
     }
 
     /**
-        Converts a class file to a <tt>ClassFile</tt> structure.
-        @param file the file from which to read the <tt>ClassFile</tt> structure
-        @return the new <tt>ClassFile</tt> structure
-        @throws InvalidByteCodeException if the code is invalid
-        @throws IOException if an exception occurs while reading the file
+     * Converts a class file to a ClassFile structure.
+     * @param file the file from which to read the ClassFile structure
+     * @return the new ClassFile structure
      */
-    public static ClassFile readFromFile(File file)
-        throws InvalidByteCodeException, IOException
-    {
-
-        return readFromInputStream(new FileInputStream(file));
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    @JvmStatic
+    fun readFromFile(file: File): ClassFile {
+        return readFromInputStream(FileInputStream(file))
     }
 
     /**
-        Converts a class file to a <tt>ClassFile</tt> structure.
-        @param is the input stream from which to read the
-                  <tt>ClassFile</tt> structure
-        @return the new <tt>ClassFile</tt> structure
-        @throws InvalidByteCodeException if the code is invalid
-        @throws IOException if an exception occurs while reading from
-                            the input stream
+     * Converts a class file to a ClassFile structure.
+     * @param input the input stream from which to read the ClassFile structure
+     * @return the new ClassFile structure
      */
-    public static ClassFile readFromInputStream(InputStream is)
-        throws InvalidByteCodeException, IOException
-    {
-
-        DataInputStream in = new DataInputStream(
-                                new BufferedInputStream(is));
-
-        ClassFile classFile = new ClassFile();
-        classFile.read(in);
-        in.close();
-        return classFile;
-    }
-
-    /**
-     * Test method.
-     * @param args arguments
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-
-        final int maxCount = 500;
-        long startTime, endTime;
-
-        File file = new File(args[0]);
-        ClassFile classFile = readFromFile(file);
-
-        startTime = System.currentTimeMillis();
-        for (int i = 0; i < maxCount; i++) {
-            classFile = readFromFile(file);
-        }
-        endTime = System.currentTimeMillis();
-        System.out.println("With attributes:");
-        System.out.print((endTime - startTime));
-        System.out.println(" ms");
-
-        System.setProperty(AttributeInfo.SYSTEM_PROPERTY_SKIP_ATTRIBUTES, "true");
-        startTime = System.currentTimeMillis();
-        for (int i = 0; i < maxCount; i++) {
-            classFile = readFromFile(file);
-        }
-        endTime = System.currentTimeMillis();
-        System.out.println("Without attributes:");
-        System.out.print((endTime - startTime));
-        System.out.println(" ms");
-
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    @JvmStatic
+    fun readFromInputStream(stream: InputStream): ClassFile {
+        val classFile = ClassFile()
+        DataInputStream(BufferedInputStream(stream)).use { classFile.read(it) }
+        return classFile
     }
 
 }
