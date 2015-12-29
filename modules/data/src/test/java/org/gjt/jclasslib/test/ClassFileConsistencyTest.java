@@ -71,13 +71,13 @@ public abstract class ClassFileConsistencyTest {
         is.close();
         byte[] before = os.toByteArray();
 
-        ClassFile classFile = ClassFileReader.INSTANCE.readFromInputStream(inputStreamProvider.createInputStream());
+        ClassFile classFile = ClassFileReader.readFromInputStream(inputStreamProvider.createInputStream());
         byte[] after = ClassFileWriter.writeToByteArray(classFile);
 
         boolean success = compare(className, before, after);
         if (!success) {
             System.setProperty(AbstractStructure.SYSTEM_PROPERTY_DEBUG, "true");
-            ClassFileReader.INSTANCE.readFromInputStream(new ByteArrayInputStream(after));
+            ClassFileReader.readFromInputStream(new ByteArrayInputStream(after));
         }
         return success;
     }
