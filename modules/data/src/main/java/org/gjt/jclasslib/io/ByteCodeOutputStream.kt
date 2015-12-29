@@ -5,29 +5,18 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.io;
+package org.gjt.jclasslib.io
 
-import java.io.DataOutputStream;
-import java.io.OutputStream;
+import java.io.DataOutputStream
+import java.io.OutputStream
 
 /**
-    <tt>DataOutputStream</tt> which extends <tt>ByteCodeOutput</tt>.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ByteCodeOutputStream extends DataOutputStream
-                                  implements ByteCodeOutput
-{
+ * DataOutputStream which extends ByteCodeOutput.
 
-    /**
-        Constructor.
-        @param out the output stream.
-     */
-    public ByteCodeOutputStream(OutputStream out) {
-        super(new CountedOutputStream(out));
-    }
-    
-    public int getBytesWritten() {
-        return ((CountedOutputStream)out).getBytesWritten();
-    }
+ * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
+ */
+class ByteCodeOutputStream(output: OutputStream) : DataOutputStream(CountedOutputStream(output)), ByteCodeOutput {
+
+    override val bytesWritten: Int
+        get() = (out as CountedOutputStream).bytesWritten
 }
