@@ -59,6 +59,9 @@ abstract class ConstantLargeNumeric : CPInfo() {
         output.writeInt(lowBytes)
     }
 
+    override val debugInfo: String
+        get() = "with high_bytes $highBytes and low_bytes $lowBytes"
+
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantLargeNumeric) {
             return false

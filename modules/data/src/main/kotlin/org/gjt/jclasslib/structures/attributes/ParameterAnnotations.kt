@@ -46,8 +46,8 @@ class ParameterAnnotations : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "ParameterAnnotations"
+    override val debugInfo: String
+        get() = ""
 
     val length: Int
         get() = 2 + runtimeAnnotations.sumBy { length }

@@ -47,8 +47,8 @@ class StackMapTableAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 2 + entries.sumBy { it.length }
 
-    override val debugMessage: String
-        get() = "StackMapTable attribute with ${entries.size} entries"
+    override val debugInfo: String
+        get() = "with ${entries.size} entries"
 
     companion object {
 

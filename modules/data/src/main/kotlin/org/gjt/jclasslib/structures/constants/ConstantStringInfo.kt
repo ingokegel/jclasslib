@@ -48,8 +48,8 @@ class ConstantStringInfo : CPInfo() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "$constantType with string_index $stringIndex"
+    override val debugInfo: String
+        get() = "with stringIndex $stringIndex"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantStringInfo) {

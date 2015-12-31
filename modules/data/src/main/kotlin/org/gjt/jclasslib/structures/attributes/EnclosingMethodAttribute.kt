@@ -52,8 +52,8 @@ class EnclosingMethodAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 4
 
-    override val debugMessage: String
-        get() = "EnclosingMethod attribute with class index $classInfoIndex and method index $methodInfoIndex"
+    override val debugInfo: String
+        get() = "with classInfoIndex $classInfoIndex and methodInfoIndex $methodInfoIndex"
 
     companion object {
         /**

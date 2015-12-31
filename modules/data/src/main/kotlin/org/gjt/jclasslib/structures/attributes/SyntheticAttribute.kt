@@ -33,8 +33,8 @@ class SyntheticAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 0
 
-    override val debugMessage: String
-        get() = "Synthetic attribute"
+    override val debugInfo: String
+        get() = ""
 
     companion object {
 

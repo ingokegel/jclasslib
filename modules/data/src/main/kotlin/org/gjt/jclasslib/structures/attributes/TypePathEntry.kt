@@ -34,6 +34,6 @@ class TypePathEntry : AbstractStructure() {
         output.writeByte(typeArgumentIndex)
     }
 
-    override val debugMessage: String
-        get() = "TypePathEntry entry with typePathKind $typePathKind, typeArgumentIndex $typeArgumentIndex"
+    override val debugInfo: String
+        get() = "with typePathKind $typePathKind, typeArgumentIndex $typeArgumentIndex"
 }

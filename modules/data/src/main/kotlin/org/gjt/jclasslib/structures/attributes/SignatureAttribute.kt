@@ -40,8 +40,8 @@ class SignatureAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 2
 
-    override val debugMessage: String
-        get() = "Signature attribute with signature index $signatureIndex"
+    override val debugInfo: String
+        get() = "with signatureIndex $signatureIndex"
 
     companion object {
         /**

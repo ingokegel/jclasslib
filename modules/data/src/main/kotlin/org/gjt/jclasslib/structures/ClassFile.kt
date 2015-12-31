@@ -286,8 +286,8 @@ class ClassFile : AbstractStructureWithAttributes() {
         writeAttributes(output)
     }
 
-    override val debugMessage: String
-        get() = "ClassFile"
+    override val debugInfo: String
+        get() = ""
 
     private fun checkValidConstantPoolIndex(index: Int) {
         if (index < 1 || index >= constantPool.size) {

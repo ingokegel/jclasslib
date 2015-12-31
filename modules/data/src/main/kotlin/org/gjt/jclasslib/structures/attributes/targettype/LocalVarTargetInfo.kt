@@ -49,6 +49,6 @@ class LocalVarTargetInfo : TargetInfo() {
             return buffer.toString()
         }
 
-    override val debugMessage: String
-        get() = "LocalVarTargetInfo with ${localVarTargets.size} targets"
+    override val debugInfo: String
+        get() = "with ${localVarTargets.size} targets"
 }

@@ -51,8 +51,8 @@ class BootstrapMethodsEntry : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "BootstrapMethods entry with bootstrap_method_index $methodRefIndex, arguments ($verbose)"
+    override val debugInfo: String
+        get() = "with methodRefIndex $methodRefIndex, arguments ($verbose)"
 
     val verbose: String
         get() {

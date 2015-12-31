@@ -71,18 +71,18 @@ abstract class AbstractStructure {
      * Write debug information when reading the structure.
      */
     protected fun debugRead() {
-        if (isDebug) debug("read $debugMessage")
+        if (isDebug) debug("read ${javaClass.simpleName} $debugInfo")
     }
 
     /**
      * Write debug information when reading the structure.
      */
     protected fun debugWrite() {
-        if (isDebug) debug("wrote $debugMessage")
+        if (isDebug) debug("wrote ${javaClass.simpleName} $debugInfo")
     }
 
     //TODO rename to debugInfo and append class name in debugMessage, then add readData/writeData and log automatically in read/write
-    protected abstract val debugMessage : String
+    protected abstract val debugInfo: String
 
     /**
      * Utility method for derived structures. Print an int value as a hex string.

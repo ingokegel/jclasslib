@@ -41,8 +41,8 @@ class ConstElementValue(elementValueType: ElementValueType) : ElementValue(eleme
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "ConstElementValue with const_value_index $constValueIndex"
+    override val debugInfo: String
+        get() = "with constValueIndex $constValueIndex"
 
     override val entryName: String
         get() = "ConstElement"

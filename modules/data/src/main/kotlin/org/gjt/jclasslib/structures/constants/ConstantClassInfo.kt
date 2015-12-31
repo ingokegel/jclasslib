@@ -63,6 +63,6 @@ class ConstantClassInfo : CPInfo() {
 
     override fun hashCode(): Int = super.hashCode() xor nameIndex
 
-    override val debugMessage: String
-        get() = "$constantType with name_index $nameIndex"
+    override val debugInfo: String
+        get() = "with nameIndex $nameIndex"
 }

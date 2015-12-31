@@ -35,8 +35,8 @@ abstract class VerificationTypeInfoEntry(
 
     }
 
-    override val debugMessage: String
-        get() = "VerificationTypeInfo entry of type $type"
+    override val debugInfo: String
+        get() = "of type $type"
 
     /**
      * Returns the bytecode length of the entry.

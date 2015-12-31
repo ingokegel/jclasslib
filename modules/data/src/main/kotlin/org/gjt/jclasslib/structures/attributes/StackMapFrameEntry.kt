@@ -157,8 +157,8 @@ class StackMapFrameEntry : AbstractStructure() {
         }
     }
 
-    override val debugMessage: String
-        get() = "StackMapFrameEntry of type $frameType"
+    override val debugInfo: String
+        get() = "of type $frameType"
 
     /**
      * Returns the verbose representation for display in the UI

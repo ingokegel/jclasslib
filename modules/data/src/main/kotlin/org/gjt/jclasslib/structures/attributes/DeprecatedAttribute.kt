@@ -33,8 +33,8 @@ class DeprecatedAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 0
 
-    override val debugMessage: String
-        get() = "Deprecated attribute"
+    override val debugInfo: String
+        get() = ""
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

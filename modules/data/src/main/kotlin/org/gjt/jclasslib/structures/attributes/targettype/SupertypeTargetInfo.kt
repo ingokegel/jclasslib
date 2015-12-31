@@ -42,6 +42,6 @@ class SupertypeTargetInfo : TargetInfo() {
             }
         }
 
-    override val debugMessage: String
-        get() = "SupertypeTargetInfo with supertypeIndex $supertypeIndex"
+    override val debugInfo: String
+        get() = "with supertypeIndex $supertypeIndex"
 }

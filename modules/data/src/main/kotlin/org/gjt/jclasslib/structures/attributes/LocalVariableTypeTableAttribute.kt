@@ -32,9 +32,6 @@ class LocalVariableTypeTableAttribute : LocalVariableCommonAttribute<LocalVariab
 
     override fun getAttributeLength(): Int = super.getAttributeLength() + localVariableEntries.size * LocalVariableCommonEntry.LENGTH
 
-    override val debugMessage: String
-        get() = "LocalVariableTypeTable attribute with ${localVariableEntries.size} entries"
-
     companion object {
         /**
          * Name of the attribute as in the corresponding constant pool entry.

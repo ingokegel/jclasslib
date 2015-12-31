@@ -46,6 +46,9 @@ abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
         debugWrite()
     }
 
+    override val debugInfo: String
+        get() = "with ${runtimeAnnotations.size} entries"
+
     override fun getAttributeLength(): Int = 2 + runtimeAnnotations.sumBy { it.length }
 
     override fun getNumberOfAnnotations(): Int = runtimeAnnotations.size

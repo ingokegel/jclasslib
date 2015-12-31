@@ -39,8 +39,8 @@ class MethodParametersEntry : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "MethodParamsEntry"
+    override val debugInfo: String
+        get() = ""
 
     val length: Int
         get() = 4

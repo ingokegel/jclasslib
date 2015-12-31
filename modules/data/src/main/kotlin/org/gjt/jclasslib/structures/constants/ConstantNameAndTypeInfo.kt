@@ -71,8 +71,8 @@ class ConstantNameAndTypeInfo : CPInfo() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "$constantType with name_index $nameIndex and descriptor_index $descriptorIndex"
+    override val debugInfo: String
+        get() = "with nameIndex $nameIndex and descriptorIndex $descriptorIndex"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantNameAndTypeInfo) {

@@ -55,8 +55,8 @@ class ConstantInvokeDynamicInfo : CPInfo() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "$constantType with bootstrap method attr index $bootstrapMethodAttributeIndex and name and type index $nameAndTypeIndex"
+    override val debugInfo: String
+        get() = "with bootstrapMethodAttributeIndex $bootstrapMethodAttributeIndex and nameAndTypeIndex $nameAndTypeIndex"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantInvokeDynamicInfo) {

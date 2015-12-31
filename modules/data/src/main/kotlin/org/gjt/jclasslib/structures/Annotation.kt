@@ -52,6 +52,6 @@ class Annotation : AbstractStructure(), AnnotationData {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "Annotation with ${elementValuePairEntries.size} value pair elements"
+    override val debugInfo: String
+        get() = "with ${elementValuePairEntries.size} value pair elements"
 }

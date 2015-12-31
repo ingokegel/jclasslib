@@ -44,8 +44,8 @@ class BootstrapMethodsAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 2 + methods.sumBy { it.length }
 
-    override val debugMessage: String
-        get() = "BootstrapMethods attribute with ${methods.size} references"
+    override val debugInfo: String
+        get() = "with ${methods.size} references"
 
     companion object {
         /**

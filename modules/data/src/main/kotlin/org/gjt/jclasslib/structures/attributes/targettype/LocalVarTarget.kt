@@ -37,6 +37,6 @@ class LocalVarTarget : AbstractStructure() {
         output.writeShort(index)
     }
 
-    override val debugMessage: String
-        get() = "LocalVarTarget with startPc $startPc, length $length, index $index"
+    override val debugInfo: String
+        get() = "with startPc $startPc, length $length, index $index"
 }

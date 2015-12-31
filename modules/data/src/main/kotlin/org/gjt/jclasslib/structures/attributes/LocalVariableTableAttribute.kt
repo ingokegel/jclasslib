@@ -35,9 +35,6 @@ class LocalVariableTableAttribute : LocalVariableCommonAttribute<LocalVariableTa
         return super.getAttributeLength() + localVariableEntries.size * LocalVariableCommonEntry.LENGTH
     }
 
-    override val debugMessage: String
-        get() = "LocalVariableTable attribute with ${localVariableEntries.size} entries"
-
     companion object {
         /**
          * Name of the attribute as in the corresponding constant pool entry.

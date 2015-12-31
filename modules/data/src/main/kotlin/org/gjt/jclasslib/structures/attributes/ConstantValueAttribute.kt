@@ -42,8 +42,8 @@ class ConstantValueAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 2
 
-    override val debugMessage: String
-        get() = "ConstantValue attribute with constantvalue_index $constantValueIndex"
+    override val debugInfo: String
+        get() = "with constantValueIndex $constantValueIndex"
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

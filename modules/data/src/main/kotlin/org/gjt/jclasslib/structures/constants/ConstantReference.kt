@@ -64,6 +64,9 @@ abstract class ConstantReference : CPInfo() {
         output.writeShort(nameAndTypeIndex)
     }
 
+    override val debugInfo: String
+        get() = "with classIndex $classIndex and nameAndTypeIndex $nameAndTypeIndex"
+
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantReference) {
             return false

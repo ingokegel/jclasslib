@@ -47,8 +47,8 @@ class ElementValuePair : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "ElementValuePair with index $elementNameIndex"
+    override val debugInfo: String
+        get() = "with elementNameIndex $elementNameIndex"
 
     val length: Int
         get() = 2 + elementValue.length

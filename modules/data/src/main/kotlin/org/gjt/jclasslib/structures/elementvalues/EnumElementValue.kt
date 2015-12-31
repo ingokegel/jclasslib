@@ -48,8 +48,8 @@ class EnumElementValue : ElementValue(ElementValueType.ENUM) {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "EnumElementValue with type_name_index $typeNameIndex, const_name_index $constNameIndex"
+    override val debugInfo: String
+        get() = "with typeNameIndex $typeNameIndex, constNameIndex $constNameIndex"
 
     override val entryName: String
         get() = "EnumElement"

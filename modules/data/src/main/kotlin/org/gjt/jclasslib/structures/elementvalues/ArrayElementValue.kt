@@ -45,8 +45,8 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "ArrayElementValue with ${elementValueEntries.size} entries"
+    override val debugInfo: String
+        get() = "with ${elementValueEntries.size} entries"
 
     override val entryName: String
         get() = "ArrayElement"

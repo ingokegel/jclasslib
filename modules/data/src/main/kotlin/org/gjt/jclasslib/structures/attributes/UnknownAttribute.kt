@@ -51,8 +51,8 @@ class UnknownAttribute(
         return info.size
     }
 
-    override val debugMessage: String
-        get() = "uninterpreted attribute of reported type ${getAttributeName()}"
+    override val debugInfo: String
+        get() = "of reported type ${getAttributeName()}"
 
     private fun getAttributeName(): String {
         try {

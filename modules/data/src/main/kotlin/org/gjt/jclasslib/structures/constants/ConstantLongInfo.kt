@@ -52,6 +52,4 @@ class ConstantLongInfo : ConstantLargeNumeric() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "$constantType with high_bytes $highBytes and low_bytes $lowBytes"
 }

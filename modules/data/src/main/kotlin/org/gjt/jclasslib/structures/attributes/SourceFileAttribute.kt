@@ -42,8 +42,8 @@ class SourceFileAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 2
 
-    override val debugMessage: String
-        get() = "SourceFile attribute with sourcefile_index $sourceFileIndex"
+    override val debugInfo: String
+        get() = "sourcefileIndex $sourceFileIndex"
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

@@ -54,8 +54,8 @@ class ConstantUtf8Info : CPInfo() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "$constantType with length ${string.length} (\"$string\")"
+    override val debugInfo: String
+        get() = "with length ${string.length} (\"$string\")"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantUtf8Info) {

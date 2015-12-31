@@ -37,6 +37,4 @@ class ConstantFieldrefInfo : ConstantReference() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "$constantType with class_index $classIndex and name_and_type_index $nameAndTypeIndex"
 }

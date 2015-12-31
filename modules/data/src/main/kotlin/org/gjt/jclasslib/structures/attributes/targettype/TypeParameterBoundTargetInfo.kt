@@ -39,6 +39,6 @@ class TypeParameterBoundTargetInfo : TargetInfo() {
     override val verbose: String
         get() = "parameter index $typeParameterIndex, bound index $boundIndex"
 
-    override val debugMessage: String
-        get() = "TypeParameterBoundTargetInfo with $verbose"
+    override val debugInfo: String
+        get() = "with $verbose"
 }

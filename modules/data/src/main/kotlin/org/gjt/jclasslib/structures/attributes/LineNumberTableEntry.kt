@@ -48,8 +48,8 @@ class LineNumberTableEntry : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "LineNumberTable entry with start_pc $startPc, line_number $lineNumber"
+    override val debugInfo: String
+        get() = "with startPc $startPc, lineNumber $lineNumber"
 
     companion object {
 

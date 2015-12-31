@@ -72,6 +72,6 @@ class ConstantMethodHandleInfo : CPInfo() {
 
     override fun hashCode(): Int = super.hashCode() xor referenceIndex
 
-    override val debugMessage: String
-        get() = "$constantType with reference_index $referenceIndex and type $type"
+    override val debugInfo: String
+        get() = "with referenceIndex $referenceIndex and type $type"
 }

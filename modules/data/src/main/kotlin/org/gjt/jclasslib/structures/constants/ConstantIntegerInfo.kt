@@ -50,6 +50,6 @@ class ConstantIntegerInfo : ConstantNumeric() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "$constantType with bytes $bytes"
+    override val debugInfo: String
+        get() = "with bytes $bytes"
 }

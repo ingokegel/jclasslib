@@ -43,8 +43,8 @@ class AnnotationDefaultAttribute constructor(): AttributeInfo() {
 
     override fun getAttributeLength(): Int = defaultValue.length
 
-    override val debugMessage: String
-        get() = "AnnotationDefaultAttribute"
+    override val debugInfo: String
+        get() = ""
 
     companion object {
         /**

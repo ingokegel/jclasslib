@@ -48,8 +48,8 @@ class InnerClassesAttribute : AttributeInfo() {
         return 2 + classes.size * InnerClassesEntry.LENGTH
     }
 
-    override val debugMessage: String
-        get() = "InnerClasses attribute with ${classes.size} classes"
+    override val debugInfo: String
+        get() = "with ${classes.size} classes"
 
     companion object {
 

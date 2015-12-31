@@ -78,10 +78,10 @@ class InnerClassesEntry : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "InnerClasses entry with inner_class_info_index $innerClassInfoIndex, " +
-                "outer_class_info_index $outerClassInfoIndex, inner_name_index $innerNameIndex, " +
-                "access flags ${printAccessFlags(innerClassAccessFlags)}"
+    override val debugInfo: String
+        get() = "with innerClassInfoIndex $innerClassInfoIndex, " +
+                "outerClassInfoIndex $outerClassInfoIndex, innerNameIndex $innerNameIndex, " +
+                "accessFlags ${printAccessFlags(innerClassAccessFlags)}"
 
     companion object {
 

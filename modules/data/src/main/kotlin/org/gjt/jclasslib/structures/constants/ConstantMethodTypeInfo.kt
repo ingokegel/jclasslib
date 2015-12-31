@@ -63,6 +63,6 @@ class ConstantMethodTypeInfo : CPInfo() {
 
     override fun hashCode(): Int = super.hashCode() xor descriptorIndex
 
-    override val debugMessage: String
-        get() = "$constantType with descriptor_index $descriptorIndex"
+    override val debugInfo: String
+        get() = "with descriptorIndex $descriptorIndex"
 }

@@ -63,8 +63,8 @@ class ExceptionTableEntry : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "ExceptionTableEntry with start_pc $startPc, end_pc $endPc, handler_pc $handlerPc, catch_type index $catchType"
+    override val debugInfo: String
+        get() = "with startPc $startPc, endPc $endPc, handlerPc $handlerPc, catchType $catchType"
 
     companion object {
 

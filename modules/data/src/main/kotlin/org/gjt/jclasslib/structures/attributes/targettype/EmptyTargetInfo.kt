@@ -32,6 +32,6 @@ class EmptyTargetInfo : TargetInfo() {
     override fun read(input: DataInput) {
     }
 
-    override val debugMessage: String
-        get() = "EmptyTargetInfo"
+    override val debugInfo: String
+        get() = ""
 }

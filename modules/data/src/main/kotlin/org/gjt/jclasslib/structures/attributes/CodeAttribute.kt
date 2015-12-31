@@ -87,8 +87,8 @@ class CodeAttribute : AttributeInfo() {
             6 * attributes.size +
             totalAttributesLength
 
-    override val debugMessage: String
-        get() = "Code attribute with max_stack $maxStack, max_locals $maxLocals, code_length ${code.size}"
+    override val debugInfo: String
+        get() = "with maxStack $maxStack, maxLocals $maxLocals, code length ${code.size}"
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

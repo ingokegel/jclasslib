@@ -25,6 +25,6 @@ object ConstantPlaceholder : CPInfo() {
         throw UnsupportedOperationException()
     }
 
-    override val debugMessage: String
+    override val debugInfo: String
         get() = throw UnsupportedOperationException()
 }

@@ -48,8 +48,8 @@ class LineNumberTableAttribute : AttributeInfo() {
         return 2 + lineNumberTable.size * LineNumberTableEntry.LENGTH
     }
 
-    override val debugMessage: String
-        get() = "LineNumberTable attribute with ${lineNumberTable.size} entries"
+    override val debugInfo: String
+        get() = "with ${lineNumberTable.size} entries"
 
     companion object {
 

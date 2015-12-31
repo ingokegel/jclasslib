@@ -54,8 +54,8 @@ class TypeAnnotation : AbstractStructure() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "TypeAnnotation entry"
+    override val debugInfo: String
+        get() = ""
 
     val length: Int
         get() = 2 + targetInfo.length + typePathEntries.size * 2 + annotation.length

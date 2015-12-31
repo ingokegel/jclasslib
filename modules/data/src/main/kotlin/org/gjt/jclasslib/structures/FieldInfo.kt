@@ -32,9 +32,6 @@ class FieldInfo : ClassMember() {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "field with access flags $accessFlagsVerbose, name_index $nameIndex, descriptor_index $descriptorIndex, ${attributes.size} attributes"
-
     override fun printAccessFlagsVerbose(accessFlags: Int): String {
         return printAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)
     }

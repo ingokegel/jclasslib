@@ -12,9 +12,6 @@ package org.gjt.jclasslib.structures.attributes
  */
 class RuntimeInvisibleParameterAnnotationsAttribute : RuntimeParameterAnnotationsAttribute() {
 
-    override val debugMessage: String
-        get() = "RuntimeInvisibleParameterAnnotations attribute with ${parameterAnnotations.size} entries"
-
     companion object {
         /**
          * Name of the attribute as in the corresponding constant pool entry.

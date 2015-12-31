@@ -45,8 +45,8 @@ class MethodParametersAttribute : AttributeInfo() {
 
     override fun getAttributeLength(): Int = 1 + entries.sumBy { it.length }
 
-    override val debugMessage: String
-        get() = "MethodParametersEntry attribute with ${entries.size} entries"
+    override val debugInfo: String
+        get() = "with ${entries.size} entries"
 
     companion object {
         /**

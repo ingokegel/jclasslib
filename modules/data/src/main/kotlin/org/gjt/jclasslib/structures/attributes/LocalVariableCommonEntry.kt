@@ -69,6 +69,9 @@ abstract class LocalVariableCommonEntry : AbstractStructure() {
         debugWrite()
     }
 
+    override val debugInfo: String
+        get() = "with startPc $startPc, length $length, nameIndex $nameIndex, descriptorIndex $descriptorOrSignatureIndex, index $index"
+
     companion object {
         /**
          * Length in bytes of a local variable association.

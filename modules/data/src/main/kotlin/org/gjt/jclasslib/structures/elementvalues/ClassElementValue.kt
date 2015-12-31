@@ -41,8 +41,8 @@ class ClassElementValue : ElementValue(ElementValueType.CLASS) {
         debugWrite()
     }
 
-    override val debugMessage: String
-        get() = "ClassElementValue with class_info_index $classInfoIndex"
+    override val debugInfo: String
+        get() = "with classInfoIndex $classInfoIndex"
 
     override val entryName: String
         get() = "ClassElement"

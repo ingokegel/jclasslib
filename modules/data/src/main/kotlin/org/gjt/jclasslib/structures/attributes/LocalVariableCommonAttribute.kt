@@ -32,6 +32,9 @@ abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry> : Attr
         debugWrite()
     }
 
+    override val debugInfo: String
+        get() = "with ${localVariableEntries.size} entries"
+
     override fun getAttributeLength(): Int = 2
 
 }
