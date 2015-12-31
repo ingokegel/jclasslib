@@ -35,4 +35,7 @@ class ExceptionTargetInfo : TargetInfo() {
 
     override val verbose: String
         get() = "<a href=\"E$exceptionTableIndex\">exception table entry $exceptionTableIndex</a>"
+
+    override val debugMessage: String
+        get() = "ExceptionTargetInfo with exceptionTableIndex $exceptionTableIndex"
 }

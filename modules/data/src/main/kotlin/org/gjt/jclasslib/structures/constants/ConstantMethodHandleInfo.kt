@@ -52,7 +52,7 @@ class ConstantMethodHandleInfo : CPInfo() {
     override fun read(input: DataInput) {
         type = MethodHandleType.getFromTag(input.readByte().toInt())
         referenceIndex = input.readUnsignedShort()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -60,7 +60,7 @@ class ConstantMethodHandleInfo : CPInfo() {
         output.writeByte(ConstantType.METHOD_HANDLE.tag)
         output.write(type.tag)
         output.writeShort(referenceIndex)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -72,9 +72,6 @@ class ConstantMethodHandleInfo : CPInfo() {
 
     override fun hashCode(): Int = super.hashCode() xor referenceIndex
 
-    override fun debug(message: String) {
-        super.debug("$message $constantType with reference_index $referenceIndex and type $type")
-    }
-
-
+    override val debugMessage: String
+        get() = "$constantType with reference_index $referenceIndex and type $type"
 }

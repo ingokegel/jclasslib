@@ -35,7 +35,7 @@ class ParameterAnnotations : AbstractStructure() {
             }
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -43,8 +43,11 @@ class ParameterAnnotations : AbstractStructure() {
         output.writeShort(runtimeAnnotations.size)
         runtimeAnnotations.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
+
+    override val debugMessage: String
+        get() = "ParameterAnnotations"
 
     val length: Int
         get() = 2 + runtimeAnnotations.sumBy { length }

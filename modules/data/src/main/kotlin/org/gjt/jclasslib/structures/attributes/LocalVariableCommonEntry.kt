@@ -55,7 +55,7 @@ abstract class LocalVariableCommonEntry : AbstractStructure() {
         descriptorOrSignatureIndex = input.readUnsignedShort()
         index = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -66,7 +66,7 @@ abstract class LocalVariableCommonEntry : AbstractStructure() {
         output.writeShort(descriptorOrSignatureIndex)
         output.writeShort(index)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     companion object {

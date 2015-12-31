@@ -18,9 +18,8 @@ package org.gjt.jclasslib.structures.attributes
  */
 class RuntimeInvisibleTypeAnnotationsAttribute : RuntimeTypeAnnotationsAttribute() {
 
-    override fun debug(message: String) {
-        super.debug("$message RuntimeInvisibleTypeAnnotations attribute with ${runtimeAnnotations.size} entries")
-    }
+    override val debugMessage: String
+        get() = "RuntimeInvisibleTypeAnnotations attribute with ${runtimeAnnotations.size} entries"
 
     companion object {
         /**

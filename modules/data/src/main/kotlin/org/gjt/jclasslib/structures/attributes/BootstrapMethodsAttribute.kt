@@ -31,7 +31,7 @@ class BootstrapMethodsAttribute : AttributeInfo() {
             BootstrapMethodsEntry.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -39,14 +39,13 @@ class BootstrapMethodsAttribute : AttributeInfo() {
         output.writeShort(methods.size)
         methods.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote ")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2 + methods.sumBy { it.length }
 
-    override fun debug(message: String) {
-        super.debug("$message BootstrapMethods attribute with ${methods.size} references")
-    }
+    override val debugMessage: String
+        get() = "BootstrapMethods attribute with ${methods.size} references"
 
     companion object {
         /**

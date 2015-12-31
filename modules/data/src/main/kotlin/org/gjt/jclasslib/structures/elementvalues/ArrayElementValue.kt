@@ -33,7 +33,7 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
             ElementValue.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -42,12 +42,11 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
         output.writeShort(elementValueEntries.size)
         elementValueEntries.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message ArrayElementValue with ${elementValueEntries.size} entries")
-    }
+    override val debugMessage: String
+        get() = "ArrayElementValue with ${elementValueEntries.size} entries"
 
     override val entryName: String
         get() = "ArrayElement"

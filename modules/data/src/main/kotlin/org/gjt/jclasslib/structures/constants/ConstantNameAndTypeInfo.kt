@@ -59,7 +59,7 @@ class ConstantNameAndTypeInfo : CPInfo() {
         nameIndex = input.readUnsignedShort()
         descriptorIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -68,12 +68,11 @@ class ConstantNameAndTypeInfo : CPInfo() {
         output.writeByte(ConstantType.NAME_AND_TYPE.tag)
         output.writeShort(nameIndex)
         output.writeShort(descriptorIndex)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message $constantType with name_index $nameIndex and descriptor_index $descriptorIndex")
-    }
+    override val debugMessage: String
+        get() = "$constantType with name_index $nameIndex and descriptor_index $descriptorIndex"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantNameAndTypeInfo) {

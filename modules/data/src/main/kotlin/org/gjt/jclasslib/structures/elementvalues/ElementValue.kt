@@ -28,7 +28,7 @@ abstract class ElementValue(val elementValueType: ElementValueType) : AbstractSt
     override fun write(output: DataOutput) {
         output.writeByte(elementValueType.tag)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     val length: Int

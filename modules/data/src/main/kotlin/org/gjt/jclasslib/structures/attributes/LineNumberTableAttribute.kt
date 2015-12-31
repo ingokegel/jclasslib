@@ -33,7 +33,7 @@ class LineNumberTableAttribute : AttributeInfo() {
             LineNumberTableEntry.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -41,16 +41,15 @@ class LineNumberTableAttribute : AttributeInfo() {
         output.writeShort(lineNumberTable.size)
         lineNumberTable.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int {
         return 2 + lineNumberTable.size * LineNumberTableEntry.LENGTH
     }
 
-    override fun debug(message: String) {
-        super.debug("$message LineNumberTable attribute with ${lineNumberTable.size} entries")
-    }
+    override val debugMessage: String
+        get() = "LineNumberTable attribute with ${lineNumberTable.size} entries"
 
     companion object {
 

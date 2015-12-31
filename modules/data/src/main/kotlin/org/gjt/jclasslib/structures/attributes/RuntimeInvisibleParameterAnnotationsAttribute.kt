@@ -12,9 +12,8 @@ package org.gjt.jclasslib.structures.attributes
  */
 class RuntimeInvisibleParameterAnnotationsAttribute : RuntimeParameterAnnotationsAttribute() {
 
-    override fun debug(message: String) {
-        super.debug("$message RuntimeInvisibleParameterAnnotations attribute with ${parameterAnnotations.size} entries")
-    }
+    override val debugMessage: String
+        get() = "RuntimeInvisibleParameterAnnotations attribute with ${parameterAnnotations.size} entries"
 
     companion object {
         /**

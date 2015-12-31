@@ -36,7 +36,7 @@ class ElementValuePair : AbstractStructure() {
         elementNameIndex = input.readUnsignedShort()
         elementValue = ElementValue.create(input, classFile)
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -44,8 +44,11 @@ class ElementValuePair : AbstractStructure() {
         output.writeShort(elementNameIndex)
         elementValue.write(output)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
+
+    override val debugMessage: String
+        get() = "ElementValuePair with index $elementNameIndex"
 
     val length: Int
         get() = 2 + elementValue.length

@@ -24,4 +24,7 @@ object ConstantPlaceholder : CPInfo() {
     override fun write(output: DataOutput) {
         throw UnsupportedOperationException()
     }
+
+    override val debugMessage: String
+        get() = throw UnsupportedOperationException()
 }

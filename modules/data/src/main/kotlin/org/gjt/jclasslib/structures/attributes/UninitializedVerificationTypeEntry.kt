@@ -28,13 +28,13 @@ class UninitializedVerificationTypeEntry : VerificationTypeInfoEntry(Verificatio
     override fun read(input: DataInput) {
         super.read(input)
         offset = input.readUnsignedShort()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     override fun write(output: DataOutput) {
         super.write(output)
         output.writeShort(offset)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun appendTo(buffer: StringBuilder) {

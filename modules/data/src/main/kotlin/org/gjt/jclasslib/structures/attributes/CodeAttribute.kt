@@ -53,7 +53,7 @@ class CodeAttribute : AttributeInfo() {
         readExceptionTable(input)
         readAttributes(input)
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -66,7 +66,7 @@ class CodeAttribute : AttributeInfo() {
         writeExceptionTable(output)
         writeAttributes(output)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     private fun readExceptionTable(input: DataInput) {
@@ -87,9 +87,8 @@ class CodeAttribute : AttributeInfo() {
             6 * attributes.size +
             totalAttributesLength
 
-    override fun debug(message: String) {
-        super.debug("$message Code attribute with max_stack $maxStack, max_locals $maxLocals, code_length ${code.size}")
-    }
+    override val debugMessage: String
+        get() = "Code attribute with max_stack $maxStack, max_locals $maxLocals, code_length ${code.size}"
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

@@ -34,7 +34,7 @@ class UnknownAttribute(
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         input.readFully(info)
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -43,7 +43,7 @@ class UnknownAttribute(
         output.writeInt(getAttributeLength())
         if (javaClass == AttributeInfo::class.java) {
             output.write(info)
-            if (isDebug) debug("wrote")
+            debugWrite()
         }
     }
 
@@ -51,13 +51,14 @@ class UnknownAttribute(
         return info.size
     }
 
-    override fun debug(message: String) {
-        val type: String
+    override val debugMessage: String
+        get() = "uninterpreted attribute of reported type ${getAttributeName()}"
+
+    private fun getAttributeName(): String {
         try {
-            type = classFile.getConstantPoolUtf8Entry(attributeNameIndex).string
+            return classFile.getConstantPoolUtf8Entry(attributeNameIndex).string
         } catch (ex: InvalidByteCodeException) {
-            type = "(unknown)"
+            return "(unknown)"
         }
-        super.debug("$message uninterpreted attribute of reported type $type")
     }
 }

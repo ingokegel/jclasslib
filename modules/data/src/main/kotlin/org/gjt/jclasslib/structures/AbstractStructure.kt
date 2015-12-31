@@ -63,11 +63,26 @@ abstract class AbstractStructure {
      * Utility method for derived structures. Dump a specific debug message.
      * @param message the debug message
      */
-    protected open fun debug(message: String) {
-        if (isDebug) {
-            Log.debug(message)
-        }
+    protected fun debug(message: String) {
+        if (isDebug) Log.debug(message)
     }
+
+    /**
+     * Write debug information when reading the structure.
+     */
+    protected fun debugRead() {
+        if (isDebug) debug("read $debugMessage")
+    }
+
+    /**
+     * Write debug information when reading the structure.
+     */
+    protected fun debugWrite() {
+        if (isDebug) debug("wrote $debugMessage")
+    }
+
+    //TODO rename to debugInfo and append class name in debugMessage, then add readData/writeData and log automatically in read/write
+    protected abstract val debugMessage : String
 
     /**
      * Utility method for derived structures. Print an int value as a hex string.

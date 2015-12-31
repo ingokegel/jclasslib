@@ -28,7 +28,7 @@ class MethodParametersEntry : AbstractStructure() {
         nameIndex = input.readUnsignedShort()
         accessFlags = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -36,13 +36,11 @@ class MethodParametersEntry : AbstractStructure() {
         output.writeShort(nameIndex)
         output.writeShort(accessFlags)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-
-    override fun debug(message: String) {
-        super.debug("$message MethodParams entry")
-    }
+    override val debugMessage: String
+        get() = "MethodParamsEntry"
 
     val length: Int
         get() = 4

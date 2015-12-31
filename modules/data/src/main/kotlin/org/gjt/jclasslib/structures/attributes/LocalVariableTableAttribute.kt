@@ -28,16 +28,15 @@ class LocalVariableTableAttribute : LocalVariableCommonAttribute<LocalVariableTa
             LocalVariableTableEntry.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     override fun getAttributeLength(): Int {
         return super.getAttributeLength() + localVariableEntries.size * LocalVariableCommonEntry.LENGTH
     }
 
-    override fun debug(message: String) {
-        super.debug("$message LocalVariableTable attribute with ${localVariableEntries.size} entries")
-    }
+    override val debugMessage: String
+        get() = "LocalVariableTable attribute with ${localVariableEntries.size} entries"
 
     companion object {
         /**

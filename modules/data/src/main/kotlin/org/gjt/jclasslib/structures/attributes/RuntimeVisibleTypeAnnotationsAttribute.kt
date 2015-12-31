@@ -19,9 +19,8 @@ package org.gjt.jclasslib.structures.attributes
  */
 class RuntimeVisibleTypeAnnotationsAttribute : RuntimeTypeAnnotationsAttribute() {
 
-    override fun debug(message: String) {
-        super.debug("$message RuntimeVisibleTypeAnnotations attribute with ${runtimeAnnotations.size} entries")
-    }
+    override val debugMessage: String
+        get() = "RuntimeVisibleTypeAnnotations attribute with ${runtimeAnnotations.size} entries"
 
     companion object {
         /**

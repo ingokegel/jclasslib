@@ -39,7 +39,7 @@ class EnclosingMethodAttribute : AttributeInfo() {
         classInfoIndex = input.readUnsignedShort()
         methodInfoIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -47,14 +47,13 @@ class EnclosingMethodAttribute : AttributeInfo() {
         output.writeShort(classInfoIndex)
         output.writeShort(methodInfoIndex)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 4
 
-    override fun debug(message: String) {
-        super.debug("$message EnclosingMethod attribute with class index $classInfoIndex and method index $methodInfoIndex")
-    }
+    override val debugMessage: String
+        get() = "EnclosingMethod attribute with class index $classInfoIndex and method index $methodInfoIndex"
 
     companion object {
         /**

@@ -29,20 +29,19 @@ class SignatureAttribute : AttributeInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         signatureIndex = input.readUnsignedShort()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeShort(signatureIndex)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2
 
-    override fun debug(message: String) {
-        super.debug("$message Signature attribute with signature index $signatureIndex")
-    }
+    override val debugMessage: String
+        get() = "Signature attribute with signature index $signatureIndex"
 
     companion object {
         /**

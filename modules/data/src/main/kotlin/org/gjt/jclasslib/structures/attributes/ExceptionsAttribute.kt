@@ -33,7 +33,7 @@ class ExceptionsAttribute : AttributeInfo() {
             input.readUnsignedShort()
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -41,14 +41,13 @@ class ExceptionsAttribute : AttributeInfo() {
         output.writeShort(exceptionIndexTable.size)
         exceptionIndexTable.forEach { output.writeShort(it) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2 + 2 * exceptionIndexTable.size
 
-    override fun debug(message: String) {
-        super.debug("$message Exception attribute with ${exceptionIndexTable.size} exceptions")
-    }
+    override val debugMessage: String
+        get() = "Exception attribute with ${exceptionIndexTable.size} exceptions"
 
     companion object {
         /**

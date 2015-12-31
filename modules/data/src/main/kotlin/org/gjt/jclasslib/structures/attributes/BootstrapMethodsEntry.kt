@@ -39,7 +39,7 @@ class BootstrapMethodsEntry : AbstractStructure() {
             input.readUnsignedShort()
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -48,12 +48,11 @@ class BootstrapMethodsEntry : AbstractStructure() {
         output.writeShort(argumentIndices.size)
         argumentIndices.forEach { output.writeShort(it) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message BootstrapMethods entry with bootstrap_method_index $methodRefIndex, arguments ($verbose)")
-    }
+    override val debugMessage: String
+        get() = "BootstrapMethods entry with bootstrap_method_index $methodRefIndex, arguments ($verbose)"
 
     val verbose: String
         get() {

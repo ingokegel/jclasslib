@@ -29,7 +29,7 @@ abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry> : Attr
         output.writeShort(localVariableEntries.size)
         localVariableEntries.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2

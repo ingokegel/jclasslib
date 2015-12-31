@@ -286,6 +286,9 @@ class ClassFile : AbstractStructureWithAttributes() {
         writeAttributes(output)
     }
 
+    override val debugMessage: String
+        get() = "ClassFile"
+
     private fun checkValidConstantPoolIndex(index: Int) {
         if (index < 1 || index >= constantPool.size) {
             throw InvalidByteCodeException("Constant pool index $index is out of bounds [0, ${constantPool.size - 1}]")

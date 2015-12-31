@@ -44,14 +44,14 @@ class ConstantMethodTypeInfo : CPInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         descriptorIndex = input.readUnsignedShort()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeByte(ConstantType.METHOD_TYPE.tag)
         output.writeShort(descriptorIndex)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -63,8 +63,6 @@ class ConstantMethodTypeInfo : CPInfo() {
 
     override fun hashCode(): Int = super.hashCode() xor descriptorIndex
 
-    override fun debug(message: String) {
-        super.debug("$message $constantType with descriptor_index $descriptorIndex")
-    }
-
+    override val debugMessage: String
+        get() = "$constantType with descriptor_index $descriptorIndex"
 }

@@ -34,9 +34,9 @@ abstract class VerificationTypeInfoEntry(
     override fun read(input: DataInput) {
 
     }
-    override fun debug(message: String) {
-        super.debug("$message VerificationTypeInfo entry of type $type")
-    }
+
+    override val debugMessage: String
+        get() = "VerificationTypeInfo entry of type $type"
 
     /**
      * Returns the bytecode length of the entry.

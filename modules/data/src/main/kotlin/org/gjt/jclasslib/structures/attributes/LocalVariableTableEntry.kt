@@ -20,9 +20,8 @@ import java.io.IOException
  */
 class LocalVariableTableEntry : LocalVariableCommonEntry() {
 
-    override fun debug(message: String) {
-        super.debug("$message LocalVariableTable entry with start_pc $startPc, length $length, name_index $nameIndex, descriptor_index $descriptorOrSignatureIndex, index $index")
-    }
+    override val debugMessage: String
+        get() = "LocalVariableTable entry with start_pc $startPc, length $length, name_index $nameIndex, descriptor_index $descriptorOrSignatureIndex, index $index"
 
     companion object {
         /**

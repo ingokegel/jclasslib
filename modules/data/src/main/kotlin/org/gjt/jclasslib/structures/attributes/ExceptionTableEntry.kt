@@ -50,7 +50,7 @@ class ExceptionTableEntry : AbstractStructure() {
         handlerPc = input.readUnsignedShort()
         catchType = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -60,12 +60,11 @@ class ExceptionTableEntry : AbstractStructure() {
         output.writeShort(handlerPc)
         output.writeShort(catchType)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message exception table entry with start_pc $startPc, end_pc $endPc, handler_pc $handlerPc, catch_type index $catchType")
-    }
+    override val debugMessage: String
+        get() = "ExceptionTableEntry with start_pc $startPc, end_pc $endPc, handler_pc $handlerPc, catch_type index $catchType"
 
     companion object {
 

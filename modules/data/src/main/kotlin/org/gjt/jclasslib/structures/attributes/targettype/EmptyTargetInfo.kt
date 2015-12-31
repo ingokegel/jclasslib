@@ -31,4 +31,7 @@ class EmptyTargetInfo : TargetInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
     }
+
+    override val debugMessage: String
+        get() = "EmptyTargetInfo"
 }

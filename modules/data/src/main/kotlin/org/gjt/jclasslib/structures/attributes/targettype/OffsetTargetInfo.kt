@@ -35,4 +35,7 @@ class OffsetTargetInfo : TargetInfo() {
 
     override val verbose: String
         get() = "offset $offset"
+
+    override val debugMessage: String
+        get() = "OffsetTargetInfo with $verbose"
 }

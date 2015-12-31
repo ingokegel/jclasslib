@@ -22,19 +22,18 @@ class FieldInfo : ClassMember() {
     override fun read(input: DataInput) {
         super.read(input)
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         super.write(output)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message field with access flags $accessFlagsVerbose, name_index $nameIndex, descriptor_index $descriptorIndex, ${attributes.size} attributes")
-    }
+    override val debugMessage: String
+        get() = "field with access flags $accessFlagsVerbose, name_index $nameIndex, descriptor_index $descriptorIndex, ${attributes.size} attributes"
 
     override fun printAccessFlagsVerbose(accessFlags: Int): String {
         return printAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)

@@ -22,19 +22,18 @@ class MethodInfo : ClassMember() {
     override fun read(input: DataInput) {
         super.read(input)
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         super.write(output)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message method with access flags $accessFlagsVerbose, name_index $nameIndex, descriptor_index $descriptorIndex, ${attributes.size} attributes")
-    }
+    override val debugMessage: String
+        get() = "method with access flags $accessFlagsVerbose, name_index $nameIndex, descriptor_index $descriptorIndex, ${attributes.size} attributes"
 
     override fun printAccessFlagsVerbose(accessFlags: Int): String {
         return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)

@@ -37,7 +37,7 @@ class LineNumberTableEntry : AbstractStructure() {
         startPc = input.readUnsignedShort()
         lineNumber = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -45,12 +45,11 @@ class LineNumberTableEntry : AbstractStructure() {
         output.writeShort(startPc)
         output.writeShort(lineNumber)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message LineNumberTable entry with start_pc $startPc, line_number $lineNumber")
-    }
+    override val debugMessage: String
+        get() = "LineNumberTable entry with start_pc $startPc, line_number $lineNumber"
 
     companion object {
 

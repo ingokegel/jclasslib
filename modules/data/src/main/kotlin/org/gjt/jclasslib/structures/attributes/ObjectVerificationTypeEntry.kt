@@ -20,13 +20,13 @@ class ObjectVerificationTypeEntry : VerificationTypeInfoEntry(VerificationType.O
     override fun read(input: DataInput) {
         super.read(input)
         cpIndex = input.readUnsignedShort()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     override fun write(output: DataOutput) {
         super.write(output)
         output.writeShort(cpIndex)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun appendTo(buffer: StringBuilder) {

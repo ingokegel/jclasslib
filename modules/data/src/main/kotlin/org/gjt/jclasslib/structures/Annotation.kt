@@ -37,7 +37,7 @@ class Annotation : AbstractStructure(), AnnotationData {
             ElementValuePair.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     val length: Int
@@ -49,11 +49,9 @@ class Annotation : AbstractStructure(), AnnotationData {
         output.writeShort(elementValuePairEntries.size)
         elementValuePairEntries.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message Annotation with ${elementValuePairEntries.size} value pair elements")
-    }
-
+    override val debugMessage: String
+        get() = "Annotation with ${elementValuePairEntries.size} value pair elements"
 }

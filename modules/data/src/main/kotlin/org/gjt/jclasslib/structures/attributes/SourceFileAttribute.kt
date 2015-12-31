@@ -30,21 +30,20 @@ class SourceFileAttribute : AttributeInfo() {
     override fun read(input: DataInput) {
         sourceFileIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeShort(sourceFileIndex)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2
 
-    override fun debug(message: String) {
-        super.debug("$message SourceFile attribute with sourcefile_index $sourceFileIndex")
-    }
+    override val debugMessage: String
+        get() = "SourceFile attribute with sourcefile_index $sourceFileIndex"
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

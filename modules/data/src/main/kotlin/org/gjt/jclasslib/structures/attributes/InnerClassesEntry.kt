@@ -65,7 +65,7 @@ class InnerClassesEntry : AbstractStructure() {
         innerNameIndex = input.readUnsignedShort()
         innerClassAccessFlags = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -75,14 +75,13 @@ class InnerClassesEntry : AbstractStructure() {
         output.writeShort(innerNameIndex)
         output.writeShort(innerClassAccessFlags)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message InnerClasses entry with inner_class_info_index $innerClassInfoIndex, " +
+    override val debugMessage: String
+        get() = "InnerClasses entry with inner_class_info_index $innerClassInfoIndex, " +
                 "outer_class_info_index $outerClassInfoIndex, inner_name_index $innerNameIndex, " +
-                "access flags ${printAccessFlags(innerClassAccessFlags)}")
-    }
+                "access flags ${printAccessFlags(innerClassAccessFlags)}"
 
     companion object {
 

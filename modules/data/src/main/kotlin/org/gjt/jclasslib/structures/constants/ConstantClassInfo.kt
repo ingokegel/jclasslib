@@ -44,14 +44,14 @@ class ConstantClassInfo : CPInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         nameIndex = input.readUnsignedShort()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeByte(ConstantType.CLASS.tag)
         output.writeShort(nameIndex)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -63,8 +63,6 @@ class ConstantClassInfo : CPInfo() {
 
     override fun hashCode(): Int = super.hashCode() xor nameIndex
 
-    override fun debug(message: String) {
-        super.debug("$message $constantType with name_index $nameIndex")
-    }
-
+    override val debugMessage: String
+        get() = "$constantType with name_index $nameIndex"
 }

@@ -40,7 +40,7 @@ class TypeAnnotation : AbstractStructure() {
         }
         annotation.read(input)
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -51,12 +51,11 @@ class TypeAnnotation : AbstractStructure() {
         typePathEntries.forEach { it.write(output) }
         annotation.write(output)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message TypeAnnotation entry")
-    }
+    override val debugMessage: String
+        get() = "TypeAnnotation entry"
 
     val length: Int
         get() = 2 + targetInfo.length + typePathEntries.size * 2 + annotation.length

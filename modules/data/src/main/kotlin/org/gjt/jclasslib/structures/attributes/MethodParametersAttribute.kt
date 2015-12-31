@@ -32,7 +32,7 @@ class MethodParametersAttribute : AttributeInfo() {
             MethodParametersEntry.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -40,14 +40,13 @@ class MethodParametersAttribute : AttributeInfo() {
         output.writeShort(entries.size)
         entries.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 1 + entries.sumBy { it.length }
 
-    override fun debug(message: String) {
-        super.debug("$message MethodParametersEntry attribute with ${entries.size} entries")
-    }
+    override val debugMessage: String
+        get() = "MethodParametersEntry attribute with ${entries.size} entries"
 
     companion object {
         /**

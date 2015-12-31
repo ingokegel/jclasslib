@@ -38,19 +38,18 @@ class ConstantStringInfo : CPInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         stringIndex = input.readUnsignedShort()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeByte(ConstantType.STRING.tag)
         output.writeShort(stringIndex)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message$ constantType with string_index $stringIndex")
-    }
+    override val debugMessage: String
+        get() = "$constantType with string_index $stringIndex"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantStringInfo) {

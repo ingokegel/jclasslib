@@ -37,4 +37,7 @@ class TypeArgumentTargetInfo : TargetInfo() {
 
     override val verbose: String
         get() = "offset $offset, type argument index $typeArgumentIndex"
+
+    override val debugMessage: String
+        get() = "TypeArgumentTargetInfo with $verbose"
 }

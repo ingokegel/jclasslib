@@ -30,7 +30,7 @@ class ClassElementValue : ElementValue(ElementValueType.CLASS) {
     override fun read(input: DataInput) {
         classInfoIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -38,12 +38,11 @@ class ClassElementValue : ElementValue(ElementValueType.CLASS) {
         super.write(output)
         output.writeShort(classInfoIndex)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message ClassElementValue with class_info_index $classInfoIndex")
-    }
+    override val debugMessage: String
+        get() = "ClassElementValue with class_info_index $classInfoIndex"
 
     override val entryName: String
         get() = "ClassElement"

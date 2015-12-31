@@ -33,7 +33,7 @@ class InnerClassesAttribute : AttributeInfo() {
             InnerClassesEntry.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -41,16 +41,15 @@ class InnerClassesAttribute : AttributeInfo() {
         output.writeShort(classes.size)
         classes.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int {
         return 2 + classes.size * InnerClassesEntry.LENGTH
     }
 
-    override fun debug(message: String) {
-        super.debug("${message} InnerClasses attribute with ${classes.size} classes")
-    }
+    override val debugMessage: String
+        get() = "InnerClasses attribute with ${classes.size} classes"
 
     companion object {
 

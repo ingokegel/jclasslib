@@ -42,7 +42,7 @@ class ConstantInvokeDynamicInfo : CPInfo() {
         bootstrapMethodAttributeIndex = input.readUnsignedShort()
         nameAndTypeIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -52,12 +52,11 @@ class ConstantInvokeDynamicInfo : CPInfo() {
         output.writeShort(bootstrapMethodAttributeIndex)
         output.writeShort(nameAndTypeIndex)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message $constantType with bootstrap method attr index $bootstrapMethodAttributeIndex and name and type index $nameAndTypeIndex")
-    }
+    override val debugMessage: String
+        get() = "$constantType with bootstrap method attr index $bootstrapMethodAttributeIndex and name and type index $nameAndTypeIndex"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantInvokeDynamicInfo) {

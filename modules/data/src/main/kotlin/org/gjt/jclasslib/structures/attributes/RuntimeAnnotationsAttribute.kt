@@ -36,14 +36,14 @@ abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
 
             }
         }
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeShort(runtimeAnnotations.size)
         runtimeAnnotations.forEach { it.write(output) }
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2 + runtimeAnnotations.sumBy { it.length }

@@ -36,7 +36,7 @@ class EnumElementValue : ElementValue(ElementValueType.ENUM) {
         typeNameIndex = input.readUnsignedShort()
         constNameIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -45,12 +45,11 @@ class EnumElementValue : ElementValue(ElementValueType.ENUM) {
         output.writeShort(typeNameIndex)
         output.writeShort(constNameIndex)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message EnumElementValue with type_name_index $typeNameIndex, const_name_index $constNameIndex")
-    }
+    override val debugMessage: String
+        get() = "EnumElementValue with type_name_index $typeNameIndex, const_name_index $constNameIndex"
 
     override val entryName: String
         get() = "EnumElement"

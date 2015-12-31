@@ -30,7 +30,7 @@ class ConstElementValue(elementValueType: ElementValueType) : ElementValue(eleme
     override fun read(input: DataInput) {
         constValueIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -38,12 +38,11 @@ class ConstElementValue(elementValueType: ElementValueType) : ElementValue(eleme
         super.write(output)
         output.writeShort(constValueIndex)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message ConstElementValue with const_value_index $constValueIndex")
-    }
+    override val debugMessage: String
+        get() = "ConstElementValue with const_value_index $constValueIndex"
 
     override val entryName: String
         get() = "ConstElement"

@@ -23,19 +23,18 @@ class DeprecatedAttribute : AttributeInfo() {
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 0
 
-    override fun debug(message: String) {
-        super.debug("$message Deprecated attribute")
-    }
+    override val debugMessage: String
+        get() = "Deprecated attribute"
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

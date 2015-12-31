@@ -24,7 +24,7 @@ import java.io.IOException
  * Common class for runtime type annotations.
 
  */
-open class RuntimeTypeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
+abstract class RuntimeTypeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
 
     /**
      * Runtime annotations associations of the parent structure
@@ -41,7 +41,7 @@ open class RuntimeTypeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
             }
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -49,7 +49,7 @@ open class RuntimeTypeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
         output.writeShort(runtimeAnnotations.size)
         runtimeAnnotations.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2 + runtimeAnnotations.sumBy { it.length }

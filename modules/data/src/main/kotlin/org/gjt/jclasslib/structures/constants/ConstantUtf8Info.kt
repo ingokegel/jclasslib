@@ -44,19 +44,18 @@ class ConstantUtf8Info : CPInfo() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         string = input.readUTF()
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeByte(ConstantType.UTF8.tag)
         output.writeUTF(string)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message $constantType with length ${string.length} (\"$string\")")
-    }
+    override val debugMessage: String
+        get() = "$constantType with length ${string.length} (\"$string\")"
 
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantUtf8Info) {

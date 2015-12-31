@@ -14,11 +14,11 @@ class DefaultVerificationTypeEntry(verificationType : VerificationType) : Verifi
 
     override fun write(output: DataOutput) {
         super.write(output)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun read(input: DataInput) {
         super.read(input)
-        if (isDebug) debug("read")
+        debugRead()
     }
 }

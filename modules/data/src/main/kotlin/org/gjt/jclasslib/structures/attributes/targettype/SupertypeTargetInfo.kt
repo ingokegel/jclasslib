@@ -41,4 +41,7 @@ class SupertypeTargetInfo : TargetInfo() {
                 return "<a href=\"I$supertypeIndex\">interface index $supertypeIndex</a>"
             }
         }
+
+    override val debugMessage: String
+        get() = "SupertypeTargetInfo with supertypeIndex $supertypeIndex"
 }

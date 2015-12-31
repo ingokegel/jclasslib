@@ -42,7 +42,7 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
             ElementValuePair.create(input, classFile)
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -52,14 +52,12 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
         output.writeShort(elementValuePairEntries.size)
         elementValuePairEntries.forEach { it.write(output) }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override val specificLength: Int
         get() = 4 + elementValuePairEntries.sumBy { it.length }
 
-    override fun debug(message: String) {
-        super.debug("$message Annotation with ${elementValuePairEntries.size} value pair elements")
-    }
-
+    override val debugMessage: String
+        get() = "AnnotationElementValue with ${elementValuePairEntries.size} value pair elements"
 }

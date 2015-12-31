@@ -30,21 +30,20 @@ class ConstantValueAttribute : AttributeInfo() {
     override fun read(input: DataInput) {
         constantValueIndex = input.readUnsignedShort()
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeShort(constantValueIndex)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2
 
-    override fun debug(message: String) {
-        super.debug("$message ConstantValue attribute with constantvalue_index $constantValueIndex")
-    }
+    override val debugMessage: String
+        get() = "ConstantValue attribute with constantvalue_index $constantValueIndex"
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */

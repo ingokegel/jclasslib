@@ -65,7 +65,7 @@ class StackMapFrameEntry : AbstractStructure() {
             else -> throw IllegalStateException(frameType.toString())
         }
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     private fun readOneStackItem(input: DataInput) {
@@ -118,7 +118,7 @@ class StackMapFrameEntry : AbstractStructure() {
             else -> throw IllegalStateException(frameType.name)
         }
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     private fun writeOneStackItem(out: DataOutput) {
@@ -157,9 +157,8 @@ class StackMapFrameEntry : AbstractStructure() {
         }
     }
 
-    override fun debug(message: String) {
-        super.debug("$message StackMapFrame entry of type $frameType")
-    }
+    override val debugMessage: String
+        get() = "StackMapFrameEntry of type $frameType"
 
     /**
      * Returns the verbose representation for display in the UI

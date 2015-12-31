@@ -30,7 +30,7 @@ class AnnotationDefaultAttribute constructor(): AttributeInfo() {
     override fun read(input: DataInput) {
         defaultValue = ElementValue.create(input, classFile)
 
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
@@ -38,14 +38,13 @@ class AnnotationDefaultAttribute constructor(): AttributeInfo() {
 
         defaultValue.write(output)
 
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
     override fun getAttributeLength(): Int = defaultValue.length
 
-    override fun debug(message: String) {
-        super.debug("$message AnnotationDefaultAttribute")
-    }
+    override val debugMessage: String
+        get() = "AnnotationDefaultAttribute"
 
     companion object {
         /**

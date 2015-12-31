@@ -27,18 +27,16 @@ class ConstantFieldrefInfo : ConstantReference() {
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun read(input: DataInput) {
         super.read(input)
-        if (isDebug) debug("read")
+        debugRead()
     }
 
     @Throws(InvalidByteCodeException::class, IOException::class)
     override fun write(output: DataOutput) {
         output.writeByte(ConstantType.FIELDREF.tag)
         super.write(output)
-        if (isDebug) debug("wrote")
+        debugWrite()
     }
 
-    override fun debug(message: String) {
-        super.debug("$message $constantType with class_index $classIndex and name_and_type_index $nameAndTypeIndex")
-    }
-
+    override val debugMessage: String
+        get() = "$constantType with class_index $classIndex and name_and_type_index $nameAndTypeIndex"
 }
