@@ -7,21 +7,19 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-
-import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
-import java.lang.Float.intBitsToFloat
 import java.lang.Float.floatToIntBits
+import java.lang.Float.intBitsToFloat
 
 /**
  * Describes a CONSTANT_Float_info constant pool data structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class ConstantFloatInfo : ConstantNumeric() {
+class ConstantFloatInfo(classFile: ClassFile) : ConstantNumeric(classFile) {
 
     override val constantType: ConstantType
         get() = ConstantType.FLOAT

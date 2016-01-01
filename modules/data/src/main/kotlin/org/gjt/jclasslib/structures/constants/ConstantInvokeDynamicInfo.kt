@@ -7,20 +7,19 @@
 
 package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.AbstractConstant
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a CONSTANT_InvokeDynamic_info constant pool data structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class ConstantInvokeDynamicInfo : CPInfo() {
+class ConstantInvokeDynamicInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 
     var bootstrapMethodAttributeIndex: Int = 0
     var nameAndTypeIndex: Int = 0

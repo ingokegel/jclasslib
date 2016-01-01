@@ -8,16 +8,14 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a BootstrapMethods attribute structure.
  */
-class BootstrapMethodsAttribute : AttributeInfo() {
+class BootstrapMethodsAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Bootstrap method references in the BootstrapMethodsAttribute structure
@@ -27,7 +25,9 @@ class BootstrapMethodsAttribute : AttributeInfo() {
     override fun readData(input: DataInput) {
         val numberOfRefs = input.readUnsignedShort()
         methods = Array(numberOfRefs) {
-            BootstrapMethodsEntry.create(input, classFile)
+            BootstrapMethodsEntry(classFile).apply {
+                read(input)
+            }
         }
     }
 

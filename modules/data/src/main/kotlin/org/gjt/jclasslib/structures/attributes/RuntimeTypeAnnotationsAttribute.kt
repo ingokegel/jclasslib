@@ -14,17 +14,15 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Common class for runtime type annotations.
 
  */
-abstract class RuntimeTypeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
+abstract class RuntimeTypeAnnotationsAttribute(classFile: ClassFile) : AttributeInfo(classFile), AnnotationHolder {
 
     /**
      * Runtime annotations associations of the parent structure
@@ -35,7 +33,6 @@ abstract class RuntimeTypeAnnotationsAttribute : AttributeInfo(), AnnotationHold
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()
         runtimeAnnotations = Array(runtimeVisibleAnnotationsLength) {
             TypeAnnotation().apply {
-                this.classFile = classFile
                 read(input)
             }
         }

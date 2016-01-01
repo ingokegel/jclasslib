@@ -6,11 +6,8 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  ArrayElementValue attribute structure.
@@ -29,7 +26,7 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     override fun readData(input: DataInput) {
         val elementValueEntriesLength = input.readUnsignedShort()
         elementValueEntries = Array(elementValueEntriesLength) {
-            ElementValue.create(input, classFile)
+            ElementValue.create(input)
         }
     }
 

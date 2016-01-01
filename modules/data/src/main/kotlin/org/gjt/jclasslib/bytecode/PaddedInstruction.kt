@@ -10,8 +10,6 @@ package org.gjt.jclasslib.bytecode
 import org.gjt.jclasslib.io.ByteCodeInput
 import org.gjt.jclasslib.io.ByteCodeOutput
 
-import java.io.IOException
-
 /**
  * Base class for instructions which need a four byte padding relative
  * to the start of the enclosing code of the parent Code

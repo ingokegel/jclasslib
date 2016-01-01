@@ -7,11 +7,8 @@
 package org.gjt.jclasslib.structures.elementvalues
 
 import org.gjt.jclasslib.structures.AnnotationData
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  Annotation attribute structure.
@@ -38,7 +35,9 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
         val elementValuePairEntriesLength = input.readUnsignedShort()
 
         elementValuePairEntries = Array(elementValuePairEntriesLength) {
-            ElementValuePair.create(input, classFile)
+            ElementValuePair().apply {
+                read(input)
+            }
         }
     }
 

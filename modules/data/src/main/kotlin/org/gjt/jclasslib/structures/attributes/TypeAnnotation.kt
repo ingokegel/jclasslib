@@ -9,12 +9,9 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AbstractStructure
 import org.gjt.jclasslib.structures.Annotation
-import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an entry in a RuntimeVisibleTypeAnnotations or RuntimeInvisibleTypeAnnotations
@@ -30,7 +27,6 @@ class TypeAnnotation : AbstractStructure() {
     override fun readData(input: DataInput) {
         targetType = TypeAnnotationTargetType.getFromTag(input.readUnsignedByte())
         targetInfo = targetType.createTargetInfo()
-        targetInfo.classFile = classFile
         targetInfo.read(input)
 
         val typePathLength = input.readUnsignedByte()

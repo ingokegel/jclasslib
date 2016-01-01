@@ -10,7 +10,6 @@ package org.gjt.jclasslib.structures
 import org.gjt.jclasslib.io.Log
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 import java.util.*
 
 /**
@@ -22,21 +21,6 @@ import java.util.*
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 abstract class AbstractStructure {
-
-    /**
-     * Set parent class file.
-     * Has to be called at least once on a structure.
-     */
-    lateinit var classFile: ClassFile
-
-    /**
-     * Flag for debugging while reading and writing class files.
-     */
-    var isDebug: Boolean = false
-
-    init {
-        isDebug = java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG)
-    }
 
     /**
      * Read this structure from the given DataInput.
@@ -123,6 +107,11 @@ abstract class AbstractStructure {
          * reading and writing class files.
          */
         const val SYSTEM_PROPERTY_DEBUG = "jclasslib.io.debug"
+
+        /**
+         * Flag for debugging while reading and writing class files.
+         */
+        val isDebug: Boolean = java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG)
     }
 
 }

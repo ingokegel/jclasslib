@@ -8,16 +8,14 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a MethodParameter attribute structure.
  */
-class MethodParametersAttribute : AttributeInfo() {
+class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * List of stackMapFrame entries in the StackMapTableAttribute structure
@@ -28,7 +26,9 @@ class MethodParametersAttribute : AttributeInfo() {
 
         val numberOfEntries = input.readUnsignedByte()
         entries = Array(numberOfEntries) {
-            MethodParametersEntry.create(input, classFile)
+            MethodParametersEntry().apply {
+                read(input)
+            }
         }
     }
 

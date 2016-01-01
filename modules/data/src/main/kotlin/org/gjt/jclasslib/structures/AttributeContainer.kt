@@ -1,27 +1,21 @@
 /*
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the license, or (at your option) any later version.
-*/
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the license, or (at your option) any later version.
+ */
 
 package org.gjt.jclasslib.structures
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
-/**
- * Base class for all structures with attributes.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
- */
-abstract class AbstractStructureWithAttributes : AbstractStructure() {
+interface AttributeContainer {
 
     /**
      * Attributes of this structure.
      */
-    var attributes: Array<AttributeInfo> = emptyArray()
+    var attributes: Array<AttributeInfo>
 
     /**
      * Find an attribute of a certain class.
@@ -35,7 +29,7 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
      * Read the attributes of this structure from the given DataInput.
      * @param input the DataInput from which to read
      */
-    protected open fun readAttributes(input: DataInput) {
+    open fun readAttributes(input: DataInput, classFile: ClassFile) {
 
         val attributesCount = input.readUnsignedShort()
         if (java.lang.Boolean.getBoolean(AttributeInfo.SYSTEM_PROPERTY_SKIP_ATTRIBUTES)) {
@@ -52,7 +46,7 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
      * Write the attributes of this structure to the given DataOutput.
      * @param output the DataOutput to which to write
      */
-    protected open fun writeAttributes(output: DataOutput) {
+    open fun writeAttributes(output: DataOutput) {
         output.writeShort(attributes.size)
         attributes.forEach { it.write(output) }
     }
@@ -60,6 +54,6 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
     /**
      * Get the length of all attributes as a number of bytes.
      */
-    protected val totalAttributesLength: Int
+    val totalAttributesLength: Int
         get() = attributes.sumBy { it.getAttributeLength() }
 }

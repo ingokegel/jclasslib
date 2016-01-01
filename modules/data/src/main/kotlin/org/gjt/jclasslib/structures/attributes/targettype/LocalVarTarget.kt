@@ -8,11 +8,8 @@
 package org.gjt.jclasslib.structures.attributes.targettype
 
 import org.gjt.jclasslib.structures.AbstractStructure
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Local variable target for the LocalVarTargetInfo structure.

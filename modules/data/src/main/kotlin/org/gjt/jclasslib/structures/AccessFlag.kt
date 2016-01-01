@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.structures
 
-import java.util.EnumSet
+import java.util.*
 
 /**
  * Defines access flags constants and verbose expressions as defined by

@@ -7,17 +7,15 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Contains common attributes to a local variable table attribute structure.
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry> : AttributeInfo() {
+abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry>(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Local variable associations of the parent code attribute

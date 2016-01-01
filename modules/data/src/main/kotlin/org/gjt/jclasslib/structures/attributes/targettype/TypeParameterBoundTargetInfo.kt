@@ -7,11 +7,8 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Target info for a TypeAnnotation structure with a parameter index an a bound index.

@@ -7,12 +7,8 @@
 package org.gjt.jclasslib.structures.elementvalues
 
 import org.gjt.jclasslib.structures.AbstractStructure
-import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  ElementValuePair attribute structure.
@@ -33,7 +29,7 @@ class ElementValuePair : AbstractStructure() {
 
     override fun readData(input: DataInput) {
         elementNameIndex = input.readUnsignedShort()
-        elementValue = ElementValue.create(input, classFile)
+        elementValue = ElementValue.create(input)
     }
 
     override fun writeData(output: DataOutput) {
@@ -50,17 +46,4 @@ class ElementValuePair : AbstractStructure() {
     val entryName: String
         get() = "ElementValuePair"
 
-    companion object {
-
-        /**
-         * Factory for creating ElementValuePair structures.
-         * @param in the DataInput from which to read the ElementValuePair structure
-         * @param classFile the parent class file of the structure to be created
-         */
-        fun create(`in`: DataInput, classFile: ClassFile) = ElementValuePair().apply {
-            this.classFile = classFile
-            this.read(`in`)
-
-        }
-    }
 }

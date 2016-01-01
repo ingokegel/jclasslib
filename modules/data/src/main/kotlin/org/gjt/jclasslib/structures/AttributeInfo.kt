@@ -7,16 +7,14 @@ version 2 of the license, or (at your option) any later version.
 package org.gjt.jclasslib.structures
 
 import org.gjt.jclasslib.structures.attributes.*
-
 import java.io.DataInput
-import java.io.IOException
 
 /**
  * Base class for all attribute structures in the attribute package.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class AttributeInfo : AbstractStructureWithAttributes() {
+abstract class AttributeInfo(protected val classFile: ClassFile) : AbstractStructure() {
 
     /**
      * Constant pool index for the name of the attribute.
@@ -64,37 +62,36 @@ abstract class AttributeInfo : AbstractStructureWithAttributes() {
             val attributeLength = input.readInt()
 
             val cpInfoName = classFile.getConstantPoolUtf8Entry(attributeNameIndex)
-            return create(attributeLength, cpInfoName.string).apply {
+            return create(attributeLength, cpInfoName.string, classFile).apply {
                 this.attributeNameIndex = attributeNameIndex
-                this.classFile = classFile
                 this.read(input);
             }
         }
 
-        private fun create(attributeLength: Int, attributeName: String): AttributeInfo = when (attributeName) {
-            ConstantValueAttribute.ATTRIBUTE_NAME -> ConstantValueAttribute()
-            CodeAttribute.ATTRIBUTE_NAME -> CodeAttribute()
-            ExceptionsAttribute.ATTRIBUTE_NAME -> ExceptionsAttribute()
-            InnerClassesAttribute.ATTRIBUTE_NAME -> InnerClassesAttribute()
-            SyntheticAttribute.ATTRIBUTE_NAME -> SyntheticAttribute()
-            SourceFileAttribute.ATTRIBUTE_NAME -> SourceFileAttribute()
-            LineNumberTableAttribute.ATTRIBUTE_NAME -> LineNumberTableAttribute()
-            LocalVariableTableAttribute.ATTRIBUTE_NAME -> LocalVariableTableAttribute()
-            DeprecatedAttribute.ATTRIBUTE_NAME -> DeprecatedAttribute()
-            EnclosingMethodAttribute.ATTRIBUTE_NAME -> EnclosingMethodAttribute()
-            SignatureAttribute.ATTRIBUTE_NAME -> SignatureAttribute()
-            LocalVariableTypeTableAttribute.ATTRIBUTE_NAME -> LocalVariableTypeTableAttribute()
-            RuntimeVisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleAnnotationsAttribute()
-            RuntimeInvisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleAnnotationsAttribute()
-            RuntimeVisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleParameterAnnotationsAttribute()
-            RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleParameterAnnotationsAttribute()
-            RuntimeVisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleTypeAnnotationsAttribute()
-            RuntimeInvisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleTypeAnnotationsAttribute()
-            AnnotationDefaultAttribute.ATTRIBUTE_NAME -> AnnotationDefaultAttribute()
-            BootstrapMethodsAttribute.ATTRIBUTE_NAME -> BootstrapMethodsAttribute()
-            StackMapTableAttribute.ATTRIBUTE_NAME -> StackMapTableAttribute()
-            MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute()
-            else -> UnknownAttribute(attributeLength)
+        private fun create(attributeLength: Int, attributeName: String, classFile : ClassFile): AttributeInfo = when (attributeName) {
+            ConstantValueAttribute.ATTRIBUTE_NAME -> ConstantValueAttribute(classFile)
+            CodeAttribute.ATTRIBUTE_NAME -> CodeAttribute(classFile)
+            ExceptionsAttribute.ATTRIBUTE_NAME -> ExceptionsAttribute(classFile)
+            InnerClassesAttribute.ATTRIBUTE_NAME -> InnerClassesAttribute(classFile)
+            SyntheticAttribute.ATTRIBUTE_NAME -> SyntheticAttribute(classFile)
+            SourceFileAttribute.ATTRIBUTE_NAME -> SourceFileAttribute(classFile)
+            LineNumberTableAttribute.ATTRIBUTE_NAME -> LineNumberTableAttribute(classFile)
+            LocalVariableTableAttribute.ATTRIBUTE_NAME -> LocalVariableTableAttribute(classFile)
+            DeprecatedAttribute.ATTRIBUTE_NAME -> DeprecatedAttribute(classFile)
+            EnclosingMethodAttribute.ATTRIBUTE_NAME -> EnclosingMethodAttribute(classFile)
+            SignatureAttribute.ATTRIBUTE_NAME -> SignatureAttribute(classFile)
+            LocalVariableTypeTableAttribute.ATTRIBUTE_NAME -> LocalVariableTypeTableAttribute(classFile)
+            RuntimeVisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleAnnotationsAttribute(classFile)
+            RuntimeInvisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleAnnotationsAttribute(classFile)
+            RuntimeVisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleParameterAnnotationsAttribute(classFile)
+            RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleParameterAnnotationsAttribute(classFile)
+            RuntimeVisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleTypeAnnotationsAttribute(classFile)
+            RuntimeInvisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleTypeAnnotationsAttribute(classFile)
+            AnnotationDefaultAttribute.ATTRIBUTE_NAME -> AnnotationDefaultAttribute(classFile)
+            BootstrapMethodsAttribute.ATTRIBUTE_NAME -> BootstrapMethodsAttribute(classFile)
+            StackMapTableAttribute.ATTRIBUTE_NAME -> StackMapTableAttribute(classFile)
+            MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute(classFile)
+            else -> UnknownAttribute(attributeLength, classFile)
         }
     }
 }

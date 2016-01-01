@@ -9,14 +9,13 @@ package org.gjt.jclasslib.structures
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Base class for class members.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-abstract class ClassMember : AbstractStructureWithAttributes() {
+abstract class ClassMember(protected val classFile: ClassFile) : AbstractStructure(), AttributeContainer {
 
     /**
      * Access flags of this class member.
@@ -32,6 +31,8 @@ abstract class ClassMember : AbstractStructureWithAttributes() {
      * The constant pool index of the descriptor of this class member.
      */
     var descriptorIndex: Int = 0
+
+    override var attributes: Array<AttributeInfo> = emptyArray()
 
     /**
      * Get the Name of the class member.
@@ -66,7 +67,7 @@ abstract class ClassMember : AbstractStructureWithAttributes() {
         nameIndex = input.readUnsignedShort()
         descriptorIndex = input.readUnsignedShort()
 
-        readAttributes(input)
+        readAttributes(input, classFile)
     }
 
     override fun writeData(output: DataOutput) {

@@ -8,18 +8,16 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a SourceFile attribute structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class SourceFileAttribute : AttributeInfo() {
+class SourceFileAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Constant pool index of the name of the source file.

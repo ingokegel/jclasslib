@@ -9,7 +9,6 @@ package org.gjt.jclasslib.bytecode
 
 import org.gjt.jclasslib.io.ByteCodeInput
 import org.gjt.jclasslib.io.ByteCodeOutput
-import java.io.IOException
 
 /**
  * Base class for all opcode instruction wrappers.

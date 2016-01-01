@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser;
 
+import org.gjt.jclasslib.structures.AttributeContainer;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
@@ -156,7 +157,7 @@ public abstract class AbstractDetailPane extends JPanel {
             return classFile.getMethods()[parentIndex].getAttributes()[index];
 
         } else {
-            return findAttribute(parentPath).getAttributes()[index];
+            return ((AttributeContainer)findAttribute(parentPath)).getAttributes()[index];
         }
     }
     

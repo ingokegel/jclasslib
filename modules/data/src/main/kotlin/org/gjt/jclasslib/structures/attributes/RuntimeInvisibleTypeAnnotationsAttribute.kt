@@ -13,10 +13,12 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.structures.ClassFile
+
 /**
  * Describes an  RuntimeInvisibleTypeAnnotations attribute structure.
  */
-class RuntimeInvisibleTypeAnnotationsAttribute : RuntimeTypeAnnotationsAttribute() {
+class RuntimeInvisibleTypeAnnotationsAttribute(classFile: ClassFile) : RuntimeTypeAnnotationsAttribute(classFile) {
 
     companion object {
         /**

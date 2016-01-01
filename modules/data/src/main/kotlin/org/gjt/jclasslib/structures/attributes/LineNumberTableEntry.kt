@@ -8,12 +8,8 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AbstractStructure
-import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an entry in a LineNumberTable attribute structure.
@@ -52,15 +48,6 @@ class LineNumberTableEntry : AbstractStructure() {
          */
         val LENGTH = 4
 
-        /**
-         * Factory method for creating LineNumberTableEntry structures.
-         * @param input the DataInput from which to read the LineNumberTableEntry structure
-         * @param classFile the parent class file of the structure to be created
-         */
-        fun create(input: DataInput, classFile: ClassFile) = LineNumberTableEntry().apply {
-            this.classFile = classFile
-            this.read(input)
-        }
     }
 
 }

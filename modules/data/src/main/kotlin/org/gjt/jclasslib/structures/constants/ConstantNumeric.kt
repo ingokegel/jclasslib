@@ -7,19 +7,17 @@
 
 package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.AbstractConstant
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Base class for numeric constant pool data structures.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-abstract class ConstantNumeric : CPInfo() {
+abstract class ConstantNumeric(classFile: ClassFile) : AbstractConstant(classFile) {
 
     /**
      * Bytes field of this constant pool entry.

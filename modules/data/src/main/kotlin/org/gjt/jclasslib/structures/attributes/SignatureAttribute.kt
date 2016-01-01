@@ -7,18 +7,16 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  Signature attribute structure.
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class SignatureAttribute : AttributeInfo() {
+class SignatureAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Constant pool index of the CONSTANT_Utf8_info

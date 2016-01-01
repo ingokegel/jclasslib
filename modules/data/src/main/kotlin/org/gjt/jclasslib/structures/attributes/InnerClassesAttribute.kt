@@ -8,18 +8,16 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an InnerClasses attribute structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class InnerClassesAttribute : AttributeInfo() {
+class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Inner classes of the parent ClassFile structure
@@ -29,7 +27,9 @@ class InnerClassesAttribute : AttributeInfo() {
     override fun readData(input: DataInput) {
         val numberOfClasses = input.readUnsignedShort()
         classes = Array(numberOfClasses) {
-            InnerClassesEntry.create(input, classFile)
+            InnerClassesEntry().apply {
+                read(input)
+            }
         }
     }
 

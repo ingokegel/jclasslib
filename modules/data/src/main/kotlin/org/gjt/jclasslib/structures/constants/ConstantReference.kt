@@ -7,19 +7,18 @@
 
 package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.AbstractConstant
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Base class for constant pool data structures which reference class members.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-abstract class ConstantReference : CPInfo() {
+abstract class ConstantReference(classFile: ClassFile) : AbstractConstant(classFile) {
 
     /**
      * Index of the constant pool entry containing the

@@ -11,18 +11,16 @@ import org.gjt.jclasslib.io.Log
 import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
-import java.util.HashMap
+import java.util.*
 
 /**
  * The class file structure in which all other structures are hooked up.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class ClassFile : AbstractStructureWithAttributes() {
+class ClassFile : AbstractStructure(), AttributeContainer {
 
     /**
      * Minor version of the class file format.
@@ -77,9 +75,7 @@ class ClassFile : AbstractStructureWithAttributes() {
      */
     var methods: Array<MethodInfo> = emptyArray()
 
-    init {
-        classFile = this
-    }
+    override var attributes: Array<AttributeInfo> = emptyArray()
 
     /**
      * Verbose major version of the class file format.
@@ -268,7 +264,7 @@ class ClassFile : AbstractStructureWithAttributes() {
         readInterfaces(input)
         readFields(input)
         readMethods(input)
-        readAttributes(input)
+        readAttributes(input, this)
     }
 
     override fun writeData(output: DataOutput) {
@@ -423,8 +419,7 @@ class ClassFile : AbstractStructureWithAttributes() {
         if (isDebug) debug("read fields count $fieldsCount")
 
         fields = Array(fieldsCount) {
-            FieldInfo().apply {
-                classFile = this@ClassFile
+            FieldInfo(this).apply {
                 read(input)
             }
         }
@@ -444,8 +439,7 @@ class ClassFile : AbstractStructureWithAttributes() {
         if (isDebug) debug("read methods count $methodsCount")
 
         methods = Array(methodsCount) {
-            MethodInfo().apply {
-                classFile = this@ClassFile
+            MethodInfo(this).apply {
                 read(input)
             }
         }
@@ -459,8 +453,8 @@ class ClassFile : AbstractStructureWithAttributes() {
         methods.forEach { it.write(out) }
     }
 
-    override fun readAttributes(input: DataInput) {
-        super.readAttributes(input)
+    override fun readAttributes(input: DataInput, classFile: ClassFile) {
+        super.readAttributes(input, classFile)
         if (isDebug) debug("read ${attributes.size} attributes for the ClassFile structure")
     }
 

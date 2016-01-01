@@ -6,11 +6,13 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.structures.ClassFile
+
 
 /**
  * Describes a RuntimeVisibleParameterAnnotations attribute structure.
  */
-class RuntimeVisibleParameterAnnotationsAttribute : RuntimeParameterAnnotationsAttribute() {
+class RuntimeVisibleParameterAnnotationsAttribute(classFile: ClassFile) : RuntimeParameterAnnotationsAttribute(classFile) {
 
     companion object {
         /**

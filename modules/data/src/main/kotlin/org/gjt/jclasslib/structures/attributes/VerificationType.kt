@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 
 /**
@@ -24,9 +25,9 @@ enum class VerificationType(val tag: Int) {
     OBJECT(7),
     UNINITIALIZED(8);
 
-    fun createEntry(): VerificationTypeInfoEntry {
+    fun createEntry(classFile: ClassFile): VerificationTypeInfoEntry {
         when (this) {
-            OBJECT -> return ObjectVerificationTypeEntry()
+            OBJECT -> return ObjectVerificationTypeEntry(classFile)
             UNINITIALIZED -> return UninitializedVerificationTypeEntry()
             else -> return DefaultVerificationTypeEntry(this)
         }

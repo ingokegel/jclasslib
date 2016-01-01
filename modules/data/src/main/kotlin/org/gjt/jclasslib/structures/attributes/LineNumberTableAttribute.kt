@@ -8,18 +8,16 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an LineNumberTable attribute structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class LineNumberTableAttribute : AttributeInfo() {
+class LineNumberTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Line number associations of the parent
@@ -29,7 +27,9 @@ class LineNumberTableAttribute : AttributeInfo() {
     override fun readData(input: DataInput) {
         val lineNumberTableLength = input.readUnsignedShort()
         lineNumberTable = Array(lineNumberTableLength) {
-            LineNumberTableEntry.create(input, classFile)
+            LineNumberTableEntry().apply {
+                read(input)
+            }
         }
     }
 

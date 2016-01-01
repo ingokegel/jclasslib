@@ -7,16 +7,14 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Common class for runtime parameter annotations.
  */
-abstract class RuntimeParameterAnnotationsAttribute : AttributeInfo() {
+abstract class RuntimeParameterAnnotationsAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Parameter annotations

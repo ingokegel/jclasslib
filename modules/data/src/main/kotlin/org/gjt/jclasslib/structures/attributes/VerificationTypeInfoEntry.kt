@@ -9,11 +9,8 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AbstractStructure
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an entry in a StackMapFrameEntry attribute structure.
@@ -59,8 +56,7 @@ abstract class VerificationTypeInfoEntry(
         fun create(input: DataInput, classFile: ClassFile): VerificationTypeInfoEntry {
             val tag = input.readUnsignedByte()
             val verificationType = VerificationType.getFromTag(tag)
-            return verificationType.createEntry().apply {
-                this.classFile = classFile
+            return verificationType.createEntry(classFile).apply {
                 this.read(input)
             }
         }

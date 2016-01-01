@@ -8,18 +8,16 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a Synthetic attribute structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class SyntheticAttribute : AttributeInfo() {
+class SyntheticAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     override fun readData(input: DataInput) {
     }

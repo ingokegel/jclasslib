@@ -14,10 +14,8 @@
 package org.gjt.jclasslib.structures
 
 import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  Annotation attribute structure.
@@ -33,7 +31,9 @@ class Annotation : AbstractStructure(), AnnotationData {
         typeIndex = input.readUnsignedShort()
         val elementValuePairEntriesLength = input.readUnsignedShort()
         elementValuePairEntries = Array(elementValuePairEntriesLength) {
-            ElementValuePair.create(input, classFile)
+            ElementValuePair().apply {
+                read(input)
+            }
         }
     }
 

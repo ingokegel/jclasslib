@@ -295,12 +295,9 @@ public class BrowserTreePane extends JPanel {
         return new BrowserTreeNode("[error] null");
     }
 
-    private void addAttributeNodes(BrowserTreeNode parentNode, AbstractStructureWithAttributes structure) {
+    private void addAttributeNodes(BrowserTreeNode parentNode, AttributeContainer structure) {
 
         AttributeInfo[] attributes = structure.getAttributes();
-        if (attributes == null) {
-            return;
-        }
         int attributesCount = attributes.length;
         for (int i = 0; i < attributesCount; i++) {
             addSingleAttributeNode(attributes[i],
@@ -331,8 +328,8 @@ public class BrowserTreePane extends JPanel {
                     addSingleElementValueEntryNode(((AnnotationDefaultAttribute)attribute).getDefaultValue(), 0, 1, entryNode);
                 } else if (attribute instanceof RuntimeTypeAnnotationsAttribute) {
                     addRuntimeTypeAnnotation(entryNode, (RuntimeTypeAnnotationsAttribute)attribute);
-                } else {
-                    addAttributeNodes(entryNode, attribute);
+                } else if (attribute instanceof AttributeContainer) {
+                    addAttributeNodes(entryNode, (AttributeContainer)attribute);
                 }
 
             } catch (InvalidByteCodeException ex) {
@@ -371,9 +368,6 @@ public class BrowserTreePane extends JPanel {
     private void addRuntimeAnnotation(BrowserTreeNode parentNode, RuntimeAnnotationsAttribute attribute) {
 
         Annotation[] annotations = attribute.getRuntimeAnnotations();
-        if (annotations == null) {
-            return;
-        }
         int annotationsCount = annotations.length;
         for (int i = 0; i < annotationsCount; i++) {
             addSingleAnnotationNode(annotations[i], i, annotationsCount, parentNode);
@@ -382,9 +376,6 @@ public class BrowserTreePane extends JPanel {
 
     private void addRuntimeParameterAnnotation(BrowserTreeNode parentNode, RuntimeParameterAnnotationsAttribute attribute) {
         ParameterAnnotations[] parameterAnnotations = attribute.getParameterAnnotations();
-        if (parameterAnnotations == null) {
-            return;
-        }
         int annotationsCount = parameterAnnotations.length;
         for (int i = 0; i < annotationsCount; i++) {
             addParameterAnnotationNode(parameterAnnotations[i], i, annotationsCount, parentNode);
@@ -432,9 +423,6 @@ public class BrowserTreePane extends JPanel {
 	private void addRuntimeTypeAnnotation(BrowserTreeNode parentNode, RuntimeTypeAnnotationsAttribute attribute) {
 
 		TypeAnnotation[] annotations = attribute.getRuntimeAnnotations();
-		if (annotations == null) {
-			return;
-		}
 		int annotationsCount = annotations.length;
 		for (int i = 0; i < annotationsCount; i++) {
 			addSingleTypeAnnotationNode(annotations[i], i, annotationsCount, parentNode);
@@ -457,9 +445,6 @@ public class BrowserTreePane extends JPanel {
     private void addElementValuePairEntry(BrowserTreeNode parentNode, AnnotationData annotation) {
 
         ElementValuePair[] entries = annotation.getElementValuePairEntries();
-        if (entries == null) {
-            return;
-        }
         int entriesCount = entries.length;
         for (int i = 0; i < entriesCount; i++) {
             addSingleElementValuePairEntryNode(entries[i],
@@ -472,9 +457,6 @@ public class BrowserTreePane extends JPanel {
     private void addArrayElementValueEntry(BrowserTreeNode parentNode, ArrayElementValue elementValue) {
 
         ElementValue[] entries = elementValue.getElementValueEntries();
-        if (entries == null) {
-            return;
-        }
         int entriesCount = entries.length;
         for (int i = 0; i < entriesCount; i++) {
             addSingleElementValueEntryNode(entries[i],

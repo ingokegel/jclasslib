@@ -7,12 +7,10 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-
-import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 import java.lang.Double.doubleToLongBits
 import java.lang.Double.longBitsToDouble
 
@@ -21,7 +19,7 @@ import java.lang.Double.longBitsToDouble
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class ConstantDoubleInfo : ConstantLargeNumeric() {
+class ConstantDoubleInfo(classFile: ClassFile) : ConstantLargeNumeric(classFile) {
 
     override val constantType: ConstantType
         get() = ConstantType.DOUBLE

@@ -7,19 +7,18 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.structures.AttributeContainer
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a Code attribute structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class CodeAttribute : AttributeInfo() {
+class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeContainer {
 
     /**
      * Maximum stack depth of this code attribute.
@@ -41,6 +40,8 @@ class CodeAttribute : AttributeInfo() {
      */
     var exceptionTable: Array<ExceptionTableEntry> = emptyArray()
 
+    override var attributes: Array<AttributeInfo> = emptyArray()
+
     override fun readData(input: DataInput) {
 
         maxStack = input.readUnsignedShort()
@@ -50,7 +51,7 @@ class CodeAttribute : AttributeInfo() {
         input.readFully(code)
 
         readExceptionTable(input)
-        readAttributes(input)
+        readAttributes(input, classFile)
     }
 
     override fun writeData(output: DataOutput) {
@@ -67,7 +68,9 @@ class CodeAttribute : AttributeInfo() {
 
         val exceptionTableLength = input.readUnsignedShort()
         exceptionTable = Array(exceptionTableLength) {
-            ExceptionTableEntry.create(input, classFile)
+            ExceptionTableEntry().apply {
+                read(input)
+            }
         }
     }
 

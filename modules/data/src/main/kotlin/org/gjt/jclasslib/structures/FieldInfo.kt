@@ -12,7 +12,7 @@ package org.gjt.jclasslib.structures
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class FieldInfo : ClassMember() {
+class FieldInfo(classFile: ClassFile) : ClassMember(classFile) {
 
     override fun printAccessFlagsVerbose(accessFlags: Int): String {
         return printAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)

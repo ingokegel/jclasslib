@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.structures
 
 import java.io.DataInput
-import java.io.IOException
 
 /**
  * Base class for all constant pool entries in the constants package.
@@ -48,8 +47,7 @@ abstract class CPInfo : AbstractStructure() {
         @JvmStatic
         fun create(input: DataInput, classFile: ClassFile): CPInfo {
             val constantType = ConstantType.getFromTag(input.readByte())
-            val cpInfo: CPInfo = constantType.create()
-            cpInfo.classFile = classFile
+            val cpInfo: CPInfo = constantType.create(classFile)
             cpInfo.read(input)
 
             return cpInfo

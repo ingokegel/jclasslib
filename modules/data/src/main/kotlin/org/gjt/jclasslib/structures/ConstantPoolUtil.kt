@@ -33,8 +33,7 @@ object ConstantPoolUtil {
         val classIndex = addConstantClassInfo(classFile, className)
         val nameAndTypeIndex = addConstantNameAndTypeInfo(classFile, methodName, methodSignature)
 
-        val methodrefInfo = ConstantMethodrefInfo().apply {
-            this.classFile = classFile
+        val methodrefInfo = ConstantMethodrefInfo(classFile).apply {
             this.classIndex = classIndex
             this.nameAndTypeIndex = nameAndTypeIndex
 
@@ -57,8 +56,7 @@ object ConstantPoolUtil {
         val classIndex = addConstantClassInfo(classFile, className)
         val nameAndTypeIndex = addConstantNameAndTypeInfo(classFile, fieldName, fieldType)
 
-        val fieldrefInfo = ConstantFieldrefInfo().apply {
-            this.classFile = classFile
+        val fieldrefInfo = ConstantFieldrefInfo(classFile).apply {
             this.classIndex = classIndex
             this.nameAndTypeIndex = nameAndTypeIndex
         }
@@ -79,8 +77,7 @@ object ConstantPoolUtil {
         val nameIndex = addConstantUTF8Info(classFile, name)
         val descriptorIndex = addConstantUTF8Info(classFile, descriptor)
 
-        val nameAndTypeInfo = ConstantNameAndTypeInfo().apply {
-            this.classFile = classFile
+        val nameAndTypeInfo = ConstantNameAndTypeInfo(classFile).apply {
             this.nameIndex = nameIndex
             this.descriptorIndex = descriptorIndex
 
@@ -100,8 +97,7 @@ object ConstantPoolUtil {
     fun addConstantClassInfo(classFile: ClassFile, className: String): Int {
         val nameIndex = addConstantUTF8Info(classFile, className)
 
-        val classInfo = ConstantClassInfo().apply {
-            this.classFile = classFile
+        val classInfo = ConstantClassInfo(classFile).apply {
             this.nameIndex = nameIndex
         }
         return addConstantPoolEntry(classFile, classInfo)
@@ -117,8 +113,7 @@ object ConstantPoolUtil {
      * @return the constant pool index of the added ConstantUTF8Info
      */
     fun addConstantUTF8Info(classFile: ClassFile, string: String): Int {
-        val utf8Info = ConstantUtf8Info().apply {
-            this.classFile = classFile
+        val utf8Info = ConstantUtf8Info(classFile).apply {
             this.string = string
         }
         return addConstantPoolEntry(classFile, utf8Info)

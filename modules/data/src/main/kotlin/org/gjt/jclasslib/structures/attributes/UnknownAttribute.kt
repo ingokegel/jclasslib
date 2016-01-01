@@ -8,10 +8,10 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * The class file can contain non-standard attributes that can be read, but that are not interpreted.
@@ -22,8 +22,9 @@ class UnknownAttribute(
         /**
          * Length of the unknown attribute.
          */
-        val byteArrayLength : Int
-) : AttributeInfo() {
+        val byteArrayLength : Int,
+        classFile: ClassFile
+) : AttributeInfo(classFile) {
 
     /**
      * Raw bytes of the unknown attribute.

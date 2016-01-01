@@ -8,11 +8,9 @@
 package org.gjt.jclasslib.io
 
 import org.gjt.jclasslib.bytecode.*
-
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.util.ArrayList
-import java.util.Collections
+import java.util.*
 
 /**
  * Converts code to a list of instructions as defined in the package

@@ -7,16 +7,12 @@
 
 package org.gjt.jclasslib.structures
 
-import java.io.DataInput
-import java.io.DataOutput
-import java.io.IOException
-
 /**
  * Describes a method in a ClassFile structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class MethodInfo : ClassMember() {
+class MethodInfo(classFile: ClassFile) : ClassMember(classFile) {
 
     override fun printAccessFlagsVerbose(accessFlags: Int): String {
         return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)

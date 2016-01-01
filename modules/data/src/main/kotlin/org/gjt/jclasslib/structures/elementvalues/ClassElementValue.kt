@@ -6,11 +6,8 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  ClassElementValue attribute structure.

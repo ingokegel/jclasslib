@@ -7,19 +7,17 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-
-import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a CONSTANT_Integer_info constant pool data structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class ConstantIntegerInfo : ConstantNumeric() {
+class ConstantIntegerInfo(classFile: ClassFile) : ConstantNumeric(classFile) {
 
     override val constantType: ConstantType
         get() = ConstantType.INTEGER

@@ -9,16 +9,13 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AbstractStructure
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
  */
-class StackMapFrameEntry : AbstractStructure() {
+class StackMapFrameEntry(private val classFile: ClassFile) : AbstractStructure() {
 
     /**
      * Frame tag
@@ -222,8 +219,7 @@ class StackMapFrameEntry : AbstractStructure() {
          * @param classFile the parent class file of the structure to be created
          * @param previousOffset the offset of the previous stack map frame
          */
-        fun create(input: DataInput, classFile: ClassFile, previousOffset: Int) = StackMapFrameEntry().apply {
-            this.classFile = classFile
+        fun create(input: DataInput, classFile: ClassFile, previousOffset: Int) = StackMapFrameEntry(classFile).apply {
             this.read(input)
             this.offset = previousOffset + this.offsetDelta
         }

@@ -7,18 +7,16 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  EnclosingMethod attribute structure.
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class EnclosingMethodAttribute : AttributeInfo() {
+class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Constant pool index of the CONSTANT_Class_info

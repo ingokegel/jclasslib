@@ -7,24 +7,24 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
-import java.io.IOException
 
 /**
  * Describes an LocalVariableTable attribute structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class LocalVariableTableAttribute : LocalVariableCommonAttribute<LocalVariableTableEntry>() {
+class LocalVariableTableAttribute(classFile: ClassFile) : LocalVariableCommonAttribute<LocalVariableTableEntry>(classFile) {
 
     override var localVariableEntries: Array<LocalVariableTableEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         val localVariableTableLength = input.readUnsignedShort()
         localVariableEntries = Array(localVariableTableLength) {
-            LocalVariableTableEntry.create(input, classFile)
+            LocalVariableTableEntry().apply {
+                read(input)
+            }
         }
     }
 

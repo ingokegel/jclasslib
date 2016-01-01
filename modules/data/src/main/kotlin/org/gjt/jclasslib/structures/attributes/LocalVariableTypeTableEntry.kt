@@ -7,10 +7,7 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
-import java.io.IOException
 
 /**
  * Describes an  LocalVariableTypeTableEntry attribute structure.
@@ -19,16 +16,4 @@ import java.io.IOException
  */
 class LocalVariableTypeTableEntry : LocalVariableCommonEntry() {
 
-    companion object {
-        /**
-         * Factory method for creating LocalVariableTypeTableEntry structures.
-         * @param input  the DataInput from which to read the
-         * @param classFile the parent class file of the structure to be created
-         */
-        fun create(input: DataInput, classFile: ClassFile) = LocalVariableTypeTableEntry().apply {
-            this.classFile = classFile
-            this.read(input)
-
-        }
-    }
 }

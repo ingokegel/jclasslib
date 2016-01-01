@@ -7,18 +7,16 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AbstractStructure
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Contains common attributes to a local variable table entry structure.
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class LocalVariableCommonEntry : AbstractStructure() {
+//TODO remove subclasses
+open class LocalVariableCommonEntry : AbstractStructure() {
 
     /**
      * start_pc of this local variable association.

@@ -7,20 +7,19 @@
 
 package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.AbstractConstant
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a CONSTANT_MethodHandle_info constant pool data structure.
 
  * @author [Hannes Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class ConstantMethodHandleInfo : CPInfo() {
+class ConstantMethodHandleInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 
     /**
      * Index of the constant pool entry containing the reference.
@@ -42,7 +41,6 @@ class ConstantMethodHandleInfo : CPInfo() {
     /**
      * Get the descriptor.
      * @return the descriptor
-     * @throws org.gjt.jclasslib.structures.InvalidByteCodeException if the byte code is invalid
      */
     val name: String
         @Throws(InvalidByteCodeException::class)

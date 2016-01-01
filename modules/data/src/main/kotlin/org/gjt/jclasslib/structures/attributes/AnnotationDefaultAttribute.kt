@@ -7,19 +7,17 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.elementvalues.ElementValue
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  AnnotationDefault attribute structure.
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class AnnotationDefaultAttribute constructor(): AttributeInfo() {
+class AnnotationDefaultAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * The default_value of this attribute.
@@ -27,7 +25,7 @@ class AnnotationDefaultAttribute constructor(): AttributeInfo() {
     lateinit var defaultValue: ElementValue
 
     override fun readData(input: DataInput) {
-        defaultValue = ElementValue.create(input, classFile)
+        defaultValue = ElementValue.create(input)
     }
 
     override fun writeData(output: DataOutput) {

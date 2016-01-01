@@ -12,49 +12,49 @@ import org.gjt.jclasslib.structures.constants.*
 enum class ConstantType(val tag: Int, val verbose: String, val size : Int) {
 
     CLASS(7, "CONSTANT_Class_info", 2) {
-        override fun create(): CPInfo = ConstantClassInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantClassInfo(classFile)
     },
     FIELDREF(9, "CONSTANT_Fieldref_info", 4) {
-        override fun create(): CPInfo = ConstantFieldrefInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantFieldrefInfo(classFile)
     },
     METHODREF(10, "CONSTANT_Methodref_info", 4) {
-        override fun create(): CPInfo = ConstantMethodrefInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantMethodrefInfo(classFile)
     },
     INTERFACE_METHODREF(11, "CONSTANT_InterfaceMethodref_info", 4) {
-        override fun create(): CPInfo = ConstantInterfaceMethodrefInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantInterfaceMethodrefInfo(classFile)
     },
     STRING(8, "CONSTANT_String_info", 2) {
-        override fun create(): CPInfo = ConstantStringInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantStringInfo(classFile)
     },
     INTEGER(3, "CONSTANT_Integer_info", 4) {
-        override fun create(): CPInfo = ConstantIntegerInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantIntegerInfo(classFile)
     },
     FLOAT(4, "CONSTANT_Float_info", 4) {
-        override fun create(): CPInfo = ConstantFloatInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantFloatInfo(classFile)
     },
     LONG(5, "CONSTANT_Long_info", 8) {
-        override fun create(): CPInfo = ConstantLongInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantLongInfo(classFile)
     },
     DOUBLE(6, "CONSTANT_Double_info", 8) {
-        override fun create(): CPInfo = ConstantDoubleInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantDoubleInfo(classFile)
     },
     NAME_AND_TYPE(12, "CONSTANT_NameAndType_info", 4) {
-        override fun create(): CPInfo = ConstantNameAndTypeInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantNameAndTypeInfo(classFile)
     },
     METHOD_TYPE(16, "CONSTANT_MethodType_info", 2) {
-        override fun create(): CPInfo = ConstantMethodTypeInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantMethodTypeInfo(classFile)
     },
     METHOD_HANDLE(15, "CONSTANT_MethodHandle_info", 3) {
-        override fun create(): CPInfo = ConstantMethodHandleInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantMethodHandleInfo(classFile)
     },
     INVOKE_DYNAMIC(18, "CONSTANT_InvokeDynamic_info", 4) {
-        override fun create(): CPInfo = ConstantInvokeDynamicInfo()
+        override fun create(classFile: ClassFile): CPInfo = ConstantInvokeDynamicInfo(classFile)
     },
     UTF8(1, "CONSTANT_Utf8_info", 0) {
-        override fun create(): CPInfo = ConstantUtf8Info()
+        override fun create(classFile: ClassFile): CPInfo = ConstantUtf8Info(classFile)
     };
 
-    abstract fun create() : CPInfo
+    abstract fun create(classFile: ClassFile): CPInfo
 
     val extraEntryCount: Int
         get() = when(this) {

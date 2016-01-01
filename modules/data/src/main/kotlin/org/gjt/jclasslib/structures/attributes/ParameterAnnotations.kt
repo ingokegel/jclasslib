@@ -8,11 +8,8 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AbstractStructure
 import org.gjt.jclasslib.structures.Annotation
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Common class for runtime parameter annotations.
@@ -29,7 +26,6 @@ class ParameterAnnotations : AbstractStructure() {
 
         runtimeAnnotations = Array(runtimeVisibleAnnotationsLength) {
             Annotation().apply {
-                this.classFile = classFile
                 read(input)
             }
         }

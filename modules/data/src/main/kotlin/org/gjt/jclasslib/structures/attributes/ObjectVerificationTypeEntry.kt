@@ -7,13 +7,14 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an entry of type VerificationType.OBJECT in a StackMapFrameEntry attribute structure.
  */
-class ObjectVerificationTypeEntry : VerificationTypeInfoEntry(VerificationType.OBJECT) {
+class ObjectVerificationTypeEntry(private val classFile: ClassFile) : VerificationTypeInfoEntry(VerificationType.OBJECT) {
 
     var cpIndex: Int = 0
 

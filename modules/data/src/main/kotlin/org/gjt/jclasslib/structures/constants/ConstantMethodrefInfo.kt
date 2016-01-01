@@ -7,19 +7,16 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
-import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes a CONSTANT_Methodref_info constant pool data structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-class ConstantMethodrefInfo : ConstantReference() {
+class ConstantMethodrefInfo(classFile: ClassFile) : ConstantReference(classFile) {
 
     override val constantType: ConstantType
         get() = ConstantType.METHODREF

@@ -13,11 +13,13 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.structures.ClassFile
+
 
 /**
  * Describes an  RuntimeVisibleTypeAnnotations attribute structure.
  */
-class RuntimeVisibleTypeAnnotationsAttribute : RuntimeTypeAnnotationsAttribute() {
+class RuntimeVisibleTypeAnnotationsAttribute(classFile: ClassFile) : RuntimeTypeAnnotationsAttribute(classFile) {
 
     companion object {
         /**

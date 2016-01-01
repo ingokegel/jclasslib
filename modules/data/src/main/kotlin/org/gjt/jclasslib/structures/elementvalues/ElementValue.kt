@@ -7,12 +7,8 @@
 package org.gjt.jclasslib.structures.elementvalues
 
 import org.gjt.jclasslib.structures.AbstractStructure
-import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Describes an  ElementValue attribute structure.
@@ -35,13 +31,11 @@ abstract class ElementValue(val elementValueType: ElementValueType) : AbstractSt
         /**
          * Factory for creating ElementValue structures.
          * @param input the DataInput from which to read the ElementValue structure
-         * @param classFile the parent class file of the structure to be created
          */
-        fun create(input: DataInput, classFile: ClassFile): ElementValue {
+        fun create(input: DataInput): ElementValue {
             val tag = input.readUnsignedByte()
             val elementValueType = ElementValueType.getFromTag(tag)
             return elementValueType.createEntry().apply {
-                this.classFile = classFile
                 this.read(input)
             }
         }

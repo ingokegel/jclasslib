@@ -8,18 +8,16 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 
 /**
  * Base class for runtime annotations.
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
+abstract class RuntimeAnnotationsAttribute(classFile: ClassFile) : AttributeInfo(classFile), AnnotationHolder {
 
     /**
      * Runtime annotations associations of the parent
@@ -30,9 +28,7 @@ abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()
         runtimeAnnotations = Array(runtimeVisibleAnnotationsLength) {
             Annotation().apply {
-                this.classFile = classFile
                 this.read(input)
-
             }
         }
     }
