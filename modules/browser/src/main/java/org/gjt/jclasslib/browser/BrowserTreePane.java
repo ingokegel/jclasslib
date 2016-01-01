@@ -173,7 +173,7 @@ public class BrowserTreePane extends JPanel {
 
         BrowserTreeNode constantPoolNode = new BrowserTreeNode("Constant Pool");
 
-        CPInfo[] constantPool = services.getClassFile().getConstantPool();
+        Constant[] constantPool = services.getClassFile().getConstantPool();
         int constantPoolCount = constantPool.length;
 
         for (int i = 1; i < constantPoolCount; i++) {
@@ -183,7 +183,7 @@ public class BrowserTreePane extends JPanel {
         return constantPoolNode;
     }
 
-    private int addConstantPoolEntry(CPInfo constantPoolEntry, int index, int constantPoolCount, BrowserTreeNode constantPoolNode) {
+    private int addConstantPoolEntry(Constant constantPoolEntry, int index, int constantPoolCount, BrowserTreeNode constantPoolNode) {
 
         if (constantPoolEntry == null) {
             constantPoolNode.add(buildNullNode());

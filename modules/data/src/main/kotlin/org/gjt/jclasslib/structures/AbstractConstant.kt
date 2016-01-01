@@ -12,7 +12,7 @@ package org.gjt.jclasslib.structures
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-abstract class AbstractConstant(protected val classFile: ClassFile ) : CPInfo() {
+abstract class AbstractConstant(protected val classFile: ClassFile ) : Constant() {
 
 
 }

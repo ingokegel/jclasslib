@@ -11,7 +11,7 @@ import org.gjt.jclasslib.browser.AbstractDetailPane;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
 import org.gjt.jclasslib.browser.detail.constants.*;
-import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.Constant;
 import org.gjt.jclasslib.structures.constants.*;
 
 import javax.swing.*;
@@ -102,7 +102,7 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     public void show(TreePath treePath) {
 
         int constantPoolIndex = ((BrowserTreeNode)treePath.getLastPathComponent()).getIndex();
-        CPInfo constantPoolEntry = services.getClassFile().getConstantPool()[constantPoolIndex];
+        Constant constantPoolEntry = services.getClassFile().getConstantPool()[constantPoolIndex];
         
         String paneName = null;
         if (constantPoolEntry instanceof ConstantUtf8Info) {

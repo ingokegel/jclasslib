@@ -7,12 +7,12 @@
 
 package org.gjt.jclasslib.structures.constants
 
-import org.gjt.jclasslib.structures.CPInfo
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.ConstantType
 import java.io.DataInput
 import java.io.DataOutput
 
-object ConstantPlaceholder : CPInfo() {
+object ConstantPlaceholder : Constant() {
 
     override val constantType: ConstantType
         get() = throw UnsupportedOperationException()

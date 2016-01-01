@@ -14,7 +14,7 @@ import java.io.DataInput
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class CPInfo : AbstractStructure() {
+abstract class Constant : AbstractStructure() {
 
     /**
      * Type of the cp_info structure.
@@ -28,7 +28,7 @@ abstract class CPInfo : AbstractStructure() {
         @Throws(InvalidByteCodeException::class)
         get() = ""
 
-    override fun equals(other: Any?): Boolean = other is CPInfo
+    override fun equals(other: Any?): Boolean = other is Constant
 
     override fun hashCode(): Int = 0
 
@@ -45,12 +45,12 @@ abstract class CPInfo : AbstractStructure() {
          * @return the new CPInfo structure
          */
         @JvmStatic
-        fun create(input: DataInput, classFile: ClassFile): CPInfo {
+        fun create(input: DataInput, classFile: ClassFile): Constant {
             val constantType = ConstantType.getFromTag(input.readByte())
-            val cpInfo: CPInfo = constantType.create(classFile)
-            cpInfo.read(input)
+            val constant: Constant = constantType.create(classFile)
+            constant.read(input)
 
-            return cpInfo
+            return constant
         }
 
     }

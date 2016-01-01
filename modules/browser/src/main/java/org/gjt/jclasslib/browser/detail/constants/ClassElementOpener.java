@@ -11,7 +11,7 @@ import org.gjt.jclasslib.browser.BrowserTreeNode;
 import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.gjt.jclasslib.browser.config.window.CategoryHolder;
 import org.gjt.jclasslib.browser.config.window.ReferenceHolder;
-import org.gjt.jclasslib.structures.CPInfo;
+import org.gjt.jclasslib.structures.Constant;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.*;
 
@@ -28,7 +28,7 @@ import java.awt.event.ActionListener;
 public class ClassElementOpener implements ActionListener {
 
     private JButton btnShow;
-    private CPInfo cpInfo;
+    private Constant constant;
     private AbstractConstantInfoDetailPane detailPane;
 
     /**
@@ -47,16 +47,16 @@ public class ClassElementOpener implements ActionListener {
         try {
             ConstantClassInfo classInfo = null;
             BrowserPath browserPath = null;
-            if (cpInfo instanceof ConstantClassInfo) {
-                classInfo = (ConstantClassInfo)cpInfo;
-            } else if (cpInfo instanceof ConstantReference) {
-                ConstantReference reference = (ConstantReference)cpInfo;
+            if (constant instanceof ConstantClassInfo) {
+                classInfo = (ConstantClassInfo)constant;
+            } else if (constant instanceof ConstantReference) {
+                ConstantReference reference = (ConstantReference)constant;
                 ConstantNameAndTypeInfo nameAndType = reference.getNameAndTypeInfo();
                 classInfo = reference.getClassInfo();
                 String category = null;
-                if (cpInfo instanceof ConstantFieldrefInfo) {
+                if (constant instanceof ConstantFieldrefInfo) {
                     category = BrowserTreeNode.NODE_FIELD;
-                } else if (cpInfo instanceof ConstantMethodrefInfo || cpInfo instanceof ConstantInterfaceMethodrefInfo){
+                } else if (constant instanceof ConstantMethodrefInfo || constant instanceof ConstantInterfaceMethodrefInfo){
                     category = BrowserTreeNode.NODE_METHOD;
                 }
                 if (category != null) {
@@ -98,26 +98,26 @@ public class ClassElementOpener implements ActionListener {
 
     /**
      * Set the constant pool info that is to be the source of the link.
-     * @param cpInfo the constant pool info.
+     * @param constant the constant pool info.
      */
-    public void setCPInfo(CPInfo cpInfo) {
+    public void setCPInfo(Constant constant) {
 
-        this.cpInfo = cpInfo;
+        this.constant = constant;
 
         String buttonText = null;
-        if (cpInfo instanceof ConstantClassInfo) {
+        if (constant instanceof ConstantClassInfo) {
             buttonText = "Show class";
             try {
-                if (((ConstantClassInfo)cpInfo).getName().equals(detailPane.getBrowserServices().getClassFile().getThisClassName())) {
+                if (((ConstantClassInfo)constant).getName().equals(detailPane.getBrowserServices().getClassFile().getThisClassName())) {
                     buttonText = null;
                 }
             } catch (InvalidByteCodeException e) {
             }
-        } else if (cpInfo instanceof ConstantFieldrefInfo) {
+        } else if (constant instanceof ConstantFieldrefInfo) {
             buttonText = "Show field";
-        } else if (cpInfo instanceof ConstantMethodrefInfo) {
+        } else if (constant instanceof ConstantMethodrefInfo) {
             buttonText = "Show method";
-        } else if (cpInfo instanceof ConstantInterfaceMethodrefInfo) {
+        } else if (constant instanceof ConstantInterfaceMethodrefInfo) {
             buttonText = "Show interface method";
         }
 

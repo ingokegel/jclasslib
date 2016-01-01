@@ -35,7 +35,7 @@ class ClassFile : AbstractStructure(), AttributeContainer {
     /**
      * Constant pool entries.
      */
-    var constantPool: Array<CPInfo> = emptyArray()
+    var constantPool: Array<Constant> = emptyArray()
         set(constantPool) {
             field = constantPool
             constantPool.forEachIndexed { i, cpInfo ->
@@ -43,7 +43,7 @@ class ClassFile : AbstractStructure(), AttributeContainer {
             }
         }
 
-    private val constantPoolEntryToIndex = HashMap<CPInfo, Int>()
+    private val constantPoolEntryToIndex = HashMap<Constant, Int>()
 
     /**
      * Access flags of this class.
@@ -97,10 +97,10 @@ class ClassFile : AbstractStructure(), AttributeContainer {
     /**
      * Index of an equivalent constant pool entry, or -1 if no equivalent constant pool entry can be found.
      *
-     * @param cpInfo the constant pool entry
+     * @param constant the constant pool entry
      */
-    fun getConstantPoolIndex(cpInfo: CPInfo): Int {
-        val index = constantPoolEntryToIndex[cpInfo]
+    fun getConstantPoolIndex(constant: Constant): Int {
+        val index = constantPoolEntryToIndex[constant]
         return if (index != null) index else -1
     }
 
@@ -110,7 +110,7 @@ class ClassFile : AbstractStructure(), AttributeContainer {
      * you delete entries, use setConstantPool.
      * @param enlargedConstantPool the enlagre constant pool
      */
-    fun enlargeConstantPool(enlargedConstantPool: Array<CPInfo>) {
+    fun enlargeConstantPool(enlargedConstantPool: Array<Constant>) {
         for (i in constantPool.size..enlargedConstantPool.size - 1) {
             constantPoolEntryToIndex.put(enlargedConstantPool[i], i)
         }
@@ -178,7 +178,7 @@ class ClassFile : AbstractStructure(), AttributeContainer {
      * @param entryClass the required subtype of CPInfo
      */
     @Throws(InvalidByteCodeException::class)
-    fun <T : CPInfo> getConstantPoolEntry(index: Int, entryClass: Class<T>): T {
+    fun <T : Constant> getConstantPoolEntry(index: Int, entryClass: Class<T>): T {
         checkValidConstantPoolIndex(index)
 
         val cpInfo = constantPool[index]
@@ -337,7 +337,7 @@ class ClassFile : AbstractStructure(), AttributeContainer {
                 placeholderIndex -> ConstantPlaceholder
                 else -> {
                     if (isDebug) debug("reading constant pool entry $i")
-                    CPInfo.create(input, this).apply {
+                    Constant.create(input, this).apply {
                         constantPoolEntryToIndex.put(this, i)
                         if (this is ConstantLargeNumeric) {
                             // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant

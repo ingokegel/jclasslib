@@ -128,7 +128,7 @@ object ConstantPoolUtil {
      * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added constant pool entry
      */
-    fun addConstantPoolEntry(classFile: ClassFile, newEntry: CPInfo): Int {
+    fun addConstantPoolEntry(classFile: ClassFile, newEntry: Constant): Int {
         val constantPool = classFile.constantPool
         val index = classFile.getConstantPoolIndex(newEntry)
         if (index > -1) {
