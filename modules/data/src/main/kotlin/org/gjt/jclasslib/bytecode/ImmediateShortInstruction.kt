@@ -31,14 +31,12 @@ constructor(
     override val size: Int
         get() = super.size + 2
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
         immediateShort = input.readUnsignedShort()
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 

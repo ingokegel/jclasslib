@@ -79,7 +79,6 @@ class StackMapFrameEntry : AbstractStructure() {
         offsetDelta = input.readUnsignedShort()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
     private fun readSameExt(input: DataInput) {
         offsetDelta = input.readUnsignedShort()
     }
@@ -223,7 +222,6 @@ class StackMapFrameEntry : AbstractStructure() {
          * @param classFile the parent class file of the structure to be created
          * @param previousOffset the offset of the previous stack map frame
          */
-        @Throws(InvalidByteCodeException::class, IOException::class)
         fun create(input: DataInput, classFile: ClassFile, previousOffset: Int) = StackMapFrameEntry().apply {
             this.classFile = classFile
             this.read(input)

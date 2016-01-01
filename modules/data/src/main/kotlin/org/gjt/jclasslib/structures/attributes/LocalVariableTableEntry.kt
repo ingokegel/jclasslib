@@ -26,7 +26,6 @@ class LocalVariableTableEntry : LocalVariableCommonEntry() {
          * @param input the DataInput from which to read the LocalVariableTableEntry structure
          * @param classFile the parent class file of the structure to be created
          */
-        @Throws(InvalidByteCodeException::class, IOException::class)
         fun create(input: DataInput, classFile: ClassFile) = LocalVariableTableEntry().apply {
             this.classFile = classFile
             this.read(input)

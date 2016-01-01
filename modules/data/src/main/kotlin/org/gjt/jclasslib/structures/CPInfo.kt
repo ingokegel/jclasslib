@@ -45,7 +45,6 @@ abstract class CPInfo : AbstractStructure() {
          * @param classFile the parent class file of the structure to be created
          * @return the new CPInfo structure
          */
-        @Throws(InvalidByteCodeException::class, IOException::class)
         @JvmStatic
         fun create(input: DataInput, classFile: ClassFile): CPInfo {
             val constantType = ConstantType.getFromTag(input.readByte())

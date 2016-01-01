@@ -459,13 +459,11 @@ class ClassFile : AbstractStructureWithAttributes() {
         methods.forEach { it.write(out) }
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
     override fun readAttributes(input: DataInput) {
         super.readAttributes(input)
         if (isDebug) debug("read ${attributes.size} attributes for the ClassFile structure")
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
     override fun writeAttributes(output: DataOutput) {
         super.writeAttributes(output)
         if (isDebug) debug("wrote ${attributes.size} attributes for the ClassFile structure")

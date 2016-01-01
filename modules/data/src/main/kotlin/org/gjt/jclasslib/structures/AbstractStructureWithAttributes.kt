@@ -35,7 +35,6 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
      * Read the attributes of this structure from the given DataInput.
      * @param input the DataInput from which to read
      */
-    @Throws(InvalidByteCodeException::class, IOException::class)
     protected open fun readAttributes(input: DataInput) {
 
         val attributesCount = input.readUnsignedShort()
@@ -53,7 +52,6 @@ abstract class AbstractStructureWithAttributes : AbstractStructure() {
      * Write the attributes of this structure to the given DataOutput.
      * @param output the DataOutput to which to write
      */
-    @Throws(InvalidByteCodeException::class, IOException::class)
     protected open fun writeAttributes(output: DataOutput) {
         output.writeShort(attributes.size)
         attributes.forEach { it.write(output) }

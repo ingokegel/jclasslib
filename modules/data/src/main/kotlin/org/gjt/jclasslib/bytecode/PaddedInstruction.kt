@@ -30,7 +30,6 @@ open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
         return size + paddingBytes(offset + 1)
     }
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
@@ -40,7 +39,6 @@ open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
         }
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 

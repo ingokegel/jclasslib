@@ -43,7 +43,6 @@ open class Instruction(
      * before a instruction of this kind.
      * @param input the ByteCodeInput from which to read
      */
-    @Throws(IOException::class)
     open fun read(input: ByteCodeInput) {
         // The opcode has already been read
         offset = input.bytesRead - 1
@@ -53,7 +52,6 @@ open class Instruction(
      * Write this instruction to the given ByteCodeOutput.
      * @param output the ByteCodeOutput to which to write
      */
-    @Throws(IOException::class)
     open fun write(output: ByteCodeOutput) {
         output.writeByte(opcode.tag)
     }

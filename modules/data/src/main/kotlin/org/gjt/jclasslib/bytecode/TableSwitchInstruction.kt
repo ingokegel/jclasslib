@@ -42,7 +42,6 @@ class TableSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
     override val size: Int
         get() = super.size + 12 + 4 * jumpOffsets.size
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
@@ -59,7 +58,6 @@ class TableSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
 
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 

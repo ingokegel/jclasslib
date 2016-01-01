@@ -36,7 +36,6 @@ class LookupSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
     override val size: Int
         get() = super.size + 8 + 8 * matchOffsetPairs.size
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
@@ -54,7 +53,6 @@ class LookupSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
 
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 

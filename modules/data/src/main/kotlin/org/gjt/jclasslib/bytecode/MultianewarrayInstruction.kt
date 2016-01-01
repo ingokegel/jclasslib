@@ -27,14 +27,12 @@ class MultianewarrayInstruction(opcode: Opcode) : ImmediateShortInstruction(opco
     override val size: Int
         get() = super.size + 1
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
         dimensions = input.readUnsignedByte()
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 

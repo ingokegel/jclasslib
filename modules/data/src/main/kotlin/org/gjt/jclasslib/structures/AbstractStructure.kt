@@ -46,7 +46,6 @@ abstract class AbstractStructure {
 
      * @param input the DataInput from which to read
      */
-    @Throws(InvalidByteCodeException::class, IOException::class)
     fun read(input: DataInput) {
         readData(input)
         if (isDebug) debug("read ${javaClass.simpleName} $debugInfo")
@@ -60,7 +59,6 @@ abstract class AbstractStructure {
 
      * @param output the DataOutput to which to write
      */
-    @Throws(InvalidByteCodeException::class, IOException::class)
     fun write(output: DataOutput) {
         writeData(output)
         if (isDebug) debug("wrote ${javaClass.simpleName} $debugInfo")

@@ -58,7 +58,6 @@ abstract class AttributeInfo : AbstractStructureWithAttributes() {
          * @param classFile the parent class file of the structure to be created
          * @return the new AttributeInfo structure
          */
-        @Throws(InvalidByteCodeException::class, IOException::class)
         fun create(input: DataInput, classFile: ClassFile): AttributeInfo {
 
             val attributeNameIndex = input.readUnsignedShort()

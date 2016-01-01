@@ -57,7 +57,6 @@ class ElementValuePair : AbstractStructure() {
          * @param in the DataInput from which to read the ElementValuePair structure
          * @param classFile the parent class file of the structure to be created
          */
-        @Throws(InvalidByteCodeException::class, IOException::class)
         fun create(`in`: DataInput, classFile: ClassFile) = ElementValuePair().apply {
             this.classFile = classFile
             this.read(`in`)

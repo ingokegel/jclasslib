@@ -32,7 +32,6 @@ constructor(
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
@@ -43,7 +42,6 @@ constructor(
         }
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 

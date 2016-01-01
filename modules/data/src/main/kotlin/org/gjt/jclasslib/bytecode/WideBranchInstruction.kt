@@ -22,14 +22,12 @@ class WideBranchInstruction @JvmOverloads constructor(opcode: Opcode, branchOffs
     override val size: Int
         get() = super.size + 4
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
         branchOffset = input.readInt()
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 

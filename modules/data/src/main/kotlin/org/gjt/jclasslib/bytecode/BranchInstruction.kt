@@ -23,14 +23,12 @@ class BranchInstruction @JvmOverloads constructor(opcode: Opcode, branchOffset: 
     override val size: Int
         get() = super.size + 2
 
-    @Throws(IOException::class)
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
         branchOffset = input.readShort().toInt()
     }
 
-    @Throws(IOException::class)
     override fun write(output: ByteCodeOutput) {
         super.write(output)
 
