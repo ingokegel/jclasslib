@@ -41,17 +41,13 @@ class ConstantMethodTypeInfo : CPInfo() {
         @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(descriptorIndex).string
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         descriptorIndex = input.readUnsignedShort()
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.METHOD_TYPE.tag)
         output.writeShort(descriptorIndex)
-        debugWrite()
     }
 
     override fun equals(other: Any?): Boolean {

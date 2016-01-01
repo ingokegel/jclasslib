@@ -45,15 +45,13 @@ abstract class ConstantLargeNumeric : CPInfo() {
     val formattedLowBytes: String
         get() = printBytes(lowBytes)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
 
         highBytes = input.readInt()
         lowBytes = input.readInt()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
 
         output.writeInt(highBytes)
         output.writeInt(lowBytes)

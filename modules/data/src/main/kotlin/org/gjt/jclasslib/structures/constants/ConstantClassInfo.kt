@@ -41,17 +41,13 @@ class ConstantClassInfo : CPInfo() {
         @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(nameIndex).string
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.CLASS.tag)
         output.writeShort(nameIndex)
-        debugWrite()
     }
 
     override fun equals(other: Any?): Boolean {

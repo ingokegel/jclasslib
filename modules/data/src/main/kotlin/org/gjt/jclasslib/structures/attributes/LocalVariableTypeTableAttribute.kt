@@ -20,14 +20,11 @@ class LocalVariableTypeTableAttribute : LocalVariableCommonAttribute<LocalVariab
 
     override var localVariableEntries: Array<LocalVariableTypeTableEntry> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val localVariableTypeTableLength = input.readUnsignedShort()
         localVariableEntries = Array(localVariableTypeTableLength) {
             LocalVariableTypeTableEntry.create(input, classFile)
         }
-
-        debugRead()
     }
 
     override fun getAttributeLength(): Int = super.getAttributeLength() + localVariableEntries.size * LocalVariableCommonEntry.LENGTH

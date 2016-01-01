@@ -31,19 +31,15 @@ class UnknownAttribute(
     var info: ByteArray = ByteArray(byteArrayLength)
 
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         input.readFully(info)
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(attributeNameIndex)
         output.writeInt(getAttributeLength())
         if (javaClass == AttributeInfo::class.java) {
             output.write(info)
-            debugWrite()
         }
     }
 

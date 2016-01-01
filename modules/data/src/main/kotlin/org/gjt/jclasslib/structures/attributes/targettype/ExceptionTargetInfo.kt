@@ -20,13 +20,11 @@ class ExceptionTargetInfo : TargetInfo() {
 
     var exceptionTableIndex: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         exceptionTableIndex = input.readUnsignedShort()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(exceptionTableIndex)
     }
 

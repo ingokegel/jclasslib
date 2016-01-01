@@ -31,24 +31,18 @@ class BootstrapMethodsEntry : AbstractStructure() {
      */
     var argumentIndices: IntArray = IntArray(0)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         methodRefIndex = input.readUnsignedShort()
         val argumentRefsCount = input.readUnsignedShort()
         argumentIndices = IntArray(argumentRefsCount) {
             input.readUnsignedShort()
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(methodRefIndex)
         output.writeShort(argumentIndices.size)
         argumentIndices.forEach { output.writeShort(it) }
-
-        debugWrite()
     }
 
     override val debugInfo: String

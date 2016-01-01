@@ -25,16 +25,14 @@ class UninitializedVerificationTypeEntry : VerificationTypeInfoEntry(Verificatio
 
     var offset: Int = 0
 
-    override fun read(input: DataInput) {
-        super.read(input)
+    override fun readData(input: DataInput) {
+        super.readData(input)
         offset = input.readUnsignedShort()
-        debugRead()
     }
 
-    override fun write(output: DataOutput) {
-        super.write(output)
+    override fun writeData(output: DataOutput) {
+        super.writeData(output)
         output.writeShort(offset)
-        debugWrite()
     }
 
     override fun appendTo(buffer: StringBuilder) {

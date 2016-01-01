@@ -32,20 +32,14 @@ class LineNumberTableEntry : AbstractStructure() {
      */
     var lineNumber: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         startPc = input.readUnsignedShort()
         lineNumber = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(startPc)
         output.writeShort(lineNumber)
-
-        debugWrite()
     }
 
     override val debugInfo: String

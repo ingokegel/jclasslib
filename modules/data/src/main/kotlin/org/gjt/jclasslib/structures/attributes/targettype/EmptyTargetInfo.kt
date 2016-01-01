@@ -24,12 +24,10 @@ class EmptyTargetInfo : TargetInfo() {
     override val verbose: String
         get() = "<none>"
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
     }
 
     override val debugInfo: String

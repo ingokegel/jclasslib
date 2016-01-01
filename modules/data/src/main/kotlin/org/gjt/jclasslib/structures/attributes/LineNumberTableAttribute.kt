@@ -26,22 +26,16 @@ class LineNumberTableAttribute : AttributeInfo() {
      */
     var lineNumberTable: Array<LineNumberTableEntry> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val lineNumberTableLength = input.readUnsignedShort()
         lineNumberTable = Array(lineNumberTableLength) {
             LineNumberTableEntry.create(input, classFile)
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(lineNumberTable.size)
         lineNumberTable.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int {

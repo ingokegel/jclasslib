@@ -20,16 +20,14 @@ class LocalVarTargetInfo : TargetInfo() {
 
     var localVarTargets: Array<LocalVarTarget> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val count = input.readUnsignedShort()
         localVarTargets = Array(count) {
             LocalVarTarget().apply { read(input) }
         }
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(localVarTargets.size)
         localVarTargets.forEach { it.write(output) }
     }

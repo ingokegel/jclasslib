@@ -31,20 +31,14 @@ class ElementValuePair : AbstractStructure() {
      */
     lateinit var elementValue: ElementValue
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         elementNameIndex = input.readUnsignedShort()
         elementValue = ElementValue.create(input, classFile)
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(elementNameIndex)
         elementValue.write(output)
-
-        debugWrite()
     }
 
     override val debugInfo: String

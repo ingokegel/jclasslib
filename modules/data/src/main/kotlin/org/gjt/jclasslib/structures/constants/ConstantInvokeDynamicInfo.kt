@@ -36,23 +36,15 @@ class ConstantInvokeDynamicInfo : CPInfo() {
         @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(nameAndTypeIndex, ConstantNameAndTypeInfo::class.java)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-
+    override fun readData(input: DataInput) {
         bootstrapMethodAttributeIndex = input.readUnsignedShort()
         nameAndTypeIndex = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.INVOKE_DYNAMIC.tag)
         output.writeShort(bootstrapMethodAttributeIndex)
         output.writeShort(nameAndTypeIndex)
-
-        debugWrite()
     }
 
     override val debugInfo: String

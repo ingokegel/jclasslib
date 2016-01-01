@@ -33,13 +33,11 @@ abstract class ConstantNumeric : CPInfo() {
     val formattedBytes: String
         get() = printBytes(bytes)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         bytes = input.readInt()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeInt(bytes)
     }
 

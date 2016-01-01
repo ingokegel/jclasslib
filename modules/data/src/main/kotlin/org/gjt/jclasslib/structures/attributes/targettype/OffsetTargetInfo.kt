@@ -20,13 +20,11 @@ class OffsetTargetInfo : TargetInfo() {
 
     var offset: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         offset = input.readUnsignedShort()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(offset)
     }
 

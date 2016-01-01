@@ -23,20 +23,14 @@ class MethodParametersEntry : AbstractStructure() {
     var nameIndex: Int = 0
     var accessFlags: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()
         accessFlags = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(nameIndex)
         output.writeShort(accessFlags)
-
-        debugWrite()
     }
 
     override val debugInfo: String

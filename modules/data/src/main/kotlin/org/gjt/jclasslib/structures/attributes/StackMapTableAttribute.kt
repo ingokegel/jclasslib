@@ -24,8 +24,7 @@ class StackMapTableAttribute : AttributeInfo() {
      */
     var entries: Array<StackMapFrameEntry> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val numberOfEntries = input.readUnsignedShort()
         var previousOffset = 0
         entries = Array(numberOfEntries) {
@@ -33,16 +32,11 @@ class StackMapTableAttribute : AttributeInfo() {
                 previousOffset += offsetDelta + 1
             }
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(entries.size)
         entries.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2 + entries.sumBy { it.length }

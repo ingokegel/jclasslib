@@ -7,18 +7,6 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import java.io.DataInput
-import java.io.DataOutput
-
 class DefaultVerificationTypeEntry(verificationType : VerificationType) : VerificationTypeInfoEntry(verificationType) {
 
-    override fun write(output: DataOutput) {
-        super.write(output)
-        debugWrite()
-    }
-
-    override fun read(input: DataInput) {
-        super.read(input)
-        debugRead()
-    }
 }

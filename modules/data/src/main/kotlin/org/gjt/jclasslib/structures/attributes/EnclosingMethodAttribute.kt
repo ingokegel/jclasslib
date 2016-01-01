@@ -34,20 +34,14 @@ class EnclosingMethodAttribute : AttributeInfo() {
      */
     var methodInfoIndex: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         classInfoIndex = input.readUnsignedShort()
         methodInfoIndex = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(classInfoIndex)
         output.writeShort(methodInfoIndex)
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 4

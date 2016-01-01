@@ -22,14 +22,12 @@ class TypePathEntry : AbstractStructure() {
     lateinit var typePathKind: TypePathKind
     var typeArgumentIndex: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         typePathKind = TypePathKind.getFromTag(input.readUnsignedByte())
         typeArgumentIndex = input.readUnsignedByte()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(typePathKind.tag)
         output.writeByte(typeArgumentIndex)
     }

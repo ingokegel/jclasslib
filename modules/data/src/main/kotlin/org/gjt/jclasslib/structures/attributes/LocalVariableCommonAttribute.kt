@@ -24,12 +24,9 @@ abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry> : Attr
      */
     abstract var localVariableEntries: Array<T>
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(localVariableEntries.size)
         localVariableEntries.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override val debugInfo: String

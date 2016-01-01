@@ -24,22 +24,16 @@ class BootstrapMethodsAttribute : AttributeInfo() {
      */
     var methods: Array<BootstrapMethodsEntry> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val numberOfRefs = input.readUnsignedShort()
         methods = Array(numberOfRefs) {
             BootstrapMethodsEntry.create(input, classFile)
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(methods.size)
         methods.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2 + methods.sumBy { it.length }

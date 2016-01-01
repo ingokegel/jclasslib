@@ -26,22 +26,16 @@ class InnerClassesAttribute : AttributeInfo() {
      */
     var classes: Array<InnerClassesEntry> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val numberOfClasses = input.readUnsignedShort()
         classes = Array(numberOfClasses) {
             InnerClassesEntry.create(input, classFile)
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(classes.size)
         classes.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int {

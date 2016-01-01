@@ -24,17 +24,9 @@ class ConstantInterfaceMethodrefInfo : ConstantReference() {
     override val constantType: ConstantType
         get() = ConstantType.INTERFACE_METHODREF
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-        super.read(input)
-        debugRead()
-    }
-
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.INTERFACE_METHODREF.tag)
-        super.write(output)
-        debugWrite()
+        super.writeData(output)
     }
 
 }

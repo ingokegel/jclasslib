@@ -258,8 +258,7 @@ class ClassFile : AbstractStructureWithAttributes() {
         return if (index < 0) null else methods[index]
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         readMagicNumber(input)
         readVersion(input)
         readConstantPool(input)
@@ -272,8 +271,7 @@ class ClassFile : AbstractStructureWithAttributes() {
         readAttributes(input)
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         writeMagicNumber(output)
         writeVersion(output)
         writeConstantPool(output)
@@ -304,7 +302,7 @@ class ClassFile : AbstractStructureWithAttributes() {
         if (isDebug) debug("read magic number")
     }
 
-    fun Int.hex() : String = "0x${Integer.toHexString(this)}"
+    fun Int.hex(): String = "0x${Integer.toHexString(this)}"
 
     private fun writeMagicNumber(out: DataOutput) {
         out.writeInt(MAGIC_NUMBER)
@@ -338,7 +336,7 @@ class ClassFile : AbstractStructureWithAttributes() {
 
         // constantPool[0] is not used
         var placeholderIndex = 0
-        constantPool = Array(constantPoolCount) {i ->
+        constantPool = Array(constantPoolCount) { i ->
             when (i) {
                 placeholderIndex -> ConstantPlaceholder
                 else -> {

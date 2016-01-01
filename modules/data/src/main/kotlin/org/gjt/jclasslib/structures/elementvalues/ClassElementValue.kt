@@ -26,19 +26,13 @@ class ClassElementValue : ElementValue(ElementValueType.CLASS) {
     override val specificLength: Int
         get() = 2
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         classInfoIndex = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-        super.write(output)
+    override fun writeData(output: DataOutput) {
+        super.writeData(output)
         output.writeShort(classInfoIndex)
-
-        debugWrite()
     }
 
     override val debugInfo: String

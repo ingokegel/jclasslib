@@ -29,27 +29,21 @@ class Annotation : AbstractStructure(), AnnotationData {
     override var typeIndex: Int = 0
     override var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         typeIndex = input.readUnsignedShort()
         val elementValuePairEntriesLength = input.readUnsignedShort()
         elementValuePairEntries = Array(elementValuePairEntriesLength) {
             ElementValuePair.create(input, classFile)
         }
-
-        debugRead()
     }
 
     val length: Int
         get() = 4 + elementValuePairEntries.sumBy { it.length }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(typeIndex)
         output.writeShort(elementValuePairEntries.size)
         elementValuePairEntries.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override val debugInfo: String

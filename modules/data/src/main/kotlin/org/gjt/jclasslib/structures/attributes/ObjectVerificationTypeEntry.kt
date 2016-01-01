@@ -17,16 +17,14 @@ class ObjectVerificationTypeEntry : VerificationTypeInfoEntry(VerificationType.O
 
     var cpIndex: Int = 0
 
-    override fun read(input: DataInput) {
-        super.read(input)
+    override fun readData(input: DataInput) {
+        super.readData(input)
         cpIndex = input.readUnsignedShort()
-        debugRead()
     }
 
-    override fun write(output: DataOutput) {
-        super.write(output)
+    override fun writeData(output: DataOutput) {
+        super.writeData(output)
         output.writeShort(cpIndex)
-        debugWrite()
     }
 
     override fun appendTo(buffer: StringBuilder) {

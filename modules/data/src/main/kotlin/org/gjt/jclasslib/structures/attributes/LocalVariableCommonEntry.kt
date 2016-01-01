@@ -47,26 +47,20 @@ abstract class LocalVariableCommonEntry : AbstractStructure() {
      */
     var index: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         startPc = input.readUnsignedShort()
         length = input.readUnsignedShort()
         nameIndex = input.readUnsignedShort()
         descriptorOrSignatureIndex = input.readUnsignedShort()
         index = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(startPc)
         output.writeShort(length)
         output.writeShort(nameIndex)
         output.writeShort(descriptorOrSignatureIndex)
         output.writeShort(index)
-
-        debugWrite()
     }
 
     override val debugInfo: String

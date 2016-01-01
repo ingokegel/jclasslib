@@ -8,12 +8,10 @@
 package org.gjt.jclasslib.structures
 
 import org.gjt.jclasslib.io.Log
-
 import java.io.DataInput
 import java.io.DataOutput
 import java.io.IOException
-import java.lang.reflect.Array
-import java.util.EnumSet
+import java.util.*
 
 /**
  * Base class for all structures defined in the class file format.
@@ -49,7 +47,13 @@ abstract class AbstractStructure {
      * @param input the DataInput from which to read
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
-    abstract fun read(input: DataInput)
+    fun read(input: DataInput) {
+        readData(input)
+        if (isDebug) debug("read ${javaClass.simpleName} $debugInfo")
+    }
+
+    protected abstract fun readData(input: DataInput)
+
     /**
      * Write this structure to the given DataOutput.
      * The written bytes are in JVM class file format.
@@ -57,7 +61,12 @@ abstract class AbstractStructure {
      * @param output the DataOutput to which to write
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
-    abstract fun write(output: DataOutput)
+    fun write(output: DataOutput) {
+        writeData(output)
+        if (isDebug) debug("wrote ${javaClass.simpleName} $debugInfo")
+    }
+
+    protected abstract fun writeData(output: DataOutput)
 
     /**
      * Utility method for derived structures. Dump a specific debug message.
@@ -67,21 +76,6 @@ abstract class AbstractStructure {
         if (isDebug) Log.debug(message)
     }
 
-    /**
-     * Write debug information when reading the structure.
-     */
-    protected fun debugRead() {
-        if (isDebug) debug("read ${javaClass.simpleName} $debugInfo")
-    }
-
-    /**
-     * Write debug information when reading the structure.
-     */
-    protected fun debugWrite() {
-        if (isDebug) debug("wrote ${javaClass.simpleName} $debugInfo")
-    }
-
-    //TODO rename to debugInfo and append class name in debugMessage, then add readData/writeData and log automatically in read/write
     protected abstract val debugInfo: String
 
     /**

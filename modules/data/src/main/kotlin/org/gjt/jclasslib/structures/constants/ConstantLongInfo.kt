@@ -39,17 +39,9 @@ class ConstantLongInfo : ConstantLargeNumeric() {
             lowBytes = (number and 0xFFFFFFFF).toInt()
         }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-        super.read(input)
-        debugRead()
-    }
-
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.LONG.tag)
-        super.write(output)
-        debugWrite()
+        super.writeData(output)
     }
 
 }

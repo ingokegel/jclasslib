@@ -35,17 +35,13 @@ class ConstantStringInfo : CPInfo() {
         @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntryName(stringIndex)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         stringIndex = input.readUnsignedShort()
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.STRING.tag)
         output.writeShort(stringIndex)
-        debugWrite()
     }
 
     override val debugInfo: String

@@ -48,19 +48,15 @@ class ConstantMethodHandleInfo : CPInfo() {
         @Throws(InvalidByteCodeException::class)
         get() = constantType.verbose + " " + classFile.getConstantPoolEntryName(referenceIndex)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         type = MethodHandleType.getFromTag(input.readByte().toInt())
         referenceIndex = input.readUnsignedShort()
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.METHOD_HANDLE.tag)
         output.write(type.tag)
         output.writeShort(referenceIndex)
-        debugWrite()
     }
 
     override fun equals(other: Any?): Boolean {

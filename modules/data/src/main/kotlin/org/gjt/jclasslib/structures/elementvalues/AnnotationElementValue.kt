@@ -33,26 +33,20 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
     override val entryName: String
         get() = "Annotation"
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         typeIndex = input.readUnsignedShort()
         val elementValuePairEntriesLength = input.readUnsignedShort()
 
         elementValuePairEntries = Array(elementValuePairEntriesLength) {
             ElementValuePair.create(input, classFile)
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-        super.write(output)
+    override fun writeData(output: DataOutput) {
+        super.writeData(output)
         output.writeShort(typeIndex)
         output.writeShort(elementValuePairEntries.size)
         elementValuePairEntries.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override val specificLength: Int

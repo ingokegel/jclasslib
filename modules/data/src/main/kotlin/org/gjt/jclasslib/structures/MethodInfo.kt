@@ -18,20 +18,6 @@ import java.io.IOException
  */
 class MethodInfo : ClassMember() {
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-        super.read(input)
-
-        debugRead()
-    }
-
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-        super.write(output)
-
-        debugWrite()
-    }
-
     override fun printAccessFlagsVerbose(accessFlags: Int): String {
         return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)
     }

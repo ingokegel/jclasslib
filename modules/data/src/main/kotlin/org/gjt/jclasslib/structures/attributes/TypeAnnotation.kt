@@ -27,8 +27,7 @@ class TypeAnnotation : AbstractStructure() {
     var typePathEntries: Array<TypePathEntry> = emptyArray()
     var annotation: Annotation = Annotation()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         targetType = TypeAnnotationTargetType.getFromTag(input.readUnsignedByte())
         targetInfo = targetType.createTargetInfo()
         targetInfo.classFile = classFile
@@ -39,19 +38,14 @@ class TypeAnnotation : AbstractStructure() {
             TypePathEntry().apply { read(input) }
         }
         annotation.read(input)
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(targetType.tag)
         targetInfo.write(output)
         output.writeByte(typePathEntries.size)
         typePathEntries.forEach { it.write(output) }
         annotation.write(output)
-
-        debugWrite()
     }
 
     override val debugInfo: String

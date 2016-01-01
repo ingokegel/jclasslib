@@ -21,14 +21,12 @@ class TypeParameterBoundTargetInfo : TargetInfo() {
     var typeParameterIndex: Int = 0
     var boundIndex: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         typeParameterIndex = input.readUnsignedByte()
         boundIndex = input.readUnsignedByte()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(typeParameterIndex)
         output.writeByte(boundIndex)
     }

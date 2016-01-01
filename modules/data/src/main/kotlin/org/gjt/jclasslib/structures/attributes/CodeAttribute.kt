@@ -41,8 +41,7 @@ class CodeAttribute : AttributeInfo() {
      */
     var exceptionTable: Array<ExceptionTableEntry> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
 
         maxStack = input.readUnsignedShort()
         maxLocals = input.readUnsignedShort()
@@ -52,12 +51,9 @@ class CodeAttribute : AttributeInfo() {
 
         readExceptionTable(input)
         readAttributes(input)
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(maxStack)
         output.writeShort(maxLocals)
         output.writeInt(code.size)
@@ -65,8 +61,6 @@ class CodeAttribute : AttributeInfo() {
 
         writeExceptionTable(output)
         writeAttributes(output)
-
-        debugWrite()
     }
 
     private fun readExceptionTable(input: DataInput) {

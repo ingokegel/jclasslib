@@ -58,24 +58,18 @@ class InnerClassesEntry : AbstractStructure() {
     val innerClassAccessFlagsVerbose: String
         get() = printAccessFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS, innerClassAccessFlags)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         innerClassInfoIndex = input.readUnsignedShort()
         outerClassInfoIndex = input.readUnsignedShort()
         innerNameIndex = input.readUnsignedShort()
         innerClassAccessFlags = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(innerClassInfoIndex)
         output.writeShort(outerClassInfoIndex)
         output.writeShort(innerNameIndex)
         output.writeShort(innerClassAccessFlags)
-
-        debugWrite()
     }
 
     override val debugInfo: String

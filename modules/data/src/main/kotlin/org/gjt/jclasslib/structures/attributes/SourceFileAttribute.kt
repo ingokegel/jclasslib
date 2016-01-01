@@ -26,18 +26,12 @@ class SourceFileAttribute : AttributeInfo() {
      */
     var sourceFileIndex: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         sourceFileIndex = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(sourceFileIndex)
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 2

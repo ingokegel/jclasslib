@@ -43,24 +43,18 @@ class ExceptionTableEntry : AbstractStructure() {
     var catchType: Int = 0
 
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         startPc = input.readUnsignedShort()
         endPc = input.readUnsignedShort()
         handlerPc = input.readUnsignedShort()
         catchType = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(startPc)
         output.writeShort(endPc)
         output.writeShort(handlerPc)
         output.writeShort(catchType)
-
-        debugWrite()
     }
 
     override val debugInfo: String

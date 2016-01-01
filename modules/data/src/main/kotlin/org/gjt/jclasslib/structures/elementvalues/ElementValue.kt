@@ -24,11 +24,8 @@ abstract class ElementValue(val elementValueType: ElementValueType) : AbstractSt
     abstract val entryName: String
     protected abstract val specificLength: Int
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(elementValueType.tag)
-
-        debugWrite()
     }
 
     val length: Int

@@ -26,8 +26,7 @@ abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
      */
     var runtimeAnnotations: Array<Annotation> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()
         runtimeAnnotations = Array(runtimeVisibleAnnotationsLength) {
             Annotation().apply {
@@ -36,14 +35,11 @@ abstract class RuntimeAnnotationsAttribute : AttributeInfo(), AnnotationHolder {
 
             }
         }
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(runtimeAnnotations.size)
         runtimeAnnotations.forEach { it.write(output) }
-        debugWrite()
     }
 
     override val debugInfo: String

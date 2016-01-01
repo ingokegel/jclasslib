@@ -26,23 +26,17 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     override val specificLength: Int
         get() = 2 + elementValueEntries.sumBy { it.length }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val elementValueEntriesLength = input.readUnsignedShort()
         elementValueEntries = Array(elementValueEntriesLength) {
             ElementValue.create(input, classFile)
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-        super.write(output)
+    override fun writeData(output: DataOutput) {
+        super.writeData(output)
         output.writeShort(elementValueEntries.size)
         elementValueEntries.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override val debugInfo: String

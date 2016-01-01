@@ -24,23 +24,17 @@ class MethodParametersAttribute : AttributeInfo() {
      */
     var entries: Array<MethodParametersEntry> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
 
         val numberOfEntries = input.readUnsignedByte()
         entries = Array(numberOfEntries) {
             MethodParametersEntry.create(input, classFile)
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(entries.size)
         entries.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int = 1 + entries.sumBy { it.length }

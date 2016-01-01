@@ -61,20 +61,15 @@ abstract class ClassMember : AbstractStructureWithAttributes() {
 
     protected abstract fun printAccessFlagsVerbose(accessFlags: Int): String
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-
+    override fun readData(input: DataInput) {
         accessFlags = input.readUnsignedShort()
         nameIndex = input.readUnsignedShort()
         descriptorIndex = input.readUnsignedShort()
 
         readAttributes(input)
-
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-
+    override fun writeData(output: DataOutput) {
         output.writeShort(accessFlags)
         output.writeShort(nameIndex)
         output.writeShort(descriptorIndex)

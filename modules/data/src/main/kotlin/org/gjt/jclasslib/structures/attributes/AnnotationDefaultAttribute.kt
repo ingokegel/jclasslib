@@ -26,19 +26,13 @@ class AnnotationDefaultAttribute constructor(): AttributeInfo() {
      */
     lateinit var defaultValue: ElementValue
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         defaultValue = ElementValue.create(input, classFile)
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
 
         defaultValue.write(output)
-
-        debugWrite()
     }
 
     override fun getAttributeLength(): Int = defaultValue.length

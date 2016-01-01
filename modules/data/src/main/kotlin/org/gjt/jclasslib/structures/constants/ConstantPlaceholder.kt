@@ -17,11 +17,11 @@ object ConstantPlaceholder : CPInfo() {
     override val constantType: ConstantType
         get() = throw UnsupportedOperationException()
 
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         throw UnsupportedOperationException()
     }
 
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         throw UnsupportedOperationException()
     }
 

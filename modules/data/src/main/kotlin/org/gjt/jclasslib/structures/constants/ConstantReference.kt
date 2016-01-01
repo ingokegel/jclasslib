@@ -52,14 +52,12 @@ abstract class ConstantReference : CPInfo() {
         @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(nameAndTypeIndex, ConstantNameAndTypeInfo::class.java)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         classIndex = input.readUnsignedShort()
         nameAndTypeIndex = input.readUnsignedShort()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(classIndex)
         output.writeShort(nameAndTypeIndex)
     }

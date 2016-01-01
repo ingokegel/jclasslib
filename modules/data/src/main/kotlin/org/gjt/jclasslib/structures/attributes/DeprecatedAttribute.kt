@@ -21,14 +21,10 @@ import java.io.IOException
  */
 class DeprecatedAttribute : AttributeInfo() {
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-        debugRead()
+    override fun readData(input: DataInput) {
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-        debugWrite()
+    override fun writeData(output: DataOutput) {
     }
 
     override fun getAttributeLength(): Int = 0

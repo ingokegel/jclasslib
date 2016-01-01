@@ -53,22 +53,15 @@ class ConstantNameAndTypeInfo : CPInfo() {
         @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntryName(descriptorIndex)
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
-
+    override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()
         descriptorIndex = input.readUnsignedShort()
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
-
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.NAME_AND_TYPE.tag)
         output.writeShort(nameIndex)
         output.writeShort(descriptorIndex)
-        debugWrite()
     }
 
     override val debugInfo: String

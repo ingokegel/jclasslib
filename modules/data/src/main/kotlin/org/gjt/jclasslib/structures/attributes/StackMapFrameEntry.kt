@@ -50,8 +50,7 @@ class StackMapFrameEntry : AbstractStructure() {
      */
     var stackItems = emptyArray<VerificationTypeInfoEntry>()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         tag = input.readUnsignedByte()
         frameType = StackFrameType.getFromTag(tag)
         when (frameType) {
@@ -64,8 +63,6 @@ class StackMapFrameEntry : AbstractStructure() {
             StackFrameType.FULL -> readFull(input)
             else -> throw IllegalStateException(frameType.toString())
         }
-
-        debugRead()
     }
 
     private fun readOneStackItem(input: DataInput) {
@@ -105,7 +102,7 @@ class StackMapFrameEntry : AbstractStructure() {
         VerificationTypeInfoEntry.create(input, classFile)
     }
 
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(tag)
         when (frameType) {
             StackFrameType.SAME -> Unit
@@ -117,8 +114,6 @@ class StackMapFrameEntry : AbstractStructure() {
             StackFrameType.FULL -> writeFull(output)
             else -> throw IllegalStateException(frameType.name)
         }
-
-        debugWrite()
     }
 
     private fun writeOneStackItem(out: DataOutput) {

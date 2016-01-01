@@ -41,17 +41,13 @@ class ConstantUtf8Info : CPInfo() {
     val bytes: ByteArray
         get() = string.toByteArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         string = input.readUTF()
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.UTF8.tag)
         output.writeUTF(string)
-        debugWrite()
     }
 
     override val debugInfo: String

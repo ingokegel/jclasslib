@@ -23,15 +23,13 @@ class LocalVarTarget : AbstractStructure() {
     var length: Int = 0
     var index: Int = 0
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         startPc = input.readUnsignedShort()
         length = input.readUnsignedShort()
         index = input.readUnsignedShort()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeShort(startPc)
         output.writeShort(length)
         output.writeShort(index)

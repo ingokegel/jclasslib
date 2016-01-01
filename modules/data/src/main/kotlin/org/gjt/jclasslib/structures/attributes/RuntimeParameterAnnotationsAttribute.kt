@@ -23,22 +23,16 @@ abstract class RuntimeParameterAnnotationsAttribute : AttributeInfo() {
      */
     var parameterAnnotations: Array<ParameterAnnotations> = emptyArray()
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun read(input: DataInput) {
+    override fun readData(input: DataInput) {
         val numParameters = input.readUnsignedByte()
         parameterAnnotations = Array(numParameters) {
             ParameterAnnotations().apply { read(input) }
         }
-
-        debugRead()
     }
 
-    @Throws(InvalidByteCodeException::class, IOException::class)
-    override fun write(output: DataOutput) {
+    override fun writeData(output: DataOutput) {
         output.writeByte(parameterAnnotations.size)
         parameterAnnotations.forEach { it.write(output) }
-
-        debugWrite()
     }
 
     override val debugInfo: String
