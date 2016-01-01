@@ -7,14 +7,14 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Local variable target for the LocalVarTargetInfo structure.
  */
-class LocalVarTarget : AbstractStructure() {
+class LocalVarTarget : Structure() {
 
     var startPc: Int = 0
     var length: Int = 0

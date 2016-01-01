@@ -6,7 +6,7 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -16,7 +16,7 @@ import java.io.DataOutput
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 //TODO remove subclasses
-open class LocalVariableCommonEntry : AbstractStructure() {
+open class LocalVariableCommonEntry : Structure() {
 
     /**
      * start_pc of this local variable association.

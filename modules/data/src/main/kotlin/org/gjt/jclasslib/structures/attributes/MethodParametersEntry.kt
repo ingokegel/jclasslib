@@ -7,14 +7,14 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
  */
-class MethodParametersEntry : AbstractStructure() {
+class MethodParametersEntry : Structure() {
 
     var nameIndex: Int = 0
     var accessFlags: Int = 0

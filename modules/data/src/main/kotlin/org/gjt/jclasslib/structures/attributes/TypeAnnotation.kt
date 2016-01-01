@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo
 import java.io.DataInput
@@ -17,7 +17,7 @@ import java.io.DataOutput
  * Describes an entry in a RuntimeVisibleTypeAnnotations or RuntimeInvisibleTypeAnnotations
  * attribute structure.
  */
-class TypeAnnotation : AbstractStructure() {
+class TypeAnnotation : Structure() {
 
     lateinit var targetType: TypeAnnotationTargetType
     lateinit var targetInfo: TargetInfo

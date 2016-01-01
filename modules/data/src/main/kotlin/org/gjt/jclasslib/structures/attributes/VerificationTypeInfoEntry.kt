@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
@@ -20,7 +20,7 @@ abstract class VerificationTypeInfoEntry(
          * The verification type
          */
         val type: VerificationType
-) : AbstractStructure() {
+) : Structure() {
 
 
     override fun writeData(output: DataOutput) {

@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
@@ -17,7 +17,7 @@ import java.io.DataOutput
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class ExceptionTableEntry : AbstractStructure() {
+class ExceptionTableEntry : Structure() {
 
     /**
      * start_pc of this exception table entry.

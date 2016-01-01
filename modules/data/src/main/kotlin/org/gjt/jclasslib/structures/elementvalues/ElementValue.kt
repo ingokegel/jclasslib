@@ -6,7 +6,7 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -15,7 +15,7 @@ import java.io.DataOutput
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class ElementValue(val elementValueType: ElementValueType) : AbstractStructure() {
+abstract class ElementValue(val elementValueType: ElementValueType) : Structure() {
 
     abstract val entryName: String
     protected abstract val specificLength: Int

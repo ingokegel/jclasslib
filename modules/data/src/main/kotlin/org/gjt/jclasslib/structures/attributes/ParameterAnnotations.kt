@@ -6,7 +6,7 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.Annotation
 import java.io.DataInput
 import java.io.DataOutput
@@ -14,7 +14,7 @@ import java.io.DataOutput
 /**
  * Common class for runtime parameter annotations.
  */
-class ParameterAnnotations : AbstractStructure() {
+class ParameterAnnotations : Structure() {
 
     /**
      * Runtime annotations associations of the parent structure

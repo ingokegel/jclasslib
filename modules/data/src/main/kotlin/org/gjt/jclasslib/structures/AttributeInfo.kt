@@ -14,7 +14,7 @@ import java.io.DataInput
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class AttributeInfo(protected val classFile: ClassFile) : AbstractStructure() {
+abstract class AttributeInfo(protected val classFile: ClassFile) : Structure() {
 
     /**
      * Constant pool index for the name of the attribute.

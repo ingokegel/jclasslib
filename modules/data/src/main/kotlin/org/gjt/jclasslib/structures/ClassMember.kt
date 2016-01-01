@@ -15,7 +15,7 @@ import java.io.DataOutput
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
-abstract class ClassMember(protected val classFile: ClassFile) : AbstractStructure(), AttributeContainer {
+abstract class ClassMember(protected val classFile: ClassFile) : Structure(), AttributeContainer {
 
     /**
      * Access flags of this class member.

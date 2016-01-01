@@ -20,7 +20,9 @@ import java.util.*
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class AbstractStructure {
+
+//TODO check all "factory methods"
+abstract class Structure {
 
     /**
      * Read this structure from the given DataInput.

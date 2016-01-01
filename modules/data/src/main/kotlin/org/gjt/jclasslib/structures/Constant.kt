@@ -14,7 +14,7 @@ import java.io.DataInput
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class Constant : AbstractStructure() {
+abstract class Constant : Structure() {
 
     /**
      * Type of the cp_info structure.

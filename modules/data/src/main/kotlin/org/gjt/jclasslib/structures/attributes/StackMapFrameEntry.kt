@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
@@ -15,7 +15,7 @@ import java.io.DataOutput
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
  */
-class StackMapFrameEntry(private val classFile: ClassFile) : AbstractStructure() {
+class StackMapFrameEntry(private val classFile: ClassFile) : Structure() {
 
     /**
      * Frame tag

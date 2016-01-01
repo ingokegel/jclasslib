@@ -6,7 +6,7 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -15,7 +15,7 @@ import java.io.DataOutput
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class ElementValuePair : AbstractStructure() {
+class ElementValuePair : Structure() {
 
     /**
      * element_name_index of this element value pair.

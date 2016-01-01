@@ -7,14 +7,14 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Type path entry for a TypeAnnotation structure.
  */
-class TypePathEntry : AbstractStructure() {
+class TypePathEntry : Structure() {
 
     lateinit var typePathKind: TypePathKind
     var typeArgumentIndex: Int = 0

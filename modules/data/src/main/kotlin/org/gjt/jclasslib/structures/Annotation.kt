@@ -22,7 +22,7 @@ import java.io.DataOutput
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class Annotation : AbstractStructure(), AnnotationData {
+class Annotation : Structure(), AnnotationData {
 
     override var typeIndex: Int = 0
     override var elementValuePairEntries: Array<ElementValuePair> = emptyArray()

@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AbstractStructure
+import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
@@ -18,7 +18,7 @@ import java.io.DataOutput
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class InnerClassesEntry : AbstractStructure() {
+class InnerClassesEntry : Structure() {
 
     /**
      * Constant pool index of the CONSTANT_Class_info structure

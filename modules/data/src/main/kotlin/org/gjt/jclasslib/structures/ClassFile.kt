@@ -20,7 +20,7 @@ import java.util.*
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class ClassFile : AbstractStructure(), AttributeContainer {
+class ClassFile : Structure(), AttributeContainer {
 
     /**
      * Minor version of the class file format.
