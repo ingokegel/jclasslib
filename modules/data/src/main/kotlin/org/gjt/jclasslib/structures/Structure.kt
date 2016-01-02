@@ -51,7 +51,7 @@ abstract class Structure {
     protected abstract fun writeData(output: DataOutput)
 
     /**
-     * Utility method for derived structures. Dump a specific debug message.
+     * Utility method for derived structures.
      * @param message the debug message
      */
     protected fun debug(message: String) {

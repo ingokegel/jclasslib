@@ -7,9 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeContainer
-import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.*
 import java.io.DataInput
 import java.io.DataOutput
 
