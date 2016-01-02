@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.io.Log
 import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
@@ -455,7 +454,7 @@ class ClassFile : Structure(), AttributeContainer {
 
     private fun checkMajorVersion(majorVersion: Int) {
         if (majorVersion < 45 || majorVersion > 53) {
-            Log.warning("major version should be between 45 and 53 for JDK <= 1.9, was $majorVersion")
+            warning("major version should be between 45 and 53 for JDK <= 1.9, was $majorVersion")
         }
     }
 

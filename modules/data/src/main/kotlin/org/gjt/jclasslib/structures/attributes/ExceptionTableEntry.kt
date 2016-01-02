@@ -56,12 +56,10 @@ class ExceptionTableEntry : Structure() {
         get() = "with startPc $startPc, endPc $endPc, handlerPc $handlerPc, catchType $catchType"
 
     companion object {
-
         /**
          * Length in bytes of an exception table entry.
          */
         val LENGTH = 8
-
     }
 
 }

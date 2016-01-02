@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.io.Log
 import org.gjt.jclasslib.structures.attributes.*
 import java.io.DataInput
 import java.io.DataOutput
@@ -32,66 +31,67 @@ interface AttributeContainer {
      */
     val totalAttributesLength: Int
         get() = attributes.sumBy { it.getAttributeLength() }
-}
 
-const val SYSTEM_PROPERTY_SKIP_ATTRIBUTES = "jclasslib.io.skipAttributes"
 
-/**
- * Read the attributes of this structure from the given DataInput.
- * @param input the DataInput from which to read
- */
-fun AttributeContainer.readAttributes(input: DataInput, classFile: ClassFile) {
-    val attributesCount = input.readUnsignedShort()
-    if (java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_ATTRIBUTES)) {
-        input.skipBytes(2)
-        input.skipBytes(input.readInt())
-    } else {
-        this.attributes = Array(attributesCount) {
-            val attributeNameIndex = input.readUnsignedShort()
-            val attributeLength = input.readInt()
-            val cpInfoName = classFile.getConstantPoolUtf8Entry(attributeNameIndex)
-            create(attributeLength, cpInfoName.string, classFile).apply {
-                this.attributeNameIndex = attributeNameIndex
-                read(input);
+
+    /**
+     * Read the attributes of this structure from the given DataInput.
+     * @param input the DataInput from which to read
+     */
+    fun AttributeContainer.readAttributes(input: DataInput, classFile: ClassFile) {
+        val attributesCount = input.readUnsignedShort()
+        if (java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_ATTRIBUTES)) {
+            input.skipBytes(2)
+            input.skipBytes(input.readInt())
+        } else {
+            attributes = Array(attributesCount) {
+                val attributeNameIndex = input.readUnsignedShort()
+                val attributeLength = input.readInt()
+                val cpInfoName = classFile.getConstantPoolUtf8Entry(attributeNameIndex)
+                create(attributeLength, cpInfoName.string, classFile).apply {
+                    this.attributeNameIndex = attributeNameIndex
+                    read(input);
+                }
             }
+            if (isDebug) debug("read $attributesCount attributes")
         }
-        if (Structure.isDebug) Log.debug("read $attributesCount attributes")
+    }
+
+    private fun create(attributeLength: Int, attributeName: String, classFile : ClassFile): AttributeInfo = when (attributeName) {
+        ConstantValueAttribute.ATTRIBUTE_NAME -> ConstantValueAttribute(classFile)
+        CodeAttribute.ATTRIBUTE_NAME -> CodeAttribute(classFile)
+        ExceptionsAttribute.ATTRIBUTE_NAME -> ExceptionsAttribute(classFile)
+        InnerClassesAttribute.ATTRIBUTE_NAME -> InnerClassesAttribute(classFile)
+        SyntheticAttribute.ATTRIBUTE_NAME -> SyntheticAttribute(classFile)
+        SourceFileAttribute.ATTRIBUTE_NAME -> SourceFileAttribute(classFile)
+        LineNumberTableAttribute.ATTRIBUTE_NAME -> LineNumberTableAttribute(classFile)
+        LocalVariableTableAttribute.ATTRIBUTE_NAME -> LocalVariableTableAttribute(classFile)
+        DeprecatedAttribute.ATTRIBUTE_NAME -> DeprecatedAttribute(classFile)
+        EnclosingMethodAttribute.ATTRIBUTE_NAME -> EnclosingMethodAttribute(classFile)
+        SignatureAttribute.ATTRIBUTE_NAME -> SignatureAttribute(classFile)
+        LocalVariableTypeTableAttribute.ATTRIBUTE_NAME -> LocalVariableTypeTableAttribute(classFile)
+        RuntimeVisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleAnnotationsAttribute(classFile)
+        RuntimeInvisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleAnnotationsAttribute(classFile)
+        RuntimeVisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleParameterAnnotationsAttribute(classFile)
+        RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleParameterAnnotationsAttribute(classFile)
+        RuntimeVisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleTypeAnnotationsAttribute(classFile)
+        RuntimeInvisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleTypeAnnotationsAttribute(classFile)
+        AnnotationDefaultAttribute.ATTRIBUTE_NAME -> AnnotationDefaultAttribute(classFile)
+        BootstrapMethodsAttribute.ATTRIBUTE_NAME -> BootstrapMethodsAttribute(classFile)
+        StackMapTableAttribute.ATTRIBUTE_NAME -> StackMapTableAttribute(classFile)
+        MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute(classFile)
+        else -> UnknownAttribute(attributeLength, classFile)
+    }
+
+    /**
+     * Write the attributes of this structure to the given DataOutput.
+     * @param output the DataOutput to which to write
+     */
+    fun AttributeContainer.writeAttributes(output: DataOutput) {
+        val attributesCount = attributes.size
+        output.writeShort(attributesCount)
+        attributes.forEach { it.write(output) }
+        if (isDebug) debug("wrote $attributesCount attributes")
     }
 }
 
-private fun create(attributeLength: Int, attributeName: String, classFile : ClassFile): AttributeInfo = when (attributeName) {
-    ConstantValueAttribute.ATTRIBUTE_NAME -> ConstantValueAttribute(classFile)
-    CodeAttribute.ATTRIBUTE_NAME -> CodeAttribute(classFile)
-    ExceptionsAttribute.ATTRIBUTE_NAME -> ExceptionsAttribute(classFile)
-    InnerClassesAttribute.ATTRIBUTE_NAME -> InnerClassesAttribute(classFile)
-    SyntheticAttribute.ATTRIBUTE_NAME -> SyntheticAttribute(classFile)
-    SourceFileAttribute.ATTRIBUTE_NAME -> SourceFileAttribute(classFile)
-    LineNumberTableAttribute.ATTRIBUTE_NAME -> LineNumberTableAttribute(classFile)
-    LocalVariableTableAttribute.ATTRIBUTE_NAME -> LocalVariableTableAttribute(classFile)
-    DeprecatedAttribute.ATTRIBUTE_NAME -> DeprecatedAttribute(classFile)
-    EnclosingMethodAttribute.ATTRIBUTE_NAME -> EnclosingMethodAttribute(classFile)
-    SignatureAttribute.ATTRIBUTE_NAME -> SignatureAttribute(classFile)
-    LocalVariableTypeTableAttribute.ATTRIBUTE_NAME -> LocalVariableTypeTableAttribute(classFile)
-    RuntimeVisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleAnnotationsAttribute(classFile)
-    RuntimeInvisibleAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleAnnotationsAttribute(classFile)
-    RuntimeVisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleParameterAnnotationsAttribute(classFile)
-    RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleParameterAnnotationsAttribute(classFile)
-    RuntimeVisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleTypeAnnotationsAttribute(classFile)
-    RuntimeInvisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleTypeAnnotationsAttribute(classFile)
-    AnnotationDefaultAttribute.ATTRIBUTE_NAME -> AnnotationDefaultAttribute(classFile)
-    BootstrapMethodsAttribute.ATTRIBUTE_NAME -> BootstrapMethodsAttribute(classFile)
-    StackMapTableAttribute.ATTRIBUTE_NAME -> StackMapTableAttribute(classFile)
-    MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute(classFile)
-    else -> UnknownAttribute(attributeLength, classFile)
-}
-
-/**
- * Write the attributes of this structure to the given DataOutput.
- * @param output the DataOutput to which to write
- */
-fun AttributeContainer.writeAttributes(output: DataOutput) {
-    val attributesCount = this.attributes.size
-    output.writeShort(attributesCount)
-    this.attributes.forEach { it.write(output) }
-    if (Structure.isDebug) Log.debug("wrote $attributesCount attributes")
-}

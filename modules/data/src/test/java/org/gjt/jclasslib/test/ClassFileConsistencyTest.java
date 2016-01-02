@@ -9,7 +9,7 @@ package org.gjt.jclasslib.test;
 
 import org.gjt.jclasslib.io.ClassFileReader;
 import org.gjt.jclasslib.io.ClassFileWriter;
-import org.gjt.jclasslib.structures.Structure;
+import org.gjt.jclasslib.structures.Package;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 
@@ -76,7 +76,7 @@ public abstract class ClassFileConsistencyTest {
 
         boolean success = compare(className, before, after);
         if (!success) {
-            System.setProperty(Structure.SYSTEM_PROPERTY_DEBUG, "true");
+            System.setProperty(Package.SYSTEM_PROPERTY_DEBUG, "true");
             ClassFileReader.readFromInputStream(new ByteArrayInputStream(after));
         }
         return success;
@@ -113,7 +113,7 @@ public abstract class ClassFileConsistencyTest {
         return count;
     }
 
-    protected static interface InputStreamProvider {
+    protected interface InputStreamProvider {
         InputStream createInputStream() throws IOException;
     }
 

@@ -84,7 +84,9 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
         get() = "with maxStack $maxStack, maxLocals $maxLocals, code length ${code.size}"
 
     companion object {
-        /** Name of the attribute as in the corresponding constant pool entry.  */
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
         val ATTRIBUTE_NAME = "Code"
     }
 }

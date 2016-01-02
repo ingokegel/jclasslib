@@ -73,12 +73,10 @@ class InnerClassesEntry : Structure() {
                 "accessFlags ${printAccessFlags(innerClassAccessFlags)}"
 
     companion object {
-
         /**
          * Length in bytes of an inner class entry.
          */
         val LENGTH = 8
-
     }
 
 }

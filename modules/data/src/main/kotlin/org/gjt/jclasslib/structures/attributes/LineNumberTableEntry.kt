@@ -40,12 +40,10 @@ class LineNumberTableEntry : Structure() {
         get() = "with startPc $startPc, lineNumber $lineNumber"
 
     companion object {
-
         /**
          * Length in bytes of a line number association.
          */
         val LENGTH = 4
-
     }
 
 }

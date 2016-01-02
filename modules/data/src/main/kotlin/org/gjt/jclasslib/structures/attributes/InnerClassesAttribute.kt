@@ -44,8 +44,9 @@ class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         get() = "with ${classes.size} classes"
 
     companion object {
-
-        /** Name of the attribute as in the corresponding constant pool entry.  */
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
         val ATTRIBUTE_NAME = "InnerClasses"
     }
 

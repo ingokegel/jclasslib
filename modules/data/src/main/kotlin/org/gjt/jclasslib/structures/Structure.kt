@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.io.Log
 import java.io.DataInput
 import java.io.DataOutput
 import java.util.*
@@ -49,14 +48,6 @@ abstract class Structure {
 
     protected abstract fun writeData(output: DataOutput)
 
-    /**
-     * Utility method for derived structures.
-     * @param message the debug message
-     */
-    protected fun debug(message: String) {
-        if (isDebug) Log.debug(message)
-    }
-
     protected abstract val debugInfo: String
 
     /**
@@ -97,20 +88,6 @@ abstract class Structure {
         return matchingFlags.
                 mapNotNull { if (it.verbose.isEmpty()) null else it.verbose }.
                 joinToString(separator = " ", postfix = if (accessFlags != handledFlags) "?" else "")
-    }
-
-    companion object {
-
-        /**
-         * Set this JVM System property to true to switch on debugging for
-         * reading and writing class files.
-         */
-        const val SYSTEM_PROPERTY_DEBUG = "jclasslib.io.debug"
-
-        /**
-         * Flag for debugging while reading and writing class files.
-         */
-        val isDebug: Boolean = java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG)
     }
 
 }

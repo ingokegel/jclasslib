@@ -45,7 +45,6 @@ class StackMapTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         get() = "with ${entries.size} entries"
 
     companion object {
-
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */

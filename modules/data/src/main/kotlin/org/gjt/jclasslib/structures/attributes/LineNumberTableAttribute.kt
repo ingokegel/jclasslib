@@ -44,8 +44,9 @@ class LineNumberTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
         get() = "with ${lineNumberTable.size} entries"
 
     companion object {
-
-        /** Name of the attribute as in the corresponding constant pool entry.  */
+        /**
+         * Name of the attribute as in the corresponding constant pool entry.
+         */
         val ATTRIBUTE_NAME = "LineNumberTable"
     }
 }
