@@ -26,7 +26,9 @@ class StackMapTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         val numberOfEntries = input.readUnsignedShort()
         var previousOffset = 0
         entries = Array(numberOfEntries) {
-            StackMapFrameEntry.create(input, classFile, previousOffset).apply {
+            StackMapFrameEntry(classFile).apply {
+                read(input)
+                offset = previousOffset + offsetDelta
                 previousOffset += offsetDelta + 1
             }
         }

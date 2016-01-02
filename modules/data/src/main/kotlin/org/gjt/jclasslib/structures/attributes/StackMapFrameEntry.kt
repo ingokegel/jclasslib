@@ -64,12 +64,20 @@ class StackMapFrameEntry(private val classFile: ClassFile) : Structure() {
 
     private fun readOneStackItem(input: DataInput) {
         offsetDelta = tag - 64
-        stackItems = arrayOf(VerificationTypeInfoEntry.create(input, classFile))
+        stackItems = arrayOf(readVerificationTypeInfoEntry(input))
+    }
+
+    private fun readVerificationTypeInfoEntry(input: DataInput): VerificationTypeInfoEntry {
+        val tag = input.readUnsignedByte()
+        val verificationType = VerificationType.getFromTag(tag)
+        return verificationType.createEntry(classFile).apply {
+            this.read(input)
+        }
     }
 
     private fun readOneStackItemExt(input: DataInput) {
         offsetDelta = input.readUnsignedShort()
-        stackItems = arrayOf(VerificationTypeInfoEntry.create(input, classFile))
+        stackItems = arrayOf(readVerificationTypeInfoEntry(input))
     }
 
     private fun readChop(input: DataInput) {
@@ -95,7 +103,7 @@ class StackMapFrameEntry(private val classFile: ClassFile) : Structure() {
     }
 
     private fun readEntries(input: DataInput, numLocals: Int) = Array(numLocals) {
-        VerificationTypeInfoEntry.create(input, classFile)
+        readVerificationTypeInfoEntry(input)
     }
 
     override fun writeData(output: DataOutput) {
@@ -210,19 +218,6 @@ class StackMapFrameEntry(private val classFile: ClassFile) : Structure() {
 
     private fun Array<VerificationTypeInfoEntry>.totalLength(): Int {
         return this.sumBy { it.length }
-    }
-
-    companion object {
-        /**
-         * Factory method for creating StackMapFrameEntry structures.
-         * @param input        the DataInput from which to read the
-         * @param classFile the parent class file of the structure to be created
-         * @param previousOffset the offset of the previous stack map frame
-         */
-        fun create(input: DataInput, classFile: ClassFile, previousOffset: Int) = StackMapFrameEntry(classFile).apply {
-            this.read(input)
-            this.offset = previousOffset + this.offsetDelta
-        }
     }
 
 }

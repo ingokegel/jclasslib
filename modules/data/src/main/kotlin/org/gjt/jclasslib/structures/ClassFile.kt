@@ -335,7 +335,9 @@ class ClassFile : Structure(), AttributeContainer {
                 placeholderIndex -> ConstantPlaceholder
                 else -> {
                     if (isDebug) debug("reading constant pool entry $i")
-                    Constant.create(input, this).apply {
+                    val constantType = ConstantType.getFromTag(input.readByte())
+                    constantType.create(this).apply {
+                        read(input)
                         constantPoolEntryToIndex.put(this, i)
                         if (this is ConstantLargeNumeric) {
                             // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant

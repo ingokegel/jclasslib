@@ -7,8 +7,6 @@
 
 package org.gjt.jclasslib.structures
 
-import java.io.DataInput
-
 /**
  * Base class for all constant pool entries in the constants package.
  */
@@ -30,26 +28,4 @@ abstract class Constant : Structure() {
 
     override fun hashCode(): Int = 0
 
-    companion object {
-
-        /**
-         * Factory method for creating CPInfo structures.
-         *
-         * A CPInfo of the appropriate subtype from the constants package
-         * is created.
-         *
-         * @param input the DataInput from which to read the CPInfo structure
-         * @param classFile the parent class file of the structure to be created
-         * @return the new CPInfo structure
-         */
-        @JvmStatic
-        fun create(input: DataInput, classFile: ClassFile): Constant {
-            val constantType = ConstantType.getFromTag(input.readByte())
-            val constant: Constant = constantType.create(classFile)
-            constant.read(input)
-
-            return constant
-        }
-
-    }
 }

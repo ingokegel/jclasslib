@@ -19,7 +19,6 @@ import java.util.*
  * Provides common services such as reading, writing and debugging.
  */
 
-//TODO check all "factory methods"
 abstract class Structure {
 
     /**

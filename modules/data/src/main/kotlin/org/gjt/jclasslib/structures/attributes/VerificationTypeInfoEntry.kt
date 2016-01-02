@@ -47,20 +47,4 @@ abstract class VerificationTypeInfoEntry(
         buffer.append(type)
     }
 
-    companion object {
-        /**
-         * Factory method for creating VerificationTypeInfoEntry structures.
-         * @param input the DataInput from which to read the VerificationTypeInfoEntry structure
-         * @param classFile the parent class file of the structure to be created
-         */
-        fun create(input: DataInput, classFile: ClassFile): VerificationTypeInfoEntry {
-            val tag = input.readUnsignedByte()
-            val verificationType = VerificationType.getFromTag(tag)
-            return verificationType.createEntry(classFile).apply {
-                this.read(input)
-            }
-        }
-    }
-
-
 }
