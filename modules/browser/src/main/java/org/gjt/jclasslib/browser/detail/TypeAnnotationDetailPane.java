@@ -128,9 +128,9 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
     }
 
     private int getLinkIndex(int index, LocalVariableTableAttribute attribute) {
-        LocalVariableTableEntry[] localVariableTable = attribute.getLocalVariableEntries();
+        LocalVariableEntry[] localVariableTable = attribute.getLocalVariableEntries();
         for (int i = 0; i < localVariableTable.length; i++) {
-            LocalVariableTableEntry entry = localVariableTable[i];
+            LocalVariableEntry entry = localVariableTable[i];
             if (entry.getIndex() == index) {
                 return i;
             }

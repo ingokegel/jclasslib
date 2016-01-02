@@ -15,8 +15,7 @@ import java.io.DataOutput
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-//TODO remove subclasses
-open class LocalVariableCommonEntry : Structure() {
+class LocalVariableEntry : Structure() {
 
     /**
      * start_pc of this local variable association.

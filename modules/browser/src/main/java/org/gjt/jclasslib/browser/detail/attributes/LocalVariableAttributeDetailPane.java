@@ -9,8 +9,8 @@ package org.gjt.jclasslib.browser.detail.attributes;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener;
 import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.attributes.LocalVariableCommonAttribute;
-import org.gjt.jclasslib.structures.attributes.LocalVariableCommonEntry;
+import org.gjt.jclasslib.structures.attributes.LocalVariableAttribute;
+import org.gjt.jclasslib.structures.attributes.LocalVariableEntry;
 
 /**
  * Contains common attributes to a local variable detail pane.
@@ -18,14 +18,14 @@ import org.gjt.jclasslib.structures.attributes.LocalVariableCommonEntry;
  * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
  *
  */
-public abstract class LocalVariableCommonAttributeDetailPane extends AbstractAttributeListDetailPane {
+public abstract class LocalVariableAttributeDetailPane extends AbstractAttributeListDetailPane {
 
     /**
      * Constructor.
      *
      * @param services the associated browser services.
      */
-    public LocalVariableCommonAttributeDetailPane(BrowserServices services) {
+    public LocalVariableAttributeDetailPane(BrowserServices services) {
         super(services);
     }
 
@@ -50,13 +50,13 @@ public abstract class LocalVariableCommonAttributeDetailPane extends AbstractAtt
 
         private static final int COMMENT_LINK_COLUMN_WIDTH = 200;
 
-        private LocalVariableCommonEntry[] localVariableEntries;
+        private LocalVariableEntry[] localVariableEntries;
 
         private AttributeTableModel(AttributeInfo attribute,
                                     String descriptorOrSignatureVerbose) {
 
             super(attribute);
-            localVariableEntries = ((LocalVariableCommonAttribute)attribute).getLocalVariableEntries();
+            localVariableEntries = ((LocalVariableAttribute)attribute).getLocalVariableEntries();
             this.descriptorOrSignatureVerbose = descriptorOrSignatureVerbose;
         }
 
@@ -131,7 +131,7 @@ public abstract class LocalVariableCommonAttributeDetailPane extends AbstractAtt
         }
 
         protected Object doGetValueAt(int row, int column) {
-            LocalVariableCommonEntry localVariableEntry = localVariableEntries[row];
+            LocalVariableEntry localVariableEntry = localVariableEntries[row];
 
             switch (column) {
                 case START_PC_COLUMN_INDEX:

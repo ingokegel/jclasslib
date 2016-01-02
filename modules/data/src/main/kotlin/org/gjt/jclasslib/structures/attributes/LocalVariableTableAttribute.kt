@@ -8,29 +8,13 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
 
 /**
  * Describes an LocalVariableTable attribute structure.
 
  * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-class LocalVariableTableAttribute(classFile: ClassFile) : LocalVariableCommonAttribute<LocalVariableTableEntry>(classFile) {
-
-    override var localVariableEntries: Array<LocalVariableTableEntry> = emptyArray()
-
-    override fun readData(input: DataInput) {
-        val localVariableTableLength = input.readUnsignedShort()
-        localVariableEntries = Array(localVariableTableLength) {
-            LocalVariableTableEntry().apply {
-                read(input)
-            }
-        }
-    }
-
-    override fun getAttributeLength(): Int {
-        return super.getAttributeLength() + localVariableEntries.size * LocalVariableCommonEntry.LENGTH
-    }
+class LocalVariableTableAttribute(classFile: ClassFile) : LocalVariableAttribute(classFile) {
 
     companion object {
         /**

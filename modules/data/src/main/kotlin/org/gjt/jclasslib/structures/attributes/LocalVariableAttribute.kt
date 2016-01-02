@@ -8,6 +8,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import java.io.DataInput
 import java.io.DataOutput
 
 /**
@@ -15,12 +16,21 @@ import java.io.DataOutput
 
  * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
-abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry>(classFile: ClassFile) : AttributeInfo(classFile) {
+abstract class LocalVariableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Local variable associations of the parent code attribute
      */
-    abstract var localVariableEntries: Array<T>
+    var localVariableEntries: Array<LocalVariableEntry> = emptyArray()
+
+    override fun readData(input: DataInput) {
+        val localVariableTableLength = input.readUnsignedShort()
+        localVariableEntries = Array(localVariableTableLength) {
+            LocalVariableEntry().apply {
+                read(input)
+            }
+        }
+    }
 
     override fun writeData(output: DataOutput) {
         output.writeShort(localVariableEntries.size)
@@ -30,6 +40,8 @@ abstract class LocalVariableCommonAttribute<T : LocalVariableCommonEntry>(classF
     override val debugInfo: String
         get() = "with ${localVariableEntries.size} entries"
 
-    override fun getAttributeLength(): Int = 2
+    override fun getAttributeLength(): Int {
+        return 2 + localVariableEntries.size * LocalVariableEntry.LENGTH
+    }
 
 }

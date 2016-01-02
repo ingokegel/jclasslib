@@ -16,7 +16,7 @@ import org.gjt.jclasslib.structures.AttributeInfo;
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
  *
  */
-public class LocalVariableTableAttributeDetailPane extends LocalVariableCommonAttributeDetailPane {
+public class LocalVariableTableAttributeDetailPane extends LocalVariableAttributeDetailPane {
     /**
      * Constructor.
      *
