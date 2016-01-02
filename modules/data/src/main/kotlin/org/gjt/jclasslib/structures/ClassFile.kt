@@ -289,13 +289,11 @@ class ClassFile : Structure(), AttributeContainer {
     private fun readMagicNumber(input: DataInput) {
         val magicNumber = input.readInt()
         if (magicNumber != MAGIC_NUMBER) {
-            throw InvalidByteCodeException("Invalid magic number ${magicNumber.hex()} instead of ${MAGIC_NUMBER.hex()}")
+            throw InvalidByteCodeException("Invalid magic number ${magicNumber.hex} instead of ${MAGIC_NUMBER.hex}")
         }
 
         if (isDebug) debug("read magic number")
     }
-
-    fun Int.hex(): String = "0x${Integer.toHexString(this)}"
 
     private fun writeMagicNumber(out: DataOutput) {
         out.writeInt(MAGIC_NUMBER)

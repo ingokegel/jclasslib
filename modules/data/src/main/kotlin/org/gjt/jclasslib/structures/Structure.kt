@@ -13,41 +13,52 @@ import java.util.*
 
 /**
  * Base class for all structures defined in the class file format.
- *
- *
  * Provides common services such as reading, writing and debugging.
  */
-
 abstract class Structure {
 
     /**
      * Read this structure from the given DataInput.
      * Expects DataInput to be in JVM class file format and just
-     * before a structure of this kind. No look ahead parsing since
-     * the class file format is deterministic.
-
-     * @param input the DataInput from which to read
+     * before a structure of this kind.
+     *
+     * If the system property [SYSTEM_PROPERTY_DEBUG] is set, logging output
+     * is printed.
+     * @param input the DataInput for reading
      */
     fun read(input: DataInput) {
         readData(input)
         if (isDebug) debug("read ${javaClass.simpleName} $debugInfo")
     }
 
+    /**
+     * Implement this method to read the structure.
+     * @param input the DataInput for reading
+     */
     protected abstract fun readData(input: DataInput)
 
     /**
      * Write this structure to the given DataOutput.
      * The written bytes are in JVM class file format.
-
-     * @param output the DataOutput to which to write
+     *
+     * If the system property [SYSTEM_PROPERTY_DEBUG] is set, logging output
+     * is printed.
+     * @param output the DataOutput for writing
      */
     fun write(output: DataOutput) {
         writeData(output)
         if (isDebug) debug("wrote ${javaClass.simpleName} $debugInfo")
     }
 
+    /**
+     * Implement this method to read the structure.
+     * @param output the DataOutput for writing
+     */
     protected abstract fun writeData(output: DataOutput)
 
+    /**
+     * Returns specific debugging information for this structure.
+     */
     protected abstract val debugInfo: String
 
     /**
@@ -56,7 +67,7 @@ abstract class Structure {
      * @return the hex string
      */
     protected fun printBytes(bytes: Int): String {
-        return padHexString(Integer.toHexString(bytes), 8)
+        return bytes.paddedHex(8)
     }
 
     /**
@@ -66,18 +77,14 @@ abstract class Structure {
      * @return the hex string
      */
     protected fun printAccessFlags(accessFlags: Int): String {
-        return padHexString(Integer.toHexString(accessFlags), 4)
-    }
-
-    private fun padHexString(hexString: String, length: Int): String {
-        return "0x" + hexString.padStart(length, '0')
+        return accessFlags.paddedHex(4)
     }
 
     /**
      * Utility method for derived structures. Print an access flag as
      * a space separated list of verbose java access modifiers.
      * @param availableAccessFlags array with the access flags available for the derived structure
-     * @param accessFlags the unsigned short value to print as a hex string
+     * @param accessFlags the unsigned short value to print in verbose form
      * @return the access flags verbose description
      */
     protected fun printAccessFlagsVerbose(availableAccessFlags: EnumSet<AccessFlag>, accessFlags: Int): String {

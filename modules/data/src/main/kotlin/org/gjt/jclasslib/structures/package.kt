@@ -41,3 +41,17 @@ fun debug(message: String) {
     print("[debug] ")
     println(message)
 }
+
+/**
+ * Format the int value in hexadecimal notation
+ */
+val Int.hex: String
+    get() = "0x${Integer.toHexString(this)}"
+
+/**
+ * Format the int value in hexadecimal notation and pad with zeros
+ * @param length the number of digits in the output
+ */
+fun Int.paddedHex(length: Int): String {
+    return "0x" + this.hex.padStart(length, '0')
+}
