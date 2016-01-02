@@ -12,8 +12,8 @@ package org.gjt.jclasslib.structures
  */
 class FieldInfo(classFile: ClassFile) : ClassMember(classFile) {
 
-    override fun printAccessFlagsVerbose(accessFlags: Int): String {
-        return printAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)
+    override fun formatAccessFlagsVerbose(accessFlags: Int): String {
+        return formatAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)
     }
 
 }

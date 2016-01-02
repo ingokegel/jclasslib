@@ -32,14 +32,14 @@ abstract class ConstantLargeNumeric(classFile: ClassFile) : AbstractConstant(cla
      * entry as a hex string.
      */
     val formattedHighBytes: String
-        get() = printBytes(highBytes)
+        get() = formatBytes(highBytes)
 
     /**
      * Get the the low_bytes field of this constant pool
      * entry as a hex string.
      */
     val formattedLowBytes: String
-        get() = printBytes(lowBytes)
+        get() = formatBytes(lowBytes)
 
     override fun readData(input: DataInput) {
 

@@ -62,32 +62,32 @@ abstract class Structure {
     protected abstract val debugInfo: String
 
     /**
-     * Utility method for derived structures. Print an int value as a hex string.
+     * Utility method for derived structures. Format an int value as a hex string.
      * @param bytes the int value to print as a hex string
      * @return the hex string
      */
-    protected fun printBytes(bytes: Int): String {
+    protected fun formatBytes(bytes: Int): String {
         return bytes.paddedHex(8)
     }
 
     /**
-     * Utility method for derived structures. Print an access flag or an
+     * Utility method for derived structures. Format an access flag or an
      * unsigned short value as a hex string.
      * @param accessFlags the unsigned short value to print as a hex string
      * @return the hex string
      */
-    protected fun printAccessFlags(accessFlags: Int): String {
+    protected fun formatAccessFlags(accessFlags: Int): String {
         return accessFlags.paddedHex(4)
     }
 
     /**
-     * Utility method for derived structures. Print an access flag as
+     * Utility method for derived structures. Format an access flag as
      * a space separated list of verbose java access modifiers.
      * @param availableAccessFlags array with the access flags available for the derived structure
      * @param accessFlags the unsigned short value to print in verbose form
      * @return the access flags verbose description
      */
-    protected fun printAccessFlagsVerbose(availableAccessFlags: EnumSet<AccessFlag>, accessFlags: Int): String {
+    protected fun formatAccessFlagsVerbose(availableAccessFlags: EnumSet<AccessFlag>, accessFlags: Int): String {
 
         val matchingFlags = availableAccessFlags.filter { (accessFlags and it.flag) != 0 }
         val handledFlags = matchingFlags.fold(0) {value, accessFlag -> value or accessFlag.flag}

@@ -12,8 +12,8 @@ package org.gjt.jclasslib.structures
  */
 class MethodInfo(classFile: ClassFile) : ClassMember(classFile) {
 
-    override fun printAccessFlagsVerbose(accessFlags: Int): String {
-        return printAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)
+    override fun formatAccessFlagsVerbose(accessFlags: Int): String {
+        return formatAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)
     }
 
 }

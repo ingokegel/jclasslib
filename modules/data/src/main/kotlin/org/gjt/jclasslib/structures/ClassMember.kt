@@ -50,15 +50,15 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
      * Access flags of this class as a hex string.
      */
     val formattedAccessFlags: String
-        get() = printAccessFlags(accessFlags)
+        get() = formatAccessFlags(accessFlags)
 
     /**
      * Verbose description of the access flags of this class.
      */
     val accessFlagsVerbose: String
-        get() = printAccessFlagsVerbose(accessFlags)
+        get() = formatAccessFlagsVerbose(accessFlags)
 
-    protected abstract fun printAccessFlagsVerbose(accessFlags: Int): String
+    protected abstract fun formatAccessFlagsVerbose(accessFlags: Int): String
 
     override fun readData(input: DataInput) {
         accessFlags = input.readUnsignedShort()

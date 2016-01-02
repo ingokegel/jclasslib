@@ -27,7 +27,7 @@ abstract class ConstantNumeric(classFile: ClassFile) : AbstractConstant(classFil
      * entry as a hex string.
      */
     val formattedBytes: String
-        get() = printBytes(bytes)
+        get() = formatBytes(bytes)
 
     override fun readData(input: DataInput) {
         bytes = input.readInt()
