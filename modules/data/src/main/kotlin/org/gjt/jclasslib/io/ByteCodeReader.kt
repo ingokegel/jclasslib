@@ -15,8 +15,6 @@ import java.util.*
 /**
  * Converts code to a list of instructions as defined in the package
  * org.gjt.jclasslib.code.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 object ByteCodeReader {
 

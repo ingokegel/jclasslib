@@ -11,8 +11,6 @@ import org.gjt.jclasslib.structures.ClassFile
 
 /**
  * Describes an  RuntimeVisibleAnnotations attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class RuntimeVisibleAnnotationsAttribute(classFile: ClassFile) : RuntimeAnnotationsAttribute(classFile) {
 

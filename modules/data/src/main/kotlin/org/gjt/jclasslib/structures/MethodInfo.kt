@@ -9,8 +9,6 @@ package org.gjt.jclasslib.structures
 
 /**
  * Describes a method in a ClassFile structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class MethodInfo(classFile: ClassFile) : ClassMember(classFile) {
 

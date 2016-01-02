@@ -13,8 +13,6 @@ import java.io.DataOutput
 
 /**
  * Describes an entry in a LineNumberTable attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class LineNumberTableEntry : Structure() {
 

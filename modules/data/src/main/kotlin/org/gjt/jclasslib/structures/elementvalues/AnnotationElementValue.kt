@@ -12,8 +12,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  Annotation attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), AnnotationData {
 

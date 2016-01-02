@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes a SourceFile attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class SourceFileAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

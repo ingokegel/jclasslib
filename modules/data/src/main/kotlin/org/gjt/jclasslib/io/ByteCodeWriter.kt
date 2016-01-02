@@ -15,8 +15,6 @@ import java.io.IOException
 /**
  * Converts a list of instructions as defined in the package
  * org.gjt.jclasslib.code to code.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 object ByteCodeWriter {
 

@@ -11,8 +11,6 @@ import org.gjt.jclasslib.structures.ClassFile
 
 /**
  * Describes an LocalVariableTable attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class LocalVariableTableAttribute(classFile: ClassFile) : LocalVariableAttribute(classFile) {
 

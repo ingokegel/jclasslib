@@ -12,8 +12,6 @@ import java.io.OutputStream
 
 /**
  * DataOutputStream which extends ByteCodeOutput.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ByteCodeOutputStream(output: OutputStream) : DataOutputStream(CountedOutputStream(output)), ByteCodeOutput {
 

@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes the invokeinterface instruction.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class InvokeInterfaceInstruction
 @JvmOverloads

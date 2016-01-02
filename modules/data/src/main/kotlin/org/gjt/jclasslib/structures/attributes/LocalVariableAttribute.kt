@@ -13,8 +13,6 @@ import java.io.DataOutput
 
 /**
  * Contains common attributes to a local variable table attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 abstract class LocalVariableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

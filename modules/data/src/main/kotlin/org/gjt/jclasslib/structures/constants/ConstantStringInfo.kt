@@ -16,8 +16,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_String_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantStringInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 

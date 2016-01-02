@@ -16,8 +16,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_MethodType_info constant pool data structure.
-
- * @author [Hannes Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantMethodTypeInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 

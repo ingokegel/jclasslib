@@ -13,8 +13,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  EnclosingMethod attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

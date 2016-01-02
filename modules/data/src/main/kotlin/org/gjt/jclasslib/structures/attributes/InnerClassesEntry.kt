@@ -15,8 +15,6 @@ import java.io.DataOutput
 
 /**
  * Describes an entry in a InnerClasses attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class InnerClassesEntry : Structure() {
 

@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes the invokedynamic instruction.
-
- * @author [Hannes Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class InvokeDynamicInstruction
 @JvmOverloads

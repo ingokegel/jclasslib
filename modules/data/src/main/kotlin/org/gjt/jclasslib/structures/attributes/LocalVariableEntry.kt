@@ -12,8 +12,6 @@ import java.io.DataOutput
 
 /**
  * Contains common attributes to a local variable table entry structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class LocalVariableEntry : Structure() {
 

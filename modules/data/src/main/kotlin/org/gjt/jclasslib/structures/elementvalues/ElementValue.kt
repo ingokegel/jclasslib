@@ -12,8 +12,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  ElementValue attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 abstract class ElementValue(val elementValueType: ElementValueType) : Structure() {
 

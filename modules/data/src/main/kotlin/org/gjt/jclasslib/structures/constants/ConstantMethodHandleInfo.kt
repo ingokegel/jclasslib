@@ -16,8 +16,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_MethodHandle_info constant pool data structure.
-
- * @author [Hannes Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantMethodHandleInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 

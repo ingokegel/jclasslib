@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_Long_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantLongInfo(classFile: ClassFile) : ConstantLargeNumeric(classFile) {
 

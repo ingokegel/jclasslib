@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Base class for runtime annotations.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 abstract class RuntimeAnnotationsAttribute(classFile: ClassFile) : AttributeInfo(classFile), AnnotationHolder {
 

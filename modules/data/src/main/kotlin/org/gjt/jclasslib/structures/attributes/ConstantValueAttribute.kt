@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes a ConstantValue attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantValueAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

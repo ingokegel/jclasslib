@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes an exception table entry in a Code attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class ExceptionTableEntry : Structure() {
 

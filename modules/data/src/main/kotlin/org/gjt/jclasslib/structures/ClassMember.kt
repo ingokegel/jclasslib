@@ -12,8 +12,6 @@ import java.io.DataOutput
 
 /**
  * Base class for class members.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 abstract class ClassMember(protected val classFile: ClassFile) : Structure(), AttributeContainer {
 

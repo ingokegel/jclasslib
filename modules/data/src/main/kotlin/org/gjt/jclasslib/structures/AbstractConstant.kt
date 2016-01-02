@@ -9,8 +9,6 @@ package org.gjt.jclasslib.structures
 
 /**
  * Base class for all stateful constant pool entries in the constants package.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 abstract class AbstractConstant(protected val classFile: ClassFile ) : Constant() {
 

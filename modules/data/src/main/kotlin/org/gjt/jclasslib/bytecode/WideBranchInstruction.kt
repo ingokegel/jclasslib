@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes an instruction that is followed by an immediate int.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class WideBranchInstruction @JvmOverloads constructor(opcode: Opcode, branchOffset: Int = 0) : AbstractBranchInstruction(opcode, branchOffset) {
 

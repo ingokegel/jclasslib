@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes a Deprecated attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class DeprecatedAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

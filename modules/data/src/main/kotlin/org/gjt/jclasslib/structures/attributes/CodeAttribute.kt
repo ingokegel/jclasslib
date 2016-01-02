@@ -15,8 +15,6 @@ import java.io.DataOutput
 
 /**
  * Describes a Code attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeContainer {
 

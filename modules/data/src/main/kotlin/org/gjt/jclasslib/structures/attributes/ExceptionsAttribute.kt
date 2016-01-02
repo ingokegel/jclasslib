@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes an Exceptions attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ExceptionsAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

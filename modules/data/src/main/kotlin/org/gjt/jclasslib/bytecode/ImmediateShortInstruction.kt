@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes an instruction that is followed by an immediate unsigned short.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 open class ImmediateShortInstruction
 @JvmOverloads

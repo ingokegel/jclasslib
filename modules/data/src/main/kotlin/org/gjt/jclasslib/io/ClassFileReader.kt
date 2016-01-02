@@ -15,8 +15,6 @@ import java.util.jar.JarFile
 /**
  * Converts class files to a class file structure ClassFile as defined in
  * org.gjt.jclasslib.structures.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 object ClassFileReader {
 

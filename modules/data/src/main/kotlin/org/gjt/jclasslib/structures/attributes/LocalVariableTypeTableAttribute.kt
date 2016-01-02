@@ -10,8 +10,6 @@ import org.gjt.jclasslib.structures.ClassFile
 
 /**
  * Describes an  LocalVariableTypeTable attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class LocalVariableTypeTableAttribute(classFile: ClassFile) : LocalVariableAttribute(classFile) {
 

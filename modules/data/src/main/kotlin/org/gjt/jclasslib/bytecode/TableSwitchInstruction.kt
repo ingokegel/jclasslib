@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes the tableswitch instruction.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class TableSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
 

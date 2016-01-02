@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes an instruction that branches to a different offset.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 
 class BranchInstruction @JvmOverloads constructor(opcode: Opcode, branchOffset: Int = 0) : AbstractBranchInstruction(opcode, branchOffset) {

@@ -12,8 +12,6 @@ import org.gjt.jclasslib.structures.Lookup
 
 /**
  * Defines all opcodes and their verbose representation.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 enum class Opcode(
         /**

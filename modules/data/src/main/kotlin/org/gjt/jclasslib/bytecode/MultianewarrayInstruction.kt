@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes the multianewarray instruction.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class MultianewarrayInstruction(opcode: Opcode) : ImmediateShortInstruction(opcode) {
 

@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Base class for all opcode instruction wrappers.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 open class Instruction(
         /**

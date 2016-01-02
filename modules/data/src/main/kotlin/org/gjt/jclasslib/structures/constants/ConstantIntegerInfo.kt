@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_Integer_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantIntegerInfo(classFile: ClassFile) : ConstantNumeric(classFile) {
 

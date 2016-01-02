@@ -11,8 +11,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  ClassElementValue attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class ClassElementValue : ElementValue(ElementValueType.CLASS) {
     /**

@@ -13,8 +13,6 @@ import java.util.*
 
 /**
  * Describes the lookupswitch instruction.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class LookupSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
 

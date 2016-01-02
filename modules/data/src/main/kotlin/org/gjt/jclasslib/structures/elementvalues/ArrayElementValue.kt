@@ -11,8 +11,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  ArrayElementValue attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     /**

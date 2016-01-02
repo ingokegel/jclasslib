@@ -11,8 +11,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  ConstElementValue attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class ConstElementValue(elementValueType: ElementValueType) : ElementValue(elementValueType) {
     /**

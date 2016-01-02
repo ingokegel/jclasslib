@@ -15,8 +15,6 @@ import java.io.DataOutput
 
 /**
  * The class file can contain non-standard attributes that can be read, but that are not interpreted.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class UnknownAttribute(
         /**

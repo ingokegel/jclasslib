@@ -9,8 +9,6 @@ package org.gjt.jclasslib.structures
 
 /**
  * Describes a field in a ClassFile structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class FieldInfo(classFile: ClassFile) : ClassMember(classFile) {
 

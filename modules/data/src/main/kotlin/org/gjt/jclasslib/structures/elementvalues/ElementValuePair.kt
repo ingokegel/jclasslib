@@ -12,8 +12,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  ElementValuePair attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class ElementValuePair : Structure() {
 

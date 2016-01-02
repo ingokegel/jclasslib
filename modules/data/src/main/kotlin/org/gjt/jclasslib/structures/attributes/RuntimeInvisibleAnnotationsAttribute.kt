@@ -10,8 +10,6 @@ import org.gjt.jclasslib.structures.ClassFile
 
 /**
  * Describes an  RuntimeInvisibleAnnotations attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class RuntimeInvisibleAnnotationsAttribute(classFile: ClassFile) : RuntimeAnnotationsAttribute(classFile) {
 

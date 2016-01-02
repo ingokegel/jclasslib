@@ -11,8 +11,6 @@ import java.io.DataInput
 
 /**
  * Base class for all attribute structures in the attribute package.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 abstract class AttributeInfo(protected val classFile: ClassFile) : Structure() {
 

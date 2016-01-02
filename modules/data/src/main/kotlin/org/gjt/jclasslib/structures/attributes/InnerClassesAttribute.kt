@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes an InnerClasses attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

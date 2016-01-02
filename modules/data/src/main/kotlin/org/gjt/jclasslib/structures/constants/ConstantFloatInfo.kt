@@ -16,8 +16,6 @@ import java.lang.Float.intBitsToFloat
 
 /**
  * Describes a CONSTANT_Float_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantFloatInfo(classFile: ClassFile) : ConstantNumeric(classFile) {
 

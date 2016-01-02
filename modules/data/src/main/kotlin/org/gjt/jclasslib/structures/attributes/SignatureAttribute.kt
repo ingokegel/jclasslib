@@ -13,8 +13,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  Signature attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class SignatureAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

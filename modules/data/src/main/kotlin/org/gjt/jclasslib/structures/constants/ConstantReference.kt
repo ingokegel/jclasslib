@@ -15,8 +15,6 @@ import java.io.DataOutput
 
 /**
  * Base class for constant pool data structures which reference class members.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 abstract class ConstantReference(classFile: ClassFile) : AbstractConstant(classFile) {
 

@@ -9,7 +9,5 @@ package org.gjt.jclasslib.bytecode
 
 /**
  * Holds a single match-offset pair.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class MatchOffsetPair(var match: Int, var offset: Int)

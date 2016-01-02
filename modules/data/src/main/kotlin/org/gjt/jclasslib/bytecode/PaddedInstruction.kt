@@ -14,8 +14,6 @@ import org.gjt.jclasslib.io.ByteCodeOutput
  * Base class for instructions which need a four byte padding relative
  * to the start of the enclosing code of the parent Code
  * attribute before reading immediate arguments.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
 

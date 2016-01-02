@@ -13,8 +13,6 @@ import java.io.InputStream
 
 /**
  * InputStream which counts the number of bytes read.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class CountedInputStream (input: InputStream) : FilterInputStream(input) {
 

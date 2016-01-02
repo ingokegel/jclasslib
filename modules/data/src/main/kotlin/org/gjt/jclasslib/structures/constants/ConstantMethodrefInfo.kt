@@ -13,8 +13,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_Methodref_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantMethodrefInfo(classFile: ClassFile) : ConstantReference(classFile) {
 

@@ -16,8 +16,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_InvokeDynamic_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantInvokeDynamicInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 

@@ -17,8 +17,6 @@ import java.util.*
 
 /**
  * The class file structure in which all other structures are hooked up.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class ClassFile : Structure(), AttributeContainer {
 

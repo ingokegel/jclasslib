@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Base class for large numeric constant pool data structures.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 abstract class ConstantLargeNumeric(classFile: ClassFile) : AbstractConstant(classFile) {
 

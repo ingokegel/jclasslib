@@ -13,8 +13,6 @@ import java.io.OutputStream
 
 /**
  * OutputStream which counts the number of bytes written.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class CountedOutputStream(out: OutputStream) : FilterOutputStream(out) {
 

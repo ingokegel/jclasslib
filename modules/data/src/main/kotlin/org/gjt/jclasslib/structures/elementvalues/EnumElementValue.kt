@@ -11,8 +11,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  EnumElementValue attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class EnumElementValue : ElementValue(ElementValueType.ENUM) {
     /**

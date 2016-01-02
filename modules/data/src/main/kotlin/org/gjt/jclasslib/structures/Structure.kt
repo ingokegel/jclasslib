@@ -17,8 +17,6 @@ import java.util.*
  *
  *
  * Provides common services such as reading, writing and debugging.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 
 //TODO check all "factory methods"

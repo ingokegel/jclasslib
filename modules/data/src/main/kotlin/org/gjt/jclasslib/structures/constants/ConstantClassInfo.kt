@@ -16,8 +16,6 @@ import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_Class_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantClassInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 

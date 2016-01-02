@@ -12,8 +12,6 @@ import java.io.DataInput
 /**
  * Extends DataInput to accommodate for a method to retrieve the number
  * of bytes read.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 interface ByteCodeInput : DataInput {
 

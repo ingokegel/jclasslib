@@ -11,8 +11,6 @@ import java.io.DataInput
 
 /**
  * Base class for all constant pool entries in the constants package.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 abstract class Constant : Structure() {
 

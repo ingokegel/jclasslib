@@ -16,8 +16,6 @@ import java.lang.Double.longBitsToDouble
 
 /**
  * Describes a CONSTANT_Double_info constant pool data structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class ConstantDoubleInfo(classFile: ClassFile) : ConstantLargeNumeric(classFile) {
 

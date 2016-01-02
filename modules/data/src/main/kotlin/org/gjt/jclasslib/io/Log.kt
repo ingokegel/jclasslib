@@ -9,8 +9,6 @@ package org.gjt.jclasslib.io
 
 /**
  * Utility class to log errors, warnings and debug messages.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 object Log {
 

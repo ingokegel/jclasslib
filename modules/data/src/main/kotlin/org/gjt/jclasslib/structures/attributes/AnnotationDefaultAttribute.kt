@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes an  AnnotationDefault attribute structure.
-
- * @author [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 class AnnotationDefaultAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

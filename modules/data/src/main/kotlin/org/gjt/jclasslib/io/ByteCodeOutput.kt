@@ -12,8 +12,6 @@ import java.io.DataOutput
 /**
  * Extends DataOutput to accommodate for a method to retrieve the number
  * of bytes written.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 interface ByteCodeOutput : DataOutput {
 

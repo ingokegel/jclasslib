@@ -14,8 +14,6 @@ import java.io.DataOutput
 
 /**
  * Describes a Synthetic attribute structure.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class SyntheticAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

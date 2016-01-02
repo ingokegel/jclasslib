@@ -15,8 +15,6 @@ import java.io.*
 /**
  * Converts class file structure ClassFile as defined in
  * org.gjt.jclasslib.structures to class files.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 object ClassFileWriter {
 

@@ -12,8 +12,6 @@ import java.util.*
 /**
  * Defines access flags constants and verbose expressions as defined by
  * the java access modifiers.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com), [Vitor Carreira](mailto:vitor.carreira@gmail.com)
  */
 enum class AccessFlag(
         /**

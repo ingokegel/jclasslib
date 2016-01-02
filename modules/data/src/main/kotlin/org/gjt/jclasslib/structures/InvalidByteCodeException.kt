@@ -10,7 +10,5 @@ package org.gjt.jclasslib.structures
 /**
  * Exception relating to errors in the class file format of internal state
  * of the ClassFile structure and its substructures.
-
- * @author [Ingo Kegel](mailto:jclasslib@ej-technologies.com)
  */
 class InvalidByteCodeException(message: String) : Exception(message)
