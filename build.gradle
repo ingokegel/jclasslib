@@ -6,9 +6,10 @@ ext.libCompileDir = file('lib-compile')
 
 buildDir = file('build/gradle')
 ext.externalLibsDir = file("$buildDir/externalLibs")
-ext.kotlinVersion = '1.0.0-beta-4584'
 
 buildscript {
+    ext.kotlinVersion = '1.0.0-beta-4584'
+
     repositories {
         flatDir {
             dirs 'lib-compile'
@@ -18,7 +19,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+
+        //TODO remove next 2 lines when dokka pull request is merged and uncomment dependency below
+        classpath "org.jetbrains.dokka:dokka-fatjar:0.9.4"
+        classpath ':dokka-gradle-plugin'
+        //classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.4"
+
         // Download after install4j 6
         classpath ':i4jgradle'
 

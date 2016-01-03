@@ -1,7 +1,8 @@
 apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.dokka'
 
 dependencies {
-    compile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0-beta-4584'
+    compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 }
 
 apply plugin: 'java'
@@ -10,11 +11,13 @@ jar {
     archiveName = 'jclasslib-library.jar'
 }
 
-javadoc {
-    options {
-        links 'http://docs.oracle.com/javase/8/docs/api/'
-        addStringOption('Xdoclint:none', '-quiet')
-    }
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+}
+
+task doc {
+    dependsOn dokka, dokkaJavadoc
 }
 
 task copyDist(type: Copy, dependsOn: jar) {
@@ -24,5 +27,5 @@ task copyDist(type: Copy, dependsOn: jar) {
 }
 
 task dist {
-    dependsOn javadoc, copyDist
+    dependsOn doc, copyDist
 }

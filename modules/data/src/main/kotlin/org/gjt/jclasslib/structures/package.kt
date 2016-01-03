@@ -22,13 +22,13 @@ const val SYSTEM_PROPERTY_SKIP_ATTRIBUTES = "jclasslib.io.skipAttributes"
 /**
  * Flag for debugging while reading and writing class files.
  */
-val isDebug: Boolean = java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG)
+internal val isDebug: Boolean = java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG)
 
 /**
  * Log a warning message.
  * @param message the message
  */
-fun warning(message: String) {
+internal fun warning(message: String) {
     print("[warning] ")
     println(message)
 }
@@ -37,7 +37,7 @@ fun warning(message: String) {
  * Log a debug message.
  * @param message the message
  */
-fun debug(message: String) {
+internal fun debug(message: String) {
     print("[debug] ")
     println(message)
 }
@@ -45,13 +45,13 @@ fun debug(message: String) {
 /**
  * Format the int value in hexadecimal notation
  */
-val Int.hex: String
+internal val Int.hex: String
     get() = "0x${Integer.toHexString(this)}"
 
 /**
  * Format the int value in hexadecimal notation and pad with zeros
  * @param length the number of digits in the output
  */
-fun Int.paddedHex(length: Int): String {
+internal fun Int.paddedHex(length: Int): String {
     return "0x" + this.hex.padStart(length, '0')
 }
