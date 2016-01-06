@@ -332,7 +332,7 @@ class ClassFile : Structure(), AttributeContainer {
                 placeholderIndex -> ConstantPlaceholder
                 else -> {
                     if (isDebug) debug("reading constant pool entry $i")
-                    val constantType = ConstantType.getFromTag(input.readByte())
+                    val constantType = ConstantType.getFromTag(input.readByte().toInt())
                     constantType.create(this).apply {
                         read(input)
                         constantPoolEntryToIndex.put(this, i)

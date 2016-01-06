@@ -13,6 +13,8 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 /**
  * Represents the verification type of a bootstrap entry.
  */
+
+@Suppress("NOT_DOCUMENTED")
 enum class VerificationType(val tag: Int) {
 
     TOP(0),
@@ -25,11 +27,14 @@ enum class VerificationType(val tag: Int) {
     OBJECT(7),
     UNINITIALIZED(8);
 
+    /**
+     * Create an associated [VerificationTypeInfoEntry] instance.
+     */
     fun createEntry(classFile: ClassFile): VerificationTypeInfoEntry {
         when (this) {
-            OBJECT -> return ObjectVerificationTypeEntry(classFile)
-            UNINITIALIZED -> return UninitializedVerificationTypeEntry()
-            else -> return DefaultVerificationTypeEntry(this)
+            OBJECT -> return ObjectVerificationTypeInfoEntry(classFile)
+            UNINITIALIZED -> return UninitializedVerificationTypeInfoEntry()
+            else -> return VerificationTypeInfoEntry(this)
         }
     }
 

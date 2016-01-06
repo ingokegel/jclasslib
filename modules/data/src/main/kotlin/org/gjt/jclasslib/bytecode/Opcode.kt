@@ -12,17 +12,12 @@ import org.gjt.jclasslib.structures.Lookup
 
 /**
  * Defines all opcodes and their verbose representation.
+ * @property verbose Verbose representation.
  */
+@Suppress("NOT_DOCUMENTED")
 enum class Opcode(
-        /**
-         * Bytecode value.
-         */
         override val tag: Int,
-        /**
-         * Verbose representation.
-         */
         val verbose: String,
-
         private val docAnchorSuffix: String = verbose
 ) : ClassFileEnum {
 
@@ -232,6 +227,9 @@ enum class Opcode(
     IMPDEP1(254, "impdep1", ""),
     IMPDEP2(255, "impdep2", "");
 
+    /**
+     * The URL to the documentation in the JVM spec
+     */
     val docUrl: String
         get() = JVM_SPEC_URL + docAnchorSuffix
 

@@ -15,7 +15,14 @@ import java.io.DataOutput
  */
 class TypeParameterBoundTargetInfo : TargetInfo() {
 
+    /**
+     * The index of the parameter.
+     */
     var typeParameterIndex: Int = 0
+
+    /**
+     * The bound index.
+     */
     var boundIndex: Int = 0
 
     override fun readData(input: DataInput) {

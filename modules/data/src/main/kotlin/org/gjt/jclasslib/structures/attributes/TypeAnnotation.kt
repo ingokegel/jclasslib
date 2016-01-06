@@ -19,9 +19,24 @@ import java.io.DataOutput
  */
 class TypeAnnotation : Structure() {
 
+    /**
+     * The target type.
+     */
     lateinit var targetType: TypeAnnotationTargetType
+
+    /**
+     * The target info.
+     */
     lateinit var targetInfo: TargetInfo
+
+    /**
+     * The type path entries.
+     */
     var typePathEntries: Array<TypePathEntry> = emptyArray()
+
+    /**
+     * The annotation.
+     */
     var annotation: Annotation = Annotation()
 
     override fun readData(input: DataInput) {
@@ -47,6 +62,9 @@ class TypeAnnotation : Structure() {
     override val debugInfo: String
         get() = ""
 
+    /**
+     * The length of the structure in bytes.
+     */
     val length: Int
         get() = 2 + targetInfo.length + typePathEntries.size * 2 + annotation.length
 

@@ -35,6 +35,9 @@ class Annotation : Structure(), AnnotationData {
         }
     }
 
+    /**
+     * Length of the structure in bytes.
+     */
     val length: Int
         get() = 4 + elementValuePairEntries.sumBy { it.length }
 

@@ -12,10 +12,13 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an entry of type VerificationType.OBJECT in a StackMapFrameEntry attribute structure.
+ * Describes an entry of type [VerificationType.OBJECT] in a StackMapFrameEntry attribute structure.
  */
-class ObjectVerificationTypeEntry(private val classFile: ClassFile) : VerificationTypeInfoEntry(VerificationType.OBJECT) {
+class ObjectVerificationTypeInfoEntry(private val classFile: ClassFile) : VerificationTypeInfoEntry(VerificationType.OBJECT) {
 
+    /**
+     * The constant pool index of the associated ConstantClassInfo.
+     */
     var cpIndex: Int = 0
 
     override fun readData(input: DataInput) {
@@ -36,6 +39,9 @@ class ObjectVerificationTypeEntry(private val classFile: ClassFile) : Verificati
     private val verboseIndex: String
         get() = classFile.getConstantPoolEntryName(cpIndex)
 
+    /**
+     * The length of the structure in bytes.
+     */
     override val length: Int
         get() = super.length + 2
 }

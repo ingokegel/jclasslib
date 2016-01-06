@@ -12,6 +12,10 @@ import org.gjt.jclasslib.structures.ConstantType
 import java.io.DataInput
 import java.io.DataOutput
 
+/**
+ * Constant pool entry for unused indices in the constant pool, such as after [ConstantLongInfo] or [ConstantDoubleInfo]
+ * entries.
+ */
 object ConstantPlaceholder : Constant() {
 
     override val constantType: ConstantType

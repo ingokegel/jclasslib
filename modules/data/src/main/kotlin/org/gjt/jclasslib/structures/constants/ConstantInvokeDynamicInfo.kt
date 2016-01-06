@@ -19,7 +19,14 @@ import java.io.DataOutput
  */
 class ConstantInvokeDynamicInfo(classFile: ClassFile) : AbstractConstant(classFile) {
 
+    /**
+     * The constant pool index of the bootstrap method attribute.
+     */
     var bootstrapMethodAttributeIndex: Int = 0
+
+    /**
+     * The constant pool index of the associated [ConstantNameAndTypeInfo].
+     */
     var nameAndTypeIndex: Int = 0
 
     override val constantType: ConstantType
@@ -29,6 +36,9 @@ class ConstantInvokeDynamicInfo(classFile: ClassFile) : AbstractConstant(classFi
         @Throws(InvalidByteCodeException::class)
         get() = "${nameAndTypeInfo.name}, BootstrapMethods #$bootstrapMethodAttributeIndex"
 
+    /**
+     * The associated [ConstantNameAndTypeInfo] constant pool entry.
+     */
     val nameAndTypeInfo: ConstantNameAndTypeInfo
         @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(nameAndTypeIndex, ConstantNameAndTypeInfo::class.java)

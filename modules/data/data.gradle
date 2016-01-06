@@ -11,6 +11,11 @@ jar {
     archiveName = 'jclasslib-library.jar'
 }
 
+dokka {
+    processConfigurations = ["compile"]
+    includes = ['packages.md']
+}
+
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
     outputFormat = 'javadoc'
     outputDirectory = "$buildDir/javadoc"

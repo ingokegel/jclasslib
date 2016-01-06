@@ -12,16 +12,27 @@ import java.io.DataOutput
 
 /**
  * Describes an  ElementValue attribute structure.
+ * @property elementValueType The type of the element value.
  */
 abstract class ElementValue(val elementValueType: ElementValueType) : Structure() {
 
+    /**
+     * Name of the entry.
+     */
     abstract val entryName: String
+
+    /**
+     * Specific length of the entry in bytes.
+     */
     protected abstract val specificLength: Int
 
     override fun writeData(output: DataOutput) {
         output.writeByte(elementValueType.tag)
     }
 
+    /**
+     * Length of the entry in bytes.
+     */
     val length: Int
         get() = 1 + specificLength
 

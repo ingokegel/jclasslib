@@ -16,8 +16,19 @@ import java.io.DataOutput
  */
 class LocalVarTarget : Structure() {
 
+    /**
+     * start_pc of this local variable target.
+     */
     var startPc: Int = 0
+
+    /**
+     * Length in bytes of this local variable target.
+     */
     var length: Int = 0
+
+    /**
+     * Index of this local variable target.
+     */
     var index: Int = 0
 
     override fun readData(input: DataInput) {

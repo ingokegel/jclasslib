@@ -21,8 +21,11 @@ import java.io.DataOutput
 /**
  * Describes an entry of type VerificationType.UNINITIALIZED in a StackMapFrameEntry attribute structure.
  */
-class UninitializedVerificationTypeEntry : VerificationTypeInfoEntry(VerificationType.UNINITIALIZED) {
+class UninitializedVerificationTypeInfoEntry : VerificationTypeInfoEntry(VerificationType.UNINITIALIZED) {
 
+    /**
+     * The offset.
+     */
     var offset: Int = 0
 
     override fun readData(input: DataInput) {

@@ -9,5 +9,7 @@ package org.gjt.jclasslib.bytecode
 
 /**
  * Holds a single match-offset pair.
+ * @property match The match value.
+ * @property offset The bytecode offset.
  */
-class MatchOffsetPair(var match: Int, var offset: Int)
+class MatchOffsetPair(@Suppress("NOT_DOCUMENTED") var match: Int, var offset: Int)

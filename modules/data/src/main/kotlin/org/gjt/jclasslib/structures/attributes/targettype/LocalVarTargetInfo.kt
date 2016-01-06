@@ -15,6 +15,9 @@ import java.io.DataOutput
  */
 class LocalVarTargetInfo : TargetInfo() {
 
+    /**
+     * Contained local variable targets.
+     */
     var localVarTargets: Array<LocalVarTarget> = emptyArray()
 
     override fun readData(input: DataInput) {

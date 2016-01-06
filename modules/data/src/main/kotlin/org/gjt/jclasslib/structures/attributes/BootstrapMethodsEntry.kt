@@ -45,6 +45,9 @@ class BootstrapMethodsEntry(private val classFile: ClassFile) : Structure() {
     override val debugInfo: String
         get() = "with methodRefIndex $methodRefIndex, arguments ($verbose)"
 
+    /**
+     * Verbose representation of the bootstrap method entry.
+     */
     val verbose: String
         get() {
             val buffer = StringBuilder()
@@ -59,6 +62,9 @@ class BootstrapMethodsEntry(private val classFile: ClassFile) : Structure() {
 
     private fun getVerboseIndex(index: Int): String = classFile.getConstantPoolEntryName(index)
 
+    /**
+     * Length of the structure in bytes.
+     */
     val length: Int
         get() = 4 + argumentIndices.size * 2
 

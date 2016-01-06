@@ -16,7 +16,14 @@ import java.io.DataOutput
  */
 class TypePathEntry : Structure() {
 
+    /**
+     * The type path kind.
+     */
     lateinit var typePathKind: TypePathKind
+
+    /**
+     * The index of the type argument.
+     */
     var typeArgumentIndex: Int = 0
 
     override fun readData(input: DataInput) {

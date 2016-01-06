@@ -8,6 +8,11 @@
 package org.gjt.jclasslib.structures
 
 
+/**
+ * Base class for companion objects that facilitates fast bytecode to enum instance lookups.
+ * @property enumClass The class of the enum
+ * @property name A name for the enum for use in error messages
+ */
 abstract class Lookup<T>(
     val enumClass : Class<T>,
     val name : String
@@ -22,6 +27,10 @@ abstract class Lookup<T>(
         }
     }
 
+    /**
+     * Get the enum instance for the specified bytecode tag.
+     * @throws InvalidByteCodeException if the bytecode tag is not found
+     */
     @Throws(InvalidByteCodeException::class)
     fun getFromTag(tag: Int): T {
         if (tag < LOOKUP.size && tag >= 0) {

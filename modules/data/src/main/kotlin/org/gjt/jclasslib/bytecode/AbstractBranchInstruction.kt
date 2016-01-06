@@ -1,14 +1,7 @@
 package org.gjt.jclasslib.bytecode
 
-abstract class AbstractBranchInstruction(opcode: Opcode) : Instruction(opcode) {
-
-    constructor(opcode: Opcode, branchOffset: Int) : this(opcode) {
-        this.branchOffset = branchOffset
-    }
-
-    /**
-     * Relative offset of the branch of this instruction.
-     */
-    var branchOffset: Int = 0
-
-}
+/**
+ * Base class for instructions with a branch offset.
+ * @property branchOffset Relative offset of the branch of this instruction.
+ */
+abstract class AbstractBranchInstruction(opcode: Opcode, var branchOffset: Int = 0) : Instruction(opcode)

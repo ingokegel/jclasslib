@@ -39,6 +39,9 @@ class ParameterAnnotations : Structure() {
     override val debugInfo: String
         get() = ""
 
+    /**
+     * The length of the structure in bytes.
+     */
     val length: Int
         get() = 2 + runtimeAnnotations.sumBy { length }
 

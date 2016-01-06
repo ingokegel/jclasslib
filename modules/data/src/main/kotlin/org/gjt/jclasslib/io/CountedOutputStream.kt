@@ -14,6 +14,7 @@ import java.io.OutputStream
 /**
  * OutputStream which counts the number of bytes written.
  */
+@Suppress("NOT_DOCUMENTED")
 class CountedOutputStream(out: OutputStream) : FilterOutputStream(out) {
 
     /**

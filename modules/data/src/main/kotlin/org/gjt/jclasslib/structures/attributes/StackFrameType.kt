@@ -12,6 +12,7 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 /**
  * Represents the available stack frame types in a stack map entry attribute.
  */
+@Suppress("NOT_DOCUMENTED")
 enum class StackFrameType(private val boundary: Int) {
     SAME(63), //0-63
     SAME_LOCALS_1_STACK_ITEM(127), //64-127
@@ -24,6 +25,10 @@ enum class StackFrameType(private val boundary: Int) {
 
     companion object {
 
+        /**
+         * Get the stack frame type from the associated bytecode.
+         * @throws InvalidByteCodeException if the bytecode is invalid
+         */
         @Throws(InvalidByteCodeException::class)
         fun getFromTag(tag: Int): StackFrameType {
             if (tag < 0) {

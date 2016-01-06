@@ -11,6 +11,9 @@ import org.gjt.jclasslib.structures.attributes.*
 import java.io.DataInput
 import java.io.DataOutput
 
+/**
+ * Implemented by structures that have attributes.
+ */
 interface AttributeContainer {
 
     /**

@@ -16,7 +16,14 @@ import java.io.DataOutput
  */
 class MethodParametersEntry : Structure() {
 
+    /**
+     * The name index.
+     */
     var nameIndex: Int = 0
+
+    /**
+     * The access flags.
+     */
     var accessFlags: Int = 0
 
     override fun readData(input: DataInput) {
@@ -32,6 +39,9 @@ class MethodParametersEntry : Structure() {
     override val debugInfo: String
         get() = ""
 
+    /**
+     * The length of the structure in bytes.
+     */
     val length: Int
         get() = 4
 

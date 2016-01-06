@@ -7,6 +7,12 @@
 
 package org.gjt.jclasslib.structures
 
+/**
+ * Implemented by enums that have an identifying bytecode tag.
+ */
 interface ClassFileEnum {
+    /**
+     * The bytecode tag representing the enum value.
+     */
     val tag : Int
 }

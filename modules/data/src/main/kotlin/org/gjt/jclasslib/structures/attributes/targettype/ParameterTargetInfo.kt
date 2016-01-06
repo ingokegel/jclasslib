@@ -15,6 +15,9 @@ import java.io.DataOutput
  */
 class ParameterTargetInfo : TargetInfo() {
 
+    /**
+     * The index of the type parameter.
+     */
     var typeParameterIndex: Int = 0
 
     override fun readData(input: DataInput) {

@@ -12,17 +12,11 @@ import java.util.*
 /**
  * Defines access flags constants and verbose expressions as defined by
  * the java access modifiers.
+ * @property flag the flag
+ * @property verbose Verbose form of the flag suitable for printing a list of access flags
  */
-enum class AccessFlag(
-        /**
-         * The flag
-         */
-        val flag: Int,
-        /**
-         * Verbose form of the flag suitable for printing a list of access flags
-         */
-        val verbose: String
-) {
+@Suppress("NOT_DOCUMENTED")
+enum class AccessFlag(val flag: Int, val verbose: String) {
 
     PUBLIC(1, "public"),
     PRIVATE(2, "private"),

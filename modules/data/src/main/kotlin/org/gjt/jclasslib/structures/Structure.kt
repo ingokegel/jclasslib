@@ -5,6 +5,9 @@
     version 2 of the license, or (at your option) any later version.
 */
 
+/**
+ * Test
+ */
 package org.gjt.jclasslib.structures
 
 import java.io.DataInput

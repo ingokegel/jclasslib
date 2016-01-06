@@ -38,9 +38,15 @@ class ElementValuePair : Structure() {
     override val debugInfo: String
         get() = "with elementNameIndex $elementNameIndex"
 
+    /**
+     * Length of the the structure in bytes.
+     */
     val length: Int
         get() = 2 + elementValue.length
 
+    /**
+     * Name of the entry.
+     */
     val entryName: String
         get() = "ElementValuePair"
 

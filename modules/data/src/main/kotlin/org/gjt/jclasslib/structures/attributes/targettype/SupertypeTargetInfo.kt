@@ -15,6 +15,10 @@ import java.io.DataOutput
  */
 class SupertypeTargetInfo : TargetInfo() {
 
+    /**
+     * The index of the super type, 65535 if the super class is the target, otherwise
+     * an index in the list of implemented interfaces.
+     */
     var supertypeIndex: Int = 0
 
     override fun readData(input: DataInput) {

@@ -15,6 +15,9 @@ import java.io.DataOutput
  */
 class OffsetTargetInfo : TargetInfo() {
 
+    /**
+     * The bytecode offset.
+     */
     var offset: Int = 0
 
     override fun readData(input: DataInput) {

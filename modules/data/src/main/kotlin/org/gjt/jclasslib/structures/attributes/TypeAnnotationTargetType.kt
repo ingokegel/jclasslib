@@ -14,6 +14,7 @@ import org.gjt.jclasslib.structures.attributes.targettype.*
 /**
  * Represents the target type of a type annotation.
  */
+@Suppress("NOT_DOCUMENTED")
 enum class TypeAnnotationTargetType(override val tag: Int, private val targetInfoClass: Class<out TargetInfo>) : ClassFileEnum {
 
     GENERIC_PARAMETER_CLASS(0, ParameterTargetInfo::class.java),
@@ -39,6 +40,9 @@ enum class TypeAnnotationTargetType(override val tag: Int, private val targetInf
     TYPE_ARGUMENT_METHODREF_NEW(74, TypeArgumentTargetInfo::class.java),
     TYPE_ARGUMENT_METHODREF_IDENTIFIER(75, TypeArgumentTargetInfo::class.java);
 
+    /**
+     * Create an associated [TargetInfo] instance.
+     */
     fun createTargetInfo(): TargetInfo {
         try {
             return targetInfoClass.newInstance()
@@ -47,7 +51,5 @@ enum class TypeAnnotationTargetType(override val tag: Int, private val targetInf
         }
     }
 
-    companion object : Lookup<TypeAnnotationTargetType>(TypeAnnotationTargetType::class.java, "type annotation target type") {
-
-    }
+    companion object : Lookup<TypeAnnotationTargetType>(TypeAnnotationTargetType::class.java, "type annotation target type")
 }

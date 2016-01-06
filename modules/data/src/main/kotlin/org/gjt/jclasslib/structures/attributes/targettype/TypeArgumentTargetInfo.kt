@@ -14,7 +14,15 @@ import java.io.DataOutput
  * Target info for a TypeAnnotation structure with an offset and an argument index.
  */
 class TypeArgumentTargetInfo : TargetInfo() {
+
+    /**
+     * The offset.
+     */
     var offset: Int = 0
+
+    /**
+     * The index of the type argument.
+     */
     var typeArgumentIndex: Int = 0
 
     override fun readData(input: DataInput) {

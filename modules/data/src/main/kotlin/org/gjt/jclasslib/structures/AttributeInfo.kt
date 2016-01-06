@@ -8,6 +8,7 @@ package org.gjt.jclasslib.structures
 
 /**
  * Base class for all attribute structures in the attribute package.
+ * @property classFile The class file that this class member is a part of.
  */
 abstract class AttributeInfo(protected val classFile: ClassFile) : Structure() {
 
@@ -24,7 +25,7 @@ abstract class AttributeInfo(protected val classFile: ClassFile) : Structure() {
         get() = classFile.getConstantPoolUtf8Entry(attributeNameIndex).string
 
     /**
-     * Get the length of this attribute as a number of bytes.
+     * Get the length of this attribute in bytes.
      * @return the length
      */
     abstract fun getAttributeLength(): Int

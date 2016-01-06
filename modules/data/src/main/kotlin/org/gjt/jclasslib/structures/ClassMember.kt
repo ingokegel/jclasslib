@@ -12,6 +12,7 @@ import java.io.DataOutput
 
 /**
  * Base class for class members.
+ * @property classFile The class file that this class member is a part of.
  */
 abstract class ClassMember(protected val classFile: ClassFile) : Structure(), AttributeContainer {
 
@@ -33,7 +34,7 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
     override var attributes: Array<AttributeInfo> = emptyArray()
 
     /**
-     * Get the Name of the class member.
+     * Name of the class member.
      */
     val name: String
         @Throws(InvalidByteCodeException::class)
@@ -58,6 +59,10 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
     val accessFlagsVerbose: String
         get() = formatAccessFlagsVerbose(accessFlags)
 
+    /**
+     * Verbose description of the specified access flags.
+     * @param accessFlags the access flags
+     */
     protected abstract fun formatAccessFlagsVerbose(accessFlags: Int): String
 
     override fun readData(input: DataInput) {

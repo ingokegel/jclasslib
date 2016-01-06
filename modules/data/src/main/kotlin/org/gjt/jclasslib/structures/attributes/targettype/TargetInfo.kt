@@ -14,7 +14,14 @@ import org.gjt.jclasslib.structures.Structure
  */
 abstract class TargetInfo : Structure() {
 
+    /**
+     * The length of the structure in bytes.
+     */
     abstract val length: Int
+
+    /**
+     * A verbose description for the target info.
+     */
     abstract val verbose: String
 
 }

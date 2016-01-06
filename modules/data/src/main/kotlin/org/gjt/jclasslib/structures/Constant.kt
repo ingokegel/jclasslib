@@ -24,8 +24,14 @@ abstract class Constant : Structure() {
         @Throws(InvalidByteCodeException::class)
         get() = ""
 
+    /**
+     * Check if constant is equal to another one.
+     */
     override fun equals(other: Any?): Boolean = other is Constant
 
+    /**
+     * Hash code of the constant,
+     */
     override fun hashCode(): Int = 0
 
 }

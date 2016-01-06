@@ -10,6 +10,10 @@ package org.gjt.jclasslib.structures.constants
 import org.gjt.jclasslib.structures.ClassFileEnum
 import org.gjt.jclasslib.structures.Lookup
 
+/**
+ * Lists all types of [ConstantMethodHandleInfo] constant pool entries.
+ */
+@Suppress("NOT_DOCUMENTED")
 enum class MethodHandleType(override val tag: Int, val verbose: String) : ClassFileEnum {
 
     GET_FIELD(1, "REF_getField"),
@@ -22,8 +26,6 @@ enum class MethodHandleType(override val tag: Int, val verbose: String) : ClassF
     NEW_INVOKE_SPECIAL(8, "REF_newInvokeSpecial"),
     INVOKE_INTERFACE(9, "REF_invokeInterface");
 
-    companion object : Lookup<MethodHandleType>(MethodHandleType::class.java, "method handle entry") {
-
-    }
+    companion object : Lookup<MethodHandleType>(MethodHandleType::class.java, "method handle entry")
 
 }

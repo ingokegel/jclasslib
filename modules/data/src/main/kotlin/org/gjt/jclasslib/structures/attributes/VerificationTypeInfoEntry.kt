@@ -14,14 +14,9 @@ import java.io.DataOutput
 
 /**
  * Describes an entry in a StackMapFrameEntry attribute structure.
+ * @property type The verification type.
  */
-abstract class VerificationTypeInfoEntry(
-        /**
-         * The verification type
-         */
-        val type: VerificationType
-) : Structure() {
-
+open class VerificationTypeInfoEntry(val type: VerificationType) : Structure() {
 
     override fun writeData(output: DataOutput) {
         output.writeByte(type.tag)
@@ -35,7 +30,7 @@ abstract class VerificationTypeInfoEntry(
         get() = "of type $type"
 
     /**
-     * Returns the bytecode length of the entry.
+     * The length of the entry in bytes.
      */
     open val length: Int
         get() = 1

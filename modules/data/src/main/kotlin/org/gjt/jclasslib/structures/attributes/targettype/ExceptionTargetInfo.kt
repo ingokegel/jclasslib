@@ -15,6 +15,9 @@ import java.io.DataOutput
  */
 class ExceptionTargetInfo : TargetInfo() {
 
+    /**
+     * The linked index in the exception table.
+     */
     var exceptionTableIndex: Int = 0
 
     override fun readData(input: DataInput) {
