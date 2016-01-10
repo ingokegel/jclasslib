@@ -137,7 +137,7 @@ public abstract class LocalVariableAttributeDetailPane extends AbstractAttribute
                 case START_PC_COLUMN_INDEX:
                     return String.valueOf(localVariableEntry.getStartPc());
                 case LENGTH_COLUMN_INDEX:
-                    return String.valueOf(localVariableEntry.getLength());
+                    return String.valueOf(localVariableEntry.getTargetLength());
                 case INDEX_COLUMN_INDEX:
                     return String.valueOf(localVariableEntry.getIndex());
                 case NAME_COLUMN_INDEX:

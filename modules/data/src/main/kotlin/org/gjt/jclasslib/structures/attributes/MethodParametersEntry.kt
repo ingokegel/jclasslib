@@ -7,14 +7,13 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
  */
-class MethodParametersEntry : Structure() {
+class MethodParametersEntry : SubStructure() {
 
     /**
      * The name index.
@@ -42,7 +41,7 @@ class MethodParametersEntry : Structure() {
     /**
      * The length of the structure in bytes.
      */
-    val length: Int
+    override val length: Int
         get() = 4
 
 }

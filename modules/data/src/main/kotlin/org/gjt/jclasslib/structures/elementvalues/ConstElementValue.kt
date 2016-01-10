@@ -18,8 +18,8 @@ class ConstElementValue(elementValueType: ElementValueType) : ElementValue(eleme
      */
     var constValueIndex: Int = 0
 
-    override val specificLength: Int
-        get() = 2
+    override val length: Int
+        get() = super.length + 2
 
     override fun readData(input: DataInput) {
         constValueIndex = input.readUnsignedShort()

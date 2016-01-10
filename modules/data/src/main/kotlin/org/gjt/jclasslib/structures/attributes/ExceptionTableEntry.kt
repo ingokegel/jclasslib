@@ -7,15 +7,13 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
-import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an exception table entry in a Code attribute structure.
  */
-class ExceptionTableEntry : Structure() {
+class ExceptionTableEntry : SubStructure() {
 
     /**
      * start_pc of this exception table entry.
@@ -55,11 +53,7 @@ class ExceptionTableEntry : Structure() {
     override val debugInfo: String
         get() = "with startPc $startPc, endPc $endPc, handlerPc $handlerPc, catchType $catchType"
 
-    companion object {
-        /**
-         * Length in bytes of an exception table entry.
-         */
-        val LENGTH = 8
-    }
+    override val length: Int
+        get() = 8
 
 }

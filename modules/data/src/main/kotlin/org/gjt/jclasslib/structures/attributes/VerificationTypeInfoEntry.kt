@@ -7,8 +7,6 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
-import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -16,7 +14,7 @@ import java.io.DataOutput
  * Describes an entry in a StackMapFrameEntry attribute structure.
  * @property type The verification type.
  */
-open class VerificationTypeInfoEntry(val type: VerificationType) : Structure() {
+open class VerificationTypeInfoEntry(val type: VerificationType) : SubStructure() {
 
     override fun writeData(output: DataOutput) {
         output.writeByte(type.tag)
@@ -32,7 +30,7 @@ open class VerificationTypeInfoEntry(val type: VerificationType) : Structure() {
     /**
      * The length of the entry in bytes.
      */
-    open val length: Int
+    override val length: Int
         get() = 1
 
     /**

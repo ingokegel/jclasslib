@@ -7,14 +7,13 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Type path entry for a TypeAnnotation structure.
  */
-class TypePathEntry private constructor() : Structure() {
+class TypePathEntry private constructor() : SubStructure() {
 
     /**
      * Constructor.
@@ -50,4 +49,7 @@ class TypePathEntry private constructor() : Structure() {
 
     override val debugInfo: String
         get() = "with typePathKind $typePathKind, typeArgumentIndex $typeArgumentIndex"
+
+    override val length: Int
+        get() = 2
 }

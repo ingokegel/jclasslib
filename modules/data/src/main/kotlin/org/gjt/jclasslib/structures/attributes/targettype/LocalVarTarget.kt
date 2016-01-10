@@ -7,14 +7,14 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.Structure
+import org.gjt.jclasslib.structures.attributes.SubStructure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Local variable target for the LocalVarTargetInfo structure.
  */
-class LocalVarTarget : Structure() {
+class LocalVarTarget : SubStructure() {
 
     /**
      * start_pc of this local variable target.
@@ -24,7 +24,7 @@ class LocalVarTarget : Structure() {
     /**
      * Length in bytes of this local variable target.
      */
-    var length: Int = 0
+    var targetLength: Int = 0
 
     /**
      * Index of this local variable target.
@@ -33,16 +33,19 @@ class LocalVarTarget : Structure() {
 
     override fun readData(input: DataInput) {
         startPc = input.readUnsignedShort()
-        length = input.readUnsignedShort()
+        targetLength = input.readUnsignedShort()
         index = input.readUnsignedShort()
     }
 
     override fun writeData(output: DataOutput) {
         output.writeShort(startPc)
-        output.writeShort(length)
+        output.writeShort(targetLength)
         output.writeShort(index)
     }
 
     override val debugInfo: String
-        get() = "with startPc $startPc, length $length, index $index"
+        get() = "with startPc $startPc, length $targetLength, index $index"
+
+    override val length: Int
+        get() = 6
 }

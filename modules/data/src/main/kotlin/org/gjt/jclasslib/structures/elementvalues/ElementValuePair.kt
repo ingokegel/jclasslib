@@ -6,14 +6,14 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.Structure
+import org.gjt.jclasslib.structures.attributes.SubStructure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an  ElementValuePair attribute structure.
  */
-class ElementValuePair private constructor() : Structure() {
+class ElementValuePair private constructor() : SubStructure() {
 
     /**
      * Constructor.
@@ -53,7 +53,7 @@ class ElementValuePair private constructor() : Structure() {
     /**
      * Length of the the structure in bytes.
      */
-    val length: Int
+    override val length: Int
         get() = 2 + elementValue.length
 
     /**

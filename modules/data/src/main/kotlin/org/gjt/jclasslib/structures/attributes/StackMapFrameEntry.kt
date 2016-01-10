@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
@@ -15,7 +14,7 @@ import java.io.DataOutput
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
  */
-class StackMapFrameEntry(private val classFile: ClassFile) : Structure() {
+class StackMapFrameEntry(private val classFile: ClassFile) : SubStructure() {
 
     /**
      * Frame tag
@@ -206,7 +205,7 @@ class StackMapFrameEntry(private val classFile: ClassFile) : Structure() {
     /**
      * Returns the bytecode length of the entry
      */
-    val length: Int
+    override val length: Int
         get() = when (frameType) {
             StackFrameType.SAME -> 1
             StackFrameType.SAME_LOCALS_1_STACK_ITEM -> 1 + stackItems.totalLength()

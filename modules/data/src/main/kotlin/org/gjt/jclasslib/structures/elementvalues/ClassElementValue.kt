@@ -18,8 +18,8 @@ class ClassElementValue : ElementValue(ElementValueType.CLASS) {
      */
     var classInfoIndex: Int = 0
 
-    override val specificLength: Int
-        get() = 2
+    override val length: Int
+        get() = super.length + 2
 
     override fun readData(input: DataInput) {
         classInfoIndex = input.readUnsignedShort()

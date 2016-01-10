@@ -7,14 +7,13 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an entry in a LineNumberTable attribute structure.
  */
-class LineNumberTableEntry : Structure() {
+class LineNumberTableEntry : SubStructure() {
 
     /**
      * start_pc of this line number association.
@@ -39,11 +38,7 @@ class LineNumberTableEntry : Structure() {
     override val debugInfo: String
         get() = "with startPc $startPc, lineNumber $lineNumber"
 
-    companion object {
-        /**
-         * Length in bytes of a line number association.
-         */
-        val LENGTH = 4
-    }
+    override val length: Int
+        get() = 4
 
 }

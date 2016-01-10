@@ -13,6 +13,7 @@
 */
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.structures.attributes.SubStructure
 import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
 import java.io.DataInput
 import java.io.DataOutput
@@ -20,7 +21,7 @@ import java.io.DataOutput
 /**
  * Describes an  Annotation attribute structure.
  */
-class Annotation : Structure(), AnnotationData {
+class Annotation : SubStructure(), AnnotationData {
 
     override var typeIndex: Int = 0
     override var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
@@ -36,7 +37,7 @@ class Annotation : Structure(), AnnotationData {
     /**
      * Length of the structure in bytes.
      */
-    val length: Int
+    override val length: Int
         get() = 4 + elementValuePairEntries.sumBy { it.length }
 
     override fun writeData(output: DataOutput) {

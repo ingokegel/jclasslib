@@ -7,7 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.*
+import org.gjt.jclasslib.structures.AttributeContainer
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -76,7 +78,7 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
     }
 
     override fun getAttributeLength(): Int = 12 + code.size +
-            exceptionTable.size * ExceptionTableEntry.LENGTH +
+            exceptionTable.sumBy { it.length } +
             6 * attributes.size +
             totalAttributesLength
 

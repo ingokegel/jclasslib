@@ -39,7 +39,7 @@ abstract class LocalVariableAttribute(classFile: ClassFile) : AttributeInfo(clas
         get() = "with ${localVariableEntries.size} entries"
 
     override fun getAttributeLength(): Int {
-        return 2 + localVariableEntries.size * LocalVariableEntry.LENGTH
+        return 2 + localVariableEntries.sumBy { it.length }
     }
 
 }

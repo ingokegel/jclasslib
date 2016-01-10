@@ -37,7 +37,7 @@ class LineNumberTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
     }
 
     override fun getAttributeLength(): Int {
-        return 2 + lineNumberTable.size * LineNumberTableEntry.LENGTH
+        return 2 + lineNumberTable.sumBy { it.length }
     }
 
     override val debugInfo: String

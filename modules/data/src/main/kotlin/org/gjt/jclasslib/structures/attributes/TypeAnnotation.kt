@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo
 import java.io.DataInput
@@ -17,7 +16,7 @@ import java.io.DataOutput
  * Describes an entry in a RuntimeVisibleTypeAnnotations or RuntimeInvisibleTypeAnnotations
  * attribute structure.
  */
-class TypeAnnotation private constructor() : Structure() {
+class TypeAnnotation private constructor() : SubStructure() {
 
     /**
      * Constructor.
@@ -79,7 +78,7 @@ class TypeAnnotation private constructor() : Structure() {
     /**
      * The length of the structure in bytes.
      */
-    val length: Int
-        get() = 2 + targetInfo.length + typePathEntries.size * 2 + annotation.length
+    override val length: Int
+        get() = 2 + targetInfo.length + typePathEntries.sumBy { it.length } + annotation.length
 
 }

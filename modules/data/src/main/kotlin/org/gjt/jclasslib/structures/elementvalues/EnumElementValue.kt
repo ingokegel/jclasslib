@@ -23,8 +23,8 @@ class EnumElementValue : ElementValue(ElementValueType.ENUM) {
      */
     var constNameIndex: Int = 0
 
-    override val specificLength: Int
-        get() = 4
+    override val length: Int
+        get() = super.length + 4
 
     override fun readData(input: DataInput) {
         typeNameIndex = input.readUnsignedShort()

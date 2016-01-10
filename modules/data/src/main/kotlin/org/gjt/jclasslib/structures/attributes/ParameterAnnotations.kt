@@ -6,7 +6,6 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.Annotation
 import java.io.DataInput
 import java.io.DataOutput
@@ -14,7 +13,7 @@ import java.io.DataOutput
 /**
  * Common class for runtime parameter annotations.
  */
-class ParameterAnnotations : Structure() {
+class ParameterAnnotations : SubStructure() {
 
     /**
      * Runtime annotations associations of the parent structure
@@ -42,7 +41,7 @@ class ParameterAnnotations : Structure() {
     /**
      * The length of the structure in bytes.
      */
-    val length: Int
+    override val length: Int
         get() = 2 + runtimeAnnotations.sumBy { length }
 
 }

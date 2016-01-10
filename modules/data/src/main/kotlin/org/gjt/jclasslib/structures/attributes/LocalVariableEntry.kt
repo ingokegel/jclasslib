@@ -6,14 +6,13 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Contains common attributes to a local variable table entry structure.
  */
-class LocalVariableEntry : Structure() {
+class LocalVariableEntry : SubStructure() {
 
     /**
      * start_pc of this local variable association.
@@ -23,7 +22,7 @@ class LocalVariableEntry : Structure() {
     /**
      * Length in bytes of this local variable association.
      */
-    var length: Int = 0
+    var targetLength: Int = 0
 
     /**
      * Index of the constant pool entry containing the name of this
@@ -44,7 +43,7 @@ class LocalVariableEntry : Structure() {
 
     override fun readData(input: DataInput) {
         startPc = input.readUnsignedShort()
-        length = input.readUnsignedShort()
+        targetLength = input.readUnsignedShort()
         nameIndex = input.readUnsignedShort()
         descriptorOrSignatureIndex = input.readUnsignedShort()
         index = input.readUnsignedShort()
@@ -52,20 +51,16 @@ class LocalVariableEntry : Structure() {
 
     override fun writeData(output: DataOutput) {
         output.writeShort(startPc)
-        output.writeShort(length)
+        output.writeShort(targetLength)
         output.writeShort(nameIndex)
         output.writeShort(descriptorOrSignatureIndex)
         output.writeShort(index)
     }
 
     override val debugInfo: String
-        get() = "with startPc $startPc, length $length, nameIndex $nameIndex, descriptorIndex $descriptorOrSignatureIndex, index $index"
+        get() = "with startPc $startPc, length $targetLength, nameIndex $nameIndex, descriptorIndex $descriptorOrSignatureIndex, index $index"
 
-    companion object {
-        /**
-         * Length in bytes of a local variable association.
-         */
-        val LENGTH = 10
-    }
+    override val length: Int
+        get() = 10
 
 }

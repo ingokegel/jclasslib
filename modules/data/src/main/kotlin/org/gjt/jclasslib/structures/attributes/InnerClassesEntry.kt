@@ -7,16 +7,14 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.AccessFlag
-import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an entry in a InnerClasses attribute structure.
  */
-class InnerClassesEntry : Structure() {
+class InnerClassesEntry : SubStructure() {
 
     /**
      * Constant pool index of the CONSTANT_Class_info structure
@@ -72,11 +70,7 @@ class InnerClassesEntry : Structure() {
                 "outerClassInfoIndex $outerClassInfoIndex, innerNameIndex $innerNameIndex, " +
                 "accessFlags ${formatAccessFlags(innerClassAccessFlags)}"
 
-    companion object {
-        /**
-         * Length in bytes of an inner class entry.
-         */
-        val LENGTH = 8
-    }
+    override val length: Int
+        get() = 8
 
 }

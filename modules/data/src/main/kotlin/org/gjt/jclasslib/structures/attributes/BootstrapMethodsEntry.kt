@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
@@ -15,7 +14,7 @@ import java.io.DataOutput
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
  */
-class BootstrapMethodsEntry(private val classFile: ClassFile) : Structure() {
+class BootstrapMethodsEntry(private val classFile: ClassFile) : SubStructure() {
 
     /**
      * Constant pool index of the CONSTANT_MethodRef_info structure
@@ -65,7 +64,7 @@ class BootstrapMethodsEntry(private val classFile: ClassFile) : Structure() {
     /**
      * Length of the structure in bytes.
      */
-    val length: Int
+    override val length: Int
         get() = 4 + argumentIndices.size * 2
 
 }

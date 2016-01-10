@@ -6,7 +6,7 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
-import org.gjt.jclasslib.structures.Structure
+import org.gjt.jclasslib.structures.attributes.SubStructure
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -14,17 +14,12 @@ import java.io.DataOutput
  * Describes an  ElementValue attribute structure.
  * @property elementValueType The type of the element value.
  */
-abstract class ElementValue(val elementValueType: ElementValueType) : Structure() {
+abstract class ElementValue(val elementValueType: ElementValueType) : SubStructure() {
 
     /**
      * Name of the entry.
      */
     abstract val entryName: String
-
-    /**
-     * Specific length of the entry in bytes.
-     */
-    protected abstract val specificLength: Int
 
     override fun writeData(output: DataOutput) {
         output.writeByte(elementValueType.tag)
@@ -33,8 +28,8 @@ abstract class ElementValue(val elementValueType: ElementValueType) : Structure(
     /**
      * Length of the entry in bytes.
      */
-    val length: Int
-        get() = 1 + specificLength
+    override val length: Int
+        get() = 1
 
     companion object {
         /**

@@ -33,14 +33,14 @@ class LocalVarTargetInfo : TargetInfo() {
     }
 
     override val length: Int
-        get() = 2 + localVarTargets.size * 6
+        get() = 2 + localVarTargets.sumBy { it.length }
 
     override val verbose: String
         get() {
             val buffer = StringBuilder()
             localVarTargets.forEachIndexed { i, localVarTarget ->
                 buffer.append("[").append(i).append("] start: ").append(localVarTarget.startPc)
-                buffer.append(", length: ").append(localVarTarget.length)
+                buffer.append(", length: ").append(localVarTarget.targetLength)
                 buffer.append(", <a href=\"L").append(localVarTarget.index).append("\">local variable with index ").append(localVarTarget.index).append("</a>")
                 buffer.append("\n")
             }

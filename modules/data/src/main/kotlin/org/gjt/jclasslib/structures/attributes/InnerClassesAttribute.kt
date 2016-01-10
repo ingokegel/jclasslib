@@ -37,7 +37,7 @@ class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     }
 
     override fun getAttributeLength(): Int {
-        return 2 + classes.size * InnerClassesEntry.LENGTH
+        return 2 + classes.sumBy { it.length }
     }
 
     override val debugInfo: String

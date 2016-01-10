@@ -7,17 +7,12 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
-import org.gjt.jclasslib.structures.Structure
+import org.gjt.jclasslib.structures.attributes.SubStructure
 
 /**
  * Base class for target infos in a TypeAnnotation structure.
  */
-abstract class TargetInfo : Structure() {
-
-    /**
-     * The length of the structure in bytes.
-     */
-    abstract val length: Int
+abstract class TargetInfo : SubStructure() {
 
     /**
      * A verbose description for the target info.
