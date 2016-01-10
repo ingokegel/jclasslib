@@ -7,17 +7,13 @@
 
 package org.gjt.jclasslib.browser;
 
-import com.exe4j.runtime.util.LazyFileOutputStream;
-import com.install4j.api.launcher.StartupNotification;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import com.install4j.api.launcher.StartupNotification
+import java.awt.EventQueue
+import java.awt.List
+import java.io.File
+import java.io.PrintStream
+import java.util.*
+import javax.swing.UIManager
 
 /**
  * Entry class for the bytecode viewer.
