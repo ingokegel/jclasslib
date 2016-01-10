@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -45,7 +46,7 @@ class TypeAnnotation private constructor() : SubStructure() {
     /**
      * The type path entries.
      */
-    var typePathEntries: Array<TypePathEntry> = emptyArray()
+    var typePathEntries: Array<TypePathEntry> = emptyArraySingleton()
 
     /**
      * The annotation.

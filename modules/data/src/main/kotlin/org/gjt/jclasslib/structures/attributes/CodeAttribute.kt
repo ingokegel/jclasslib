@@ -10,6 +10,7 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.structures.AttributeContainer
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -36,9 +37,9 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
     /**
      * Exception table of this code attribute.
      */
-    var exceptionTable: Array<ExceptionTableEntry> = emptyArray()
+    var exceptionTable: Array<ExceptionTableEntry> = emptyArraySingleton()
 
-    override var attributes: Array<AttributeInfo> = emptyArray()
+    override var attributes: Array<AttributeInfo> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
 

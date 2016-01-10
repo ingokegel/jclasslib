@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -20,7 +21,7 @@ class StackMapTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * stackMapFrame entries in the StackMapTableAttribute structure
      */
-    var entries: Array<StackMapFrameEntry> = emptyArray()
+    var entries: Array<StackMapFrameEntry> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         val numberOfEntries = input.readUnsignedShort()

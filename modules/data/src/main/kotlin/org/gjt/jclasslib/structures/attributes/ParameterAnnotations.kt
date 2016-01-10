@@ -7,6 +7,7 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.Annotation
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -18,7 +19,7 @@ class ParameterAnnotations : SubStructure() {
     /**
      * Runtime annotations associations of the parent structure
      */
-    var runtimeAnnotations: Array<Annotation> = emptyArray()
+    var runtimeAnnotations: Array<Annotation> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()

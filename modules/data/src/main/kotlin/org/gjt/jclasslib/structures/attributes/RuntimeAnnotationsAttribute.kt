@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -20,7 +21,7 @@ abstract class RuntimeAnnotationsAttribute(classFile: ClassFile) : AttributeInfo
     /**
      * Runtime annotations associations of the parent
      */
-    var runtimeAnnotations: Array<Annotation> = emptyArray()
+    var runtimeAnnotations: Array<Annotation> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()

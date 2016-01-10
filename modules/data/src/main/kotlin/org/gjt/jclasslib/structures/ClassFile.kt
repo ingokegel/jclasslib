@@ -31,7 +31,7 @@ class ClassFile : Structure(), AttributeContainer {
     /**
      * Constant pool entries.
      */
-    var constantPool: Array<Constant> = emptyArray()
+    var constantPool: Array<Constant> = emptyArraySingleton()
         set(constantPool) {
             field = constantPool
             constantPool.forEachIndexed { i, cpInfo ->
@@ -64,14 +64,14 @@ class ClassFile : Structure(), AttributeContainer {
     /**
      * FieldInfo structures for the fields of this class.
      */
-    var fields: Array<FieldInfo> = emptyArray()
+    var fields: Array<FieldInfo> = emptyArraySingleton()
 
     /**
      * MethodInfo structures for the methods of this class.
      */
-    var methods: Array<MethodInfo> = emptyArray()
+    var methods: Array<MethodInfo> = emptyArraySingleton()
 
-    override var attributes: Array<AttributeInfo> = emptyArray()
+    override var attributes: Array<AttributeInfo> = emptyArraySingleton()
 
     /**
      * Verbose major version of the class file format.
@@ -456,6 +456,6 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     companion object {
-        private val MAGIC_NUMBER = -889275714
+        private val MAGIC_NUMBER = 0xCAFEBABE.toInt()
     }
 }

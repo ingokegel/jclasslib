@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -18,7 +19,7 @@ class LocalVarTargetInfo : TargetInfo() {
     /**
      * Contained local variable targets.
      */
-    var localVarTargets: Array<LocalVarTarget> = emptyArray()
+    var localVarTargets: Array<LocalVarTarget> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         val count = input.readUnsignedShort()

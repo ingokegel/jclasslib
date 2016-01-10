@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -20,7 +21,7 @@ class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile)
     /**
      * List of stackMapFrame entries in the StackMapTableAttribute structure
      */
-    var entries: Array<MethodParametersEntry> = emptyArray()
+    var entries: Array<MethodParametersEntry> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
 

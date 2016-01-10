@@ -15,6 +15,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -27,7 +28,7 @@ abstract class RuntimeTypeAnnotationsAttribute(classFile: ClassFile) : Attribute
     /**
      * Runtime annotations associations of the parent structure
      */
-    var runtimeAnnotations: Array<TypeAnnotation> = emptyArray()
+    var runtimeAnnotations: Array<TypeAnnotation> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()

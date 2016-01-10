@@ -6,6 +6,7 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -16,7 +17,7 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     /**
      * Element values associations of this entry.
      */
-    var elementValueEntries: Array<ElementValue> = emptyArray()
+    var elementValueEntries: Array<ElementValue> = emptyArraySingleton()
 
     override val length: Int
         get() = super.length + 2 + elementValueEntries.sumBy { it.length }

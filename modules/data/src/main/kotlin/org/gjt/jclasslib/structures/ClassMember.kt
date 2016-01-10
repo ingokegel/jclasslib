@@ -31,7 +31,7 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
      */
     var descriptorIndex: Int = 0
 
-    override var attributes: Array<AttributeInfo> = emptyArray()
+    override var attributes: Array<AttributeInfo> = emptyArraySingleton()
 
     /**
      * Name of the class member.

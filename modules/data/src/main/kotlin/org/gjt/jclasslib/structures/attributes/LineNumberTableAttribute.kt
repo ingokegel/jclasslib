@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -20,7 +21,7 @@ class LineNumberTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
     /**
      * Line number associations of the parent
      */
-    var lineNumberTable: Array<LineNumberTableEntry> = emptyArray()
+    var lineNumberTable: Array<LineNumberTableEntry> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         val lineNumberTableLength = input.readUnsignedShort()

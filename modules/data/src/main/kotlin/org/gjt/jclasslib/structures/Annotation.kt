@@ -24,7 +24,7 @@ import java.io.DataOutput
 class Annotation : SubStructure(), AnnotationData {
 
     override var typeIndex: Int = 0
-    override var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
+    override var elementValuePairEntries: Array<ElementValuePair> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         typeIndex = input.readUnsignedShort()

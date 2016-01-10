@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -20,7 +21,7 @@ class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * Inner classes of the parent ClassFile structure
      */
-    var classes: Array<InnerClassesEntry> = emptyArray()
+    var classes: Array<InnerClassesEntry> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
         val numberOfClasses = input.readUnsignedShort()
