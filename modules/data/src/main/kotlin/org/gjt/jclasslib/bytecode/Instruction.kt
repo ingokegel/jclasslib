@@ -12,13 +12,9 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Base class for all opcode instruction wrappers.
+ * @property opcode Opcode of this instruction.
  */
-open class Instruction(
-        /**
-         * Opcode of this instruction.
-         */
-        val opcode: Opcode
-) {
+open class Instruction(val opcode: Opcode) {
 
     /**
      * Offset of this instruction in its parent Code attribute.
@@ -33,9 +29,6 @@ open class Instruction(
 
     /**
      * Read this instruction from the given ByteCodeInput.
-     *
-     *
-
      * Expects ByteCodeInput to be in JVM class file format and just
      * before a instruction of this kind.
      * @param input the ByteCodeInput from which to read

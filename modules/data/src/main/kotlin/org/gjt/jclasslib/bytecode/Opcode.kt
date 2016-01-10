@@ -15,12 +15,7 @@ import org.gjt.jclasslib.structures.Lookup
  * @property verbose Verbose representation.
  */
 @Suppress("NOT_DOCUMENTED")
-enum class Opcode(
-        override val tag: Int,
-        val verbose: String,
-        private val docAnchorSuffix: String = verbose
-) : ClassFileEnum {
-
+enum class Opcode(override val tag: Int, val verbose: String, private val docAnchorSuffix: String = verbose) : ClassFileEnum {
     NOP(0, "nop"),
     ACONST_NULL(1, "aconst_null"),
     ICONST_M1(2, "iconst_m1", "iconst_i"),
@@ -231,12 +226,7 @@ enum class Opcode(
      * The URL to the documentation in the JVM spec
      */
     val docUrl: String
-        get() = JVM_SPEC_URL + docAnchorSuffix
+        get() = "http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.$docAnchorSuffix"
 
-    companion object : Lookup<Opcode>(Opcode::class.java, "opcode") {
-
-        private val JVM_SPEC_URL = "http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5."
-
-    }
-
+    companion object : Lookup<Opcode>(Opcode::class.java, "opcode")
 }

@@ -12,18 +12,12 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes the iinc instruction.
+ * @property incrementConst Increment of this instruction.
  */
 class IncrementInstruction
 @JvmOverloads
-constructor(
-        opcode: Opcode,
-        wide: Boolean,
-        immediateByte: Int = 0,
-        /**
-         * Increment of this instruction.
-         */
-        var incrementConst: Int = 0
-) : ImmediateByteInstruction(opcode, wide, immediateByte) {
+constructor(opcode: Opcode, wide: Boolean, immediateByte: Int = 0, var incrementConst: Int = 0) :
+        ImmediateByteInstruction(opcode, wide, immediateByte) {
 
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)

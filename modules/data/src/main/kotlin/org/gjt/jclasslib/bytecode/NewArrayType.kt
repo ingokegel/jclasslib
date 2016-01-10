@@ -7,14 +7,16 @@
 
 package org.gjt.jclasslib.bytecode
 
+import org.gjt.jclasslib.structures.ClassFileEnum
+import org.gjt.jclasslib.structures.Lookup
+
 /**
  * Enum for the possible values of the immediate byte of the [Opcode.NEWARRAY] opcode.
- * @property code Immediate byte value.
+ * @property tag Immediate byte value.
  * @property verbose Verbose representation.
  */
 @Suppress("NOT_DOCUMENTED")
-enum class NewArrayType (val code: Int, val verbose: String) {
-
+enum class NewArrayType (override val tag: Int, val verbose: String) : ClassFileEnum {
     BOOLEAN(4, "boolean"),
     CHAR(5, "char"),
     FLOAT(6, "float"),
@@ -24,10 +26,5 @@ enum class NewArrayType (val code: Int, val verbose: String) {
     INT(10, "int"),
     LONG(11, "long");
 
-
-    companion object {
-        fun getFromCode(code: Int): NewArrayType? {
-            return values().find { it.code == code }
-        }
-    }
+    companion object : Lookup<NewArrayType>(NewArrayType::class.java, "array type")
 }

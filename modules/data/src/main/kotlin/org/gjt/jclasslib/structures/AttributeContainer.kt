@@ -36,7 +36,6 @@ interface AttributeContainer {
         get() = attributes.sumBy { it.getAttributeLength() }
 
 
-
     /**
      * Read the attributes of this structure from the given DataInput.
      * @param input the DataInput from which to read

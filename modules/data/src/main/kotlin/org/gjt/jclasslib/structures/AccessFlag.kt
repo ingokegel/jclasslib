@@ -17,7 +17,6 @@ import java.util.*
  */
 @Suppress("NOT_DOCUMENTED")
 enum class AccessFlag(val flag: Int, val verbose: String) {
-
     PUBLIC(1, "public"),
     PRIVATE(2, "private"),
     PROTECTED(4, "protected"),

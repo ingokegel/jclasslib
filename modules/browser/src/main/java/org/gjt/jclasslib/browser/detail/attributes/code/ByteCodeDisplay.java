@@ -278,7 +278,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
      */
     public void scrollToOffset(int offset) {
 
-        Integer line = offsetToLine.get(new Integer(offset));
+        Integer line = offsetToLine.get(offset);
         if (line == null) {
             return;
         }
@@ -499,8 +499,12 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         if (opcode == Opcode.LDC) {
             addConstantPoolLink(immediateByte, sourceOffset);
         } else if (opcode == Opcode.NEWARRAY) {
-            NewArrayType newArrayType = NewArrayType.Companion.getFromCode(immediateByte);
-            String verbose = newArrayType == null ? "invalid array type" : newArrayType.getVerbose();
+            String verbose;
+            try {
+                verbose = NewArrayType.Companion.getFromTag(immediateByte).getVerbose();
+            } catch (InvalidByteCodeException e) {
+                verbose = "invalid array type";
+            }
             appendString(" " + immediateByte + " (" + verbose + ")",
                     STYLE_IMMEDIATE_VALUE);
 
@@ -611,14 +615,11 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
         try {
             String name = classFile.getConstantPoolEntryName(constantPoolIndex);
-            if (name != null) {
-                if (name.length() > 0) {
-                    appendString(" <" + name + ">", STYLE_SMALL);
-                }
-            } else {
-                appendString(" [INVALID]", STYLE_SMALL);
+            if (name.length() > 0) {
+                appendString(" <" + name + ">", STYLE_SMALL);
             }
         } catch (InvalidByteCodeException ex) {
+            appendString(" [INVALID]", STYLE_SMALL);
         }
     }
 

@@ -12,7 +12,6 @@ import org.gjt.jclasslib.structures.Lookup
 
 @Suppress("NOT_DOCUMENTED")
 enum class ElementValueType(val charTag: Char, val verbose : String) : ClassFileEnum {
-
     BYTE('B', "byte"),
     CHAR('C', "String"),
     DOUBLE('D', "double"),
@@ -37,7 +36,6 @@ enum class ElementValueType(val charTag: Char, val verbose : String) : ClassFile
         ElementValueType.ARRAY -> ArrayElementValue()
         else -> ConstElementValue(this)
     }
-
 
     companion object : Lookup<ElementValueType>(ElementValueType::class.java, "element value type")
 

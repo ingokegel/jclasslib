@@ -8,15 +8,15 @@
 package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.ClassFileEnum
+import org.gjt.jclasslib.structures.Lookup
 
 /**
  * Represents the verification type of a bootstrap entry.
  */
 
 @Suppress("NOT_DOCUMENTED")
-enum class VerificationType(val tag: Int) {
-
+enum class VerificationType(override val tag: Int) : ClassFileEnum {
     TOP(0),
     INTEGER(1),
     FLOAT(2),
@@ -38,14 +38,5 @@ enum class VerificationType(val tag: Int) {
         }
     }
 
-    companion object {
-        @Throws(InvalidByteCodeException::class)
-        fun getFromTag(tag: Int): VerificationType {
-            val values = values()
-            if (tag < 0 || tag >= values.size) {
-                throw InvalidByteCodeException("Invalid verification tag " + tag)
-            }
-            return values[tag]
-        }
-    }
+    companion object : Lookup<VerificationType>(VerificationType::class.java, "verification tag")
 }

@@ -20,6 +20,5 @@ enum class TypePathKind(override val tag: Int) : ClassFileEnum {
     WILDCARD_BOUND(2),
     TYPE_ARGUMENT(3);
 
-
     companion object : Lookup<TypePathKind>(TypePathKind::class.java, "type path kind")
 }

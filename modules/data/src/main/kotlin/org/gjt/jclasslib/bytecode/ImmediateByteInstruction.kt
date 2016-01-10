@@ -12,21 +12,12 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes an instruction that is followed by an immediate unsigned byte.
+ * @property isWide Indicates whether the instruction is subject to a wide instruction or not.
+ * @property immediateByte Immediate unsigned byte of this instruction.
  */
 open class ImmediateByteInstruction
 @JvmOverloads
-constructor (
-        opcode: Opcode,
-        /**
-         * Indicates whether the instruction is subject to a wide instruction or not.
-         */
-        var isWide: Boolean,
-        /**
-         * Immediate unsigned byte of this instruction.
-         */
-        var immediateByte: Int = 0
-
-) : Instruction(opcode) {
+constructor (opcode: Opcode, var isWide: Boolean, var immediateByte: Int = 0) : Instruction(opcode) {
 
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)

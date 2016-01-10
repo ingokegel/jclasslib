@@ -12,17 +12,11 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes the invokeinterface instruction.
+ * @property count Argument count of this instruction.
  */
 class InvokeInterfaceInstruction
 @JvmOverloads
-constructor(
-        opcode: Opcode,
-        immediateShort: Int = 0,
-        /**
-         * Argument count of this instruction.
-         */
-        var count: Int = 0
-) : ImmediateShortInstruction(opcode, immediateShort) {
+constructor(opcode: Opcode, immediateShort: Int = 0, var count: Int = 0) : ImmediateShortInstruction(opcode, immediateShort) {
 
     override val size: Int
         get() = super.size + 2

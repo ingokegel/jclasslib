@@ -15,10 +15,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput
  */
 class InvokeDynamicInstruction
 @JvmOverloads
-constructor(
-        opcode: Opcode,
-        immediateShort: Int = 0
-) : ImmediateShortInstruction(opcode, immediateShort) {
+constructor(opcode: Opcode, immediateShort: Int = 0) : ImmediateShortInstruction(opcode, immediateShort) {
 
     override val size: Int
         get() = super.size + 2

@@ -81,7 +81,6 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
         writeAttributes(output)
     }
 
-
     override val debugInfo: String
         get() = "with accessFlags $accessFlagsVerbose, nameIndex $nameIndex, descriptorIndex $descriptorIndex, ${attributes.size} attributes"
 

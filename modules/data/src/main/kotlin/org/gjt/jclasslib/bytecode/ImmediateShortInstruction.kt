@@ -12,17 +12,11 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 
 /**
  * Describes an instruction that is followed by an immediate unsigned short.
+ * @property immediateShort Immediate unsigned short of this instruction.
  */
 open class ImmediateShortInstruction
 @JvmOverloads
-constructor(
-        opcode: Opcode,
-        /**
-         * Immediate unsigned short of this instruction.
-         */
-        var immediateShort: Int = 0
-) : Instruction(opcode) {
-
+constructor(opcode: Opcode, var immediateShort: Int = 0) : Instruction(opcode) {
 
     override val size: Int
         get() = super.size + 2
