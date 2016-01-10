@@ -5,114 +5,96 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+@file:JvmName("BrowserApplication")
+package org.gjt.jclasslib.browser
 
+import com.exe4j.runtime.util.LazyFileOutputStream
 import com.install4j.api.launcher.StartupNotification
-import java.awt.EventQueue
-import java.awt.List
+
+import javax.swing.*
+import java.awt.*
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.PrintStream
-import java.util.*
-import javax.swing.UIManager
+import java.util.ArrayList
+import java.util.StringTokenizer
 
-/**
- * Entry class for the bytecode viewer.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- *
- */
-public class BrowserApplication {
+// TODO remove @JvmField annotations
+@JvmField
+val APPLICATION_TITLE = "Bytecode viewer"
+@JvmField
+val SYSTEM_PROPERTY_LAF_DEFAULT = "jclasslib.laf.default"
+@JvmField
+val WORKSPACE_FILE_SUFFIX = "jcw"
 
-    /**
-     * Title of the application.
-     */
-    public static final String APPLICATION_TITLE = "Bytecode viewer";
-    /**
-     * System property used to choose default look and feel.
-     */
-    public static final String SYSTEM_PROPERTY_LAF_DEFAULT = "jclasslib.laf.default";
-    /**
-     * Suffix for workspace files.
-     */
-    public static final String WORKSPACE_FILE_SUFFIX = "jcw";
 
-    private static BrowserMDIFrame frame;
+fun main(args: Array<String>) {
 
-    /**
-     * Entry point for the class file browser application.
-     *
-     * @param args arguments for the application. As an argument, a workspace
-     *             file or a class file can be passed.
-     */
-    public static void main(final String[] args) {
-
-        if (!Boolean.getBoolean(BrowserApplication.SYSTEM_PROPERTY_LAF_DEFAULT)) {
-            String lookAndFeelClass = UIManager.getSystemLookAndFeelClassName();
-            try {
-                UIManager.setLookAndFeel(lookAndFeelClass);
-            } catch (Exception ex) {
-            }
+    if (!java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_LAF_DEFAULT)) {
+        val lookAndFeelClass = UIManager.getSystemLookAndFeelClassName()
+        try {
+            UIManager.setLookAndFeel(lookAndFeelClass)
+        } catch (ex: Exception) {
         }
-
-        if (isLoadedFromJar()) {
-            File stdErrFile = new File(System.getProperty("java.io.tmpdir"), "jclasslib_error.log");
-            PrintStream err = new PrintStream(new BufferedOutputStream(new LazyFileOutputStream(stdErrFile.getPath())), true);
-            System.setErr(err);
-        }
-        StartupNotification.registerStartupListener(new StartupNotification.Listener() {
-            @Override
-            public void startupPerformed(String argLine) {
-                List<String> args = splitupCommandLine(argLine);
-                if (args.size() > 0) {
-                    frame.openExternalFile(args.get(0));
-                }
-            }
-        });
-
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frame = new BrowserMDIFrame();
-                frame.setVisible(true);
-                if (args.length > 0) {
-                    frame.openExternalFile(args[0]);
-                }
-            }
-        });
     }
 
-    private static boolean isLoadedFromJar() {
-        return BrowserApplication.class.getResource(BrowserApplication.class.getSimpleName() + ".class").toString().startsWith("jar:");
+    if (isLoadedFromJar()) {
+        val stdErrFile = File(System.getProperty("java.io.tmpdir"), "jclasslib_error.log")
+        System.setErr(PrintStream(BufferedOutputStream(LazyFileOutputStream(stdErrFile.path)), true))
     }
 
-    private static List<String> splitupCommandLine(String command) {
-        List<String> cmdList = new ArrayList<String>();
-        StringTokenizer tokenizer = new StringTokenizer(command, " \"", true);
-        boolean insideQuotes = false;
-        StringBuilder argument = new StringBuilder();
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            if (token.equals("\"")) {
-                if (insideQuotes && argument.length() > 0) {
-                    cmdList.add(argument.toString());
-                    argument.setLength(0);
-                }
-                insideQuotes = !insideQuotes;
-            } else if (" ".contains(token)) {
-                if (insideQuotes) {
-                    argument.append(" ");
-                } else if (argument.length() > 0) {
-                    cmdList.add(argument.toString());
-                    argument.setLength(0);
-                }
-            } else {
-                argument.append(token);
+    EventQueue.invokeLater {
+        BrowserMDIFrame().apply {
+            registerStartupListener(this)
+            isVisible = true
+            if (args.size > 0) {
+                openExternalFile(args[0])
             }
         }
-        if (argument.length() > 0) {
-            cmdList.add(argument.toString());
-        }
-        return cmdList;
     }
-
 }
+
+//TODO move to frame
+private fun registerStartupListener(frame: BrowserMDIFrame) {
+    StartupNotification.registerStartupListener { argLine ->
+        splitupCommandLine(argLine).let { startupArgs ->
+            if (startupArgs.size > 0) {
+                frame.openExternalFile(startupArgs[0])
+            }
+        }
+    }
+}
+
+private fun isLoadedFromJar(): Boolean =
+    ::isLoadedFromJar.javaClass.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:")}
+
+private fun splitupCommandLine(command: String): List<String> {
+    val cmdList = ArrayList<String>()
+    val tokenizer = StringTokenizer(command, " \"", true)
+    var insideQuotes = false
+    val argument = StringBuilder()
+    while (tokenizer.hasMoreTokens()) {
+        val token = tokenizer.nextToken()
+        if (token == "\"") {
+            if (insideQuotes && argument.length > 0) {
+                cmdList.add(argument.toString())
+                argument.setLength(0)
+            }
+            insideQuotes = !insideQuotes
+        } else if (" ".contains(token)) {
+            if (insideQuotes) {
+                argument.append(" ")
+            } else if (argument.length > 0) {
+                cmdList.add(argument.toString())
+                argument.setLength(0)
+            }
+        } else {
+            argument.append(token)
+        }
+    }
+    if (argument.length > 0) {
+        cmdList.add(argument.toString())
+    }
+    return cmdList
+}
+
