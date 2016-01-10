@@ -51,16 +51,18 @@ interface AttributeContainer {
                 val attributeNameIndex = input.readUnsignedShort()
                 val attributeLength = input.readInt()
                 val cpInfoName = classFile.getConstantPoolUtf8Entry(attributeNameIndex)
-                create(attributeLength, cpInfoName.string, classFile).apply {
+                create(attributeLength, cpInfoName.string, input, classFile).apply {
                     this.attributeNameIndex = attributeNameIndex
-                    read(input);
+                    if (this !is AnnotationDefaultAttribute) {
+                        read(input);
+                    }
                 }
             }
             if (isDebug) debug("read $attributesCount attributes")
         }
     }
 
-    private fun create(attributeLength: Int, attributeName: String, classFile : ClassFile): AttributeInfo = when (attributeName) {
+    private fun create(attributeLength: Int, attributeName: String, input: DataInput, classFile: ClassFile): AttributeInfo = when (attributeName) {
         ConstantValueAttribute.ATTRIBUTE_NAME -> ConstantValueAttribute(classFile)
         CodeAttribute.ATTRIBUTE_NAME -> CodeAttribute(classFile)
         ExceptionsAttribute.ATTRIBUTE_NAME -> ExceptionsAttribute(classFile)
@@ -79,7 +81,7 @@ interface AttributeContainer {
         RuntimeInvisibleParameterAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleParameterAnnotationsAttribute(classFile)
         RuntimeVisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeVisibleTypeAnnotationsAttribute(classFile)
         RuntimeInvisibleTypeAnnotationsAttribute.ATTRIBUTE_NAME -> RuntimeInvisibleTypeAnnotationsAttribute(classFile)
-        AnnotationDefaultAttribute.ATTRIBUTE_NAME -> AnnotationDefaultAttribute(classFile)
+        AnnotationDefaultAttribute.ATTRIBUTE_NAME -> AnnotationDefaultAttribute(classFile, input)
         BootstrapMethodsAttribute.ATTRIBUTE_NAME -> BootstrapMethodsAttribute(classFile)
         StackMapTableAttribute.ATTRIBUTE_NAME -> StackMapTableAttribute(classFile)
         MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute(classFile)

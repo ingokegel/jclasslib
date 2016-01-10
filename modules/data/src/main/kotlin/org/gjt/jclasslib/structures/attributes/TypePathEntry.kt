@@ -14,7 +14,19 @@ import java.io.DataOutput
 /**
  * Type path entry for a TypeAnnotation structure.
  */
-class TypePathEntry : Structure() {
+class TypePathEntry private constructor() : Structure() {
+
+    /**
+     * Constructor.
+     * @param typePathKind the type path kind
+     */
+    constructor(typePathKind: TypePathKind) : this() {
+        this.typePathKind = typePathKind
+    }
+
+    internal constructor(input: DataInput) : this() {
+        read(input)
+    }
 
     /**
      * The type path kind.

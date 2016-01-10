@@ -29,9 +29,7 @@ class Annotation : Structure(), AnnotationData {
         typeIndex = input.readUnsignedShort()
         val elementValuePairEntriesLength = input.readUnsignedShort()
         elementValuePairEntries = Array(elementValuePairEntriesLength) {
-            ElementValuePair().apply {
-                read(input)
-            }
+            ElementValuePair(input)
         }
     }
 

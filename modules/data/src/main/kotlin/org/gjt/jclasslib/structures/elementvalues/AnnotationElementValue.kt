@@ -33,9 +33,7 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
         val elementValuePairEntriesLength = input.readUnsignedShort()
 
         elementValuePairEntries = Array(elementValuePairEntriesLength) {
-            ElementValuePair().apply {
-                read(input)
-            }
+            ElementValuePair(input)
         }
     }
 

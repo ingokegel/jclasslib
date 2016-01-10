@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
 import java.io.DataInput
@@ -333,13 +332,13 @@ class ClassFile : Structure(), AttributeContainer {
                 else -> {
                     if (isDebug) debug("reading constant pool entry $i")
                     val constantType = ConstantType.getFromTag(input.readByte().toInt())
-                    constantType.create(this).apply {
-                        read(input)
+                    constantType.read(this, input).apply {
                         constantPoolEntryToIndex.put(this, i)
-                        if (this is ConstantLargeNumeric) {
+                        val extraEntryCount = constantType.extraEntryCount
+                        if (extraEntryCount > 0) {
                             // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
                             // pool entries, the second entry is unusable (design mistake)
-                            placeholderIndex = i + 1
+                            placeholderIndex = i + extraEntryCount
                         }
                     }
                 }

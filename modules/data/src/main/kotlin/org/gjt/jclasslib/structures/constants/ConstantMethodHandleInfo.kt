@@ -17,7 +17,20 @@ import java.io.DataOutput
 /**
  * Describes a CONSTANT_MethodHandle_info constant pool data structure.
  */
-class ConstantMethodHandleInfo(classFile: ClassFile) : AbstractConstant(classFile) {
+class ConstantMethodHandleInfo private constructor(classFile: ClassFile) : AbstractConstant(classFile) {
+
+    /**
+     * Constructor.
+     * @param type the method handle type
+     * @param classFile the class file of which this structure is part of
+     */
+    constructor(type: MethodHandleType, classFile: ClassFile) : this(classFile) {
+        this.type = type
+    }
+
+    internal constructor(classFile: ClassFile, input: DataInput) : this(classFile) {
+        read(input)
+    }
 
     /**
      * Index of the constant pool entry containing the reference.

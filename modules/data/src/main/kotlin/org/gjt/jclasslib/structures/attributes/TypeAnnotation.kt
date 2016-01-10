@@ -17,7 +17,21 @@ import java.io.DataOutput
  * Describes an entry in a RuntimeVisibleTypeAnnotations or RuntimeInvisibleTypeAnnotations
  * attribute structure.
  */
-class TypeAnnotation : Structure() {
+class TypeAnnotation private constructor() : Structure() {
+
+    /**
+     * Constructor.
+     * @param targetType the target type
+     * @param targetInfo the target info
+     */
+    constructor(targetType: TypeAnnotationTargetType, targetInfo: TargetInfo) : this() {
+        this.targetType = targetType
+        this.targetInfo = targetInfo
+    }
+
+    internal constructor(input: DataInput) : this() {
+        read(input)
+    }
 
     /**
      * The target type.
@@ -46,7 +60,7 @@ class TypeAnnotation : Structure() {
 
         val typePathLength = input.readUnsignedByte()
         typePathEntries = Array(typePathLength) {
-            TypePathEntry().apply { read(input) }
+            TypePathEntry(input)
         }
         annotation.read(input)
     }

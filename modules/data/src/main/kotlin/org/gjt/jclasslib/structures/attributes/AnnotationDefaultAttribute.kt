@@ -15,7 +15,20 @@ import java.io.DataOutput
 /**
  * Describes an  AnnotationDefault attribute structure.
  */
-class AnnotationDefaultAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
+class AnnotationDefaultAttribute private constructor(classFile: ClassFile) : AttributeInfo(classFile) {
+
+    /**
+     * Constructor.
+     * @param defaultValue the default element value
+     * @param classFile the class file of which this structure is part of
+     */
+    constructor(defaultValue : ElementValue, classFile: ClassFile) : this(classFile) {
+        this.defaultValue = defaultValue
+    }
+
+    internal constructor(classFile: ClassFile, input: DataInput) : this(classFile) {
+        read(input)
+    }
 
     /**
      * The default_value of this attribute.

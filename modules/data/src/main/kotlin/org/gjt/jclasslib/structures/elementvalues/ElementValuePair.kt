@@ -13,7 +13,19 @@ import java.io.DataOutput
 /**
  * Describes an  ElementValuePair attribute structure.
  */
-class ElementValuePair : Structure() {
+class ElementValuePair private constructor() : Structure() {
+
+    /**
+     * Constructor.
+     * @param elementValue the element value
+     */
+    constructor(elementValue: ElementValue) : this() {
+        this.elementValue = elementValue
+    }
+
+    internal constructor(input: DataInput) : this() {
+        read(input)
+    }
 
     /**
      * element_name_index of this element value pair.

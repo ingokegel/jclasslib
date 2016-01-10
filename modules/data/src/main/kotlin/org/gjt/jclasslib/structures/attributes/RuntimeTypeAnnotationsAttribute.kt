@@ -32,9 +32,7 @@ abstract class RuntimeTypeAnnotationsAttribute(classFile: ClassFile) : Attribute
     override fun readData(input: DataInput) {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()
         runtimeAnnotations = Array(runtimeVisibleAnnotationsLength) {
-            TypeAnnotation().apply {
-                read(input)
-            }
+            TypeAnnotation(input)
         }
     }
 
