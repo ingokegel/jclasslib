@@ -10,23 +10,16 @@ package org.gjt.jclasslib.browser
 
 import com.exe4j.runtime.util.LazyFileOutputStream
 import com.install4j.api.launcher.StartupNotification
-
-import javax.swing.*
-import java.awt.*
+import java.awt.EventQueue
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.PrintStream
-import java.util.ArrayList
-import java.util.StringTokenizer
+import java.util.*
+import javax.swing.UIManager
 
-// TODO remove @JvmField annotations
-@JvmField
 val APPLICATION_TITLE = "Bytecode viewer"
-@JvmField
 val SYSTEM_PROPERTY_LAF_DEFAULT = "jclasslib.laf.default"
-@JvmField
 val WORKSPACE_FILE_SUFFIX = "jcw"
-
 
 fun main(args: Array<String>) {
 
@@ -54,7 +47,6 @@ fun main(args: Array<String>) {
     }
 }
 
-//TODO move to frame
 private fun registerStartupListener(frame: BrowserMDIFrame) {
     StartupNotification.registerStartupListener { argLine ->
         splitupCommandLine(argLine).let { startupArgs ->

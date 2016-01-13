@@ -25,6 +25,7 @@ import java.awt.event.*;
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
+
 public class ClasspathBrowser extends JDialog
                               implements ActionListener, ClasspathChangeListener
 {
@@ -33,6 +34,7 @@ public class ClasspathBrowser extends JDialog
     private static final int DIALOG_HEIGHT = 450;
 
     private BrowserMDIFrame frame;
+    private boolean updateClassPathFromFrame;
     private ClasspathComponent classpathComponent;
 
     private JLabel lblTitle;
@@ -49,19 +51,13 @@ public class ClasspathBrowser extends JDialog
 
     private String selectedClassName;
 
-    /**
-     * Constructor.
-     * @param frame the parent frame.
-     * @param classpathComponent the classpath component to display initially.
-     * @param title the dialog title.
-     * @param setupVisible if the <i>setup classpath</i> button should be visible.
-     */
-    public ClasspathBrowser(BrowserMDIFrame frame, ClasspathComponent classpathComponent, String title, boolean setupVisible) {
+    public ClasspathBrowser(BrowserMDIFrame frame, String title, boolean updateClassPathFromFrame) {
         super(frame);
         this.frame = frame;
+        this.updateClassPathFromFrame = updateClassPathFromFrame;
 
         setClasspathComponent(classpathComponent);
-        setupControls(title, setupVisible);
+        setupControls(title);
         setupComponent();
         setupEventHandlers();
     }
@@ -89,6 +85,9 @@ public class ClasspathBrowser extends JDialog
 
     public void setVisible(boolean visible) {
         if (visible) {
+            if (updateClassPathFromFrame) {
+                setClasspathComponent(frame.getConfig());
+            }
             selectedClassName = null;
         }
         super.setVisible(visible);
@@ -130,7 +129,7 @@ public class ClasspathBrowser extends JDialog
         }
     }
 
-    private void setupControls(String title, boolean setupVisible) {
+    private void setupControls(String title) {
 
         lblTitle = new JLabel(title);
         tree = new JTree(new ClassTreeNode());
@@ -140,7 +139,7 @@ public class ClasspathBrowser extends JDialog
         scpTree = new JScrollPane(tree);
 
         btnSetup = new JButton("Setup classpath");
-        btnSetup.setVisible(setupVisible);
+        btnSetup.setVisible(updateClassPathFromFrame);
         btnSync = new JButton("Synchronize");
         btnOk = new JButton("Ok");
         btnOk.setEnabled(false);

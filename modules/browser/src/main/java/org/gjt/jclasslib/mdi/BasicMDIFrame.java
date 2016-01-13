@@ -85,7 +85,7 @@ public class BasicMDIFrame extends JFrame {
     /**
         Exit the application.
      */
-    protected void doQuit() {
+    protected void quit() {
 
         saveWindowSettings();
         dispose();
@@ -97,9 +97,9 @@ public class BasicMDIFrame extends JFrame {
      */
     protected void closeAllFrames() {
 
-        List frames = desktopManager.getOpenFrames();
+        List<BasicInternalFrame> frames = desktopManager.getOpenFrames();
         while (frames.size() > 0) {
-            BasicInternalFrame frame = (BasicInternalFrame)frames.get(0);
+            BasicInternalFrame frame = frames.get(0);
             frame.doDefaultCloseAction();
         }
     }
@@ -152,7 +152,7 @@ public class BasicMDIFrame extends JFrame {
             Constructor<? extends BasicInternalFrame> frameConstructor;
             try {
                 Class<? extends BasicInternalFrame> frameClass = toFrameClass(internalFrameDesc);
-                frameConstructor = frameClass.getConstructor(getFrameConstructorArguments(frameClass));
+                frameConstructor =  frameClass.getConstructor(getFrameConstructorArguments(frameClass));
             } catch (ClassNotFoundException ex) {
                 System.out.println("class not found:" + ex.getMessage());
                 continue;
@@ -263,7 +263,7 @@ public class BasicMDIFrame extends JFrame {
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
-                doQuit();
+                quit();
             }
         });
 

@@ -33,16 +33,16 @@ public class ClasspathSetupDialog extends JDialog
     private static final int DIALOG_HEIGHT = 300;
 
     private static final Dimension IMAGE_BUTTON_SIZE = new Dimension(28, 28);
-    private static final Icon ICON_ADD = BrowserMDIFrame.loadIcon("add.png");
-    private static final Icon ICON_REMOVE = BrowserMDIFrame.loadIcon("remove.png");
-    private static final Icon ICON_UP = BrowserMDIFrame.loadIcon("up.png");
-    private static final Icon ICON_DOWN = BrowserMDIFrame.loadIcon("down.png");
+    private static final Icon ICON_ADD = BrowserMDIFrame.Companion.getIcon("add.png");
+    private static final Icon ICON_REMOVE = BrowserMDIFrame.Companion.getIcon("remove.png");
+    private static final Icon ICON_UP = BrowserMDIFrame.Companion.getIcon("up.png");
+    private static final Icon ICON_DOWN = BrowserMDIFrame.Companion.getIcon("down.png");
 
     private BrowserMDIFrame frame;
 
-    private DefaultListModel listModel;
+    private DefaultListModel<ClasspathEntry> listModel;
 
-    private JList lstElements;
+    private JList<ClasspathEntry> lstElements;
     private JScrollPane scpLstElements;
     private JButton btnAdd;
     private JButton btnRemove;
@@ -99,16 +99,16 @@ public class ClasspathSetupDialog extends JDialog
     private void updateList() {
 
         listModel.clear();
-        for (Object o : frame.getConfig().getClasspath()) {
-            listModel.addElement(o);
+        for (ClasspathEntry classpathEntry : frame.getConfig().getClasspath()) {
+            listModel.addElement(classpathEntry);
         }
     }
 
     private void setupControls() {
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<ClasspathEntry>();
 
-        lstElements = new JList(listModel);
+        lstElements = new JList<ClasspathEntry>(listModel);
         lstElements.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lstElements.setCellRenderer(new ClasspathCellRenderer());
         scpLstElements = new JScrollPane(lstElements);
@@ -271,7 +271,7 @@ public class ClasspathSetupDialog extends JDialog
 
         List<ClasspathEntry> newEntries = new ArrayList<ClasspathEntry>();
         for (int i = 0; i < listModel.getSize(); i++) {
-            newEntries.add((ClasspathEntry)listModel.getElementAt(i));
+            newEntries.add(listModel.getElementAt(i));
         }
         BrowserConfig config = frame.getConfig();
         List<ClasspathEntry> oldEntries = new ArrayList<ClasspathEntry>(config.getClasspath());
@@ -343,7 +343,7 @@ public class ClasspathSetupDialog extends JDialog
     private void doUp() {
         int selectedIndex = lstElements.getSelectedIndex();
         if (selectedIndex > 0) {
-            Object entry = listModel.remove(selectedIndex);
+            ClasspathEntry entry = listModel.remove(selectedIndex);
             int newSelectedIndex = selectedIndex - 1;
             listModel.insertElementAt(entry, newSelectedIndex);
             selectIndex(newSelectedIndex);
@@ -353,7 +353,7 @@ public class ClasspathSetupDialog extends JDialog
     private void doDown() {
         int selectedIndex = lstElements.getSelectedIndex();
         if (selectedIndex < listModel.getSize() - 1) {
-            Object entry = listModel.remove(selectedIndex);
+            ClasspathEntry entry = listModel.remove(selectedIndex);
             int newSelectedIndex = selectedIndex + 1;
             listModel.insertElementAt(entry, newSelectedIndex);
             selectIndex(newSelectedIndex);
