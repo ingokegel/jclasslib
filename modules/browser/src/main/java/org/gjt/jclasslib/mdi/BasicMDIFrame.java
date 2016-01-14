@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.mdi;
 
+import org.gjt.jclasslib.browser.BrowserInternalFrame;
 import org.gjt.jclasslib.util.GUIHelper;
 
 import javax.swing.*;
@@ -14,7 +15,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -120,7 +120,6 @@ public class BasicMDIFrame extends JFrame {
 
             Rectangle bounds = openFrame.getNormalBounds();
             MDIConfig.InternalFrameDesc internalFrameDesc = new MDIConfig.InternalFrameDesc();
-            internalFrameDesc.setClassName(openFrame.getClass().getName());
             internalFrameDesc.setInitParam(openFrame.getInitParam());
             internalFrameDesc.setX(bounds.x);
             internalFrameDesc.setY(bounds.y);
@@ -149,28 +148,11 @@ public class BasicMDIFrame extends JFrame {
 
         boolean anyFrameMaximized = false;
         for (MDIConfig.InternalFrameDesc internalFrameDesc : config.getInternalFrameDescs()) {
-            Constructor<? extends BasicInternalFrame> frameConstructor;
+            BasicInternalFrame frame = null;
             try {
-                Class<? extends BasicInternalFrame> frameClass = toFrameClass(internalFrameDesc);
-                frameConstructor =  frameClass.getConstructor(getFrameConstructorArguments(frameClass));
-            } catch (ClassNotFoundException ex) {
-                System.out.println("class not found:" + ex.getMessage());
-                continue;
-            } catch (NoSuchMethodException ex) {
-                System.out.println("constructor not found:" + ex.getMessage());
-                continue;
-            }
-
-            BasicInternalFrame frame;
-            try {
-                frame = frameConstructor.newInstance(desktopManager, internalFrameDesc.getInitParam());
-            } catch (Exception e) {
-                Throwable cause = e.getCause();
-                if (cause instanceof IOException) {
-                    GUIHelper.showMessage(this, cause.getMessage(), JOptionPane.ERROR_MESSAGE);
-                } else {
-                    e.printStackTrace();
-                }
+                frame = new BrowserInternalFrame(desktopManager, internalFrameDesc.getInitParam());
+            } catch (IOException e) {
+                e.printStackTrace();
                 continue;
             }
             desktopManager.resizeFrame(
@@ -199,20 +181,6 @@ public class BasicMDIFrame extends JFrame {
         }
 
         desktopManager.showAll();
-    }
-
-    @SuppressWarnings("unchecked")
-    private Class<? extends BasicInternalFrame> toFrameClass(MDIConfig.InternalFrameDesc internalFrameDesc) throws ClassNotFoundException {
-        return (Class<? extends BasicInternalFrame>)Class.forName(internalFrameDesc.getClassName());
-    }
-
-    /**
-        Get the constructor arguments classes for the constructor of the supplied frame class.
-        @param frameClass the frame class.
-        @return the constructor argument classes.
-     */
-    protected Class[] getFrameConstructorArguments(Class frameClass) {
-        return BasicInternalFrame.CONSTRUCTOR_ARGUMENTS;
     }
 
     private void setupActions() {

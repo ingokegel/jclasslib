@@ -7,6 +7,8 @@
 
 package org.gjt.jclasslib.mdi;
 
+import org.gjt.jclasslib.browser.config.window.WindowState;
+
 import java.util.List;
 
 /**
@@ -56,8 +58,7 @@ public class MDIConfig {
      */
     public static class InternalFrameDesc {
 
-        private String className;
-        private Object initParam;
+        private WindowState initParam;
         private int x;
         private int y;
         private int width;
@@ -66,26 +67,10 @@ public class MDIConfig {
         private boolean iconified;
 
         /**
-         * Get the class name of the internal frame.
-         * @return the class name.
-         */
-        public String getClassName() {
-            return className;
-        }
-
-        /**
-         * Set the class name of the internal frame.
-         * @param className the class name.
-         */
-        public void setClassName(String className) {
-            this.className = className;
-        }
-
-        /**
          * Get the initialization parameter for the internal frame.
          * @return the initialization parameter
          */
-        public Object getInitParam() {
+        public WindowState getInitParam() {
             return initParam;
         }
 
@@ -93,7 +78,7 @@ public class MDIConfig {
          * Set the initialization parameter for the internal frame.
          * @param initParam the initialization parameter
          */
-        public void setInitParam(Object initParam) {
+        public void setInitParam(WindowState initParam) {
             this.initParam = initParam;
         }
 

@@ -7,6 +7,8 @@
 
 package org.gjt.jclasslib.mdi;
 
+import org.gjt.jclasslib.browser.config.window.WindowState;
+
 import javax.swing.*;
 
 /**
@@ -16,13 +18,6 @@ import javax.swing.*;
 */
 public abstract class BasicInternalFrame extends JInternalFrame {
 
-    /**
-        Constructor for creating a derived <tt>BasicInternalFrame</tt> with
-        an initialization parameter.
-     */
-    public static final Class[] CONSTRUCTOR_ARGUMENTS =
-        new Class[] {BasicDesktopManager.class, String.class};
-    
     /** The parent <tt>DesktopManager</tt>. */
     protected final BasicDesktopManager desktopManager;
 
@@ -41,7 +36,7 @@ public abstract class BasicInternalFrame extends JInternalFrame {
         This parameter will be supplied to the constructor when the state is restored.
         @return the parameter
      */
-    public Object getInitParam() {
+    public WindowState getInitParam() {
         return null;
     }
 

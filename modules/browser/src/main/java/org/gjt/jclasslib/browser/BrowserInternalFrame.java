@@ -36,13 +36,6 @@ public class BrowserInternalFrame extends BasicInternalFrame
         implements BrowserServices {
 
 
-    /**
-     * Constructor for creating a derived <tt>BasicInternalFrame</tt> with
-     * an initialization parameter.
-     */
-    public static final Class[] CONSTRUCTOR_ARGUMENTS =
-            new Class[]{BasicDesktopManager.class, WindowState.class};
-
     private String fileName;
     private ClassFile classFile;
 
@@ -66,7 +59,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
         setupInternalFrame(windowState.getBrowserPath());
     }
 
-    public Object getInitParam() {
+    public WindowState getInitParam() {
         return new WindowState(fileName, browserComponent.getBrowserPath());
     }
 
@@ -151,15 +144,6 @@ public class BrowserInternalFrame extends BasicInternalFrame
     public void reload() throws IOException {
         readClassFile();
         browserComponent.rebuild();
-    }
-
-    /**
-     * Get the file name for the displayed class file.
-     *
-     * @return the file name
-     */
-    public String getFileName() {
-        return fileName;
     }
 
     private void setupInternalFrame(BrowserPath browserPath) {
