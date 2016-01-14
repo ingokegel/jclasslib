@@ -12,7 +12,6 @@ import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
 import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog
 import org.gjt.jclasslib.browser.config.window.WindowState
-import org.gjt.jclasslib.mdi.BasicDesktopManager
 import org.gjt.jclasslib.mdi.BasicFileFilter
 import org.gjt.jclasslib.mdi.BasicMDIFrame
 import org.gjt.jclasslib.structures.InvalidByteCodeException
@@ -251,7 +250,7 @@ class BrowserMDIFrame : BasicMDIFrame() {
         }
     }
 
-    override fun createDesktopManager(): BasicDesktopManager = BrowserDesktopManager(this)
+    override fun createDesktopManager(): BrowserDesktopManager = BrowserDesktopManager(this)
 
     private fun setupMenu() {
         jMenuBar = JMenuBar().apply {

@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.mdi;
 
+import org.gjt.jclasslib.browser.BrowserDesktopManager;
 import org.gjt.jclasslib.browser.BrowserInternalFrame;
 import org.gjt.jclasslib.util.GUIHelper;
 
@@ -26,7 +27,7 @@ import java.util.prefs.Preferences;
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class BasicMDIFrame extends JFrame {
+public abstract class BasicMDIFrame extends JFrame {
 
     private static final int DEFAULT_WINDOW_WIDTH = 800;
     private static final int DEFAULT_WINDOW_HEIGHT = 600;
@@ -55,7 +56,7 @@ public class BasicMDIFrame extends JFrame {
     /** The desktop pane. */
     protected JDesktopPane desktopPane;
     /** <tt>DesktopManager</tt> for this MDI parent frame. */
-    protected BasicDesktopManager desktopManager;    
+    protected BrowserDesktopManager desktopManager;
     /** <tt>JMenu</tt> for window actions. */
     protected JMenu menuWindow;
 
@@ -77,10 +78,7 @@ public class BasicMDIFrame extends JFrame {
         Create a <tt>BasicDesktopManager</tt> for this MDI parent window.
         @return the <tt>BasicDesktopManager</tt>
      */
-    protected BasicDesktopManager createDesktopManager() {
-        
-        return new BasicDesktopManager(this);
-    }
+    protected abstract BrowserDesktopManager createDesktopManager();
     
     /**
         Exit the application.
@@ -97,9 +95,9 @@ public class BasicMDIFrame extends JFrame {
      */
     protected void closeAllFrames() {
 
-        List<BasicInternalFrame> frames = desktopManager.getOpenFrames();
+        List<BrowserInternalFrame> frames = desktopManager.getOpenFrames();
         while (frames.size() > 0) {
-            BasicInternalFrame frame = frames.get(0);
+            BrowserInternalFrame frame = frames.get(0);
             frame.doDefaultCloseAction();
         }
     }
@@ -113,10 +111,10 @@ public class BasicMDIFrame extends JFrame {
     protected MDIConfig createMDIConfig() {
 
         MDIConfig config = new MDIConfig();
-        List<BasicInternalFrame> openFrames = desktopManager.getOpenFrames();
+        List<BrowserInternalFrame> openFrames = desktopManager.getOpenFrames();
         List<MDIConfig.InternalFrameDesc> internalFrameDescs = new ArrayList<MDIConfig.InternalFrameDesc>(openFrames.size());
 
-        for (BasicInternalFrame openFrame : openFrames) {
+        for (BrowserInternalFrame openFrame : openFrames) {
 
             Rectangle bounds = openFrame.getNormalBounds();
             MDIConfig.InternalFrameDesc internalFrameDesc = new MDIConfig.InternalFrameDesc();
@@ -148,7 +146,7 @@ public class BasicMDIFrame extends JFrame {
 
         boolean anyFrameMaximized = false;
         for (MDIConfig.InternalFrameDesc internalFrameDesc : config.getInternalFrameDescs()) {
-            BasicInternalFrame frame = null;
+            BrowserInternalFrame frame = null;
             try {
                 frame = new BrowserInternalFrame(desktopManager, internalFrameDesc.getInitParam());
             } catch (IOException e) {

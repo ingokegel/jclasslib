@@ -7,6 +7,8 @@
 
 package org.gjt.jclasslib.mdi;
 
+import org.gjt.jclasslib.browser.BrowserInternalFrame;
+
 import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
@@ -42,8 +44,8 @@ public class BasicDesktopManager extends DefaultDesktopManager
 
     private JDesktopPane desktopPane;
     private HashMap<JInternalFrame, JCheckBoxMenuItem> frameToMenuItem = new HashMap<JInternalFrame, JCheckBoxMenuItem>();
-    private BasicInternalFrame activeFrame;
-    private LinkedList<BasicInternalFrame> openFrames = new LinkedList<BasicInternalFrame>();
+    private BrowserInternalFrame activeFrame;
+    private LinkedList<BrowserInternalFrame> openFrames = new LinkedList<BrowserInternalFrame>();
     private int rollover = 0;
     private int separatorMenuIndex = -1;
 
@@ -79,7 +81,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         Get the list of open child frames.
         @return the list
      */
-    public List<BasicInternalFrame> getOpenFrames() {
+    public List<BrowserInternalFrame> getOpenFrames() {
         return openFrames;
     }
 
@@ -110,7 +112,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         Set the index of the frame to be shown on top after a call to <tt>showAll()</tt>.
         @param activeFrame the index
      */
-    public void setActiveFrame(BasicInternalFrame activeFrame) {
+    public void setActiveFrame(BrowserInternalFrame activeFrame) {
         this.activeFrame = activeFrame;
     }
 
@@ -119,9 +121,9 @@ public class BasicDesktopManager extends DefaultDesktopManager
         @param initParam the init parameter to look for.
         @return the open frame or <tt>null</tt>.
      */
-    public BasicInternalFrame getOpenFrame(Object initParam) {
+    public BrowserInternalFrame getOpenFrame(Object initParam) {
 
-        for (BasicInternalFrame frame : openFrames) {
+        for (BrowserInternalFrame frame : openFrames) {
             if (frame.getInitParam().equals(initParam)) {
                 return frame;
             }
@@ -133,7 +135,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         Show all internal frames.
      */
     public void showAll() {
-        for (BasicInternalFrame openFrame : openFrames) {
+        for (BrowserInternalFrame openFrame : openFrames) {
             openFrame.setVisible(true);
         }
         if (activeFrame != null) {
@@ -149,7 +151,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         Add a child frame to this <tt>DesktopManager</tt>.
         @param frame the frame
      */
-    public void addInternalFrame(BasicInternalFrame frame) {
+    public void addInternalFrame(BrowserInternalFrame frame) {
 
         frame.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent event) {
@@ -240,7 +242,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         newInternalX = newInternalY = rollover = 0;
 
         Rectangle currentBounds;
-        for (BasicInternalFrame openFrame : openFrames) {
+        for (BrowserInternalFrame openFrame : openFrames) {
             normalizeFrame(openFrame);
             currentBounds = getNextInternalFrameBounds();
             resizeFrame(openFrame, currentBounds.x, currentBounds.y, currentBounds.width, currentBounds.height);
@@ -291,7 +293,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
     }
 
     public void internalFrameClosing(InternalFrameEvent event) {
-        BasicInternalFrame frame = (BasicInternalFrame)event.getInternalFrame();
+        BrowserInternalFrame frame = (BrowserInternalFrame)event.getInternalFrame();
         removeInternalFrame(frame);
     }
 
@@ -352,7 +354,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         desktopPane.scrollRectToVisible(frame.getBounds());
     }
 
-    private void removeInternalFrame(BasicInternalFrame frame) {
+    private void removeInternalFrame(BrowserInternalFrame frame) {
 
         JMenuItem menuItem = frameToMenuItem.remove(frame);
         if (menuItem != null) {
@@ -393,7 +395,7 @@ public class BasicDesktopManager extends DefaultDesktopManager
         JInternalFrame currentFrame = desktopPane.getSelectedFrame();
         JInternalFrame nextFrame;
 
-        ListIterator<BasicInternalFrame> it = openFrames.listIterator();
+        ListIterator<BrowserInternalFrame> it = openFrames.listIterator();
         //noinspection StatementWithEmptyBody
         while (it.hasNext() && it.next() != currentFrame) {
         }

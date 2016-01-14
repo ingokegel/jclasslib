@@ -11,8 +11,6 @@ import org.gjt.jclasslib.browser.config.classpath.FindResult;
 import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.gjt.jclasslib.browser.config.window.WindowState;
 import org.gjt.jclasslib.io.ClassFileReader;
-import org.gjt.jclasslib.mdi.BasicDesktopManager;
-import org.gjt.jclasslib.mdi.BasicInternalFrame;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.util.GUIHelper;
 
@@ -32,10 +30,11 @@ import java.util.jar.JarFile;
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
  *
  */
-public class BrowserInternalFrame extends BasicInternalFrame
+public class BrowserInternalFrame extends JInternalFrame
         implements BrowserServices {
 
 
+    private BrowserDesktopManager desktopManager;
     private String fileName;
     private ClassFile classFile;
 
@@ -50,8 +49,9 @@ public class BrowserInternalFrame extends BasicInternalFrame
      * @param windowState    the window state object. The frame will load the class file from
      *                       information present within this object.
      */
-    public BrowserInternalFrame(BasicDesktopManager desktopManager, WindowState windowState) throws IOException {
-        super(desktopManager, windowState.getFileName());
+    public BrowserInternalFrame(BrowserDesktopManager desktopManager, WindowState windowState) throws IOException {
+        super(windowState.getFileName(), true, true, true, true);
+        this.desktopManager = desktopManager;
         this.fileName = windowState.getFileName();
 
         setFrameIcon(BrowserMDIFrame.ICON_APPLICATION_16);
@@ -104,7 +104,7 @@ public class BrowserInternalFrame extends BasicInternalFrame
             }
         }
 
-        BrowserInternalFrame frame = (BrowserInternalFrame)desktopManager.getOpenFrame(new WindowState(findResult.getFileName()));
+        BrowserInternalFrame frame = desktopManager.getOpenFrame(new WindowState(findResult.getFileName()));
         if (frame != null) {
             try {
                 frame.setSelected(true);
@@ -156,7 +156,16 @@ public class BrowserInternalFrame extends BasicInternalFrame
         browserComponent = new BrowserComponent(this);
         contentPane.add(browserComponent, BorderLayout.CENTER);
 
-        setupInternalFrame();
+        setBounds(desktopManager.getNextInternalFrameBounds());
+
+        addVetoableChangeListener(desktopManager);
+        addInternalFrameListener(desktopManager);
+        desktopManager.addInternalFrame(this);
+
+
+        if (desktopManager.getParentFrame().isVisible()) {
+            setVisible(true);
+        }
         browserComponent.setBrowserPath(browserPath);
 
     }
