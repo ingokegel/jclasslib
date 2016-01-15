@@ -21,12 +21,6 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 
-/**
-    Parent frame for MDI application. Handles window actions, state saving and loading
-    and supplies various utility methods.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
 public abstract class BasicMDIFrame extends JFrame {
 
     private static final int DEFAULT_WINDOW_WIDTH = 800;
@@ -41,13 +35,13 @@ public abstract class BasicMDIFrame extends JFrame {
     // Actions
     
     /** Action for selecting the next child window. */
-    protected Action actionNextWindow;
+    protected Action nextWindowAction;
     /** Action for selecting the previous child window. */
-    protected Action actionPreviousWindow;
+    protected Action previousWindowAction;
     /** Action for tiling all child windows. */
-    protected Action actionTileWindows;
+    protected Action tileWindowsAction;
     /** Action for stacking all child windows. */
-    protected Action actionStackWindows;
+    protected Action stackWindowsAction;
 
     // Visual components
 
@@ -72,6 +66,21 @@ public abstract class BasicMDIFrame extends JFrame {
         setupFrame();
         setupEventHandlers();
         loadWindowSettings();
+    }
+
+    public JDesktopPane getDesktopPane() {
+        return desktopPane;
+    }
+
+    public JMenu getMenuWindow() {
+        return menuWindow;
+    }
+
+    public void setWindowActionsEnabled(boolean enabled) {
+        nextWindowAction.setEnabled(enabled);
+        previousWindowAction.setEnabled(enabled);
+        tileWindowsAction.setEnabled(enabled);
+        stackWindowsAction.setEnabled(enabled);
     }
 
     /**
@@ -146,7 +155,7 @@ public abstract class BasicMDIFrame extends JFrame {
 
         boolean anyFrameMaximized = false;
         for (MDIConfig.InternalFrameDesc internalFrameDesc : config.getInternalFrameDescs()) {
-            BrowserInternalFrame frame = null;
+            BrowserInternalFrame frame;
             try {
                 frame = new BrowserInternalFrame(desktopManager, internalFrameDesc.getInitParam());
             } catch (IOException e) {
@@ -183,36 +192,36 @@ public abstract class BasicMDIFrame extends JFrame {
 
     private void setupActions() {
 
-        actionNextWindow = new WindowAction("Next window");
-        actionNextWindow.putValue(Action.SHORT_DESCRIPTION,
+        nextWindowAction = new WindowAction("Next window");
+        nextWindowAction.putValue(Action.SHORT_DESCRIPTION,
                                   "Cycle to the next opened window");
-        actionNextWindow.setEnabled(false);
+        nextWindowAction.setEnabled(false);
         
-        actionPreviousWindow = new WindowAction("Previous window");
-        actionPreviousWindow.putValue(Action.SHORT_DESCRIPTION,
+        previousWindowAction = new WindowAction("Previous window");
+        previousWindowAction.putValue(Action.SHORT_DESCRIPTION,
                                      "Cycle to the previous opened window");
-        actionPreviousWindow.setEnabled(false);
+        previousWindowAction.setEnabled(false);
         
-        actionTileWindows = new WindowAction("Tile windows");
-        actionTileWindows.putValue(Action.SHORT_DESCRIPTION,
+        tileWindowsAction = new WindowAction("Tile windows");
+        tileWindowsAction.putValue(Action.SHORT_DESCRIPTION,
                                    "Tile all windows in the main frame");
-        actionTileWindows.setEnabled(false);
+        tileWindowsAction.setEnabled(false);
 
-        actionStackWindows = new WindowAction("Stack windows");
-        actionStackWindows.putValue(Action.SHORT_DESCRIPTION,
+        stackWindowsAction = new WindowAction("Stack windows");
+        stackWindowsAction.putValue(Action.SHORT_DESCRIPTION,
                                     "Stack all windows in the main frame");
-        actionStackWindows.setEnabled(false);
+        stackWindowsAction.setEnabled(false);
     }
 
     private void setupMenu() {
 
         menuWindow = new JMenu("Window");
-            menuWindow.add(actionPreviousWindow).setAccelerator(
+            menuWindow.add(previousWindowAction).setAccelerator(
                 KeyStroke.getKeyStroke(KeyEvent.VK_F2, InputEvent.CTRL_MASK));
-            menuWindow.add(actionNextWindow).setAccelerator(
+            menuWindow.add(nextWindowAction).setAccelerator(
                 KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_MASK));
-            menuWindow.add(actionTileWindows);
-            menuWindow.add(actionStackWindows);
+            menuWindow.add(tileWindowsAction);
+            menuWindow.add(stackWindowsAction);
     }
 
     private void setupFrame() {
@@ -309,7 +318,16 @@ public abstract class BasicMDIFrame extends JFrame {
 
         return scpDesktop;
     }
-    
+
+    public void invalidateDektopPane() {
+        desktopPane.setPreferredSize(null);
+        desktopPane.invalidate();
+        desktopPane.getParent().validate();
+        scpDesktop.invalidate();
+        scpDesktop.validate();
+
+    }
+
     private class WindowAction extends AbstractAction {
 
         private WindowAction(String name) {
@@ -318,13 +336,13 @@ public abstract class BasicMDIFrame extends JFrame {
 
         public void actionPerformed(ActionEvent ev) {
 
-            if (this == actionPreviousWindow) {
+            if (this == previousWindowAction) {
                 desktopManager.cycleToPreviousWindow();
-            } else if (this == actionNextWindow) {
+            } else if (this == nextWindowAction) {
                 desktopManager.cycleToNextWindow();
-            } else if (this == actionTileWindows) {
+            } else if (this == tileWindowsAction) {
                 desktopManager.tileWindows();
-            } else if (this == actionStackWindows) {
+            } else if (this == stackWindowsAction) {
                 desktopManager.stackWindows();
             }
 
