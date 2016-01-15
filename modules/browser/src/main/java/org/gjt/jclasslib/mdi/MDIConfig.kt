@@ -5,174 +5,23 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.mdi;
+package org.gjt.jclasslib.mdi
 
-/**
-    Serializable configuration object for the window state of an MDI frame.
+import org.gjt.jclasslib.browser.config.window.WindowState
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class MDIConfig {
+class MDIConfig {
 
-    private List<InternalFrameDesc> internalFrameDescs;
-    private InternalFrameDesc activeFrameDesc;
+    var internalFrameDescs: List<InternalFrameDesc> = listOf()
+    var activeFrameDesc: InternalFrameDesc? = null
 
-    /**
-     * Get the list of internal frame descriptions.
-     * @return the list.
-     */
-    public List<InternalFrameDesc> getInternalFrameDescs() {
-        return internalFrameDescs;
-    }
-
-    /**
-     * Set the list of internal frame descriptions.
-     * @param internalFrameDescs the list.
-     */
-    public void setInternalFrameDescs(List<InternalFrameDesc> internalFrameDescs) {
-        this.internalFrameDescs = internalFrameDescs;
-    }
-
-    /**
-     * Get the internal frame description of the active internal frame.
-     * @return the internal frame description.
-     */
-    public InternalFrameDesc getActiveFrameDesc() {
-        return activeFrameDesc;
-    }
-
-    /**
-     * Set the internal frame description of the active internal frame.
-     * @param activeFrameDesc the internal frame description.
-     */
-    public void setActiveFrameDesc(InternalFrameDesc activeFrameDesc) {
-        this.activeFrameDesc = activeFrameDesc;
-    }
-
-    /**
-     * Serializable description object for the state of an internal frame.
-     */
-    public static class InternalFrameDesc {
-
-        private WindowState initParam;
-        private int x;
-        private int y;
-        private int width;
-        private int height;
-        private boolean maximized;
-        private boolean iconified;
-
-        /**
-         * Get the initialization parameter for the internal frame.
-         * @return the initialization parameter
-         */
-        public WindowState getInitParam() {
-            return initParam;
-        }
-
-        /**
-         * Set the initialization parameter for the internal frame.
-         * @param initParam the initialization parameter
-         */
-        public void setInitParam(WindowState initParam) {
-            this.initParam = initParam;
-        }
-
-        /**
-         * Get the x-position of the internal frame on the desktop.
-         * @return the x-position.
-         */
-        public int getX() {
-            return x;
-        }
-
-        /**
-         * Set the x-position of the internal frame on the desktop.
-         * @param x the x-position.
-         */
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        /**
-         * Get the y-position of the internal frame on the desktop.
-         * @return the y-position.
-         */
-        public int getY() {
-            return y;
-        }
-
-        /**
-         * Set the y-position of the internal frame on the desktop.
-         * @param y the y-position.
-         */
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        /**
-         * Get the width of the internal frame on the desktop.
-         * @return the width.
-         */
-        public int getWidth() {
-            return width;
-        }
-
-        /**
-         * Set the width of the internal frame on the desktop.
-         * @param width the width.
-         */
-        public void setWidth(int width) {
-            this.width = width;
-        }
-
-        /**
-         * Get the height of the internal frame on the desktop.
-         * @return the height.
-         */
-        public int getHeight() {
-            return height;
-        }
-
-        /**
-         * Set the height of the internal frame on the desktop.
-         * @param height the height.
-         */
-        public void setHeight(int height) {
-            this.height = height;
-        }
-
-        /**
-         * Returns whether the internal frame is maximized.
-         * @return the value.
-         */
-        public boolean isMaximized() {
-            return maximized;
-        }
-
-        /**
-         * Sets whether the internal frame is maximized.
-         * @param maximized the value.
-         */
-        public void setMaximized(boolean maximized) {
-            this.maximized = maximized;
-        }
-
-        /**
-         * Returns whether the internal frame is iconified.
-         * @return the value.
-         */
-        public boolean isIconified() {
-            return iconified;
-        }
-
-        /**
-         * Sets whether the internal frame is iconified.
-         * @param iconified the value.
-         */
-        public void setIconified(boolean iconified) {
-            this.iconified = iconified;
-        }
+    class InternalFrameDesc {
+        var initParam: WindowState? = null
+        var x: Int = 0
+        var y: Int = 0
+        var width: Int = 0
+        var height: Int = 0
+        var isMaximized: Boolean = false
+        var isIconified: Boolean = false
     }
 
 }
