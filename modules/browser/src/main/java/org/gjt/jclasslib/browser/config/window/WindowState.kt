@@ -5,83 +5,34 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.window;
+package org.gjt.jclasslib.browser.config.window
 
-/**
-    Complete serializable state of a <tt>BrowserComponent</tt>.
+class WindowState {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class WindowState {
+    var fileName: String? = null
+    var browserPath: BrowserPath? = null
 
-    private String fileName;
-    private BrowserPath browserPath;
-
-    /**
-     * Constructor.
-     * @param fileName the file name for the displayed class.
-     * @param browserPath the browser path that should be selected. May be <tt>null</tt>.
-     */
-    public WindowState(String fileName, BrowserPath browserPath) {
-        this.fileName = fileName;
-        this.browserPath = browserPath;
+    constructor(fileName: String, browserPath: BrowserPath) {
+        this.fileName = fileName
+        this.browserPath = browserPath
     }
 
-    /**
-     * Constructor.
-     * @param fileName the file name for the displayed class.
-     */
-    public WindowState(String fileName) {
-        this.fileName = fileName;
+    constructor(fileName: String) {
+        this.fileName = fileName
     }
 
-    /**
-     * Constructor.
-     */
-    public WindowState() {
+    constructor() {
+
     }
 
-    /**
-     * Get the file name of the displayed class.
-     * @return the file name.
-     */
-    public String getFileName() {
-        return fileName;
-    }
-
-    /**
-     * Set the file name of the displayed class.
-     * @param fileName the file name
-     */
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    /**
-     * Get the browser path.
-     * @return the browser path.
-     */
-    public BrowserPath getBrowserPath() {
-        return browserPath;
-    }
-
-    /**
-     * Set the browser path.
-     * @param browserPath the browser path.
-     */
-    public void setBrowserPath(BrowserPath browserPath) {
-        this.browserPath = browserPath;
-    }
-
-    public boolean equals(Object other) {
-
-        if (fileName == null || other == null || !(other instanceof WindowState)) {
-            return false;
+    override fun equals(other: Any?): Boolean {
+        if (fileName == null || other == null || other !is WindowState) {
+            return false
         }
-        return fileName.equals(((WindowState)other).fileName);
+        return fileName == other.fileName
     }
 
-    public int hashCode() {
-        return fileName.hashCode();
+    override fun hashCode(): Int {
+        return fileName?.hashCode() ?: 0
     }
 }
