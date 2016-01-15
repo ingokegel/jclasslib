@@ -7,10 +7,6 @@
 
 package org.gjt.jclasslib.mdi;
 
-import org.gjt.jclasslib.browser.config.window.WindowState;
-
-import java.util.List;
-
 /**
     Serializable configuration object for the window state of an MDI frame.
 
