@@ -7,8 +7,6 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.mdi.BasicMDIFrame;
-
 import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
@@ -35,12 +33,11 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
     private static int NEW_INTERNAL_HEIGHT = 400;
 
     /** Parent frame of this <tt>DesktopManager</tt>. */
-    protected BasicMDIFrame parentFrame;
+    protected BrowserMDIFrame parentFrame;
 
     private int newInternalX = 0;
     private int newInternalY = 0;
 
-    private JDesktopPane desktopPane;
     private HashMap<JInternalFrame, JCheckBoxMenuItem> frameToMenuItem = new HashMap<JInternalFrame, JCheckBoxMenuItem>();
     private BrowserInternalFrame activeFrame;
     private LinkedList<BrowserInternalFrame> openFrames = new LinkedList<BrowserInternalFrame>();
@@ -55,7 +52,6 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
      */
     public BrowserDesktopManager(BrowserMDIFrame parentFrame) {
         this.parentFrame = parentFrame;
-        desktopPane = parentFrame.getDesktopPane();
     }
 
     public void internalFrameActivated(InternalFrameEvent event) {
@@ -71,7 +67,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
 
     private void actionStatus(BrowserInternalFrame internalFrame) {
 
-        BrowserMDIFrame browserParentFrame = (BrowserMDIFrame)parentFrame;
+        BrowserMDIFrame browserParentFrame = parentFrame;
 
         if (internalFrame != null) {
             internalFrame.getBrowserComponent().getHistory().updateActions();
@@ -87,7 +83,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
      Get the parent frame.
      @return the frame
      */
-    public BasicMDIFrame getParentFrame() {
+    public BrowserMDIFrame getParentFrame() {
         return parentFrame;
     }
 
@@ -96,7 +92,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
      @return the <tt>JDesktopPane</tt>
      */
     public JDesktopPane getDesktopPane() {
-        return desktopPane;
+        return parentFrame.getDesktopPane();
     }
 
     /**
@@ -113,7 +109,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
      */
     public Rectangle getNextInternalFrameBounds() {
 
-        if (newInternalY + NEW_INTERNAL_HEIGHT > desktopPane.getHeight()) {
+        if (newInternalY + NEW_INTERNAL_HEIGHT > getDesktopPane().getHeight()) {
             rollover++;
             newInternalY = 0;
             newInternalX = rollover * NEW_INTERNAL_X_OFFSET;
@@ -192,7 +188,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
         menuItem.setSelected(false);
         menuWindow.add(menuItem);
 
-        desktopPane.add(frame);
+        getDesktopPane().add(frame);
         frameToMenuItem.put(frame, menuItem);
         openFrames.add(frame);
         parentFrame.setWindowActionsEnabled(true);
@@ -235,7 +231,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
             }
         }
 
-        Dimension size = desktopPane.getSize();
+        Dimension size = getDesktopPane().getSize();
 
         int width = size.width/cols;
         int height = size.height/rows;
@@ -341,6 +337,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
     public void checkSize() {
 
         Dimension size = new Dimension();
+        JDesktopPane desktopPane = getDesktopPane();
         JInternalFrame[] frames = desktopPane.getAllFrames();
         for (JInternalFrame frame : frames) {
             size.width = Math.max(size.width, frame.getX() + frame.getWidth());
@@ -368,7 +365,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
      @param frame the frame.
      */
     public void scrollToVisible(JInternalFrame frame) {
-        desktopPane.scrollRectToVisible(frame.getBounds());
+        getDesktopPane().scrollRectToVisible(frame.getBounds());
     }
 
     private void removeInternalFrame(BrowserInternalFrame frame) {
@@ -387,7 +384,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
     }
 
     private void resetSize() {
-        parentFrame.invalidateDektopPane();
+        parentFrame.invalidateDesktopPane();
     }
 
     private void normalizeFrame(JInternalFrame frame) {
@@ -405,7 +402,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
 
     private void cycleWindows(boolean forward) {
 
-        JInternalFrame currentFrame = desktopPane.getSelectedFrame();
+        JInternalFrame currentFrame = getDesktopPane().getSelectedFrame();
         JInternalFrame nextFrame;
 
         ListIterator<BrowserInternalFrame> it = openFrames.listIterator();
@@ -446,7 +443,7 @@ public class BrowserDesktopManager extends DefaultDesktopManager implements Veto
         }
 
         try {
-            JInternalFrame[] frames = desktopPane.getAllFrames();
+            JInternalFrame[] frames = getDesktopPane().getAllFrames();
             for (JInternalFrame frame : frames) {
                 if (frame == source) {
                     continue;
