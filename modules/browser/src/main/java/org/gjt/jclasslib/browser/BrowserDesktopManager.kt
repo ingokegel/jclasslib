@@ -7,18 +7,14 @@
 
 package org.gjt.jclasslib.browser;
 
-import javax.swing.*;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
-import java.util.*;
-import java.util.List;
+import java.awt.Dimension
+import java.awt.Rectangle
+import java.awt.event.ActionEvent
+import java.awt.event.ComponentEvent
+import java.beans.PropertyChangeEvent
+import java.util.*
+import javax.swing.*
+import javax.swing.event.InternalFrameEvent
 
 /**
     The desktop manager for the class file browser application.
