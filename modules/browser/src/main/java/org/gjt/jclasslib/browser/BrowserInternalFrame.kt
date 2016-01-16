@@ -7,22 +7,17 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.browser.config.classpath.FindResult;
-import org.gjt.jclasslib.browser.config.window.BrowserPath;
-import org.gjt.jclasslib.browser.config.window.WindowState;
-import org.gjt.jclasslib.io.ClassFileReader;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.util.GUIHelper;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import org.gjt.jclasslib.browser.config.classpath.FindResult
+import org.gjt.jclasslib.browser.config.window.BrowserPath
+import org.gjt.jclasslib.browser.config.window.WindowState
+import org.gjt.jclasslib.io.ClassFileReader
+import org.gjt.jclasslib.util.GUIHelper
+import java.awt.BorderLayout
+import java.awt.Container
+import java.io.IOException
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import javax.swing.JOptionPane
 
 /**
  * A child window of the class file browser application.
