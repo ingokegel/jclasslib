@@ -35,6 +35,7 @@
       <w>dcmpop</w>
       <w>dconst</w>
       <w>ddiv</w>
+      <w>deiconified</w>
       <w>dload</w>
       <w>dmul</w>
       <w>dneg</w>
@@ -74,6 +75,7 @@
       <w>icmple</w>
       <w>icmplt</w>
       <w>icmpne</w>
+      <w>iconified</w>
       <w>iconst</w>
       <w>idiv</w>
       <w>ifcond</w>
@@ -139,6 +141,7 @@
       <w>supertype</w>
       <w>tableswitch</w>
       <w>typeannotation</w>
+      <w>vetoable</w>
       <w>vitor</w>
     </words>
   </dictionary>

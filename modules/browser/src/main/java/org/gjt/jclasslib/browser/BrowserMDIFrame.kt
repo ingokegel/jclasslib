@@ -13,13 +13,12 @@ import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
 import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog
 import org.gjt.jclasslib.browser.config.window.WindowState
 import org.gjt.jclasslib.mdi.BasicFileFilter
-import org.gjt.jclasslib.mdi.MDIConfig
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.*
-import java.beans.PropertyVetoException
 import java.beans.XMLDecoder
 import java.beans.XMLEncoder
 import java.io.*
@@ -29,12 +28,6 @@ import javax.swing.*
 class BrowserMDIFrame : JFrame() {
 
     private val desktopManager: BrowserDesktopManager = BrowserDesktopManager(this)
-    //TODO move to BrowserDesktopManager
-    val desktopPane = JDesktopPane().apply {
-        background = Color.LIGHT_GRAY
-        this.desktopManager = desktopManager
-
-    }
 
     val actionOpenClassFile: Action = DefaultAction("Open class file", "Open a class file", "open_small.png", "open_large.png") {
         val result = classesFileChooser.showOpenDialog(this)
@@ -48,10 +41,7 @@ class BrowserMDIFrame : JFrame() {
                 } else {
                     openClassFromJar(file)
                 }?.apply {
-                    try {
-                        setMaximum(true)
-                    } catch (ex: PropertyVetoException) {
-                    }
+                    setMaximum(true)
                 }
             }
         }
@@ -65,10 +55,8 @@ class BrowserMDIFrame : JFrame() {
             if (findResult != null) {
                 repaintNow()
                 withWaitCursor {
-                    val frame = BrowserInternalFrame(desktopManager, WindowState(findResult.fileName))
-                    try {
-                        frame.setMaximum(true)
-                    } catch (ex: PropertyVetoException) {
+                    BrowserInternalFrame(desktopManager, WindowState(findResult.fileName)).apply {
+                        setMaximum(true)
                     }
                 }
             } else {
@@ -82,7 +70,7 @@ class BrowserMDIFrame : JFrame() {
     }
 
     val actionNewWorkspace: Action = DefaultAction("New workspace", "Close all frames and open a new workspace") {
-        closeAllFrames()
+        desktopManager.closeAllFrames()
         workspaceFile = null
         config = browserConfigWithRuntimeLib()
         updateTitle()
@@ -121,16 +109,16 @@ class BrowserMDIFrame : JFrame() {
     }
 
     val actionBackward: Action = DefaultAction("Backward", "Move backward in the navigation history", "browser_backward_small.png", "browser_backward_large.png") {
-        getSelectedInternalFrame()?.browserComponent?.history?.historyBackward()
+        desktopManager.selectedFrame?.browserComponent?.history?.historyBackward()
     }.apply { isEnabled = false }
 
     val actionForward: Action = DefaultAction("Forward", "Move backward in the navigation history", "browser_forward_small.png", "browser_forward_large.png") {
-        getSelectedInternalFrame()?.browserComponent?.history?.historyForward()
+        desktopManager.selectedFrame?.browserComponent?.history?.historyForward()
     }.apply { isEnabled = false }
 
     var actionReload: Action = DefaultAction("Reload", "Reload class file", "reload_small.png", "reload_large.png") {
         try {
-            getSelectedInternalFrame()?.reload()
+            desktopManager.selectedFrame?.reload()
         } catch (e: IOException) {
             GUIHelper.showMessage(this, e.message, JOptionPane.ERROR_MESSAGE)
         }
@@ -213,7 +201,6 @@ class BrowserMDIFrame : JFrame() {
 
     private fun browserConfigWithRuntimeLib() = BrowserConfig().apply { addRuntimeLib() }
 
-    private fun getSelectedInternalFrame() = desktopPane.selectedFrame as BrowserInternalFrame?
 
     override fun setVisible(visible: Boolean) {
         super.setVisible(visible)
@@ -225,10 +212,10 @@ class BrowserMDIFrame : JFrame() {
     fun openWorkspace(file: File) {
         repaintNow()
         withWaitCursor {
-            closeAllFrames()
+            desktopManager.closeAllFrames()
             val decoder = XMLDecoder(FileInputStream(file))
             config = decoder.readObject() as BrowserConfig
-            readMDIConfig(config.mdiConfig)
+            desktopManager.applyMDIConfig(config.mdiConfig)
             decoder.close()
             recentMenu.addRecentWorkspace(file)
         }
@@ -273,10 +260,7 @@ class BrowserMDIFrame : JFrame() {
                 } else if (path.toLowerCase().endsWith(".class")) {
                     try {
                         openClassFromFile(file).apply {
-                            try {
-                                setMaximum(true)
-                            } catch (e: PropertyVetoException) {
-                            }
+                            setMaximum(true)
                         }
                     } catch (e: IOException) {
                         GUIHelper.showMessage(this@BrowserMDIFrame, e.message, JOptionPane.ERROR_MESSAGE)
@@ -342,7 +326,7 @@ class BrowserMDIFrame : JFrame() {
 
         val contentPane = contentPane as JComponent
         contentPane.layout = BorderLayout(5, 5)
-        contentPane.add(JScrollPane(desktopPane).apply {
+        contentPane.add(JScrollPane(desktopManager.desktopPane).apply {
             GUIHelper.setDefaultScrollbarUnits(this)
         }, BorderLayout.CENTER)
 
@@ -457,7 +441,7 @@ class BrowserMDIFrame : JFrame() {
     }
 
     private fun saveWorkspaceToFile(file: File) {
-        config.mdiConfig = createMDIConfig()
+        config.mdiConfig = desktopManager.createMDIConfig()
         try {
             val fos = FileOutputStream(file)
             val encoder = XMLEncoder(fos)
@@ -512,65 +496,6 @@ class BrowserMDIFrame : JFrame() {
         stackWindowsAction.isEnabled = enabled
     }
 
-    private fun closeAllFrames() {
-        val frames = desktopManager.openFrames
-        while (frames.size > 0) {
-            frames[0].doDefaultCloseAction()
-        }
-    }
-
-    private fun createMDIConfig() = MDIConfig().apply {
-        internalFrameDescs = desktopManager.openFrames.map { openFrame ->
-            val bounds = openFrame.normalBounds
-            val internalFrameDesc = MDIConfig.InternalFrameDesc().apply {
-                initParam = openFrame.initParam
-                x = bounds.x
-                y = bounds.y
-                width = bounds.width
-                height = bounds.height
-                isMaximized = openFrame.isMaximum
-                isIconified = openFrame.isIcon
-            }
-
-            if (openFrame === desktopPane.selectedFrame) {
-                activeFrameDesc = internalFrameDesc
-            }
-            internalFrameDesc
-        }
-    }
-
-    private fun readMDIConfig(config: MDIConfig) {
-
-        var anyFrameMaximized = false
-        config.internalFrameDescs.forEach { internalFrameDesc ->
-            val frame: BrowserInternalFrame
-            try {
-                frame = BrowserInternalFrame(desktopManager, internalFrameDesc.initParam)
-                desktopManager.resizeFrame(frame, internalFrameDesc.x, internalFrameDesc.y, internalFrameDesc.width, internalFrameDesc.height)
-
-                val frameMaximized = internalFrameDesc.isMaximized
-                anyFrameMaximized = anyFrameMaximized || frameMaximized
-
-                try {
-                    if (frameMaximized || anyFrameMaximized) {
-                        frame.setMaximum(true)
-                    } else if (internalFrameDesc.isIconified) {
-                        frame.setIcon(true)
-                    }
-                } catch (ex: PropertyVetoException) {
-                }
-
-                if (internalFrameDesc === config.activeFrameDesc) {
-                    desktopManager.setActiveFrame(frame)
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-
-        desktopManager.showAll()
-    }
-
     private fun setupEventHandlers() {
 
         addWindowListener(object : WindowAdapter() {
@@ -589,7 +514,6 @@ class BrowserMDIFrame : JFrame() {
                 recordLastNormalFrameBounds()
             }
         })
-
     }
 
     private fun saveWindowSettings() {
@@ -640,34 +564,6 @@ class BrowserMDIFrame : JFrame() {
             if (frameBounds.x >= 0 && frameBounds.y >= 0) {
                 lastNormalFrameBounds = frameBounds
             }
-        }
-    }
-
-    fun invalidateDesktopPane() {
-        desktopPane.apply {
-            preferredSize = null
-            invalidate()
-            parent.validate()
-            SwingUtilities.getAncestorOfClass(JScrollPane::class.java, this)?.revalidate()
-        }
-    }
-
-    class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: () -> Unit) : AbstractAction(name) {
-        init {
-            val smallIcon = if (smallIconFileName != null) getIcon(smallIconFileName) else GUIHelper.ICON_EMPTY
-            putValue(Action.SMALL_ICON, smallIcon)
-            if (largeIconFileName != null) {
-                putValue(Action.LARGE_ICON_KEY, getIcon(largeIconFileName))
-            }
-            if (shortDescription != null) {
-                putValue(Action.SHORT_DESCRIPTION, shortDescription)
-            }
-        }
-
-        override fun actionPerformed(ev: ActionEvent) = invoke()
-
-        operator fun invoke() {
-            action.invoke()
         }
     }
 

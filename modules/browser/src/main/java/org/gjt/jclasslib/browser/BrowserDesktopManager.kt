@@ -5,478 +5,395 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
+import org.gjt.jclasslib.mdi.MDIConfig
+import org.gjt.jclasslib.util.ReentryGuard
+import java.awt.Color
 import java.awt.Dimension
+import java.awt.Point
 import java.awt.Rectangle
 import java.awt.event.ActionEvent
+import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.beans.PropertyChangeEvent
+import java.beans.VetoableChangeListener
+import java.io.IOException
 import java.util.*
 import javax.swing.*
 import javax.swing.event.InternalFrameEvent
+import javax.swing.event.InternalFrameListener
 
-/**
-    The desktop manager for the class file browser application.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class BrowserDesktopManager extends DefaultDesktopManager implements VetoableChangeListener, InternalFrameListener {
+class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopManager(), VetoableChangeListener, InternalFrameListener {
 
-    private static int NEW_INTERNAL_X_OFFSET = 22;
-    private static int NEW_INTERNAL_Y_OFFSET = 22;
-    private static int NEW_INTERNAL_WIDTH = 600;
-    private static int NEW_INTERNAL_HEIGHT = 400;
+    private val openFrames = LinkedList<BrowserInternalFrame>()
 
-    /** Parent frame of this <tt>DesktopManager</tt>. */
-    protected BrowserMDIFrame parentFrame;
+    private var newInternalX = 0
+    private var newInternalY = 0
 
-    private int newInternalX = 0;
-    private int newInternalY = 0;
+    private val frameToMenuItem = hashMapOf<JInternalFrame, JCheckBoxMenuItem>()
+    private var activeFrame: BrowserInternalFrame? = null
+    private var rollover = 0
+    private var separatorMenuIndex = -1
 
-    private HashMap<JInternalFrame, JCheckBoxMenuItem> frameToMenuItem = new HashMap<JInternalFrame, JCheckBoxMenuItem>();
-    private BrowserInternalFrame activeFrame;
-    private LinkedList<BrowserInternalFrame> openFrames = new LinkedList<BrowserInternalFrame>();
-    private int rollover = 0;
-    private int separatorMenuIndex = -1;
+    private var maximizationReentryGuard = ReentryGuard()
+    private var anyFrameMaximized: Boolean = false
 
-    private boolean maximizationInProgress;
-    private boolean anyFrameMaximized;
-    /**
-        Constructor.
-        @param parentFrame the parent frame
-     */
-    public BrowserDesktopManager(BrowserMDIFrame parentFrame) {
-        this.parentFrame = parentFrame;
+    val desktopPane = JDesktopPane().apply {
+        background = Color.LIGHT_GRAY
+        this.desktopManager = desktopManager
     }
 
-    public void internalFrameActivated(InternalFrameEvent event) {
-        BrowserInternalFrame internalFrame = (BrowserInternalFrame)event.getInternalFrame();
-        actionStatus(internalFrame);
-        internalFrame.getBrowserComponent().checkSelection();
-    }
+    val selectedFrame : BrowserInternalFrame?
+        get() = desktopPane.selectedFrame as BrowserInternalFrame?
 
-    public void internalFrameDeactivated(InternalFrameEvent event) {
-        actionStatus(null);
-    }
-
-
-    private void actionStatus(BrowserInternalFrame internalFrame) {
-
-        BrowserMDIFrame browserParentFrame = parentFrame;
-
-        if (internalFrame != null) {
-            internalFrame.getBrowserComponent().getHistory().updateActions();
-        } else {
-            browserParentFrame.getActionReload().setEnabled(false);
-            browserParentFrame.getActionBackward().setEnabled(false);
-            browserParentFrame.getActionForward().setEnabled(false);
-        }
-        browserParentFrame.getActionReload().setEnabled(internalFrame != null);
-    }
-
-    /**
-     Get the parent frame.
-     @return the frame
-     */
-    public BrowserMDIFrame getParentFrame() {
-        return parentFrame;
-    }
-
-    /**
-     Get the associated <tt>JDesktopPane</tt>.
-     @return the <tt>JDesktopPane</tt>
-     */
-    public JDesktopPane getDesktopPane() {
-        return parentFrame.getDesktopPane();
-    }
-
-    /**
-     Get the list of open child frames.
-     @return the list
-     */
-    public List<BrowserInternalFrame> getOpenFrames() {
-        return openFrames;
-    }
-
-    /**
-     Get a rectangle for a new child frame.
-     @return the rectangle
-     */
-    public Rectangle getNextInternalFrameBounds() {
-
-        if (newInternalY + NEW_INTERNAL_HEIGHT > getDesktopPane().getHeight()) {
-            rollover++;
-            newInternalY = 0;
-            newInternalX = rollover * NEW_INTERNAL_X_OFFSET;
-        }
-
-        Rectangle nextBounds = new Rectangle(newInternalX,
-                newInternalY,
-                NEW_INTERNAL_WIDTH,
-                NEW_INTERNAL_HEIGHT);
-
-        newInternalX += NEW_INTERNAL_X_OFFSET;
-        newInternalY += NEW_INTERNAL_Y_OFFSET;
-
-        return nextBounds;
-    }
-
-    /**
-     Set the index of the frame to be shown on top after a call to <tt>showAll()</tt>.
-     @param activeFrame the index
-     */
-    public void setActiveFrame(BrowserInternalFrame activeFrame) {
-        this.activeFrame = activeFrame;
-    }
-
-    /**
-     Look for an open frame with an equivalent init parameter.
-     @param initParam the init parameter to look for.
-     @return the open frame or <tt>null</tt>.
-     */
-    public BrowserInternalFrame getOpenFrame(Object initParam) {
-
-        for (BrowserInternalFrame frame : openFrames) {
-            if (frame.getInitParam().equals(initParam)) {
-                return frame;
-            }
-        }
-        return null;
-    }
-
-    /**
-     Show all internal frames.
-     */
-    public void showAll() {
-        for (BrowserInternalFrame openFrame : openFrames) {
-            openFrame.setVisible(true);
-        }
-        if (activeFrame != null) {
-            try {
-                activeFrame.setSelected(true);
-            } catch (PropertyVetoException ex) {
-            }
-        }
-        checkSize();
-    }
-
-    /**
-     Add a child frame to this <tt>DesktopManager</tt>.
-     @param frame the frame
-     */
-    public void addInternalFrame(BrowserInternalFrame frame) {
-
-        frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent event) {
-                checkSize();
+    val nextInternalFrameBounds: Rectangle
+        get() {
+            if (newInternalY + NEW_INTERNAL_HEIGHT > desktopPane.height) {
+                rollover++
+                newInternalY = 0
+                newInternalX = rollover * NEW_INTERNAL_X_OFFSET
             }
 
-        });
+            val nextBounds = Rectangle(newInternalX, newInternalY, NEW_INTERNAL_WIDTH, NEW_INTERNAL_HEIGHT)
+            newInternalX += NEW_INTERNAL_X_OFFSET
+            newInternalY += NEW_INTERNAL_Y_OFFSET
 
-        JMenu menuWindow = parentFrame.getMenuWindow();
-        if (frameToMenuItem.size() == 0) {
-            separatorMenuIndex = menuWindow.getMenuComponentCount();
-            menuWindow.addSeparator();
-        }
-        Action action = new WindowActivateAction(frame);
-        JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(action);
-        menuItem.setSelected(false);
-        menuWindow.add(menuItem);
-
-        getDesktopPane().add(frame);
-        frameToMenuItem.put(frame, menuItem);
-        openFrames.add(frame);
-        parentFrame.setWindowActionsEnabled(true);
-        checkSize();
-    }
-
-    /**
-     Cycle to the next child window.
-     */
-    public void cycleToNextWindow() {
-        cycleWindows(true);
-    }
-
-    /**
-     Cycle to the previous child window.
-     */
-    public void cycleToPreviousWindow() {
-        cycleWindows(false);
-    }
-
-    /**
-     Tile all child windows.
-     */
-    public void tileWindows() {
-
-        int framesCount = openFrames.size();
-        if (framesCount == 0) {
-            return;
+            return nextBounds
         }
 
-        resetSize();
-
-        int sqrt = (int)Math.sqrt(framesCount);
-        int rows = sqrt;
-        int cols = sqrt;
-        if (rows * cols < framesCount) {
-            cols++;
-            if (rows * cols < framesCount) {
-                rows++;
-            }
-        }
-
-        Dimension size = getDesktopPane().getSize();
-
-        int width = size.width/cols;
-        int height = size.height/rows;
-        int offsetX = 0;
-        int offsetY = 0;
-
-        JInternalFrame currentFrame;
-        Iterator it = openFrames.iterator();
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols && (i * cols + j < framesCount); j++) {
-                currentFrame = (JInternalFrame)it.next();
-                normalizeFrame(currentFrame);
-                resizeFrame(currentFrame, offsetX, offsetY, width, height);
-                offsetX += width;
-            }
-            offsetX = 0;
-            offsetY += height;
+    override fun internalFrameActivated(event: InternalFrameEvent) {
+        (event.internalFrame as BrowserInternalFrame?)?.apply {
+            browserComponent.history.updateActions()
+            parentFrame.actionReload.isEnabled = true
+            browserComponent.checkSelection()
         }
     }
 
-
-    /**
-     Stack all child windows.
-     */
-    public void stackWindows() {
-
-        newInternalX = newInternalY = rollover = 0;
-
-        Rectangle currentBounds;
-        for (BrowserInternalFrame openFrame : openFrames) {
-            normalizeFrame(openFrame);
-            currentBounds = getNextInternalFrameBounds();
-            resizeFrame(openFrame, currentBounds.x, currentBounds.y, currentBounds.width, currentBounds.height);
-            try {
-                openFrame.setSelected(true);
-            } catch (PropertyVetoException ex) {
-            }
-        }
-        checkSize();
-    }
-
-    public void vetoableChange(PropertyChangeEvent changeEvent)
-            throws PropertyVetoException {
-
-        String eventName = changeEvent.getPropertyName();
-
-        if (JInternalFrame.IS_MAXIMUM_PROPERTY.equals(eventName)) {
-            if (maximizationInProgress) {
-                return;
-            }
-
-            boolean isMaximum = (Boolean)changeEvent.getNewValue();
-            if (isMaximum) {
-                resetSize();
-            }
-            anyFrameMaximized = isMaximum;
-            JInternalFrame source = (JInternalFrame)changeEvent.getSource();
-            maximizeAllFrames(source, isMaximum);
+    override fun internalFrameDeactivated(event: InternalFrameEvent) {
+        parentFrame.apply {
+            actionReload.isEnabled = false
+            actionBackward.isEnabled = false
+            actionForward.isEnabled = false
+            actionReload.isEnabled = false
         }
     }
 
-    public void activateFrame(JInternalFrame frame) {
-        super.activateFrame(frame);
-        for (JCheckBoxMenuItem menuItem : frameToMenuItem.values()) {
-            menuItem.setSelected(false);
-
-        }
-        (frameToMenuItem.get(frame)).setSelected(true);
-    }
-
-    public void internalFrameDeiconified(InternalFrameEvent event) {
-    }
-
-    public void internalFrameOpened(InternalFrameEvent event) {
-    }
-
-    public void internalFrameIconified(InternalFrameEvent event) {
-    }
-
-    public void internalFrameClosing(InternalFrameEvent event) {
-        BrowserInternalFrame frame = (BrowserInternalFrame)event.getInternalFrame();
-        removeInternalFrame(frame);
-    }
-
-    public void internalFrameClosed(InternalFrameEvent event) {
-        parentFrame.getDesktopPane().remove(event.getInternalFrame());
-        checkSize();
-    }
-
-    public void endResizingFrame(JComponent f) {
-        super.endResizingFrame(f);
-        checkSize();
-    }
-
-    public void endDraggingFrame(JComponent f) {
-        super.endDraggingFrame(f);
-        checkSize();
-    }
-
-    /**
-     Check if the desktop pane should be resized.
-     */
-    public void checkSize() {
-
-        Dimension size = new Dimension();
-        JDesktopPane desktopPane = getDesktopPane();
-        JInternalFrame[] frames = desktopPane.getAllFrames();
-        for (JInternalFrame frame : frames) {
-            size.width = Math.max(size.width, frame.getX() + frame.getWidth());
-            size.height = Math.max(size.height, frame.getY() + frame.getHeight());
-        }
-        if (size.width > 0 && size.height > 0) {
-            desktopPane.setPreferredSize(size);
-        } else {
-            desktopPane.setPreferredSize(null);
-        }
-        desktopPane.revalidate();
-    }
-
-    /**
-     Check whether the desktop pane must be resized if in the maximized state.
-     */
-    public void checkResizeInMaximizedState() {
+    fun checkResizeInMaximizedState() {
         if (anyFrameMaximized) {
-            resetSize();
+            resetSize()
         }
     }
 
-    /**
-     Scroll the desktop pane such that the given frame becomes fully visible.
-     @param frame the frame.
-     */
-    public void scrollToVisible(JInternalFrame frame) {
-        getDesktopPane().scrollRectToVisible(frame.getBounds());
+    fun scrollToVisible(frame: JInternalFrame) {
+        desktopPane.scrollRectToVisible(frame.bounds)
     }
 
-    private void removeInternalFrame(BrowserInternalFrame frame) {
-
-        JMenuItem menuItem = frameToMenuItem.remove(frame);
-        if (menuItem != null) {
-            JMenu menuWindow = parentFrame.getMenuWindow();
-            menuWindow.remove(menuItem);
-            openFrames.remove(frame);
-            if (frameToMenuItem.size() == 0 && separatorMenuIndex > -1) {
-                menuWindow.remove(separatorMenuIndex);
-                separatorMenuIndex = -1;
-                parentFrame.setWindowActionsEnabled(false);
-            }
+    fun closeAllFrames() {
+        while (openFrames.size > 0) {
+            openFrames[0].doDefaultCloseAction()
         }
     }
 
-    private void resetSize() {
-        parentFrame.invalidateDesktopPane();
-    }
-
-    private void normalizeFrame(JInternalFrame frame) {
-
-        try {
-            if (frame.isIcon()) {
-                frame.setIcon(false);
+    fun createMDIConfig() = MDIConfig().apply {
+        internalFrameDescs = openFrames.map { openFrame ->
+            val bounds = openFrame.normalBounds
+            val internalFrameDesc = MDIConfig.InternalFrameDesc().apply {
+                initParam = openFrame.initParam
+                x = bounds.x
+                y = bounds.y
+                width = bounds.width
+                height = bounds.height
+                isMaximized = openFrame.isMaximum
+                isIconified = openFrame.isIcon
             }
-            if (frame.isMaximum()) {
-                frame.setMaximum(false);
+
+            if (openFrame === selectedFrame) {
+                activeFrameDesc = internalFrameDesc
             }
-        } catch (PropertyVetoException ex) {
+            internalFrameDesc
         }
     }
 
-    private void cycleWindows(boolean forward) {
+    fun applyMDIConfig(config: MDIConfig) {
 
-        JInternalFrame currentFrame = getDesktopPane().getSelectedFrame();
-        JInternalFrame nextFrame;
-
-        ListIterator<BrowserInternalFrame> it = openFrames.listIterator();
-        //noinspection StatementWithEmptyBody
-        while (it.hasNext() && it.next() != currentFrame) {
-        }
-        if (forward) {
-            if (it.hasNext()) {
-                nextFrame = it.next();
-            } else {
-                nextFrame = openFrames.getFirst();
-            }
-        } else {
-            if (it.hasPrevious() && it.previous() != null && it.hasPrevious()) {
-                nextFrame = it.previous();
-            } else {
-                nextFrame = openFrames.getLast();
-            }
-        }
-
-        try {
-            if (nextFrame.isIcon()) {
-                nextFrame.setIcon(false);
-            }
-            nextFrame.setSelected(true);
-            scrollToVisible(nextFrame);
-        } catch (PropertyVetoException ex) {
-        }
-    }
-
-    private void maximizeAllFrames(JInternalFrame source, boolean isMaximum) {
-
-        synchronized (this) {
-            if (maximizationInProgress) {
-                return;
-            }
-            maximizationInProgress = true;
-        }
-
-        try {
-            JInternalFrame[] frames = getDesktopPane().getAllFrames();
-            for (JInternalFrame frame : frames) {
-                if (frame == source) {
-                    continue;
-                }
-                try {
-                    frame.setMaximum(isMaximum);
-                } catch (PropertyVetoException ex) {
-                }
-            }
-        } finally {
-            maximizationInProgress = false;
-        }
-    }
-
-    private class WindowActivateAction extends AbstractAction {
-
-        private JInternalFrame frame;
-
-        private WindowActivateAction(JInternalFrame frame) {
-            super(frame.getTitle());
-            this.frame = frame;
-        }
-
-        public void actionPerformed(ActionEvent event) {
+        var anyFrameMaximized = false
+        config.internalFrameDescs.forEach { internalFrameDesc ->
+            val frame: BrowserInternalFrame
             try {
-                if (frame.isIcon()) {
-                    frame.setIcon(false);
+                frame = BrowserInternalFrame(this, internalFrameDesc.initParam)
+                resizeFrame(frame, internalFrameDesc.x, internalFrameDesc.y, internalFrameDesc.width, internalFrameDesc.height)
+
+                val frameMaximized = internalFrameDesc.isMaximized
+                anyFrameMaximized = anyFrameMaximized || frameMaximized
+
+                if (frameMaximized || anyFrameMaximized) {
+                    frame.setMaximum(true)
+                } else if (internalFrameDesc.isIconified) {
+                    frame.setIcon(true)
                 }
-                if (frame.isSelected()) {
-                    ((JCheckBoxMenuItem)event.getSource()).setSelected(true);
-                } else {
-                    frame.setSelected(true);
+
+                if (internalFrameDesc === config.activeFrameDesc) {
+                    activeFrame = frame
                 }
-                scrollToVisible(frame);
-            } catch (PropertyVetoException ex) {
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
 
+        showAll()
+    }
+
+    fun getOpenFrame(initParam: Any): BrowserInternalFrame? {
+        return openFrames.find { it.initParam == initParam }
+    }
+
+    fun showAll() {
+        openFrames.forEach { openFrame -> openFrame.isVisible = true }
+        activeFrame?.let {
+            it.setSelected(true)
+        }
+        checkSize()
+    }
+
+    fun addInternalFrame(frame: BrowserInternalFrame) {
+        frame.addComponentListener(object : ComponentAdapter() {
+            override fun componentResized(event: ComponentEvent?) {
+                checkSize()
+            }
+        })
+
+        val menuWindow = parentFrame.menuWindow
+        if (frameToMenuItem.size == 0) {
+            separatorMenuIndex = menuWindow.menuComponentCount
+            menuWindow.addSeparator()
+        }
+        JCheckBoxMenuItem(WindowActivateAction(frame)).apply {
+            isSelected = false
+            menuWindow.add(this)
+            frameToMenuItem.put(frame, this)
+        }
+
+        desktopPane.add(frame)
+        openFrames.add(frame)
+        parentFrame.setWindowActionsEnabled(true)
+        checkSize()
+    }
+
+    fun cycleToNextWindow() {
+        cycleWindows(CycleDirection.NEXT)
+    }
+
+    fun cycleToPreviousWindow() {
+        cycleWindows(CycleDirection.PREVIOUS)
+    }
+
+    fun tileWindows() {
+        val framesCount = openFrames.size
+        if (framesCount == 0) {
+            return
+        }
+
+        resetSize()
+
+        val (rows, cols) = getRowsAndCols(framesCount)
+        val size = desktopPane.size
+
+        val width = size.width / cols
+        val height = size.height / rows
+        val offset = Point()
+
+        val it = openFrames.iterator()
+        for (i in 0..rows - 1) {
+            var j = 0
+            while (j < cols && i * cols + j < framesCount) {
+                val currentFrame = it.next()
+                normalizeFrame(currentFrame)
+                resizeFrame(currentFrame, offset.x, offset.y, width, height)
+                offset.x += width
+                j++
+            }
+            offset.x = 0
+            offset.y += height
+        }
+    }
+
+    private fun getRowsAndCols(framesCount: Int): Pair<Int, Int> {
+        val sqrt = Math.sqrt(framesCount.toDouble()).toInt()
+        var rows = sqrt
+        var cols = sqrt
+        if (rows * cols < framesCount) {
+            cols++
+            if (rows * cols < framesCount) {
+                rows++
+            }
+        }
+        return Pair(rows, cols)
+    }
+
+    fun stackWindows() {
+
+        newInternalX = 0
+        newInternalY = 0
+        rollover = 0
+
+        for (openFrame in openFrames) {
+            normalizeFrame(openFrame)
+            val bounds = nextInternalFrameBounds
+            resizeFrame(openFrame, bounds.x, bounds.y, bounds.width, bounds.height)
+            openFrame.setSelected(true)
+        }
+        checkSize()
+    }
+
+    override fun vetoableChange(changeEvent: PropertyChangeEvent) {
+
+        val eventName = changeEvent.propertyName
+
+        if (JInternalFrame.IS_MAXIMUM_PROPERTY == eventName) {
+            if (maximizationReentryGuard.inProgress) {
+                return
+            }
+
+            val isMaximum = changeEvent.newValue as Boolean
+            if (isMaximum) {
+                resetSize()
+            }
+            anyFrameMaximized = isMaximum
+            val source = changeEvent.source as JInternalFrame
+            maximizeAllFrames(source, isMaximum)
+        }
+    }
+
+    override fun activateFrame(frame: JInternalFrame) {
+        super.activateFrame(frame)
+        frameToMenuItem.values.forEach { menuItem -> menuItem.isSelected = false }
+        frameToMenuItem[frame]?.isSelected = true
+    }
+
+    override fun internalFrameDeiconified(event: InternalFrameEvent) {
+    }
+
+    override fun internalFrameOpened(event: InternalFrameEvent) {
+    }
+
+    override fun internalFrameIconified(event: InternalFrameEvent) {
+    }
+
+    override fun internalFrameClosing(event: InternalFrameEvent) {
+        removeInternalFrame(event.internalFrame as BrowserInternalFrame)
+    }
+
+    override fun internalFrameClosed(event: InternalFrameEvent) {
+        desktopPane.remove(event.internalFrame)
+        checkSize()
+    }
+
+    override fun endResizingFrame(f: JComponent) {
+        super.endResizingFrame(f)
+        checkSize()
+    }
+
+    override fun endDraggingFrame(f: JComponent) {
+        super.endDraggingFrame(f)
+        checkSize()
+    }
+
+    private fun checkSize() {
+        val size = Dimension()
+        val frames = desktopPane.allFrames
+        frames.forEach { frame ->
+            size.width = Math.max(size.width, frame.x + frame.width)
+            size.height = Math.max(size.height, frame.y + frame.height)
+        }
+        desktopPane.preferredSize = if (size.width > 0 && size.height > 0) size else null
+        desktopPane.revalidate()
+    }
+
+    private fun removeInternalFrame(frame: BrowserInternalFrame) {
+        val menuItem = frameToMenuItem.remove(frame)
+        if (menuItem != null) {
+            val menuWindow = parentFrame.menuWindow
+            menuWindow.remove(menuItem)
+            openFrames.remove(frame)
+            if (frameToMenuItem.size == 0 && separatorMenuIndex > -1) {
+                menuWindow.remove(separatorMenuIndex)
+                separatorMenuIndex = -1
+                parentFrame.setWindowActionsEnabled(false)
+            }
+        }
+    }
+
+    private fun resetSize() {
+        desktopPane.apply {
+            preferredSize = null
+            invalidate()
+            parent.validate()
+            SwingUtilities.getAncestorOfClass(JScrollPane::class.java, this)?.revalidate()
+        }
+    }
+
+    private fun normalizeFrame(frame: JInternalFrame) {
+        if (frame.isIcon) {
+            frame.isIcon = false
+        }
+        if (frame.isMaximum) {
+            frame.isMaximum = false
+        }
+    }
+
+    private fun cycleWindows(cycleDirection: CycleDirection) {
+        getNextFrame(cycleDirection).apply {
+            if (isIcon) {
+                isIcon = false
+            }
+            isSelected = true
+            scrollToVisible(this)
+        }
+    }
+
+    private fun getNextFrame(cycleDirection: CycleDirection): BrowserInternalFrame = openFrames.listIterator().run {
+        while (hasNext() && next() !== desktopPane.selectedFrame) { }
+        when (cycleDirection) {
+            CycleDirection.NEXT -> {
+                if (hasNext()) next() else openFrames.first
+            }
+            CycleDirection.PREVIOUS -> {
+                if (hasPrevious() && let { it.previous(); it.hasPrevious() }) {
+                    previous()
+                } else {
+                    openFrames.last
+                }
+            }
+        }
+    }
+
+    private fun maximizeAllFrames(source: JInternalFrame, isMaximum: Boolean) {
+        maximizationReentryGuard.execute {
+            desktopPane.allFrames.filterNot { it === source }.forEach { it.isMaximum = isMaximum }
+        }
+    }
+
+    private inner class WindowActivateAction(private val frame: JInternalFrame) : AbstractAction(frame.title) {
+        override fun actionPerformed(event: ActionEvent) {
+            if (frame.isIcon) {
+                frame.isIcon = false
+            }
+            if (frame.isSelected) {
+                (event.source as JCheckBoxMenuItem).isSelected = true
+            } else {
+                frame.isSelected = true
+            }
+            scrollToVisible(frame)
+        }
+    }
+
+    private enum class CycleDirection {NEXT, PREVIOUS}
+
+    companion object {
+        private val NEW_INTERNAL_X_OFFSET = 22
+        private val NEW_INTERNAL_Y_OFFSET = 22
+        private val NEW_INTERNAL_WIDTH = 600
+        private val NEW_INTERNAL_HEIGHT = 400
     }
 }

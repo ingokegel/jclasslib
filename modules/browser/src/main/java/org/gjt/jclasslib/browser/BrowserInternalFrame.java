@@ -171,7 +171,7 @@ public class BrowserInternalFrame extends JInternalFrame
     }
 
     private BrowserMDIFrame getParentFrame() {
-        return (BrowserMDIFrame)desktopManager.getParentFrame();
+        return desktopManager.getParentFrame();
     }
 
     private void readClassFile() throws IOException {
