@@ -7,18 +7,17 @@
 
 package org.gjt.jclasslib.mdi;
 
-import org.gjt.jclasslib.browser.BrowserDesktopManager;
-import org.gjt.jclasslib.browser.BrowserInternalFrame;
-import org.gjt.jclasslib.util.GUIHelper;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.prefs.Preferences;
+import org.gjt.jclasslib.browser.BrowserDesktopManager
+import org.gjt.jclasslib.browser.BrowserInternalFrame
+import org.gjt.jclasslib.util.GUIHelper
+import java.awt.*
+import java.awt.List
+import java.awt.event.*
+import java.util.*
+import java.util.prefs.Preferences
+import javax.swing.Action
+import javax.swing.JFrame
+import javax.swing.KeyStroke
 
 
 public abstract class BasicMDIFrame extends JFrame {

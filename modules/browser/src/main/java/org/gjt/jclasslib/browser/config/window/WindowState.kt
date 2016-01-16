@@ -25,14 +25,20 @@ class WindowState {
 
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (fileName == null || other == null || other !is WindowState) {
-            return false
-        }
-        return fileName == other.fileName
+    override fun equals(other: Any?): Boolean{
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as WindowState
+
+        if (fileName != other.fileName) return false
+
+        return true
     }
 
-    override fun hashCode(): Int {
+    override fun hashCode(): Int{
         return fileName?.hashCode() ?: 0
     }
+
+
 }
