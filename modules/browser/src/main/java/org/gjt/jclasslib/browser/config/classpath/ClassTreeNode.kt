@@ -5,40 +5,18 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.classpath;
+package org.gjt.jclasslib.browser.config.classpath
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultMutableTreeNode
 
-/**
-    Tree node for the tree in the <tt>ClasspathBrowser</tt> dialog.
+class ClassTreeNode : DefaultMutableTreeNode {
+    val isPackageNode: Boolean
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ClassTreeNode extends DefaultMutableTreeNode {
-
-    private boolean packageNode;
-
-    /**
-     * Constructor for the root node.
-     */
-    public ClassTreeNode() {
+    constructor() {
+        isPackageNode = false
     }
 
-    /**
-     * Constructor for class and package nodes.
-     * @param name the name of the entry.
-     * @param packageNode whether the node is a package node or not.
-     */
-    public ClassTreeNode(String name, boolean packageNode) {
-        super(name);
-        this.packageNode = packageNode;
-    }
-
-    /**
-     * Return whether the node is a package node or not.
-     * @return the value.
-     */
-    public boolean isPackageNode() {
-        return packageNode;
+    constructor(name: String, packageNode: Boolean) : super(name) {
+        this.isPackageNode = packageNode
     }
 }
