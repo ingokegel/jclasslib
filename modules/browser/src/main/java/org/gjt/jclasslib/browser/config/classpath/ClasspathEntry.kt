@@ -5,144 +5,105 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.classpath;
+package org.gjt.jclasslib.browser.config.classpath
 
+import java.io.File
+import java.io.IOException
 import javax.swing.tree.DefaultTreeModel
 
-/**
-    Base class for classpath entries.
+abstract class ClasspathEntry : ClasspathComponent {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class ClasspathEntry implements ClasspathComponent {
-
-    /** Suffix for class files. */
-    protected static final String CLASSFILE_SUFFIX = ".class";
-
-    private String fileName;
-    private File file;
-
-    /**
-     * Get the name of the classpath entry.
-     * @return the name
-     */
-    public String getFileName() {
-        return fileName;
-    }
-
-    /**
-     * Set the name of the classpath entry.
-     * @param fileName the name.
-     */
-    public void setFileName(String fileName) {
-
-        this.fileName = fileName;
-        file = new File(fileName);
-        try {
-            file = file.getCanonicalFile();
-        } catch (IOException e) {
-            file = null;
-        }
-    }
-
-    public boolean equals(Object other) {
-
-        if (this == other) {
-            return true;
-        }
-        if (other.getClass() != getClass()) {
-            return false;
+    var fileName: String? = null
+        set(fileName) {
+            field = fileName
+            try {
+                file = File(fileName).canonicalFile
+            } catch (e: IOException) {
+                file = null
+            }
         }
 
-        return fileName.equals(((ClasspathEntry)other).fileName);
+    protected var file: File? = null
+        private set
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other?.javaClass != javaClass) {
+            return false
+        }
+        other as ClasspathEntry
+
+        return fileName == other.fileName
     }
 
-    public int hashCode() {
-        return fileName.hashCode();
+    override fun hashCode(): Int {
+        return fileName?.hashCode() ?: 0
     }
 
     // classpath entries are immutable
-    public void addClasspathChangeListener(ClasspathChangeListener listener) {
+    override fun addClasspathChangeListener(listener: ClasspathChangeListener) {
     }
 
-    public void removeClasspathChangeListener(ClasspathChangeListener listener) {
+    override fun removeClasspathChangeListener(listener: ClasspathChangeListener) {
     }
 
-    /**
-     * Get the file for the classpath entry. May be <tt>null</tt> if the entry is invalid.
-     * @return the file.
-     */
-    protected File getFile() {
-        return file;
-    }
+    protected fun addOrFindNode(newNodeName: String,
+                                parentNode: ClassTreeNode,
+                                packageNode: Boolean,
+                                model: DefaultTreeModel,
+                                reset: Boolean): ClassTreeNode {
+        val childCount = parentNode.childCount
 
-    /**
-     * Convenience method to get a node or add a new class of package node to
-     * a parent node. New nodes will be added in correct sort order, packages first.
-     * @param newNodeName the name of the new node.
-     * @param parentNode the parent node.
-     * @param packageNode whether the new node is a package node or not.
-     * @param model the tree model.
-     * @param reset whether a reset operation is in progress.
-     * @return the found or created node.
-     */
-    protected ClassTreeNode addOrFindNode(String newNodeName,
-                                          ClassTreeNode parentNode,
-                                          boolean packageNode,
-                                          DefaultTreeModel model,
-                                          boolean reset)
-    {
-        int childCount = parentNode.getChildCount();
-
-        ClassTreeNode newNode = new ClassTreeNode(newNodeName, packageNode);
-        for (int i = 0; i < childCount; i++) {
-            ClassTreeNode childNode = (ClassTreeNode)parentNode.getChildAt(i);
-            String childNodeName = childNode.toString();
-            if (childNode.getChildCount() > 0 && !packageNode) {
-                continue;
-            } else if (childNode.getChildCount() == 0 && packageNode) {
-                insertNode(newNode, parentNode, i, model, reset);
-                return newNode;
-            } else if (newNodeName.equals(childNodeName)) {
-                return childNode;
+        val newNode = ClassTreeNode(newNodeName, packageNode)
+        for (i in 0..childCount - 1) {
+            val childNode = parentNode.getChildAt(i) as ClassTreeNode
+            val childNodeName = childNode.toString()
+            if (childNode.childCount > 0 && !packageNode) {
+                continue
+            } else if (childNode.childCount == 0 && packageNode) {
+                insertNode(newNode, parentNode, i, model, reset)
+                return newNode
+            } else if (newNodeName == childNodeName) {
+                return childNode
             } else if (newNodeName.compareTo(childNodeName) < 0) {
-                insertNode(newNode, parentNode, i, model, reset);
-                return newNode;
+                insertNode(newNode, parentNode, i, model, reset)
+                return newNode
             }
         }
-        insertNode(newNode, parentNode, childCount, model, reset);
+        insertNode(newNode, parentNode, childCount, model, reset)
 
-        return newNode;
+        return newNode
     }
 
-    /**
-     * Strip the class suffix from the supplied file name.
-     * @param name the file name.
-     * @return the stripped name.
-     */
-    protected String stripClassSuffix(String name) {
-        return name.substring(0, name.length() - CLASSFILE_SUFFIX.length());
+    protected fun stripClassSuffix(name: String): String {
+        return name.substring(0, name.length - CLASSFILE_SUFFIX.length)
     }
 
-    private void insertNode(ClassTreeNode newNode,
-                              ClassTreeNode parentNode,
-                              int insertionIndex,
-                              DefaultTreeModel model,
-                              boolean reset)
-    {
-        parentNode.insert(newNode, insertionIndex);
+    private fun insertNode(newNode: ClassTreeNode,
+                           parentNode: ClassTreeNode,
+                           insertionIndex: Int,
+                           model: DefaultTreeModel,
+                           reset: Boolean) {
+        parentNode.insert(newNode, insertionIndex)
         if (!reset) {
-            model.nodesWereInserted(parentNode, new int[] {insertionIndex});
+            model.nodesWereInserted(parentNode, intArrayOf(insertionIndex))
         }
     }
 
-    public boolean addToClassPath(List<ClasspathEntry> classpath) {
+    fun addToClassPath(classpath: MutableList<ClasspathEntry>): Boolean {
         if (!classpath.contains(this)) {
-            classpath.add(this);
-            return true;
+            classpath.add(this)
+            return true
         } else {
-            return false;
+            return false
         }
+    }
+
+    companion object {
+        @JvmField
+        protected val CLASSFILE_SUFFIX = ".class"
     }
 
 }
