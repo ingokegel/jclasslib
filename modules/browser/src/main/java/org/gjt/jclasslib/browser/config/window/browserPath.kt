@@ -1,11 +1,15 @@
 /*
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the license, or (at your option) any later version.
-*/
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the license, or (at your option) any later version.
+ */
 
 package org.gjt.jclasslib.browser.config.window
+
+import java.util.*
+
+// keep vars for bean serialization
 
 class WindowState {
 
@@ -39,6 +43,16 @@ class WindowState {
     override fun hashCode(): Int{
         return fileName?.hashCode() ?: 0
     }
-
-
 }
+
+class BrowserPath {
+    var pathComponents = LinkedList<PathComponent>()
+    fun addPathComponent(pathComponent: PathComponent) {
+        pathComponents.add(pathComponent)
+    }
+}
+
+interface PathComponent
+data class CategoryHolder(var category: String = "") : PathComponent
+data class IndexHolder(var index: Int = -1) : PathComponent
+data class ReferenceHolder(var name: String = "", var type: String = "") : PathComponent

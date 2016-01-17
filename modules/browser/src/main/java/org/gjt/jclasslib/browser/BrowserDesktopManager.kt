@@ -105,8 +105,8 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
                 y = bounds.y
                 width = bounds.width
                 height = bounds.height
-                isMaximized = openFrame.isMaximum
-                isIconified = openFrame.isIcon
+                isMaximized = openFrame.isMaximum()
+                isIconified = openFrame.isIcon()
             }
 
             if (openFrame === selectedFrame) {

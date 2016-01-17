@@ -90,21 +90,19 @@ class BrowserMDIFrame : JFrame() {
     }
 
     val actionSaveWorkspace = DefaultAction("Save workspace", "Save current workspace to disk", "save_ws_small.png", "save_ws_large.png") {
-        saveWorkspace()
-    }
-
-    val actionSaveWorkspaceAs = DefaultAction("Save workspace as", "Save current workspace to a different file") {
         val workspaceFile = this.workspaceFile
         if (workspaceFile != null) {
             saveWorkspaceToFile(workspaceFile)
         } else {
             saveWorkspace()
         }
+    }
 
+    val actionSaveWorkspaceAs = DefaultAction("Save workspace as", "Save current workspace to a different file") {
+        saveWorkspace()
     }.apply {
         disabled()
     }
-
 
     val actionQuit = DefaultAction("Quit") {
         saveSettings()
@@ -430,7 +428,7 @@ class BrowserMDIFrame : JFrame() {
         val result = fileChooser.showSaveDialog(this)
         if (result == JFileChooser.APPROVE_OPTION) {
             val selectedFile = getWorkspaceFile(fileChooser.selectedFile)
-            if (selectedFile.exists() && GUIHelper.showOptionDialog(this,
+            if (!selectedFile.exists() || GUIHelper.showOptionDialog(this,
                     "The file " + selectedFile.path + "\nexists. Do you want to overwrite this file?",
                     GUIHelper.YES_NO_OPTIONS,
                     JOptionPane.QUESTION_MESSAGE) == 0)
