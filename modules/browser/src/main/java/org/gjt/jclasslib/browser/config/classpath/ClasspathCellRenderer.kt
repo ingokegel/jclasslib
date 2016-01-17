@@ -5,36 +5,21 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.classpath;
+package org.gjt.jclasslib.browser.config.classpath
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.*
+import java.awt.*
 
-/**
-    Cell renderer for the list in the <tt>ClasspathSetupDialog</tt>.
+class ClasspathCellRenderer : DefaultListCellRenderer() {
+    override fun getListCellRendererComponent(list: JList<*>, value: Any?, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component? {
+        val entry = value as ClasspathEntry?
+        super.getListCellRendererComponent(list, entry?.fileName, index, isSelected, cellHasFocus)
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ClasspathCellRenderer extends DefaultListCellRenderer {
-
-    public Component getListCellRendererComponent(
-            JList list,
-            Object value,
-            int index,
-            boolean isSelected,
-            boolean cellHasFocus)
-    {
-        ClasspathEntry entry = (ClasspathEntry)value;
-        super.getListCellRendererComponent(list, entry.getFileName(), index, isSelected, cellHasFocus);
-
-        Icon icon;
-        if (entry instanceof ClasspathDirectoryEntry) {
-            icon = UIManager.getIcon("FileView.directoryIcon");
+        icon = UIManager.getIcon(if (entry is ClasspathDirectoryEntry) {
+            "FileView.directoryIcon"
         } else {
-            icon = UIManager.getIcon("FileView.fileIcon");
-        }
-        setIcon(icon);
-
-        return this;
+            "FileView.fileIcon"
+        })
+        return this
     }
 }
