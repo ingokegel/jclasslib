@@ -162,7 +162,7 @@ class ClasspathSetupDialog(private val frame: BrowserMDIFrame) : JDialog(frame) 
             })
             add(createListPanel(), GridBagConstraints().apply {
                 gridy = 1
-                insets = Insets(5, 0, 0, 0)
+                insets = Insets(5, 0, 5, 0)
                 weightx = 1.0
                 weighty = 1.0
                 fill = GridBagConstraints.BOTH

@@ -5,315 +5,205 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.classpath;
+package org.gjt.jclasslib.browser.config.classpath
 
-import org.gjt.jclasslib.browser.BrowserMDIFrame;
-import org.gjt.jclasslib.util.GUIHelper;
-import org.gjt.jclasslib.util.ProgressDialog;
+import org.gjt.jclasslib.browser.BrowserMDIFrame
+import org.gjt.jclasslib.util.DefaultAction
+import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.ProgressDialog
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
+import java.awt.event.*
+import javax.swing.*
+import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.TreePath
 
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.awt.event.*;
+class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame) {
 
-/**
-    Classpath browser that shows a tree of the contents of a
-    <tt>ClasspathComponent</tt>.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-
-public class ClasspathBrowser extends JDialog
-                              implements ActionListener, ClasspathChangeListener
-{
-
-    private static final int DIALOG_WIDTH = 450;
-    private static final int DIALOG_HEIGHT = 450;
-
-    private BrowserMDIFrame frame;
-    private boolean updateClassPathFromFrame;
-    private ClasspathComponent classpathComponent;
-
-    private JLabel lblTitle;
-    private JTree tree;
-    private JScrollPane scpTree;
-    private JButton btnSetup;
-    private JButton btnSync;
-    private JButton btnOk;
-    private JButton btnCancel;
-
-    private ProgressDialog progressDialog;
-    private boolean resetOnNextMerge;
-    private boolean needsMerge;
-
-    private String selectedClassName;
-
-    public ClasspathBrowser(BrowserMDIFrame frame, String title, boolean updateClassPathFromFrame) {
-        super(frame);
-        this.frame = frame;
-        this.updateClassPathFromFrame = updateClassPathFromFrame;
-
-        setClasspathComponent(classpathComponent);
-        setupControls(title);
-        setupComponent();
-        setupEventHandlers();
-    }
-
-    public void actionPerformed(ActionEvent event) {
-        Object source = event.getSource();
-        if (source == btnCancel) {
-            doCancel();
-        } else if (source == btnOk) {
-            doOk();
-        } else if (source == btnSetup) {
-            doSetup();
-        } else if (source == btnSync) {
-            doSync(true);
-        }
-
-    }
-
-    public void classpathChanged(ClasspathChangeEvent event) {
-        needsMerge = true;
-        if (event.isRemoval()) {
-            resetOnNextMerge = true;
-        }
-    }
-
-    public void setVisible(boolean visible) {
-        if (visible) {
-            if (updateClassPathFromFrame) {
-                setClasspathComponent(frame.getConfig());
+    private val classPathChangeListener = object : ClasspathChangeListener {
+        override fun classpathChanged(event: ClasspathChangeEvent) {
+            needsMerge = true
+            if (event.isRemoval) {
+                resetOnNextMerge = true
             }
-            selectedClassName = null;
         }
-        super.setVisible(visible);
     }
+
+    var classpathComponent: ClasspathComponent?  = null
+        set(classpathComponent) {
+            field?.removeClasspathChangeListener(classPathChangeListener)
+            field = classpathComponent
+            classpathComponent?.addClasspathChangeListener(classPathChangeListener)
+            resetOnNextMerge = true
+            needsMerge = true
+            clear()
+        }
+
+    private val tree : JTree = JTree(ClassTreeNode()).apply {
+        isRootVisible = false
+        showsRootHandles = true
+        putClientProperty("JTree.lineStyle", "Angled")
+
+        addTreeSelectionListener {
+            val selectionPath = selectionPath
+            okAction.isEnabled = if (selectionPath != null) {
+                !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
+            } else false
+
+        }
+        addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(event: MouseEvent) {
+                if (event.clickCount == 2 && isValidDoubleClickPath(event)) {
+                    okAction()
+                }
+            }
+        })
+    }
+
+    private val setupAction = DefaultAction("Setup classpath") {
+        frame.actionSetupClasspath.actionPerformed(ActionEvent(this, 0, null))
+        conditionalUpdate()
+    }
+
+    private val syncAction = DefaultAction("Synchronize") {
+        sync(true)
+    }
+
+    private val okAction = DefaultAction("OK") {
+        isVisible = false
+    }.apply {
+        isEnabled = false
+    }
+
+    private val cancelAction = DefaultAction("Cancel") {
+        isVisible = false
+    }.apply {
+        accelerator(KeyEvent.VK_ESCAPE, 0)
+        applyAcceleratorTo(contentPane as JComponent)
+    }
+
+    private val progressDialog: ProgressDialog by lazy {
+        ProgressDialog(this, null, "Scanning classpath ...")
+    }
+
+    private var resetOnNextMerge: Boolean = false
+    private var needsMerge: Boolean = false
 
     /**
      * Get the name of the selected class.
      * @return the name
      */
-    public String getSelectedClassName() {
-        return selectedClassName;
-    }
-
-    /**
-     * Set the new classpath component to be displayed by this dialog.
-     * The previous content will be cleared.
-     * @param classpathComponent the new classpath component.
-     */
-    public void setClasspathComponent(ClasspathComponent classpathComponent) {
-        if (this.classpathComponent != null) {
-            this.classpathComponent.removeClasspathChangeListener(this);
-        }
-        this.classpathComponent = classpathComponent;
-        if (classpathComponent != null) {
-            classpathComponent.addClasspathChangeListener(this);
-        }
-        resetOnNextMerge = true;
-        needsMerge = true;
-        clear();
-    }
-
-    /**
-     * Clear the current contents of the dialog. The tree will not be synchronized
-     * automatically on the next <tt>setVisible</tt>.
-     */
-    public void clear() {
-        if (tree != null) {
-            tree.setModel(new DefaultTreeModel(new ClassTreeNode()));
-        }
-    }
-
-    private void setupControls(String title) {
-
-        lblTitle = new JLabel(title);
-        tree = new JTree(new ClassTreeNode());
-        tree.setRootVisible(false);
-        tree.setShowsRootHandles(true);
-        tree.putClientProperty("JTree.lineStyle", "Angled");
-        scpTree = new JScrollPane(tree);
-
-        btnSetup = new JButton("Setup classpath");
-        btnSetup.setVisible(updateClassPathFromFrame);
-        btnSync = new JButton("Synchronize");
-        btnOk = new JButton("Ok");
-        btnOk.setEnabled(false);
-        btnCancel = new JButton("Cancel");
-        btnOk.setPreferredSize(btnCancel.getPreferredSize());
-
-        progressDialog = new ProgressDialog(this, null, "Scanning classpath ...");
-
-    }
-
-    private void setupComponent() {
-
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.gridx = 0;
-        gc.gridy = 0;
-        gc.insets = new Insets(5, 5, 0, 5);
-        gc.weightx = 1;
-        gc.anchor = GridBagConstraints.NORTHWEST;
-        contentPane.add(lblTitle, gc);
-        gc.gridy++;
-
-        gc.weighty = 1;
-        gc.insets.top = 0;
-        gc.fill = GridBagConstraints.BOTH;
-        contentPane.add(scpTree, gc);
-        gc.gridy++;
-        gc.fill = GridBagConstraints.HORIZONTAL;
-        gc.weighty = 0;
-        gc.insets.top = 3;
-        gc.insets.bottom = 5;
-        contentPane.add(createButtonBox(), gc);
-        getRootPane().setDefaultButton(btnOk);
-
-        setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
-        setModal(true);
-        setTitle("Choose a class");
-        GUIHelper.centerOnParentWindow(this, getOwner());
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-
-    }
-
-    private Box createButtonBox() {
-
-        Box box = Box.createHorizontalBox();
-        box.add(btnSetup);
-        box.add(btnSync);
-        box.add(Box.createHorizontalGlue());
-        box.add(btnOk);
-        box.add(btnCancel);
-
-        return box;
-    }
-
-    private void setupEventHandlers() {
-
-        btnCancel.addActionListener(this);
-        btnOk.addActionListener(this);
-        btnSetup.addActionListener(this);
-        btnSync.addActionListener(this);
-
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent event) {
-                doCancel();
-            }
-        });
-        KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        Object key = new Object();
-
-        JComponent contentPane = (JComponent)getContentPane();
-        contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(keyStroke, key);
-        contentPane.getActionMap().put(key, new AbstractAction() {
-            public void actionPerformed(ActionEvent event) {
-                doCancel();
-            }
-        });
-
-        addComponentListener(new ComponentAdapter() {
-            public void componentShown(ComponentEvent event) {
-                conditionalUpdate();
-            }
-        });
-
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-            public void valueChanged(TreeSelectionEvent event) {
-                checkTreeSelection();
-            }
-        });
-
-        tree.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent event) {
-                if (event.getClickCount() == 2 && isValidDoubleClickPath(event)) {
-                    doOk();
+    val selectedClassName: String
+        get() {
+            val buffer = StringBuilder()
+            val selectionPath = tree.selectionPath
+            for (i in 1..selectionPath.pathCount - 1) {
+                if (buffer.length > 0) {
+                    buffer.append('/')
                 }
+                buffer.append(selectionPath.getPathComponent(i).toString())
             }
-        });
+            return buffer.toString()
+        }
 
+    init {
+        setupComponent()
     }
 
-    private void conditionalUpdate() {
+    override fun setVisible(visible: Boolean) {
+        if (visible) {
+            if (updateClassPathFromFrame) {
+                classpathComponent = frame.config
+            }
+        }
+        super.setVisible(visible)
+    }
+
+    fun clear() {
+        //The tree will not be synchronized automatically on the next setVisible.
+        tree.model = DefaultTreeModel(ClassTreeNode())
+    }
+
+    private fun setupComponent() {
+        (contentPane as JComponent).apply {
+            border = GUIHelper.WINDOW_BORDER
+            layout = GridBagLayout()
+
+            add(JLabel(header), GridBagConstraints().apply {
+                gridy = 0
+                weightx = 1.0
+                anchor = GridBagConstraints.NORTHWEST
+            })
+            add(tree, GridBagConstraints().apply {
+                gridy = 1
+                insets = Insets(5, 0, 5, 0)
+                weightx = 1.0
+                weighty = 1.0
+                fill = GridBagConstraints.BOTH
+            })
+            add(createButtonBox(), GridBagConstraints().apply {
+                gridy = 2
+                weightx = 1.0
+                fill = GridBagConstraints.HORIZONTAL
+            })
+        }
+
+        setSize(450, 450)
+        isModal = true
+        title = "Choose a class"
+        GUIHelper.centerOnParentWindow(this, owner)
+        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
+    }
+
+    private fun createButtonBox() = Box.createHorizontalBox().apply {
+        if (updateClassPathFromFrame) {
+            add(setupAction.createTextButton())
+        }
+        add(syncAction.createTextButton())
+        add(Box.createHorizontalGlue())
+        add(okAction.createTextButton().apply {
+            this@ClasspathBrowser.getRootPane().defaultButton = this
+        })
+        add(cancelAction.createTextButton())
+
+        addWindowListener(object : WindowAdapter() {
+            override fun windowClosing(event: WindowEvent?) {
+                cancelAction()
+            }
+
+            override fun windowActivated(e: WindowEvent?) {
+                conditionalUpdate()
+            }
+        })
+    }
+
+    private fun conditionalUpdate() {
         if (needsMerge) {
-            doSync(resetOnNextMerge);
+            sync(resetOnNextMerge)
         }
     }
 
-    private boolean isValidDoubleClickPath(MouseEvent event) {
-
-        TreePath locationPath = tree.getPathForLocation(event.getX(), event.getY());
-        TreePath selectionPath = tree.getSelectionPath();
-        if (selectionPath == null || locationPath == null || !selectionPath.equals(locationPath)) {
-            return false;
+    private fun isValidDoubleClickPath(event: MouseEvent): Boolean {
+        val locationPath = tree.getPathForLocation(event.x, event.y)
+        val selectionPath = tree.selectionPath
+        if (selectionPath == null || locationPath == null || selectionPath != locationPath) {
+            return false
         }
-        ClassTreeNode lastPathComponent = (ClassTreeNode)selectionPath.getLastPathComponent();
-        return !lastPathComponent.isPackageNode();
+        return !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
     }
 
-    private void checkTreeSelection() {
-
-        TreePath selectionPath = tree.getSelectionPath();
-        boolean enabled = false;
-        if (selectionPath != null) {
-            ClassTreeNode classTreeNode = (ClassTreeNode)selectionPath.getLastPathComponent();
-            enabled = !classTreeNode.isPackageNode();
+    private fun sync(reset: Boolean) {
+        val model = if (reset) DefaultTreeModel(ClassTreeNode()) else tree.model as DefaultTreeModel
+        progressDialog.setRunnable {
+            classpathComponent?.mergeClassesIntoTree(model, reset)
         }
-        btnOk.setEnabled(enabled);
-    }
-
-    private void doOk() {
-
-        StringBuilder buffer = new StringBuilder();
-        TreePath selectionPath = tree.getSelectionPath();
-        for (int i = 1; i < selectionPath.getPathCount(); i++) {
-            if (buffer.length() > 0) {
-                buffer.append('/');
-            }
-            buffer.append(selectionPath.getPathComponent(i).toString());
-        }
-        selectedClassName = buffer.toString();
-
-        setVisible(false);
-    }
-
-
-    private void doCancel() {
-        setVisible(false);
-    }
-
-    private void doSetup() {
-        frame.getActionSetupClasspath().actionPerformed(new ActionEvent(this, 0, null));
-        conditionalUpdate();
-    }
-
-    private void doSync(final boolean reset) {
-
-        final DefaultTreeModel model = reset ? new DefaultTreeModel(new ClassTreeNode()) : (DefaultTreeModel)tree.getModel();
-        Runnable mergeTask = new Runnable() {
-            public void run() {
-                if (classpathComponent != null) {
-                    classpathComponent.mergeClassesIntoTree(model, reset);
-                }
-            }
-        };
-
-        progressDialog.setRunnable(mergeTask);
-        progressDialog.setVisible(true);
-
+        progressDialog.isVisible = true
         if (reset) {
-            tree.setModel(model);
+            tree.model = model
         }
-        tree.expandPath(new TreePath(model.getRoot()));
-        resetOnNextMerge = false;
-        needsMerge = false;
+        tree.expandPath(TreePath(model.root))
+        resetOnNextMerge = false
+        needsMerge = false
     }
-
-
 }

@@ -53,7 +53,7 @@ class BrowserMDIFrame : JFrame() {
     val actionBrowseClasspath  = DefaultAction("Browse classpath", "Browse the current classpath to open a class file", "tree_small.png", "tree_large.png") {
         classpathBrowser.isVisible = true
         val selectedClassName = classpathBrowser.selectedClassName
-        if (selectedClassName != null) {
+        if (!selectedClassName.isEmpty()) {
             val findResult = config.findClass(selectedClassName)
             if (findResult != null) {
                 repaintNow()
@@ -469,13 +469,11 @@ class BrowserMDIFrame : JFrame() {
         val entry = ClasspathArchiveEntry().apply { fileName = file.path }
         jarBrowser.apply {
             clear()
-            setClasspathComponent(entry)
+            classpathComponent = entry
             isVisible = true
         }
-        val selectedClassName = jarBrowser.selectedClassName ?: return null
-
+        val selectedClassName = jarBrowser.selectedClassName
         val fileName = file.path + "!" + selectedClassName + ".class"
-
         val frame = BrowserInternalFrame(desktopManager, fileName)
         config.addClasspathArchive(file.path)
         return frame
