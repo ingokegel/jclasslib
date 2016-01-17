@@ -7,19 +7,20 @@
 
 package org.gjt.jclasslib.browser.config.classpath;
 
-import org.gjt.jclasslib.browser.BrowserMDIFrame;
-import org.gjt.jclasslib.browser.config.BrowserConfig;
-import org.gjt.jclasslib.util.GUIHelper;
-import org.gjt.jclasslib.util.MultiFileFilter;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import org.gjt.jclasslib.browser.BrowserMDIFrame
+import org.gjt.jclasslib.browser.config.BrowserConfig
+import org.gjt.jclasslib.util.GUIHelper
+import java.awt.BorderLayout
+import java.awt.Container
+import java.awt.GridBagConstraints
+import java.awt.List
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
+import java.awt.event.WindowEvent
+import java.io.File
+import java.util.*
+import javax.swing.*
+import javax.swing.event.ListSelectionEvent
 
 /**
     Dialog for viewing and modifying the classpath.
