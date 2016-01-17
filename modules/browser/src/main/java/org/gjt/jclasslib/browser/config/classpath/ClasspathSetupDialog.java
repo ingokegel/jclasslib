@@ -9,7 +9,7 @@ package org.gjt.jclasslib.browser.config.classpath;
 
 import org.gjt.jclasslib.browser.BrowserMDIFrame;
 import org.gjt.jclasslib.browser.config.BrowserConfig;
-import org.gjt.jclasslib.mdi.BasicFileFilter;
+import org.gjt.jclasslib.util.BasicFileFilter;
 import org.gjt.jclasslib.util.GUIHelper;
 
 import javax.swing.*;

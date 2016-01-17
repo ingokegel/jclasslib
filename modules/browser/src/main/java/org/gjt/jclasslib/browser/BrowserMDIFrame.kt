@@ -11,8 +11,8 @@ import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
 import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog
-import org.gjt.jclasslib.mdi.BasicFileFilter
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.util.BasicFileFilter
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.*
