@@ -22,3 +22,4 @@ interface ClasspathChangeListener : EventListener {
 }
 
 class FindResult(val fileName: String)
+class ClasspathChangeEvent(source: Any, val isRemoval: Boolean) : EventObject(source)
