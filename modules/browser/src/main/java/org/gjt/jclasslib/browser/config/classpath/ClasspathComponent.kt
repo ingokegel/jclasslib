@@ -7,8 +7,6 @@
 
 package org.gjt.jclasslib.browser.config.classpath;
 
-import javax.swing.tree.DefaultTreeModel;
-
 /**
     A logical component of the classpath.
 
