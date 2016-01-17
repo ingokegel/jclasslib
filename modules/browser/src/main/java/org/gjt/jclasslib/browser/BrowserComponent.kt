@@ -7,19 +7,18 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.browser.config.window.*;
-import org.gjt.jclasslib.structures.ClassMember;
-import org.gjt.jclasslib.structures.FieldInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.structures.MethodInfo;
-
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.util.Iterator;
-import java.util.LinkedList;
+import org.gjt.jclasslib.browser.config.window.*
+import org.gjt.jclasslib.structures.ClassMember
+import org.gjt.jclasslib.structures.FieldInfo
+import org.gjt.jclasslib.structures.MethodInfo
+import java.awt.BorderLayout
+import java.awt.CardLayout
+import java.util.*
+import java.util.Iterator
+import javax.swing.JSplitPane
+import javax.swing.JTree
+import javax.swing.event.TreeSelectionEvent
+import javax.swing.tree.TreePath
 
 /**
  * Visual component displaying a class file.
