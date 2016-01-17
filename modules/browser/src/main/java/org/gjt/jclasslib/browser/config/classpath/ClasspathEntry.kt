@@ -7,10 +7,7 @@
 
 package org.gjt.jclasslib.browser.config.classpath;
 
-import javax.swing.tree.DefaultTreeModel;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import javax.swing.tree.DefaultTreeModel
 
 /**
     Base class for classpath entries.
