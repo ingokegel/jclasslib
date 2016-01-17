@@ -11,6 +11,7 @@ import java.util.*
 
 // keep vars for bean serialization
 
+// TODO XSL transform: move one package up
 class WindowState {
 
     var fileName: String? = null

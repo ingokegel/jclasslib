@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser.config.classpath;
 import javax.swing.tree.DefaultTreeModel;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
     Base class for classpath entries.
@@ -135,6 +136,15 @@ public abstract class ClasspathEntry implements ClasspathComponent {
         parentNode.insert(newNode, insertionIndex);
         if (!reset) {
             model.nodesWereInserted(parentNode, new int[] {insertionIndex});
+        }
+    }
+
+    public boolean addToClassPath(List<ClasspathEntry> classpath) {
+        if (!classpath.contains(this)) {
+            classpath.add(this);
+            return true;
+        } else {
+            return false;
         }
     }
 

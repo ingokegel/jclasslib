@@ -15,6 +15,7 @@ class MDIConfig {
     var activeFrameDesc: InternalFrameDesc? = null
 
     class InternalFrameDesc {
+        // TODO XSL transform: rename to windowState when adding
         var initParam: WindowState? = null
         var x: Int = 0
         var y: Int = 0

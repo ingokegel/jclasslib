@@ -5,160 +5,98 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config;
+package org.gjt.jclasslib.browser.config
 
 import org.gjt.jclasslib.browser.config.classpath.*
 import org.gjt.jclasslib.mdi.MDIConfig
+import java.io.File
 import java.util.*
-import java.util.regex.Matcher
 import javax.swing.tree.DefaultTreeModel
 
+class BrowserConfig : ClasspathComponent {
+    // TODO XSL transform: remove annotations
+    var mdiConfig: MDIConfig = MDIConfig()
+        @JvmName("getMDIConfig")
+        get() = field
+        @JvmName("setMDIConfig")
+        set(mdiConfig) {field = mdiConfig}
 
-/**
-    Workspace configuration object.
+    var classpath: MutableList<ClasspathEntry> = ArrayList()
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class BrowserConfig implements ClasspathComponent {
+    private val mergedEntries = HashSet<ClasspathEntry>()
+    private val changeListeners = HashSet<ClasspathChangeListener>()
 
-    private MDIConfig mdiConfig;
-    private List<ClasspathEntry> classpath = new ArrayList<ClasspathEntry>();
-    private Set<ClasspathEntry> mergedEntries = new HashSet<ClasspathEntry>();
-    private Set<ClasspathChangeListener> changeListeners = new HashSet<ClasspathChangeListener>();
-
-    /**
-     * Get the associated MDI configuration object.
-     * @return the <tt>MDIConfig</tt> object.
-     */
-    public MDIConfig getMDIConfig() {
-        return mdiConfig;
+    override fun addClasspathChangeListener(listener: ClasspathChangeListener) {
+        changeListeners.add(listener)
     }
 
-    /**
-     * Set the associated MDI configuration object.
-     * @param mdiConfig the <tt>MDIConfig</tt> object.
-     */
-    public void setMDIConfig(MDIConfig mdiConfig) {
-        this.mdiConfig = mdiConfig;
+    override fun removeClasspathChangeListener(listener: ClasspathChangeListener) {
+        changeListeners.remove(listener)
     }
 
-    /**
-     * Get the list of <tt>ClasspathEntry</tt> objects that define the classpath.
-     * @return the list
-     */
-    public List<ClasspathEntry> getClasspath() {
-        return classpath;
-    }
-
-    /**
-     * Set the list of <tt>ClasspathEntry</tt> objects that define the classpath.
-     * @param classpath the list
-     */
-    public void setClasspath(List<ClasspathEntry> classpath) {
-        this.classpath = classpath;
-    }
-
-    public void addClasspathChangeListener(ClasspathChangeListener listener) {
-        changeListeners.add(listener);
-    }
-
-    public void removeClasspathChangeListener(ClasspathChangeListener listener) {
-        changeListeners.remove(listener);
-    }
-
-    /**
-     * Add a classpath entry for a directory.
-     * Has no effect of the classpath entry is already present.
-     * @param directoryName the name of the directory.
-     */
-    public void addClasspathDirectory(String directoryName) {
-        ClasspathDirectoryEntry entry = new ClasspathDirectoryEntry();
-        entry.setFileName(directoryName);
-        if (classpath.indexOf(entry) < 0) {
-            classpath.add(entry);
-            fireClasspathChanged(false);
+    fun addClasspathDirectory(directoryName: String) {
+        ClasspathDirectoryEntry().apply {
+            fileName = directoryName
+            if (addToClassPath(classpath)) {
+                fireClasspathChanged(false)
+            }
         }
     }
 
-    /**
-     * Add a classpath entry for an archive.
-     * Has no effect of the classpath entry is already present.
-     * @param archiveName the path of he archive.
-     */
-    public void addClasspathArchive(String archiveName) {
-        ClasspathArchiveEntry entry = new ClasspathArchiveEntry();
-        entry.setFileName(archiveName);
-        if (classpath.indexOf(entry) < 0) {
-            classpath.add(entry);
-            fireClasspathChanged(false);
+    fun addClasspathArchive(archiveName: String) {
+        ClasspathArchiveEntry().apply {
+            fileName = archiveName
+            if (addToClassPath(classpath)) {
+                fireClasspathChanged(false)
+            }
         }
     }
 
-    /**
-     * Add a classpath entry.
-     * Has no effect of the classpath entry is already present.
-     * @param entry the entry.
-     */
-    public void addClasspathEntry(ClasspathEntry entry) {
-        if (classpath.indexOf(entry) < 0) {
-            classpath.add(entry);
-            fireClasspathChanged(false);
+    fun addClasspathEntry(entry: ClasspathEntry) {
+        if (entry.addToClassPath(classpath)) {
+            fireClasspathChanged(false)
         }
     }
 
-    /**
-     * Remove a classpath entry.
-     * @param entry the entry.
-     */
-    public void removeClasspathEntry(ClasspathEntry entry) {
+    fun removeClasspathEntry(entry: ClasspathEntry) {
         if (classpath.remove(entry)) {
-            fireClasspathChanged(true);
+            fireClasspathChanged(true)
         }
     }
 
-    /**
-     * Add the <tt>rt.jar</tt> archive of the JRE used by the bytecode browser to the classpath.
-     */
-    public void addRuntimeLib() {
+    fun addRuntimeLib() {
+        val fileName = String::class.java.getResource("String.class").toExternalForm()
 
-        String fileName = String.class.getResource("String.class").toExternalForm();
-        Matcher matcher = Pattern.compile("jar:file:/(.*)!.*").matcher(fileName);
-        if (matcher.matches()) {
-            String path = matcher.group(1);
-            if (path.indexOf(':') == -1) {
-                path = "/" + path;
-            }
-            addClasspathArchive(new File(path).getPath());
-            fireClasspathChanged(false);
+        val matchResult = Regex("jar:file:/(.*)!.*").matchEntire(fileName)
+        if (matchResult != null) {
+            val path = matchResult.groups[1]?.value!!
+            addClasspathArchive(File(if (path.contains(':')) path else "/" + path).path)
+            fireClasspathChanged(false)
         }
     }
 
-    public FindResult findClass(String className) {
-
-        for (ClasspathEntry entry : classpath) {
-            FindResult findResult = entry.findClass(className);
+    override fun findClass(className: String): FindResult? {
+        classpath.forEach { entry ->
+            val findResult = entry.findClass(className)
             if (findResult != null) {
-                return findResult;
+                return findResult
             }
         }
-        return null;
+        return null
     }
 
-    public void mergeClassesIntoTree(DefaultTreeModel model, boolean reset) {
-
-        for (ClasspathEntry entry : classpath) {
+    override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
+        classpath.forEach { entry ->
             if (reset || !mergedEntries.contains(entry)) {
-                entry.mergeClassesIntoTree(model, reset);
-                mergedEntries.add(entry);
+                entry.mergeClassesIntoTree(model, reset)
+                mergedEntries.add(entry)
             }
         }
     }
 
-    private void fireClasspathChanged(boolean removal) {
-        ClasspathChangeEvent event = new ClasspathChangeEvent(this, removal);
-        for (ClasspathChangeListener listener : changeListeners) {
-            listener.classpathChanged(event);
-        }
+    private fun fireClasspathChanged(removal: Boolean) {
+        val event = ClasspathChangeEvent(this, removal)
+        changeListeners.forEach { listener -> listener.classpathChanged(event) }
     }
 
 }
