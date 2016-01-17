@@ -7,17 +7,11 @@
 
 package org.gjt.jclasslib.browser.config;
 
-import org.gjt.jclasslib.browser.config.classpath.*;
-import org.gjt.jclasslib.mdi.MDIConfig;
-
-import javax.swing.tree.DefaultTreeModel;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.gjt.jclasslib.browser.config.classpath.*
+import org.gjt.jclasslib.mdi.MDIConfig
+import java.util.*
+import java.util.regex.Matcher
+import javax.swing.tree.DefaultTreeModel
 
 
 /**
