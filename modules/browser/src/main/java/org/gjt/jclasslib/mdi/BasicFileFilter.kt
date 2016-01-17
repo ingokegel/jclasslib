@@ -5,68 +5,38 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.mdi;
+package org.gjt.jclasslib.mdi
 
 import java.io.File
+import javax.swing.filechooser.FileFilter
 
-/**
-    Configurable file filter for a <tt>JFileChooser</tt>.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class BasicFileFilter extends FileFilter {
+class BasicFileFilter(private val extensions: List<String>, description: String) : FileFilter() {
+    private val description: String
 
-    private String[] extensions;
-    private String description;
+    init {
 
-    /**
-        Constructor.
-        @param extensions the file extensions.
-        @param description the description.
-     */
-    public BasicFileFilter(String[] extensions, String description) {
-
-        this.extensions = extensions;
-
-        StringBuilder buffer = new StringBuilder(description);
-        buffer.append(" (");
-        for (int i = 0; i < extensions.length; i++) {
+        val buffer = StringBuilder(description)
+        buffer.append(" (")
+        for (i in extensions.indices) {
             if (i > 0) {
-                buffer.append(", ");
+                buffer.append(", ")
             }
-            buffer.append("*.");
-            buffer.append(extensions[i]);
+            buffer.append("*.")
+            buffer.append(extensions[i])
         }
-        buffer.append(")");
+        buffer.append(")")
 
-        this.description = buffer.toString();
+        this.description = buffer.toString()
     }
 
-    /**
-        Constructor.
-        @param extension the file extension.
-        @param description the description.
-     */
-    public BasicFileFilter(String extension, String description) {
+    constructor(extension: String, description: String) : this(listOf(extension), description)
 
-        this(new String[] {extension}, description);
+    override fun accept(file: File): Boolean = extensions.any { extension ->
+        file.isDirectory || file.name.endsWith(extension)
     }
 
-    public boolean accept(File file) {
-
-        if (extensions == null)
-            return true;
-
-        for (String extension : extensions) {
-            if (file.isDirectory() || file.getName().endsWith(extension)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public String getDescription() {
-        return description + "";
+    override fun getDescription(): String {
+        return description
     }
 }
 

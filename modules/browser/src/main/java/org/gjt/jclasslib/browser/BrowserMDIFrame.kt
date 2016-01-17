@@ -211,7 +211,7 @@ class BrowserMDIFrame : JFrame() {
             dialogTitle = "Choose class file or jar file"
             addChoosableFileFilter(BasicFileFilter("class", "class files"))
             addChoosableFileFilter(BasicFileFilter("jar", "jar files"))
-            fileFilter = BasicFileFilter(arrayOf("class", "jar"), "class files and jar files")
+            fileFilter = BasicFileFilter(listOf("class", "jar"), "class files and jar files")
         }
     }
 
