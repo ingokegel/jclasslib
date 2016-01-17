@@ -9,8 +9,8 @@ package org.gjt.jclasslib.browser.config.classpath;
 
 import org.gjt.jclasslib.browser.BrowserMDIFrame;
 import org.gjt.jclasslib.browser.config.BrowserConfig;
-import org.gjt.jclasslib.util.BasicFileFilter;
 import org.gjt.jclasslib.util.GUIHelper;
+import org.gjt.jclasslib.util.MultiFileFilter;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -296,7 +296,7 @@ public class ClasspathSetupDialog extends JDialog
         if (fileChooser == null) {
             fileChooser = new JFileChooser(frame.getClassesChooserPath());
             fileChooser.setDialogTitle("Choose directory or jar file");
-            fileChooser.setFileFilter(new BasicFileFilter("jar", "jar files and directories"));
+            fileChooser.setFileFilter(new MultiFileFilter("jar", "jar files and directories"));
             fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             fileChooser.setMultiSelectionEnabled(true);
         }

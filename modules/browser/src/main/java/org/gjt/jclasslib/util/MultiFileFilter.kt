@@ -24,7 +24,7 @@ package org.gjt.jclasslib.util
 import java.io.File
 import javax.swing.filechooser.FileFilter
 
-class BasicFileFilter(private val extensions: List<String>, description: String) : FileFilter() {
+class MultiFileFilter(private val extensions: List<String>, description: String) : FileFilter() {
     private val description: String
 
     init {

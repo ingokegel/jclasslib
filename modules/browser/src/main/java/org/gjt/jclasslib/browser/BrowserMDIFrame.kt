@@ -12,9 +12,9 @@ import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
 import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import org.gjt.jclasslib.util.BasicFileFilter
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.MultiFileFilter
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.*
@@ -202,16 +202,16 @@ class BrowserMDIFrame : JFrame() {
     private val workspaceFileChooser: JFileChooser by lazy {
         JFileChooser(workspaceChooserPath).apply {
             dialogTitle = "Choose workspace file"
-            fileFilter = BasicFileFilter(WORKSPACE_FILE_SUFFIX, "jclasslib workspace files")
+            fileFilter = MultiFileFilter(WORKSPACE_FILE_SUFFIX, "jclasslib workspace files")
         }
     }
 
     private val classesFileChooser: JFileChooser by lazy {
         JFileChooser(workspaceChooserPath).apply {
             dialogTitle = "Choose class file or jar file"
-            addChoosableFileFilter(BasicFileFilter("class", "class files"))
-            addChoosableFileFilter(BasicFileFilter("jar", "jar files"))
-            fileFilter = BasicFileFilter(listOf("class", "jar"), "class files and jar files")
+            addChoosableFileFilter(MultiFileFilter("class", "class files"))
+            addChoosableFileFilter(MultiFileFilter("jar", "jar files"))
+            fileFilter = MultiFileFilter(listOf("class", "jar"), "class files and jar files")
         }
     }
 
