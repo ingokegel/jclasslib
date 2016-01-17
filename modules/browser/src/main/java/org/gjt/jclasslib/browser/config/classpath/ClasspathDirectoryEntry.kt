@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser.config.classpath;
 
-import javax.swing.tree.DefaultTreeModel;
-import java.io.File;
+import java.io.File
+import javax.swing.tree.DefaultTreeModel
 
 /**
     Classpath entry for a directory.
