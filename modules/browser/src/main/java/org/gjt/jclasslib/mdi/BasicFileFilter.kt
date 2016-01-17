@@ -7,8 +7,7 @@
 
 package org.gjt.jclasslib.mdi;
 
-import javax.swing.filechooser.FileFilter;
-import java.io.File;
+import java.io.File
 
 /**
     Configurable file filter for a <tt>JFileChooser</tt>.
