@@ -5,68 +5,46 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.classpath;
+package org.gjt.jclasslib.browser.config.classpath
 
-import java.io.File
-import java.util.*
-import java.util.jar.JarEntry
+import java.io.IOException
 import java.util.jar.JarFile
 import javax.swing.tree.DefaultTreeModel
 
-/**
-    Classpath entry for an archive.
+class ClasspathArchiveEntry : ClasspathEntry() {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ClasspathArchiveEntry extends ClasspathEntry {
-
-    public FindResult findClass(String className) {
-
-        File file = getFile();
-        if (file == null) {
-            return null;
-        }
-        className = className.replace('.', '/') + ".class";
+    override fun findClass(className: String): FindResult? {
+        val file = file ?: return null
+        val internalClassName = className.replace('.', '/') + ".class"
         try {
-            JarFile jarFile = new JarFile(file);
-            JarEntry entry = jarFile.getJarEntry(className);
+            val jarFile = JarFile(file)
+            val entry = jarFile.getJarEntry(internalClassName)
             if (entry != null) {
-                return new FindResult(this, file.getPath() + "!" + className);
+                return FindResult(this, file.path + "!" + internalClassName)
             }
-        } catch (IOException e) {
+        } catch (e: IOException) {
         }
-
-        return null;
+        return null
     }
 
-    public void mergeClassesIntoTree(DefaultTreeModel model, boolean reset) {
-
-        File archive = getFile();
-        if (archive == null) {
-            return;
-        }
-
+    override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
+        val archive = file ?: return
         try {
-            JarFile jarFile = new JarFile(archive);
-            Enumeration en = jarFile.entries();
-            while (en.hasMoreElements()) {
-                JarEntry entry = (JarEntry)en.nextElement();
-                if (!entry.isDirectory() && entry.getName().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
-                    addEntry((stripClassSuffix(entry.getName())), model, reset);
+            val jarFile = JarFile(archive)
+            jarFile.entries().iterator().forEach {
+                if (!it.isDirectory && it.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX)) {
+                    addEntry(stripClassSuffix(it.name), model, reset)
                 }
             }
-        } catch (IOException ex) {
+        } catch (ex: IOException) {
         }
     }
 
-    private void addEntry(String path, DefaultTreeModel model, boolean reset) {
-
-        String[] pathComponents = path.replace('\\', '/').split("/");
-        ClassTreeNode currentNode = (ClassTreeNode)model.getRoot();
-        for (int i = 0; i < pathComponents.length; i++) {
-            String pathComponent = pathComponents[i];
-            currentNode = addOrFindNode(pathComponent, currentNode, i < pathComponents.length - 1, model, reset);
+    private fun addEntry(path: String, model: DefaultTreeModel, reset: Boolean) {
+        val pathComponents = path.replace('\\', '/').split(Regex("/"))
+        var currentNode = model.root as ClassTreeNode
+        pathComponents.forEachIndexed { i, pathComponent ->
+            currentNode = addOrFindNode(pathComponent, currentNode, i < pathComponents.size - 1, model, reset)
         }
     }
-
 }
