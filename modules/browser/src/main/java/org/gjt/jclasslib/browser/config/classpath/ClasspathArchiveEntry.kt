@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.browser.config.classpath;
 
-import javax.swing.tree.DefaultTreeModel;
-import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.io.File
+import java.util.*
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import javax.swing.tree.DefaultTreeModel
 
 /**
     Classpath entry for an archive.
