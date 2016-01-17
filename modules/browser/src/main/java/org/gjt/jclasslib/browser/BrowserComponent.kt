@@ -5,275 +5,175 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.window.*
 import org.gjt.jclasslib.structures.ClassMember
-import org.gjt.jclasslib.structures.FieldInfo
-import org.gjt.jclasslib.structures.MethodInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
 import java.awt.BorderLayout
 import java.awt.CardLayout
-import java.util.*
-import java.util.Iterator
+import javax.swing.JComponent
 import javax.swing.JSplitPane
-import javax.swing.JTree
 import javax.swing.event.TreeSelectionEvent
+import javax.swing.event.TreeSelectionListener
 import javax.swing.tree.TreePath
 
-/**
- * Visual component displaying a class file.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- *
- */
-public class BrowserComponent extends JComponent
-        implements TreeSelectionListener {
+class BrowserComponent(private val services: BrowserServices) : JComponent(), TreeSelectionListener {
+    val history: BrowserHistory = BrowserHistory(services)
+    val detailPane: BrowserDetailPane = BrowserDetailPane(services)
+    val treePane: BrowserTreePane = BrowserTreePane(services)
 
-    private BrowserHistory history;
-    private BrowserServices services;
+    private val splitPane: JSplitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane.tree, detailPane)
 
-    // Visual Components
-
-    private JSplitPane splitPane;
-    private BrowserTreePane treePane;
-    private BrowserDetailPane detailPane;
-
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services
-     */
-    public BrowserComponent(BrowserServices services) {
-
-        this.services = services;
-        setupComponent();
+    init {
+        layout = BorderLayout()
+        add(splitPane, BorderLayout.CENTER)
+        treePane.tree.addTreeSelectionListener(this)
     }
 
-    /**
-     * Get the pane containing the tree structure for the shown class file.
-     *
-     * @return the pane
-     */
-    public BrowserTreePane getTreePane() {
-        return treePane;
+    var browserPath: BrowserPath?
+        get() {
+            //TODO support general paths, not just methods and fields
+            val selectionPath = treePane.tree.selectionPath
+            if (selectionPath == null || selectionPath.pathCount < 3) {
+                return null
+            }
+            val categoryNode = selectionPath.getPathComponent(2) as BrowserTreeNode
+            if (categoryNode.type == BrowserTreeNode.NODE_NO_CONTENT) {
+                return null
+            }
+            return createBrowserPath(categoryNode, selectionPath)
+
+        }
+        set(browserPath) {
+            if (browserPath == null) {
+                return
+            }
+            val pathComponents = browserPath.pathComponents
+            val it = pathComponents.iterator()
+            if (!it.hasNext()) {
+                return
+            }
+            val categoryComponent = it.next() as CategoryHolder
+            val category = categoryComponent.category
+            val initialCategoryPath: TreePath = treePane.getPathForCategory(category) ?: return
+            val path = buildPath(initialCategoryPath, category, it)
+            val pathObjects = path.path
+
+            treePane.tree.apply {
+                expandPath(path)
+                selectionPath = path
+                if (pathObjects.size > 2) {
+                    val categoryPath = TreePath(arrayOf(pathObjects[0], pathObjects[1], pathObjects[2]))
+                    scrollPathToVisible(categoryPath)
+                }
+            }
+        }
+
+    private fun createBrowserPath(categoryNode: BrowserTreeNode, selectionPath: TreePath) = BrowserPath().apply {
+        val category = categoryNode.type
+        addPathComponent(CategoryHolder(category))
+        val categoryNodeIndex = categoryNode.index + if (category == BrowserTreeNode.NODE_CONSTANT_POOL) -1 else 0
+        when (category) {
+            BrowserTreeNode.NODE_METHOD -> {
+                val methodInfo = services.classFile.methods[categoryNodeIndex]
+                addClassMemberPathComponent(methodInfo, this, selectionPath)
+            }
+            BrowserTreeNode.NODE_FIELD -> {
+                val fieldInfo = services.classFile.fields[categoryNodeIndex]
+                addClassMemberPathComponent(fieldInfo, this, selectionPath)
+            }
+            else -> {
+                addPathComponent(IndexHolder(categoryNodeIndex))
+            }
+        }
     }
 
-    /**
-     * Get the pane containing the detail area for the specific tree node selected
-     * in the <tt>BrowserTreePane</tt>.
-     *
-     * @return the pane
-     */
-    public BrowserDetailPane getDetailPane() {
-        return detailPane;
-    }
-
-    /**
-     * Get the navigation history of this child window.
-     *
-     * @return the history
-     */
-    public BrowserHistory getHistory() {
-        return history;
-    }
-
-    /**
-     * Construct a <tt>BrowserPath</tt> object for the currently selected path in the tree.
-     *
-     * @return the browser path
-     */
-    public BrowserPath getBrowserPath() {
-
-        TreePath selectionPath = treePane.getTree().getSelectionPath();
-        if (selectionPath == null || selectionPath.getPathCount() < 3) {
-            return null;
-        }
-
-        BrowserTreeNode categoryNode = (BrowserTreeNode)selectionPath.getPathComponent(2);
-        String category = categoryNode.getType();
-        if (category.equals(BrowserTreeNode.NODE_NO_CONTENT)) {
-            return null;
-        }
-
-        BrowserPath browserPath = new BrowserPath();
-        browserPath.addPathComponent(new CategoryHolder(category));
-        int categoryNodeIndex = categoryNode.getIndex();
-        if (category.equals(BrowserTreeNode.NODE_CONSTANT_POOL)) {
-            --categoryNodeIndex;
-        }
-        if (category.equals(BrowserTreeNode.NODE_METHOD)) {
-            MethodInfo methodInfo = services.getClassFile().getMethods()[categoryNodeIndex];
-            addClassMemberPathComponent(methodInfo, browserPath, selectionPath);
-        } else if (category.equals(BrowserTreeNode.NODE_FIELD)) {
-            FieldInfo fieldInfo = services.getClassFile().getFields()[categoryNodeIndex];
-            addClassMemberPathComponent(fieldInfo, browserPath, selectionPath);
-        } else {
-            browserPath.addPathComponent(new IndexHolder(categoryNodeIndex));
-        }
-
-        return browserPath;
-    }
-
-    /**
-     * Set the currently selected path in the tree by analyzing a <tt>BrowserPath</tt> object.
-     * In the case the given path is <code>null</code> nothing happens.
-     *
-     * @param browserPath the browser path
-     */
-    public void setBrowserPath(BrowserPath browserPath) {
-
-        if (browserPath == null) {
-            return;
-        }
-        LinkedList pathComponents = browserPath.getPathComponents();
-        Iterator it = pathComponents.iterator();
-        if (!it.hasNext()) {
-            return;
-        }
-        CategoryHolder categoryComponent = (CategoryHolder)it.next();
-        String category = categoryComponent.getCategory();
-        TreePath path = treePane.getPathForCategory(category);
-        if (path == null) {
-            return;
-        }
-        while (it.hasNext()) {
-            PathComponent pathComponent = (PathComponent)it.next();
-            int childIndex;
-            if (pathComponent instanceof ReferenceHolder) {
-                ReferenceHolder referenceHolder = (ReferenceHolder)pathComponent;
+    private fun buildPath(path: TreePath, category : String, it: MutableIterator<PathComponent>): TreePath {
+        if (it.hasNext()) {
+            val pathComponent = it.next()
+            val childIndex: Int
+            if (pathComponent is ReferenceHolder) {
                 try {
-                    if (category.equals(BrowserTreeNode.NODE_METHOD)) {
-                        childIndex = services.getClassFile().getMethodIndex(referenceHolder.getName(), referenceHolder.getType());
-                    } else if (category.equals(BrowserTreeNode.NODE_FIELD)) {
-                        childIndex = services.getClassFile().getFieldIndex(referenceHolder.getName(), referenceHolder.getType());
+                    if (category == BrowserTreeNode.NODE_METHOD) {
+                        childIndex = services.classFile.getMethodIndex(pathComponent.name, pathComponent.type)
+                    } else if (category == BrowserTreeNode.NODE_FIELD) {
+                        childIndex = services.classFile.getFieldIndex(pathComponent.name, pathComponent.type)
                     } else {
-                        break;
+                        return path
                     }
-                } catch (InvalidByteCodeException ex) {
-                    break;
+                } catch (ex: InvalidByteCodeException) {
+                    return path
                 }
-            } else if (pathComponent instanceof IndexHolder) {
-                childIndex = ((IndexHolder)pathComponent).getIndex();
+
+            } else if (pathComponent is IndexHolder) {
+                childIndex = pathComponent.index
             } else {
-                break;
+                return path
             }
-            BrowserTreeNode lastNode = (BrowserTreeNode)path.getLastPathComponent();
-            if (childIndex >= lastNode.getChildCount()) {
-                break;
+            val lastNode = path.lastPathComponent as BrowserTreeNode
+            if (childIndex >= lastNode.childCount) {
+                return path
             }
-            path = path.pathByAddingChild(lastNode.getChildAt(childIndex));
-        }
-
-        JTree tree = treePane.getTree();
-        tree.expandPath(path);
-        tree.setSelectionPath(path);
-        Object[] pathObjects = path.getPath();
-        if (pathObjects.length > 2) {
-            TreePath categoryPath = new TreePath(new Object[]{pathObjects[0], pathObjects[1], pathObjects[2]});
-            tree.scrollPathToVisible(categoryPath);
-        }
-
-    }
-
-    /**
-     * Rebuild tree view, clear history and try to set the same path in the browser as before.
-     */
-    public void rebuild() {
-
-
-        BrowserPath browserPath = getBrowserPath();
-        reset();
-        if (browserPath != null) {
-            setBrowserPath(browserPath);
-        }
-    }
-
-    /**
-     * Rebuild tree view and clear history.
-     */
-    public void reset() {
-
-        JTree tree = treePane.getTree();
-        tree.removeTreeSelectionListener(this);
-        treePane.rebuild();
-        history.clear();
-        tree.addTreeSelectionListener(this);
-        checkSelection();
-    }
-
-
-    /**
-     * Check whether anything is selected. If not select the first node.
-     */
-    public void checkSelection() {
-
-        JTree tree = treePane.getTree();
-        if (services.getClassFile() == null) {
-            ((CardLayout)detailPane.getLayout()).show(detailPane, BrowserTreeNode.NODE_NO_CONTENT);
+            return buildPath(path.pathByAddingChild(lastNode.getChildAt(childIndex)), category, it)
         } else {
-            if (tree.getSelectionPath() == null) {
-                BrowserTreeNode rootNode = (BrowserTreeNode)tree.getModel().getRoot();
-                tree.setSelectionPath(new TreePath(new Object[]{rootNode, rootNode.getFirstChild()}));
+            return path
+        }
+    }
+
+    fun rebuild() {
+        val browserPath = browserPath
+        reset()
+        if (browserPath != null) {
+            this.browserPath = browserPath
+        }
+    }
+
+    fun reset() {
+        val tree = treePane.tree
+        tree.removeTreeSelectionListener(this)
+        treePane.rebuild()
+        history.clear()
+        tree.addTreeSelectionListener(this)
+        checkSelection()
+    }
+
+    fun checkSelection() {
+        val tree = treePane.tree
+        if (services.classFile == null) {
+            (detailPane.layout as CardLayout).show(detailPane, BrowserTreeNode.NODE_NO_CONTENT)
+        } else {
+            if (tree.selectionPath == null) {
+                val rootNode = tree.model.root as BrowserTreeNode
+                tree.selectionPath = TreePath(arrayOf<Any>(rootNode, rootNode.firstChild))
             }
         }
     }
 
-    public void valueChanged(TreeSelectionEvent selectionEvent) {
+    override fun valueChanged(selectionEvent: TreeSelectionEvent) {
+        services.activate()
 
-        services.activate();
-
-        TreePath selectedPath = selectionEvent.getPath();
-
-        history.updateHistory(selectedPath);
-        showDetailPaneForPath(selectedPath);
-
+        val selectedPath = selectionEvent.path
+        history.updateHistory(selectedPath)
+        showDetailPaneForPath(selectedPath)
     }
 
-    private void addClassMemberPathComponent(ClassMember classMember, BrowserPath browserPath, TreePath selectionPath) {
-
+    private fun addClassMemberPathComponent(classMember: ClassMember, browserPath: BrowserPath, selectionPath: TreePath) {
         try {
-            browserPath.addPathComponent(new ReferenceHolder(classMember.getName(), classMember.getDescriptor()));
-            if (selectionPath.getPathCount() > 3) {
-                for (int i = 3; i < selectionPath.getPathCount(); i++) {
-                    BrowserTreeNode attributeNode = (BrowserTreeNode)selectionPath.getPathComponent(i);
-                    browserPath.addPathComponent(new IndexHolder(attributeNode.getIndex()));
+            browserPath.addPathComponent(ReferenceHolder(classMember.name, classMember.descriptor))
+            if (selectionPath.pathCount > 3) {
+                for (i in 3..selectionPath.pathCount - 1) {
+                    val attributeNode = selectionPath.getPathComponent(i) as BrowserTreeNode
+                    browserPath.addPathComponent(IndexHolder(attributeNode.index))
                 }
             }
-        } catch (InvalidByteCodeException ex) {
+        } catch (ex: InvalidByteCodeException) {
         }
     }
 
-    private void showDetailPaneForPath(TreePath path) {
-
-        BrowserTreeNode node = (BrowserTreeNode)path.getLastPathComponent();
-        String nodeType = node.getType();
-        detailPane.showPane(nodeType, path);
+    private fun showDetailPaneForPath(path: TreePath) {
+        val node = path.lastPathComponent as BrowserTreeNode
+        val nodeType = node.type
+        detailPane.showPane(nodeType, path)
     }
-
-
-    private void setupComponent() {
-
-        setLayout(new BorderLayout());
-
-        detailPane = new BrowserDetailPane(services);
-
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                buildTreePane(),
-                detailPane);
-
-        add(splitPane, BorderLayout.CENTER);
-
-    }
-
-    private BrowserTreePane buildTreePane() {
-
-        treePane = new BrowserTreePane(services);
-
-        JTree tree = treePane.getTree();
-        tree.addTreeSelectionListener(this);
-        history = new BrowserHistory(services);
-
-        return treePane;
-    }
-
 }

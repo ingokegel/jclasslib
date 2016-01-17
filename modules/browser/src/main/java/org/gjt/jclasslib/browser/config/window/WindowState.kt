@@ -12,7 +12,7 @@ class WindowState {
     var fileName: String? = null
     var browserPath: BrowserPath? = null
 
-    constructor(fileName: String, browserPath: BrowserPath) {
+    constructor(fileName: String, browserPath: BrowserPath?) {
         this.fileName = fileName
         this.browserPath = browserPath
     }
