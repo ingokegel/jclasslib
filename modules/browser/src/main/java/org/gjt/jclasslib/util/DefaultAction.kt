@@ -8,21 +8,23 @@
 package org.gjt.jclasslib.util
 
 import org.gjt.jclasslib.browser.BrowserMDIFrame
+import java.awt.Dimension
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
-import javax.swing.Action
+import javax.swing.JButton
+import javax.swing.JComponent
 import javax.swing.KeyStroke
 
 class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: () -> Unit) : AbstractAction(name) {
     init {
         val smallIcon = if (smallIconFileName != null) BrowserMDIFrame.getIcon(smallIconFileName) else GUIHelper.ICON_EMPTY
-        putValue(Action.SMALL_ICON, smallIcon)
+        putValue(SMALL_ICON, smallIcon)
         if (largeIconFileName != null) {
-            putValue(Action.LARGE_ICON_KEY, BrowserMDIFrame.getIcon(largeIconFileName))
+            putValue(LARGE_ICON_KEY, BrowserMDIFrame.getIcon(largeIconFileName))
         }
         if (shortDescription != null) {
-            putValue(Action.SHORT_DESCRIPTION, shortDescription)
+            putValue(SHORT_DESCRIPTION, shortDescription)
         }
     }
 
@@ -33,15 +35,35 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
     }
 
     fun accelerator(keyCode : Int, modifiers : Int = MENU_MODIFIER) {
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(keyCode, modifiers))
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(keyCode, modifiers))
     }
 
     fun disabled() {
         isEnabled = false
     }
 
+    fun createImageButton() = JButton(this).apply {
+        text = null
+        minimumSize = IMAGE_BUTTON_SIZE
+        preferredSize = IMAGE_BUTTON_SIZE
+        maximumSize = IMAGE_BUTTON_SIZE
+    }
+
+    fun createTextButton() = JButton(this).apply {
+        icon = null
+    }
+
+    fun applyAcceleratorTo(component: JComponent) {
+        val key = Object()
+        component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(getValue(ACCELERATOR_KEY) as KeyStroke, key)
+        component.actionMap.put(key, this)
+    }
+
     companion object {
         val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMask
+        private val IMAGE_BUTTON_SIZE = Dimension(30, 30)
     }
+
+
 }
 

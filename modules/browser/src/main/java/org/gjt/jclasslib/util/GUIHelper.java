@@ -10,6 +10,7 @@ package org.gjt.jclasslib.util;
 import com.install4j.api.Util;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,6 +36,8 @@ public class GUIHelper {
      * Empty icon 16x16.
      */
     public static final Icon ICON_EMPTY = new EmptyIcon(16, 16);
+
+    public static final Border WINDOW_BORDER = BorderFactory.createEmptyBorder(8, 8, 8, 8);
 
     /**
      * Show a <tt>JOptionPane</tt> option dialog.

@@ -5,379 +5,230 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.classpath;
+package org.gjt.jclasslib.browser.config.classpath
 
 import org.gjt.jclasslib.browser.BrowserMDIFrame
-import org.gjt.jclasslib.browser.config.BrowserConfig
+import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.MultiFileFilter
 import java.awt.BorderLayout
-import java.awt.Container
 import java.awt.GridBagConstraints
-import java.awt.List
-import java.awt.event.ActionEvent
+import java.awt.GridBagLayout
+import java.awt.Insets
+import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
+import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.io.File
 import java.util.*
 import javax.swing.*
-import javax.swing.event.ListSelectionEvent
 
-/**
-    Dialog for viewing and modifying the classpath.
+class ClasspathSetupDialog(private val frame: BrowserMDIFrame) : JDialog(frame) {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ClasspathSetupDialog extends JDialog
-                                  implements ActionListener, ListSelectionListener {
-
-    private static final int DIALOG_WIDTH = 500;
-    private static final int DIALOG_HEIGHT = 300;
-
-    private static final Dimension IMAGE_BUTTON_SIZE = new Dimension(28, 28);
-    private static final Icon ICON_ADD = BrowserMDIFrame.Companion.getIcon("add.png");
-    private static final Icon ICON_REMOVE = BrowserMDIFrame.Companion.getIcon("remove.png");
-    private static final Icon ICON_UP = BrowserMDIFrame.Companion.getIcon("up.png");
-    private static final Icon ICON_DOWN = BrowserMDIFrame.Companion.getIcon("down.png");
-
-    private BrowserMDIFrame frame;
-
-    private DefaultListModel<ClasspathEntry> listModel;
-
-    private JList<ClasspathEntry> lstElements;
-    private JScrollPane scpLstElements;
-    private JButton btnAdd;
-    private JButton btnRemove;
-    private JButton btnUp;
-    private JButton btnDown;
-
-    private JButton btnOk;
-    private JButton btnCancel;
-    private JFileChooser fileChooser;
-
-    /**
-     * Constructor.
-     * @param frame the parent frame.
-     */
-    public ClasspathSetupDialog(BrowserMDIFrame frame)  {
-        super(frame);
-        this.frame = frame;
-        setupControls();
-        setupAccelerators();
-        setupComponent();
-        setupEventHandlers();
-        checkEnabledStatus();
-    }
-
-    public void valueChanged(ListSelectionEvent event) {
-        checkEnabledStatus();
-    }
-
-    public void actionPerformed(ActionEvent event) {
-        Object source = event.getSource();
-        if (source == btnAdd) {
-            doAdd();
-        } else if (source == btnRemove) {
-            doRemove();
-        } else if (source == btnUp) {
-            doUp();
-        } else if (source == btnDown) {
-            doDown();
-        } else if (source == btnCancel) {
-            doCancel();
-        } else if (source == btnOk) {
-            doOk();
-        }
-        checkEnabledStatus();
-    }
-
-    public void setVisible(boolean visible) {
-        if (visible) {
-            updateList();
-        }
-        super.setVisible(visible);
-    }
-
-    private void updateList() {
-
-        listModel.clear();
-        for (ClasspathEntry classpathEntry : frame.getConfig().getClasspath()) {
-            listModel.addElement(classpathEntry);
+    private val listModel: DefaultListModel<ClasspathEntry> = DefaultListModel()
+    private val lstElements: JList<ClasspathEntry> = JList(listModel).apply {
+        selectionMode = ListSelectionModel.SINGLE_SELECTION
+        cellRenderer = ClasspathCellRenderer()
+        addListSelectionListener {
+            checkEnabledStatus()
         }
     }
 
-    private void setupControls() {
-
-        listModel = new DefaultListModel<ClasspathEntry>();
-
-        lstElements = new JList<ClasspathEntry>(listModel);
-        lstElements.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        lstElements.setCellRenderer(new ClasspathCellRenderer());
-        scpLstElements = new JScrollPane(lstElements);
-        scpLstElements.setBorder(BorderFactory.createEtchedBorder());
-
-        btnAdd = new JButton(ICON_ADD);
-        btnAdd.setToolTipText("Add a classpath entry (INS)");
-        makeImageButton(btnAdd);
-        btnRemove = new JButton(ICON_REMOVE);
-        btnRemove.setToolTipText("Remove a classpath entry (DEL)");
-        makeImageButton(btnRemove);
-        btnUp = new JButton(ICON_UP);
-        btnUp.setToolTipText("Move a classpath entry up (ALT-UP)");
-        makeImageButton(btnUp);
-        btnDown = new JButton(ICON_DOWN);
-        btnDown.setToolTipText("Move a classpath entry down (ALT-DOWN)");
-        makeImageButton(btnDown);
-
-        btnOk = new JButton("Ok");
-        btnCancel = new JButton("Cancel");
-        btnOk.setPreferredSize(btnCancel.getPreferredSize());
-
-    }
-
-    private void setupComponent() {
-
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.gridx = 0;
-        gc.gridy = 0;
-        gc.insets = new Insets(5, 5, 0, 5);
-        gc.weightx = 1;
-        gc.anchor = GridBagConstraints.NORTHWEST;
-        contentPane.add(new JLabel("Classpath:"), gc);
-        gc.gridy++;
-
-        gc.weighty = 1;
-        gc.insets.top = 0;
-        gc.fill = GridBagConstraints.BOTH;
-        contentPane.add(createListPanel(), gc);
-        gc.gridy++;
-        gc.fill = GridBagConstraints.HORIZONTAL;
-        gc.weighty = 0;
-        gc.insets.top = 3;
-        gc.insets.bottom = 5;
-        contentPane.add(createButtonBox(), gc);
-        getRootPane().setDefaultButton(btnOk);
-
-        setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
-        setModal(true);
-        setTitle("Setup classpath");
-        GUIHelper.centerOnParentWindow(this, getOwner());
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-
-    }
-
-    private void setupEventHandlers() {
-
-        btnCancel.addActionListener(this);
-        btnOk.addActionListener(this);
-
-        btnAdd.addActionListener(this);
-        btnRemove.addActionListener(this);
-        btnUp.addActionListener(this);
-        btnDown.addActionListener(this);
-
-        lstElements.addListSelectionListener(this);
-
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent event) {
-                doCancel();
-            }
-        });
-    }
-
-    private void setupAccelerators() {
-
-        addAccelerator((JComponent)getContentPane(), KeyEvent.VK_ESCAPE, 0, new AbstractAction() {
-            public void actionPerformed(ActionEvent event) {
-                doCancel();
-            }
-        });
-
-        addAccelerator(lstElements, KeyEvent.VK_INSERT, 0, new AbstractAction() {
-            public void actionPerformed(ActionEvent event) {
-                doAdd();
-            }
-        });
-        addAccelerator(lstElements, KeyEvent.VK_DELETE, 0, new AbstractAction() {
-            public void actionPerformed(ActionEvent event) {
-                doRemove();
-            }
-        });
-        addAccelerator(lstElements, KeyEvent.VK_UP, KeyEvent.ALT_MASK, new AbstractAction() {
-            public void actionPerformed(ActionEvent event) {
-                doUp();
-            }
-        });
-        addAccelerator(lstElements, KeyEvent.VK_DOWN, KeyEvent.ALT_MASK, new AbstractAction() {
-            public void actionPerformed(ActionEvent event) {
-                doDown();
-            }
-        });
-
-    }
-
-    private void addAccelerator(JComponent component, int keyCode, int keyMask, AbstractAction action) {
-
-        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, keyMask);
-        Object key = new Object();
-        component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(keyStroke, key);
-        component.getActionMap().put(key, action);
-    }
-
-    private JPanel createListPanel() {
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-
-        panel.add(scpLstElements, BorderLayout.CENTER);
-        panel.add(createModificationButtonBox(), BorderLayout.EAST);
-
-        return panel;
-    }
-
-    private Box createModificationButtonBox() {
-
-        Box box = Box.createVerticalBox();
-        box.add(btnAdd);
-        box.add(btnRemove);
-        box.add(Box.createVerticalGlue());
-        box.add(btnUp);
-        box.add(btnDown);
-        return box;
-    }
-
-    private Box createButtonBox() {
-
-        Box box = Box.createHorizontalBox();
-        box.add(Box.createHorizontalGlue());
-        box.add(btnOk);
-        box.add(btnCancel);
-
-        return box;
-    }
-
-    private void makeImageButton(AbstractButton button) {
-        button.setMinimumSize(IMAGE_BUTTON_SIZE);
-        button.setPreferredSize(IMAGE_BUTTON_SIZE);
-        button.setMaximumSize(IMAGE_BUTTON_SIZE);
-    }
-
-
-    private void doCancel() {
-        setVisible(false);
-    }
-
-    private void doOk() {
-
-        List<ClasspathEntry> newEntries = new ArrayList<ClasspathEntry>();
-        for (int i = 0; i < listModel.getSize(); i++) {
-            newEntries.add(listModel.getElementAt(i));
-        }
-        BrowserConfig config = frame.getConfig();
-        List<ClasspathEntry> oldEntries = new ArrayList<ClasspathEntry>(config.getClasspath());
-
-        for (ClasspathEntry entry : oldEntries) {
-            if (!newEntries.contains(entry)) {
-                config.removeClasspathEntry(entry);
-            }
-        }
-        for (ClasspathEntry entry : newEntries) {
-            if (!oldEntries.contains(entry)) {
-                config.addClasspathEntry(entry);
-            }
-        }
-
-        config.setClasspath(newEntries);
-        setVisible(false);
-    }
-
-    private void doAdd() {
-
-        if (fileChooser == null) {
-            fileChooser = new JFileChooser(frame.getClassesChooserPath());
-            fileChooser.setDialogTitle("Choose directory or jar file");
-            fileChooser.setFileFilter(new MultiFileFilter("jar", "jar files and directories"));
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            fileChooser.setMultiSelectionEnabled(true);
-        }
-
+    private val addAction = DefaultAction("Add classpath entry", "Add a classpath entry (INS)", "add.png") {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            frame.setClassesChooserPath(fileChooser.getCurrentDirectory().getAbsolutePath());
-            File[] files = fileChooser.getSelectedFiles();
-            for (File file : files) {
-                ClasspathEntry entry;
-                if (file.isDirectory()) {
-                    entry = new ClasspathDirectoryEntry();
-                    entry.setFileName(file.getPath());
+            frame.classesChooserPath = fileChooser.currentDirectory.absolutePath
+            val files = fileChooser.selectedFiles
+            for (file in files) {
+                val entry: ClasspathEntry
+                if (file.isDirectory) {
+                    entry = ClasspathDirectoryEntry()
+                    entry.fileName = file.path
                 } else {
-                    entry = new ClasspathArchiveEntry();
-                    entry.setFileName(file.getPath());
+                    entry = ClasspathArchiveEntry()
+                    entry.fileName = file.path
 
                 }
                 if (!isInModel(entry)) {
-                    listModel.addElement(entry);
-                    selectIndex(listModel.getSize() - 1);
+                    listModel.addElement(entry)
+                    selectIndex(listModel.size - 1)
                 }
             }
         }
+    }.apply {
+        accelerator(KeyEvent.VK_INSERT, 0)
+        applyAcceleratorTo(lstElements)
     }
 
-    private boolean isInModel(ClasspathEntry entry) {
+    private val removeAction = DefaultAction("Remove classpath entry", "Remove a classpath entry (DEL)", "remove.png") {
+        val selectedIndex = lstElements.selectedIndex
+        if (selectedIndex > -1) {
+            listModel.remove(selectedIndex)
+            selectIndex(selectedIndex)
+        }
+    }.apply {
+        accelerator(KeyEvent.VK_DELETE, 0)
+        applyAcceleratorTo(lstElements)
+    }
 
-        for (int i = 0; i < listModel.getSize(); i++) {
-            if (listModel.getElementAt(i).equals(entry)) {
-                return true;
+    private val upAction = DefaultAction("Move up", "Move a classpath entry up (ALT-UP)", "up.png") {
+        val selectedIndex = lstElements.selectedIndex
+        if (selectedIndex > 0) {
+            val entry = listModel.remove(selectedIndex)
+            val newSelectedIndex = selectedIndex - 1
+            listModel.insertElementAt(entry, newSelectedIndex)
+            selectIndex(newSelectedIndex)
+        }
+
+    }.apply {
+        accelerator(KeyEvent.VK_UP, InputEvent.ALT_DOWN_MASK)
+        applyAcceleratorTo(lstElements)
+    }
+
+    private val downAction = DefaultAction("down.png", "Move a classpath entry down (ALT-DOWN)", "down.png") {
+        val selectedIndex = lstElements.selectedIndex
+        if (selectedIndex < listModel.size - 1) {
+            val entry = listModel.remove(selectedIndex)
+            val newSelectedIndex = selectedIndex + 1
+            listModel.insertElementAt(entry, newSelectedIndex)
+            selectIndex(newSelectedIndex)
+        }
+    }.apply {
+        accelerator(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK)
+        applyAcceleratorTo(lstElements)
+    }
+
+    private val okAction = DefaultAction("OK") {
+        val newEntries = ArrayList<ClasspathEntry>()
+        newEntries.addAll(listModel.elements().asSequence())
+        val config = frame.config
+        val oldEntries = ArrayList(config.classpath)
+
+        for (oldEntry in oldEntries) {
+            if (!newEntries.contains(oldEntry)) {
+                config.removeClasspathEntry(oldEntry)
             }
         }
-        return false;
+        for (newEntry in newEntries) {
+            if (!oldEntries.contains(newEntry)) {
+                config.addClasspathEntry(newEntry)
+            }
+        }
+
+        config.classpath = newEntries
+        isVisible = false
     }
 
-    private void doRemove() {
-        int selectedIndex = lstElements.getSelectedIndex();
-        if (selectedIndex > -1) {
-            listModel.remove(selectedIndex);
-            selectIndex(selectedIndex);
+    private val cancelAction = DefaultAction("Cancel") {
+        isVisible = false
+    }.apply {
+        accelerator(KeyEvent.VK_ESCAPE, 0)
+        applyAcceleratorTo(contentPane as JComponent)
+    }
+
+    private val fileChooser: JFileChooser by lazy {
+        JFileChooser(frame.classesChooserPath).apply {
+            dialogTitle = "Choose directory or jar file"
+            fileFilter = MultiFileFilter("jar", "jar files and directories")
+            fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
+            isMultiSelectionEnabled = true
         }
     }
 
-    private void doUp() {
-        int selectedIndex = lstElements.getSelectedIndex();
-        if (selectedIndex > 0) {
-            ClasspathEntry entry = listModel.remove(selectedIndex);
-            int newSelectedIndex = selectedIndex - 1;
-            listModel.insertElementAt(entry, newSelectedIndex);
-            selectIndex(newSelectedIndex);
+    init {
+        setupComponent()
+    }
+
+    override fun setVisible(visible: Boolean) {
+        if (visible) {
+            updateList()
+        }
+        super.setVisible(visible)
+    }
+
+    private fun updateList() {
+        listModel.clear()
+        for (classpathEntry in frame.config.classpath) {
+            listModel.addElement(classpathEntry)
         }
     }
 
-    private void doDown() {
-        int selectedIndex = lstElements.getSelectedIndex();
-        if (selectedIndex < listModel.getSize() - 1) {
-            ClasspathEntry entry = listModel.remove(selectedIndex);
-            int newSelectedIndex = selectedIndex + 1;
-            listModel.insertElementAt(entry, newSelectedIndex);
-            selectIndex(newSelectedIndex);
+    private fun setupComponent() {
+        (contentPane as JComponent).apply {
+            border = GUIHelper.WINDOW_BORDER
+            layout = GridBagLayout()
+            add(JLabel("Classpath:"), GridBagConstraints().apply {
+                gridy = 0
+                weightx = 1.0
+                anchor = GridBagConstraints.NORTHWEST
+            })
+            add(createListPanel(), GridBagConstraints().apply {
+                gridy = 1
+                insets = Insets(5, 0, 0, 0)
+                weightx = 1.0
+                weighty = 1.0
+                fill = GridBagConstraints.BOTH
+            })
+            add(createButtonBox(), GridBagConstraints().apply {
+                gridy = 2
+                weightx = 1.0
+                fill = GridBagConstraints.HORIZONTAL
+            })
+        }
+
+        setSize(500, 300)
+        isModal = true
+        title = "Setup classpath"
+        GUIHelper.centerOnParentWindow(this, owner)
+        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
+
+        addWindowListener(object : WindowAdapter() {
+            override fun windowClosing(event: WindowEvent?) {
+                cancelAction()
+            }
+        })
+
+        checkEnabledStatus()
+    }
+
+    private fun createListPanel() = JPanel().apply {
+        layout = BorderLayout()
+        add(JScrollPane(lstElements).apply {
+            border = BorderFactory.createEtchedBorder()
+        }, BorderLayout.CENTER)
+        add(createModificationButtonBox(), BorderLayout.EAST)
+    }
+
+    private fun createModificationButtonBox() = Box.createVerticalBox().apply {
+        add(addAction.createImageButton())
+        add(removeAction.createImageButton())
+        add(Box.createVerticalGlue())
+        add(upAction.createImageButton())
+        add(downAction.createImageButton())
+    }
+
+    private fun createButtonBox() = Box.createHorizontalBox().apply {
+        add(Box.createHorizontalGlue())
+        add(okAction.createTextButton().apply {
+            this@ClasspathSetupDialog.getRootPane().defaultButton = this
+
+        })
+        add(cancelAction.createTextButton())
+    }
+
+    private fun isInModel(entry: ClasspathEntry): Boolean = listModel.elements().toList().any { it == entry }
+
+    private fun selectIndex(newSelectedIndex: Int) {
+        val cappedSelectedIndex = Math.min(newSelectedIndex, listModel.size - 1)
+        if (cappedSelectedIndex > -1) {
+            lstElements.selectedIndex = cappedSelectedIndex
+            lstElements.ensureIndexIsVisible(cappedSelectedIndex)
+            checkEnabledStatus()
         }
     }
 
-    private void selectIndex(int newSelectedIndex) {
-        newSelectedIndex = Math.min(newSelectedIndex, listModel.getSize() - 1);
-        if (newSelectedIndex > -1) {
-            lstElements.setSelectedIndex(newSelectedIndex);
-            lstElements.ensureIndexIsVisible(newSelectedIndex);
-        }
+    private fun checkEnabledStatus() {
+        val selectedIndex = lstElements.selectedIndex
+        removeAction.isEnabled = selectedIndex > -1
+        upAction.isEnabled = selectedIndex > 0
+        downAction.isEnabled = selectedIndex > -1 && selectedIndex < listModel.size - 1
     }
-
-    private void checkEnabledStatus() {
-
-        int selectedIndex = lstElements.getSelectedIndex();
-        boolean removeEnabled = selectedIndex > -1;
-        boolean upEnabled = selectedIndex > 0;
-        boolean downEnabled = selectedIndex > -1 && selectedIndex < listModel.getSize() - 1;
-        btnRemove.setEnabled(removeEnabled);
-        btnUp.setEnabled(upEnabled);
-        btnDown.setEnabled(downEnabled);
-    }
-
 }
