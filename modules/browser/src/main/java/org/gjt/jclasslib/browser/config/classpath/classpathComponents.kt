@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import java.util.*
 import javax.swing.tree.DefaultTreeModel
 
 interface ClasspathComponent {
@@ -14,4 +15,8 @@ interface ClasspathComponent {
     fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean)
     fun addClasspathChangeListener(listener: ClasspathChangeListener)
     fun removeClasspathChangeListener(listener: ClasspathChangeListener)
+}
+
+interface ClasspathChangeListener : EventListener {
+    fun classpathChanged(event: ClasspathChangeEvent)
 }
