@@ -5,63 +5,43 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.config.classpath;
+package org.gjt.jclasslib.browser.config.classpath
 
 import java.io.File
 import javax.swing.tree.DefaultTreeModel
 
-/**
-    Classpath entry for a directory.
+class ClasspathDirectoryEntry : ClasspathEntry() {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ClasspathDirectoryEntry extends ClasspathEntry {
-
-    public FindResult findClass(String className) {
-
-        File file = getFile();
-        if (file == null) {
-            return null;
-        }
-        File classFile = new File(file, className.replace('.', '/') + ".class");
+    override fun findClass(className: String): FindResult? {
+        val file = file ?: return null
+        val classFile = File(file, className.replace('.', '/') + ".class")
         if (classFile.exists() && classFile.canRead()) {
-            return new FindResult(this, classFile.getPath());
+            return FindResult(this, classFile.path)
         }
-
-        return null;
+        return null
     }
 
-    public void mergeClassesIntoTree(DefaultTreeModel model, boolean reset) {
-
-        File directory = getFile();
-        if (directory == null) {
-            return;
-        }
-
-        ClassTreeNode rootNode = (ClassTreeNode)model.getRoot();
-        mergeDirectory(directory, rootNode, model, reset);
-
+    override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
+        val directory = file ?: return
+        val rootNode = model.root as ClassTreeNode
+        mergeDirectory(directory, rootNode, model, reset)
     }
 
-    private void mergeDirectory(File directory, ClassTreeNode parentNode, DefaultTreeModel model, boolean reset) {
-
-        File[] files = directory.listFiles();
-        if (files == null) {
-            return;
-        }
-        for (File file : files) {
-            if (file.isDirectory()) {
-                ClassTreeNode directoryNode = addOrFindNode(file.getName(), parentNode, true, model, reset);
-                mergeDirectory(file, directoryNode, model, reset);
-                if ((directoryNode.getChildCount() == 0)) {
-                    int deletionIndex = parentNode.getIndex(directoryNode);
-                    parentNode.remove(directoryNode);
+    private fun mergeDirectory(directory: File, parentNode: ClassTreeNode, model: DefaultTreeModel, reset: Boolean) {
+        val files = directory.listFiles() ?: return
+        files.forEach { file ->
+            if (file.isDirectory) {
+                val directoryNode = addOrFindNode(file.name, parentNode, true, model, reset)
+                mergeDirectory(file, directoryNode, model, reset)
+                if (directoryNode.childCount == 0) {
+                    val deletionIndex = parentNode.getIndex(directoryNode)
+                    parentNode.remove(directoryNode)
                     if (!reset) {
-                        model.nodesWereRemoved(parentNode, new int[]{deletionIndex}, new Object[]{directoryNode});
+                        model.nodesWereRemoved(parentNode, intArrayOf(deletionIndex), arrayOf<Any>(directoryNode))
                     }
                 }
-            } else if (file.getName().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
-                addOrFindNode(stripClassSuffix(file.getName()), parentNode, false, model, reset);
+            } else if (file.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX)) {
+                addOrFindNode(stripClassSuffix(file.name), parentNode, false, model, reset)
             }
         }
 

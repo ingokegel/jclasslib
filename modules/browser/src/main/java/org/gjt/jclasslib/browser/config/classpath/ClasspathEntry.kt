@@ -102,9 +102,7 @@ abstract class ClasspathEntry : ClasspathComponent {
     }
 
     companion object {
-        //TODO remove annotation
-        @JvmStatic
-        protected val CLASSFILE_SUFFIX = ".class"
+        val CLASSFILE_SUFFIX = ".class"
     }
 
 }
