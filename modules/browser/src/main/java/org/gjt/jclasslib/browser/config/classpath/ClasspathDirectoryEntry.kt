@@ -16,7 +16,7 @@ class ClasspathDirectoryEntry : ClasspathEntry() {
         val file = file ?: return null
         val classFile = File(file, className.replace('.', '/') + ".class")
         if (classFile.exists() && classFile.canRead()) {
-            return FindResult(this, classFile.path)
+            return FindResult(classFile.path)
         }
         return null
     }

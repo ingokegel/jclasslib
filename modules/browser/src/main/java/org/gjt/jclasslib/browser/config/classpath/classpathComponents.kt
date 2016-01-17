@@ -20,3 +20,5 @@ interface ClasspathComponent {
 interface ClasspathChangeListener : EventListener {
     fun classpathChanged(event: ClasspathChangeEvent)
 }
+
+class FindResult(val fileName: String)

@@ -20,7 +20,7 @@ class ClasspathArchiveEntry : ClasspathEntry() {
             val jarFile = JarFile(file)
             val entry = jarFile.getJarEntry(internalClassName)
             if (entry != null) {
-                return FindResult(this, file.path + "!" + internalClassName)
+                return FindResult(file.path + "!" + internalClassName)
             }
         } catch (e: IOException) {
         }
