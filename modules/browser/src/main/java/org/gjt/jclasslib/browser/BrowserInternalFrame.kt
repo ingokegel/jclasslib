@@ -5,192 +5,161 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.classpath.FindResult
 import org.gjt.jclasslib.browser.config.window.BrowserPath
 import org.gjt.jclasslib.browser.config.window.WindowState
 import org.gjt.jclasslib.io.ClassFileReader
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.BorderLayout
-import java.awt.Container
+import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.jar.JarEntry
 import java.util.jar.JarFile
+import javax.swing.Action
+import javax.swing.JInternalFrame
 import javax.swing.JOptionPane
 
-/**
- * A child window of the class file browser application.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- *
- */
-public class BrowserInternalFrame extends JInternalFrame
-        implements BrowserServices {
+class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, private val fileName: String, browserPath: BrowserPath? = null) : JInternalFrame(fileName, true, true, true, true), BrowserServices {
+    private val classFile: ClassFile = readClassFile()
+    private val browserComponent: BrowserComponent = BrowserComponent(this)
 
-
-    private BrowserDesktopManager desktopManager;
-    private String fileName;
-    private ClassFile classFile;
-
-    // Visual Components
-
-    private BrowserComponent browserComponent;
-
-    /**
-     * Constructor.
-     *
-     * @param desktopManager the associated desktop manager
-     * @param windowState    the window state object. The frame will load the class file from
-     *                       information present within this object.
-     */
-    public BrowserInternalFrame(BrowserDesktopManager desktopManager, WindowState windowState) throws IOException {
-        super(windowState.getFileName(), true, true, true, true);
-        this.desktopManager = desktopManager;
-        this.fileName = windowState.getFileName();
-
-        setFrameIcon(BrowserMDIFrame.ICON_APPLICATION_16);
-        readClassFile();
-        setupInternalFrame(windowState.getBrowserPath());
+    init {
+        setFrameIcon(BrowserMDIFrame.ICON_APPLICATION_16)
+        readClassFile()
+        setupInternalFrame()
+        if (browserPath != null) {
+            browserComponent.browserPath = browserPath
+        }
     }
 
-    public WindowState getInitParam() {
-        return new WindowState(fileName, browserComponent.getBrowserPath());
+    // TODO remove this when kotlin does not complain about a missing override anymore
+    override fun setLayer(layer: Int?) {
+        super.setLayer(layer)
     }
+
+    fun createWindowState(): WindowState = WindowState(fileName, browserComponent.browserPath)
+
 
     // Browser services
 
-    public ClassFile getClassFile() {
-        return classFile;
+    override fun getClassFile(): ClassFile {
+        return classFile
     }
 
-    public void activate() {
-
+    override fun activate() {
         // force sync of toolbar state with this frame
-        desktopManager.getDesktopPane().setSelectedFrame(this);
+        desktopManager.desktopPane.selectedFrame = this
     }
 
-    public BrowserComponent getBrowserComponent() {
-        return browserComponent;
+    override fun getBrowserComponent(): BrowserComponent {
+        return browserComponent
     }
 
-    public Action getActionBackward() {
-        return getParentFrame().getActionBackward();
+    override fun getActionBackward(): Action {
+        return parentFrame.actionBackward
     }
 
-    public Action getActionForward() {
-        return getParentFrame().getActionForward();
+    override fun getActionForward(): Action {
+        return parentFrame.actionForward
     }
 
-    public void openClassFile(String className, BrowserPath browserPath) {
-
-        FindResult findResult = getParentFrame().getConfig().findClass(className);
+    override fun openClassFile(className: String, browserPath: BrowserPath) {
+        var findResult: FindResult? = parentFrame.config.findClass(className)
         while (findResult == null) {
-            int result = GUIHelper.showOptionDialog(getParentFrame(),
-                    "The class " + className + " could not be found.\n" +
-                    "You can check your classpath configuration and try again.",
-                    new String[]{"Setup classpath", "Cancel"},
-                    JOptionPane.WARNING_MESSAGE);
-            if (result == 0) {
-                getParentFrame().getActionSetupClasspath().actionPerformed(new ActionEvent(this, 0, null));
-                findResult = getParentFrame().getConfig().findClass(className);
+            if (GUIHelper.showOptionDialog(parentFrame,
+                    "The class $className could not be found.\nYou can check your classpath configuration and try again.",
+                    arrayOf("Setup classpath", "Cancel"),
+                    JOptionPane.WARNING_MESSAGE) == 0)
+            {
+                parentFrame.actionSetupClasspath()
+                findResult = parentFrame.config.findClass(className)
             } else {
-                return;
+                return
             }
         }
 
-        BrowserInternalFrame frame = desktopManager.getOpenFrame(new WindowState(findResult.getFileName()));
-        if (frame != null) {
-            try {
-                frame.setSelected(true);
-                frame.browserComponent.setBrowserPath(browserPath);
-                desktopManager.scrollToVisible(frame);
-            } catch (PropertyVetoException e) {
+        val openFrame = desktopManager.getOpenFrame(WindowState(findResult.fileName))
+        if (openFrame != null) {
+            openFrame.apply {
+                setSelected(true)
+                browserComponent.browserPath = browserPath
+                desktopManager.scrollToVisible(this)
             }
         } else {
-            WindowState windowState = new WindowState(findResult.getFileName(), browserPath);
             try {
-                frame = new BrowserInternalFrame(desktopManager, windowState);
-                if (isMaximum()) {
-                    try {
-                        frame.setMaximum(true);
-                    } catch (PropertyVetoException ex) {
+                BrowserInternalFrame(desktopManager, findResult.fileName, browserPath).apply {
+                    if (isMaximum()) {
+                        setMaximum(true)
+                    } else {
+                        desktopManager.scrollToVisible(this)
                     }
-                } else {
-                    desktopManager.scrollToVisible(frame);
                 }
-            } catch (IOException e) {
-                GUIHelper.showMessage(desktopManager.getParentFrame(), e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            } catch (e: IOException) {
+                GUIHelper.showMessage(desktopManager.parentFrame, e.message, JOptionPane.ERROR_MESSAGE)
             }
+
         }
     }
 
-    public boolean canOpenClassFiles() {
-        return true;
+    override fun canOpenClassFiles(): Boolean = true
+
+    override fun showURL(urlSpec: String) {
+        GUIHelper.showURL(urlSpec)
     }
 
-    public void showURL(String urlSpec) {
-        GUIHelper.showURL(urlSpec);
+    fun reload() {
+        readClassFile()
+        browserComponent.rebuild()
     }
 
-    /**
-     * Reload class file.
-     */
-    public void reload() throws IOException {
-        readClassFile();
-        browserComponent.rebuild();
-    }
+    private fun setupInternalFrame() {
+        setTitle(fileName)
 
-    private void setupInternalFrame(BrowserPath browserPath) {
+        val contentPane = contentPane
+        contentPane.layout = BorderLayout()
 
-        setTitle(fileName);
+        contentPane.add(browserComponent, BorderLayout.CENTER)
 
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
+        bounds = desktopManager.nextInternalFrameBounds
 
-        browserComponent = new BrowserComponent(this);
-        contentPane.add(browserComponent, BorderLayout.CENTER);
+        addVetoableChangeListener(desktopManager)
+        addInternalFrameListener(desktopManager)
+        desktopManager.addInternalFrame(this)
 
-        setBounds(desktopManager.getNextInternalFrameBounds());
-
-        addVetoableChangeListener(desktopManager);
-        addInternalFrameListener(desktopManager);
-        desktopManager.addInternalFrame(this);
-
-
-        if (desktopManager.getParentFrame().isVisible()) {
-            setVisible(true);
+        if (desktopManager.parentFrame.isVisible) {
+            isVisible = true
         }
-        browserComponent.setBrowserPath(browserPath);
-
     }
 
-    private BrowserMDIFrame getParentFrame() {
-        return desktopManager.getParentFrame();
-    }
+    private val parentFrame: BrowserMDIFrame
+        get() = desktopManager.parentFrame
 
-    private void readClassFile() throws IOException {
+    private fun readClassFile() : ClassFile {
         try {
-            int index = fileName.indexOf('!');
+            val index = fileName.indexOf('!')
             if (index > -1) {
-                String jarFileName = fileName.substring(0, index);
-                String classFileName = fileName.substring(index + 1);
-                JarFile jarFile = new JarFile(jarFileName);
-                JarEntry jarEntry = jarFile.getJarEntry(classFileName);
+                val jarFileName = fileName.substring(0, index)
+                val classFileName = fileName.substring(index + 1)
+                val jarFile = JarFile(jarFileName)
+                val jarEntry = jarFile.getJarEntry(classFileName)
                 if (jarEntry != null) {
-                    classFile = ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry));
+                    return ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry))
+                } else {
+                    throw IOException("The jar entry $classFileName was not found")
                 }
             } else {
-                classFile = ClassFileReader.readFromFile(new File(fileName));
+                return ClassFileReader.readFromFile(File(fileName))
             }
-        } catch (FileNotFoundException ex) {
-            throw new IOException("The file " + fileName + " was not found");
-        } catch (IOException ex) {
-            throw new IOException("An error occurred while reading " + fileName);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new IOException("The file " + fileName + " does not seem to contain a class file");
+        } catch (ex: FileNotFoundException) {
+            throw IOException("The file $fileName was not found")
+        } catch (ex: IOException) {
+            throw IOException("An error occurred while reading " + fileName)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            throw IOException("The file $fileName does not seem to contain a class file")
         }
     }
-
 }

@@ -8,9 +8,11 @@
 package org.gjt.jclasslib.util
 
 import org.gjt.jclasslib.browser.BrowserMDIFrame
+import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.Action
+import javax.swing.KeyStroke
 
 class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: () -> Unit) : AbstractAction(name) {
     init {
@@ -28,6 +30,18 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
 
     operator fun invoke() {
         action.invoke()
+    }
+
+    fun accelerator(keyCode : Int, modifiers : Int = MENU_MODIFIER) {
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(keyCode, modifiers))
+    }
+
+    fun disabled() {
+        isEnabled = false
+    }
+
+    companion object {
+        val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMask
     }
 }
 

@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.mdi.MDIConfig
+import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.ReentryGuard
 import java.awt.Color
 import java.awt.Dimension
@@ -41,7 +42,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
 
     val desktopPane = JDesktopPane().apply {
         background = Color.LIGHT_GRAY
-        this.desktopManager = desktopManager
+        this.desktopManager = this@BrowserDesktopManager
     }
 
     val selectedFrame : BrowserInternalFrame?
@@ -80,7 +81,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
     }
 
     fun checkResizeInMaximizedState() {
-        if (anyFrameMaximized) {
+        if (anyFrameMaximized || openFrames.isEmpty()) {
             resetSize()
         }
     }
@@ -99,7 +100,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
         internalFrameDescs = openFrames.map { openFrame ->
             val bounds = openFrame.normalBounds
             val internalFrameDesc = MDIConfig.InternalFrameDesc().apply {
-                initParam = openFrame.initParam
+                initParam = openFrame.createWindowState()
                 x = bounds.x
                 y = bounds.y
                 width = bounds.width
@@ -119,25 +120,29 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
 
         var anyFrameMaximized = false
         config.internalFrameDescs.forEach { internalFrameDesc ->
-            val frame: BrowserInternalFrame
-            try {
-                frame = BrowserInternalFrame(this, internalFrameDesc.initParam)
-                resizeFrame(frame, internalFrameDesc.x, internalFrameDesc.y, internalFrameDesc.width, internalFrameDesc.height)
+            val initParam = internalFrameDesc.initParam
+            if (initParam != null && initParam.fileName != null) {
+                val frame: BrowserInternalFrame
+                try {
+                    frame = BrowserInternalFrame(this, initParam.fileName!!, initParam.browserPath)
+                    resizeFrame(frame, internalFrameDesc.x, internalFrameDesc.y, internalFrameDesc.width, internalFrameDesc.height)
 
-                val frameMaximized = internalFrameDesc.isMaximized
-                anyFrameMaximized = anyFrameMaximized || frameMaximized
+                    val frameMaximized = internalFrameDesc.isMaximized
+                    anyFrameMaximized = anyFrameMaximized || frameMaximized
 
-                if (frameMaximized || anyFrameMaximized) {
-                    frame.setMaximum(true)
-                } else if (internalFrameDesc.isIconified) {
-                    frame.setIcon(true)
+                    if (frameMaximized || anyFrameMaximized) {
+                        frame.setMaximum(true)
+                    } else if (internalFrameDesc.isIconified) {
+                        frame.setIcon(true)
+                    }
+
+                    if (internalFrameDesc === config.activeFrameDesc) {
+                        activeFrame = frame
+                    }
+                } catch (e: IOException) {
+                    GUIHelper.showMessage(parentFrame, "An error occurred while reading ${initParam.fileName}", JOptionPane.ERROR_MESSAGE)
+                    e.printStackTrace()
                 }
-
-                if (internalFrameDesc === config.activeFrameDesc) {
-                    activeFrame = frame
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
             }
         }
 
@@ -145,7 +150,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
     }
 
     fun getOpenFrame(initParam: Any): BrowserInternalFrame? {
-        return openFrames.find { it.initParam == initParam }
+        return openFrames.find { it.createWindowState() == initParam }
     }
 
     fun showAll() {
@@ -218,6 +223,14 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
         }
     }
 
+    override fun activateFrame(frame : JInternalFrame) {
+        super.activateFrame(frame)
+        frameToMenuItem.values.forEach {
+            it.isSelected = false
+        }
+        frameToMenuItem[frame]?.isSelected = true
+    }
+
     private fun getRowsAndCols(framesCount: Int): Pair<Int, Int> {
         val sqrt = Math.sqrt(framesCount.toDouble()).toInt()
         var rows = sqrt
@@ -263,12 +276,6 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
             val source = changeEvent.source as JInternalFrame
             maximizeAllFrames(source, isMaximum)
         }
-    }
-
-    override fun activateFrame(frame: JInternalFrame) {
-        super.activateFrame(frame)
-        frameToMenuItem.values.forEach { menuItem -> menuItem.isSelected = false }
-        frameToMenuItem[frame]?.isSelected = true
     }
 
     override fun internalFrameDeiconified(event: InternalFrameEvent) {
@@ -327,9 +334,8 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
     private fun resetSize() {
         desktopPane.apply {
             preferredSize = null
-            invalidate()
-            parent.validate()
-            SwingUtilities.getAncestorOfClass(JScrollPane::class.java, this)?.revalidate()
+            size = Dimension(0, 0)
+            revalidate()
         }
     }
 
@@ -344,25 +350,30 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
 
     private fun cycleWindows(cycleDirection: CycleDirection) {
         getNextFrame(cycleDirection).apply {
-            if (isIcon) {
-                isIcon = false
+            if (isIcon()) {
+                setIcon(false)
             }
-            isSelected = true
+            setSelected(true)
             scrollToVisible(this)
         }
     }
 
-    private fun getNextFrame(cycleDirection: CycleDirection): BrowserInternalFrame = openFrames.listIterator().run {
-        while (hasNext() && next() !== desktopPane.selectedFrame) { }
+    private fun getNextFrame(cycleDirection: CycleDirection): BrowserInternalFrame {
+        val it = openFrames.listIterator()
+        while (it.hasNext() && it.next() !== desktopPane.selectedFrame) { }
         when (cycleDirection) {
             CycleDirection.NEXT -> {
-                if (hasNext()) next() else openFrames.first
+                if (it.hasNext()) {
+                    return it.next()
+                } else {
+                    return openFrames.first
+                }
             }
             CycleDirection.PREVIOUS -> {
-                if (hasPrevious() && let { it.previous(); it.hasPrevious() }) {
-                    previous()
+                if (it.hasPrevious() && it.let { it.previous(); it.hasPrevious() }) {
+                    return it.previous()
                 } else {
-                    openFrames.last
+                    return openFrames.last
                 }
             }
         }
