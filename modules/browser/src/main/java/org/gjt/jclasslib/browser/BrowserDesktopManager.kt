@@ -66,17 +66,17 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
     override fun internalFrameActivated(event: InternalFrameEvent) {
         (event.internalFrame as BrowserInternalFrame?)?.apply {
             browserComponent.history.updateActions()
-            parentFrame.actionReload.isEnabled = true
+            parentFrame.reloadAction.isEnabled = true
             browserComponent.checkSelection()
         }
     }
 
     override fun internalFrameDeactivated(event: InternalFrameEvent) {
         parentFrame.apply {
-            actionReload.isEnabled = false
-            actionBackward.isEnabled = false
-            actionForward.isEnabled = false
-            actionReload.isEnabled = false
+            reloadAction.isEnabled = false
+            backwardAction.isEnabled = false
+            forwardAction.isEnabled = false
+            reloadAction.isEnabled = false
         }
     }
 
@@ -168,7 +168,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
             }
         })
 
-        val menuWindow = parentFrame.menuWindow
+        val menuWindow = parentFrame.windowMenu
         if (frameToMenuItem.size == 0) {
             separatorMenuIndex = menuWindow.menuComponentCount
             menuWindow.addSeparator()
@@ -320,7 +320,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
     private fun removeInternalFrame(frame: BrowserInternalFrame) {
         val menuItem = frameToMenuItem.remove(frame)
         if (menuItem != null) {
-            val menuWindow = parentFrame.menuWindow
+            val menuWindow = parentFrame.windowMenu
             menuWindow.remove(menuItem)
             openFrames.remove(frame)
             if (frameToMenuItem.size == 0 && separatorMenuIndex > -1) {

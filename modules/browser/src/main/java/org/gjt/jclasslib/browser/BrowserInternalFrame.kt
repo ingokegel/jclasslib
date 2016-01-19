@@ -50,11 +50,11 @@ class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, pr
         desktopManager.desktopPane.selectedFrame = this
     }
 
-    override val actionBackward: Action
-        get() = parentFrame.actionBackward
+    override val backwardAction: Action
+        get() = parentFrame.backwardAction
 
-    override val actionForward: Action
-        get() = parentFrame.actionForward
+    override val forwardAction: Action
+        get() = parentFrame.forwardAction
 
     override fun openClassFile(className: String, browserPath: BrowserPath) {
         var findResult: FindResult? = parentFrame.config.findClass(className)
@@ -64,7 +64,7 @@ class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, pr
                     arrayOf("Setup classpath", "Cancel"),
                     JOptionPane.WARNING_MESSAGE) == 0)
             {
-                parentFrame.actionSetupClasspath()
+                parentFrame.setupClasspathAction()
                 findResult = parentFrame.config.findClass(className)
             } else {
                 return

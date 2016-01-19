@@ -62,7 +62,7 @@ class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: S
     }
 
     private val setupAction = DefaultAction("Setup classpath") {
-        frame.actionSetupClasspath.actionPerformed(ActionEvent(this, 0, null))
+        frame.setupClasspathAction.actionPerformed(ActionEvent(this, 0, null))
         conditionalUpdate()
     }
 

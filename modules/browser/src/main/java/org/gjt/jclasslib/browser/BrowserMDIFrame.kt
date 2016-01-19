@@ -28,7 +28,7 @@ class BrowserMDIFrame : JFrame() {
 
     private val desktopManager: BrowserDesktopManager = BrowserDesktopManager(this)
 
-    val actionOpenClassFile = DefaultAction("Open class file", "Open a class file", "open_small.png", "open_large.png") {
+    val openClassFileAction = DefaultAction("Open class file", "Open a class file", "open_small.png", "open_large.png") {
         val result = classesFileChooser.showOpenDialog(this)
         if (result == JFileChooser.APPROVE_OPTION) {
             repaintNow()
@@ -50,7 +50,7 @@ class BrowserMDIFrame : JFrame() {
         }
     }
 
-    val actionBrowseClasspath  = DefaultAction("Browse classpath", "Browse the current classpath to open a class file", "tree_small.png", "tree_large.png") {
+    val browseClasspathAction = DefaultAction("Browse classpath", "Browse the current classpath to open a class file", "tree_small.png", "tree_large.png") {
         classpathBrowser.isVisible = true
         val selectedClassName = classpathBrowser.selectedClassName
         if (!selectedClassName.isEmpty()) {
@@ -68,11 +68,11 @@ class BrowserMDIFrame : JFrame() {
         }
     }
 
-    val actionSetupClasspath = DefaultAction("Setup classpath", "Configure the classpath") {
+    val setupClasspathAction = DefaultAction("Setup classpath", "Configure the classpath") {
         classpathSetupDialog.isVisible = true
     }
 
-    val actionNewWorkspace = DefaultAction("New workspace", "Close all frames and open a new workspace") {
+    val newWorkspaceAction = DefaultAction("New workspace", "Close all frames and open a new workspace") {
         desktopManager.closeAllFrames()
         workspaceFile = null
         config = browserConfigWithRuntimeLib()
@@ -80,7 +80,7 @@ class BrowserMDIFrame : JFrame() {
 
     }
 
-    val actionOpenWorkspace = DefaultAction("Open workspace", "Open workspace from disk", "open_ws_small.png", "open_ws_large.png") {
+    val openWorkspaceAction = DefaultAction("Open workspace", "Open workspace from disk", "open_ws_small.png", "open_ws_large.png") {
         val result = workspaceFileChooser.showOpenDialog(this)
         if (result == JFileChooser.APPROVE_OPTION) {
             val selectedFile = workspaceFileChooser.selectedFile
@@ -89,7 +89,7 @@ class BrowserMDIFrame : JFrame() {
         }
     }
 
-    val actionSaveWorkspace = DefaultAction("Save workspace", "Save current workspace to disk", "save_ws_small.png", "save_ws_large.png") {
+    val saveWorkspaceAction = DefaultAction("Save workspace", "Save current workspace to disk", "save_ws_small.png", "save_ws_large.png") {
         val workspaceFile = this.workspaceFile
         if (workspaceFile != null) {
             saveWorkspaceToFile(workspaceFile)
@@ -98,34 +98,34 @@ class BrowserMDIFrame : JFrame() {
         }
     }
 
-    val actionSaveWorkspaceAs = DefaultAction("Save workspace as", "Save current workspace to a different file") {
+    val saveWorkspaceAsAction = DefaultAction("Save workspace as", "Save current workspace to a different file") {
         saveWorkspace()
     }.apply {
         disabled()
     }
 
-    val actionQuit = DefaultAction("Quit") {
+    val quitAction = DefaultAction("Quit") {
         saveSettings()
         saveWindowSettings()
         dispose()
         System.exit(0)
     }
 
-    val actionBackward = DefaultAction("Backward", "Move backward in the navigation history", "browser_backward_small.png", "browser_backward_large.png") {
+    val backwardAction = DefaultAction("Backward", "Move backward in the navigation history", "browser_backward_small.png", "browser_backward_large.png") {
         desktopManager.selectedFrame?.browserComponent?.history?.historyBackward()
     }.apply {
         disabled()
         accelerator(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK)
     }
 
-    val actionForward = DefaultAction("Forward", "Move backward in the navigation history", "browser_forward_small.png", "browser_forward_large.png") {
+    val forwardAction = DefaultAction("Forward", "Move backward in the navigation history", "browser_forward_small.png", "browser_forward_large.png") {
         desktopManager.selectedFrame?.browserComponent?.history?.historyForward()
     }.apply {
         disabled()
         accelerator(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK)
     }
 
-    var actionReload = DefaultAction("Reload", "Reload class file", "reload_small.png", "reload_large.png") {
+    var reloadAction = DefaultAction("Reload", "Reload class file", "reload_small.png", "reload_large.png") {
         try {
             desktopManager.selectedFrame?.reload()
         } catch (e: IOException) {
@@ -137,21 +137,21 @@ class BrowserMDIFrame : JFrame() {
         accelerator(KeyEvent.VK_R)
     }
 
-    val actionShowHomepage = DefaultAction("jclasslib on the web", "Visit jclasslib on the web", "web_small.png", "web_large.png") {
+    val showHomepageAction = DefaultAction("jclasslib on the web", "Visit jclasslib on the web", "web_small.png", "web_large.png") {
         GUIHelper.showURL("http://www.ej-technologies.com/products/jclasslib/overview.html")
     }
 
-    val actionShowEJT = DefaultAction("ej-technologies on the web", "Visit ej-technologies on the web", "web_small.png") {
+    val showEjtAction = DefaultAction("ej-technologies on the web", "Visit ej-technologies on the web", "web_small.png") {
         GUIHelper.showURL("http://www.ej-technologies.com")
     }
 
-    val actionShowHelp = DefaultAction("Show help", "Show the jclasslib documentation", "help.png") {
+    val showHelpAction = DefaultAction("Show help", "Show the jclasslib documentation", "help.png") {
         GUIHelper.showURL(File("doc/help.html").canonicalFile.toURI().toURL().toExternalForm())
     }.apply {
         accelerator(KeyEvent.VK_F1, 0)
     }
 
-    val actionAbout = DefaultAction("About the jclasslib bytecode viewer", "Show the jclasslib documentation") {
+    val aboutAction = DefaultAction("About the jclasslib bytecode viewer", "Show the jclasslib documentation") {
         BrowserAboutDialog(this).isVisible = true
     }
 
@@ -181,7 +181,7 @@ class BrowserMDIFrame : JFrame() {
         disabled()
     }
 
-    val menuWindow = JMenu("Window").apply {
+    val windowMenu = JMenu("Window").apply {
         add(previousWindowAction)
         add(nextWindowAction)
         add(tileWindowsAction)
@@ -240,7 +240,7 @@ class BrowserMDIFrame : JFrame() {
         }
         workspaceFile = file
         updateTitle()
-        actionSaveWorkspaceAs.isEnabled = true
+        saveWorkspaceAsAction.isEnabled = true
     }
 
     private fun openClassFromFile(file: File): BrowserInternalFrame {
@@ -292,39 +292,39 @@ class BrowserMDIFrame : JFrame() {
         jMenuBar = JMenuBar().apply {
 
             add(JMenu("File").apply {
-                add(actionOpenClassFile)
+                add(openClassFileAction)
                 addSeparator()
-                add(actionNewWorkspace)
-                add(actionOpenWorkspace)
+                add(newWorkspaceAction)
+                add(openWorkspaceAction)
                 add(recentMenu)
                 addSeparator()
-                add(actionSaveWorkspace)
-                add(actionSaveWorkspaceAs)
+                add(saveWorkspaceAction)
+                add(saveWorkspaceAsAction)
                 addSeparator()
-                add(actionShowHomepage)
-                add(actionShowEJT)
+                add(showHomepageAction)
+                add(showEjtAction)
                 addSeparator()
-                add(actionQuit)
+                add(quitAction)
             })
 
             add(JMenu("Classpath").apply {
-                add(actionBrowseClasspath)
-                add(actionSetupClasspath)
+                add(browseClasspathAction)
+                add(setupClasspathAction)
             })
 
             add(JMenu("Browse").apply {
-                add(actionBackward)
-                add(actionForward)
+                add(backwardAction)
+                add(forwardAction)
 
                 addSeparator()
-                add(actionReload)
+                add(reloadAction)
             })
 
-            add(menuWindow)
+            add(windowMenu)
 
             add(JMenu("Help").apply {
-                add(actionShowHelp)
-                add(actionAbout)
+                add(showHelpAction)
+                add(aboutAction)
             })
         }
 
@@ -377,25 +377,25 @@ class BrowserMDIFrame : JFrame() {
         val workspaceFile = this.workspaceFile
         if (workspaceFile == null) {
             title = APPLICATION_TITLE
-            actionSaveWorkspaceAs.isEnabled = false
+            saveWorkspaceAsAction.isEnabled = false
         } else {
             title = APPLICATION_TITLE + " [" + workspaceFile.name + "]"
         }
     }
 
     private fun buildToolbar(): JToolBar = JToolBar().apply {
-        add(actionOpenClassFile)
-        add(actionBrowseClasspath)
+        add(openClassFileAction)
+        add(browseClasspathAction)
         addSeparator()
-        add(actionOpenWorkspace)
-        add(actionSaveWorkspace)
+        add(openWorkspaceAction)
+        add(saveWorkspaceAction)
         addSeparator()
-        add(actionBackward)
-        add(actionForward)
+        add(backwardAction)
+        add(forwardAction)
         addSeparator()
-        add(actionReload)
+        add(reloadAction)
         addSeparator()
-        add(actionShowHomepage)
+        add(showHomepageAction)
 
         isFloatable = false
     }
@@ -462,7 +462,7 @@ class BrowserMDIFrame : JFrame() {
         }
 
         GUIHelper.showMessage(this, "Workspace saved to " + file.path, JOptionPane.INFORMATION_MESSAGE)
-        actionSaveWorkspaceAs.isEnabled = true
+        saveWorkspaceAsAction.isEnabled = true
     }
 
     private fun openClassFromJar(file: File): BrowserInternalFrame? {
@@ -503,7 +503,7 @@ class BrowserMDIFrame : JFrame() {
 
         addWindowListener(object : WindowAdapter() {
             override fun windowClosing(event: WindowEvent?) {
-                actionQuit()
+                quitAction()
             }
         })
 

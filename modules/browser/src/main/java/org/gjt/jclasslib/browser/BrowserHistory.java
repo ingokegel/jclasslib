@@ -73,11 +73,11 @@ public class BrowserHistory {
      */
     public void updateActions() {
 
-        if (services.getActionBackward() == null || services.getActionForward() == null) {
+        if (services.getBackwardAction() == null || services.getForwardAction() == null) {
             return;
         }
-        services.getActionBackward().setEnabled(historyPointer > 0);
-        services.getActionForward().setEnabled(historyPointer < history.size() - 1);
+        services.getBackwardAction().setEnabled(historyPointer > 0);
+        services.getForwardAction().setEnabled(historyPointer < history.size() - 1);
     }
 
     /** 
