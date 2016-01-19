@@ -5,142 +5,108 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.util.GUIHelper;
+import org.gjt.jclasslib.util.GUIHelper
+import java.awt.EventQueue
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.TreeMap;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
+import javax.swing.*
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.io.File
+import java.io.IOException
+import java.util.LinkedList
+import java.util.TreeMap
+import java.util.prefs.BackingStoreException
+import java.util.prefs.Preferences
 
-/**
-    Menu that holds recent workspace files.
+class RecentMenu(private val frame: BrowserMDIFrame) : JMenu() {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class RecentMenu extends JMenu implements ActionListener {
+    private val recentWorkspaces = LinkedList<String>()
 
-    private static final int RECENT_PROJECTS_MAX_SIZE = 10;
-    private static final String SETTINGS_RECENT_WORKSPACES = "recentWorkspaces";
-
-    private static final String ACTION_CLEAR_LIST = "clearList";
-    private BrowserMDIFrame frame;
-
-    private LinkedList<String> recentWorkspaces = new LinkedList<String>();
-
-    /**
-        Constructor.
-        @param frame the parent frame.
-     */
-    public RecentMenu(BrowserMDIFrame frame) {
-        this.frame = frame;
-        setText("Reopen workspace");
-        setIcon(GUIHelper.ICON_EMPTY);
+    init {
+        text = "Reopen workspace"
+        icon = GUIHelper.ICON_EMPTY
     }
 
-    public void menuSelectionChanged(boolean isIncluded) {
-        super.menuSelectionChanged(isIncluded);
-
-        updateContents();
+    override fun menuSelectionChanged(isIncluded: Boolean) {
+        super.menuSelectionChanged(isIncluded)
+        updateContents()
     }
 
-    public void actionPerformed(final ActionEvent event) {
-
-        if (event.getActionCommand().equals(ACTION_CLEAR_LIST)) {
-            recentWorkspaces.clear();
-        } else {
-            setPopupMenuVisible(false);
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    frame.openWorkspace(new File(((JMenuItem)event.getSource()).getText()));
+    fun addRecentWorkspace(file: File) {
+        try {
+            val fileName = file.canonicalFile.absolutePath
+            recentWorkspaces.apply {
+                remove(fileName)
+                addFirst(fileName)
+                if (size > RECENT_PROJECTS_MAX_SIZE) {
+                    removeLast()
                 }
-            });
-
-        }
-    }
-
-    /**
-        Add a file to the list of recently used workspaces.
-        @param file the workspace file.
-     */
-    public void addRecentWorkspace(File file) {
-
-        try {
-            String fileName = file.getCanonicalFile().getAbsolutePath();
-            recentWorkspaces.remove(fileName);
-            recentWorkspaces.addFirst(fileName);
-            if (recentWorkspaces.size() > RECENT_PROJECTS_MAX_SIZE) {
-                recentWorkspaces.removeLast();
             }
-        } catch (IOException e) {
+        } catch (e: IOException) {
         }
     }
 
-    /**
-        Read the list of recently used workspaces from the preferences store.
-        @param preferences the preferences node
-     */
-    public void read(Preferences preferences) {
+    fun read(preferences: Preferences) {
+        recentWorkspaces.clear()
 
-        recentWorkspaces.clear();
-
-        TreeMap<Integer, String> numberToFile = new TreeMap<Integer, String>();
-        Preferences recentNode = preferences.node(SETTINGS_RECENT_WORKSPACES);
+        val numberToFile = TreeMap<Int, String>()
+        val recentNode = preferences.node(SETTINGS_RECENT_WORKSPACES)
         try {
-            String[] keys = recentNode.keys();
-            for (String key : keys) {
-                String fileName = recentNode.get(key, null);
+            recentNode.keys().forEach { key ->
+                val fileName = recentNode.get(key, null)
                 if (fileName != null) {
-                    numberToFile.put(new Integer(key), fileName);
+                    numberToFile.put(Integer.parseInt(key), fileName)
                 }
             }
-            recentWorkspaces.addAll(numberToFile.values());
-        } catch (BackingStoreException ex) {
+            recentWorkspaces.addAll(numberToFile.values)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    /**
-        Save the list of recently used workspaces to the preferences store.
-        @param preferences the preferences node
-     */
-    public void save(Preferences preferences) {
+    fun save(preferences: Preferences) {
 
-        Preferences recentNode = preferences.node(SETTINGS_RECENT_WORKSPACES);
+        val recentNode = preferences.node(SETTINGS_RECENT_WORKSPACES)
         try {
-            recentNode.clear();
-        } catch (BackingStoreException e) {
+            recentNode.clear()
+        } catch (e: BackingStoreException) {
         }
-        int count = 0;
-        for (String fileName : recentWorkspaces) {
-            recentNode.put(String.valueOf(count++), fileName);
-        }
+
+        var count = 0
+        recentWorkspaces.forEach { fileName -> recentNode.put(count++.toString(), fileName) }
     }
 
-    private void updateContents() {
-
-        removeAll();
-        if (recentWorkspaces.size() > 0) {
-            for (String fileName : recentWorkspaces) {
-                JMenuItem menuItem = new JMenuItem(fileName);
-                menuItem.addActionListener(this);
-                add(menuItem);
+    private fun updateContents() {
+        removeAll()
+        if (recentWorkspaces.size > 0) {
+            val workspaceOpenListener = object : ActionListener {
+                override fun actionPerformed(event: ActionEvent) {
+                    isPopupMenuVisible = false
+                    EventQueue.invokeLater { frame.openWorkspace(File((event.source as JMenuItem).text)) }
+                }
             }
-            addSeparator();
-            JMenuItem menuItem = new JMenuItem("Clear list");
-            menuItem.setActionCommand(ACTION_CLEAR_LIST);
-            menuItem.addActionListener(this);
-            add(menuItem);
+            recentWorkspaces.forEach { fileName ->
+                add(JMenuItem(fileName).apply {
+                    addActionListener(workspaceOpenListener)
+                })
+            }
+            addSeparator()
+            add(JMenuItem("Clear list").apply {
+                addActionListener {
+                    recentWorkspaces.clear()
+                }
+            })
         } else {
-            JMenuItem menuItem = new JMenuItem("(Empty)");
-            menuItem.setEnabled(false);
-            add(menuItem);
+            add(JMenuItem("(Empty)").apply {
+                isEnabled = false
+            })
         }
     }
 
+    companion object {
+        private val RECENT_PROJECTS_MAX_SIZE = 10
+        private val SETTINGS_RECENT_WORKSPACES = "recentWorkspaces"
+    }
 }
