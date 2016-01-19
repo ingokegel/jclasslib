@@ -5,229 +5,133 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane;
-
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.*
+import javax.swing.tree.TreePath
 
 
-/**
-    Manages the navigation history of a single child window.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class BrowserHistory {
+class BrowserHistory(private val services: BrowserServices) {
 
-    private static int MAX_HISTORY_ENTRIES = 50;
-    
-    private BrowserServices services;
+    private val history = LinkedList<BrowserHistoryEntry>()
+    private var historyPointer = -1
 
-    private LinkedList<BrowserHistoryEntry> history = new LinkedList<BrowserHistoryEntry>();
-    private int historyPointer = -1;
-
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    public BrowserHistory(BrowserServices services) {
-        this.services = services;
+    fun clear() {
+        history.clear()
+        historyPointer = -1
     }
 
-    /** 
-        Clear the navigation history.
-     */
-    public void clear() {
-        history.clear();
-        historyPointer = -1;
-    }
-    
-    /** 
-        Move one step backward in the navigation history.
-     */
-    public void historyBackward() {
+    fun historyBackward() {
         if (historyPointer == 0) {
-            return;
+            return
         }
-        historyPointer--;
-        syncWithHistory();
+        historyPointer--
+        syncWithHistory()
     }
 
-    /** 
-        Move one step forward in the navigation history.
-     */
-    public void historyForward() {
-        if (historyPointer == history.size() - 1) {
-            return;
+    fun historyForward() {
+        if (historyPointer == history.size - 1) {
+            return
         }
-        historyPointer++;
-        syncWithHistory();
-    }
-    
-    /** 
-        Update the availability of the actions associated with the
-        navigation history.
-     */
-    public void updateActions() {
-
-        if (services.getBackwardAction() == null || services.getForwardAction() == null) {
-            return;
-        }
-        services.getBackwardAction().setEnabled(historyPointer > 0);
-        services.getForwardAction().setEnabled(historyPointer < history.size() - 1);
+        historyPointer++
+        syncWithHistory()
     }
 
-    /** 
-        Add a navigation step to the history.
-        @param newPath the selected tree path in <tt>BrowserTreePane</tt>
-     */
-    public void updateHistory(TreePath newPath) {
-        updateHistory(newPath, null);
+    fun updateActions() {
+        services.backwardAction.isEnabled = historyPointer > 0
+        services.forwardAction.isEnabled = historyPointer < history.size - 1
     }
-    
-    /** 
-        Add a navigation step to the history.
-        @param newPath the selected tree path in <tt>BrowserTreePane</tt>
-        @param offset the target's offset in the code. <tt>Null</tt> if
-                      not applicable.
-     */
-    public void updateHistory(TreePath newPath, Integer offset) {
-        
 
-        BrowserHistoryEntry newEntry = new BrowserHistoryEntry(newPath, offset);
-        
-        if (!checkForOffset(newEntry) &&
-                (historyPointer < 0 || !newEntry.equals(history.get(historyPointer)))) {
-                        
-            eliminateForwardEntries();
-            
+    //TODO remove annotation
+    @JvmOverloads
+    fun updateHistory(newPath: TreePath, offset: Int? = null) {
+        val newEntry = BrowserHistoryEntry(newPath, offset)
+        if (!checkForOffset(newEntry) && (historyPointer < 0 || newEntry != history[historyPointer])) {
+            eliminateForwardEntries()
+
             if (historyPointer > MAX_HISTORY_ENTRIES) {
-                history.removeFirst();
-                historyPointer--;
+                history.removeFirst()
+                historyPointer--
             }
-            
-            history.add(newEntry);
-            historyPointer++;
-            
-        }
-        updateActions();
-    }
-    
-    private boolean checkForOffset(BrowserHistoryEntry newEntry) {
 
+            history.add(newEntry)
+            historyPointer++
+
+        }
+        updateActions()
+    }
+
+    private fun checkForOffset(newEntry: BrowserHistoryEntry): Boolean {
         if (historyPointer >= 0) {
-
-            BrowserHistoryEntry currentEntry = history.get(historyPointer);
-            if (currentEntry.getTreePath().equals(newEntry.getTreePath())) {
-                if (newEntry.getOffset() == null) {
+            val currentEntry = history[historyPointer]
+            if (currentEntry.treePath == newEntry.treePath) {
+                if (newEntry.offset == null) {
                     // Ignore history event, since it is more unspecific than the current one
-                    return true;
-
-                } else if (currentEntry.getOffset() == null) {
+                } else if (currentEntry.offset == null) {
                     // merge with current entry to achieve more specific history entry
-                    eliminateForwardEntries();
-                    currentEntry.setOffset(newEntry.getOffset());
+                    eliminateForwardEntries()
+                    currentEntry.offset = newEntry.offset
                     // Do not add another history event
-                    return true;
+                    return true
                 }
             }
         }
-        return false;
+        return false
     }
-    
-    private void eliminateForwardEntries() {
-        
-        if (historyPointer < history.size() - 1) {
-            ListIterator<BrowserHistoryEntry> it = history.listIterator(historyPointer + 1);
+
+    private fun eliminateForwardEntries() {
+        if (historyPointer < history.size - 1) {
+            val it = history.listIterator(historyPointer + 1)
             while (it.hasNext()) {
-                it.next();
-                it.remove();
+                it.next()
+                it.remove()
             }
         }
     }
-    
-    private void syncWithHistory() {
-        
-        BrowserHistoryEntry entry = history.get(historyPointer);
 
-        JTree tree = services.getBrowserComponent().getTreePane().getTree();
-        
-        tree.setSelectionPath(entry.getTreePath());
-        tree.scrollPathToVisible(entry.getTreePath());
-        
-        Integer offset = entry.getOffset();
-        
+    private fun syncWithHistory() {
+        val entry = history[historyPointer]
+        services.browserComponent.treePane.tree.apply {
+            selectionPath = entry.treePath
+            scrollPathToVisible(entry.treePath)
+        }
+
+        val offset = entry.offset
         if (offset != null) {
-            BrowserDetailPane detailPane = services.getBrowserComponent().getDetailPane();
-            
-            CodeAttributeDetailPane codeAttributeDetailPane =
-                detailPane.getAttributeDetailPane().getCodeAttributeDetailPane();
-            
-            codeAttributeDetailPane.selectByteCodeDetailPane();
-
-            codeAttributeDetailPane.getCodeAttributeByteCodeDetailPane().
-                scrollToOffset(offset);
+            services.browserComponent.detailPane.attributeDetailPane.codeAttributeDetailPane.apply {
+                selectByteCodeDetailPane()
+                codeAttributeByteCodeDetailPane.scrollToOffset(offset)
+            }
         }
-        
-        updateActions();
+        updateActions()
     }
-    
-    private class BrowserHistoryEntry {
-        
-        private TreePath treePath;
-        private Integer offset;
-        
-        private BrowserHistoryEntry(TreePath treePath, Integer offset) {
-            this.treePath = treePath;
-            this.offset = offset;
-        }
-        
-        public TreePath getTreePath() {
-            return treePath;
-        }
-        
-        public Integer getOffset() {
-            return offset;
+
+    private inner class BrowserHistoryEntry(val treePath: TreePath, var offset: Int?) {
+
+        override fun toString(): String {
+            return treePath.toString() + " / offset " + (offset?.toString() ?: "null")
         }
 
-        public void setOffset(Integer offset) {
-            this.offset = offset;
-        }
-        
-        public boolean equals(Object object) {
-            
-            if (object == null || !(object instanceof BrowserHistoryEntry)) {
-                return false;
-            }
-            BrowserHistoryEntry other = (BrowserHistoryEntry)object;
-            
-            return isEqual(offset, other.getOffset()) &&
-                   isEqual(treePath, other.getTreePath());
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other?.javaClass != javaClass) return false
+
+            other as BrowserHistoryEntry
+
+            if (treePath != other.treePath) return false
+            if (offset != other.offset) return false
+
+            return true
         }
 
-        public int hashCode() {
-            return treePath.hashCode() ^ offset.hashCode();
+        override fun hashCode(): Int {
+            var result = treePath.hashCode()
+            result += 31 * result + (offset ?: 0)
+            return result
         }
+    }
 
-        private boolean isEqual(Object one, Object two) {
-            
-            if (one == null) {
-                if (two != null) {
-                    return false;
-                }
-            } else {
-                if (!one.equals(two)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        
-        public String toString() {
-            return treePath.toString() + " / offset " + (offset == null ? "null" : offset.toString());
-        }
+    companion object {
+        private val MAX_HISTORY_ENTRIES = 50
     }
 }
