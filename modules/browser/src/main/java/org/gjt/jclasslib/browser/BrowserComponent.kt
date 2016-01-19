@@ -11,7 +11,6 @@ import org.gjt.jclasslib.browser.config.window.*
 import org.gjt.jclasslib.structures.ClassMember
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import java.awt.BorderLayout
-import java.awt.CardLayout
 import javax.swing.JComponent
 import javax.swing.JSplitPane
 import javax.swing.event.TreeSelectionEvent
@@ -140,13 +139,9 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
 
     fun checkSelection() {
         val tree = treePane.tree
-        if (services.classFile == null) {
-            (detailPane.layout as CardLayout).show(detailPane, BrowserTreeNode.NODE_NO_CONTENT)
-        } else {
-            if (tree.selectionPath == null) {
-                val rootNode = tree.model.root as BrowserTreeNode
-                tree.selectionPath = TreePath(arrayOf<Any>(rootNode, rootNode.firstChild))
-            }
+        if (tree.selectionPath == null) {
+            val rootNode = tree.model.root as BrowserTreeNode
+            tree.selectionPath = TreePath(arrayOf<Any>(rootNode, rootNode.firstChild))
         }
     }
 

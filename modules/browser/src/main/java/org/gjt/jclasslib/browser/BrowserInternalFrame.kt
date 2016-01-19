@@ -23,8 +23,8 @@ import javax.swing.JInternalFrame
 import javax.swing.JOptionPane
 
 class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, private val fileName: String, browserPath: BrowserPath? = null) : JInternalFrame(fileName, true, true, true, true), BrowserServices {
-    private val classFile: ClassFile = readClassFile()
-    private val browserComponent: BrowserComponent = BrowserComponent(this)
+    override val classFile: ClassFile = readClassFile()
+    override val browserComponent: BrowserComponent = BrowserComponent(this)
 
     init {
         setFrameIcon(BrowserMDIFrame.ICON_APPLICATION_16)
@@ -45,26 +45,16 @@ class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, pr
 
     // Browser services
 
-    override fun getClassFile(): ClassFile {
-        return classFile
-    }
-
     override fun activate() {
         // force sync of toolbar state with this frame
         desktopManager.desktopPane.selectedFrame = this
     }
 
-    override fun getBrowserComponent(): BrowserComponent {
-        return browserComponent
-    }
+    override val actionBackward: Action
+        get() = parentFrame.actionBackward
 
-    override fun getActionBackward(): Action {
-        return parentFrame.actionBackward
-    }
-
-    override fun getActionForward(): Action {
-        return parentFrame.actionForward
-    }
+    override val actionForward: Action
+        get() = parentFrame.actionForward
 
     override fun openClassFile(className: String, browserPath: BrowserPath) {
         var findResult: FindResult? = parentFrame.config.findClass(className)
