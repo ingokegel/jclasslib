@@ -28,7 +28,7 @@ public class BrowserDetailPane extends JPanel {
     private static final Dimension detailPreferredSize = new Dimension(150, 150);
 
     private BrowserServices services;
-    private HashMap<String, AbstractDetailPane> nodeTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
+    private HashMap<NodeType, AbstractDetailPane> nodeTypeToDetailPane = new HashMap<NodeType, AbstractDetailPane>();
     private AbstractDetailPane currentDetailPane;
 
     /**
@@ -49,7 +49,7 @@ public class BrowserDetailPane extends JPanel {
      *                 constants in <tt>BrowserTreeNode</tt>
      * @param treePath the tree path of the selected node
      */
-    public void showPane(String nodeType, TreePath treePath) {
+    public void showPane(NodeType nodeType, TreePath treePath) {
         if (services.getClassFile() == null) {
             return;
         }
@@ -59,7 +59,7 @@ public class BrowserDetailPane extends JPanel {
             currentDetailPane.show(treePath);
         }
 
-        layout.show(this, nodeType);
+        layout.show(this, nodeType.name());
     }
 
     public AbstractDetailPane getCurrentDetailPane() {
@@ -74,18 +74,18 @@ public class BrowserDetailPane extends JPanel {
      * @return the <tt>AttributeDetailPane</tt>
      */
     public AttributeDetailPane getAttributeDetailPane() {
-        return (AttributeDetailPane)getDetailPane(BrowserTreeNode.NODE_ATTRIBUTE);
+        return (AttributeDetailPane)getDetailPane(NodeType.ATTRIBUTE);
     }
 
-    private AbstractDetailPane getDetailPane(String nodeType) {
+    private AbstractDetailPane getDetailPane(NodeType nodeType) {
         AbstractDetailPane detailPane = nodeTypeToDetailPane.get(nodeType);
         if (detailPane == null) {
             detailPane = createDetailPanel(nodeType);
             if (detailPane != null) {
                 if (detailPane instanceof FixedListDetailPane) {
-                    add(((FixedListDetailPane)detailPane).getScrollPane(), nodeType);
+                    add(((FixedListDetailPane)detailPane).getScrollPane(), nodeType.name());
                 } else {
-                    add(detailPane, nodeType);
+                    add(detailPane, nodeType.name());
                 }
                 nodeTypeToDetailPane.put(nodeType, detailPane);
             }
@@ -93,32 +93,32 @@ public class BrowserDetailPane extends JPanel {
         return detailPane;
     }
 
-    private AbstractDetailPane createDetailPanel(String nodeType) {
-        if (nodeType.equals(BrowserTreeNode.NODE_GENERAL)) {
+    private AbstractDetailPane createDetailPanel(NodeType nodeType) {
+        if (nodeType.equals(NodeType.GENERAL)) {
             return new GeneralDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_CONSTANT_POOL)) {
+        } else if (nodeType.equals(NodeType.CONSTANT_POOL)) {
             return new ConstantPoolDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_INTERFACE)) {
+        } else if (nodeType.equals(NodeType.INTERFACE)) {
             return new InterfaceDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_FIELDS)) {
+        } else if (nodeType.equals(NodeType.FIELDS)) {
             return new ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_METHODS)) {
+        } else if (nodeType.equals(NodeType.METHODS)) {
             return new ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_FIELD)) {
+        } else if (nodeType.equals(NodeType.FIELD)) {
             return new ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_METHOD)) {
+        } else if (nodeType.equals(NodeType.METHOD)) {
             return new ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_ATTRIBUTE)) {
+        } else if (nodeType.equals(NodeType.ATTRIBUTE)) {
             return new AttributeDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_ANNOTATION)) {
+        } else if (nodeType.equals(NodeType.ANNOTATION)) {
             return new AnnotationDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_TYPE_ANNOTATION)) {
+        } else if (nodeType.equals(NodeType.TYPE_ANNOTATION)) {
             return new TypeAnnotationDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUE)) {
+        } else if (nodeType.equals(NodeType.ELEMENTVALUE)) {
             return new ElementValueDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_ELEMENTVALUEPAIR)) {
+        } else if (nodeType.equals(NodeType.ELEMENTVALUEPAIR)) {
             return new ElementValuePairDetailPane(services);
-        } else if (nodeType.equals(BrowserTreeNode.NODE_ARRAYELEMENTVALUE)) {
+        } else if (nodeType.equals(NodeType.ARRAYELEMENTVALUE)) {
             return new ArrayElementValueDetailPane(services);
         } else {
             return null;
@@ -129,7 +129,7 @@ public class BrowserDetailPane extends JPanel {
 
         setLayout(new CardLayout());
 
-        add(new JPanel(), BrowserTreeNode.NODE_NO_CONTENT);
+        add(new JPanel(), NodeType.NO_CONTENT.name());
 
         setMinimumSize(detailMinimumSize);
         setPreferredSize(detailPreferredSize);

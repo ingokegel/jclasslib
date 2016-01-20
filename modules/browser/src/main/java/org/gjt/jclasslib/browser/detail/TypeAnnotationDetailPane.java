@@ -15,6 +15,7 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
+import org.gjt.jclasslib.browser.NodeType;
 import org.gjt.jclasslib.structures.AttributeInfo;
 import org.gjt.jclasslib.structures.MethodInfo;
 import org.gjt.jclasslib.structures.attributes.*;
@@ -139,7 +140,7 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
     }
 
     private void handleInterfaceLink(int index) {
-        TreePath interfacesPath = services.getBrowserComponent().getTreePane().getPathForCategory(BrowserTreeNode.NODE_INTERFACE);
+        TreePath interfacesPath = services.getBrowserComponent().getTreePane().getPathForCategory(NodeType.INTERFACE);
         BrowserTreeNode interfacesNode = (BrowserTreeNode)interfacesPath.getLastPathComponent();
         if (index >= interfacesNode.getChildCount()) {
             throw new IllegalArgumentException("Invalid interface index " + index);

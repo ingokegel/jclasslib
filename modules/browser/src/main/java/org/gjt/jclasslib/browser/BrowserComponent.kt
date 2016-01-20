@@ -38,7 +38,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
                 return null
             }
             val categoryNode = selectionPath.getPathComponent(2) as BrowserTreeNode
-            if (categoryNode.type == BrowserTreeNode.NODE_NO_CONTENT) {
+            if (categoryNode.type == NodeType.NO_CONTENT) {
                 return null
             }
             return createBrowserPath(categoryNode, selectionPath)
@@ -72,13 +72,13 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     private fun createBrowserPath(categoryNode: BrowserTreeNode, selectionPath: TreePath) = BrowserPath().apply {
         val category = categoryNode.type
         addPathComponent(CategoryHolder(category))
-        val categoryNodeIndex = categoryNode.index + if (category == BrowserTreeNode.NODE_CONSTANT_POOL) -1 else 0
+        val categoryNodeIndex = categoryNode.index + if (category == NodeType.CONSTANT_POOL) -1 else 0
         when (category) {
-            BrowserTreeNode.NODE_METHOD -> {
+            NodeType.METHOD -> {
                 val methodInfo = services.classFile.methods[categoryNodeIndex]
                 addClassMemberPathComponent(methodInfo, this, selectionPath)
             }
-            BrowserTreeNode.NODE_FIELD -> {
+            NodeType.FIELD -> {
                 val fieldInfo = services.classFile.fields[categoryNodeIndex]
                 addClassMemberPathComponent(fieldInfo, this, selectionPath)
             }
@@ -88,15 +88,15 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
         }
     }
 
-    private fun buildPath(path: TreePath, category : String, it: MutableIterator<PathComponent>): TreePath {
+    private fun buildPath(path: TreePath, category : NodeType, it: MutableIterator<PathComponent>): TreePath {
         if (it.hasNext()) {
             val pathComponent = it.next()
             val childIndex: Int
             if (pathComponent is ReferenceHolder) {
                 try {
-                    if (category == BrowserTreeNode.NODE_METHOD) {
+                    if (category == NodeType.METHOD) {
                         childIndex = services.classFile.getMethodIndex(pathComponent.name, pathComponent.type)
-                    } else if (category == BrowserTreeNode.NODE_FIELD) {
+                    } else if (category == NodeType.FIELD) {
                         childIndex = services.classFile.getFieldIndex(pathComponent.name, pathComponent.type)
                     } else {
                         return path

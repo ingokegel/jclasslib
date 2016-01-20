@@ -18,65 +18,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class BrowserTreeNode extends DefaultMutableTreeNode {
 
-    /**
-     * Node that does not exhibit detail content.
-     */
-    public static final String NODE_NO_CONTENT = "noContent";
-    /**
-     * Node for general information on the class file structure.
-     */
-    public static final String NODE_GENERAL = "general";
-    /**
-     * Node for a constant pool entry (<tt>CPInfo</tt>).
-     */
-    public static final String NODE_CONSTANT_POOL = "constantPool";
-    /**
-     * Node for an interface entry.
-     */
-    public static final String NODE_INTERFACE = "interface";
-    /**
-     * Node for method container.
-     */
-    public static final String NODE_METHODS = "methods";
-    /**
-     * Node for method container.
-     */
-    public static final String NODE_FIELDS = "fields";
-    /**
-     * Node for a field entry  (<tt>FieldInfo</tt>).
-     */
-    public static final String NODE_FIELD = "field";
-    /**
-     * Node for a method entry  (<tt>MethodInfo</tt>).
-     */
-    public static final String NODE_METHOD = "method";
-    /**
-     * Node for an attribute entry  (<tt>AttributeInfo</tt>).
-     */
-    public static final String NODE_ATTRIBUTE = "attribute";
-    /**
-     * Node for an attribute entry  (<tt>VisibleRuntimeAnnotation</tt>).
-     */
-    public static final String NODE_ANNOTATION = "annotation";
-    /**
-     * Node for an attribute entry  (<tt>VisibleRuntimeTypeAnnotation</tt>).
-     */
-    public static final String NODE_TYPE_ANNOTATION = "typeannotation";
-    /**
-     * Node for an <tt>ElementValuePair</tt> entry.
-     */
-    public static final String NODE_ELEMENTVALUEPAIR = "elementvaluepair";
-    /**
-     * Node for an <tt>ElementValue</tt> entry.
-     */
-    public static final String NODE_ELEMENTVALUE = "elementvalue";
-    /**
-     * Node for an <tt>ArrayElementValue</tt> entry.
-     */
-    public static final String NODE_ARRAYELEMENTVALUE = "arrayelementvalue";
 
-
-    private String type;
+    private NodeType type;
     private int index;
     private Object element;
 
@@ -86,7 +29,7 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
      * @param text the display text.
      */
     public BrowserTreeNode(String text) {
-        this(text, NODE_NO_CONTENT);
+        this(text, NodeType.NO_CONTENT);
     }
 
     /**
@@ -95,7 +38,7 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
      * @param text the display text.
      * @param type the node type. One of the <tt>NODE_</tt> constants.
      */
-    public BrowserTreeNode(String text, String type) {
+    public BrowserTreeNode(String text, NodeType type) {
         this(text, type, 0);
     }
 
@@ -106,11 +49,11 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
      * @param type  the node type. One of the <tt>NODE_</tt> constants.
      * @param index the logical index of this node.
      */
-    public BrowserTreeNode(String text, String type, int index) {
+    public BrowserTreeNode(String text, NodeType type, int index) {
         this(text, type, index, null);
     }
 
-    public BrowserTreeNode(String text, String type, int index, Object element) {
+    public BrowserTreeNode(String text, NodeType type, int index, Object element) {
         super(text);
         this.type = type;
         this.index = index;
@@ -122,7 +65,7 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
      *
      * @return the type
      */
-    public String getType() {
+    public NodeType getType() {
         return type;
     }
 

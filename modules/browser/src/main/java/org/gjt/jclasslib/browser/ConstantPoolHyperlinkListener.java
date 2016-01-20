@@ -57,7 +57,7 @@ public class ConstantPoolHyperlinkListener extends MouseAdapter {
     
     private static TreePath linkPath(BrowserServices services, int constantPoolIndex) {
         
-        TreePath constantPoolPath = services.getBrowserComponent().getTreePane().getPathForCategory(BrowserTreeNode.NODE_CONSTANT_POOL);
+        TreePath constantPoolPath = services.getBrowserComponent().getTreePane().getPathForCategory(NodeType.CONSTANT_POOL);
         BrowserTreeNode constantPoolNode = (BrowserTreeNode)constantPoolPath.getLastPathComponent();
         TreeNode targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1);
         return constantPoolPath.pathByAddingChild(targetNode);

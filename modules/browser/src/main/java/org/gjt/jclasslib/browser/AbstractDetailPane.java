@@ -141,19 +141,19 @@ public abstract class AbstractDetailPane extends JPanel {
         
         TreePath parentPath = path.getParentPath();
         BrowserTreeNode parentNode = (BrowserTreeNode)parentPath.getLastPathComponent();
-        String parentNodeType = parentNode.getType();
+        NodeType parentNodeType = parentNode.getType();
         
         ClassFile classFile = services.getClassFile();
         int parentIndex = getIndex(parentPath);
         int index = getIndex(path);
         
-        if (parentNodeType.equals(BrowserTreeNode.NODE_NO_CONTENT)) {
+        if (parentNodeType.equals(NodeType.NO_CONTENT)) {
             return classFile.getAttributes()[index];
 
-        } else if (parentNodeType.equals(BrowserTreeNode.NODE_FIELD)) {
+        } else if (parentNodeType.equals(NodeType.FIELD)) {
             return classFile.getFields()[parentIndex].getAttributes()[index];
 
-        } else if (parentNodeType.equals(BrowserTreeNode.NODE_METHOD)) {
+        } else if (parentNodeType.equals(NodeType.METHOD)) {
             return classFile.getMethods()[parentIndex].getAttributes()[index];
 
         } else {

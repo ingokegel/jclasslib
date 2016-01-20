@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.constants;
 
-import org.gjt.jclasslib.browser.BrowserTreeNode;
+import org.gjt.jclasslib.browser.NodeType;
 import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.gjt.jclasslib.browser.config.window.CategoryHolder;
 import org.gjt.jclasslib.browser.config.window.ReferenceHolder;
@@ -53,11 +53,11 @@ public class ClassElementOpener implements ActionListener {
                 ConstantReference reference = (ConstantReference)constant;
                 ConstantNameAndTypeInfo nameAndType = reference.getNameAndTypeInfo();
                 classInfo = reference.getClassInfo();
-                String category = null;
+                NodeType category = null;
                 if (constant instanceof ConstantFieldrefInfo) {
-                    category = BrowserTreeNode.NODE_FIELD;
+                    category = NodeType.FIELD;
                 } else if (constant instanceof ConstantMethodrefInfo || constant instanceof ConstantInterfaceMethodrefInfo){
-                    category = BrowserTreeNode.NODE_METHOD;
+                    category = NodeType.METHOD;
                 }
                 if (category != null) {
                     browserPath = new BrowserPath();

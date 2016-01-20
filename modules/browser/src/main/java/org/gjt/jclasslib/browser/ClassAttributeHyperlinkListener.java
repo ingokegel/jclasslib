@@ -35,7 +35,7 @@ public class ClassAttributeHyperlinkListener extends MouseAdapter {
 
     public static void link(BrowserServices services, int index, Class<? extends AttributeInfo> attributeInfoClass) {
         BrowserTreePane treePane = services.getBrowserComponent().getTreePane();
-        TreePath attributesPath = treePane.getPathForCategory(BrowserTreeNode.NODE_ATTRIBUTE);
+        TreePath attributesPath = treePane.getPathForCategory(NodeType.ATTRIBUTE);
         link(services, attributesPath, index, attributeInfoClass);
     }
 

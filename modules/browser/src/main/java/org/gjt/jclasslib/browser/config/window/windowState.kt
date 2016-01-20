@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.config.window
 
+import org.gjt.jclasslib.browser.NodeType
 import java.util.*
 
 // keep vars for bean serialization
@@ -54,6 +55,6 @@ class BrowserPath {
 }
 
 interface PathComponent
-data class CategoryHolder(var category: String = "") : PathComponent
+data class CategoryHolder(var category: NodeType = NodeType.NO_CONTENT) : PathComponent
 data class IndexHolder(var index: Int = -1) : PathComponent
 data class ReferenceHolder(var name: String = "", var type: String = "") : PathComponent
