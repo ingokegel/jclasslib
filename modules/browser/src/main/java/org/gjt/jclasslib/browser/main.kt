@@ -58,7 +58,7 @@ private fun registerStartupListener(frame: BrowserMDIFrame) {
 }
 
 private fun isLoadedFromJar(): Boolean =
-    ::isLoadedFromJar.javaClass.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:")}
+        BrowserMDIFrame::class.java.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:")}
 
 private fun splitupCommandLine(command: String): List<String> {
     val cmdList = ArrayList<String>()
