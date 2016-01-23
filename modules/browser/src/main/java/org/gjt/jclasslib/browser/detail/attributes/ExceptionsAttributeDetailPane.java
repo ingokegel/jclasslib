@@ -62,7 +62,7 @@ public class ExceptionsAttributeDetailPane extends AbstractAttributeListDetailPa
             
             if (column == EXCEPTION_INDEX_COLUMN_INDEX) {
                 int constantPoolIndex = exceptionIndexTable[row];
-                ConstantPoolHyperlinkListener.link(services, constantPoolIndex);
+                ConstantPoolHyperlinkListener.Companion.link(services, constantPoolIndex);
             }
         }
         

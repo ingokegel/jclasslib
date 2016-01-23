@@ -5,63 +5,38 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import javax.swing.*;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import javax.swing.tree.TreePath
 
-/**
-    Listens for mouse clicks and manages linking into the constant pool.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantPoolHyperlinkListener extends MouseAdapter {
+class ConstantPoolHyperlinkListener(private val services: BrowserServices, private val constantPoolIndex: Int) : MouseAdapter() {
 
-    private BrowserServices services;
-    private int constantPoolIndex;
-
-    /**
-        Constructor.
-        @param services the browser services
-        @param constantPoolIndex the index of the constant pool to link to.
-     */
-    public ConstantPoolHyperlinkListener(BrowserServices services, int constantPoolIndex) {
-        
-        this.services = services;
-        this.constantPoolIndex = constantPoolIndex;
-    }
-    
-    public void mouseClicked(MouseEvent event) {
-        link(services, constantPoolIndex);
+    override fun mouseClicked(event: MouseEvent?) {
+        link(services, constantPoolIndex)
     }
 
-    /**
-        Link to a specific constant pool entry.
-        @param services browser services
-        @param constantPoolIndex the index of the constant pool entry
-     */
-    public static void link(BrowserServices services, int constantPoolIndex) {
-        
-        if (constantPoolIndex <= 0) {
-            return;
+    companion object {
+
+        fun link(services: BrowserServices, constantPoolIndex: Int) {
+            if (constantPoolIndex <= 0) {
+                return
+            }
+            val newPath = linkPath(services, constantPoolIndex)
+            services.browserComponent.treePane.tree.apply {
+                selectionPath = newPath
+                scrollPathToVisible(newPath)
+            }
         }
-        
-        JTree tree = services.getBrowserComponent().getTreePane().getTree();
-        TreePath newPath = linkPath(services, constantPoolIndex);
-        tree.setSelectionPath(newPath);
-        tree.scrollPathToVisible(newPath);
+
+        private fun linkPath(services: BrowserServices, constantPoolIndex: Int): TreePath {
+            val constantPoolPath = services.browserComponent.treePane.getPathForCategory(NodeType.CONSTANT_POOL)
+            val constantPoolNode = constantPoolPath.lastPathComponent as BrowserTreeNode
+            val targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1)
+            return constantPoolPath.pathByAddingChild(targetNode)
+        }
     }
-    
-    private static TreePath linkPath(BrowserServices services, int constantPoolIndex) {
-        
-        TreePath constantPoolPath = services.getBrowserComponent().getTreePane().getPathForCategory(NodeType.CONSTANT_POOL);
-        BrowserTreeNode constantPoolNode = (BrowserTreeNode)constantPoolPath.getLastPathComponent();
-        TreeNode targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1);
-        return constantPoolPath.pathByAddingChild(targetNode);
-    }
-    
+
 }
 

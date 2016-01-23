@@ -57,7 +57,7 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
                 @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        ConstantPoolHyperlinkListener.link(getBrowserServices(), Integer.parseInt(e.getDescription()));
+                        ConstantPoolHyperlinkListener.Companion.link(getBrowserServices(), Integer.parseInt(e.getDescription()));
                     }
                 }
             });
@@ -104,7 +104,7 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
                 default:
                     return;
             }
-            ConstantPoolHyperlinkListener.link(services, constantPoolIndex);
+            ConstantPoolHyperlinkListener.Companion.link(services, constantPoolIndex);
         }
 
         public int getRowCount() {

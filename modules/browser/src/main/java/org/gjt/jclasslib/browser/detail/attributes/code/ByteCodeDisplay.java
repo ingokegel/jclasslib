@@ -255,7 +255,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         updateHistory(link.sourceOffset);
 
         if (link instanceof ConstantPoolLink) {
-            ConstantPoolHyperlinkListener.link(detailPane.getBrowserServices(), ((ConstantPoolLink)link).cpIndex);
+            ConstantPoolHyperlinkListener.Companion.link(detailPane.getBrowserServices(), ((ConstantPoolLink)link).cpIndex);
         } else if (link instanceof OffsetLink) {
             int targetOffset = ((OffsetLink)link).targetOffset;
             scrollToOffset(targetOffset);

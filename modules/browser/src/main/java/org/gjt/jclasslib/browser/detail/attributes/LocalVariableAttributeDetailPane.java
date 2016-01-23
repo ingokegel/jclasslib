@@ -88,7 +88,7 @@ public abstract class LocalVariableAttributeDetailPane extends AbstractAttribute
                 default:
                     return;
             }
-            ConstantPoolHyperlinkListener.link(services, constantPoolIndex);
+            ConstantPoolHyperlinkListener.Companion.link(services, constantPoolIndex);
         }
 
         public int getRowCount() {
