@@ -22,8 +22,7 @@ class BrowserNodeTransferHandler(private val services: BrowserServices) : Transf
             return null
         }
 
-        val detailPane = services.browserComponent.detailPane.currentDetailPane ?: return null
-        val text = detailPane.clipboardText
+        val text = services.browserComponent.detailPane.currentDetailPane.clipboardText
         if (text != null) {
             return StringSelection(text)
         } else {

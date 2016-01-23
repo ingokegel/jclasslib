@@ -5,135 +5,47 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.detail.*;
+import org.gjt.jclasslib.browser.detail.AttributeDetailPane
+import org.gjt.jclasslib.browser.detail.EmptyDetailPane
+import java.awt.CardLayout
+import java.awt.Dimension
+import java.util.*
+import javax.swing.JPanel
+import javax.swing.tree.TreePath
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.util.HashMap;
+class BrowserDetailPane(private val services: BrowserServices) : JPanel() {
 
-/**
- * The right half of a child window of the class file browser application
- * showing detailed information for the specific tree node selected in
- * <tt>BrowserTreePane</tt>.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
- */
-public class BrowserDetailPane extends JPanel {
+    private val nodeTypeToDetailPane = HashMap<NodeType, AbstractDetailPane>()
+    var currentDetailPane: AbstractDetailPane = EmptyDetailPane(services)
+        private set
 
-    private static final Dimension detailMinimumSize = new Dimension(150, 150);
-    private static final Dimension detailPreferredSize = new Dimension(150, 150);
-
-    private BrowserServices services;
-    private HashMap<NodeType, AbstractDetailPane> nodeTypeToDetailPane = new HashMap<NodeType, AbstractDetailPane>();
-    private AbstractDetailPane currentDetailPane;
-
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services.
-     */
-    public BrowserDetailPane(BrowserServices services) {
-        this.services = services;
-        setupComponent();
+    init {
+        layout = CardLayout()
+        add(JPanel(), NodeType.NO_CONTENT.name)
+        minimumSize = Dimension(150, 150)
+        preferredSize = Dimension(150, 150)
     }
 
-    /**
-     * Show details for the specific tree node selected in
-     * <tt>BrowserTreePane</tt>.
-     *
-     * @param nodeType the type of the node as defined in the <tt>NODE_</tt>
-     *                 constants in <tt>BrowserTreeNode</tt>
-     * @param treePath the tree path of the selected node
-     */
-    public void showPane(NodeType nodeType, TreePath treePath) {
-        if (services.getClassFile() == null) {
-            return;
-        }
-        CardLayout layout = (CardLayout)getLayout();
-        currentDetailPane = getDetailPane(nodeType);
-        if (currentDetailPane != null) {
-            currentDetailPane.show(treePath);
-        }
-
-        layout.show(this, nodeType.name());
+    fun showPane(nodeType: NodeType, treePath: TreePath) {
+        currentDetailPane = getDetailPane(nodeType)
+        currentDetailPane.show(treePath)
+        showCard(nodeType)
     }
 
-    public AbstractDetailPane getCurrentDetailPane() {
-        return currentDetailPane;
+    private fun showCard(nodeType: NodeType) {
+        (layout as CardLayout).show(this, nodeType.name)
     }
 
-    /**
-     * Get the <tt>AttributeDetailPane</tt> detail pane associated with the
-     * node type <tt>BrowserTreeNode.NODE_ATTRIBUTE</tt>. This is necessary for
-     * hyperlinks within <tt>Code</tt> attributes.
-     *
-     * @return the <tt>AttributeDetailPane</tt>
-     */
-    public AttributeDetailPane getAttributeDetailPane() {
-        return (AttributeDetailPane)getDetailPane(NodeType.ATTRIBUTE);
-    }
+    val attributeDetailPane: AttributeDetailPane
+        get() = getDetailPane(NodeType.ATTRIBUTE) as AttributeDetailPane
 
-    private AbstractDetailPane getDetailPane(NodeType nodeType) {
-        AbstractDetailPane detailPane = nodeTypeToDetailPane.get(nodeType);
-        if (detailPane == null) {
-            detailPane = createDetailPanel(nodeType);
-            if (detailPane != null) {
-                if (detailPane instanceof FixedListDetailPane) {
-                    add(((FixedListDetailPane)detailPane).getScrollPane(), nodeType.name());
-                } else {
-                    add(detailPane, nodeType.name());
-                }
-                nodeTypeToDetailPane.put(nodeType, detailPane);
+    private fun getDetailPane(nodeType: NodeType): AbstractDetailPane {
+        return nodeTypeToDetailPane.getOrPut(nodeType) {
+            nodeType.createDetailPanel(services).apply {
+                this@BrowserDetailPane.add(wrapper, nodeType.name)
             }
         }
-        return detailPane;
     }
-
-    private AbstractDetailPane createDetailPanel(NodeType nodeType) {
-        if (nodeType.equals(NodeType.GENERAL)) {
-            return new GeneralDetailPane(services);
-        } else if (nodeType.equals(NodeType.CONSTANT_POOL)) {
-            return new ConstantPoolDetailPane(services);
-        } else if (nodeType.equals(NodeType.INTERFACE)) {
-            return new InterfaceDetailPane(services);
-        } else if (nodeType.equals(NodeType.FIELDS)) {
-            return new ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD);
-        } else if (nodeType.equals(NodeType.METHODS)) {
-            return new ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD);
-        } else if (nodeType.equals(NodeType.FIELD)) {
-            return new ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD);
-        } else if (nodeType.equals(NodeType.METHOD)) {
-            return new ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD);
-        } else if (nodeType.equals(NodeType.ATTRIBUTE)) {
-            return new AttributeDetailPane(services);
-        } else if (nodeType.equals(NodeType.ANNOTATION)) {
-            return new AnnotationDetailPane(services);
-        } else if (nodeType.equals(NodeType.TYPE_ANNOTATION)) {
-            return new TypeAnnotationDetailPane(services);
-        } else if (nodeType.equals(NodeType.ELEMENTVALUE)) {
-            return new ElementValueDetailPane(services);
-        } else if (nodeType.equals(NodeType.ELEMENTVALUEPAIR)) {
-            return new ElementValuePairDetailPane(services);
-        } else if (nodeType.equals(NodeType.ARRAYELEMENTVALUE)) {
-            return new ArrayElementValueDetailPane(services);
-        } else {
-            return null;
-        }
-    }
-
-    private void setupComponent() {
-
-        setLayout(new CardLayout());
-
-        add(new JPanel(), NodeType.NO_CONTENT.name());
-
-        setMinimumSize(detailMinimumSize);
-        setPreferredSize(detailPreferredSize);
-
-    }
-
 }

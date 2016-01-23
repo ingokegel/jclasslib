@@ -31,6 +31,12 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
     private java.util.List<DetailPaneEntry> detailPaneEntries;
     private JScrollPane scrollPane;
 
+
+    @Override
+    public JComponent getWrapper() {
+        return scrollPane;
+    }
+
     /**
         Constructor.
         @param services the associated browser services.

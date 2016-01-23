@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.detail.AttributeDetailPane
 import org.gjt.jclasslib.browser.detail.ListDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.GUIHelper
@@ -31,7 +30,7 @@ class ClassAttributeHyperlinkListener(private val services: BrowserServices, pri
             scrollPathToVisible(targetPath)
         }
 
-        val detailPane = services.browserComponent.detailPane.currentDetailPane as AttributeDetailPane
+        val detailPane = services.browserComponent.detailPane.attributeDetailPane
         (detailPane.getAttributeDetailPane(attributeInfoClass) as ListDetailPane).selectIndex(index)
     }
 

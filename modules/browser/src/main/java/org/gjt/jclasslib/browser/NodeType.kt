@@ -7,19 +7,53 @@
 
 package org.gjt.jclasslib.browser
 
+import org.gjt.jclasslib.browser.detail.*
+
 enum class NodeType {
-    NO_CONTENT,
-    GENERAL,
-    CONSTANT_POOL,
-    INTERFACE,
-    METHODS,
-    FIELDS,
-    FIELD,
-    METHOD,
-    ATTRIBUTE,
-    ANNOTATION,
-    TYPE_ANNOTATION,
-    ELEMENTVALUEPAIR,
-    ELEMENTVALUE,
-    ARRAYELEMENTVALUE
+    NO_CONTENT {
+        override fun createDetailPanel(services: BrowserServices) = EmptyDetailPane(services)
+    },
+    GENERAL {
+        override fun createDetailPanel(services: BrowserServices) = GeneralDetailPane(services)
+    },
+    CONSTANT_POOL {
+        override fun createDetailPanel(services: BrowserServices) = ConstantPoolDetailPane(services)
+    },
+    INTERFACE {
+        override fun createDetailPanel(services: BrowserServices) = InterfaceDetailPane(services)
+    },
+    METHODS {
+        override fun createDetailPanel(services: BrowserServices) = EmptyDetailPane(services)
+    },
+    FIELDS {
+        override fun createDetailPanel(services: BrowserServices) = EmptyDetailPane(services)
+    },
+    FIELD {
+        override fun createDetailPanel(services: BrowserServices) =
+                ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD)
+    },
+    METHOD {
+        override fun createDetailPanel(services: BrowserServices) =
+                ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD)
+    },
+    ATTRIBUTE {
+        override fun createDetailPanel(services: BrowserServices) = AttributeDetailPane(services)
+    },
+    ANNOTATION {
+        override fun createDetailPanel(services: BrowserServices) = AnnotationDetailPane(services)
+    },
+    TYPE_ANNOTATION {
+        override fun createDetailPanel(services: BrowserServices) = TypeAnnotationDetailPane(services)
+    },
+    ELEMENTVALUEPAIR {
+        override fun createDetailPanel(services: BrowserServices) = ElementValueDetailPane(services)
+    },
+    ELEMENTVALUE {
+        override fun createDetailPanel(services: BrowserServices) = ElementValueDetailPane(services)
+    },
+    ARRAYELEMENTVALUE {
+        override fun createDetailPanel(services: BrowserServices) = ArrayElementValueDetailPane(services)
+    };
+
+    abstract fun createDetailPanel(services: BrowserServices): AbstractDetailPane
 }

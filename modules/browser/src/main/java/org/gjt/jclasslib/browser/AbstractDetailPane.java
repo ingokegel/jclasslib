@@ -66,6 +66,10 @@ public abstract class AbstractDetailPane extends JPanel {
         return null;
     }
 
+    public JComponent getWrapper() {
+        return this;
+    }
+
     /**
         Setup the detail pane at the beginning of its life cycle.
      */
