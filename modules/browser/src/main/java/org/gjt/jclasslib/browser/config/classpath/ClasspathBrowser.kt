@@ -135,7 +135,7 @@ class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: S
                 weightx = 1.0
                 anchor = GridBagConstraints.NORTHWEST
             })
-            add(tree, GridBagConstraints().apply {
+            add(JScrollPane(tree), GridBagConstraints().apply {
                 gridy = 1
                 insets = Insets(5, 0, 5, 0)
                 weightx = 1.0

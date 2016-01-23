@@ -104,7 +104,7 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
 
     public void show(TreePath treePath) {
 
-        CodeAttribute attribute = (CodeAttribute)findAttribute(treePath);
+        CodeAttribute attribute = (CodeAttribute)getAttribute(treePath);
         if (byteCodeDisplay.getCodeAttribute() != attribute) {
 
             BrowserComponent browserComponent = services.getBrowserComponent();

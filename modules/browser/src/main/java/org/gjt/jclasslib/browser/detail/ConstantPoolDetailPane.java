@@ -101,8 +101,7 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
     
     public void show(TreePath treePath) {
 
-        int constantPoolIndex = ((BrowserTreeNode)treePath.getLastPathComponent()).getIndex();
-        Constant constantPoolEntry = services.getClassFile().getConstantPool()[constantPoolIndex];
+        Constant constantPoolEntry = (Constant)((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
         
         String paneName = null;
         if (constantPoolEntry instanceof ConstantUtf8Info) {

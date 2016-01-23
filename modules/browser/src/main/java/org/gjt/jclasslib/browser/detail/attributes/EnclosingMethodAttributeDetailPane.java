@@ -46,7 +46,7 @@ public class EnclosingMethodAttributeDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        EnclosingMethodAttribute attribute = (EnclosingMethodAttribute)findAttribute(treePath);
+        EnclosingMethodAttribute attribute = (EnclosingMethodAttribute)getAttribute(treePath);
         constantPoolHyperlink(lblClass,
                 lblClassVerbose,
                 attribute.getClassInfoIndex());

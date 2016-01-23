@@ -41,7 +41,7 @@ public class SignatureAttributeDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        SignatureAttribute attribute = (SignatureAttribute)findAttribute(treePath);
+        SignatureAttribute attribute = (SignatureAttribute)getAttribute(treePath);
         constantPoolHyperlink(lblSignature,
                 lblSignatureVerbose,
                 attribute.getSignatureIndex());

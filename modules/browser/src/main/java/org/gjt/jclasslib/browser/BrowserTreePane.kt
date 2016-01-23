@@ -5,508 +5,270 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.structures.*;
-import org.gjt.jclasslib.structures.attributes.*;
-import org.gjt.jclasslib.structures.constants.ConstantLargeNumeric;
-import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue;
-import org.gjt.jclasslib.structures.elementvalues.ArrayElementValue;
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
-import org.gjt.jclasslib.structures.elementvalues.ElementValuePair;
+import org.gjt.jclasslib.structures.*
+import org.gjt.jclasslib.structures.Annotation
+import org.gjt.jclasslib.structures.attributes.*
+import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
+import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue
+import org.gjt.jclasslib.structures.elementvalues.ArrayElementValue
+import org.gjt.jclasslib.structures.elementvalues.ElementValue
+import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
+import java.awt.BorderLayout
+import java.awt.Dimension
+import java.util.*
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTree
+import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.TreeNode
+import javax.swing.tree.TreePath
+import javax.swing.tree.TreeSelectionModel
 
-import javax.swing.*;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
-/**
- * The pane containing the tree structure for the class file shown in the
- * child window.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>, <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
- */
-public class BrowserTreePane extends JPanel {
+    private val categoryToPath = EnumMap<NodeType, TreePath>(NodeType::class.java)
 
-    private static final Dimension treeMinimumSize = new Dimension(100, 150);
-    private static final Dimension treePreferredSize = new Dimension(250, 150);
-
-    private BrowserServices services;
-    private JTree tree;
-    private Map<NodeType, TreePath> categoryToPath = new HashMap<NodeType, TreePath>();
-
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services.
-     */
-    public BrowserTreePane(BrowserServices services) {
-        this.services = services;
-        setLayout(new BorderLayout());
-        setupComponent();
+    val tree: JTree = JTree(buildTreeModel()).apply {
+        selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
+        isRootVisible = false
+        showsRootHandles = true
+        transferHandler = BrowserNodeTransferHandler(services)
     }
 
-    /**
-     * Get the tree view.
-     *
-     * @return the tree view
-     */
-    public JTree getTree() {
-        return tree;
+    init {
+        layout = BorderLayout()
+        add(JScrollPane(tree).apply {
+            minimumSize = Dimension(100, 150)
+            preferredSize = Dimension(250, 150)
+        }, BorderLayout.CENTER)
     }
 
-    /**
-     * Get the tree path for a given category.
-     *
-     * @param category the category. One the <tt>BrowserTree.NODE_</tt> constants.
-     * @return the tree path.
-     */
-    public TreePath getPathForCategory(NodeType category) {
-        return categoryToPath.get(category);
+    fun getPathForCategory(category: NodeType): TreePath {
+        return categoryToPath[category]!!
     }
 
-    /**
-     * Show the specified method if it exists.
-     *
-     * @param methodName      the name of the method
-     * @param methodSignature the signature of the method (in class file format)
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    public void showMethod(String methodName, String methodSignature) {
+    fun showMethod(methodName: String, methodSignature: String) {
+        val methodsPath = categoryToPath[NodeType.METHOD] ?: return
+        val methodsNode = methodsPath.lastPathComponent as TreeNode
 
-        TreePath methodsPath = categoryToPath.get(NodeType.METHOD);
-        if (methodsPath == null) {
-            return;
+        methodsNode.children().iterator().forEach { treeNode ->
+            treeNode as BrowserTreeNode
+            val method = treeNode.element as MethodInfo
+            if (method.name == methodName && method.descriptor.startsWith(methodSignature)) {
+                val path = getMethodDisplayPath(methodsPath, method, treeNode)
+                tree.apply {
+                    makeVisible(path)
+                    scrollPathToVisible(path)
+                    selectionPath = path
+                }
+            }
         }
-        MethodInfo[] methods = services.getClassFile().getMethods();
-        TreeNode methodsNode = (TreeNode)methodsPath.getLastPathComponent();
-        for (int i = 0; i < methodsNode.getChildCount(); i++) {
-            BrowserTreeNode treeNode = (BrowserTreeNode)methodsNode.getChildAt(i);
-            MethodInfo testMethod = methods[treeNode.getIndex()];
-            try {
-                if (testMethod.getName().equals(methodName) && testMethod.getDescriptor().startsWith(methodSignature)) {
-                    TreePath path = methodsPath.pathByAddingChild(treeNode);
-                    BrowserTreeNode codeNode = findCodeNode(treeNode, testMethod);
-                    if (codeNode != null) {
-                        path = path.pathByAddingChild(codeNode);
+    }
+
+    private fun getMethodDisplayPath(methodsPath: TreePath, method: MethodInfo, treeNode: BrowserTreeNode): TreePath {
+        val path = methodsPath.pathByAddingChild(treeNode)
+        val codeNode = findCodeNode(treeNode, method)
+        if (codeNode != null) {
+            return path.pathByAddingChild(codeNode)
+        } else {
+            return path
+        }
+    }
+
+    fun rebuild() {
+        categoryToPath.clear()
+        tree.apply {
+            clearSelection()
+            model = buildTreeModel()
+        }
+    }
+
+    private fun buildTreeModel() = DefaultTreeModel(BrowserRootNode().apply {
+        add(NodeType.GENERAL, BrowserTreeNode("General Information", NodeType.GENERAL))
+        add(NodeType.CONSTANT_POOL, buildConstantPoolNode())
+        add(NodeType.INTERFACE, buildInterfacesNode())
+        add(NodeType.FIELD, buildFieldsNode())
+        add(NodeType.METHOD, buildMethodsNode())
+        add(NodeType.ATTRIBUTE, buildAttributesNode())
+    })
+
+    private inner class BrowserRootNode : BrowserTreeNode("Class file") {
+        fun add(nodeType: NodeType, node: BrowserTreeNode) {
+            add(node)
+            categoryToPath.put(nodeType, TreePath(arrayOf<Any>(this, node)))
+        }
+    }
+
+    private fun buildConstantPoolNode() = BrowserTreeNode("Constant Pool").apply {
+        val constantPool = services.classFile.constantPool
+        val constantPoolCount = constantPool.size
+        constantPool.forEachIndexed { i, constant ->
+            if (i > 0) {
+                add(if (constant is ConstantPlaceholder) {
+                    BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + "(large numeric continued)", NodeType.NO_CONTENT)
+                } else {
+                    try {
+                        BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + constant.constantType.verbose, NodeType.CONSTANT_POOL, constant)
+                    } catch (ex: InvalidByteCodeException) {
+                        buildNullNode()
                     }
+                })
+            }
+        }
+    }
 
-                    tree.makeVisible(path);
-                    tree.scrollPathToVisible(path);
-                    tree.setSelectionPath(path);
-                    return;
+    private fun buildInterfacesNode() = BrowserTreeNode("Interfaces").apply {
+        services.classFile.interfaces.forEachIndexed { i, interfaceIndex ->
+            add(BrowserTreeNode("Interface " + i, NodeType.INTERFACE, interfaceIndex))
+        }
+    }
+
+    private fun buildFieldsNode(): BrowserTreeNode =
+            buildClassMembersNode("Fields", NodeType.FIELDS, NodeType.FIELD, services.classFile.fields)
+
+    private fun buildMethodsNode(): BrowserTreeNode =
+            buildClassMembersNode("Methods", NodeType.METHODS, NodeType.METHOD, services.classFile.methods)
+
+    private fun buildClassMembersNode(text: String, containerType: NodeType, childType: NodeType, classMembers: Array<out ClassMember>) =
+            BrowserTreeNode(text, containerType).apply {
+                val classMembersCount = classMembers.size
+                classMembers.forEachIndexed { i, classMember ->
+                    try {
+                        val name = getFormattedIndex(i, classMembersCount) + classMember.name
+                        add(BrowserTreeNode(name, childType, classMember).apply {
+                            addAttributeNodes(classMember)
+                        })
+                    } catch (ex: InvalidByteCodeException) {
+                        add(buildNullNode())
+                    }
                 }
-            } catch (InvalidByteCodeException ex) {
             }
+
+    private fun buildAttributesNode() = BrowserTreeNode("Attributes").apply {
+        addAttributeNodes(services.classFile)
+    }
+
+    private fun buildNullNode() = BrowserTreeNode("[error] null")
+
+    private fun BrowserTreeNode.addAttributeNodes(structure: AttributeContainer) {
+        val attributes = structure.attributes
+        attributes.forEachIndexed { i, attributeInfo ->
+            addSingleAttributeNode(attributeInfo, i, attributes.size)
         }
     }
 
-    /**
-     * Rebuild the tree from the <tt>ClassFile</tt> object.
-     */
-    public void rebuild() {
-        categoryToPath.clear();
-        tree.clearSelection();
-        tree.setModel(buildTreeModel());
-    }
-
-    private void setupComponent() {
-
-        JScrollPane treeScrollPane = new JScrollPane(buildTree());
-        treeScrollPane.setMinimumSize(treeMinimumSize);
-        treeScrollPane.setPreferredSize(treePreferredSize);
-
-        add(treeScrollPane, BorderLayout.CENTER);
-    }
-
-    private JTree buildTree() {
-
-        tree = new JTree(buildTreeModel());
-
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.setRootVisible(false);
-        tree.setShowsRootHandles(true);
-        tree.setTransferHandler(new BrowserNodeTransferHandler(services));
-
-        return tree;
-    }
-
-    private TreeModel buildTreeModel() {
-        BrowserTreeNode rootNode = buildRootNode();
-        return new DefaultTreeModel(rootNode);
-    }
-
-    private BrowserTreeNode buildRootNode() {
-
-        BrowserTreeNode rootNode = new BrowserTreeNode("Class file");
-        ClassFile classFile = services.getClassFile();
-        if (classFile != null) {
-
-            BrowserTreeNode generalNode = new BrowserTreeNode("General Information", NodeType.GENERAL);
-            BrowserTreeNode constantPoolNode = buildConstantPoolNode();
-            BrowserTreeNode interfacesNode = buildInterfacesNode();
-            BrowserTreeNode fieldsNode = buildFieldsNode();
-            BrowserTreeNode methodsNode = buildMethodsNode();
-            BrowserTreeNode attributesNode = buildAttributesNode();
-
-            rootNode.add(generalNode);
-            rootNode.add(constantPoolNode);
-            rootNode.add(interfacesNode);
-            rootNode.add(fieldsNode);
-            rootNode.add(methodsNode);
-            rootNode.add(attributesNode);
-
-            categoryToPath.put(NodeType.GENERAL, new TreePath(new Object[]{rootNode, generalNode}));
-            categoryToPath.put(NodeType.CONSTANT_POOL, new TreePath(new Object[]{rootNode, constantPoolNode}));
-            categoryToPath.put(NodeType.INTERFACE, new TreePath(new Object[]{rootNode, interfacesNode}));
-            categoryToPath.put(NodeType.FIELD, new TreePath(new Object[]{rootNode, fieldsNode}));
-            categoryToPath.put(NodeType.METHOD, new TreePath(new Object[]{rootNode, methodsNode}));
-            categoryToPath.put(NodeType.ATTRIBUTE, new TreePath(new Object[]{rootNode, attributesNode}));
-        }
-
-        return rootNode;
-    }
-
-    private BrowserTreeNode buildConstantPoolNode() {
-
-        BrowserTreeNode constantPoolNode = new BrowserTreeNode("Constant Pool");
-
-        Constant[] constantPool = services.getClassFile().getConstantPool();
-        int constantPoolCount = constantPool.length;
-
-        for (int i = 1; i < constantPoolCount; i++) {
-            i += addConstantPoolEntry(constantPool[i], i, constantPoolCount, constantPoolNode);
-        }
-
-        return constantPoolNode;
-    }
-
-    private int addConstantPoolEntry(Constant constantPoolEntry, int index, int constantPoolCount, BrowserTreeNode constantPoolNode) {
-
-        if (constantPoolEntry == null) {
-            constantPoolNode.add(buildNullNode());
-        } else {
-            BrowserTreeNode entryNode =
-                    new BrowserTreeNode(getFormattedIndex(index, constantPoolCount) +
-                    constantPoolEntry.getConstantType().getVerbose(),
-                            NodeType.CONSTANT_POOL,
-                            index, constantPoolEntry);
-
-            constantPoolNode.add(entryNode);
-            if (constantPoolEntry instanceof ConstantLargeNumeric) {
-                addConstantPoolContinuedEntry(index + 1,
-                        constantPoolCount,
-                        constantPoolNode);
-                return 1;
-            }
-        }
-        return 0;
-    }
-
-    private void addConstantPoolContinuedEntry(int index, int constantPoolCount, BrowserTreeNode constantPoolNode) {
-        BrowserTreeNode entryNode =
-                new BrowserTreeNode(getFormattedIndex(index, constantPoolCount) +
-                "(large numeric continued)",
-                        NodeType.NO_CONTENT);
-        constantPoolNode.add(entryNode);
-    }
-
-    private BrowserTreeNode buildInterfacesNode() {
-
-        BrowserTreeNode interfacesNode = new BrowserTreeNode("Interfaces");
-        int[] interfaces = services.getClassFile().getInterfaces();
-        int interfacesCount = interfaces.length;
-        BrowserTreeNode entryNode;
-        for (int i = 0; i < interfacesCount; i++) {
-            entryNode = new BrowserTreeNode("Interface " + i,
-                    NodeType.INTERFACE,
-                    i);
-            interfacesNode.add(entryNode);
-        }
-
-        return interfacesNode;
-    }
-
-    private BrowserTreeNode buildFieldsNode() {
-
-        return buildClassMembersNode("Fields",
-                NodeType.FIELDS,
-                NodeType.FIELD,
-                services.getClassFile().getFields());
-    }
-
-    private BrowserTreeNode buildMethodsNode() {
-
-        return buildClassMembersNode("Methods",
-                NodeType.METHODS,
-                NodeType.METHOD,
-                services.getClassFile().getMethods());
-    }
-
-    private BrowserTreeNode buildClassMembersNode(String text, NodeType containerType, NodeType childType, ClassMember[] classMembers) {
-
-        BrowserTreeNode classMemberNode = new BrowserTreeNode(text, containerType);
-        int classMembersCount = classMembers.length;
-
-        for (int i = 0; i < classMembersCount; i++) {
-            addClassMembersNode(classMembers[i],
-                    i,
-                    classMembersCount,
-                    childType,
-                    classMemberNode);
-        }
-
-        return classMemberNode;
-    }
-
-    private void addClassMembersNode(ClassMember classMember, int index, int classMembersCount, NodeType type, BrowserTreeNode classMemberNode) {
-
-        if (classMember == null) {
-            classMemberNode.add(buildNullNode());
-        } else {
-            try {
-                BrowserTreeNode entryNode =
-                        new BrowserTreeNode(getFormattedIndex(index, classMembersCount) +
-                        classMember.getName(),
-                                type,
-                                index, classMember);
-
-                classMemberNode.add(entryNode);
-                addAttributeNodes(entryNode, classMember);
-
-            } catch (InvalidByteCodeException ex) {
-                classMemberNode.add(buildNullNode());
-            }
-        }
-    }
-
-    private BrowserTreeNode buildAttributesNode() {
-        BrowserTreeNode attributesNode = new BrowserTreeNode("Attributes");
-
-        addAttributeNodes(attributesNode, services.getClassFile());
-
-        return attributesNode;
-    }
-
-    private BrowserTreeNode buildNullNode() {
-
-        return new BrowserTreeNode("[error] null");
-    }
-
-    private void addAttributeNodes(BrowserTreeNode parentNode, AttributeContainer structure) {
-
-        AttributeInfo[] attributes = structure.getAttributes();
-        int attributesCount = attributes.length;
-        for (int i = 0; i < attributesCount; i++) {
-            addSingleAttributeNode(attributes[i],
-                    i,
-                    attributesCount,
-                    parentNode);
-        }
-    }
-
-    private void addSingleAttributeNode(AttributeInfo attribute, int index, int attributesCount, BrowserTreeNode parentNode) {
-
-        if (attribute == null) {
-            parentNode.add(buildNullNode());
-        } else {
-            try {
-                BrowserTreeNode entryNode =
-                        new BrowserTreeNode(getFormattedIndex(index, attributesCount) +
-                        attribute.getName(),
-                                NodeType.ATTRIBUTE,
-                                index, attribute);
-
-                parentNode.add(entryNode);
-                if (attribute instanceof RuntimeAnnotationsAttribute) {
-                    addRuntimeAnnotation(entryNode, (RuntimeAnnotationsAttribute)attribute);
-                } else if (attribute instanceof RuntimeParameterAnnotationsAttribute) {
-                    addRuntimeParameterAnnotation(entryNode, ((RuntimeParameterAnnotationsAttribute)attribute));
-                } else if (attribute instanceof AnnotationDefaultAttribute) {
-                    addSingleElementValueEntryNode(((AnnotationDefaultAttribute)attribute).getDefaultValue(), 0, 1, entryNode);
-                } else if (attribute instanceof RuntimeTypeAnnotationsAttribute) {
-                    addRuntimeTypeAnnotation(entryNode, (RuntimeTypeAnnotationsAttribute)attribute);
-                } else if (attribute instanceof AttributeContainer) {
-                    addAttributeNodes(entryNode, (AttributeContainer)attribute);
+    private fun BrowserTreeNode.addSingleAttributeNode(attribute: AttributeInfo, index: Int, attributesCount: Int) {
+        try {
+            val name = getFormattedIndex(index, attributesCount) + attribute.name
+            add(BrowserTreeNode(name, NodeType.ATTRIBUTE, attribute).apply {
+                when (attribute) {
+                    is RuntimeAnnotationsAttribute -> addRuntimeAnnotations(attribute)
+                    is RuntimeParameterAnnotationsAttribute -> addRuntimeParameterAnnotation(attribute)
+                    is AnnotationDefaultAttribute -> addSingleElementValueEntryNode(attribute.defaultValue, 0, 1)
+                    is RuntimeTypeAnnotationsAttribute -> addRuntimeTypeAnnotation(attribute)
+                    is AttributeContainer -> addAttributeNodes(attribute)
                 }
+            })
+        } catch (ex: InvalidByteCodeException) {
+            add(buildNullNode())
+        }
+    }
 
-            } catch (InvalidByteCodeException ex) {
-                parentNode.add(buildNullNode());
+    private fun getFormattedIndex(index: Int, maxIndex: Int): String {
+        val paddedIndex = index.toString().padStart((maxIndex - 1).toString().length, '0')
+        return "[$paddedIndex] "
+    }
+
+    private fun findCodeNode(treeNode: BrowserTreeNode, methodInfo: MethodInfo): BrowserTreeNode? {
+        return methodInfo.attributes.indexOfFirst { it is CodeAttribute }.let { index ->
+            when (index) {
+                -1 -> null
+                else -> treeNode.getChildAt(index) as BrowserTreeNode
             }
         }
     }
 
-
-    private String getFormattedIndex(int index, int maxIndex) {
-
-        StringBuilder buffer = new StringBuilder("[");
-        String indexString = String.valueOf(index);
-        String maxIndexString = String.valueOf(maxIndex - 1);
-        for (int i = 0; i < maxIndexString.length() - indexString.length(); i++) {
-            buffer.append("0");
+    private fun BrowserTreeNode.addRuntimeAnnotations(attribute : RuntimeAnnotationsAttribute) {
+        val annotations = attribute.runtimeAnnotations
+        annotations.forEachIndexed { i, annotation ->
+            addSingleAnnotationNode(annotation, i, annotations.size)
         }
-        buffer.append(indexString);
-        buffer.append("]");
-        buffer.append(" ");
-
-        return buffer.toString();
     }
 
-    private BrowserTreeNode findCodeNode(BrowserTreeNode treeNode, MethodInfo methodInfo) {
-        AttributeInfo[] attributes = methodInfo.getAttributes();
-        for (int i = 0; i < attributes.length; i++) {
-            if (attributes[i] instanceof CodeAttribute) {
-                return (BrowserTreeNode)treeNode.getChildAt(i);
+    private fun BrowserTreeNode.addRuntimeParameterAnnotation(attribute: RuntimeParameterAnnotationsAttribute) {
+        val parameterAnnotations = attribute.parameterAnnotations
+        parameterAnnotations.forEachIndexed { i, annotation ->
+            addParameterAnnotationNode(annotation, i, parameterAnnotations.size)
+        }
+    }
+
+    private fun BrowserTreeNode.addParameterAnnotationNode(parameterAnnotations: ParameterAnnotations, index: Int, parameterAnnotationsCount: Int) {
+        val name = getFormattedIndex(index, parameterAnnotationsCount) + "Parameter annotation"
+        add(BrowserTreeNode(name, NodeType.NO_CONTENT, parameterAnnotations).apply {
+            val annotations = parameterAnnotations.runtimeAnnotations
+            annotations.forEachIndexed { i, annotation ->
+                addSingleAnnotationNode(annotation, i, annotations.size)
             }
-        }
-        return null;
+        })
     }
 
+    private fun BrowserTreeNode.addSingleAnnotationNode(annotation: Annotation, index: Int, attributesCount: Int) {
+        val name = getFormattedIndex(index, attributesCount) + "Annotation"
+        add(BrowserTreeNode(name, NodeType.ANNOTATION, annotation).apply {
+            addElementValuePairEntry(annotation)
+        })
+    }
 
-    private void addRuntimeAnnotation(BrowserTreeNode parentNode, RuntimeAnnotationsAttribute attribute) {
-
-        Annotation[] annotations = attribute.getRuntimeAnnotations();
-        int annotationsCount = annotations.length;
-        for (int i = 0; i < annotationsCount; i++) {
-            addSingleAnnotationNode(annotations[i], i, annotationsCount, parentNode);
+    private fun BrowserTreeNode.addRuntimeTypeAnnotation(attribute: RuntimeTypeAnnotationsAttribute) {
+        val annotations = attribute.runtimeAnnotations
+        annotations.forEachIndexed { i, annotation ->
+            addSingleTypeAnnotationNode(annotation, i, annotations.size)
         }
     }
 
-    private void addRuntimeParameterAnnotation(BrowserTreeNode parentNode, RuntimeParameterAnnotationsAttribute attribute) {
-        ParameterAnnotations[] parameterAnnotations = attribute.getParameterAnnotations();
-        int annotationsCount = parameterAnnotations.length;
-        for (int i = 0; i < annotationsCount; i++) {
-            addParameterAnnotationNode(parameterAnnotations[i], i, annotationsCount, parentNode);
-        }
-
+    private fun BrowserTreeNode.addSingleTypeAnnotationNode(annotation: TypeAnnotation, index: Int, attributesCount: Int) {
+        val name = getFormattedIndex(index, attributesCount) + annotation.targetType.toString()
+        add(BrowserTreeNode(name, NodeType.TYPE_ANNOTATION, annotation).apply {
+            addSingleAnnotationNode(annotation.annotation, 0, 1)
+        })
     }
 
-    private void addParameterAnnotationNode(ParameterAnnotations parameterAnnotations, int index, int parameterAnnotationsCount, BrowserTreeNode parentNode) {
+    private fun BrowserTreeNode.addElementValuePairEntry(annotation: AnnotationData) {
+        val entries = annotation.elementValuePairEntries
+        entries.forEachIndexed { i, elementValuePair ->
+            addSingleElementValuePairEntryNode(elementValuePair, i, entries.size)
+        }
+    }
 
-        if (parameterAnnotations == null) {
-            parentNode.add(buildNullNode());
-        } else {
-            BrowserTreeNode containerNode =
-                    new BrowserTreeNode(getFormattedIndex(index, parameterAnnotationsCount) +
-                        "Parameter annotation",
-                            NodeType.NO_CONTENT,
-                            index, parameterAnnotations);
-            parentNode.add(containerNode);
-            Annotation[] annotations = parameterAnnotations.getRuntimeAnnotations();
-            int annotationsCount = annotations.length;
-            for (int i = 0; i < annotationsCount; i++) {
-                addSingleAnnotationNode(annotations[i], i, annotationsCount, containerNode);
+    private fun BrowserTreeNode.addArrayElementValueEntry(elementValue: ArrayElementValue) {
+        val entries = elementValue.elementValueEntries
+        entries.forEachIndexed { i, elementValue ->
+            addSingleElementValueEntryNode(elementValue, i, entries.size)
+        }
+    }
+
+    private fun BrowserTreeNode.addSingleElementValuePairEntryNode(elementValuePair: ElementValuePair, index: Int, attributesCount: Int) {
+        val name = getFormattedIndex(index, attributesCount) + elementValuePair.entryName
+        add(BrowserTreeNode(name, NodeType.ELEMENTVALUEPAIR, elementValuePair).apply {
+            addSingleElementValueEntryNode(elementValuePair.elementValue, 0, 1)
+        })
+    }
+
+    private fun BrowserTreeNode.addSingleElementValueEntryNode(elementValue: ElementValue, index: Int, attributesCount: Int) {
+        val prefix = if (attributesCount > 1) getFormattedIndex(index, attributesCount) else ""
+        val nodeType = when (elementValue) {
+            is AnnotationElementValue -> NodeType.ANNOTATION
+            is ArrayElementValue -> NodeType.ARRAYELEMENTVALUE
+            else -> NodeType.ELEMENTVALUE
+        }
+        add(BrowserTreeNode(prefix + elementValue.entryName, nodeType, elementValue).apply {
+            if (elementValue is AnnotationElementValue) {
+                addElementValuePairEntry(elementValue)
+            } else if (elementValue is ArrayElementValue) {
+                addArrayElementValueEntry(elementValue)
             }
-        }
-
-    }
-
-    private void addSingleAnnotationNode(Annotation annotation, int index, int attributesCount, BrowserTreeNode parentNode) {
-
-        if (annotation == null) {
-            parentNode.add(buildNullNode());
-        } else {
-            BrowserTreeNode entryNode =
-                    new BrowserTreeNode(getFormattedIndex(index, attributesCount) +
-                        "Annotation",
-                            NodeType.ANNOTATION,
-                            index,
-                            annotation);
-            parentNode.add(entryNode);
-            addElementValuePairEntry(entryNode, annotation);
-        }
-    }
-
-
-	private void addRuntimeTypeAnnotation(BrowserTreeNode parentNode, RuntimeTypeAnnotationsAttribute attribute) {
-
-		TypeAnnotation[] annotations = attribute.getRuntimeAnnotations();
-		int annotationsCount = annotations.length;
-		for (int i = 0; i < annotationsCount; i++) {
-			addSingleTypeAnnotationNode(annotations[i], i, annotationsCount, parentNode);
-		}
-	}
-
-	private void addSingleTypeAnnotationNode(TypeAnnotation annotation, int index, int attributesCount, BrowserTreeNode parentNode) {
-
-		if (annotation == null) {
-			parentNode.add(buildNullNode());
-		} else {
-			BrowserTreeNode entryNode = new BrowserTreeNode(getFormattedIndex(
-					index, attributesCount) + annotation.getTargetType().toString(),
-					NodeType.TYPE_ANNOTATION, index, annotation);
-			parentNode.add(entryNode);
-			addSingleAnnotationNode(annotation.getAnnotation(), 0, 1, entryNode);
-		}
-	}
-
-    private void addElementValuePairEntry(BrowserTreeNode parentNode, AnnotationData annotation) {
-
-        ElementValuePair[] entries = annotation.getElementValuePairEntries();
-        int entriesCount = entries.length;
-        for (int i = 0; i < entriesCount; i++) {
-            addSingleElementValuePairEntryNode(entries[i],
-                    i,
-                    entriesCount,
-                    parentNode);
-        }
-    }
-
-    private void addArrayElementValueEntry(BrowserTreeNode parentNode, ArrayElementValue elementValue) {
-
-        ElementValue[] entries = elementValue.getElementValueEntries();
-        int entriesCount = entries.length;
-        for (int i = 0; i < entriesCount; i++) {
-            addSingleElementValueEntryNode(entries[i],
-                    i,
-                    entriesCount,
-                    parentNode);
-        }
-    }
-
-
-    private void addSingleElementValuePairEntryNode(ElementValuePair elementValuePair, int index, int attributesCount, BrowserTreeNode parentNode) {
-
-        if (elementValuePair == null) {
-            parentNode.add(buildNullNode());
-        } else {
-            BrowserTreeNode entryNode =
-                    new BrowserTreeNode(getFormattedIndex(index, attributesCount) +
-                    elementValuePair.getEntryName(),
-                            NodeType.ELEMENTVALUEPAIR,
-                            index,
-                            elementValuePair);
-            parentNode.add(entryNode);
-            addSingleElementValueEntryNode(elementValuePair.getElementValue(), 0, 1, entryNode);
-        }
-    }
-
-    private void addSingleElementValueEntryNode(ElementValue elementValue, int index, int attributesCount, BrowserTreeNode parentNode) {
-
-        if (elementValue == null) {
-            parentNode.add(buildNullNode());
-        } else {
-            String prefix = attributesCount > 1 ?
-                    getFormattedIndex(index, attributesCount) : "";
-            NodeType nodeType = NodeType.ELEMENTVALUE;
-            if (elementValue instanceof AnnotationElementValue) {
-                nodeType = NodeType.ANNOTATION;
-            } else if (elementValue instanceof ArrayElementValue) {
-                nodeType = NodeType.ARRAYELEMENTVALUE;
-            }
-
-            BrowserTreeNode entryNode =
-                    new BrowserTreeNode(prefix + elementValue.getEntryName(),
-                            nodeType, index, elementValue);
-
-            parentNode.add(entryNode);
-            if (elementValue instanceof AnnotationElementValue) {
-                addElementValuePairEntry(entryNode, (AnnotationElementValue)elementValue);
-            } else if (elementValue instanceof ArrayElementValue) {
-                addArrayElementValueEntry(entryNode, (ArrayElementValue)elementValue);
-            }
-        }
+        })
     }
 }

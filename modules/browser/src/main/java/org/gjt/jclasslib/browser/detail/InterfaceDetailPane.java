@@ -42,7 +42,7 @@ public class InterfaceDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        int constantPoolIndex = services.getClassFile().getInterfaces()[getIndex(treePath)];
+        int constantPoolIndex = (Integer)getElement(treePath);
         
         constantPoolHyperlink(lblInterface,
                               lblInterfaceVerbose,

@@ -41,7 +41,7 @@ public class RuntimeAnnotationsAttributeDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         AnnotationHolder ah =
-                (AnnotationHolder)findAttribute(treePath);
+                (AnnotationHolder)getAttribute(treePath);
 
         lblAnnotationEntries.setText(String.valueOf(ah.getNumberOfAnnotations()));
 

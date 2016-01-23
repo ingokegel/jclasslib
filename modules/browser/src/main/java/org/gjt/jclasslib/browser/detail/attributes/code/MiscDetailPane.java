@@ -50,7 +50,7 @@ public class MiscDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        CodeAttribute attribute = (CodeAttribute)findAttribute(treePath);
+        CodeAttribute attribute = (CodeAttribute)getAttribute(treePath);
 
         lblMaxStack.setText(attribute.getMaxStack());
         lblMaxLocals.setText(attribute.getMaxLocals());

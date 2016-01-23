@@ -20,43 +20,19 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
 
 
     private NodeType type;
-    private int index;
     private Object element;
 
-    /**
-     * Constructor.
-     *
-     * @param text the display text.
-     */
     public BrowserTreeNode(String text) {
         this(text, NodeType.NO_CONTENT);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param text the display text.
-     * @param type the node type. One of the <tt>NODE_</tt> constants.
-     */
     public BrowserTreeNode(String text, NodeType type) {
-        this(text, type, 0);
+        this(text, type, null);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param text  the display text.
-     * @param type  the node type. One of the <tt>NODE_</tt> constants.
-     * @param index the logical index of this node.
-     */
-    public BrowserTreeNode(String text, NodeType type, int index) {
-        this(text, type, index, null);
-    }
-
-    public BrowserTreeNode(String text, NodeType type, int index, Object element) {
+    public BrowserTreeNode(String text, NodeType type, Object element) {
         super(text);
         this.type = type;
-        this.index = index;
         this.element = element;
     }
 
@@ -69,15 +45,8 @@ public class BrowserTreeNode extends DefaultMutableTreeNode {
         return type;
     }
 
-    /**
-     * Get the index of the node among its siblings. This information <i>could</i>
-     * be retrieved from a tree but is important structural information and
-     * should not be left to chance.
-     *
-     * @return the index
-     */
     public int getIndex() {
-        return index;
+        return getParent().getIndex(this);
     }
 
     /**

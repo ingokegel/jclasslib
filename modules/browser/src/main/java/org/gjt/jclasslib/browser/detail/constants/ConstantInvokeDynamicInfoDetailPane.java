@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute;
 import org.gjt.jclasslib.structures.constants.ConstantInvokeDynamicInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
@@ -48,22 +47,16 @@ public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDet
 
     public void show(TreePath treePath) {
 
-        int constantPoolIndex = constantPoolIndex(treePath);
+        ConstantInvokeDynamicInfo entry = getConstant(treePath, ConstantInvokeDynamicInfo.class);
 
-        try {
-            ConstantInvokeDynamicInfo entry = (ConstantInvokeDynamicInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantInvokeDynamicInfo.class);
+        constantPoolHyperlink(lblNameAndType,
+            lblNameAndTypeVerbose,
+            entry.getNameAndTypeIndex());
 
-            constantPoolHyperlink(lblNameAndType,
-                lblNameAndTypeVerbose,
-                entry.getNameAndTypeIndex());
+        classAttributeIndexHyperlink(lblBootstrap,
+            null,
+            entry.getBootstrapMethodAttributeIndex(), BootstrapMethodsAttribute.class, "BootstrapMethods #");
 
-            classAttributeIndexHyperlink(lblBootstrap,
-                null,
-                entry.getBootstrapMethodAttributeIndex(), BootstrapMethodsAttribute.class, "BootstrapMethods #");
-
-        } catch (InvalidByteCodeException ex) {
-            lblNameAndTypeVerbose.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
-        }
 
         super.show(treePath);
 

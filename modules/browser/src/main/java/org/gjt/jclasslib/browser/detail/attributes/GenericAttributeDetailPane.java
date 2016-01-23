@@ -47,7 +47,7 @@ public class GenericAttributeDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        AttributeInfo attribute = findAttribute(treePath);
+        AttributeInfo attribute = getAttribute(treePath);
 
         constantPoolHyperlink(lblNameIndex,
                               null,

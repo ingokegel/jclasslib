@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.detail.FixedListDetailPane;
+import org.gjt.jclasslib.structures.Constant;
 
 import javax.swing.tree.TreePath;
 
@@ -30,14 +31,8 @@ public abstract class AbstractConstantInfoDetailPane extends FixedListDetailPane
         super(services);
     }
     
-    /**
-        Get the constant pool index corresponding to a selection in
-        <tt>BrowserTreePane</tt>.
-        @param treePath the tree path
-        @return the index
-     */
-    protected int constantPoolIndex(TreePath treePath) {
-        return getIndex(treePath);
+    protected <T extends Constant> T getConstant(TreePath treePath, Class<T> constantClass) {
+        return constantClass.cast(getElement(treePath));
     }
     
 }

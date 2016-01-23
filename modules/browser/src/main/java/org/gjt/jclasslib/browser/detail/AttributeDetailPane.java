@@ -86,7 +86,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
 
     public void show(TreePath treePath) {
 
-        AttributeInfo attribute = findAttribute(treePath);
+        AttributeInfo attribute = getAttribute(treePath);
         String paneName = getPaneName(attribute.getClass());
         CardLayout layout = (CardLayout)specificInfoPane.getLayout();
         if (paneName == null) {

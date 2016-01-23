@@ -43,7 +43,7 @@ public class ConstantValueAttributeDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        ConstantValueAttribute attribute = (ConstantValueAttribute)findAttribute(treePath);
+        ConstantValueAttribute attribute = (ConstantValueAttribute)getAttribute(treePath);
 
         constantPoolHyperlink(lblValue,
                               lblVerbose,

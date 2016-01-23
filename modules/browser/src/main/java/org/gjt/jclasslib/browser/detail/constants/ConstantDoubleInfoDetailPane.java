@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.ConstantDoubleInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
@@ -26,8 +25,7 @@ public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane
     private ExtendedJLabel lblHighBytes;
     private ExtendedJLabel lblLowBytes;
     private ExtendedJLabel lblDouble;
-    private ExtendedJLabel lblComment;
-    
+
     /**
         Constructor.
         @param services the associated browser services.
@@ -45,24 +43,17 @@ public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane
                            lblLowBytes = highlightLabel());
         
         addDetailPaneEntry(normalLabel("Double:"),
-                           lblDouble = highlightLabel(),
-                           lblComment = highlightLabel());
+                           lblDouble = highlightLabel());
 
     }
 
     public void show(TreePath treePath) {
         
-        int constantPoolIndex = constantPoolIndex(treePath);
+        ConstantDoubleInfo entry = getConstant(treePath, ConstantDoubleInfo.class);
+        lblHighBytes.setText(entry.getFormattedHighBytes());
+        lblLowBytes.setText(entry.getFormattedLowBytes());
+        lblDouble.setText(entry.getDouble());
 
-        try {
-            ConstantDoubleInfo entry = (ConstantDoubleInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantDoubleInfo.class);
-            lblHighBytes.setText(entry.getFormattedHighBytes());
-            lblLowBytes.setText(entry.getFormattedLowBytes());
-            lblDouble.setText(entry.getDouble());
-        } catch (InvalidByteCodeException ex) {
-            lblComment.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
-        }
-        
         super.show(treePath);
     }
     

@@ -24,7 +24,6 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
     // Visual components
     
     private ExtendedJLabel lblByteLength;
-    private ExtendedJLabel lblByteLengthComment;
     private ExtendedJLabel lblStringLength;
     private ExtendedJLabel lblString;
     
@@ -39,8 +38,7 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
     protected void setupLabels() {
         
         addDetailPaneEntry(normalLabel("Length of byte array:"),
-                           lblByteLength = highlightLabel(),
-                           lblByteLengthComment = highlightLabel());
+                           lblByteLength = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Length of string:"),
                            lblStringLength = highlightLabel());
@@ -53,19 +51,15 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
 
     public void show(TreePath treePath) {
         
-        int constantPoolIndex = constantPoolIndex(treePath);
-
+        ConstantUtf8Info entry = getConstant(treePath, ConstantUtf8Info.class);
+        lblByteLength.setText(entry.getBytes().length);
+        lblStringLength.setText(entry.getString().length());
         try {
-            ConstantUtf8Info entry = services.getClassFile().getConstantPoolUtf8Entry(constantPoolIndex);
-            lblByteLength.setText(entry.getBytes().length);
-            lblStringLength.setText(entry.getString().length());
-            lblString.setText(getConstantPoolEntryName(constantPoolIndex));
-        } catch (InvalidByteCodeException ex) {
-            lblByteLength.setText(-1);
-            lblStringLength.setText(-1);
-            lblByteLengthComment.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
+            lblString.setText(entry.getVerbose());
+        } catch (InvalidByteCodeException e) {
+            lblString.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
         }
-        
+
         super.show(treePath);
     }
     

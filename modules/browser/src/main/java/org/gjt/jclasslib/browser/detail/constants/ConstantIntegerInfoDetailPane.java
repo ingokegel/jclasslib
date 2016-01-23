@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.ConstantIntegerInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
@@ -25,8 +24,7 @@ public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPan
     
     private ExtendedJLabel lblBytes;
     private ExtendedJLabel lblInt;
-    private ExtendedJLabel lblComment;
-    
+
     /**
         Constructor.
         @param services the associated browser services.
@@ -41,23 +39,16 @@ public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPan
                            lblBytes = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Integer:"),
-                           lblInt = highlightLabel(),
-                           lblComment = highlightLabel());
+                           lblInt = highlightLabel());
 
     }
 
     public void show(TreePath treePath) {
         
-        int constantPoolIndex = constantPoolIndex(treePath);
+        ConstantIntegerInfo entry = getConstant(treePath, ConstantIntegerInfo.class);
+        lblBytes.setText(entry.getFormattedBytes());
+        lblInt.setText(entry.getInt());
 
-        try {
-            ConstantIntegerInfo entry = (ConstantIntegerInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantIntegerInfo.class);
-            lblBytes.setText(entry.getFormattedBytes());
-            lblInt.setText(entry.getInt());
-        } catch (InvalidByteCodeException ex) {
-            lblComment.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
-        }
-        
         super.show(treePath);
     }
     

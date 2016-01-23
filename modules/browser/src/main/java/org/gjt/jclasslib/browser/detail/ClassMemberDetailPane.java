@@ -92,13 +92,7 @@ public class ClassMemberDetailPane extends FixedListWithSignatureDetailPane {
     }
 
     private ClassMember getClassMember(TreePath treePath) {
-        int index = getIndex(treePath);
-        ClassMember[] classMembers = getSignatureMode().getClassMembers(services.getClassFile());
-        if (index < classMembers.length) {
-            return classMembers[index];
-        } else {
-            return null;
-        }
+        return (ClassMember)getElement(treePath);
     }
 
     protected String getSignatureButtonText() {

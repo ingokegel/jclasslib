@@ -9,7 +9,6 @@ package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.ConstantMethodHandleInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
@@ -39,20 +38,14 @@ public class ConstantMethodHandleInfoDetailPane extends AbstractConstantInfoDeta
     @Override
     public void show(TreePath treePath) {
 
-        int constantPoolIndex = constantPoolIndex(treePath);
+        ClassFile classFile = services.getClassFile();
+        ConstantMethodHandleInfo entry = getConstant(treePath, ConstantMethodHandleInfo.class);
 
-        try {
-            ClassFile classFile = services.getClassFile();
-            ConstantMethodHandleInfo entry = (ConstantMethodHandleInfo)classFile.getConstantPoolEntry(constantPoolIndex, ConstantMethodHandleInfo.class);
+        lblKind.setText(entry.getType().getVerbose());
+        constantPoolHyperlink(lblReference,
+            lblReferenceVerbose,
+            entry.getReferenceIndex());
 
-            lblKind.setText(entry.getType().getVerbose());
-            constantPoolHyperlink(lblReference,
-                lblReferenceVerbose,
-                entry.getReferenceIndex());
-
-        } catch (InvalidByteCodeException ex) {
-            lblKind.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
-        }
 
         super.show(treePath);
 

@@ -25,8 +25,7 @@ public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane 
     
     private ExtendedJLabel lblBytes;
     private ExtendedJLabel lblFloat;
-    private ExtendedJLabel lblComment;
-    
+
     /**
         Constructor.
         @param services the associated browser services.
@@ -41,23 +40,15 @@ public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane 
                            lblBytes = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Float:"),
-                           lblFloat = highlightLabel(),
-                           lblComment = highlightLabel());
+                           lblFloat = highlightLabel());
 
     }
 
     public void show(TreePath treePath) {
-        
-        int constantPoolIndex = constantPoolIndex(treePath);
+        ConstantFloatInfo entry = getConstant(treePath, ConstantFloatInfo.class);
+        lblBytes.setText(entry.getFormattedBytes());
+        lblFloat.setText(entry.getFloat());
 
-        try {
-            ConstantFloatInfo entry = (ConstantFloatInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantFloatInfo.class);
-            lblBytes.setText(entry.getFormattedBytes());
-            lblFloat.setText(entry.getFloat());
-        } catch (InvalidByteCodeException ex) {
-            lblComment.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
-        }
-        
         super.show(treePath);
     }
     

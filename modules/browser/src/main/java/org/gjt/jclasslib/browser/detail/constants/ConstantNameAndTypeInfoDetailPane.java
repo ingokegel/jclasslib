@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser.detail.constants;
 
 import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.ConstantNameAndTypeInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
@@ -49,22 +48,15 @@ public class ConstantNameAndTypeInfoDetailPane extends AbstractConstantInfoDetai
 
     public void show(TreePath treePath) {
         
-        int constantPoolIndex = constantPoolIndex(treePath);
+        ConstantNameAndTypeInfo entry = getConstant(treePath, ConstantNameAndTypeInfo.class);
 
-        try {
-            ConstantNameAndTypeInfo entry = (ConstantNameAndTypeInfo)services.getClassFile().getConstantPoolEntry(constantPoolIndex, ConstantNameAndTypeInfo.class);
+        constantPoolHyperlink(lblName,
+                              lblNameVerbose,
+                              entry.getNameIndex());
 
-            constantPoolHyperlink(lblName,
-                                  lblNameVerbose,
-                                  entry.getNameIndex());
-        
-            constantPoolHyperlink(lblDescriptor,
-                                  lblDescriptorVerbose,
-                                  entry.getDescriptorIndex());
-        
-        } catch (InvalidByteCodeException ex) {
-            lblNameVerbose.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
-        }
+        constantPoolHyperlink(lblDescriptor,
+                              lblDescriptorVerbose,
+                              entry.getDescriptorIndex());
 
         super.show(treePath);
         

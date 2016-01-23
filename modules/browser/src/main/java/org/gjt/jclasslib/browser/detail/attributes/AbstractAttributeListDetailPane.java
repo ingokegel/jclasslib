@@ -51,7 +51,7 @@ public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
     }
     
     protected TableModel getTableModel(TreePath treePath) {
-        AttributeInfo attribute = findAttribute(treePath);
+        AttributeInfo attribute = getAttribute(treePath);
         
         tableModel = getCachedTableModel(attribute);
         return tableModel;

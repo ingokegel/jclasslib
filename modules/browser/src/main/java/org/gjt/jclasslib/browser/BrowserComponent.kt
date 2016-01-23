@@ -9,7 +9,9 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.window.*
 import org.gjt.jclasslib.structures.ClassMember
+import org.gjt.jclasslib.structures.FieldInfo
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.MethodInfo
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JSplitPane
@@ -22,7 +24,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     val detailPane: BrowserDetailPane = BrowserDetailPane(services)
     val treePane: BrowserTreePane = BrowserTreePane(services)
 
-    private val splitPane: JSplitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane.tree, detailPane)
+    private val splitPane: JSplitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane, detailPane)
 
     init {
         layout = BorderLayout()
@@ -55,7 +57,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
             }
             val categoryComponent = it.next() as CategoryHolder
             val category = categoryComponent.category
-            val initialCategoryPath: TreePath = treePane.getPathForCategory(category) ?: return
+            val initialCategoryPath: TreePath = treePane.getPathForCategory(category)
             val path = buildPath(initialCategoryPath, category, it)
             val pathObjects = path.path
 
@@ -72,18 +74,15 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     private fun createBrowserPath(categoryNode: BrowserTreeNode, selectionPath: TreePath) = BrowserPath().apply {
         val category = categoryNode.type
         addPathComponent(CategoryHolder(category))
-        val categoryNodeIndex = categoryNode.index + if (category == NodeType.CONSTANT_POOL) -1 else 0
         when (category) {
             NodeType.METHOD -> {
-                val methodInfo = services.classFile.methods[categoryNodeIndex]
-                addClassMemberPathComponent(methodInfo, this, selectionPath)
+                addClassMemberPathComponent(categoryNode.element as MethodInfo, this, selectionPath)
             }
             NodeType.FIELD -> {
-                val fieldInfo = services.classFile.fields[categoryNodeIndex]
-                addClassMemberPathComponent(fieldInfo, this, selectionPath)
+                addClassMemberPathComponent(categoryNode.element as FieldInfo, this, selectionPath)
             }
             else -> {
-                addPathComponent(IndexHolder(categoryNodeIndex))
+                addPathComponent(IndexHolder(categoryNode.index))
             }
         }
     }

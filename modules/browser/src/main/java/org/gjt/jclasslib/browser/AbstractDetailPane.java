@@ -7,9 +7,7 @@
 
 package org.gjt.jclasslib.browser;
 
-import org.gjt.jclasslib.structures.AttributeContainer;
 import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 import org.gjt.jclasslib.util.HtmlDisplayTextArea;
@@ -122,43 +120,17 @@ public abstract class AbstractDetailPane extends JPanel {
         return label;
     }
     
-    /**
-        Determine the index of the tree node selected in <tt>BrowserTreePane</tt>
-        among its siblings.
-        @param treePath the tree path
-        @return the index
-     */
-    protected int getIndex(TreePath treePath) {
-        return ((BrowserTreeNode)treePath.getLastPathComponent()).getIndex();
+    protected Object getElement(TreePath treePath) {
+        return ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
     }
-    
+
     /**
         Find the attribute pertaining to a specific tree path. 
         @param path the tree path
         @return the attribute
      */
-    protected AttributeInfo findAttribute(TreePath path) {
-        
-        TreePath parentPath = path.getParentPath();
-        BrowserTreeNode parentNode = (BrowserTreeNode)parentPath.getLastPathComponent();
-        NodeType parentNodeType = parentNode.getType();
-        
-        ClassFile classFile = services.getClassFile();
-        int parentIndex = getIndex(parentPath);
-        int index = getIndex(path);
-        
-        if (parentNodeType.equals(NodeType.NO_CONTENT)) {
-            return classFile.getAttributes()[index];
-
-        } else if (parentNodeType.equals(NodeType.FIELD)) {
-            return classFile.getFields()[parentIndex].getAttributes()[index];
-
-        } else if (parentNodeType.equals(NodeType.METHOD)) {
-            return classFile.getMethods()[parentIndex].getAttributes()[index];
-
-        } else {
-            return ((AttributeContainer)findAttribute(parentPath)).getAttributes()[index];
-        }
+    protected AttributeInfo getAttribute(TreePath path) {
+        return (AttributeInfo)getElement(path);
     }
     
     /**

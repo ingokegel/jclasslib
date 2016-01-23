@@ -35,7 +35,7 @@ public class AnnotationDefaultAttributeDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        AnnotationDefaultAttribute ada = (AnnotationDefaultAttribute)findAttribute(treePath);
+        AnnotationDefaultAttribute ada = (AnnotationDefaultAttribute)getAttribute(treePath);
 
         String name = ada.getDefaultValue().getEntryName();
         lblTag.setText(name);

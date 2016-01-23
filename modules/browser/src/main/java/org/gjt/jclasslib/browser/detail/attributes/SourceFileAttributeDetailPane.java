@@ -43,7 +43,7 @@ public class SourceFileAttributeDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        SourceFileAttribute attribute = (SourceFileAttribute)findAttribute(treePath);
+        SourceFileAttribute attribute = (SourceFileAttribute)getAttribute(treePath);
 
         constantPoolHyperlink(lblSourceFile,
                               lblSourceFileVerbose,
