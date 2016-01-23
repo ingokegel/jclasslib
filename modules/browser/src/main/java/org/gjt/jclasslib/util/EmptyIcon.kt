@@ -5,39 +5,16 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.*
+import java.awt.*
 
-/**
-    Transparent icon with no content.
+class EmptyIcon(private val width: Int, private val height: Int) : Icon {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class EmptyIcon implements Icon {
-
-    private int width;
-    private int height;
-
-    /**
-     * Constructor.
-     * @param width the width of the icon.
-     * @param height the height of the icon.
-     */
-    public EmptyIcon(int width, int height) {
-        this.width = width;
-        this.height = height;
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     }
 
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-    }
-
-    public int getIconWidth() {
-        return width;
-    }
-
-    public int getIconHeight() {
-        return height;
-    }
+    override fun getIconWidth(): Int = width
+    override fun getIconHeight(): Int = height
 }
