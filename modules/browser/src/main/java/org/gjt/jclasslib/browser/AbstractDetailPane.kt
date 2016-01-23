@@ -5,200 +5,104 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
-import org.gjt.jclasslib.util.ExtendedJLabel;
-import org.gjt.jclasslib.util.HtmlDisplayTextArea;
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.util.ExtendedJLabel
+import org.gjt.jclasslib.util.HtmlDisplayTextArea
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
+import javax.swing.*
+import javax.swing.tree.TreePath
+import java.awt.*
+import java.awt.event.MouseListener
+import java.util.HashMap
 
-/**
-    Base class for all detail panes showing specific information for
-    a specific tree node selected in <tt>BrowserTreePane</tt>.
-    
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class AbstractDetailPane extends JPanel {
-    
-    /** Text prepended to constant pool hyperlinks. */
-    public static final String CPINFO_LINK_TEXT = "cp_info #";
+abstract class AbstractDetailPane(val browserServices: BrowserServices) : JPanel() {
 
-    /** Color for highlighted text (values in key-value pairs). */
-    protected static final Color COLOR_HIGHLIGHT = new Color(128, 0, 0);
+    private val labelToMouseListener = HashMap<ExtendedJLabel, MouseListener>()
 
-    /** Services for this detail pane. */
-    protected BrowserServices services;
-
-    private HashMap<ExtendedJLabel, MouseListener> labelToMouseListener = new HashMap<ExtendedJLabel, MouseListener>();
- 
-    /**
-        Constructs a detail pane with a specified parent frame.
-        @param services browser services
-     */
-    protected AbstractDetailPane(BrowserServices services) {
-        this.services = services;
-        setupComponent();
+    init {
+        setupComponent()
     }
 
-    /**
-        Get the associated <tt>BrowserServices</tt> object.
-        @return the browser services
-     */
-    public BrowserServices getBrowserServices() {
-        return services;
+    abstract fun show(treePath: TreePath)
+    protected abstract fun setupComponent()
+
+    open val clipboardText: String?
+        get() = null
+
+    open val wrapper: JComponent
+        get() = this
+
+    @JvmOverloads protected fun normalLabel(text: String = "") = ExtendedJLabel(text)
+
+    protected fun highlightLabel(): ExtendedJLabel = normalLabel().apply {
+        foreground = COLOR_HIGHLIGHT
     }
 
-    /**
-        Show the detail pane for a specific tree node 
-        selected in <tt>BrowserTreePane</tt>.
-        @param treePath the <tt>TreePath</tt> for the selection
-                        in <tt>BrowserTreePane</tt>
-     */
-    public abstract void show(TreePath treePath);
-
-    public String getClipboardText() {
-        return null;
+    protected fun highlightTextArea() = HtmlDisplayTextArea().apply {
+        foreground = COLOR_HIGHLIGHT
     }
 
-    public JComponent getWrapper() {
-        return this;
+    protected fun linkLabel(): ExtendedJLabel = normalLabel().apply {
+        foreground = HtmlDisplayTextArea.COLOR_LINK
+        isRequestFocusEnabled = true
+        isUnderlined = true
     }
 
-    /**
-        Setup the detail pane at the beginning of its life cycle.
-     */
-    protected abstract void setupComponent();
-
-    /**
-        Create a normal label (keys in key-value pairs).
-        @return the label
-     */
-    protected ExtendedJLabel normalLabel() {
-        return normalLabel("");
+    protected fun getElement(treePath: TreePath): Any? {
+        return (treePath.lastPathComponent as BrowserTreeNode).element
     }
 
-    /**
-        Create a normal label (keys in key-value pairs).
-        @param text the text for the label
-        @return the label
-     */
-    protected ExtendedJLabel normalLabel(String text) {
-        return new ExtendedJLabel(text);
+    protected fun getAttribute(path: TreePath): AttributeInfo {
+        return getElement(path) as AttributeInfo
     }
 
-    /**
-        Create a highlighted label (values in key-value pairs).
-        @return the label
-     */
-    protected ExtendedJLabel highlightLabel() {
-        ExtendedJLabel label = normalLabel();
-        label.setForeground(COLOR_HIGHLIGHT);
-        return label;
-    }
-    
-    /**
-        Create a highlighted text area for HTML display (values in key-value pairs).
-        @return the text area
-     */
-    protected HtmlDisplayTextArea highlightTextArea() {
-        HtmlDisplayTextArea textArea = new HtmlDisplayTextArea();
-        textArea.setForeground(COLOR_HIGHLIGHT);
-        return textArea;
-    }
-
-    /**
-        Create a label with the appearance of a hyperlink.
-        @return the label
-     */
-    protected ExtendedJLabel linkLabel() {
-        ExtendedJLabel label = normalLabel();
-        label.setForeground(HtmlDisplayTextArea.COLOR_LINK);
-        label.setRequestFocusEnabled(true);
-        label.setUnderlined(true);
-        return label;
-    }
-    
-    protected Object getElement(TreePath treePath) {
-        return ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
-    }
-
-    /**
-        Find the attribute pertaining to a specific tree path. 
-        @param path the tree path
-        @return the attribute
-     */
-    protected AttributeInfo getAttribute(TreePath path) {
-        return (AttributeInfo)getElement(path);
-    }
-    
-    /**
-        Get the name of a constant pool entry.
-        @param constantPoolIndex the index of the constant pool entry
-        @return the name
-     */
-    protected String getConstantPoolEntryName(int constantPoolIndex) {
-
+    protected fun getConstantPoolEntryName(constantPoolIndex: Int): String {
         try {
-            return services.getClassFile().getConstantPoolEntryName(constantPoolIndex);
-        } catch (InvalidByteCodeException ex) {
-            return "invalid constant pool reference";
-        }
-    }
-    
-    /**
-        Construct a hyperlink into the constant pool.
-        @param value the label for the hyperlink source
-        @param comment an optional label whose text is automatically set to
-                       the name of the constant pool entry
-        @param constantPoolIndex the index of the constant pool entry for the
-                                 target of the hyperlink
-     */
-    protected void constantPoolHyperlink(ExtendedJLabel value,
-                                         ExtendedJLabel comment,
-                                         int constantPoolIndex) {
-                                         
-        value.setText(CPINFO_LINK_TEXT + constantPoolIndex);
-        setupMouseListener(value, new ConstantPoolHyperlinkListener(services, constantPoolIndex));
-        value.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        applyComment(comment, constantPoolIndex);
-
-    }
-
-    protected void classAttributeIndexHyperlink(ExtendedJLabel value,
-                                                ExtendedJLabel comment,
-                                                int index,
-                                                Class<? extends AttributeInfo> attributeInfoClass,
-                                                String text) {
-
-        value.setText(text + index);
-        setupMouseListener(value, new ClassAttributeHyperlinkListener(services, index, attributeInfoClass));
-        value.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        applyComment(comment, index);
-    }
-
-    private void applyComment(ExtendedJLabel comment, int constantPoolIndex) {
-        if (comment != null) {
-            comment.setToolTipText(comment.getText());
-            comment.setText("<" + getConstantPoolEntryName(constantPoolIndex) + ">");
+            return browserServices.classFile.getConstantPoolEntryName(constantPoolIndex)
+        } catch (ex: InvalidByteCodeException) {
+            return "invalid constant pool reference"
         }
     }
 
-    private void setupMouseListener(ExtendedJLabel value, MouseListener mouseListener) {
-
-        MouseListener oldListener = labelToMouseListener.get(value);
-        if (oldListener != null) {
-            value.removeMouseListener(oldListener);
+    protected fun constantPoolHyperlink(value: ExtendedJLabel, comment: ExtendedJLabel?, constantPoolIndex: Int) {
+        value.apply {
+            text = CPINFO_LINK_TEXT + constantPoolIndex
+            setupMouseListener(ConstantPoolHyperlinkListener(browserServices, constantPoolIndex))
+            cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
         }
-        value.addMouseListener(mouseListener);
-        labelToMouseListener.put(value, mouseListener);
+        comment?.applyComment(constantPoolIndex)
+    }
+
+    protected fun classAttributeIndexHyperlink(value: ExtendedJLabel,
+                                               comment: ExtendedJLabel?,
+                                               index: Int,
+                                               attributeInfoClass: Class<out AttributeInfo>,
+                                               valueText: String) {
+        value.apply {
+            text = valueText + index
+            setupMouseListener(ClassAttributeHyperlinkListener(browserServices, index, attributeInfoClass))
+            cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+        }
+        comment?.applyComment(index)
+    }
+
+    private fun ExtendedJLabel.applyComment(constantPoolIndex: Int) {
+        toolTipText = text
+        text = "<" + getConstantPoolEntryName(constantPoolIndex) + ">"
+    }
+
+    private fun ExtendedJLabel.setupMouseListener(mouseListener: MouseListener) {
+        labelToMouseListener[this]?.let { removeMouseListener(it) }
+        addMouseListener(mouseListener)
+        labelToMouseListener.put(this, mouseListener)
+    }
+
+    companion object {
+        @JvmField // TODO remove annotation
+        val CPINFO_LINK_TEXT = "cp_info #"
+        protected val COLOR_HIGHLIGHT = Color(128, 0, 0)
     }
 }
-

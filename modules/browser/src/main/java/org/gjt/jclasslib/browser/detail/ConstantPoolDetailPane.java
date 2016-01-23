@@ -61,40 +61,40 @@ public class ConstantPoolDetailPane extends AbstractDetailPane {
         pane.setBackground(Color.blue);
         add(pane, SCREEN_CONSTANT_UNKNOWN);
         
-        addScreen(new ConstantUtf8InfoDetailPane(services),
+        addScreen(new ConstantUtf8InfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_UTF8_INFO);
 
-        addScreen(new ConstantClassInfoDetailPane(services),
+        addScreen(new ConstantClassInfoDetailPane(getBrowserServices()),
                   SCREEN_CONSTANT_CLASS_INFO);
 
-        addScreen(new ConstantDoubleInfoDetailPane(services),
+        addScreen(new ConstantDoubleInfoDetailPane(getBrowserServices()),
                   SCREEN_CONSTANT_DOUBLE_INFO);
 
-        addScreen(new ConstantLongInfoDetailPane(services),
+        addScreen(new ConstantLongInfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_LONG_INFO);
 
-        addScreen(new ConstantFloatInfoDetailPane(services),
+        addScreen(new ConstantFloatInfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_FLOAT_INFO);
 
-        addScreen(new ConstantIntegerInfoDetailPane(services),
+        addScreen(new ConstantIntegerInfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_INTEGER_INFO);
 
-        addScreen(new ConstantNameAndTypeInfoDetailPane(services),
+        addScreen(new ConstantNameAndTypeInfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_NAME_AND_TYPE_INFO);
 
-        addScreen(new ConstantStringInfoDetailPane(services),
+        addScreen(new ConstantStringInfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_STRING_INFO);
                 
-        addScreen(new ConstantReferenceDetailPane(services),
+        addScreen(new ConstantReferenceDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_REFERENCE);
 
-        addScreen(new ConstantInvokeDynamicInfoDetailPane(services),
+        addScreen(new ConstantInvokeDynamicInfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_INVOKE_DYNAMIC);
 
-        addScreen(new ConstantMethodHandleInfoDetailPane(services),
+        addScreen(new ConstantMethodHandleInfoDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_METHOD_HANDLE);
 
-        addScreen(new ConstantMethodTypeDetailPane(services),
+        addScreen(new ConstantMethodTypeDetailPane(getBrowserServices()),
             SCREEN_CONSTANT_METHOD_TYPE);
 
     }

@@ -36,7 +36,7 @@ public class ClassMemberContainerDetailPane extends FixedListWithSignatureDetail
     @Override
     protected String getSignatureVerbose() {
         SignatureMode signatureMode = getSignatureMode();
-        ClassFile classFile = services.getClassFile();
+        ClassFile classFile = getBrowserServices().getClassFile();
         ClassMember[] classMembers = signatureMode.getClassMembers(classFile);
 
         StringBuilder buffer = new StringBuilder();
@@ -58,7 +58,7 @@ public class ClassMemberContainerDetailPane extends FixedListWithSignatureDetail
 
     public void show(TreePath treePath) {
 
-        ClassFile classFile = services.getClassFile();
+        ClassFile classFile = getBrowserServices().getClassFile();
         int count = getSignatureMode().getClassMembers(classFile).length;
         lblMemberCount.setText(count);
 

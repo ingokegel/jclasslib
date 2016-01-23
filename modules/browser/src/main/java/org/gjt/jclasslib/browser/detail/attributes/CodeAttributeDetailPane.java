@@ -72,17 +72,17 @@ public class CodeAttributeDetailPane extends AbstractDetailPane {
     }
 
     private JPanel buildByteCodePane() {
-        byteCodePane = new ByteCodeDetailPane(services);
+        byteCodePane = new ByteCodeDetailPane(getBrowserServices());
         return byteCodePane;
     }
 
     private JPanel buildExceptionTablePane() {
-        exceptionTablePane = new ExceptionTableDetailPane(services);
+        exceptionTablePane = new ExceptionTableDetailPane(getBrowserServices());
         return exceptionTablePane;
     }
 
     private JPanel buildMiscPane() {
-        miscPane = new MiscDetailPane(services);
+        miscPane = new MiscDetailPane(getBrowserServices());
         return miscPane;
     }
     

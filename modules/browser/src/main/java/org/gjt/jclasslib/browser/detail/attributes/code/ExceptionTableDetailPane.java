@@ -76,7 +76,7 @@ public class ExceptionTableDetailPane extends AbstractAttributeListDetailPane {
             
             if (column == CATCH_TYPE_COLUMN_INDEX) {
                 int constantPoolIndex = exceptionTable[row].getCatchType();
-                ConstantPoolHyperlinkListener.Companion.link(services, constantPoolIndex);
+                ConstantPoolHyperlinkListener.Companion.link(getBrowserServices(), constantPoolIndex);
             }
         }
         

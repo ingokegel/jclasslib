@@ -86,7 +86,7 @@ public class ElementValueDetailPane extends AbstractDetailPane {
 
 
     private void buildGenericInfoPane() {
-        genericInfoPane = new GenericElementValueDetailPane(services);
+        genericInfoPane = new GenericElementValueDetailPane(getBrowserServices());
         genericInfoPane.setBorder(createTitledBorder("Generic info:"));
     }
 
@@ -101,11 +101,11 @@ public class ElementValueDetailPane extends AbstractDetailPane {
         pane = new JPanel();
         specificInfoPane.add(pane, SCREEN_UNKNOWN);
 
-        addScreen(new ConstElementValueEntryDetailPane(services),
+        addScreen(new ConstElementValueEntryDetailPane(getBrowserServices()),
                 SCREEN_CONST_VALUE);
-        addScreen(new ClassElementValueEntryDetailPane(services),
+        addScreen(new ClassElementValueEntryDetailPane(getBrowserServices()),
                 SCREEN_CLASS_VALUE);
-        addScreen(new EnumElementValueEntryDetailPane(services),
+        addScreen(new EnumElementValueEntryDetailPane(getBrowserServices()),
                 SCREEN_ENUM_VALUE);
     }
 

@@ -104,7 +104,7 @@ public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDe
                 default:
                     return;
             }
-            ConstantPoolHyperlinkListener.Companion.link(services, constantPoolIndex);
+            ConstantPoolHyperlinkListener.Companion.link(getBrowserServices(), constantPoolIndex);
         }
 
         public int getRowCount() {
