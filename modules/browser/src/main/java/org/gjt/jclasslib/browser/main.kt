@@ -38,9 +38,6 @@ fun main(args: Array<String>) {
 
     EventQueue.invokeLater {
         BrowserMDIFrame().apply {
-            Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-                throwable.printStackTrace(System.out)
-            }
             registerStartupListener(this)
             isVisible = true
             if (args.size > 0) {
