@@ -41,13 +41,13 @@ class ProgressDialog(parent: Window, message: String, var task: ()->Unit = {}) :
         (contentPane as JPanel).apply {
             border = GUIHelper.WINDOW_BORDER
             layout = GridBagLayout()
+
             val gc = GridBagConstraints().apply {
                 gridx = 0
                 gridy = GridBagConstraints.RELATIVE
                 anchor = GridBagConstraints.NORTHWEST
             }
             add(messageLabel, gc)
-
             add(progressBar, gc.apply {
                 fill = GridBagConstraints.HORIZONTAL
                 weightx = 1.0

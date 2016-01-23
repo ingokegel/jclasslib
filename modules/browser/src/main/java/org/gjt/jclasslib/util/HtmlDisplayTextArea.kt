@@ -15,13 +15,14 @@ import javax.swing.text.View
 import javax.swing.text.html.HTML
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
+import javax.swing.text.html.StyleSheet
 
 open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) : JEditorPane(), TextDisplay {
 
     var inverted: Boolean = false
         set(inverted) {
             field = inverted
-            htmlDocument?.styleSheet?.apply {
+            styleSheet?.apply {
                 addRule("a {color : #" + getHexValue(if (inverted) foreground else COLOR_LINK) + " }")
                 addRule("a:active {color : #" + getHexValue(if (inverted) foreground else COLOR_LINK) + " }")
             }
@@ -38,7 +39,7 @@ open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) :
 
         editorKit = HTMLEditorKit()
 
-        htmlDocument?.styleSheet?.apply {
+        styleSheet?.apply {
             addRule("body {color : #" + getHexValue(UIManager.getColor("Label.foreground")) + " }")
             val font = UIManager.getFont("Label.font")
             addRule("body {font-size : " + font.size + "pt; }")
@@ -57,7 +58,7 @@ open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) :
 
     override fun setForeground(fg: Color) {
         super.setForeground(fg)
-        htmlDocument?.styleSheet?.apply {
+        styleSheet?.apply {
             addRule("body {color : #" + getHexValue(fg) + " }")
         }
     }
@@ -74,6 +75,9 @@ open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) :
 
     private val htmlDocument : HTMLDocument?
             get() = if (document is HTMLDocument) document as HTMLDocument else null
+
+    private val styleSheet : StyleSheet?
+            get() = htmlDocument?.styleSheet
 
     override fun setText(text: String) {
         super.setText(if (text.startsWith("<html>")) "<html>$text" else text)
@@ -143,6 +147,7 @@ open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) :
     override fun getBaselineResizeBehavior() = Component.BaselineResizeBehavior.CONSTANT_ASCENT
 
     companion object {
+        @JvmField // TODO remove annotation
         val COLOR_LINK = Color(0, 128, 0)
         private val NO_MARGIN = Insets(0, 0, 0, 0)
     }
