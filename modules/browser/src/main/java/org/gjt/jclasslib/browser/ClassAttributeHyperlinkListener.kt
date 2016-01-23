@@ -5,69 +5,38 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.detail.AttributeDetailPane;
-import org.gjt.jclasslib.browser.detail.ListDetailPane;
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.util.GUIHelper;
+import org.gjt.jclasslib.browser.detail.AttributeDetailPane
+import org.gjt.jclasslib.browser.detail.ListDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.util.GUIHelper
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import javax.swing.JOptionPane
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+class ClassAttributeHyperlinkListener(private val services: BrowserServices, private val index: Int, private val attributeInfoClass: Class<out AttributeInfo>) : MouseAdapter() {
 
-public class ClassAttributeHyperlinkListener extends MouseAdapter {
-
-    private BrowserServices services;
-    private int index;
-    private Class<? extends AttributeInfo> attributeInfoClass;
-
-    public ClassAttributeHyperlinkListener(BrowserServices services, int index, Class<? extends AttributeInfo> attributeInfoClass) {
-        this.services = services;
-        this.index = index;
-        this.attributeInfoClass = attributeInfoClass;
-    }
-
-    public void mouseClicked(MouseEvent event) {
-        link(services, index, attributeInfoClass);
-    }
-
-    public static void link(BrowserServices services, int index, Class<? extends AttributeInfo> attributeInfoClass) {
-        BrowserTreePane treePane = services.getBrowserComponent().getTreePane();
-        TreePath attributesPath = treePane.getPathForCategory(NodeType.ATTRIBUTE);
-        link(services, attributesPath, index, attributeInfoClass);
-    }
-
-    public static void link(BrowserServices services, TreePath parentPath, int index, Class<? extends AttributeInfo> attributeInfoClass) {
-
-        BrowserTreeNode attributesNode = (BrowserTreeNode)parentPath.getLastPathComponent();
-        BrowserTreeNode targetNode = findChildNode(attributesNode, attributeInfoClass);
+    override fun mouseClicked(event: MouseEvent) {
+        val attributesPath = services.browserComponent.treePane.getPathForCategory(NodeType.ATTRIBUTE)
+        val attributesNode = attributesPath.lastPathComponent as BrowserTreeNode
+        val targetNode = findChildNode(attributesNode, attributeInfoClass)
         if (targetNode == null) {
-            GUIHelper.showMessage(services.getBrowserComponent(), "No attribute of class " + attributeInfoClass.getName() + " found", JOptionPane.ERROR_MESSAGE);
-            return;
+            GUIHelper.showMessage(services.browserComponent, "No attribute of class " + attributeInfoClass.name + " found", JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        val targetPath = attributesPath.pathByAddingChild(targetNode)
+        services.browserComponent.treePane.tree.apply {
+            selectionPath = targetPath
+            scrollPathToVisible(targetPath)
         }
 
-        TreePath targetPath = parentPath.pathByAddingChild(targetNode);
-        JTree tree = services.getBrowserComponent().getTreePane().getTree();
-        tree.setSelectionPath(targetPath);
-        tree.scrollPathToVisible(targetPath);
-
-        AttributeDetailPane detailPane = (AttributeDetailPane)services.getBrowserComponent().getDetailPane().getCurrentDetailPane();
-        ((ListDetailPane)detailPane.getAttributeDetailPane(attributeInfoClass)).selectIndex(index);
+        val detailPane = services.browserComponent.detailPane.currentDetailPane as AttributeDetailPane
+        (detailPane.getAttributeDetailPane(attributeInfoClass) as ListDetailPane).selectIndex(index)
     }
 
-    private static BrowserTreeNode findChildNode(BrowserTreeNode attributesNode, Class<? extends AttributeInfo> attributeInfoClass) {
-        int childCount = attributesNode.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            BrowserTreeNode childNode = (BrowserTreeNode)attributesNode.getChildAt(i);
-            AttributeInfo attributeInfo = (AttributeInfo)childNode.getElement();
-            if (attributeInfo.getClass() == attributeInfoClass) {
-                return childNode;
-            }
-        }
-        return null;
+    private fun findChildNode(attributesNode: BrowserTreeNode, attributeInfoClass: Class<out AttributeInfo>): BrowserTreeNode? {
+        return attributesNode.find() { it.element?.javaClass == attributeInfoClass }
     }
-
 }
 

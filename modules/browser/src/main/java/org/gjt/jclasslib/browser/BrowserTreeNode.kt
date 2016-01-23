@@ -10,7 +10,11 @@ package org.gjt.jclasslib.browser
 import javax.swing.tree.DefaultMutableTreeNode
 
 open class BrowserTreeNode
-@JvmOverloads constructor(text: String, val type: NodeType = NodeType.NO_CONTENT, val element: Any? = null) : DefaultMutableTreeNode(text) {
+@JvmOverloads constructor(text: String, val type: NodeType = NodeType.NO_CONTENT, val element: Any? = null) : DefaultMutableTreeNode(text), Iterable<BrowserTreeNode> {
     val index: Int
         get() = getParent().getIndex(this)
+
+
+    @Suppress("UNCHECKED_CAST")
+    override fun iterator() = children.iterator() as Iterator<BrowserTreeNode>
 }
