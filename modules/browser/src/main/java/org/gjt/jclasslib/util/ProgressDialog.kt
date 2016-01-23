@@ -5,134 +5,72 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Window
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
+import javax.swing.*
 
-/**
-    Dialog which displays indeterminate progress.
+class ProgressDialog(parent: Window, message: String, var task: ()->Unit = {}) : JDialog(parent) {
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ProgressDialog extends JDialog {
-
-    private static final int PROGRESS_BAR_WIDTH = 200;
-
-    private Runnable runnable;
-
-    private JProgressBar progressBar;
-    private JLabel lblMessage;
-
-    /**
-     * Constructor.
-     * @param parent the parent frame.
-     * @param runnable the <tt>Runnable</tt> to be started on <tt>setVisible</tt>.
-     * @param message the initial status message.
-     */
-    public ProgressDialog(JFrame parent, Runnable runnable, String message) {
-        super(parent);
-        init(runnable, message);
-    }
-
-    /**
-     * Constructor.
-     * @param parent the parent dialog.
-     * @param runnable the <tt>Runnable</tt> to be started on <tt>setVisible</tt>.
-     * @param message the initial status message.
-     */
-    public ProgressDialog(JDialog parent, Runnable runnable, String message) {
-        super(parent);
-        init(runnable, message);
-    }
-
-    /**
-     * Set the current status message.
-     * @param message the message.
-     */
-    public void setMessage(String message) {
-        lblMessage.setText(message);
-    }
-
-    /**
-     * Set the  <tt>Runnable</tt> to be started on <tt>setVisible</tt>.
-     * @param runnable the <tt>Runnable</tt>.
-     */
-    public void setRunnable(Runnable runnable) {
-        this.runnable = runnable;
-    }
-
-    public void setVisible(boolean visible) {
-        if (visible) {
-            progressBar.setIndeterminate(true);
-            GUIHelper.INSTANCE.centerOnParentWindow(this, getOwner());
-        } else {
-            progressBar.setIndeterminate(false);
+    private val progressBar: JProgressBar = JProgressBar().apply {
+        preferredSize = preferredSize.apply {
+            width = 200
         }
-        super.setVisible(visible);
     }
 
-    private void init(Runnable runnable, String message) {
-        setupControls();
-        setupComponent();
-        setupEventHandlers();
-        setMessage(message);
-        setRunnable(runnable);
+    private val messageLabel: JLabel = JLabel(message)
+
+    init {
+        setupComponent()
+        setupEventHandlers()
     }
 
-    private void setupControls() {
-
-        progressBar = new JProgressBar();
-        Dimension preferredSize = progressBar.getPreferredSize();
-        preferredSize.width = PROGRESS_BAR_WIDTH;
-        progressBar.setPreferredSize(preferredSize);
-        lblMessage = new JLabel(" ");
+    override fun setVisible(visible: Boolean) {
+        progressBar.isIndeterminate = visible
+        if (visible) {
+            GUIHelper.centerOnParentWindow(this, owner)
+        }
+        super.setVisible(visible)
     }
 
-    private void setupComponent() {
-
-        JPanel contentPane = (JPanel)getContentPane();
-        contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        contentPane.setLayout(new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.gridx = 0;
-        gc.gridy = GridBagConstraints.RELATIVE;
-        gc.anchor = GridBagConstraints.NORTHWEST;
-        contentPane.add(lblMessage, gc);
-        gc.weightx = 1;
-        gc.fill = GridBagConstraints.HORIZONTAL;
-        contentPane.add(progressBar, gc);
-
-        setTitle(GUIHelper.MESSAGE_TITLE);
-        setModal(true);
-        pack();
-
-    }
-
-    private void setupEventHandlers() {
-
-        addComponentListener(new ComponentAdapter() {
-            public void componentShown(ComponentEvent event) {
-                final Thread task = new Thread(runnable);
-                task.start();
-                new Thread() {
-                    public void run() {
-                        try {
-                            task.join();
-                        } catch (InterruptedException e) {
-                        }
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                setVisible(false);
-                            }
-                        });
-                    }
-                }.start();
+    private fun setupComponent() {
+        (contentPane as JPanel).apply {
+            border = GUIHelper.WINDOW_BORDER
+            layout = GridBagLayout()
+            val gc = GridBagConstraints().apply {
+                gridx = 0
+                gridy = GridBagConstraints.RELATIVE
+                anchor = GridBagConstraints.NORTHWEST
             }
-        });
+            add(messageLabel, gc)
+
+            add(progressBar, gc.apply {
+                fill = GridBagConstraints.HORIZONTAL
+                weightx = 1.0
+            })
+
+            title = GUIHelper.MESSAGE_TITLE
+            isModal = true
+            pack()
+        }
     }
 
-
+    private fun setupEventHandlers() {
+        addComponentListener(object : ComponentAdapter() {
+            override fun componentShown(event: ComponentEvent?) {
+                object : SwingWorker<Unit, Unit>() {
+                    override fun doInBackground() {
+                        task()
+                    }
+                    override fun done() {
+                        isVisible = false
+                    }
+                }.execute()
+            }
+        })
+    }
 }

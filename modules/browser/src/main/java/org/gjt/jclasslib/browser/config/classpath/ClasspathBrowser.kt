@@ -84,7 +84,7 @@ class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: S
     }
 
     private val progressDialog: ProgressDialog by lazy {
-        ProgressDialog(this, null, "Scanning classpath ...")
+        ProgressDialog(this, "Scanning classpath ...")
     }
 
     private var resetOnNextMerge: Boolean = false
@@ -98,11 +98,13 @@ class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: S
         get() {
             val buffer = StringBuilder()
             val selectionPath = tree.selectionPath
-            for (i in 1..selectionPath.pathCount - 1) {
-                if (buffer.length > 0) {
-                    buffer.append('/')
+            if (selectionPath != null) {
+                for (i in 1..selectionPath.pathCount - 1) {
+                    if (buffer.length > 0) {
+                        buffer.append('/')
+                    }
+                    buffer.append(selectionPath.getPathComponent(i).toString())
                 }
-                buffer.append(selectionPath.getPathComponent(i).toString())
             }
             return buffer.toString()
         }
@@ -195,7 +197,7 @@ class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: S
 
     private fun sync(reset: Boolean) {
         val model = if (reset) DefaultTreeModel(ClassTreeNode()) else tree.model as DefaultTreeModel
-        progressDialog.setRunnable {
+        progressDialog.task = {
             classpathComponent?.mergeClassesIntoTree(model, reset)
         }
         progressDialog.isVisible = true
