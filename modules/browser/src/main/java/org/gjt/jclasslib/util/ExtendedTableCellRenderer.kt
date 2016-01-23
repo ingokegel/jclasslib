@@ -5,114 +5,98 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import javax.swing.*
+import javax.swing.border.Border
+import javax.swing.border.EmptyBorder
+import javax.swing.table.TableCellRenderer
+import java.awt.*
 
+class ExtendedTableCellRenderer : ExtendedJLabel(""), TableCellRenderer {
 
-/**
-    A <tt>TableCellRenderer</tt> which is based on an <tt>ExtendedJLabel</tt> rather than
-    a <tt>JLabel</tt> like the <tt>javax.swing.table.DefaultTableCellRenderer</tt>.
+    private var unselectedForeground: Color? = null
+    private var unselectedBackground: Color? = null
 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ExtendedTableCellRenderer extends ExtendedJLabel
-                                       implements TableCellRenderer {
-
-    private static final Border NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
-
-    private Color unselectedForeground;
-    private Color unselectedBackground;
-
-    /**
-     * Constructor.
-     */
-    public ExtendedTableCellRenderer() {
-        super("");
-        setOpaque(true);
-        setBorder(NO_FOCUS_BORDER);
+    init {
+        isOpaque = true
+        border = NO_FOCUS_BORDER
     }
 
-    public void setForeground(Color c) {
-        super.setForeground(c); 
-        unselectedForeground = c; 
-    }
-    
-    public void setBackground(Color c) {
-        super.setBackground(c); 
-        unselectedBackground = c; 
+    override fun setForeground(c: Color?) {
+        super.setForeground(c)
+        unselectedForeground = c
     }
 
-    public void updateUI() {
-        super.updateUI(); 
-        setForeground(null);
-        setBackground(null);
+    override fun setBackground(c: Color?) {
+        super.setBackground(c)
+        unselectedBackground = c
     }
-    
-    public Component getTableCellRendererComponent(JTable table,
-                                                   Object value,
-                                                   boolean isSelected,
-                                                   boolean hasFocus,
-                                                   int row,
-                                                   int column)
-    {
+
+    override fun updateUI() {
+        super.updateUI()
+        foreground = null
+        background = null
+    }
+
+    override fun getTableCellRendererComponent(table: JTable, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
         if (isSelected) {
-           super.setForeground(table.getSelectionForeground());
-           super.setBackground(table.getSelectionBackground());
+            super.setForeground(table.selectionForeground)
+            super.setBackground(table.selectionBackground)
 
         } else {
-            super.setForeground((unselectedForeground != null) ? unselectedForeground : table.getForeground());
-            super.setBackground((unselectedBackground != null) ? unselectedBackground : table.getBackground());
+            super.setForeground(if (unselectedForeground != null) unselectedForeground else table.foreground)
+            super.setBackground(if (unselectedBackground != null) unselectedBackground else table.background)
         }
 
-        setFont(table.getFont());
+        font = table.font
 
         if (hasFocus) {
-            setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
+            border = UIManager.getBorder("Table.focusCellHighlightBorder")
             if (table.isCellEditable(row, column)) {
-                super.setForeground(UIManager.getColor("Table.focusCellForeground"));
-                super.setBackground(UIManager.getColor("Table.focusCellBackground"));
+                super.setForeground(UIManager.getColor("Table.focusCellForeground"))
+                super.setBackground(UIManager.getColor("Table.focusCellBackground"))
             }
         } else {
-            setBorder(NO_FOCUS_BORDER);
+            border = NO_FOCUS_BORDER
         }
 
-        setValue(value); 
+        setValue(value)
 
-        Color background = getBackground();
-        boolean colorMatch = (background != null) && (background.equals(table.getBackground())) && table.isOpaque();
-        setOpaque(!colorMatch);
+        val colorMatch = background == table.background && table.isOpaque
+        isOpaque = !colorMatch
 
-        return this;
+        return this
     }
-    
 
-    public void validate() {}
+    override fun validate() {
+    }
 
-    public void revalidate() {}
+    override fun revalidate() {
+    }
 
-    public void repaint(long tm, int x, int y, int width, int height) {}
+    override fun repaint(tm: Long, x: Int, y: Int, width: Int, height: Int) {
+    }
 
-    public void repaint(Rectangle r) { }
+    override fun repaint(r: Rectangle) {
+    }
 
-    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        if (propertyName.equals("text")) {
-            super.firePropertyChange(propertyName, oldValue, newValue);
+    override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {
+        if (propertyName == "text") {
+            super.firePropertyChange(propertyName, oldValue, newValue)
         }
     }
 
-    public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) { }
-
-
-    private void setValue(Object value) {
-        setText((value == null) ? "" : value.toString());
+    override fun firePropertyChange(propertyName: String, oldValue: Boolean, newValue: Boolean) {
     }
-    
+
+    private fun setValue(value: Any?) {
+        text = if (value == null) "" else value.toString()
+    }
+
+    companion object {
+        private val NO_FOCUS_BORDER = EmptyBorder(1, 1, 1, 1)
+    }
+
 
 }
-
-
