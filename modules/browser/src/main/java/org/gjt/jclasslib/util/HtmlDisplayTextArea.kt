@@ -75,8 +75,8 @@ open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) :
     private val htmlDocument : HTMLDocument?
             get() = if (document is HTMLDocument) document as HTMLDocument else null
 
-    override fun setText(text: String?) {
-        super.setText(if (text?.startsWith("<html>") ?: false) "<html>$text" else text)
+    override fun setText(text: String) {
+        super.setText(if (text.startsWith("<html>")) "<html>$text" else text)
     }
 
     override fun getPreferredSize(): Dimension {

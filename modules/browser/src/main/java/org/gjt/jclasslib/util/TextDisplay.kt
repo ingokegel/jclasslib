@@ -5,8 +5,8 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-public interface TextDisplay {
-    void setText(String text);
+interface TextDisplay {
+    fun setText(text: String)
 }
