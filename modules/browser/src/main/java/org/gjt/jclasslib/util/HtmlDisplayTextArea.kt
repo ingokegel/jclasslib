@@ -5,201 +5,146 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.Document;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.View;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
-import java.awt.*;
+import java.awt.*
+import javax.swing.JEditorPane
+import javax.swing.UIManager
+import javax.swing.text.StyleConstants
+import javax.swing.text.View
+import javax.swing.text.html.HTML
+import javax.swing.text.html.HTMLDocument
+import javax.swing.text.html.HTMLEditorKit
 
-public class HtmlDisplayTextArea extends JEditorPane implements TextDisplay {
+open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) : JEditorPane(), TextDisplay {
 
-    public static final Color COLOR_LINK = new Color(0, 128, 0);
+    var inverted: Boolean = false
+        set(inverted) {
+            field = inverted
+            htmlDocument?.styleSheet?.apply {
+                addRule("a {color : #" + getHexValue(if (inverted) foreground else COLOR_LINK) + " }")
+                addRule("a:active {color : #" + getHexValue(if (inverted) foreground else COLOR_LINK) + " }")
+            }
+        }
 
-    private static final Insets NO_MARGIN = new Insets(0, 0, 0, 0);
+    init {
+        isEditable = false
+        background = UIManager.getColor("Label.background")
+        isRequestFocusEnabled = false
+        isFocusable = false
+        margin = NO_MARGIN
+        isOpaque = false
+        updateUI()
 
-    public HtmlDisplayTextArea() {
-        this(null);
-    }
+        editorKit = HTMLEditorKit()
 
-    public HtmlDisplayTextArea(String text) {
-        setEditable(false);
-        setBackground(UIManager.getColor("Label.background"));
-        setRequestFocusEnabled(false);
-        setFocusable(false);
-        setMargin(NO_MARGIN);
-        updateUI();
-
-        setEditorKit(new HTMLEditorKit());
-        Font font = UIManager.getFont("Label.font");
-        StyleSheet css = ((HTMLDocument)getDocument()).getStyleSheet();
-        setOpaque(false);
-
-        css.addRule("body {color : #" + getHexValue(UIManager.getColor("Label.foreground")) + " }");
-        css.addRule("body {font-size : " + font.getSize() + "pt; }");
-        css.addRule("body {font-family :" + font.getFontName() + "; }");
-        setInverted(false);
+        htmlDocument?.styleSheet?.apply {
+            addRule("body {color : #" + getHexValue(UIManager.getColor("Label.foreground")) + " }")
+            val font = UIManager.getFont("Label.font")
+            addRule("body {font-size : " + font.size + "pt; }")
+            addRule("body {font-family :" + font.fontName + "; }")
+        }
+        inverted = false
 
         if (text != null) {
-            setText(text);
+            setText(text)
         }
     }
 
-    public void setInverted(boolean inverted) {
-        Document document = getDocument();
-        if (document instanceof HTMLDocument) {
-            HTMLDocument htmlDocument = (HTMLDocument)document;
-            StyleSheet css = htmlDocument.getStyleSheet();
-            css.addRule("a {color : #" + getHexValue(inverted ? getForeground() : COLOR_LINK) + " }");
-            css.addRule("a:active {color : #" + getHexValue(inverted ? getForeground() : COLOR_LINK) + " }");
+    override fun getMinimumSize(): Dimension = super.getMinimumSize().apply {
+        width = 0
+    }
+
+    override fun setForeground(fg: Color) {
+        super.setForeground(fg)
+        htmlDocument?.styleSheet?.apply {
+            addRule("body {color : #" + getHexValue(fg) + " }")
         }
     }
 
-    @Override
-    public Dimension getMinimumSize() {
-        Dimension minimumSize = super.getMinimumSize();
-        minimumSize.width = 0;
-        return minimumSize;
+    private fun getHexValue(color: Color): String = StringBuilder().apply {
+        appendComponent(color.red)
+        appendComponent(color.green)
+        appendComponent(color.blue)
+    }.toString()
+
+    private fun StringBuilder.appendComponent(component: Int) {
+        append(Integer.toHexString(component).padStart(2, '0'))
     }
 
-    @Override
-    public void setForeground(Color fg) {
-        super.setForeground(fg);
-        Document document = getDocument();
-        if (document instanceof HTMLDocument) {
-            HTMLDocument htmlDocument = (HTMLDocument)document;
-            StyleSheet css = htmlDocument.getStyleSheet();
-            css.addRule("body {color : #" + getHexValue(fg) + " }");
-        }
+    private val htmlDocument : HTMLDocument?
+            get() = if (document is HTMLDocument) document as HTMLDocument else null
+
+    override fun setText(text: String?) {
+        super.setText(if (text?.startsWith("<html>") ?: false) "<html>$text" else text)
     }
 
-    private String getHexValue(Color color) {
-        StringBuilder buffer = new StringBuilder();
-        appendComponent(buffer, color.getRed());
-        appendComponent(buffer, color.getGreen());
-        appendComponent(buffer, color.getBlue());
-        return buffer.toString();
-    }
-
-    private void appendComponent(StringBuilder buffer, int component) {
-        buffer.append(padLeft(Integer.toHexString(component), '0', 2));
-    }
-
-    public static String padLeft(String val, char padChar, int length) {
-        StringBuilder buffer = new StringBuilder(length);
-        for (int i=0; i< length - val.length(); i++) {
-            buffer.append(padChar);
-        }
-        buffer.append(val.substring(0, Math.min(length, val.length())));
-        return buffer.toString();
-    }
-
-    @Override
-    public void setText(String text) {
-        if (!text.startsWith("<html>")) {
-            text = "<html>" + text;
-        }
-        super.setText(text);
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        Dimension d = super.getPreferredSize();
-        d = (d == null) ? new Dimension(400, 400) : d;
-        if (d.height == 0) {
-            d.height = 10;
-        }
-        return d;
-    }
-
-    @Override
-    public int getBaseline(int width, int height) {
-        Insets insets = getInsets();
-        View rootView = getUI().getRootView(this);
-        if (rootView.getViewCount() > 0) {
-            height = height - insets.top - insets.bottom;
-            int baseline = insets.top;
-            int fieldBaseline = getBaseline(
-                    rootView.getView(0), width - insets.left -
-                            insets.right, height);
-            if (fieldBaseline < 0) {
-                return -1;
+    override fun getPreferredSize(): Dimension {
+        return super.getPreferredSize()?.apply {
+            if (height == 0) {
+                height = 10
             }
-            return baseline + fieldBaseline;
+        } ?: Dimension(400, 400)
+    }
+
+    override fun getBaseline(width: Int, height: Int): Int {
+        val insets = insets
+        val rootView = getUI().getRootView(this)
+        if (rootView.viewCount > 0) {
+            val baseline = insets.top
+            val fieldBaseline = getBaseline(rootView.getView(0),
+                    width - insets.left - insets.right,
+                    height - insets.top - insets.bottom
+            )
+            if (fieldBaseline >= 0) {
+                return baseline + fieldBaseline
+            }
         }
-        return -1;
+        return -1
     }
 
-    @Override
-    public BaselineResizeBehavior getBaselineResizeBehavior() {
-        return BaselineResizeBehavior.CONSTANT_ASCENT;
-    }
-
-    // static methods copied from BasicHTML
-    private static int getBaseline(View view, int w, int h) {
+    // methods copied from BasicHTML
+    private fun getBaseline(view: View, w: Int, h: Int): Int {
         if (hasParagraph(view)) {
-            view.setSize(w, h);
-            return getBaseline(view, new Rectangle(0, 0, w, h));
+            view.setSize(w.toFloat(), h.toFloat())
+            return getBaseline(view, Rectangle(0, 0, w, h))
         }
-        return -1;
+        return -1
     }
 
-    private static int getBaseline(View view, Shape bounds) {
-        if (view.getViewCount() == 0) {
-            return -1;
+    private fun getBaseline(view: View, bounds: Shape?): Int {
+        if (view.viewCount == 0) {
+            return -1
         }
-        AttributeSet attributes = view.getElement().getAttributes();
-        Object name = null;
-        if (attributes != null) {
-            name = attributes.getAttribute(StyleConstants.NameAttribute);
+        val name: Any? = view.element.attributes?.getAttribute(StyleConstants.NameAttribute)
+        val index = if (name === HTML.Tag.HTML && view.viewCount > 1) 1 else 0
+        val correctedBounds = view.getChildAllocation(index, bounds) ?: return -1
+        val child = view.getView(index)
+        if (view is javax.swing.text.ParagraphView) {
+            val rect: Rectangle = if (correctedBounds is Rectangle) correctedBounds else correctedBounds.bounds
+            return rect.y + (rect.height * child.getAlignment(View.Y_AXIS)).toInt()
+        } else {
+            return getBaseline(child, correctedBounds)
         }
-        int index = 0;
-        if (name == HTML.Tag.HTML && view.getViewCount() > 1) {
-            // For html on widgets the header is not visible, skip it.
-            index++;
-        }
-        bounds = view.getChildAllocation(index, bounds);
-        if (bounds == null) {
-            return -1;
-        }
-        View child = view.getView(index);
-        if (view instanceof javax.swing.text.ParagraphView) {
-            Rectangle rect;
-            if (bounds instanceof Rectangle) {
-                rect = (Rectangle)bounds;
-            } else {
-                rect = bounds.getBounds();
-            }
-            return rect.y + (int)(rect.height *
-                    child.getAlignment(View.Y_AXIS));
-        }
-        return getBaseline(child, bounds);
     }
 
-    private static boolean hasParagraph(View view) {
-        if (view instanceof javax.swing.text.ParagraphView) {
-            return true;
+    private fun hasParagraph(view: View): Boolean {
+        if (view is javax.swing.text.ParagraphView) {
+            return true
         }
-        if (view.getViewCount() == 0) {
-            return false;
+        if (view.viewCount == 0) {
+            return false
         }
-        AttributeSet attributes = view.getElement().getAttributes();
-        Object name = null;
-        if (attributes != null) {
-            name = attributes.getAttribute(StyleConstants.NameAttribute);
-        }
-        int index = 0;
-        if (name == HTML.Tag.HTML && view.getViewCount() > 1) {
-            // For html on widgets the header is not visible, skip it.
-            index = 1;
-        }
-        return hasParagraph(view.getView(index));
+        val name: Any? = view.element.attributes?.getAttribute(StyleConstants.NameAttribute)
+        val index = if (name === HTML.Tag.HTML && view.viewCount > 1) 1 else 0
+        return hasParagraph(view.getView(index))
+    }
+
+    override fun getBaselineResizeBehavior() = Component.BaselineResizeBehavior.CONSTANT_ASCENT
+
+    companion object {
+        val COLOR_LINK = Color(0, 128, 0)
+        private val NO_MARGIN = Insets(0, 0, 0, 0)
     }
 
 }
