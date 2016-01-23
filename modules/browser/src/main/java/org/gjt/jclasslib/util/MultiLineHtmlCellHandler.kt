@@ -12,141 +12,129 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.List;
+import javax.swing.*
+import javax.swing.border.EmptyBorder
+import javax.swing.event.CellEditorListener
+import javax.swing.event.ChangeEvent
+import javax.swing.table.TableCellEditor
+import javax.swing.table.TableCellRenderer
+import java.awt.*
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.awt.event.MouseMotionAdapter
+import java.util.ArrayList
+import java.util.EventObject
 
-public class MultiLineHtmlCellHandler extends HtmlDisplayTextArea implements TableCellRenderer, TableCellEditor {
+class MultiLineHtmlCellHandler : HtmlDisplayTextArea(), TableCellRenderer, TableCellEditor {
 
-    private List<CellEditorListener> listeners = new ArrayList<CellEditorListener>();
-    private JTable table;
+    private val listeners = ArrayList<CellEditorListener>()
+    private var table: JTable? = null
 
-    public MultiLineHtmlCellHandler() {
-        setOpaque(true);
+    init {
+        isOpaque = true
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                select();
+        addMouseListener(object : MouseAdapter() {
+            override fun mousePressed(e: MouseEvent?) {
+                select()
             }
-        });
+        })
 
-        addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (table != null) {
+        addMouseMotionListener(object : MouseMotionAdapter() {
+            override fun mouseDragged(e: MouseEvent?) {
+                table?.let { table ->
                     // Implement single selection dragging while dragging
-                    MouseEvent tableEvent = SwingUtilities.convertMouseEvent(MultiLineHtmlCellHandler.this, e, table);
-                    Point point = tableEvent.getPoint();
-                    int row = table.rowAtPoint(point);
-                    if (row == -1) {
-                        int lastRow = table.getRowCount() - 1;
-                        Rectangle lastCellRect = table.getCellRect(lastRow, 0, true);
-                        if (point.y > lastCellRect.y + lastCellRect.height) {
-                            row = lastRow;
-                        }
-                    }
-                    table.getSelectionModel().setSelectionInterval(row, row);
-                    if (row == table.getEditingRow()) {
-                        switchToSelected(table);
+                    val tableEvent = SwingUtilities.convertMouseEvent(this@MultiLineHtmlCellHandler, e, table)
+                    val point = tableEvent.point
+                    val row = getRowAtPoint(point, table)
+                    table.selectionModel.setSelectionInterval(row, row)
+                    if (row == table.editingRow) {
+                        switchToSelected(table)
                     } else {
-                        switchToUnselected(table);
+                        switchToUnselected(table)
                     }
                 }
             }
-        });
+        })
 
     }
 
-    private void select() {
-        if (table != null) {
-            int row = table.getEditingRow();
-            table.getSelectionModel().setSelectionInterval(row, row);
-            switchToSelected(table);
+    private fun getRowAtPoint(point: Point, table: JTable): Int {
+        val row = table.rowAtPoint(point)
+        if (row == -1) {
+            val lastRow = table.rowCount - 1
+            val lastCellRect = table.getCellRect(lastRow, 0, true)
+            if (point.y > lastCellRect.y + lastCellRect.height) {
+                return lastRow
+            }
+        }
+        return row
+    }
+
+    private fun select() {
+        table?.let { table ->
+            val row = table.editingRow
+            table.selectionModel.setSelectionInterval(row, row)
+            switchToSelected(table)
         }
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
         if (isSelected) {
-            switchToSelected(table);
+            switchToSelected(table)
         } else {
-            switchToUnselected(table);
+            switchToUnselected(table)
         }
-        setFont(table.getFont());
-        setBorder(new EmptyBorder(1, 1, 1, 1));
-        setText((value == null) ? "" : value.toString());
-        return this;
+        font = table.font
+        border = EmptyBorder(1, 1, 1, 1)
+        text = if (value == null) "" else value.toString()
+        return this
     }
 
-    private void switchToUnselected(JTable table) {
-        setForeground(table.getForeground());
-        setBackground(table.getBackground());
-        setInverted(false);
+    private fun switchToUnselected(table: JTable) {
+        foreground = table.foreground
+        background = table.background
+        inverted = false
     }
 
-    private void switchToSelected(JTable table) {
-        setForeground(table.getSelectionForeground());
-        setBackground(table.getSelectionBackground());
-        setInverted(!table.getSelectionForeground().equals(table.getForeground()));
+    private fun switchToSelected(table: JTable) {
+        foreground = table.selectionForeground
+        background = table.selectionBackground
+        inverted = table.selectionForeground != table.foreground
     }
 
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        this.table = table;
-        return getTableCellRendererComponent(this.table, value, isSelected, false, row, column);
+    override fun getTableCellEditorComponent(table: JTable, value: Any, isSelected: Boolean, row: Int, column: Int): Component {
+        this.table = table
+        return getTableCellRendererComponent(table, value, isSelected, false, row, column)
     }
 
-    @Override
-    public Object getCellEditorValue() {
-        return null;
-    }
+    override fun getCellEditorValue() = null
 
-    @Override
-    public boolean isCellEditable(EventObject anEvent) {
-        return true;
-    }
+    override fun isCellEditable(anEvent: EventObject?) = true
 
-    @Override
-    public boolean shouldSelectCell(EventObject eventObject) {
-        return false;
-    }
+    override fun shouldSelectCell(eventObject: EventObject?) = false
 
-    @Override
-    public boolean stopCellEditing() {
-        ChangeEvent event = new ChangeEvent(this);
-        for (CellEditorListener listener : new ArrayList<CellEditorListener>(listeners)) {
-            listener.editingStopped(event);
+    override fun stopCellEditing(): Boolean {
+        val event = ChangeEvent(this)
+        for (listener in ArrayList(listeners)) {
+            listener.editingStopped(event)
         }
-        return true;
+        return true
     }
 
-    @Override
-    public void cancelCellEditing() {
-        ChangeEvent event = new ChangeEvent(this);
-        for (CellEditorListener listener : new ArrayList<CellEditorListener>(listeners)) {
-            listener.editingCanceled(event);
+    override fun cancelCellEditing() {
+        val event = ChangeEvent(this)
+        for (listener in ArrayList(listeners)) {
+            listener.editingCanceled(event)
         }
     }
 
-    @Override
-    public void addCellEditorListener(CellEditorListener l) {
-        listeners.add(l);
+    override fun addCellEditorListener(l: CellEditorListener) {
+        listeners.add(l)
     }
 
-    @Override
-    public void removeCellEditorListener(CellEditorListener l) {
-        listeners.remove(l);
+    override fun removeCellEditorListener(l: CellEditorListener) {
+        listeners.remove(l)
     }
 }
