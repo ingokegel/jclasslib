@@ -67,7 +67,7 @@ public class ProgressDialog extends JDialog {
     public void setVisible(boolean visible) {
         if (visible) {
             progressBar.setIndeterminate(true);
-            GUIHelper.centerOnParentWindow(this, getOwner());
+            GUIHelper.INSTANCE.centerOnParentWindow(this, getOwner());
         } else {
             progressBar.setIndeterminate(false);
         }

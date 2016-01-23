@@ -128,7 +128,7 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
 
         add(new JPanel(), gRemainder);
         scrollPane = new JScrollPane(this);
-        GUIHelper.setDefaultScrollbarUnits(scrollPane);
+        GUIHelper.INSTANCE.setDefaultScrollBarUnits(scrollPane);
         scrollPane.setBorder(null);
 
     }

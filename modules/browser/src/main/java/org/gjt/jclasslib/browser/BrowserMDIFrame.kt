@@ -336,7 +336,7 @@ class BrowserMDIFrame : JFrame() {
         val contentPane = contentPane as JComponent
         contentPane.layout = BorderLayout(5, 5)
         contentPane.add(JScrollPane(desktopManager.desktopPane).apply {
-            GUIHelper.setDefaultScrollbarUnits(this)
+            GUIHelper.setDefaultScrollBarUnits(this)
         }, BorderLayout.CENTER)
 
         contentPane.add(buildToolbar(), BorderLayout.NORTH)

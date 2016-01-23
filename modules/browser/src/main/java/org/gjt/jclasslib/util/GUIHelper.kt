@@ -5,50 +5,29 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-import com.install4j.api.Util;
+import com.install4j.api.Util
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+import javax.swing.*
+import javax.swing.border.Border
+import java.awt.*
+import java.net.MalformedURLException
+import java.net.URL
 
-/**
- * Collection of GUI utility methods.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- *
- */
-public class GUIHelper {
+object GUIHelper {
 
-    /**
-     * The title for message boxes.
-     */
-    public static final String MESSAGE_TITLE = "jclasslib";
+    //TODO remove annotations
+    @JvmField
+    val MESSAGE_TITLE = "jclasslib"
+    @JvmField
+    val YES_NO_OPTIONS = arrayOf("Yes", "No")
+    @JvmField
+    val ICON_EMPTY: Icon = EmptyIcon(16, 16)
+    @JvmField
+    val WINDOW_BORDER = BorderFactory.createEmptyBorder(8, 8, 8, 8)
 
-    /**
-     * "Yes" and "No" Options for showOptionDialog.
-     */
-    public static final String[] YES_NO_OPTIONS = new String[]{"Yes", "No"};
-    /**
-     * Empty icon 16x16.
-     */
-    public static final Icon ICON_EMPTY = new EmptyIcon(16, 16);
-
-    public static final Border WINDOW_BORDER = BorderFactory.createEmptyBorder(8, 8, 8, 8);
-
-    /**
-     * Show a <tt>JOptionPane</tt> option dialog.
-     *
-     * @param parent      parent component
-     * @param message     the message string
-     * @param options     the array of option strings
-     * @param messageType the message type as defined in <tt>JOptionPane</tt>
-     * @return the result code of the dialog
-     */
-    public static int showOptionDialog(Component parent, String message, String[] options, int messageType) {
+    fun showOptionDialog(parent: Component, message: String, options: Array<String>, messageType: Int): Int {
         return JOptionPane.showOptionDialog(parent,
                 message,
                 MESSAGE_TITLE,
@@ -56,61 +35,43 @@ public class GUIHelper {
                 messageType,
                 null,
                 options,
-                options[0]);
+                options[0])
     }
 
-    /**
-     * Show a <tt>JOptionPane</tt> message dialog.
-     *
-     * @param parent      parent component
-     * @param message     the message string
-     * @param messageType the message type as defined in <tt>JOptionPane</tt>
-     */
-    public static void showMessage(Component parent, String message, int messageType) {
-        if (parent != null && !(parent instanceof Window)) {
-            parent = SwingUtilities.getAncestorOfClass(Window.class, parent);
-        }
-        JOptionPane.showMessageDialog(parent,
+    fun showMessage(parent: Component?, message: String?, messageType: Int) {
+        JOptionPane.showMessageDialog(adjustParent(parent),
                 message,
                 MESSAGE_TITLE,
                 messageType,
-                null);
+                null)
     }
 
-    /**
-     * Center a window on another window.
-     *
-     * @param window       the window to be centered.
-     * @param parentWindow the parent window on which the window is to be centered.
-     */
-    public static void centerOnParentWindow(Window window, Window parentWindow) {
-        window.setLocation(parentWindow.getX() + (parentWindow.getWidth() - window.getWidth()) / 2,
-                parentWindow.getY() + (parentWindow.getHeight() - window.getHeight()) / 2);
+    private fun adjustParent(parent: Component?): Component? =
+            if (parent != null && parent !is Window) {
+                SwingUtilities.getAncestorOfClass(Window::class.java, parent)
+            } else {
+                parent
+            }
+
+    fun centerOnParentWindow(window: Window, parentWindow: Window) {
+        val x = parentWindow.x + (parentWindow.width - window.width) / 2
+        val y = parentWindow.y + (parentWindow.height - window.height) / 2
+        window.setLocation(x, y)
     }
 
-    /**
-     * Set reasonable unit increments for a scroll pane that does not contain a
-     * <tt>Scrollable</tt>.
-     *
-     * @param scrollPane the scroll pane
-     */
-    public static void setDefaultScrollbarUnits(JScrollPane scrollPane) {
-
-        int unit = new JLabel().getFont().getSize() * 2;
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(unit);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(unit);
+    fun setDefaultScrollBarUnits(scrollPane: JScrollPane) {
+        val unit = JLabel().font.size * 2
+        scrollPane.apply {
+            horizontalScrollBar.unitIncrement = unit
+            verticalScrollBar.unitIncrement = unit
+        }
     }
 
-    /**
-     * Show a URL in the browser
-     * @param urlSpec the URL as a string
-     */
-    public static void showURL(String urlSpec) {
-
+    fun showURL(urlSpec: String) {
         try {
-            Util.showUrl(new URL(urlSpec));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Util.showUrl(URL(urlSpec))
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
         }
     }
 }
