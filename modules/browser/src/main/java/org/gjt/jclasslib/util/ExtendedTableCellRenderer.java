@@ -32,7 +32,7 @@ public class ExtendedTableCellRenderer extends ExtendedJLabel
      * Constructor.
      */
     public ExtendedTableCellRenderer() {
-        super();
+        super("");
         setOpaque(true);
         setBorder(NO_FOCUS_BORDER);
     }

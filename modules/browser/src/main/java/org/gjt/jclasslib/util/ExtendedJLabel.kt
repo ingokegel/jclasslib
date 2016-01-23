@@ -5,174 +5,90 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.util;
+package org.gjt.jclasslib.util
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.*
+import java.awt.*
 
-/**
-    A <tt>JLabel</tt> that can be underlined, implements <tt>Scrollable</tt>,
-    may have a tooltip text equal to its text and exposes a few convenience methods
-    for <tt>setText()</tt>.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ExtendedJLabel extends JLabel implements Scrollable, TextDisplay {
+open class ExtendedJLabel(text: String) : JLabel(text), Scrollable, TextDisplay {
 
-    private boolean underlined = false;
-    private boolean autoTooltip = false;
+    var isUnderlined = false
+        set(underlined) {
+            field = underlined
+            repaint()
+        }
+    var autoTooltip = false
+        set(autoTooltip) {
+            field = autoTooltip
+            if (autoTooltip) {
+                toolTipText = text
+            }
+        }
 
-    /**
-        Constructor.
-     */
-    public ExtendedJLabel() {
-    }
+    override fun getPreferredScrollableViewportSize(): Dimension = size
+    override fun getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = width / 10
+    override fun getScrollableTracksViewportWidth(): Boolean = false
+    override fun getScrollableTracksViewportHeight(): Boolean = false
+    override fun getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = 10
 
-    /**
-        Constructor.
-        @param text the label text.
-     */
-    public ExtendedJLabel(String text) {
-        super(text);
-    }
-    
-    public Dimension getPreferredScrollableViewportSize() {
-        return getSize();
-    }
-
-    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-        return getWidth() / 10;
-    }
-    
-    public boolean getScrollableTracksViewportWidth() {
-        return false;
-    }
-    
-    public boolean getScrollableTracksViewportHeight() {
-        return false;
-    }
-    
-    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-        return 10;
-    }
-    
-    /**
-        Check whether this label is underlined.
-        @return underlined or not
-     */
-    public boolean isUnderlined() {
-        return underlined;
-    }
-    
-    /**
-        Set whether this label is underlined.
-        @param underlined underlined or not
-     */
-    public void setUnderlined(boolean underlined) {
-        this.underlined = underlined;
-        repaint();
-    }
-    
-    /**
-        Check whether the tooltip text is automatically equal
-        to the text of this label or not.
-        @return equal or not
-     */
-    public boolean getAutoTooltip() {
-        return autoTooltip;
-    }
-
-    /**
-        Set whether the tooltip text is automatically equal
-        to the text of this label or not.
-        @param autoTooltip equal or not
-     */
-    public void setAutoTooltip(boolean autoTooltip) {
-        this.autoTooltip = autoTooltip;
-        setToolTipText(getText());
-    }
-    
-    public void setText(String text) {
-        super.setText(text);
+    override fun setText(text: String) {
+        super.setText(text)
         if (autoTooltip) {
-            setToolTipText(text);
+            toolTipText = text
         }
     }
-    
-    /**
-        Convenience method for calling <tt>setText()</tt> with a <tt>short</tt>.
-        @param number the <tt>short</tt>
-     */
-    public void setText(short number) {
-        setText(String.valueOf(number));
+
+    fun setText(number: Short) {
+        text = number.toString()
     }
 
-    /**
-        Convenience method for calling <tt>setText()</tt> with a <tt>int</tt>.
-        @param number the <tt>int</tt>
-     */
-    public void setText(int number) {
-        setText(String.valueOf(number));
+    fun setText(number: Int) {
+        text = number.toString()
     }
 
-    /**
-        Convenience method for calling <tt>setText()</tt> with a <tt>double</tt>.
-        @param number the <tt>double</tt>
-     */
-    public void setText(double number) {
-        setText(String.valueOf(number));
+    fun setText(number: Double) {
+        text = number.toString()
     }
 
-    /**
-        Convenience method for calling <tt>setText()</tt> with a <tt>float</tt>.
-        @param number the <tt>float</tt>
-     */
-    public void setText(float number) {
-        setText(String.valueOf(number));
+    fun setText(number: Float) {
+        text = number.toString()
     }
 
-    /**
-        Convenience method for calling <tt>setText()</tt> with a <tt>long</tt>.
-        @param number the <tt>long</tt>
-     */
-    public void setText(long number) {
-        setText(String.valueOf(number));
+    fun setText(number: Long) {
+        text = number.toString()
     }
 
-    public void paint(Graphics g) {
-        super.paint(g);
-        
-        if (underlined) {
-            Insets i = getInsets();
-            FontMetrics fm = g.getFontMetrics();
+    override fun paint(g: Graphics) {
+        super.paint(g)
 
-            Rectangle textRect = new Rectangle();
-            Rectangle viewRect = new Rectangle(i.left, i.top, getWidth() - (i.right + i.left), getHeight() - (i.bottom + i.top) );
+        if (isUnderlined) {
+            val i = insets
+            val fm = g.fontMetrics
+
+            val textRect = Rectangle()
+            val viewRect = Rectangle(i.left, i.top, width - (i.right + i.left), height - (i.bottom + i.top))
 
             SwingUtilities.layoutCompoundLabel(
-                                this,
-                                fm,
-                                getText(),
-                                getIcon(),
-                                getVerticalAlignment(),
-                                getHorizontalAlignment(),
-                                getVerticalTextPosition(),
-                                getHorizontalTextPosition(),
-                                viewRect,
-                                new Rectangle(),
-                                textRect,
-                                getText() == null ? 0 : (Integer)UIManager.get("Button.textIconGap")
-                          );
+                    this,
+                    fm,
+                    text,
+                    icon,
+                    verticalAlignment,
+                    horizontalAlignment,
+                    verticalTextPosition,
+                    horizontalTextPosition,
+                    viewRect,
+                    Rectangle(),
+                    textRect,
+                    if (text == null) 0 else UIManager.getInt("Button.textIconGap")
+            )
 
-
-            int offset = 2;
-            if (UIManager.getLookAndFeel().isNativeLookAndFeel() && System.getProperty("os.name").startsWith("Windows")) {
-                offset = 1;
-            }
-            g.fillRect(textRect.x + (Integer)UIManager.get("Button.textShiftOffset"),
-                       textRect.y + fm.getAscent() + (Integer)UIManager.get("Button.textShiftOffset") + offset,
-                       textRect.width,
-                       1);
+            val yOffset = if (UIManager.getLookAndFeel().isNativeLookAndFeel && System.getProperty("os.name").startsWith("Windows")) 1 else 2
+            g.fillRect(textRect.x + UIManager.get("Button.textShiftOffset") as Int,
+                    textRect.y + fm.ascent + UIManager.get("Button.textShiftOffset") as Int + yOffset,
+                    textRect.width,
+                    1
+            )
         }
     }
 }
