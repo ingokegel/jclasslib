@@ -5,49 +5,29 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser;
+package org.gjt.jclasslib.browser
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.StringSelection
+import java.awt.datatransfer.Transferable
+import javax.swing.JComponent
+import javax.swing.JTree
+import javax.swing.TransferHandler
 
-public class BrowserNodeTransferHandler extends TransferHandler {
+class BrowserNodeTransferHandler(private val services: BrowserServices) : TransferHandler() {
 
-    private BrowserServices services;
+    override fun getSourceActions(c: JComponent): Int = TransferHandler.COPY
 
-    public BrowserNodeTransferHandler(BrowserServices services) {
-        this.services = services;
-    }
-
-    @Override
-    public int getSourceActions(JComponent c) {
-        return COPY;
-    }
-
-    @Override
-    protected Transferable createTransferable(JComponent c) {
-
-        if (!(c instanceof JTree)) {
-            return null;
+    override fun createTransferable(c: JComponent): Transferable? {
+        if (c !is JTree || c.selectionPath == null) {
+            return null
         }
 
-        TreePath selectionPath = ((JTree)c).getSelectionPath();
-        if (selectionPath == null) {
-            return null;
-        }
-
-        AbstractDetailPane detailPane = services.getBrowserComponent().getDetailPane().getCurrentDetailPane();
-        if (detailPane == null) {
-            return null;
-        }
-
-        String text = detailPane.getClipboardText();
+        val detailPane = services.browserComponent.detailPane.currentDetailPane ?: return null
+        val text = detailPane.clipboardText
         if (text != null) {
-            return new StringSelection(text);
+            return StringSelection(text)
         } else {
-            return null;
+            return null
         }
-
     }
 }
