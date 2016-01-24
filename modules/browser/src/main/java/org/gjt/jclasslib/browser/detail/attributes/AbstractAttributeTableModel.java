@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.browser.detail.attributes;
 
-import org.gjt.jclasslib.browser.detail.ListDetailPane.ColumnCache;
 import org.gjt.jclasslib.structures.AttributeInfo;
 
 import javax.swing.table.AbstractTableModel;
@@ -144,4 +143,41 @@ public abstract class AbstractAttributeTableModel extends AbstractTableModel {
     public void link(int row, int column) {
     }
 
+    /**
+     Class for caching dynamically computed values in a read only table.
+     */
+    public static class ColumnCache {
+
+        private Object[][] cache;
+
+        /**
+         * Constructor.
+         * @param rowNumber the row number.
+         * @param columnNumber the column number.
+         */
+        public ColumnCache(int rowNumber, int columnNumber) {
+            cache = new Object[rowNumber][columnNumber];
+        }
+
+        /**
+         Get the cached value of a specific cell.
+         @param row the row number of the cell
+         @param column the column number of the cell
+         @return the value
+         */
+        public Object getValueAt(int row, int column) {
+            return cache[row][column];
+        }
+
+        /**
+         Set the cached value of a specific cell.
+         @param row the row number of the cell
+         @param column the column number of the cell
+         @param value the value
+         */
+        public void setValueAt(int row, int column, Object value) {
+            cache[row][column] = value;
+        }
+
+    }
 }

@@ -63,7 +63,7 @@ public class LinkRenderer implements TableCellRenderer  {
                                                    int column)
     {
 
-        boolean standardLabel = value.toString().equals(ListDetailPane.CPINFO_LINK_TEXT + "0");
+        boolean standardLabel = value == null || value.toString().equals(ListDetailPane.CPINFO_LINK_TEXT + "0");
         linkLineRenderer.setForeground(standardLabel ? standardForeground : HtmlDisplayTextArea.COLOR_LINK);
         linkLineRenderer.setUnderlined(!standardLabel);
         linkLineRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

@@ -13,10 +13,10 @@ import org.gjt.jclasslib.bytecode.Instruction
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.LinkMouseListener
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.event.MouseMotionListener
 import java.util.*
 import javax.swing.*
 import javax.swing.tree.TreePath
@@ -40,11 +40,9 @@ class ByteCodeDetailPane(services: BrowserServices) : AbstractDetailPane(service
     }
 
     private val byteCodeDisplay: ByteCodeDisplay = ByteCodeDisplay(this).apply {
-        val listener = DocumentLinkListener(this)
-        addMouseListener(listener)
-        addMouseMotionListener(listener)
-
+        DocumentLinkListener(this)
     }
+
     private val counterDisplay: CounterDisplay = CounterDisplay()
 
     private val scrollPane: JScrollPane = JScrollPane(byteCodeDisplay).apply {
@@ -124,22 +122,13 @@ class ByteCodeDetailPane(services: BrowserServices) : AbstractDetailPane(service
         get() = byteCodeDisplay.clipboardText
 
     //TODO move to BytecodeDisplay
-    private inner class DocumentLinkListener(private val byteCodeDisplay: ByteCodeDisplay) : MouseAdapter(), MouseMotionListener {
-
-        override fun mouseClicked(event: MouseEvent) {
-            byteCodeDisplay.link(event.point)
+    private inner class DocumentLinkListener(private val byteCodeDisplay: ByteCodeDisplay) : LinkMouseListener(byteCodeDisplay) {
+        override fun isLink(point: Point): Boolean {
+            return byteCodeDisplay.isLink(point)
         }
 
-        override fun mouseDragged(event: MouseEvent) {
-        }
-
-        override fun mouseMoved(event: MouseEvent) {
-            val link = byteCodeDisplay.isLink(event.point)
-            if (byteCodeDisplay.cursor.type == Cursor.getDefaultCursor().type && link) {
-                byteCodeDisplay.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-            } else if (!link) {
-                byteCodeDisplay.cursor = Cursor.getDefaultCursor()
-            }
+        override fun link(point: Point) {
+            byteCodeDisplay.link(point)
         }
     }
 }

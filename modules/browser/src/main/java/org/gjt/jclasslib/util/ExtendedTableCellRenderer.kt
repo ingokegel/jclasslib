@@ -39,7 +39,7 @@ class ExtendedTableCellRenderer : ExtendedJLabel(""), TableCellRenderer {
         background = null
     }
 
-    override fun getTableCellRendererComponent(table: JTable, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+    override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
         if (isSelected) {
             super.setForeground(table.selectionForeground)
             super.setBackground(table.selectionBackground)
