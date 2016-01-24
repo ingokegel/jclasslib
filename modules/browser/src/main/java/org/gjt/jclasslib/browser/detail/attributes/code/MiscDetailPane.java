@@ -34,6 +34,7 @@ public class MiscDetailPane extends FixedListDetailPane {
      */
     public MiscDetailPane(BrowserServices services) {
         super(services);
+        setName("Misc");
     }
     
     protected void setupLabels() {

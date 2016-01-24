@@ -88,7 +88,7 @@ public class InnerClassesAttributeDetailPane extends AbstractAttributeListDetail
                 default:
                     return;
             }
-            ConstantPoolHyperlinkListener.Companion.link(getBrowserServices(), constantPoolIndex);
+            ConstantPoolHyperlinkListener.Companion.link(getServices(), constantPoolIndex);
         }
         
         public int getRowCount() {

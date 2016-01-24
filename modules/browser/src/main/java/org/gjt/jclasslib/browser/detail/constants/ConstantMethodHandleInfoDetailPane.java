@@ -38,7 +38,7 @@ public class ConstantMethodHandleInfoDetailPane extends AbstractConstantInfoDeta
     @Override
     public void show(TreePath treePath) {
 
-        ClassFile classFile = getBrowserServices().getClassFile();
+        ClassFile classFile = getServices().getClassFile();
         ConstantMethodHandleInfo entry = getConstant(treePath, ConstantMethodHandleInfo.class);
 
         lblKind.setText(entry.getType().getVerbose());

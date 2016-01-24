@@ -172,35 +172,35 @@ public class AttributeDetailPane extends AbstractDetailPane {
 
     private AbstractDetailPane createDetailPanel(String attributeType) {
         if (attributeType.equals(SCREEN_CONSTANT_VALUE)) {
-            return new ConstantValueAttributeDetailPane(getBrowserServices());
+            return new ConstantValueAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_CODE)) {
-            return new CodeAttributeDetailPane(getBrowserServices());
+            return new CodeAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_EXCEPTIONS)) {
-            return new ExceptionsAttributeDetailPane(getBrowserServices());
+            return new ExceptionsAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_INNER_CLASSES)) {
-            return new InnerClassesAttributeDetailPane(getBrowserServices());
+            return new InnerClassesAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_SOURCE_FILE)) {
-            return new SourceFileAttributeDetailPane(getBrowserServices());
+            return new SourceFileAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_LINE_NUMBER_TABLE)) {
-            return new LineNumberTableAttributeDetailPane(getBrowserServices());
+            return new LineNumberTableAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_LOCAL_VARIABLE_TABLE)) {
-            return new LocalVariableTableAttributeDetailPane(getBrowserServices());
+            return new LocalVariableTableAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_ENCLOSING_METHOD)) {
-            return new EnclosingMethodAttributeDetailPane(getBrowserServices());
+            return new EnclosingMethodAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_SIGNATURE)) {
-            return new SignatureAttributeDetailPane(getBrowserServices());
+            return new SignatureAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_LOCAL_VARIABLE_TYPE_TABLE)) {
-            return new LocalVariableTypeTableAttributeDetailPane(getBrowserServices());
+            return new LocalVariableTypeTableAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_RUNTIME_ANNOTATIONS)) {
-            return new RuntimeAnnotationsAttributeDetailPane(getBrowserServices());
+            return new RuntimeAnnotationsAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_ANNOTATION_DEFAULT)) {
-            return new AnnotationDefaultAttributeDetailPane(getBrowserServices());
+            return new AnnotationDefaultAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_BOOTSTRAP_METHODS)) {
-            return new BootstrapMethodsAttributeDetailPane(getBrowserServices());
+            return new BootstrapMethodsAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_STACK_MAP_TABLE)) {
-        	return new StackMapTableAttributeDetailPane(getBrowserServices());
+        	return new StackMapTableAttributeDetailPane(getServices());
         } else if (attributeType.equals(SCREEN_METHOD_PARAMETERS)) {
-        	return new MethodParametersAttributeDetailPane(getBrowserServices());
+        	return new MethodParametersAttributeDetailPane(getServices());
         } else {
             return null;
         }
@@ -208,7 +208,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
 
     private void buildGenericInfoPane() {
 
-        genericInfoPane = new GenericAttributeDetailPane(getBrowserServices());
+        genericInfoPane = new GenericAttributeDetailPane(getServices());
         genericInfoPane.setBorder(createTitledBorder("Generic info:"));
     }
 

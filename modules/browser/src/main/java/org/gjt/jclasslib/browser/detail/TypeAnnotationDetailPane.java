@@ -112,7 +112,7 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
     }
 
     private void handleExceptionsLink(int index) {
-        JTree tree = getBrowserServices().getBrowserComponent().getTreePane().getTree();
+        JTree tree = getServices().getBrowserComponent().getTreePane().getTree();
         TreePath parentPath = findParentNode(tree, MethodInfo.class);
         TreePath path = findAttributeChildNode(parentPath, ExceptionsAttribute.class);
 
@@ -120,7 +120,7 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
     }
 
     private void handleLocalVarLink(int index) {
-        JTree tree = getBrowserServices().getBrowserComponent().getTreePane().getTree();
+        JTree tree = getServices().getBrowserComponent().getTreePane().getTree();
         TreePath parentPath = findParentNode(tree, CodeAttribute.class);
         TreePath path = findAttributeChildNode(parentPath, LocalVariableTableAttribute.class);
         LocalVariableTableAttribute attribute = (LocalVariableTableAttribute)((BrowserTreeNode)path.getLastPathComponent()).getElement();
@@ -140,7 +140,7 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
     }
 
     private void handleInterfaceLink(int index) {
-        TreePath interfacesPath = getBrowserServices().getBrowserComponent().getTreePane().getPathForCategory(NodeType.INTERFACE);
+        TreePath interfacesPath = getServices().getBrowserComponent().getTreePane().getPathForCategory(NodeType.INTERFACE);
         BrowserTreeNode interfacesNode = (BrowserTreeNode)interfacesPath.getLastPathComponent();
         if (index >= interfacesNode.getChildCount()) {
             throw new IllegalArgumentException("Invalid interface index " + index);
@@ -152,12 +152,12 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
 
     private void handleListLink(int index, TreePath path, Class<? extends AttributeInfo> attributeClass) {
         selectPath(path);
-        AttributeDetailPane detailPane = (AttributeDetailPane)getBrowserServices().getBrowserComponent().getDetailPane().getCurrentDetailPane();
+        AttributeDetailPane detailPane = (AttributeDetailPane)getServices().getBrowserComponent().getDetailPane().getCurrentDetailPane();
         ((ListDetailPane)detailPane.getAttributeDetailPane(attributeClass)).selectIndex(index);
     }
 
     private void selectPath(TreePath path) {
-        JTree tree = getBrowserServices().getBrowserComponent().getTreePane().getTree();
+        JTree tree = getServices().getBrowserComponent().getTreePane().getTree();
         tree.setSelectionPath(path);
         tree.scrollPathToVisible(path);
     }

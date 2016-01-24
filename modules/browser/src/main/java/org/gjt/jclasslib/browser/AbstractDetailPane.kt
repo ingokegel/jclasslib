@@ -18,7 +18,7 @@ import java.awt.*
 import java.awt.event.MouseListener
 import java.util.HashMap
 
-abstract class AbstractDetailPane(val browserServices: BrowserServices) : JPanel() {
+abstract class AbstractDetailPane(val services: BrowserServices) : JPanel() {
 
     private val labelToMouseListener = HashMap<ExtendedJLabel, MouseListener>()
 
@@ -62,7 +62,7 @@ abstract class AbstractDetailPane(val browserServices: BrowserServices) : JPanel
 
     protected fun getConstantPoolEntryName(constantPoolIndex: Int): String {
         try {
-            return browserServices.classFile.getConstantPoolEntryName(constantPoolIndex)
+            return services.classFile.getConstantPoolEntryName(constantPoolIndex)
         } catch (ex: InvalidByteCodeException) {
             return "invalid constant pool reference"
         }
@@ -71,7 +71,7 @@ abstract class AbstractDetailPane(val browserServices: BrowserServices) : JPanel
     protected fun constantPoolHyperlink(value: ExtendedJLabel, comment: ExtendedJLabel?, constantPoolIndex: Int) {
         value.apply {
             text = CPINFO_LINK_TEXT + constantPoolIndex
-            setupMouseListener(ConstantPoolHyperlinkListener(browserServices, constantPoolIndex))
+            setupMouseListener(ConstantPoolHyperlinkListener(services, constantPoolIndex))
             cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
         }
         comment?.applyComment(constantPoolIndex)
@@ -84,7 +84,7 @@ abstract class AbstractDetailPane(val browserServices: BrowserServices) : JPanel
                                                valueText: String) {
         value.apply {
             text = valueText + index
-            setupMouseListener(ClassAttributeHyperlinkListener(browserServices, index, attributeInfoClass))
+            setupMouseListener(ClassAttributeHyperlinkListener(services, index, attributeInfoClass))
             cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
         }
         comment?.applyComment(index)

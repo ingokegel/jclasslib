@@ -87,7 +87,7 @@ public class GeneralDetailPane extends FixedListDetailPane {
 
     public void show(TreePath treePath) {
         
-        ClassFile classFile = getBrowserServices().getClassFile();
+        ClassFile classFile = getServices().getClassFile();
         
         lblMinorVersion.setText(classFile.getMinorVersion());
         lblMajorVersion.setText(classFile.getMajorVersion());

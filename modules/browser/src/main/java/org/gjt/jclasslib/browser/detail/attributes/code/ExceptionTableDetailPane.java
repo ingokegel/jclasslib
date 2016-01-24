@@ -29,6 +29,7 @@ public class ExceptionTableDetailPane extends AbstractAttributeListDetailPane {
      */
     public ExceptionTableDetailPane(BrowserServices services) {
         super(services);
+        setName("Exception table");
     }
     
     protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute) {
@@ -76,7 +77,7 @@ public class ExceptionTableDetailPane extends AbstractAttributeListDetailPane {
             
             if (column == CATCH_TYPE_COLUMN_INDEX) {
                 int constantPoolIndex = exceptionTable[row].getCatchType();
-                ConstantPoolHyperlinkListener.Companion.link(getBrowserServices(), constantPoolIndex);
+                ConstantPoolHyperlinkListener.Companion.link(getServices(), constantPoolIndex);
             }
         }
         

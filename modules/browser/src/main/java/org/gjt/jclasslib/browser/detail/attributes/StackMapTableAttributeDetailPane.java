@@ -57,7 +57,7 @@ public class StackMapTableAttributeDetailPane extends AbstractAttributeListDetai
                 @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        ConstantPoolHyperlinkListener.Companion.link(getBrowserServices(), Integer.parseInt(e.getDescription()));
+                        ConstantPoolHyperlinkListener.Companion.link(getServices(), Integer.parseInt(e.getDescription()));
                     }
                 }
             });

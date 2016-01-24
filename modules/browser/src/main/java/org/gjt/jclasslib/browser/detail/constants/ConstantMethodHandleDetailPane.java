@@ -50,7 +50,7 @@ public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPa
     protected int addSpecial(int gridy) {
 
         classElementOpener = new ClassElementOpener(this);
-        if (getBrowserServices().canOpenClassFiles()) {
+        if (getServices().canOpenClassFiles()) {
             return classElementOpener.addSpecial(this, gridy);
         } else {
             return 0;

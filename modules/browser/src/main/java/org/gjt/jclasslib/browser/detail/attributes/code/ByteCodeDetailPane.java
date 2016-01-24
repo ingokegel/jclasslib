@@ -45,6 +45,7 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
      */
     public ByteCodeDetailPane(BrowserServices services) {
         super(services);
+        setName("Bytecode");
     }
 
     protected void setupComponent() {
@@ -79,7 +80,7 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
             public void actionPerformed(ActionEvent e) {
                 String opcode = (String)instructions.getSelectedItem();
                 if (opcode != null) {
-                    getBrowserServices().showURL(instructionToURL.get(opcode));
+                    getServices().showURL(instructionToURL.get(opcode));
                 }
             }
         };
@@ -107,10 +108,10 @@ public class ByteCodeDetailPane extends AbstractDetailPane {
         CodeAttribute attribute = (CodeAttribute)getAttribute(treePath);
         if (byteCodeDisplay.getCodeAttribute() != attribute) {
 
-            BrowserComponent browserComponent = getBrowserServices().getBrowserComponent();
+            BrowserComponent browserComponent = getServices().getBrowserComponent();
             browserComponent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             try {
-                byteCodeDisplay.setCodeAttribute(attribute, getBrowserServices().getClassFile());
+                byteCodeDisplay.setCodeAttribute(attribute, getServices().getClassFile());
                 counterDisplay.init(byteCodeDisplay);
 
                 byteCodeDisplay.scrollRectToVisible(RECT_ORIGIN);

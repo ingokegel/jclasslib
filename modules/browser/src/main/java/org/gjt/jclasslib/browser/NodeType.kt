@@ -22,19 +22,21 @@ enum class NodeType {
     INTERFACE {
         override fun createDetailPanel(services: BrowserServices) = InterfaceDetailPane(services)
     },
-    METHODS {
-        override fun createDetailPanel(services: BrowserServices) = EmptyDetailPane(services)
-    },
     FIELDS {
-        override fun createDetailPanel(services: BrowserServices) = EmptyDetailPane(services)
-    },
-    FIELD {
         override fun createDetailPanel(services: BrowserServices) =
                 ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD)
     },
-    METHOD {
+    FIELD {
+        override fun createDetailPanel(services: BrowserServices) =
+                ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.FIELD)
+    },
+    METHODS {
         override fun createDetailPanel(services: BrowserServices) =
                 ClassMemberContainerDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD)
+    },
+    METHOD {
+        override fun createDetailPanel(services: BrowserServices) =
+                ClassMemberDetailPane(services, FixedListWithSignatureDetailPane.SignatureMode.METHOD)
     },
     ATTRIBUTE {
         override fun createDetailPanel(services: BrowserServices) = AttributeDetailPane(services)

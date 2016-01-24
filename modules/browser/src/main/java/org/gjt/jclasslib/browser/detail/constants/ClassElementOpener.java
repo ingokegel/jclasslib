@@ -69,7 +69,7 @@ public class ClassElementOpener implements ActionListener {
                 return;
             }
             String className = classInfo.getName().replace('/', '.');
-            detailPane.getBrowserServices().openClassFile(className, browserPath);
+            detailPane.getServices().openClassFile(className, browserPath);
         } catch (InvalidByteCodeException ex) {
             ex.printStackTrace();
         }
@@ -108,7 +108,7 @@ public class ClassElementOpener implements ActionListener {
         if (constant instanceof ConstantClassInfo) {
             buttonText = "Show class";
             try {
-                if (((ConstantClassInfo)constant).getName().equals(detailPane.getBrowserServices().getClassFile().getThisClassName())) {
+                if (((ConstantClassInfo)constant).getName().equals(detailPane.getServices().getClassFile().getThisClassName())) {
                     buttonText = null;
                 }
             } catch (InvalidByteCodeException e) {

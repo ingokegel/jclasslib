@@ -255,7 +255,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
         updateHistory(link.sourceOffset);
 
         if (link instanceof ConstantPoolLink) {
-            ConstantPoolHyperlinkListener.Companion.link(detailPane.getBrowserServices(), ((ConstantPoolLink)link).cpIndex);
+            ConstantPoolHyperlinkListener.Companion.link(detailPane.getServices(), ((ConstantPoolLink)link).cpIndex);
         } else if (link instanceof OffsetLink) {
             int targetOffset = ((OffsetLink)link).targetOffset;
             scrollToOffset(targetOffset);
@@ -370,7 +370,7 @@ public class ByteCodeDisplay extends JPanel implements Scrollable {
 
     private void updateHistory(int offset) {
 
-        BrowserServices services = detailPane.getBrowserServices();
+        BrowserServices services = detailPane.getServices();
         TreePath treePath = services.getBrowserComponent().getTreePane().getTree().getSelectionPath();
 
         BrowserHistory history = services.getBrowserComponent().getHistory();

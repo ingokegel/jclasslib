@@ -100,7 +100,7 @@ class BrowserHistory(private val services: BrowserServices) {
         if (offset != null) {
             services.browserComponent.detailPane.attributeDetailPane.codeAttributeDetailPane.apply {
                 selectByteCodeDetailPane()
-                codeAttributeByteCodeDetailPane.scrollToOffset(offset)
+                byteCodeDetailPane.scrollToOffset(offset)
             }
         }
         updateActions()
