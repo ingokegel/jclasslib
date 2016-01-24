@@ -31,7 +31,7 @@ class ClassAttributeHyperlinkListener(private val services: BrowserServices, pri
         }
 
         val detailPane = services.browserComponent.detailPane.attributeDetailPane
-        (detailPane.getAttributeDetailPane(attributeInfoClass) as ListDetailPane).selectIndex(index)
+        (detailPane.getDetailPane(attributeInfoClass) as ListDetailPane).selectIndex(index)
     }
 
     private fun findChildNode(attributesNode: BrowserTreeNode, attributeInfoClass: Class<out AttributeInfo>): BrowserTreeNode? {

@@ -153,7 +153,7 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
     private void handleListLink(int index, TreePath path, Class<? extends AttributeInfo> attributeClass) {
         selectPath(path);
         AttributeDetailPane detailPane = (AttributeDetailPane)getServices().getBrowserComponent().getDetailPane().getCurrentDetailPane();
-        ((ListDetailPane)detailPane.getAttributeDetailPane(attributeClass)).selectIndex(index);
+        ((ListDetailPane)detailPane.getDetailPane(attributeClass)).selectIndex(index);
     }
 
     private void selectPath(TreePath path) {

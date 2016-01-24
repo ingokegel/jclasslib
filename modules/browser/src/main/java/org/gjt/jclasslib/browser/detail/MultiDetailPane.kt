@@ -28,6 +28,7 @@ import javax.swing.tree.TreePath
 abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : AbstractDetailPane(services) {
 
     private val elementClassToDetailPane = HashMap<Class<out T>, AbstractDetailPane>()
+    private var currentDetailPane : AbstractDetailPane? = null
 
     private val specificInfoPane: JPanel = JPanel().apply {
         border = createTitledBorder("Specific info:")
@@ -55,15 +56,23 @@ abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : Abstr
         val element = (treePath.lastPathComponent as BrowserTreeNode).element as T?
         if (element == null) {
             showCard(NAME_UNKNOWN)
+            currentDetailPane = null
         } else {
             val detailPane = elementClassToDetailPane[element.javaClass]
             if (detailPane != null) {
+                currentDetailPane = detailPane
                 showCard(element.javaClass.name)
                 detailPane.show(treePath)
             }
         }
         genericInfoPane.show(treePath)
     }
+
+    fun getDetailPane(elementValueClass: Class<out T>) : AbstractDetailPane? =
+            elementClassToDetailPane[elementValueClass]
+
+    override val clipboardText: String?
+        get() = currentDetailPane?.let { it.clipboardText }
 
     private fun showCard(cardName: String) {
         (specificInfoPane.layout as CardLayout).show(specificInfoPane, cardName)
