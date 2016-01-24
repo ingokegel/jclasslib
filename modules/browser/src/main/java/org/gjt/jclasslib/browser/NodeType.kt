@@ -48,7 +48,7 @@ enum class NodeType {
         override fun createDetailPanel(services: BrowserServices) = TypeAnnotationDetailPane(services)
     },
     ELEMENTVALUEPAIR {
-        override fun createDetailPanel(services: BrowserServices) = ElementValueDetailPane(services)
+        override fun createDetailPanel(services: BrowserServices) = ElementValuePairDetailPane(services)
     },
     ELEMENTVALUE {
         override fun createDetailPanel(services: BrowserServices) = ElementValueDetailPane(services)

@@ -30,6 +30,11 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
 
     }
 
+    @Test2(one = "1", two = true, three = TestEnum.THREE, four = String.class, other = @Test("test"), otherArray = {@Test("x"), @Test("y")})
+    private static void elementValues() {
+
+    }
+
     private static void handleTest(@Test TestInterface t2) {
         t2.run(new int[0]);
     }

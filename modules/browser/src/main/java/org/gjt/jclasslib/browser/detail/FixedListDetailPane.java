@@ -133,14 +133,6 @@ public abstract class FixedListDetailPane extends AbstractDetailPane {
 
     }
 
-    /**
-        Get the scroll pane.
-        @return the scroll pane.
-     */
-    public JScrollPane getScrollPane() {
-        return scrollPane;
-    }
-
     public void show(TreePath treePath) {
 
         scrollPane.getViewport().setViewPosition(new Point(0, 0));

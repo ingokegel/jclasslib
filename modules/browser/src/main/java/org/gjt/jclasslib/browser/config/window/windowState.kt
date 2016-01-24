@@ -55,6 +55,11 @@ class BrowserPath {
 }
 
 interface PathComponent
-data class CategoryHolder(var category: NodeType = NodeType.NO_CONTENT) : PathComponent
+data class CategoryHolder(var category: NodeType = NodeType.NO_CONTENT) : PathComponent {
+    // backwards compatibility with pre-5.0 format, called by XMLDecoder
+    fun setCategory(name: String) {
+        category = NodeType.values().find { it.name.toLowerCase() == name } ?: NodeType.NO_CONTENT
+    }
+}
 data class IndexHolder(var index: Int = -1) : PathComponent
 data class ReferenceHolder(var name: String = "", var type: String = "") : PathComponent

@@ -8,7 +8,7 @@ package org.gjt.jclasslib.browser.detail;
 
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.browser.BrowserTreeNode;
-import org.gjt.jclasslib.structures.Annotation;
+import org.gjt.jclasslib.structures.AnnotationData;
 import org.gjt.jclasslib.util.ExtendedJLabel;
 
 import javax.swing.tree.TreePath;
@@ -41,7 +41,7 @@ public class AnnotationDetailPane extends FixedListDetailPane {
     }
 
     public void show(TreePath treePath) {
-        Annotation annotation = (Annotation)((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
+        AnnotationData annotation = (AnnotationData)((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
 
         constantPoolHyperlink(lblType,
                 lblTypeVerbose,

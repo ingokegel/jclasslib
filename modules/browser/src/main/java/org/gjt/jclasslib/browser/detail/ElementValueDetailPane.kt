@@ -4,123 +4,78 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.browser.detail;
+package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane;
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.BrowserTreeNode;
-import org.gjt.jclasslib.browser.detail.elementvalues.ClassElementValueEntryDetailPane;
-import org.gjt.jclasslib.browser.detail.elementvalues.ConstElementValueEntryDetailPane;
-import org.gjt.jclasslib.browser.detail.elementvalues.EnumElementValueEntryDetailPane;
-import org.gjt.jclasslib.browser.detail.elementvalues.GenericElementValueDetailPane;
-import org.gjt.jclasslib.structures.elementvalues.ClassElementValue;
-import org.gjt.jclasslib.structures.elementvalues.ConstElementValue;
-import org.gjt.jclasslib.structures.elementvalues.ElementValue;
-import org.gjt.jclasslib.structures.elementvalues.EnumElementValue;
+import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.BrowserTreeNode
+import org.gjt.jclasslib.browser.detail.elementvalues.ClassElementValueEntryDetailPane
+import org.gjt.jclasslib.browser.detail.elementvalues.ConstElementValueEntryDetailPane
+import org.gjt.jclasslib.browser.detail.elementvalues.EnumElementValueEntryDetailPane
+import org.gjt.jclasslib.browser.detail.elementvalues.GenericElementValueDetailPane
+import org.gjt.jclasslib.structures.elementvalues.ClassElementValue
+import org.gjt.jclasslib.structures.elementvalues.ConstElementValue
+import org.gjt.jclasslib.structures.elementvalues.ElementValue
+import org.gjt.jclasslib.structures.elementvalues.EnumElementValue
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.util.HashMap;
+import javax.swing.*
+import javax.swing.border.Border
+import javax.swing.tree.TreePath
+import java.awt.*
+import java.util.HashMap
 
-/**
- * Container for the classes defined in the <tt>elementvalue</tt> subpackage
- * and switches between the contained panes as required.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
- */
-public class ElementValueDetailPane extends AbstractDetailPane {
+class ElementValueDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
 
-    private static final String SCREEN_UNKNOWN = "Unknown";
-    private static final String SCREEN_CONST_VALUE = "Const";
-    private static final String SCREEN_CLASS_VALUE = "Class";
-    private static final String SCREEN_ENUM_VALUE = "Enum";
+    private val elementTypeToDetailPane = HashMap<Class<out ElementValue>, AbstractDetailPane>()
 
-
-    private HashMap<String, AbstractDetailPane> elementTypeToDetailPane;
-
-    // Visual components
-
-    private JPanel specificInfoPane;
-    private GenericElementValueDetailPane genericInfoPane;
-
-    public ElementValueDetailPane(BrowserServices services) {
-        super(services);
+    private val specificInfoPane: JPanel = JPanel().apply {
+        border = createTitledBorder("Specific info:")
+        layout = CardLayout()
+        add(JPanel(), NAME_UNKNOWN)
+        addCard(ConstElementValue::class.java, ConstElementValueEntryDetailPane(services))
+        addCard(ClassElementValue::class.java, ClassElementValueEntryDetailPane(services))
+        addCard(EnumElementValue::class.java, EnumElementValueEntryDetailPane(services))
     }
 
-    protected void setupComponent() {
-        buildGenericInfoPane();
-        buildSpecificInfoPane();
-
-        setLayout(new BorderLayout());
-
-        add(genericInfoPane, BorderLayout.NORTH);
-        add(specificInfoPane, BorderLayout.CENTER);
+    private val genericInfoPane: GenericElementValueDetailPane = GenericElementValueDetailPane(services).apply {
+        border = createTitledBorder("Generic info:")
     }
 
-    public void show(TreePath treePath) {
-        ElementValue eve = (ElementValue)
-                ((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
+    override fun setupComponent() {
+        layout = BorderLayout()
+        add(genericInfoPane.displayComponent, BorderLayout.NORTH)
+        add(specificInfoPane, BorderLayout.CENTER)
+    }
 
-        String paneName = null;
-        if (eve instanceof ConstElementValue) {
-            paneName = SCREEN_CONST_VALUE;
-        } else if (eve instanceof ClassElementValue) {
-            paneName = SCREEN_CLASS_VALUE;
-        } else if (eve instanceof EnumElementValue) {
-            paneName = SCREEN_ENUM_VALUE;
-        }
-
-        CardLayout layout = (CardLayout)specificInfoPane.getLayout();
-        if (paneName == null) {
-            layout.show(specificInfoPane, SCREEN_UNKNOWN);
+    override fun show(treePath: TreePath) {
+        val elementValue = (treePath.lastPathComponent as BrowserTreeNode).element as ElementValue?
+        if (elementValue == null) {
+            showCard(NAME_UNKNOWN)
         } else {
-            AbstractDetailPane pane = elementTypeToDetailPane.get(paneName);
-            pane.show(treePath);
-            layout.show(specificInfoPane, paneName);
+            val detailPane = elementTypeToDetailPane[elementValue.javaClass]
+            if (detailPane != null) {
+                showCard(elementValue.javaClass.name)
+                detailPane.show(treePath)
+            }
         }
-        genericInfoPane.show(treePath);
+        genericInfoPane.show(treePath)
     }
 
-
-    private void buildGenericInfoPane() {
-        genericInfoPane = new GenericElementValueDetailPane(getServices());
-        genericInfoPane.setBorder(createTitledBorder("Generic info:"));
+    private fun showCard(cardName: String) {
+        (specificInfoPane.layout as CardLayout).show(specificInfoPane, cardName)
     }
 
-    private void buildSpecificInfoPane() {
-        specificInfoPane = new JPanel();
-        specificInfoPane.setBorder(createTitledBorder("Specific info:"));
-
-        specificInfoPane.setLayout(new CardLayout());
-        elementTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
-        JPanel pane;
-
-        pane = new JPanel();
-        specificInfoPane.add(pane, SCREEN_UNKNOWN);
-
-        addScreen(new ConstElementValueEntryDetailPane(getServices()),
-                SCREEN_CONST_VALUE);
-        addScreen(new ClassElementValueEntryDetailPane(getServices()),
-                SCREEN_CLASS_VALUE);
-        addScreen(new EnumElementValueEntryDetailPane(getServices()),
-                SCREEN_ENUM_VALUE);
+    private fun JPanel.addCard(elementValueClass: Class<out ElementValue>, detailPane: AbstractDetailPane) {
+        add(detailPane.displayComponent, elementValueClass.name)
+        elementTypeToDetailPane.put(elementValueClass, detailPane)
     }
 
-    private void addScreen(AbstractDetailPane detailPane, String name) {
-        if (detailPane instanceof FixedListDetailPane) {
-            specificInfoPane.add(((FixedListDetailPane)detailPane).getScrollPane(), name);
-        } else {
-            specificInfoPane.add(detailPane, name);
-        }
-        elementTypeToDetailPane.put(name, detailPane);
+    private fun createTitledBorder(title: String): Border {
+        return BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), title)
     }
 
-    private Border createTitledBorder(String title) {
-        Border simpleBorder = BorderFactory.createEtchedBorder();
-        return BorderFactory.createTitledBorder(simpleBorder, title);
+    companion object {
+        private val NAME_UNKNOWN = "Unknown"
     }
 }
 
