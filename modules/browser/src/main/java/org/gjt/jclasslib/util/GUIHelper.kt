@@ -26,6 +26,7 @@ object GUIHelper {
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
     @JvmField
     val WINDOW_BORDER = BorderFactory.createEmptyBorder(8, 8, 8, 8)
+    val RECT_ORIGIN = Rectangle(0, 0, 0, 0)
 
     fun showOptionDialog(parent: Component, message: String, options: Array<String>, messageType: Int): Int {
         return JOptionPane.showOptionDialog(parent,

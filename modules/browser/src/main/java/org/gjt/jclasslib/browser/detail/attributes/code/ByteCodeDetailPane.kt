@@ -5,201 +5,142 @@
     version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser.detail.attributes.code;
+package org.gjt.jclasslib.browser.detail.attributes.code
 
-import org.gjt.jclasslib.browser.AbstractDetailPane;
-import org.gjt.jclasslib.browser.BrowserComponent;
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.bytecode.Instruction;
-import org.gjt.jclasslib.structures.attributes.CodeAttribute;
+import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.bytecode.Instruction
+import org.gjt.jclasslib.structures.attributes.CodeAttribute
+import org.gjt.jclasslib.util.DefaultAction
+import org.gjt.jclasslib.util.GUIHelper
+import java.awt.*
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.awt.event.MouseMotionListener
+import java.util.*
+import javax.swing.*
+import javax.swing.tree.TreePath
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+class ByteCodeDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
 
-/**
- * Detail pane showing the code of a <tt>Code</tt> attribute.
- *
- * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
- */
-public class ByteCodeDetailPane extends AbstractDetailPane {
+    private val instructionToURL = HashMap<String, String>()
 
-    private static final Rectangle RECT_ORIGIN = new Rectangle(0, 0, 0, 0);
-
-    private final Map<String, String> instructionToURL = new HashMap<String, String>();
-
-    // Visual components
-
-    private ByteCodeDisplay byteCodeDisplay;
-    private CounterDisplay counterDisplay;
-    private JScrollPane scrollPane;
-    private JComboBox<String> instructions;
-    private JButton btnCopy;
-
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services.
-     */
-    public ByteCodeDetailPane(BrowserServices services) {
-        super(services);
-        setName("Bytecode");
-    }
-
-    protected void setupComponent() {
-
-        setLayout(new BorderLayout());
-        btnCopy = new JButton("Copy to clipboard");
-        btnCopy.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                byteCodeDisplay.copyToClipboard();
+    private val showDescriptionAction = DefaultAction("Show Description", "Show detailed information about the selected instruction.") {
+        val opcode = instructionsDropDown.selectedItem
+        if (opcode != null) {
+            val url = instructionToURL[opcode]
+            if (url != null) {
+                services.showURL(url)
             }
-        });
-        Box box = Box.createHorizontalBox();
-        box.add(buildInstructionPanel());
-        box.add(Box.createHorizontalGlue());
-        box.add(btnCopy);
-
-        add(box, BorderLayout.SOUTH);
-        add(buildByteCodeScrollPane(), BorderLayout.CENTER);
-
-        DocumentLinkListener listener = new DocumentLinkListener(byteCodeDisplay);
-        byteCodeDisplay.addMouseListener(listener);
-        byteCodeDisplay.addMouseMotionListener(listener);
+        }
     }
 
-    private JPanel buildInstructionPanel() {
-        instructions = new JComboBox<String>();
-        JPanel instructionPanel = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, 6, 0));
-        instructionPanel.add(new JLabel("Used instructions:"));
-        instructionPanel.add(instructions, BorderLayout.CENTER);
-        Action action = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                String opcode = (String)instructions.getSelectedItem();
-                if (opcode != null) {
-                    getServices().showURL(instructionToURL.get(opcode));
-                }
+    private val copyAction = DefaultAction("Copy to clipboard", "Copy the entire byte code to the clipboard.") {
+        byteCodeDisplay.copyToClipboard()
+    }
+
+    private val byteCodeDisplay: ByteCodeDisplay = ByteCodeDisplay(this).apply {
+        val listener = DocumentLinkListener(this)
+        addMouseListener(listener)
+        addMouseMotionListener(listener)
+
+    }
+    private val counterDisplay: CounterDisplay = CounterDisplay()
+
+    private val scrollPane: JScrollPane = JScrollPane(byteCodeDisplay).apply {
+        viewport.background = Color.WHITE
+        setRowHeaderView(counterDisplay)
+        object : MouseAdapter() {
+            override fun mousePressed(event: MouseEvent?) {
+                requestFocus()
             }
-        };
-        action.putValue(Action.NAME, "Show Description");
-        action.putValue(Action.SHORT_DESCRIPTION, "Show detailed information " +
-                "about the selected instruction.");
-        instructionPanel.add(new JButton(action));
-        return instructionPanel;
+        }.let {
+            horizontalScrollBar.addMouseListener(it)
+            verticalScrollBar.addMouseListener(it)
+        }
+        addMouseWheelListener { requestFocus() }
     }
 
-    void setCurrentInstructions(final ArrayList<Instruction> instructions) {
-        instructionToURL.clear();
-        Set<String> mnemonics = new TreeSet<String>();
-        for (Instruction instruction : instructions) {
-            String verbose = instruction.getOpcode().getVerbose();
+    private val instructionsDropDown = JComboBox<String>()
+
+    init {
+        name = "Bytecode"
+    }
+
+    override fun setupComponent() {
+        layout = BorderLayout()
+        add(Box.createHorizontalBox().apply {
+            add(JPanel(FlowLayout(FlowLayout.LEFT, 6, 0)).apply {
+                add(JLabel("Used instructions:"))
+                add(instructionsDropDown, BorderLayout.CENTER)
+                add(showDescriptionAction.createTextButton())
+            })
+            add(Box.createHorizontalGlue())
+            add(copyAction.createTextButton())
+        }, BorderLayout.SOUTH)
+        add(scrollPane, BorderLayout.CENTER)
+    }
+
+    fun setCurrentInstructions(instructions: List<Instruction>) {
+        instructionToURL.clear()
+        val mnemonics = TreeSet<String>()
+        instructions.forEach { instruction ->
+            val verbose = instruction.opcode.verbose
             if (mnemonics.add(verbose)) {
-                instructionToURL.put(verbose, instruction.getOpcode().getDocUrl());
+                instructionToURL.put(verbose, instruction.opcode.docUrl)
             }
         }
-        this.instructions.setModel(new DefaultComboBoxModel<String>(mnemonics.toArray(new String[mnemonics.size()])));
+        instructionsDropDown.model = DefaultComboBoxModel(mnemonics.toTypedArray())
     }
 
-    public void show(TreePath treePath) {
-
-        CodeAttribute attribute = (CodeAttribute)getAttribute(treePath);
-        if (byteCodeDisplay.getCodeAttribute() != attribute) {
-
-            BrowserComponent browserComponent = getServices().getBrowserComponent();
-            browserComponent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            try {
-                byteCodeDisplay.setCodeAttribute(attribute, getServices().getClassFile());
-                counterDisplay.init(byteCodeDisplay);
-
-                byteCodeDisplay.scrollRectToVisible(RECT_ORIGIN);
-
-                scrollPane.validate();
-                scrollPane.repaint();
-            } finally {
-                browserComponent.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    override fun show(treePath: TreePath) {
+        val attribute = getAttribute(treePath) as CodeAttribute
+        if (byteCodeDisplay.codeAttribute != attribute) {
+            withWaitCursor {
+                byteCodeDisplay.setCodeAttribute(attribute, services.classFile)
+                counterDisplay.init(byteCodeDisplay)
+                byteCodeDisplay.scrollRectToVisible(GUIHelper.RECT_ORIGIN)
+                scrollPane.validate()
+                scrollPane.repaint()
             }
         }
     }
 
-    /**
-     * Scroll the code to a specified code offset.
-     *
-     * @param offset the offset
-     */
-    public void scrollToOffset(int offset) {
-        byteCodeDisplay.scrollToOffset(offset);
+    private fun withWaitCursor(function: () -> Unit) {
+        val browserComponent = services.browserComponent
+        browserComponent.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
+        try {
+            function.invoke()
+        } finally {
+            browserComponent.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+        }
     }
 
-    @Override
-    public String getClipboardText() {
-        return byteCodeDisplay.getClipboardText();
+    fun scrollToOffset(offset: Int) {
+        byteCodeDisplay.scrollToOffset(offset)
     }
 
-    private JScrollPane buildByteCodeScrollPane() {
+    override val clipboardText: String?
+        get() = byteCodeDisplay.clipboardText
 
-        byteCodeDisplay = new ByteCodeDisplay(this);
-        scrollPane = new JScrollPane(byteCodeDisplay);
-        scrollPane.getViewport().setBackground(Color.WHITE);
-        counterDisplay = new CounterDisplay();
-        scrollPane.setRowHeaderView(counterDisplay);
+    //TODO move to BytecodeDisplay
+    private inner class DocumentLinkListener(private val byteCodeDisplay: ByteCodeDisplay) : MouseAdapter(), MouseMotionListener {
 
-        MouseAdapter mouseListener = new MouseAdapter() {
-            public void mousePressed(MouseEvent event) {
-                scrollPane.requestFocus();
-            }
-        };
-        byteCodeDisplay.addMouseListener(mouseListener);
-        scrollPane.getHorizontalScrollBar().addMouseListener(mouseListener);
-        scrollPane.getVerticalScrollBar().addMouseListener(mouseListener);
-        scrollPane.addMouseWheelListener(new MouseWheelListener() {
-            public void mouseWheelMoved(MouseWheelEvent event) {
-                scrollPane.requestFocus();
-            }
-        });
-
-        return scrollPane;
-    }
-
-    private class DocumentLinkListener extends MouseAdapter
-            implements MouseMotionListener {
-
-        private ByteCodeDisplay byteCodeDisplay;
-
-        private Cursor defaultCursor;
-        private int defaultCursorType;
-        private Cursor handCursor;
-
-        private DocumentLinkListener(ByteCodeDisplay byteCodeDisplay) {
-            this.byteCodeDisplay = byteCodeDisplay;
-
-            defaultCursor = Cursor.getDefaultCursor();
-            defaultCursorType = defaultCursor.getType();
-            handCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        override fun mouseClicked(event: MouseEvent) {
+            byteCodeDisplay.link(event.point)
         }
 
-        public void mouseClicked(MouseEvent event) {
-
-            byteCodeDisplay.link(event.getPoint());
+        override fun mouseDragged(event: MouseEvent) {
         }
 
-        public void mouseDragged(MouseEvent event) {
-        }
-
-        public void mouseMoved(MouseEvent event) {
-
-            boolean link = byteCodeDisplay.isLink(event.getPoint());
-            if (byteCodeDisplay.getCursor().getType() == defaultCursorType && link) {
-                byteCodeDisplay.setCursor(handCursor);
+        override fun mouseMoved(event: MouseEvent) {
+            val link = byteCodeDisplay.isLink(event.point)
+            if (byteCodeDisplay.cursor.type == Cursor.getDefaultCursor().type && link) {
+                byteCodeDisplay.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
             } else if (!link) {
-                byteCodeDisplay.setCursor(defaultCursor);
+                byteCodeDisplay.cursor = Cursor.getDefaultCursor()
             }
         }
-
     }
-
-
 }
 
