@@ -22,17 +22,18 @@ abstract class AbstractDetailPane(val browserServices: BrowserServices) : JPanel
 
     private val labelToMouseListener = HashMap<ExtendedJLabel, MouseListener>()
 
-    init {
-        setupComponent()
-    }
-
     abstract fun show(treePath: TreePath)
     protected abstract fun setupComponent()
 
     open val clipboardText: String?
         get() = null
 
-    open val wrapper: JComponent
+    val displayComponent: JComponent by lazy {
+        setupComponent()
+        wrapper
+    }
+
+    protected open val wrapper: JComponent
         get() = this
 
     @JvmOverloads protected fun normalLabel(text: String = "") = ExtendedJLabel(text)

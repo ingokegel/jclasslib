@@ -44,7 +44,7 @@ class BrowserDetailPane(private val services: BrowserServices) : JPanel() {
     private fun getDetailPane(nodeType: NodeType): AbstractDetailPane {
         return nodeTypeToDetailPane.getOrPut(nodeType) {
             nodeType.createDetailPanel(services).apply {
-                this@BrowserDetailPane.add(wrapper, nodeType.name)
+                this@BrowserDetailPane.add(displayComponent, nodeType.name)
             }
         }
     }

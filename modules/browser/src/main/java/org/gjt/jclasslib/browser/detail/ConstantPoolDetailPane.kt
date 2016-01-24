@@ -5,152 +5,74 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail;
+package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane;
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.BrowserTreeNode;
-import org.gjt.jclasslib.browser.detail.constants.*;
-import org.gjt.jclasslib.structures.Constant;
-import org.gjt.jclasslib.structures.constants.*;
+import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.BrowserTreeNode
+import org.gjt.jclasslib.browser.detail.constants.*
+import org.gjt.jclasslib.structures.Constant
+import org.gjt.jclasslib.structures.ConstantType
+import java.awt.CardLayout
+import java.awt.Color
+import java.util.*
+import javax.swing.JPanel
+import javax.swing.tree.TreePath
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.util.HashMap;
+class ConstantPoolDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
 
-/**
-    Detail pane showing constant pool entries. This class is a container for
-    the classes defined in the <tt>constants</tt> subpackage and switches between
-    the contained panes as required.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantPoolDetailPane extends AbstractDetailPane {
+    private val constantTypeToDetailPane: EnumMap<ConstantType, AbstractDetailPane> = EnumMap(ConstantType::class.java)
 
-    private static final String SCREEN_CONSTANT_UTF8_INFO = "ConstantUtf8Info";
-    private static final String SCREEN_CONSTANT_UNKNOWN = "ConstantUnknown";
-    private static final String SCREEN_CONSTANT_CLASS_INFO = "ConstantClassInfo";
-    private static final String SCREEN_CONSTANT_DOUBLE_INFO = "ConstantDoubleInfo";
-    private static final String SCREEN_CONSTANT_LONG_INFO = "ConstantLongInfo";
-    private static final String SCREEN_CONSTANT_FLOAT_INFO = "ConstantFloatInfo";
-    private static final String SCREEN_CONSTANT_INTEGER_INFO = "ConstantIntegerInfo";
-    private static final String SCREEN_CONSTANT_NAME_AND_TYPE_INFO = "ConstantNameAndTypeInfo";
-    private static final String SCREEN_CONSTANT_STRING_INFO = "ConstantStringInfo";
-    private static final String SCREEN_CONSTANT_REFERENCE = "ConstantReference";
-    private static final String SCREEN_CONSTANT_INVOKE_DYNAMIC = "ConstantInvokeDynamic";
-    private static final String SCREEN_CONSTANT_METHOD_HANDLE = "ConstantMethodHandle";
-    private static final String SCREEN_CONSTANT_METHOD_TYPE = "ConstantMethodType";
+    override fun setupComponent() {
+        layout = CardLayout()
 
-    private HashMap<String, AbstractDetailPane> constantTypeToDetailPane;
-
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    public ConstantPoolDetailPane(BrowserServices services) {
-        super(services);
+        add(JPanel().apply { background = Color.RED }, NAME_UNKNOWN)
+        addCard(ConstantUtf8InfoDetailPane(browserServices), ConstantType.UTF8)
+        addCard(ConstantClassInfoDetailPane(browserServices), ConstantType.CLASS)
+        addCard(ConstantDoubleInfoDetailPane(browserServices), ConstantType.DOUBLE)
+        addCard(ConstantLongInfoDetailPane(browserServices), ConstantType.LONG)
+        addCard(ConstantFloatInfoDetailPane(browserServices), ConstantType.FLOAT)
+        addCard(ConstantIntegerInfoDetailPane(browserServices), ConstantType.INTEGER)
+        addCard(ConstantNameAndTypeInfoDetailPane(browserServices), ConstantType.NAME_AND_TYPE)
+        addCard(ConstantStringInfoDetailPane(browserServices), ConstantType.STRING)
+        addCard(ConstantReferenceDetailPane(browserServices), ConstantType.FIELDREF)
+        addCard(ConstantReferenceDetailPane(browserServices), ConstantType.METHODREF)
+        addCard(ConstantReferenceDetailPane(browserServices), ConstantType.INTERFACE_METHODREF)
+        addCard(ConstantInvokeDynamicInfoDetailPane(browserServices), ConstantType.INVOKE_DYNAMIC)
+        addCard(ConstantMethodHandleInfoDetailPane(browserServices), ConstantType.METHOD_HANDLE)
+        addCard(ConstantMethodTypeDetailPane(browserServices), ConstantType.METHOD_TYPE)
     }
 
-    protected void setupComponent() {
-        setLayout(new CardLayout());
-        constantTypeToDetailPane = new HashMap<String, AbstractDetailPane>();
-        JPanel pane;
-        
-        pane = new JPanel();
-        pane.setBackground(Color.blue);
-        add(pane, SCREEN_CONSTANT_UNKNOWN);
-        
-        addScreen(new ConstantUtf8InfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_UTF8_INFO);
+    override fun show(treePath: TreePath) {
+        val constantPoolEntry = (treePath.lastPathComponent as BrowserTreeNode).element as Constant?
+        if (constantPoolEntry != null) {
+            val constantType = constantPoolEntry.constantType
+            val detailPane = constantTypeToDetailPane[constantType]
+            if (detailPane != null) {
+                detailPane.show(treePath)
+                showCard(constantType.name)
+                return
+            } else {
+                showCard(NAME_UNKNOWN)
 
-        addScreen(new ConstantClassInfoDetailPane(getBrowserServices()),
-                  SCREEN_CONSTANT_CLASS_INFO);
-
-        addScreen(new ConstantDoubleInfoDetailPane(getBrowserServices()),
-                  SCREEN_CONSTANT_DOUBLE_INFO);
-
-        addScreen(new ConstantLongInfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_LONG_INFO);
-
-        addScreen(new ConstantFloatInfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_FLOAT_INFO);
-
-        addScreen(new ConstantIntegerInfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_INTEGER_INFO);
-
-        addScreen(new ConstantNameAndTypeInfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_NAME_AND_TYPE_INFO);
-
-        addScreen(new ConstantStringInfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_STRING_INFO);
-                
-        addScreen(new ConstantReferenceDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_REFERENCE);
-
-        addScreen(new ConstantInvokeDynamicInfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_INVOKE_DYNAMIC);
-
-        addScreen(new ConstantMethodHandleInfoDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_METHOD_HANDLE);
-
-        addScreen(new ConstantMethodTypeDetailPane(getBrowserServices()),
-            SCREEN_CONSTANT_METHOD_TYPE);
-
-    }
-    
-    public void show(TreePath treePath) {
-
-        Constant constantPoolEntry = (Constant)((BrowserTreeNode)treePath.getLastPathComponent()).getElement();
-        
-        String paneName = null;
-        if (constantPoolEntry instanceof ConstantUtf8Info) {
-            paneName = SCREEN_CONSTANT_UTF8_INFO;
-        } else if (constantPoolEntry instanceof ConstantClassInfo) {
-            paneName = SCREEN_CONSTANT_CLASS_INFO;
-        } else if (constantPoolEntry instanceof ConstantDoubleInfo) {
-            paneName = SCREEN_CONSTANT_DOUBLE_INFO;
-        } else if (constantPoolEntry instanceof ConstantLongInfo) {
-            paneName = SCREEN_CONSTANT_LONG_INFO;
-        } else if (constantPoolEntry instanceof ConstantFloatInfo) {
-            paneName = SCREEN_CONSTANT_FLOAT_INFO;
-        } else if (constantPoolEntry instanceof ConstantIntegerInfo) {
-            paneName = SCREEN_CONSTANT_INTEGER_INFO;
-        } else if (constantPoolEntry instanceof ConstantNameAndTypeInfo) {
-            paneName = SCREEN_CONSTANT_NAME_AND_TYPE_INFO;
-        } else if (constantPoolEntry instanceof ConstantStringInfo) {
-            paneName = SCREEN_CONSTANT_STRING_INFO;
-        } else if (constantPoolEntry instanceof ConstantReference) {
-            paneName = SCREEN_CONSTANT_REFERENCE;
-        } else if (constantPoolEntry instanceof ConstantInvokeDynamicInfo) {
-            paneName = SCREEN_CONSTANT_INVOKE_DYNAMIC;
-        } else if (constantPoolEntry instanceof ConstantMethodHandleInfo) {
-            paneName = SCREEN_CONSTANT_METHOD_HANDLE;
-        } else if (constantPoolEntry instanceof ConstantMethodTypeInfo) {
-            paneName = SCREEN_CONSTANT_METHOD_TYPE;
-        }
-
-    
-        CardLayout layout = (CardLayout)getLayout();
-        if (paneName == null) {
-            layout.show(this, SCREEN_CONSTANT_UNKNOWN);
+            }
         } else {
-            AbstractDetailPane pane = constantTypeToDetailPane.get(paneName);
-            pane.show(treePath);
-            layout.show(this, paneName);
+            showCard(NAME_UNKNOWN)
         }
-        
     }
-    
-    private void addScreen(AbstractDetailPane detailPane, String name) {
 
-        if (detailPane instanceof FixedListDetailPane) {
-            add(((FixedListDetailPane)detailPane).getScrollPane(), name);
-        } else {
-            add(detailPane, name);
-        }
-        constantTypeToDetailPane.put(name, detailPane);
+    private fun addCard(detailPane: AbstractDetailPane, constantType: ConstantType) {
+        add(detailPane.displayComponent, constantType.name)
+        constantTypeToDetailPane.put(constantType, detailPane)
     }
-    
+
+    private fun showCard(name: String) {
+        (layout as CardLayout).show(this, name)
+    }
+
+    companion object {
+        private val NAME_UNKNOWN = "ConstantUnknown"
+    }
+
 }
 

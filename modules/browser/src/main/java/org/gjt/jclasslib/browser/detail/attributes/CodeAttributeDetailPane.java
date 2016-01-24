@@ -64,24 +64,24 @@ public class CodeAttributeDetailPane extends AbstractDetailPane {
     
     private JTabbedPane buildTabbedPane() {
         tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Bytecode", buildByteCodePane());
-        tabbedPane.addTab("Exception table", buildExceptionTablePane());
-        tabbedPane.addTab("Misc", buildMiscPane());
+        tabbedPane.addTab("Bytecode", buildByteCodePane().getDisplayComponent());
+        tabbedPane.addTab("Exception table", buildExceptionTablePane().getDisplayComponent());
+        tabbedPane.addTab("Misc", buildMiscPane().getDisplayComponent());
         
         return tabbedPane;
     }
 
-    private JPanel buildByteCodePane() {
+    private ByteCodeDetailPane buildByteCodePane() {
         byteCodePane = new ByteCodeDetailPane(getBrowserServices());
         return byteCodePane;
     }
 
-    private JPanel buildExceptionTablePane() {
+    private ExceptionTableDetailPane buildExceptionTablePane() {
         exceptionTablePane = new ExceptionTableDetailPane(getBrowserServices());
         return exceptionTablePane;
     }
 
-    private JPanel buildMiscPane() {
+    private MiscDetailPane buildMiscPane() {
         miscPane = new MiscDetailPane(getBrowserServices());
         return miscPane;
     }

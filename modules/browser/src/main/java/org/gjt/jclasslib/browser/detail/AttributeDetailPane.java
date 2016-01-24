@@ -70,7 +70,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
 
         setLayout(new BorderLayout());
 
-        add(genericInfoPane, BorderLayout.NORTH);
+        add(genericInfoPane.getDisplayComponent(), BorderLayout.NORTH);
         add(specificInfoPane, BorderLayout.CENTER);
 
     }
@@ -163,11 +163,7 @@ public class AttributeDetailPane extends AbstractDetailPane {
         if (detailPane == null) {
             detailPane = createDetailPanel(attributeType);
             if (detailPane != null) {
-                if (detailPane instanceof FixedListDetailPane) {
-                    specificInfoPane.add(((FixedListDetailPane)detailPane).getScrollPane(), attributeType);
-                } else {
-                    specificInfoPane.add(detailPane, attributeType);
-                }
+                specificInfoPane.add(detailPane.getDisplayComponent(), attributeType);
                 attributeTypeToDetailPane.put(attributeType, detailPane);
             }
         }
