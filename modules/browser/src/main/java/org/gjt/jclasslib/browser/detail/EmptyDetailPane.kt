@@ -5,25 +5,18 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser.detail;
+package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane;
-import org.gjt.jclasslib.browser.BrowserServices;
+import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.BrowserServices
 
-import javax.swing.tree.TreePath;
+import javax.swing.tree.TreePath
 
-public class EmptyDetailPane extends AbstractDetailPane {
-    public EmptyDetailPane(BrowserServices services) {
-        super(services);
+class EmptyDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
+
+    override fun show(treePath: TreePath) {
     }
 
-    @Override
-    public void show(TreePath treePath) {
-
-    }
-
-    @Override
-    protected void setupComponent() {
-
+    override fun setupComponent() {
     }
 }
