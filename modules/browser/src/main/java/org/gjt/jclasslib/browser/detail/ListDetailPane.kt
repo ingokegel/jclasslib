@@ -26,7 +26,7 @@ import javax.swing.tree.TreePath
 
 abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
 
-    private val table: JTable = JTable().apply {
+    protected val table: JTable = JTable().apply {
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
         selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         val rowHeightFactor = rowHeightFactor
@@ -86,7 +86,7 @@ abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(se
         val tableModel = getTableModel(treePath)
         table.apply {
             model = tableModel
-            createTableColumnModel(this, tableModel)
+            createTableColumnModel(this)
             alignTop(Number::class.java)
             alignTop(String::class.java)
             setDefaultRenderer(Link::class.java, LinkRenderer())
@@ -116,7 +116,7 @@ abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(se
     open protected val rowHeightFactor: Float
         get() = 1f
 
-    protected open fun createTableColumnModel(table: JTable, tableModel: TableModel) {
+    protected open fun createTableColumnModel(table: JTable) {
         table.createDefaultColumnsFromModel()
     }
 

@@ -5,130 +5,91 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.detail.ListDetailPane;
-import org.gjt.jclasslib.structures.AttributeInfo;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.ListDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
 
-import javax.swing.*;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-import javax.swing.tree.TreePath;
-import java.util.WeakHashMap;
+import javax.swing.*
+import javax.swing.table.TableColumn
+import javax.swing.table.TableColumnModel
+import javax.swing.table.TableModel
+import javax.swing.tree.TreePath
+import java.util.WeakHashMap
 
-/**
-    Base class for all detail panes showing specific information for
-    a specific attribute tree node selected in <tt>BrowserTreePane</tt> 
-    which can be displayed as a list of row entries with the same number of
-    columns.
-    
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class AbstractAttributeListDetailPane extends ListDetailPane {
+abstract class AbstractAttributeListDetailPane(services: BrowserServices) : ListDetailPane(services) {
 
-    /** Default width in pixels for a column displaying a number. */
-    protected static final int NUMBER_COLUMN_WIDTH = 60;
-    /** Default width in pixels for a column displaying a hyperlink. */
-    protected static final int LINK_COLUMN_WIDTH = 80;
-    /** Default width in pixels for a column displaying a verbose entry. */
-    protected static final int VERBOSE_COLUMN_WIDTH = 250;
+    private val tableModel: AbstractAttributeTableModel
+        get() = table.model as AbstractAttributeTableModel
 
-    private static final int COLUMN_MIN_WIDTH = 20;
-    private static final int ROW_NUMBER_COLUMN_WIDTH = 35;
+    override fun getTableModel(treePath: TreePath): TableModel = getCachedTableModel(getAttribute(treePath))
 
-    private static WeakHashMap<AttributeInfo, AbstractAttributeTableModel> attributeToTableModel = new WeakHashMap<AttributeInfo, AbstractAttributeTableModel>();
-
-    private AbstractAttributeTableModel tableModel;
-    
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    protected AbstractAttributeListDetailPane(BrowserServices services) {
-        super(services);
-    }
-    
-    protected TableModel getTableModel(TreePath treePath) {
-        AttributeInfo attribute = getAttribute(treePath);
-        
-        tableModel = getCachedTableModel(attribute);
-        return tableModel;
+    override fun link(row: Int, column: Int) {
+        tableModel.link(row, column)
     }
 
-    protected void link(int row, int column) {
-        tableModel.link(row, column);
+    protected abstract fun createTableModel(attribute: AttributeInfo): AbstractAttributeTableModel
+
+    protected fun getColumnWidth(column: Int): Int {
+        return tableModel.getColumnWidth(column)
     }
 
-    /**
-        Create the table model for a specific attribute. This method is called
-        by <tt>getTableModel()</tt>.
-        @param attribute the attribute
-        @return the table model
-     */
-    protected abstract AbstractAttributeTableModel createTableModel(AttributeInfo attribute);
-    
-    /**
-        Get the width in pixels for a specific column.
-        @param column the index of the column in the model
-        @return the width
-     */
-    protected int getColumnWidth(int column) {
-        return tableModel.getColumnWidth(column);
-    }
+    override fun createTableColumnModel(table: JTable) {
 
-    protected void createTableColumnModel(JTable table, TableModel tableModel) {
-        AbstractAttributeTableModel attributeTableModel =
-                (AbstractAttributeTableModel)tableModel;
-        
-        TableColumnModel tableColumnModel = attributeTableModel.getTableColumnModel();
+        val tableColumnModel: TableColumnModel? = tableModel.tableColumnModel
         if (tableColumnModel == null) {
-            table.createDefaultColumnsFromModel();
-            tableColumnModel = table.getColumnModel();
-            attributeTableModel.setTableColumnModel(tableColumnModel);
-
+            table.createDefaultColumnsFromModel()
+            table.columnModel.let {
+                tableModel.tableColumnModel = it
+                adjustColumns(it)
+            }
         } else {
-            table.setColumnModel(tableColumnModel);
-        }
-        adjustColumns(tableColumnModel);
-    }
-    
-    
-    private void adjustColumns(TableColumnModel tableColumnModel) {
-        TableColumn indexColumn = tableColumnModel.getColumn(0);
-        indexColumn.setMaxWidth(indexColumn.getWidth());
-
-        TableColumn tableColumn;
-        for (int column = 0; column < tableColumnModel.getColumnCount(); column++) {
-            tableColumn = tableColumnModel.getColumn(column);
-            adjustColumn(tableColumn, column);
-
+            table.columnModel = tableColumnModel
         }
     }
 
-    protected void adjustColumn(TableColumn tableColumn, int column) {
-        tableColumn.setMinWidth(COLUMN_MIN_WIDTH);
+    private fun adjustColumns(tableColumnModel: TableColumnModel) {
+        val indexColumn = tableColumnModel.getColumn(0)
+        indexColumn.maxWidth = indexColumn.width
 
-        int width = (column == 0) ? ROW_NUMBER_COLUMN_WIDTH : getColumnWidth(column);
-
-        tableColumn.setWidth(width);
-        tableColumn.setPreferredWidth(width);
+        for (column in 0..tableColumnModel.columnCount - 1) {
+            tableColumnModel.getColumn(column).apply {
+                adjustColumn(this, column)
+            }
+        }
     }
 
-    private AbstractAttributeTableModel getCachedTableModel(AttributeInfo attribute) {
-        
-        AbstractAttributeTableModel tableModel =
-            attributeToTableModel.get(attribute);
-
-        if (tableModel == null) {
-            tableModel = createTableModel(attribute);
-                                
-            attributeToTableModel.put(attribute, tableModel);
-            
+    protected open fun adjustColumn(tableColumn: TableColumn, column: Int) {
+        tableColumn.apply {
+            minWidth = COLUMN_MIN_WIDTH
+            val columnWidth = if (column == 0) ROW_NUMBER_COLUMN_WIDTH else getColumnWidth(column)
+            width = columnWidth
+            preferredWidth = columnWidth
         }
-        
-        return tableModel;
+    }
+
+    private fun getCachedTableModel(attribute: AttributeInfo): AbstractAttributeTableModel =
+            attributeToTableModel.getOrPut(attribute) {
+                createTableModel(attribute)
+            }
+
+    companion object {
+
+        /** Default width in pixels for a column displaying a number.  */
+        @JvmField
+        protected val NUMBER_COLUMN_WIDTH = 60
+        /** Default width in pixels for a column displaying a hyperlink.  */
+        @JvmField
+        protected val LINK_COLUMN_WIDTH = 80
+        /** Default width in pixels for a column displaying a verbose entry.  */
+        @JvmField
+        protected val VERBOSE_COLUMN_WIDTH = 250
+
+        private val COLUMN_MIN_WIDTH = 20
+        private val ROW_NUMBER_COLUMN_WIDTH = 35
+
+        private val attributeToTableModel = WeakHashMap<AttributeInfo, AbstractAttributeTableModel>()
     }
 
 }
