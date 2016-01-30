@@ -26,8 +26,9 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
 import java.util.ArrayList
 import java.util.EventObject
+import javax.swing.event.HyperlinkEvent
 
-class MultiLineHtmlCellHandler : HtmlDisplayTextArea(), TableCellRenderer, TableCellEditor {
+class MultiLineHtmlCellHandler(val linkHandler : (description: String) -> Unit = {}) : HtmlDisplayTextArea(), TableCellRenderer, TableCellEditor {
 
     private val listeners = ArrayList<CellEditorListener>()
     private var table: JTable? = null
@@ -58,6 +59,11 @@ class MultiLineHtmlCellHandler : HtmlDisplayTextArea(), TableCellRenderer, Table
             }
         })
 
+        addHyperlinkListener {e ->
+            if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+                linkHandler.invoke(e.description)
+            }
+        }
     }
 
     private fun getRowAtPoint(point: Point, table: JTable): Int {

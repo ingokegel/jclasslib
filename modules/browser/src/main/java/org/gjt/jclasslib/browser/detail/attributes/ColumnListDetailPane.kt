@@ -47,6 +47,8 @@ abstract class ColumnListDetailPane<T : AttributeInfo>(services: BrowserServices
                 maxWidth = column.maxWidth
                 width = column.width
                 preferredWidth = column.width
+                cellRenderer = column.createTableCellRenderer()
+                cellEditor = column.createTableCellEditor()
             }
         }
     }
