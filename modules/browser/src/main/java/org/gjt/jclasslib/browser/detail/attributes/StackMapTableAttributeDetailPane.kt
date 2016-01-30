@@ -25,7 +25,7 @@ import javax.swing.table.TableColumn
 
 class StackMapTableAttributeDetailPane(services: BrowserServices)  : ColumnListDetailPane<StackMapTableAttribute>(services) {
 
-    override fun createTableModel(attribute: StackMapTableAttribute) : ColumnTableModel<StackMapTableAttribute> = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: StackMapTableAttribute) = AttributeTableModel(attribute)
     override val attributeClass: Class<StackMapTableAttribute>
         get() = StackMapTableAttribute::class.java
 
@@ -35,7 +35,7 @@ class StackMapTableAttributeDetailPane(services: BrowserServices)  : ColumnListD
     override val autoResizeMode: Int
         get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
-    private inner class AttributeTableModel(attribute: StackMapTableAttribute) : ColumnTableModel<StackMapTableAttribute>(attribute) {
+    protected  inner class AttributeTableModel(attribute: StackMapTableAttribute) : ColumnTableModel<StackMapTableAttribute>(attribute) {
         override fun buildColumns(columns: ArrayList<Column>) {
             super.buildColumns(columns)
             columns.add(object : StringColumn("Stack Map Frame", 600) {

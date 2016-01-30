@@ -15,11 +15,11 @@ import java.util.*
 
 class ExceptionsAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<ExceptionsAttribute>(services) {
 
-    override fun createTableModel(attribute: ExceptionsAttribute) : ColumnTableModel<ExceptionsAttribute> = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: ExceptionsAttribute) = AttributeTableModel(attribute)
     override val attributeClass: Class<ExceptionsAttribute>
         get() = ExceptionsAttribute::class.java
 
-    private inner class AttributeTableModel(attribute: ExceptionsAttribute) : ColumnTableModel<ExceptionsAttribute>(attribute) {
+    protected inner class AttributeTableModel(attribute: ExceptionsAttribute) : ColumnTableModel<ExceptionsAttribute>(attribute) {
         override fun buildColumns(columns: ArrayList<Column>) {
             super.buildColumns(columns)
             columns.apply {
