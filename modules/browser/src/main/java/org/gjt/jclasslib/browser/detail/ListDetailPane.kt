@@ -138,8 +138,9 @@ abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(se
         table.selectionModel.setSelectionInterval(index, index)
     }
 
-    // Marker class returned by getColumnClass() to indicate a hyperlink
-    class Link
+    class Link(val text: String) {
+        override fun toString() = text
+    }
 
     private inner class TableLinkListener(component: JComponent) : LinkMouseListener(component) {
         protected override fun isLink(point: Point): Boolean {

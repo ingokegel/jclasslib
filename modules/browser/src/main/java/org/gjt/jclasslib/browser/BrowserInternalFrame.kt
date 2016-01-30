@@ -56,7 +56,7 @@ class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, pr
     override val forwardAction: Action
         get() = parentFrame.forwardAction
 
-    override fun openClassFile(className: String, browserPath: BrowserPath) {
+    override fun openClassFile(className: String, browserPath: BrowserPath?) {
         var findResult: FindResult? = parentFrame.config.findClass(className)
         while (findResult == null) {
             if (GUIHelper.showOptionDialog(parentFrame,

@@ -18,7 +18,7 @@ interface BrowserServices {
     val browserComponent: BrowserComponent
     val backwardAction: Action
     val forwardAction: Action
-    fun openClassFile(className: String, browserPath: BrowserPath)
+    fun openClassFile(className: String, browserPath: BrowserPath?)
     fun canOpenClassFiles(): Boolean
     fun showURL(urlSpec: String)
 }

@@ -11,6 +11,9 @@ import org.gjt.jclasslib.browser.detail.ListDetailPane
 import java.util.*
 
 abstract class Column(val name: String, val width : Int, val columnClass : Class<*>) {
+    open val maxWidth: Int = Int.MAX_VALUE
+    open val minWidth: Int = 20
+
     abstract fun getValue(rowIndex: Int) : Any
 
     open fun link(rowIndex: Int) {
@@ -31,10 +34,12 @@ abstract class CachingColumn<T : Any>(name: String, width : Int, columnClass : C
 
 abstract class NumberColumn(name: String, width : Int = 60) : CachingColumn<Number>(name, width, Number::class.java)
 abstract class StringColumn(name: String, width : Int = 250) : CachingColumn<String>(name, width, String::class.java)
-abstract class LinkColumn(name: String, width : Int = 80) : CachingColumn<ListDetailPane.Link>(name, width, ListDetailPane.Link::class.java)
+abstract class LinkColumn(name: String, width : Int = 90) : CachingColumn<ListDetailPane.Link>(name, width, ListDetailPane.Link::class.java)
 
 class IndexColumn : NumberColumn("Nr.") {
     override fun createValue(rowIndex: Int) = rowIndex
+    override val maxWidth: Int
+        get() = width
 }
 
 
