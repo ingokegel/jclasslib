@@ -19,6 +19,7 @@ import javax.swing.table.TableColumnModel;
  * @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
  *
  */
+//TODO remove
 public abstract class AbstractAttributeTableModel extends AbstractTableModel {
 
     /**

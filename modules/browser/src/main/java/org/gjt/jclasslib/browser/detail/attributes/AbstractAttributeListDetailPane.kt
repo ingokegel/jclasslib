@@ -18,6 +18,7 @@ import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 import java.util.WeakHashMap
 
+//TODO remove
 abstract class AbstractAttributeListDetailPane(services: BrowserServices) : ListDetailPane(services) {
 
     private val tableModel: AbstractAttributeTableModel

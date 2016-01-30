@@ -22,6 +22,7 @@ import javax.swing.JTable
 import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 
+//TODO merge into parent and rename to "TableDetailPane"
 abstract class ColumnListDetailPane<T : AttributeInfo>(services: BrowserServices) : ListDetailPane(services) {
 
     private val tableModel: ColumnTableModel<*>
