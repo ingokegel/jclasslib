@@ -15,31 +15,24 @@ import java.util.*
 
 class LineNumberTableAttributeDetailPane(services: BrowserServices) : TableDetailPane<LineNumberTableAttribute>(services) {
 
-    override fun createTableModel(attribute: LineNumberTableAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: LineNumberTableAttribute) = AttributeTableModel(attribute.lineNumberTable)
     override val attributeClass: Class<LineNumberTableAttribute>
         get() = LineNumberTableAttribute::class.java
 
-    protected inner class AttributeTableModel(attribute: LineNumberTableAttribute) : ColumnTableModel<LineNumberTableAttribute>(attribute) {
-        override fun buildColumns(columns: ArrayList<Column>) {
+    protected inner class AttributeTableModel(rows: Array<LineNumberTableEntry>) : ColumnTableModel<LineNumberTableEntry>(rows) {
+        override fun buildColumns(columns: ArrayList<Column<LineNumberTableEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NumberColumn("Start PC") {
-                    override fun createValue(rowIndex: Int): Number = lineNumberTable[rowIndex].startPc
+                add(object : NumberColumn<LineNumberTableEntry>("Start PC") {
+                    override fun createValue(row: LineNumberTableEntry): Number = row.startPc
                 })
             }
             columns.apply {
-                add(object : NumberColumn("Line Number", 100) {
-                    override fun createValue(rowIndex: Int): Number = lineNumberTable[rowIndex].lineNumber
+                add(object : NumberColumn<LineNumberTableEntry>("Line Number", 100) {
+                    override fun createValue(row: LineNumberTableEntry): Number = row.lineNumber
                 })
             }
         }
-
-        override fun getRowCount(): Int {
-            return lineNumberTable.size
-        }
-
-        private val lineNumberTable: Array<LineNumberTableEntry>
-            get() = attribute.lineNumberTable
     }
 }
 

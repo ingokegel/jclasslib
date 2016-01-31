@@ -23,29 +23,29 @@ class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane<Code
         name = "Exception table"
     }
 
-    override fun createTableModel(attribute: CodeAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: CodeAttribute) = AttributeTableModel(attribute.exceptionTable)
     override val attributeClass: Class<CodeAttribute>
         get() = CodeAttribute::class.java
 
     override val rowHeightFactor: Float
         get() = 2f
 
-    protected inner class AttributeTableModel(attribute: CodeAttribute) : ColumnTableModel<CodeAttribute>(attribute) {
+    protected inner class AttributeTableModel(rows: Array<ExceptionTableEntry>) : ColumnTableModel<ExceptionTableEntry>(rows) {
 
-        override fun buildColumns(columns: ArrayList<Column>) {
+        override fun buildColumns(columns: ArrayList<Column<ExceptionTableEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NumberColumn("Start PC") {
-                    override fun createValue(rowIndex: Int) = exceptionTable[rowIndex].startPc
+                add(object : NumberColumn<ExceptionTableEntry>("Start PC") {
+                    override fun createValue(row: ExceptionTableEntry) = row.startPc
                 })
-                add(object : NumberColumn("End PC") {
-                    override fun createValue(rowIndex: Int) = exceptionTable[rowIndex].endPc
+                add(object : NumberColumn<ExceptionTableEntry>("End PC") {
+                    override fun createValue(row: ExceptionTableEntry) = row.endPc
                 })
-                add(object : NumberColumn("Handler PC", 70) {
-                    override fun createValue(rowIndex: Int) = exceptionTable[rowIndex].handlerPc
+                add(object : NumberColumn<ExceptionTableEntry>("Handler PC", 70) {
+                    override fun createValue(row: ExceptionTableEntry) = row.handlerPc
                 })
-                add(object : NamedConstantPoolLinkColumn("Catch Type", services, 250) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = exceptionTable[rowIndex].catchType
+                add(object : NamedConstantPoolLinkColumn<ExceptionTableEntry>("Catch Type", services, 250) {
+                    override fun getConstantPoolIndex(row: ExceptionTableEntry) = row.catchType
                     override fun getComment(constantPoolIndex: Int) = if (constantPoolIndex == 0) {
                         "any"
                     } else {
@@ -54,12 +54,5 @@ class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane<Code
                 })
             }
         }
-
-        override fun getRowCount(): Int {
-            return exceptionTable.size
-        }
-
-        private val exceptionTable: Array<ExceptionTableEntry>
-            get() = attribute.exceptionTable
     }
 }

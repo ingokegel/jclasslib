@@ -15,51 +15,51 @@ import java.util.*
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-abstract class Column(val name: String, val width: Int, val columnClass: Class<*>) {
+abstract class Column<T : Any>(val name: String, val width: Int, val columnClass: Class<*>) {
     open val maxWidth: Int
         get() = Int.MAX_VALUE
     open val minWidth: Int
         get() = 20
 
-    abstract fun getValue(rowIndex: Int): Any
+    abstract fun getValue(row: T): Any
 
     open fun createTableCellRenderer(): TableCellRenderer? = null
     open fun createTableCellEditor(): TableCellEditor? = null
 
-    open fun link(rowIndex: Int) {
+    open fun link(row: T) {
     }
 
-    open fun isEditable(rowIndex: Int) = false
+    open fun isEditable(row: T) = false
 }
 
-abstract class CachingColumn<T : Any>(name: String, width: Int, columnClass: Class<T>) : Column(name, width, columnClass) {
-    private val cache = HashMap<Int, T>()
+abstract class CachingColumn<T : Any, R : Any>(name: String, width: Int, columnClass: Class<R>) : Column<T>(name, width, columnClass) {
+    private val cache = HashMap<T, R>()
 
-    override fun getValue(rowIndex: Int): Any = cache.getOrPut(rowIndex) {
-        createValue(rowIndex)
+    override fun getValue(row: T): Any = cache.getOrPut(row) {
+        createValue(row)
     }
 
-    protected abstract fun createValue(rowIndex: Int): T
+    protected abstract fun createValue(row: T): R
 }
 
-abstract class NumberColumn(name: String, width: Int = 60) : CachingColumn<Number>(name, width, Number::class.java)
-abstract class StringColumn(name: String, width: Int = 250) : CachingColumn<String>(name, width, String::class.java)
-abstract class LinkColumn(name: String, width: Int = 90) : CachingColumn<Link>(name, width, Link::class.java)
-abstract class ConstantPoolLinkColumn(name: String, protected val services: BrowserServices, width: Int = 90) : LinkColumn(name, width) {
-    override fun createValue(rowIndex: Int): Link {
-        val constantPoolIndex = getConstantPoolIndex(rowIndex)
+abstract class NumberColumn<T: Any>(name: String, width: Int = 60) : CachingColumn<T, Number>(name, width, Number::class.java)
+abstract class StringColumn<T: Any>(name: String, width: Int = 250) : CachingColumn<T, String>(name, width, String::class.java)
+abstract class LinkColumn<T: Any>(name: String, width: Int = 90) : CachingColumn<T, Link>(name, width, Link::class.java)
+abstract class ConstantPoolLinkColumn<T: Any>(name: String, protected val services: BrowserServices, width: Int = 90) : LinkColumn<T>(name, width) {
+    override fun createValue(row: T): Link {
+        val constantPoolIndex = getConstantPoolIndex(row)
         return Link(AbstractDetailPane.CPINFO_LINK_TEXT + constantPoolIndex)
     }
 
-    final override fun link(rowIndex: Int) {
-        ConstantPoolHyperlinkListener.link(services, getConstantPoolIndex(rowIndex))
+    final override fun link(row: T) {
+        ConstantPoolHyperlinkListener.link(services, getConstantPoolIndex(row))
     }
 
-    protected abstract fun getConstantPoolIndex(rowIndex: Int): Int
+    protected abstract fun getConstantPoolIndex(row: T): Int
 }
-abstract class NamedConstantPoolLinkColumn(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn(name, services, width) {
-    final override fun createValue(rowIndex: Int): Link {
-        val constantPoolIndex = getConstantPoolIndex(rowIndex)
+abstract class NamedConstantPoolLinkColumn<T: Any>(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn<T>(name, services, width) {
+    final override fun createValue(row: T): Link {
+        val constantPoolIndex = getConstantPoolIndex(row)
         return LinkWithComment(AbstractDetailPane.CPINFO_LINK_TEXT + constantPoolIndex, getComment(constantPoolIndex))
     }
 
@@ -73,12 +73,6 @@ abstract class NamedConstantPoolLinkColumn(name: String, services: BrowserServic
             return "invalid constant pool reference"
         }
     }
-}
-
-class IndexColumn : NumberColumn("Nr.") {
-    override fun createValue(rowIndex: Int) = rowIndex
-    override val maxWidth: Int
-        get() = width
 }
 
 open class Link(val text: String) {

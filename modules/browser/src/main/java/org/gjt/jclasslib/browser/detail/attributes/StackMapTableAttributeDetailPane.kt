@@ -18,7 +18,7 @@ import javax.swing.JTable
 
 class StackMapTableAttributeDetailPane(services: BrowserServices)  : TableDetailPane<StackMapTableAttribute>(services) {
 
-    override fun createTableModel(attribute: StackMapTableAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: StackMapTableAttribute) = AttributeTableModel(attribute.entries)
     override val attributeClass: Class<StackMapTableAttribute>
         get() = StackMapTableAttribute::class.java
 
@@ -28,24 +28,19 @@ class StackMapTableAttributeDetailPane(services: BrowserServices)  : TableDetail
     override val autoResizeMode: Int
         get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
-    protected  inner class AttributeTableModel(attribute: StackMapTableAttribute) : ColumnTableModel<StackMapTableAttribute>(attribute) {
-        override fun buildColumns(columns: ArrayList<Column>) {
+    protected  inner class AttributeTableModel(rows: Array<StackMapFrameEntry>) : ColumnTableModel<StackMapFrameEntry>(rows) {
+        override fun buildColumns(columns: ArrayList<Column<StackMapFrameEntry>>) {
             super.buildColumns(columns)
-            columns.add(object : StringColumn("Stack Map Frame", 600) {
-                override fun createValue(rowIndex: Int): String = entries[rowIndex].verbose
+            columns.add(object : StringColumn<StackMapFrameEntry>("Stack Map Frame", 600) {
+                override fun createValue(row: StackMapFrameEntry): String = row.verbose
                 override fun createTableCellRenderer() = createTableCellEditor()
                 override fun createTableCellEditor() = MultiLineHtmlCellHandler() {description ->
                     ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                 }
-                override fun isEditable(rowIndex: Int): Boolean {
+                override fun isEditable(row: StackMapFrameEntry): Boolean {
                     return true
                 }
             })
         }
-
-        private val entries: Array<StackMapFrameEntry>
-            get() = attribute.entries
-
-        override fun getRowCount(): Int = entries.size
     }
 }

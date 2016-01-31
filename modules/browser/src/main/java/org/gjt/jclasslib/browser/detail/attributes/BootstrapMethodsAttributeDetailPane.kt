@@ -18,7 +18,7 @@ import javax.swing.JTable
 
 class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDetailPane<BootstrapMethodsAttribute>(services) {
 
-    override fun createTableModel(attribute: BootstrapMethodsAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: BootstrapMethodsAttribute) = AttributeTableModel(attribute.methods)
     override val attributeClass: Class<BootstrapMethodsAttribute>
         get() = BootstrapMethodsAttribute::class.java
 
@@ -28,34 +28,26 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDeta
     override val autoResizeMode: Int
         get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
-    protected inner class AttributeTableModel(attribute: BootstrapMethodsAttribute) : ColumnTableModel<BootstrapMethodsAttribute>(attribute) {
+    protected inner class AttributeTableModel(rows: Array<BootstrapMethodsEntry>) : ColumnTableModel<BootstrapMethodsEntry>(rows) {
 
-        override fun buildColumns(columns: ArrayList<Column>) {
+        override fun buildColumns(columns: ArrayList<Column<BootstrapMethodsEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NamedConstantPoolLinkColumn("Bootstrap Method", services, 300) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = bootstrapMethods[rowIndex].methodRefIndex
+                add(object : NamedConstantPoolLinkColumn<BootstrapMethodsEntry>("Bootstrap Method", services, 300) {
+                    override fun getConstantPoolIndex(row: BootstrapMethodsEntry) = row.methodRefIndex
                 })
 
-                add(object : StringColumn("Arguments", 400) {
-                    override fun createValue(rowIndex: Int): String {
-                        return bootstrapMethods[rowIndex].verbose.replace("\n", "<br>")
+                add(object : StringColumn<BootstrapMethodsEntry>("Arguments", 400) {
+                    override fun createValue(row: BootstrapMethodsEntry): String {
+                        return row.verbose.replace("\n", "<br>")
                     }
                     override fun createTableCellRenderer() = createTableCellEditor()
                     override fun createTableCellEditor() = MultiLineHtmlCellHandler() { description ->
                         ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                     }
-                    override fun isEditable(rowIndex: Int) = true
+                    override fun isEditable(row: BootstrapMethodsEntry) = true
                 })
             }
         }
-
-        override fun getRowCount(): Int {
-            return bootstrapMethods.size
-        }
-
-        private val bootstrapMethods: Array<BootstrapMethodsEntry>
-            get() = attribute.methods
-
     }
 }

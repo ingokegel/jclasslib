@@ -15,40 +15,32 @@ import java.util.*
 
 class InnerClassesAttributeDetailPane(services: BrowserServices) : TableDetailPane<InnerClassesAttribute>(services) {
 
-    override fun createTableModel(attribute: InnerClassesAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: InnerClassesAttribute) = AttributeTableModel(attribute.classes)
     override val attributeClass: Class<InnerClassesAttribute>
         get() = InnerClassesAttribute::class.java
 
     override val rowHeightFactor: Float
         get() = 2f
 
-    protected inner class AttributeTableModel(attribute: InnerClassesAttribute) : ColumnTableModel<InnerClassesAttribute>(attribute) {
+    protected inner class AttributeTableModel(rows: Array<InnerClassesEntry>) : ColumnTableModel<InnerClassesEntry>(rows) {
 
-        override fun buildColumns(columns: ArrayList<Column>) {
+        override fun buildColumns(columns: ArrayList<Column<InnerClassesEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NamedConstantPoolLinkColumn("Inner Class", services, 160) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = innerClasses[rowIndex].innerClassInfoIndex
+                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>("Inner Class", services, 160) {
+                    override fun getConstantPoolIndex(row: InnerClassesEntry) = row.innerClassInfoIndex
                 })
-                add(object : NamedConstantPoolLinkColumn("Outer Class", services, 160) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = innerClasses[rowIndex].outerClassInfoIndex
+                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>("Outer Class", services, 160) {
+                    override fun getConstantPoolIndex(row: InnerClassesEntry) = row.outerClassInfoIndex
                 })
-                add(object : NamedConstantPoolLinkColumn("Inner Name", services, 110) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = innerClasses[rowIndex].innerNameIndex
+                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>("Inner Name", services, 110) {
+                    override fun getConstantPoolIndex(row: InnerClassesEntry) = row.innerNameIndex
                 })
-                add(object : StringColumn("Access Flags", 200) {
-                    override fun createValue(rowIndex: Int) =
-                            "${innerClasses[rowIndex].innerClassFormattedAccessFlags} [${innerClasses[rowIndex].innerClassAccessFlagsVerbose}]"
+                add(object : StringColumn<InnerClassesEntry>("Access Flags", 200) {
+                    override fun createValue(row: InnerClassesEntry) =
+                            "${row.innerClassFormattedAccessFlags} [${row.innerClassAccessFlagsVerbose}]"
                 })
             }
         }
-
-        override fun getRowCount(): Int {
-            return innerClasses.size
-        }
-
-        private val innerClasses: Array<InnerClassesEntry>
-            get() = attribute.classes
-
     }
 }

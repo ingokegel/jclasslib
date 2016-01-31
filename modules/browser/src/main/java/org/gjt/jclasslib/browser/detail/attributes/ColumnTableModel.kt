@@ -7,32 +7,31 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.structures.AttributeInfo
 import java.util.*
-import javax.swing.JTable
 import javax.swing.table.AbstractTableModel
-import javax.swing.table.DefaultTableColumnModel
-import javax.swing.table.TableColumn
-import javax.swing.table.TableColumnModel
 
-abstract class ColumnTableModel<T : AttributeInfo>(protected val attribute: T) : AbstractTableModel() {
+abstract class ColumnTableModel<T : Any>(private val rows: Array<T>) : AbstractTableModel() {
 
-    val columns = ArrayList<Column>().apply {
+    val columns = ArrayList<Column<T>>().apply {
         buildColumns(this)
     }
 
-    open protected fun buildColumns(columns: ArrayList<Column>) {
-        columns.add(IndexColumn())
+    open protected fun buildColumns(columns: ArrayList<Column<T>>) {
+        columns.add(object : NumberColumn<T>("Nr.") {
+            override fun createValue(row: T) = rows.indexOf(row)
+            override val maxWidth: Int
+                get() = width
+        })
     }
 
+    final override fun getRowCount(): Int = rows.size
     final override fun getColumnCount(): Int = columns.size
-    final override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean = columns[columnIndex].isEditable(rowIndex)
+    final override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean = columns[columnIndex].isEditable(rows[rowIndex])
     final override fun getColumnName(columnIndex: Int): String = columns[columnIndex].name
     final override fun getColumnClass(columnIndex: Int): Class<*> = columns[columnIndex].columnClass
-    final override fun getValueAt(rowIndex: Int, columnIndex: Int): Any = columns[columnIndex].getValue(rowIndex)
-    protected fun getColumnWidth(columnIndex: Int): Int = columns[columnIndex].width
+    final override fun getValueAt(rowIndex: Int, columnIndex: Int): Any = columns[columnIndex].getValue(rows[rowIndex])
 
     fun link(rowIndex: Int, columnIndex: Int) {
-        columns[columnIndex].link(rowIndex)
+        columns[columnIndex].link(rows[rowIndex])
     }
 }

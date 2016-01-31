@@ -15,33 +15,26 @@ import java.util.*
 
 class MethodParametersAttributeDetailPane(services: BrowserServices) : TableDetailPane<MethodParametersAttribute>(services) {
 
-    override fun createTableModel(attribute: MethodParametersAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: MethodParametersAttribute) = AttributeTableModel(attribute.entries)
     override val attributeClass: Class<MethodParametersAttribute>
         get() = MethodParametersAttribute::class.java
 
     override val rowHeightFactor: Float
         get() = 2f
 
-    protected inner class AttributeTableModel(attribute: MethodParametersAttribute) : ColumnTableModel<MethodParametersAttribute>(attribute) {
+    protected inner class AttributeTableModel(rows: Array<MethodParametersEntry>) : ColumnTableModel<MethodParametersEntry>(rows) {
 
-        override fun buildColumns(columns: ArrayList<Column>) {
+        override fun buildColumns(columns: ArrayList<Column<MethodParametersEntry>>) {
             super.buildColumns(columns)
 
             columns.apply {
-                add(object : NamedConstantPoolLinkColumn("Parameter Name", services, 200) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = entries[rowIndex].nameIndex
+                add(object : NamedConstantPoolLinkColumn<MethodParametersEntry>("Parameter Name", services, 200) {
+                    override fun getConstantPoolIndex(row: MethodParametersEntry) = row.nameIndex
                 })
-                add(object : StringColumn("Access Flags", 200) {
-                    override fun createValue(rowIndex: Int) = entries[rowIndex].accessFlagsVerbose
+                add(object : StringColumn<MethodParametersEntry>("Access Flags", 200) {
+                    override fun createValue(row: MethodParametersEntry) = row.accessFlagsVerbose
                 })
             }
         }
-
-        override fun getRowCount(): Int {
-            return entries.size
-        }
-        private val entries: Array<MethodParametersEntry>
-            get() = attribute.entries
-
     }
 }

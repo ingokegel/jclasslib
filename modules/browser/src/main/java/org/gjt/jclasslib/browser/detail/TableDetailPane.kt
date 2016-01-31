@@ -76,9 +76,9 @@ abstract class TableDetailPane<T : AttributeInfo>(services: BrowserServices) : A
     private val tableModel: ColumnTableModel<*>
         get() = table.model as ColumnTableModel<*>
 
-    private val attributeToTableModel = WeakHashMap<AttributeInfo, ColumnTableModel<T>>()
+    private val attributeToTableModel = WeakHashMap<AttributeInfo, ColumnTableModel<*>>()
 
-    protected abstract fun createTableModel(attribute: T): ColumnTableModel<T>
+    protected abstract fun createTableModel(attribute: T): ColumnTableModel<*>
     protected abstract val attributeClass: Class<T>
 
     fun getTableModel(treePath: TreePath): TableModel = getCachedTableModel(attributeClass.cast(getAttribute(treePath)))
@@ -104,7 +104,7 @@ abstract class TableDetailPane<T : AttributeInfo>(services: BrowserServices) : A
         }
     }
 
-    private fun getCachedTableModel(attribute: T): ColumnTableModel<T> =
+    private fun getCachedTableModel(attribute: T): ColumnTableModel<*> =
             attributeToTableModel.getOrPut(attribute) {
                 createTableModel(attribute)
             }

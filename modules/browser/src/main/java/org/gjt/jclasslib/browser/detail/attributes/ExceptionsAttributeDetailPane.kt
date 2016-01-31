@@ -14,28 +14,22 @@ import java.util.*
 
 class ExceptionsAttributeDetailPane(services: BrowserServices) : TableDetailPane<ExceptionsAttribute>(services) {
 
-    override fun createTableModel(attribute: ExceptionsAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: ExceptionsAttribute) = AttributeTableModel(attribute.exceptionIndexTable)
     override val attributeClass: Class<ExceptionsAttribute>
         get() = ExceptionsAttribute::class.java
 
-    protected inner class AttributeTableModel(attribute: ExceptionsAttribute) : ColumnTableModel<ExceptionsAttribute>(attribute) {
-        override fun buildColumns(columns: ArrayList<Column>) {
+    protected inner class AttributeTableModel(rows: IntArray) : ColumnTableModel<Int>(rows.toTypedArray()) {
+        override fun buildColumns(columns: ArrayList<Column<Int>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : ConstantPoolLinkColumn("Exception", services) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = exceptionIndexTable[rowIndex]
+                add(object : ConstantPoolLinkColumn<Int>("Exception", services) {
+                    override fun getConstantPoolIndex(row: Int) = row
                 })
 
-                add(object : StringColumn("Verbose") {
-                    override fun createValue(rowIndex: Int) =
-                            getConstantPoolEntryName(exceptionIndexTable[rowIndex])
+                add(object : StringColumn<Int>("Verbose") {
+                    override fun createValue(row: Int) = getConstantPoolEntryName(row)
                 })
             }
         }
-
-        override fun getRowCount() = exceptionIndexTable.size
-
-        private val exceptionIndexTable: IntArray
-            get() = attribute.exceptionIndexTable
     }
 }

@@ -14,7 +14,7 @@ import java.util.*
 
 abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : TableDetailPane<LocalVariableAttribute>(services) {
 
-    override fun createTableModel(attribute: LocalVariableAttribute) = AttributeTableModel(attribute)
+    override fun createTableModel(attribute: LocalVariableAttribute) = AttributeTableModel(attribute.localVariableEntries)
 
     override val rowHeightFactor: Float
         get() = 2f
@@ -23,35 +23,28 @@ abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : Tab
 
     abstract protected val descriptorOrSignatureVerbose: String
 
-    protected inner class AttributeTableModel(attribute: LocalVariableAttribute) : ColumnTableModel<LocalVariableAttribute>(attribute) {
+    protected inner class AttributeTableModel(rows: Array<LocalVariableEntry>) : ColumnTableModel<LocalVariableEntry>(rows) {
 
-        override fun buildColumns(columns: ArrayList<Column>) {
+        override fun buildColumns(columns: ArrayList<Column<LocalVariableEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NumberColumn("Start PC") {
-                    override fun createValue(rowIndex: Int) = localVariableEntries[rowIndex].startPc
+                add(object : NumberColumn<LocalVariableEntry>("Start PC") {
+                    override fun createValue(row: LocalVariableEntry) = row.startPc
                 })
-                add(object : NumberColumn("Length") {
-                    override fun createValue(rowIndex: Int) = localVariableEntries[rowIndex].length
+                add(object : NumberColumn<LocalVariableEntry>("Length") {
+                    override fun createValue(row: LocalVariableEntry) = row.length
                 })
-                add(object : NumberColumn("Index") {
-                    override fun createValue(rowIndex: Int) = localVariableEntries[rowIndex].index
+                add(object : NumberColumn<LocalVariableEntry>("Index") {
+                    override fun createValue(row: LocalVariableEntry) = row.index
                 })
-                add(object : NamedConstantPoolLinkColumn("Name", services, 200) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = localVariableEntries[rowIndex].nameIndex
+                add(object : NamedConstantPoolLinkColumn<LocalVariableEntry>("Name", services, 200) {
+                    override fun getConstantPoolIndex(row: LocalVariableEntry) = row.nameIndex
                 })
-                add(object : NamedConstantPoolLinkColumn(descriptorOrSignatureVerbose, services, 200) {
-                    override fun getConstantPoolIndex(rowIndex: Int) = localVariableEntries[rowIndex].descriptorOrSignatureIndex
+                add(object : NamedConstantPoolLinkColumn<LocalVariableEntry>(descriptorOrSignatureVerbose, services, 200) {
+                    override fun getConstantPoolIndex(row: LocalVariableEntry) = row.descriptorOrSignatureIndex
                 })
             }
         }
-
-        override fun getRowCount(): Int {
-            return localVariableEntries.size
-        }
-
-        private val localVariableEntries: Array<LocalVariableEntry>
-            get() = attribute.localVariableEntries
     }
 }
 
