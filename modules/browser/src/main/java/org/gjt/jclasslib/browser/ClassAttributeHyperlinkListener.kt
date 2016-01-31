@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.detail.ListDetailPane
+import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.event.MouseAdapter
@@ -31,7 +31,7 @@ class ClassAttributeHyperlinkListener(private val services: BrowserServices, pri
         }
 
         val detailPane = services.browserComponent.detailPane.attributeDetailPane
-        (detailPane.getDetailPane(attributeInfoClass) as ListDetailPane).selectIndex(index)
+        (detailPane.getDetailPane(attributeInfoClass) as TableDetailPane<*>).selectIndex(index)
     }
 
     private fun findChildNode(attributesNode: BrowserTreeNode, attributeInfoClass: Class<out AttributeInfo>): BrowserTreeNode? {

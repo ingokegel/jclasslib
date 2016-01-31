@@ -8,11 +8,12 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.LineNumberTableAttribute
 import org.gjt.jclasslib.structures.attributes.LineNumberTableEntry
 import java.util.*
 
-class LineNumberTableAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<LineNumberTableAttribute>(services) {
+class LineNumberTableAttributeDetailPane(services: BrowserServices) : TableDetailPane<LineNumberTableAttribute>(services) {
 
     override fun createTableModel(attribute: LineNumberTableAttribute) = AttributeTableModel(attribute)
     override val attributeClass: Class<LineNumberTableAttribute>

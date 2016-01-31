@@ -8,12 +8,16 @@
 package org.gjt.jclasslib.browser.detail.attributes.code
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.attributes.*
+import org.gjt.jclasslib.browser.detail.TableDetailPane
+import org.gjt.jclasslib.browser.detail.attributes.Column
+import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
+import org.gjt.jclasslib.browser.detail.attributes.NamedConstantPoolLinkColumn
+import org.gjt.jclasslib.browser.detail.attributes.NumberColumn
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.structures.attributes.ExceptionTableEntry
 import java.util.*
 
-class ExceptionTableDetailPane(services: BrowserServices) : ColumnListDetailPane<CodeAttribute>(services) {
+class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane<CodeAttribute>(services) {
 
     init {
         name = "Exception table"

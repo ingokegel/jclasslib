@@ -8,11 +8,12 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.InnerClassesAttribute
 import org.gjt.jclasslib.structures.attributes.InnerClassesEntry
 import java.util.*
 
-class InnerClassesAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<InnerClassesAttribute>(services) {
+class InnerClassesAttributeDetailPane(services: BrowserServices) : TableDetailPane<InnerClassesAttribute>(services) {
 
     override fun createTableModel(attribute: InnerClassesAttribute) = AttributeTableModel(attribute)
     override val attributeClass: Class<InnerClassesAttribute>

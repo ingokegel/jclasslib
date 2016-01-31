@@ -9,13 +9,17 @@ package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.AbstractDetailPane
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
+import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
+import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.LinkMouseListener
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Point
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
+import java.util.*
 import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ListSelectionEvent
@@ -24,7 +28,7 @@ import javax.swing.event.TableColumnModelListener
 import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 
-abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
+abstract class TableDetailPane<T : AttributeInfo>(services: BrowserServices) : AbstractDetailPane(services) {
 
     protected val table: JTable = JTable().apply {
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
@@ -68,6 +72,42 @@ abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(se
             })
         }
     }
+
+    private val tableModel: ColumnTableModel<*>
+        get() = table.model as ColumnTableModel<*>
+
+    private val attributeToTableModel = WeakHashMap<AttributeInfo, ColumnTableModel<T>>()
+
+    protected abstract fun createTableModel(attribute: T): ColumnTableModel<T>
+    protected abstract val attributeClass: Class<T>
+
+    fun getTableModel(treePath: TreePath): TableModel = getCachedTableModel(attributeClass.cast(getAttribute(treePath)))
+
+    fun link(row: Int, column: Int) {
+        tableModel.link(row, column)
+    }
+
+    fun createTableColumnModel(table: JTable) {
+        table.apply {
+            createDefaultColumnsFromModel()
+            columnModel.columns.iterator().withIndex().forEach {
+                val column = tableModel.columns[it.index]
+                it.value.apply {
+                    minWidth = column.minWidth
+                    maxWidth = column.maxWidth
+                    width = column.width
+                    preferredWidth = column.width
+                    cellRenderer = column.createTableCellRenderer()
+                    cellEditor = column.createTableCellEditor()
+                }
+            }
+        }
+    }
+
+    private fun getCachedTableModel(attribute: T): ColumnTableModel<T> =
+            attributeToTableModel.getOrPut(attribute) {
+                createTableModel(attribute)
+            }
 
     open protected val autoResizeMode : Int
             get() = JTable.AUTO_RESIZE_OFF
@@ -116,32 +156,11 @@ abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(se
     open protected val rowHeightFactor: Float
         get() = 1f
 
-    protected open fun createTableColumnModel(table: JTable) {
-        table.createDefaultColumnsFromModel()
-    }
-
-    protected abstract fun getTableModel(treePath: TreePath): TableModel
-
-    // TODO make a class ConstantPoolLinkWithComment :
-    protected fun createCommentLink(index: Int): LinkRenderer.LinkWithComment {
-        return LinkRenderer.LinkWithComment(
-                CPINFO_LINK_TEXT + index.toString(),
-                getConstantPoolEntryName(index))
-    }
-
-    protected open fun link(row: Int, column: Int) {
-    }
-
     fun selectIndex(index: Int) {
         if (index !in (0..table.rowCount)) {
             throw IllegalArgumentException("Invalid index: " + index)
         }
         table.selectionModel.setSelectionInterval(index, index)
-    }
-
-    //TODO move to columns.kt
-    open class Link(val text: String) {
-        override fun toString() = text
     }
 
     private inner class TableLinkListener(component: JComponent) : LinkMouseListener(component) {

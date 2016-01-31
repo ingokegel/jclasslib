@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes;
 
-import org.gjt.jclasslib.browser.detail.ListDetailPane;
+import org.gjt.jclasslib.browser.detail.TableDetailPane;
 import org.gjt.jclasslib.util.ExtendedTableCellRenderer;
 import org.gjt.jclasslib.util.HtmlDisplayTextArea;
 
@@ -63,13 +63,13 @@ public class LinkRenderer implements TableCellRenderer  {
                                                    int column)
     {
 
-        boolean standardLabel = value == null || value.toString().equals(ListDetailPane.CPINFO_LINK_TEXT + "0");
+        boolean standardLabel = value == null || value.toString().equals(TableDetailPane.CPINFO_LINK_TEXT + "0");
         linkLineRenderer.setForeground(standardLabel ? standardForeground : HtmlDisplayTextArea.COLOR_LINK);
         linkLineRenderer.setUnderlined(!standardLabel);
         linkLineRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         if (value instanceof LinkWithComment) {
-            infoLineRenderer.getTableCellRendererComponent(table, ((LinkWithComment)value).commentValue, isSelected, false, row, column);
+            infoLineRenderer.getTableCellRendererComponent(table, ((LinkWithComment)value).getCommentValue(), isSelected, false, row, column);
             infoLineRenderer.setVisible(true);
         } else {
             infoLineRenderer.setVisible(false);
@@ -86,16 +86,5 @@ public class LinkRenderer implements TableCellRenderer  {
         return linkLineRenderer.getBounds().contains(point);
     }
 
-    //TODO move to columns.kt
-    public static class LinkWithComment extends ListDetailPane.Link {
-
-        private String commentValue;
-
-        public LinkWithComment(String linkValue, String commentValue) {
-            super(linkValue);
-            this.commentValue = commentValue;
-        }
-
-    }
 
 }

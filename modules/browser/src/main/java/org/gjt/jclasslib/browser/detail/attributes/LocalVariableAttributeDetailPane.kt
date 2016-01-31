@@ -7,11 +7,12 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.LocalVariableAttribute
 import org.gjt.jclasslib.structures.attributes.LocalVariableEntry
 import java.util.*
 
-abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<LocalVariableAttribute>(services) {
+abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : TableDetailPane<LocalVariableAttribute>(services) {
 
     override fun createTableModel(attribute: LocalVariableAttribute) = AttributeTableModel(attribute)
 

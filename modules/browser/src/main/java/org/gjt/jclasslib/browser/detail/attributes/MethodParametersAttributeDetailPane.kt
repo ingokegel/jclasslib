@@ -8,11 +8,12 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.MethodParametersAttribute
 import org.gjt.jclasslib.structures.attributes.MethodParametersEntry
 import java.util.*
 
-class MethodParametersAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<MethodParametersAttribute>(services) {
+class MethodParametersAttributeDetailPane(services: BrowserServices) : TableDetailPane<MethodParametersAttribute>(services) {
 
     override fun createTableModel(attribute: MethodParametersAttribute) = AttributeTableModel(attribute)
     override val attributeClass: Class<MethodParametersAttribute>
