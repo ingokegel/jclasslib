@@ -67,7 +67,6 @@ abstract class NamedConstantPoolLinkColumn<T: Any>(name: String, services: Brows
 
     open protected fun getComment(constantPoolIndex: Int) = getConstantPoolEntryName(constantPoolIndex)
 
-    //TODO duplicate in AbstractDetailPanel, make extension function of BrowserServices
     private fun getConstantPoolEntryName(constantPoolIndex: Int): String {
         try {
             return services.classFile.getConstantPoolEntryName(constantPoolIndex)
