@@ -54,7 +54,11 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
     /**
      * new in Java 1.5
      */
-    VARARGS(128, "varargs");
+    VARARGS(128, "varargs"),
+    /**
+     * new in Java 8
+     */
+    MANDATED(0x8000, "mandated");
 
     /** Checks if this access flag is set in the supplied access flags.
      * @param accessFlags the access flags
@@ -123,5 +127,14 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
                 ABSTRACT,
                 STRICT,
                 SYNTHETIC)
+
+        /**
+         * Access flags for MethodParameters attribute
+         */
+        val METHOD_PARAMETERS_ACCESS_FLAGS: EnumSet<AccessFlag> = EnumSet.of(
+                FINAL,
+                SYNTHETIC,
+                MANDATED
+        )
     }
 }

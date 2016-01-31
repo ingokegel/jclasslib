@@ -22,7 +22,7 @@ const val SYSTEM_PROPERTY_DEBUG = "jclasslib.io.debug"
  */
 const val SYSTEM_PROPERTY_SKIP_ATTRIBUTES = "jclasslib.io.skipAttributes"
 
-internal val isDebug: Boolean = java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG)
+internal var isDebug: Boolean = java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_DEBUG)
 
 internal fun warning(message: String) {
     print("[warning] ")

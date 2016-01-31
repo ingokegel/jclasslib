@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.structures.AccessFlag
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -24,6 +25,12 @@ class MethodParametersEntry : SubStructure() {
      * The access flags.
      */
     var accessFlags: Int = 0
+
+    /**
+     * Verbose description of the access flags
+     */
+    val accessFlagsVerbose: String
+        get() = formatAccessFlagsVerbose(AccessFlag.METHOD_PARAMETERS_ACCESS_FLAGS, accessFlags)
 
     override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()

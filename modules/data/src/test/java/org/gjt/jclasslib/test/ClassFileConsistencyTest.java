@@ -76,7 +76,7 @@ public abstract class ClassFileConsistencyTest {
 
         boolean success = compare(className, before, after);
         if (!success) {
-            System.setProperty(Package.SYSTEM_PROPERTY_DEBUG, "true");
+            Package.setDebug(true);
             ClassFileReader.readFromInputStream(new ByteArrayInputStream(after));
         }
         return success;

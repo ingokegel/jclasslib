@@ -19,7 +19,7 @@ import java.io.DataOutput
 class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
-     * List of stackMapFrame entries in the StackMapTableAttribute structure
+     * List of method parameter entries in the MethodParametersAttribute structure
      */
     var entries: Array<MethodParametersEntry> = emptyArraySingleton()
 

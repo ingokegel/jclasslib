@@ -5,104 +5,42 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.attributes.MethodParametersAttribute;
-import org.gjt.jclasslib.structures.attributes.MethodParametersEntry;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.attributes.MethodParametersAttribute
+import org.gjt.jclasslib.structures.attributes.MethodParametersEntry
+import java.util.*
 
-/**
- * Detail pane showing an <tt>BootstrapMethods</tt> attribute.
- */
-public class MethodParametersAttributeDetailPane extends AbstractAttributeListDetailPane {
+class MethodParametersAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<MethodParametersAttribute>(services) {
 
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services.
-     */
-    public MethodParametersAttributeDetailPane(BrowserServices services) {
-        super(services);
-    }
+    override fun createTableModel(attribute: MethodParametersAttribute) = AttributeTableModel(attribute)
+    override val attributeClass: Class<MethodParametersAttribute>
+        get() = MethodParametersAttribute::class.java
 
-    protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute) {
-        return new AttributeTableModel(attribute);
-    }
+    override val rowHeightFactor: Float
+        get() = 2f
 
-    protected float getRowHeightFactor() {
-        return 2f;
-    }
+    protected inner class AttributeTableModel(attribute: MethodParametersAttribute) : ColumnTableModel<MethodParametersAttribute>(attribute) {
 
-    private class AttributeTableModel extends AbstractAttributeTableModel {
+        override fun buildColumns(columns: ArrayList<Column>) {
+            super.buildColumns(columns)
 
-        private static final int COLUMN_COUNT = BASE_COLUMN_COUNT + 2;
-
-        private static final int PARAM_NAME_INDEX = BASE_COLUMN_COUNT;
-        private static final int ACCESS_FLAG_INDEX = BASE_COLUMN_COUNT + 1;
-
-        private static final int PARAM_NAME_COLUMN_WIDTH = 200;
-        private static final int ACCESS_FLAG_COLUMN_WIDTH = 200;
-
-        private MethodParametersEntry[] entries;
-
-        private AttributeTableModel(AttributeInfo attribute) {
-            super(attribute);
-            entries = ((MethodParametersAttribute)attribute).getEntries();
-        }
-
-        public int getColumnWidth(int column) {
-            switch (column) {
-                case PARAM_NAME_INDEX:
-                    return PARAM_NAME_COLUMN_WIDTH;
-                case ACCESS_FLAG_INDEX:
-                    return ACCESS_FLAG_COLUMN_WIDTH;
-                default:
-                    return LINK_COLUMN_WIDTH;
+            columns.apply {
+                add(object : ConstantPoolLinkWithCommentColumn("Parameter Name", services, 200) {
+                    override fun getConstantPoolIndex(rowIndex: Int) = entries[rowIndex].nameIndex
+                })
+                add(object : StringColumn("Access Flags", 200) {
+                    override fun createValue(rowIndex: Int) = entries[rowIndex].accessFlagsVerbose
+                })
             }
         }
 
-
-        public int getRowCount() {
-            return entries.length;
+        override fun getRowCount(): Int {
+            return entries.size
         }
+        private val entries: Array<MethodParametersEntry>
+            get() = attribute.entries
 
-        public int getColumnCount() {
-            return COLUMN_COUNT;
-        }
-
-        protected String doGetColumnName(int column) {
-            switch (column) {
-                case PARAM_NAME_INDEX:
-                    return "param_name";
-                case ACCESS_FLAG_INDEX:
-                    return "access_flags";
-                default:
-                    return "";
-            }
-        }
-
-        protected Class doGetColumnClass(int column) {
-            switch (column) {
-                case PARAM_NAME_INDEX:
-                    return Link.class;
-                case ACCESS_FLAG_INDEX:
-                default:
-                    return String.class;
-            }
-        }
-
-        protected Object doGetValueAt(int row, int column) {
-
-            MethodParametersEntry entry = entries[row];
-            switch (column) {
-                case PARAM_NAME_INDEX:
-                    return createCommentLink(entry.getNameIndex());
-                case ACCESS_FLAG_INDEX:
-                    return "" + entry.getAccessFlags();
-                default:
-                    return "";
-            }
-        }
     }
 }
