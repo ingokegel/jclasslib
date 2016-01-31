@@ -68,8 +68,8 @@ public class LinkRenderer implements TableCellRenderer  {
         linkLineRenderer.setUnderlined(!standardLabel);
         linkLineRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-        if (value instanceof LinkCommentValue) {
-            infoLineRenderer.getTableCellRendererComponent(table, ((LinkCommentValue)value).commentValue, isSelected, false, row, column);
+        if (value instanceof LinkWithComment) {
+            infoLineRenderer.getTableCellRendererComponent(table, ((LinkWithComment)value).commentValue, isSelected, false, row, column);
             infoLineRenderer.setVisible(true);
         } else {
             infoLineRenderer.setVisible(false);
@@ -86,27 +86,16 @@ public class LinkRenderer implements TableCellRenderer  {
         return linkLineRenderer.getBounds().contains(point);
     }
 
-    /**
-     * Value object for a link with a comment.
-     */
-    public static class LinkCommentValue {
+    //TODO move to columns.kt
+    public static class LinkWithComment extends ListDetailPane.Link {
 
-        private String linkValue;
         private String commentValue;
 
-        /**
-         * Constructor.
-         * @param linkValue the text for the link.
-         * @param commentValue the text for the comment.
-         */
-        public LinkCommentValue(String linkValue, String commentValue) {
-            this.linkValue = linkValue;
+        public LinkWithComment(String linkValue, String commentValue) {
+            super(linkValue);
             this.commentValue = commentValue;
         }
 
-        public String toString() {
-            return linkValue;
-        }
     }
 
 }

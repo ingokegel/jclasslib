@@ -5,153 +5,61 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener;
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute;
-import org.gjt.jclasslib.structures.attributes.BootstrapMethodsEntry;
-import org.gjt.jclasslib.util.MultiLineHtmlCellHandler;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
+import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
+import org.gjt.jclasslib.structures.attributes.BootstrapMethodsEntry
+import org.gjt.jclasslib.util.MultiLineHtmlCellHandler
+import java.util.*
+import javax.swing.JTable
 
-import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.table.TableColumn;
+class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<BootstrapMethodsAttribute>(services) {
 
-/**
- * Detail pane showing an <tt>BootstrapMethods</tt> attribute.
- */
-public class BootstrapMethodsAttributeDetailPane extends AbstractAttributeListDetailPane {
+    override fun createTableModel(attribute: BootstrapMethodsAttribute) = AttributeTableModel(attribute)
+    override val attributeClass: Class<BootstrapMethodsAttribute>
+        get() = BootstrapMethodsAttribute::class.java
 
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services.
-     */
-    public BootstrapMethodsAttributeDetailPane(BrowserServices services) {
-        super(services);
-    }
+    override val isVariableRowHeight: Boolean
+        get() = true
 
-    protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute) {
-        return new AttributeTableModel(attribute);
-    }
+    override val autoResizeMode: Int
+        get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
-    @Override
-    protected boolean isVariableRowHeight() {
-        return true;
-    }
+    protected inner class AttributeTableModel(attribute: BootstrapMethodsAttribute) : ColumnTableModel<BootstrapMethodsAttribute>(attribute) {
 
-    @Override
-    protected int getAutoResizeMode() {
-        return JTable.AUTO_RESIZE_LAST_COLUMN;
-    }
-
-    @Override
-    protected void adjustColumn(TableColumn tableColumn, int column) {
-        super.adjustColumn(tableColumn, column);
-        if (column == AttributeTableModel.BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX) {
-            tableColumn.setCellRenderer(new MultiLineHtmlCellHandler());
-            MultiLineHtmlCellHandler cellHandler = new MultiLineHtmlCellHandler();
-            cellHandler.addHyperlinkListener(new HyperlinkListener() {
-                @Override
-                public void hyperlinkUpdate(HyperlinkEvent e) {
-                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        ConstantPoolHyperlinkListener.Companion.link(getServices(), Integer.parseInt(e.getDescription()));
+        override fun buildColumns(columns: ArrayList<Column>) {
+            super.buildColumns(columns)
+            columns.apply {
+                add(object : LinkColumn("Bootstrap Method", 300) {
+                    override fun createValue(rowIndex: Int): Link {
+                        return createCommentLink(bootstrapMethods[rowIndex].methodRefIndex)
                     }
-                }
-            });
-            tableColumn.setCellEditor(cellHandler);
-        }
-    }
+                    override fun link(rowIndex: Int) {
+                        ConstantPoolHyperlinkListener.link(services, bootstrapMethods[rowIndex].methodRefIndex)
+                    }
+                })
 
-    private class AttributeTableModel extends AbstractAttributeTableModel {
-
-        private static final int COLUMN_COUNT = BASE_COLUMN_COUNT + 2;
-
-        private static final int BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT;
-        private static final int BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 1;
-
-        private static final int METHOD_REF_LINK_COLUMN_WIDTH = 300;
-        private static final int ARGUMENTS_REF_LINK_COLUMN_WIDTH = 400;
-
-        private BootstrapMethodsEntry[] bootstrapMethods;
-
-        private AttributeTableModel(AttributeInfo attribute) {
-            super(attribute);
-            bootstrapMethods = ((BootstrapMethodsAttribute)attribute).getMethods();
-        }
-
-        public int getColumnWidth(int column) {
-            switch (column) {
-                case BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX:
-                    return METHOD_REF_LINK_COLUMN_WIDTH;
-                case BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX:
-                    return ARGUMENTS_REF_LINK_COLUMN_WIDTH;
-
-                default:
-                    return LINK_COLUMN_WIDTH;
+                add(object : StringColumn("Arguments", 400) {
+                    override fun createValue(rowIndex: Int): String {
+                        return bootstrapMethods[rowIndex].verbose.replace("\n", "<br>")
+                    }
+                    override fun createTableCellRenderer() = createTableCellEditor()
+                    override fun createTableCellEditor() = MultiLineHtmlCellHandler() { description ->
+                        ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
+                    }
+                    override fun isEditable(rowIndex: Int) = true
+                })
             }
         }
 
-        public void link(int row, int column) {
-
-            int constantPoolIndex;
-            switch (column) {
-                case BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX:
-                    constantPoolIndex = bootstrapMethods[row].getMethodRefIndex();
-                    break;
-                default:
-                    return;
-            }
-            ConstantPoolHyperlinkListener.Companion.link(getServices(), constantPoolIndex);
+        override fun getRowCount(): Int {
+            return bootstrapMethods.size
         }
 
-        public int getRowCount() {
-            return bootstrapMethods.length;
-        }
+        private val bootstrapMethods: Array<BootstrapMethodsEntry>
+            get() = attribute.methods
 
-        public int getColumnCount() {
-            return COLUMN_COUNT;
-        }
-
-        protected String doGetColumnName(int column) {
-            switch (column) {
-                case BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX:
-                    return "bootstrap_method";
-                case BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX:
-                    return "arguments";
-                default:
-                    return "";
-            }
-        }
-
-        protected Class doGetColumnClass(int column) {
-            switch (column) {
-                case BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX:
-                    return Link.class;
-                case BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX:
-                default:
-                    return String.class;
-            }
-        }
-
-        protected Object doGetValueAt(int row, int column) {
-
-            BootstrapMethodsEntry bootstrapMethodsEntry = bootstrapMethods[row];
-            switch (column) {
-                case BOOTSTRAP_METHOD_REF_INFO_INDEX_COLUMN_INDEX:
-                    return createCommentLink(bootstrapMethodsEntry.getMethodRefIndex());
-                case BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX:
-                    return bootstrapMethodsEntry.getVerbose().replace("\n", "<br>");
-                default:
-                    return "";
-            }
-        }
-
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == BOOTSTRAP_ARGUMENTS_INFO_INDEX_COLUMN_INDEX;
-        }
     }
 }

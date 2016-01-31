@@ -122,9 +122,10 @@ abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(se
 
     protected abstract fun getTableModel(treePath: TreePath): TableModel
 
-    protected fun createCommentLink(index: Int): Any {
-        return LinkRenderer.LinkCommentValue(
-                AbstractDetailPane.CPINFO_LINK_TEXT + index.toString(),
+    // TODO make a class ConstantPoolLinkWithComment :
+    protected fun createCommentLink(index: Int): LinkRenderer.LinkWithComment {
+        return LinkRenderer.LinkWithComment(
+                CPINFO_LINK_TEXT + index.toString(),
                 getConstantPoolEntryName(index))
     }
 
@@ -138,7 +139,8 @@ abstract class ListDetailPane(services: BrowserServices) : AbstractDetailPane(se
         table.selectionModel.setSelectionInterval(index, index)
     }
 
-    class Link(val text: String) {
+    //TODO move to columns.kt
+    open class Link(val text: String) {
         override fun toString() = text
     }
 
