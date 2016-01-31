@@ -5,86 +5,63 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.detail.TableDetailPane;
-import org.gjt.jclasslib.util.ExtendedTableCellRenderer;
-import org.gjt.jclasslib.util.HtmlDisplayTextArea;
+import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.util.ExtendedTableCellRenderer
+import org.gjt.jclasslib.util.HtmlDisplayTextArea
+import java.awt.*
+import javax.swing.JPanel
+import javax.swing.JTable
+import javax.swing.table.TableCellRenderer
 
-import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+class LinkRenderer : TableCellRenderer {
 
-/**
-    Renderer for links in <tt>ListDetailPane</tt>s.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class LinkRenderer implements TableCellRenderer  {
-
-    private ExtendedTableCellRenderer linkLineRenderer;
-    private ExtendedTableCellRenderer infoLineRenderer;
-    private Color standardForeground;
-    private JPanel panel;
-
-    /**
-     * Constructor.
-     */
-    public LinkRenderer() {
-
-        linkLineRenderer = new ExtendedTableCellRenderer();
-        infoLineRenderer = new ExtendedTableCellRenderer();
-
-        standardForeground = linkLineRenderer.getForeground();
-
-        panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.anchor = GridBagConstraints.NORTHWEST;
-        gc.gridx = 0;
-        gc.gridy = GridBagConstraints.RELATIVE;
-        gc.insets = new Insets(0, 0, 0, 0);
-
-        panel.add(linkLineRenderer, gc);
-        panel.add(infoLineRenderer, gc);
-        gc.weighty = 1;
-        gc.weightx = 1;
-        gc.fill = GridBagConstraints.BOTH;
-        JPanel dummyPanel = new JPanel();
-        dummyPanel.setOpaque(false);
-        panel.add(dummyPanel, gc);
-
+    private val linkLineRenderer = ExtendedTableCellRenderer()
+    private val infoLineRenderer = ExtendedTableCellRenderer()
+    private val standardForeground: Color? = linkLineRenderer.foreground
+    private val panel = JPanel(GridBagLayout()).apply {
+        val gc = GridBagConstraints().apply {
+            anchor = GridBagConstraints.NORTHWEST
+            gridx = 0
+        }
+        add(linkLineRenderer, gc)
+        add(infoLineRenderer, gc)
+        add(JPanel().apply { isOpaque = false }, GridBagConstraints().apply {
+            gridx = 0
+            weighty = 1.0
+            weightx = 1.0
+            fill = GridBagConstraints.BOTH
+        })
     }
 
-    public Component getTableCellRendererComponent(JTable table,
-                                                   Object value,
-                                                   boolean isSelected,
-                                                   boolean hasFocus,
-                                                   int row,
-                                                   int column)
-    {
-
-        boolean standardLabel = value == null || value.toString().equals(TableDetailPane.CPINFO_LINK_TEXT + "0");
-        linkLineRenderer.setForeground(standardLabel ? standardForeground : HtmlDisplayTextArea.COLOR_LINK);
-        linkLineRenderer.setUnderlined(!standardLabel);
-        linkLineRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-        if (value instanceof LinkWithComment) {
-            infoLineRenderer.getTableCellRendererComponent(table, ((LinkWithComment)value).getCommentValue(), isSelected, false, row, column);
-            infoLineRenderer.setVisible(true);
-        } else {
-            infoLineRenderer.setVisible(false);
+    override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+        linkLineRenderer.apply {
+            if (value == null || value.toString() == AbstractDetailPane.CPINFO_LINK_TEXT + "0") {
+                foreground = standardForeground
+                isUnderlined = false
+            } else {
+                foreground = HtmlDisplayTextArea.COLOR_LINK
+                isUnderlined = true
+            }
+            getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         }
 
-        panel.setBackground(linkLineRenderer.getBackground());
-        panel.setBorder(linkLineRenderer.getBorder());
-        linkLineRenderer.setBorder(null);
+        if (value is LinkWithComment) {
+            infoLineRenderer.getTableCellRendererComponent(table, value.commentValue, isSelected, false, row, column)
+            infoLineRenderer.isVisible = true
+        } else {
+            infoLineRenderer.isVisible = false
+        }
 
-        return panel;
+        return panel.apply {
+            background = linkLineRenderer.background
+            border = linkLineRenderer.border
+            linkLineRenderer.border = null
+        }
     }
 
-    public boolean isLinkLabelHit(Point point) {
-        return linkLineRenderer.getBounds().contains(point);
+    fun isLinkLabelHit(point: Point): Boolean {
+        return linkLineRenderer.bounds.contains(point)
     }
-
-
 }
