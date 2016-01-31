@@ -10,17 +10,16 @@ package org.gjt.jclasslib.browser.detail.attributes
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.detail.TableDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsEntry
 import org.gjt.jclasslib.util.MultiLineHtmlCellHandler
 import java.util.*
 import javax.swing.JTable
 
-class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDetailPane<BootstrapMethodsAttribute>(services) {
+class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDetailPane(services) {
 
-    override fun createTableModel(attribute: BootstrapMethodsAttribute) = AttributeTableModel(attribute.methods)
-    override val attributeClass: Class<BootstrapMethodsAttribute>
-        get() = BootstrapMethodsAttribute::class.java
+    override fun createTableModel(attribute: AttributeInfo) = AttributeTableModel((attribute as BootstrapMethodsAttribute).methods)
 
     override val isVariableRowHeight: Boolean
         get() = true

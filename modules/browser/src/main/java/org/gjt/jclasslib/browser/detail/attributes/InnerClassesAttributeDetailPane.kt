@@ -9,15 +9,14 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.InnerClassesAttribute
 import org.gjt.jclasslib.structures.attributes.InnerClassesEntry
 import java.util.*
 
-class InnerClassesAttributeDetailPane(services: BrowserServices) : TableDetailPane<InnerClassesAttribute>(services) {
+class InnerClassesAttributeDetailPane(services: BrowserServices) : TableDetailPane(services) {
 
-    override fun createTableModel(attribute: InnerClassesAttribute) = AttributeTableModel(attribute.classes)
-    override val attributeClass: Class<InnerClassesAttribute>
-        get() = InnerClassesAttribute::class.java
+    override fun createTableModel(attribute: AttributeInfo) = AttributeTableModel((attribute as InnerClassesAttribute).classes)
 
     override val rowHeightFactor: Float
         get() = 2f

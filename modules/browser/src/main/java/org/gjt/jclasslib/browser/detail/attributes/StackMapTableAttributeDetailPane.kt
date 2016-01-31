@@ -10,17 +10,16 @@ package org.gjt.jclasslib.browser.detail.attributes
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.detail.TableDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.StackMapFrameEntry
 import org.gjt.jclasslib.structures.attributes.StackMapTableAttribute
 import org.gjt.jclasslib.util.MultiLineHtmlCellHandler
 import java.util.*
 import javax.swing.JTable
 
-class StackMapTableAttributeDetailPane(services: BrowserServices)  : TableDetailPane<StackMapTableAttribute>(services) {
+class StackMapTableAttributeDetailPane(services: BrowserServices)  : TableDetailPane(services) {
 
-    override fun createTableModel(attribute: StackMapTableAttribute) = AttributeTableModel(attribute.entries)
-    override val attributeClass: Class<StackMapTableAttribute>
-        get() = StackMapTableAttribute::class.java
+    override fun createTableModel(attribute: AttributeInfo) = AttributeTableModel((attribute as StackMapTableAttribute).entries)
 
     override val isVariableRowHeight: Boolean
         get() = true

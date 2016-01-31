@@ -28,7 +28,7 @@ import javax.swing.event.TableColumnModelListener
 import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 
-abstract class TableDetailPane<T : AttributeInfo>(services: BrowserServices) : AbstractDetailPane(services) {
+abstract class TableDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
 
     protected val table: JTable = JTable().apply {
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
@@ -78,10 +78,9 @@ abstract class TableDetailPane<T : AttributeInfo>(services: BrowserServices) : A
 
     private val attributeToTableModel = WeakHashMap<AttributeInfo, ColumnTableModel<*>>()
 
-    protected abstract fun createTableModel(attribute: T): ColumnTableModel<*>
-    protected abstract val attributeClass: Class<T>
+    protected abstract fun createTableModel(attribute: AttributeInfo): ColumnTableModel<*>
 
-    fun getTableModel(treePath: TreePath): TableModel = getCachedTableModel(attributeClass.cast(getAttribute(treePath)))
+    fun getTableModel(treePath: TreePath): TableModel = getCachedTableModel(getAttribute(treePath))
 
     fun link(row: Int, column: Int) {
         tableModel.link(row, column)
@@ -104,7 +103,7 @@ abstract class TableDetailPane<T : AttributeInfo>(services: BrowserServices) : A
         }
     }
 
-    private fun getCachedTableModel(attribute: T): ColumnTableModel<*> =
+    private fun getCachedTableModel(attribute: AttributeInfo): ColumnTableModel<*> =
             attributeToTableModel.getOrPut(attribute) {
                 createTableModel(attribute)
             }

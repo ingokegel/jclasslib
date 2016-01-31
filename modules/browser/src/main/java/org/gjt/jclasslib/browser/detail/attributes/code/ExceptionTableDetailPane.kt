@@ -13,19 +13,18 @@ import org.gjt.jclasslib.browser.detail.attributes.Column
 import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
 import org.gjt.jclasslib.browser.detail.attributes.NamedConstantPoolLinkColumn
 import org.gjt.jclasslib.browser.detail.attributes.NumberColumn
+import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.structures.attributes.ExceptionTableEntry
 import java.util.*
 
-class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane<CodeAttribute>(services) {
+class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane(services) {
 
     init {
         name = "Exception table"
     }
 
-    override fun createTableModel(attribute: CodeAttribute) = AttributeTableModel(attribute.exceptionTable)
-    override val attributeClass: Class<CodeAttribute>
-        get() = CodeAttribute::class.java
+    override fun createTableModel(attribute: AttributeInfo) = AttributeTableModel((attribute as CodeAttribute).exceptionTable)
 
     override val rowHeightFactor: Float
         get() = 2f

@@ -9,15 +9,14 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.MethodParametersAttribute
 import org.gjt.jclasslib.structures.attributes.MethodParametersEntry
 import java.util.*
 
-class MethodParametersAttributeDetailPane(services: BrowserServices) : TableDetailPane<MethodParametersAttribute>(services) {
+class MethodParametersAttributeDetailPane(services: BrowserServices) : TableDetailPane(services) {
 
-    override fun createTableModel(attribute: MethodParametersAttribute) = AttributeTableModel(attribute.entries)
-    override val attributeClass: Class<MethodParametersAttribute>
-        get() = MethodParametersAttribute::class.java
+    override fun createTableModel(attribute: AttributeInfo) = AttributeTableModel((attribute as MethodParametersAttribute).entries)
 
     override val rowHeightFactor: Float
         get() = 2f

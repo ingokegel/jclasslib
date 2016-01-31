@@ -9,14 +9,13 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.ExceptionsAttribute
 import java.util.*
 
-class ExceptionsAttributeDetailPane(services: BrowserServices) : TableDetailPane<ExceptionsAttribute>(services) {
+class ExceptionsAttributeDetailPane(services: BrowserServices) : TableDetailPane(services) {
 
-    override fun createTableModel(attribute: ExceptionsAttribute) = AttributeTableModel(attribute.exceptionIndexTable)
-    override val attributeClass: Class<ExceptionsAttribute>
-        get() = ExceptionsAttribute::class.java
+    override fun createTableModel(attribute: AttributeInfo) = AttributeTableModel((attribute as ExceptionsAttribute).exceptionIndexTable)
 
     protected inner class AttributeTableModel(rows: IntArray) : ColumnTableModel<Int>(rows.toTypedArray()) {
         override fun buildColumns(columns: ArrayList<Column<Int>>) {
