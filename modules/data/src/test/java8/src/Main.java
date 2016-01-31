@@ -18,8 +18,12 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
 
         String a = s + s2 + s3;
 
-        TestInterface t = Arrays::<@Test int[]>sort;
-        handleTest(t);
+        try {
+            TestInterface t = Arrays::<@Test int[]>sort;
+            handleTest(t);
+        } finally {
+            elementValues();
+        }
 
 
         try {
@@ -32,7 +36,7 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
 
     @Test2(one = "1", two = true, three = TestEnum.THREE, four = String.class, other = @Test("test"), otherArray = {@Test("x"), @Test("y")})
     private static void elementValues() {
-
+        System.out.println();
     }
 
     private static void handleTest(@Test TestInterface t2) {
