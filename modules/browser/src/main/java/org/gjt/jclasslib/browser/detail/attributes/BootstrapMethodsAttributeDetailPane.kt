@@ -36,7 +36,6 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDeta
                 add(object : NamedConstantPoolLinkColumn<BootstrapMethodsEntry>("Bootstrap Method", services, 300) {
                     override fun getConstantPoolIndex(row: BootstrapMethodsEntry) = row.methodRefIndex
                 })
-
                 add(object : StringColumn<BootstrapMethodsEntry>("Arguments", 400) {
                     override fun createValue(row: BootstrapMethodsEntry): String {
                         return row.verbose.replace("\n", "<br>")

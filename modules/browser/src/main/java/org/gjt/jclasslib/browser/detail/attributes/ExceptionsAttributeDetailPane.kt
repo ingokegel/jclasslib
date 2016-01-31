@@ -25,7 +25,6 @@ class ExceptionsAttributeDetailPane(services: BrowserServices) : TableDetailPane
                 add(object : ConstantPoolLinkColumn<Int>("Exception", services) {
                     override fun getConstantPoolIndex(row: Int) = row
                 })
-
                 add(object : StringColumn<Int>("Verbose") {
                     override fun createValue(row: Int) = getConstantPoolEntryName(row)
                 })

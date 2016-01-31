@@ -26,8 +26,6 @@ class LineNumberTableAttributeDetailPane(services: BrowserServices) : TableDetai
                 add(object : NumberColumn<LineNumberTableEntry>("Start PC") {
                     override fun createValue(row: LineNumberTableEntry): Number = row.startPc
                 })
-            }
-            columns.apply {
                 add(object : NumberColumn<LineNumberTableEntry>("Line Number", 100) {
                     override fun createValue(row: LineNumberTableEntry): Number = row.lineNumber
                 })

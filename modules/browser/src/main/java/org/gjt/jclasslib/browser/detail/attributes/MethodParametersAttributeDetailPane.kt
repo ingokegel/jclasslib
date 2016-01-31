@@ -26,7 +26,6 @@ class MethodParametersAttributeDetailPane(services: BrowserServices) : TableDeta
 
         override fun buildColumns(columns: ArrayList<Column<MethodParametersEntry>>) {
             super.buildColumns(columns)
-
             columns.apply {
                 add(object : NamedConstantPoolLinkColumn<MethodParametersEntry>("Parameter Name", services, 200) {
                     override fun getConstantPoolIndex(row: MethodParametersEntry) = row.nameIndex
