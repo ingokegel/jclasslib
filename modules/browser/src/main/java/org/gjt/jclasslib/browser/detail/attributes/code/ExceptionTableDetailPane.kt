@@ -40,7 +40,7 @@ class ExceptionTableDetailPane(services: BrowserServices) : ColumnListDetailPane
                 add(object : NumberColumn("Handler PC", 70) {
                     override fun createValue(rowIndex: Int) = exceptionTable[rowIndex].handlerPc
                 })
-                add(object : ConstantPoolLinkWithCommentColumn("Catch Type", services, 250) {
+                add(object : NamedConstantPoolLinkColumn("Catch Type", services, 250) {
                     override fun getConstantPoolIndex(rowIndex: Int) = exceptionTable[rowIndex].catchType
                     override fun getComment(constantPoolIndex: Int) = if (constantPoolIndex == 0) {
                         "any"

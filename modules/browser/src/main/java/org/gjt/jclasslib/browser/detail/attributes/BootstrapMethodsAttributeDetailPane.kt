@@ -32,7 +32,7 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : ColumnLis
         override fun buildColumns(columns: ArrayList<Column>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : ConstantPoolLinkWithCommentColumn("Bootstrap Method", services, 300) {
+                add(object : NamedConstantPoolLinkColumn("Bootstrap Method", services, 300) {
                     override fun getConstantPoolIndex(rowIndex: Int) = bootstrapMethods[rowIndex].methodRefIndex
                 })
 

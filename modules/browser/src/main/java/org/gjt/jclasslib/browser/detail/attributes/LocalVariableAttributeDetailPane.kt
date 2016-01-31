@@ -4,149 +4,62 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener;
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.structures.attributes.LocalVariableAttribute;
-import org.gjt.jclasslib.structures.attributes.LocalVariableEntry;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.attributes.LocalVariableAttribute
+import org.gjt.jclasslib.structures.attributes.LocalVariableEntry
+import java.util.*
 
-/**
- * Contains common attributes to a local variable detail pane.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
- */
-public abstract class LocalVariableAttributeDetailPane extends AbstractAttributeListDetailPane {
+abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : ColumnListDetailPane<LocalVariableAttribute>(services) {
 
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services.
-     */
-    public LocalVariableAttributeDetailPane(BrowserServices services) {
-        super(services);
+    override fun createTableModel(attribute: LocalVariableAttribute) = AttributeTableModel(attribute)
+
+    override val rowHeightFactor: Float
+        get() = 2f
+    override val attributeClass: Class<LocalVariableAttribute>
+        get() = LocalVariableAttribute::class.java
+
+    abstract protected val descriptorOrSignatureVerbose: String
+
+    protected inner class AttributeTableModel(attribute: LocalVariableAttribute) : ColumnTableModel<LocalVariableAttribute>(attribute) {
+
+        override fun buildColumns(columns: ArrayList<Column>) {
+            super.buildColumns(columns)
+            columns.apply {
+                add(object : NumberColumn("Start PC") {
+                    override fun createValue(rowIndex: Int) = localVariableEntries[rowIndex].startPc
+                })
+                add(object : NumberColumn("Length") {
+                    override fun createValue(rowIndex: Int) = localVariableEntries[rowIndex].length
+                })
+                add(object : NumberColumn("Index") {
+                    override fun createValue(rowIndex: Int) = localVariableEntries[rowIndex].index
+                })
+                add(object : NamedConstantPoolLinkColumn("Name", services, 200) {
+                    override fun getConstantPoolIndex(rowIndex: Int) = localVariableEntries[rowIndex].nameIndex
+                })
+                add(object : NamedConstantPoolLinkColumn(descriptorOrSignatureVerbose, services, 200) {
+                    override fun getConstantPoolIndex(rowIndex: Int) = localVariableEntries[rowIndex].descriptorOrSignatureIndex
+                })
+            }
+        }
+
+        override fun getRowCount(): Int {
+            return localVariableEntries.size
+        }
+
+        private val localVariableEntries: Array<LocalVariableEntry>
+            get() = attribute.localVariableEntries
     }
+}
 
-    protected AbstractAttributeTableModel createTableModel(AttributeInfo attribute, String descriptorOrSignatureDescription) {
-        return new AttributeTableModel(attribute, descriptorOrSignatureDescription);
-    }
+class LocalVariableTableAttributeDetailPane(services: BrowserServices) : LocalVariableAttributeDetailPane(services) {
+    override val descriptorOrSignatureVerbose: String
+        get() = "Descriptor"
+}
 
-    protected float getRowHeightFactor() {
-        return 2f;
-    }
-
-    private class AttributeTableModel extends AbstractAttributeTableModel {
-        private static final int COLUMN_COUNT = BASE_COLUMN_COUNT + 5;
-
-        private static final int START_PC_COLUMN_INDEX = BASE_COLUMN_COUNT;
-        private static final int LENGTH_COLUMN_INDEX = BASE_COLUMN_COUNT + 1;
-        private static final int INDEX_COLUMN_INDEX = BASE_COLUMN_COUNT + 2;
-        private static final int NAME_COLUMN_INDEX = BASE_COLUMN_COUNT + 3;
-        private static final int DESCRIPTOR_OR_SIGNATURE_COLUMN_INDEX = BASE_COLUMN_COUNT + 4;
-
-        private final String descriptorOrSignatureVerbose;
-
-        private static final int COMMENT_LINK_COLUMN_WIDTH = 200;
-
-        private LocalVariableEntry[] localVariableEntries;
-
-        private AttributeTableModel(AttributeInfo attribute,
-                                    String descriptorOrSignatureVerbose) {
-
-            super(attribute);
-            localVariableEntries = ((LocalVariableAttribute)attribute).getLocalVariableEntries();
-            this.descriptorOrSignatureVerbose = descriptorOrSignatureVerbose;
-        }
-
-        public int getColumnWidth(int column) {
-            switch (column) {
-                case START_PC_COLUMN_INDEX:
-                case LENGTH_COLUMN_INDEX:
-                case INDEX_COLUMN_INDEX:
-                    return NUMBER_COLUMN_WIDTH;
-
-                case NAME_COLUMN_INDEX:
-                case DESCRIPTOR_OR_SIGNATURE_COLUMN_INDEX:
-                    return COMMENT_LINK_COLUMN_WIDTH;
-
-                default:
-                    return LINK_COLUMN_WIDTH;
-            }
-        }
-
-        public void link(int row, int column) {
-            int constantPoolIndex;
-            switch (column) {
-                case NAME_COLUMN_INDEX:
-                    constantPoolIndex = localVariableEntries[row].getNameIndex();
-                    break;
-                case DESCRIPTOR_OR_SIGNATURE_COLUMN_INDEX:
-                    constantPoolIndex = localVariableEntries[row].getDescriptorOrSignatureIndex();
-                    break;
-                default:
-                    return;
-            }
-            ConstantPoolHyperlinkListener.Companion.link(getServices(), constantPoolIndex);
-        }
-
-        public int getRowCount() {
-            return localVariableEntries.length;
-        }
-
-        public int getColumnCount() {
-            return COLUMN_COUNT;
-        }
-
-        protected String doGetColumnName(int column) {
-            switch (column) {
-                case START_PC_COLUMN_INDEX:
-                    return "start_pc";
-                case LENGTH_COLUMN_INDEX:
-                    return "length";
-                case INDEX_COLUMN_INDEX:
-                    return "index";
-                case NAME_COLUMN_INDEX:
-                    return "name";
-                case DESCRIPTOR_OR_SIGNATURE_COLUMN_INDEX:
-                    return descriptorOrSignatureVerbose;
-                default:
-                    return "";
-            }
-        }
-
-        protected Class doGetColumnClass(int column) {
-            switch (column) {
-                case START_PC_COLUMN_INDEX:
-                case LENGTH_COLUMN_INDEX:
-                case INDEX_COLUMN_INDEX:
-                    return Number.class;
-                case NAME_COLUMN_INDEX:
-                case DESCRIPTOR_OR_SIGNATURE_COLUMN_INDEX:
-                    return Link.class;
-                default:
-                    return String.class;
-            }
-        }
-
-        protected Object doGetValueAt(int row, int column) {
-            LocalVariableEntry localVariableEntry = localVariableEntries[row];
-
-            switch (column) {
-                case START_PC_COLUMN_INDEX:
-                    return String.valueOf(localVariableEntry.getStartPc());
-                case LENGTH_COLUMN_INDEX:
-                    return String.valueOf(localVariableEntry.getTargetLength());
-                case INDEX_COLUMN_INDEX:
-                    return String.valueOf(localVariableEntry.getIndex());
-                case NAME_COLUMN_INDEX:
-                    return createCommentLink(localVariableEntry.getNameIndex());
-                case DESCRIPTOR_OR_SIGNATURE_COLUMN_INDEX:
-                    return createCommentLink(localVariableEntry.getDescriptorOrSignatureIndex());
-                default:
-                    return "";
-            }
-        }
-    }
+class LocalVariableTypeTableAttributeDetailPane(services: BrowserServices) : LocalVariableAttributeDetailPane(services) {
+    override val descriptorOrSignatureVerbose: String
+        get() = "Signature"
 }

@@ -58,7 +58,7 @@ abstract class ConstantPoolLinkColumn(name: String, protected val services: Brow
 
     protected abstract fun getConstantPoolIndex(rowIndex: Int): Int
 }
-abstract class ConstantPoolLinkWithCommentColumn(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn(name, services, width) {
+abstract class NamedConstantPoolLinkColumn(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn(name, services, width) {
     final override fun createValue(rowIndex: Int): ListDetailPane.Link {
         val constantPoolIndex = getConstantPoolIndex(rowIndex)
         return LinkRenderer.LinkWithComment(AbstractDetailPane.CPINFO_LINK_TEXT + constantPoolIndex, getComment(constantPoolIndex))

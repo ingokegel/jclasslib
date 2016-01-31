@@ -26,13 +26,13 @@ class InnerClassesAttributeDetailPane(services: BrowserServices) : ColumnListDet
         override fun buildColumns(columns: ArrayList<Column>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : ConstantPoolLinkWithCommentColumn("Inner Class", services, 160) {
+                add(object : NamedConstantPoolLinkColumn("Inner Class", services, 160) {
                     override fun getConstantPoolIndex(rowIndex: Int) = innerClasses[rowIndex].innerClassInfoIndex
                 })
-                add(object : ConstantPoolLinkWithCommentColumn("Outer Class", services, 160) {
+                add(object : NamedConstantPoolLinkColumn("Outer Class", services, 160) {
                     override fun getConstantPoolIndex(rowIndex: Int) = innerClasses[rowIndex].outerClassInfoIndex
                 })
-                add(object : ConstantPoolLinkWithCommentColumn("Inner Name", services, 110) {
+                add(object : NamedConstantPoolLinkColumn("Inner Name", services, 110) {
                     override fun getConstantPoolIndex(rowIndex: Int) = innerClasses[rowIndex].innerNameIndex
                 })
                 add(object : StringColumn("Access Flags", 200) {

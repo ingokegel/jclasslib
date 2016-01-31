@@ -27,7 +27,7 @@ class MethodParametersAttributeDetailPane(services: BrowserServices) : ColumnLis
             super.buildColumns(columns)
 
             columns.apply {
-                add(object : ConstantPoolLinkWithCommentColumn("Parameter Name", services, 200) {
+                add(object : NamedConstantPoolLinkColumn("Parameter Name", services, 200) {
                     override fun getConstantPoolIndex(rowIndex: Int) = entries[rowIndex].nameIndex
                 })
                 add(object : StringColumn("Access Flags", 200) {
