@@ -7,9 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.structures.attributes.ExceptionsAttribute
 import java.util.*
 
@@ -23,14 +21,8 @@ class ExceptionsAttributeDetailPane(services: BrowserServices) : ColumnListDetai
         override fun buildColumns(columns: ArrayList<Column>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : LinkColumn("Exception") {
-                    override fun createValue(rowIndex: Int) =
-                            Link(AbstractDetailPane.CPINFO_LINK_TEXT + exceptionIndexTable[rowIndex].toString())
-
-                    override fun link(rowIndex: Int) {
-                        val constantPoolIndex = exceptionIndexTable[rowIndex]
-                        ConstantPoolHyperlinkListener.link(services, constantPoolIndex)
-                    }
+                add(object : ConstantPoolLinkColumn("Exception", services) {
+                    override fun getConstantPoolIndex(rowIndex: Int) = exceptionIndexTable[rowIndex]
                 })
 
                 add(object : StringColumn("Verbose") {
