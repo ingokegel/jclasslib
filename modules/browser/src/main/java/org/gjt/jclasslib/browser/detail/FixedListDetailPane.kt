@@ -5,169 +5,102 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail;
+package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane;
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.util.ExtendedJLabel;
-import org.gjt.jclasslib.util.GUIHelper;
-import org.gjt.jclasslib.util.TextDisplay;
+import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.util.ExtendedJLabel
+import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.TextDisplay
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.util.ArrayList;
+import javax.swing.*
+import javax.swing.tree.TreePath
+import java.awt.*
+import java.util.ArrayList
 
-/**
-    Base class for all detail panes with a structure of
-    a fixed number of key-value pairs arranged in a list.
-    
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public abstract class FixedListDetailPane extends AbstractDetailPane {
-    
-    // Visual components
+abstract class FixedListDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
 
-    private java.util.List<DetailPaneEntry> detailPaneEntries;
-    private JScrollPane scrollPane;
-
-
-    @Override
-    public JComponent getWrapper() {
-        return scrollPane;
+    private val detailPaneEntries = ArrayList<DetailPaneEntry>()
+    private val scrollPane = JScrollPane(this).apply {
+        GUIHelper.setDefaultScrollBarUnits(this)
+        border = null
     }
 
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    protected FixedListDetailPane(BrowserServices services) {
-        super(services);
+    public override val wrapper: JComponent
+        get() = scrollPane
+
+    @JvmOverloads protected fun addDetailPaneEntry(key: ExtendedJLabel, value: TextDisplay?, comment: TextDisplay? = null) {
+        detailPaneEntries.add(DetailPaneEntry(key, value, comment))
     }
 
-    /**
-        Add a detail entry consisting of a key value pair.
-        @param key the key label
-        @param value the value label
-     */
-    protected void addDetailPaneEntry(ExtendedJLabel key, TextDisplay value) {
-        addDetailPaneEntry(key, value, null);
-    }
+    override fun setupComponent() {
 
-    /**
-        Add a detail entry consisting of a key value pair with a associated comment
-        which is made scrollable.
-        @param key the key label
-        @param value the value label
-        @param comment the comment
-     */
-    protected void addDetailPaneEntry(ExtendedJLabel key,
-                                      TextDisplay value,
-                                      TextDisplay comment) {
-                                          
-        if (detailPaneEntries == null) {
-            detailPaneEntries = new ArrayList<DetailPaneEntry>();
+        addLabels()
+        layout = GridBagLayout()
+
+        val gKey = GridBagConstraints().apply {
+            anchor = GridBagConstraints.NORTHWEST
+            insets = Insets(1, 10, 0, 10)
         }
-        
-        detailPaneEntries.add(new DetailPaneEntry(key, value, comment));
-    }
 
-    protected void setupComponent() {
-        
-        setupLabels();
-        
-        setLayout(new GridBagLayout());
-        
-        GridBagConstraints gKey = new GridBagConstraints();
-        gKey.anchor = GridBagConstraints.NORTHWEST;
-        gKey.insets = new Insets(1,10,0,10);
-        
-        GridBagConstraints gValue = new GridBagConstraints();
-        gValue.gridx = 1;
-        gValue.anchor = GridBagConstraints.NORTHEAST;
-        gValue.insets = new Insets(1,0,0,5);
+        val gValue = GridBagConstraints().apply {
+            gridx = 1
+            anchor = GridBagConstraints.NORTHEAST
+            insets = Insets(1, 0, 0, 5)
+        }
 
-        GridBagConstraints gComment = new GridBagConstraints();
-        gComment.gridx = 2;
-        gComment.anchor = GridBagConstraints.NORTHWEST;
-        gComment.insets = new Insets(1,0,0,5);
-        gComment.fill = GridBagConstraints.HORIZONTAL;
-        
-        GridBagConstraints gCommentOnly = (GridBagConstraints)gComment.clone();
-        gCommentOnly.gridx = 1;
-        gCommentOnly.gridwidth = 2;
-        
-        GridBagConstraints gRemainder = new GridBagConstraints();
-        gRemainder.gridx = 2;
-        gRemainder.weightx = gRemainder.weighty = 1;
-        gRemainder.fill = GridBagConstraints.BOTH;
+        val gComment = GridBagConstraints().apply {
+            gridx = 2
+            anchor = GridBagConstraints.NORTHWEST
+            insets = Insets(1, 0, 0, 5)
+            fill = GridBagConstraints.HORIZONTAL
+        }
 
-        for (DetailPaneEntry entry : detailPaneEntries) {
-            if (entry == null) {
-                continue;
-            }
+        val gCommentOnly = (gComment.clone() as GridBagConstraints).apply {
+            gridx = 1
+            gridwidth = 2
+        }
 
-            gComment.gridy = gValue.gridy = ++gKey.gridy;
+        val gRemainder = GridBagConstraints().apply {
+            gridx = 2
+            weightx = 1.0
+            weighty = 1.0
+            fill = GridBagConstraints.BOTH
+        }
+
+        detailPaneEntries.forEach { entry ->
+            gKey.gridy++
+            gComment.gridy++
+            gValue.gridy++
             if (entry.key != null) {
-                add(entry.key, gKey);
+                add(entry.key, gKey)
             }
             if (entry.value != null) {
-                add((JComponent)entry.value, gValue);
+                add(entry.value as JComponent, gValue)
             }
             if (entry.comment != null) {
-                add((JComponent)entry.comment, (entry.value == null) ? gCommentOnly : gComment);
-                if (entry.comment instanceof ExtendedJLabel) {
-                    ((ExtendedJLabel)entry.comment).setAutoTooltip(true);
+                add(entry.comment as JComponent, if (entry.value == null) gCommentOnly else gComment)
+                if (entry.comment is ExtendedJLabel) {
+                    entry.comment.autoTooltip = true
                 }
             }
-
         }
 
-        gRemainder.gridy = gKey.gridy + 1;
-        gRemainder.gridy += addSpecial(gRemainder.gridy);
+        gRemainder.gridy = gKey.gridy + 1
+        gRemainder.gridy += addSpecial(gRemainder.gridy)
 
-        add(new JPanel(), gRemainder);
-        scrollPane = new JScrollPane(this);
-        GUIHelper.INSTANCE.setDefaultScrollBarUnits(scrollPane);
-        scrollPane.setBorder(null);
-
+        add(JPanel(), gRemainder)
     }
 
-    public void show(TreePath treePath) {
-
-        scrollPane.getViewport().setViewPosition(new Point(0, 0));
-
+    override fun show(treePath: TreePath) {
+        scrollPane.viewport.viewPosition = Point(0, 0)
     }
 
-    /**
-        Setup all label and fill the <tt>detailPaneEntries</tt> list so that
-        <tt>setupComponent</tt> can layout the pane.
-     */
-    protected abstract void setupLabels();
+    protected abstract fun addLabels()
 
-    /**
-        Hook for derived classes to add additional visual elements.
-        @param gridy the current <tt>gridy</tt> of the <tt>GridBagLayout</tt>.
-        @return the number of added rows.
-     */
-    protected int addSpecial(int gridy) {
-        return 0;
+    protected open fun addSpecial(gridy: Int): Int {
+        return 0
     }
 
-    private static class DetailPaneEntry {
-        public final ExtendedJLabel key;
-        public final TextDisplay value;
-        public final TextDisplay comment;
-        
-        private DetailPaneEntry(ExtendedJLabel key,
-                                TextDisplay value,
-                                TextDisplay comment) {
-            this.key = key;
-            this.value = value;
-            this.comment = comment;
-        }
-    }
-
-    
+    private class DetailPaneEntry(val key: ExtendedJLabel?, val value: TextDisplay?, val comment: TextDisplay?)
 }
-

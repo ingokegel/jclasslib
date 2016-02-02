@@ -34,7 +34,7 @@ public class GenericAttributeDetailPane extends FixedListDetailPane {
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Attribute name index:"),
                            lblNameIndex = linkLabel(),

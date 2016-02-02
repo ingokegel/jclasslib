@@ -34,7 +34,7 @@ public class ConstantValueAttributeDetailPane extends FixedListDetailPane {
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Constant value index:"),
                            lblValue = linkLabel(),

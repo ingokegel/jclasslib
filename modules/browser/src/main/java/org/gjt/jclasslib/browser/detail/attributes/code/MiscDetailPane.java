@@ -37,7 +37,7 @@ public class MiscDetailPane extends FixedListDetailPane {
         setName("Misc");
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Maximum stack depth:"),
                            lblMaxStack = highlightLabel());

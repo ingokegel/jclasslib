@@ -33,7 +33,7 @@ public class ConstantIntegerInfoDetailPane extends AbstractConstantInfoDetailPan
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Bytes:"),
                            lblBytes = highlightLabel());

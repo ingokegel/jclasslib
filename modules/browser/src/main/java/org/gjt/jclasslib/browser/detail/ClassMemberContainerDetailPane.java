@@ -48,7 +48,7 @@ public class ClassMemberContainerDetailPane extends FixedListWithSignatureDetail
         return buffer.toString();
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
 
         addDetailPaneEntry(normalLabel("Member count:"),
                 lblMemberCount = highlightLabel());

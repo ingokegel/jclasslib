@@ -35,7 +35,7 @@ public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDet
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
 
         addDetailPaneEntry(normalLabel("Name and type:"),
                            lblNameAndType = linkLabel(),

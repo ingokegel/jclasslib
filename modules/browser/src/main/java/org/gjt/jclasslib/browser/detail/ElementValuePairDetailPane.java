@@ -31,7 +31,7 @@ public class ElementValuePairDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Element name:"),
                 lblElementName = linkLabel(),
                 lblElementNameVerbose = highlightLabel());

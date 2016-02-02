@@ -47,7 +47,7 @@ public class GeneralDetailPane extends FixedListDetailPane {
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Minor version:"),
                            lblMinorVersion = highlightLabel());

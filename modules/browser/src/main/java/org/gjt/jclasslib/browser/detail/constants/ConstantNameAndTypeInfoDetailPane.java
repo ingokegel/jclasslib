@@ -35,7 +35,7 @@ public class ConstantNameAndTypeInfoDetailPane extends AbstractConstantInfoDetai
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Name:"),
                            lblName = linkLabel(),

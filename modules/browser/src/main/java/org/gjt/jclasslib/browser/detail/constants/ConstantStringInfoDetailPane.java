@@ -33,7 +33,7 @@ public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("String:"),
                            lblString = linkLabel(),

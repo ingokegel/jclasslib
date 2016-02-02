@@ -34,7 +34,7 @@ public class SourceFileAttributeDetailPane extends FixedListDetailPane {
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Source file name index:"),
                            lblSourceFile = linkLabel(),

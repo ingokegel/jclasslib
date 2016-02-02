@@ -34,7 +34,7 @@ public class RuntimeAnnotationsAttributeDetailPane extends FixedListDetailPane {
     }
 
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Number of annotations:"),
                 lblAnnotationEntries = highlightLabel());
     }

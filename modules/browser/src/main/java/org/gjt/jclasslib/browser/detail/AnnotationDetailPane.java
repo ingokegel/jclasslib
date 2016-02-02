@@ -30,7 +30,7 @@ public class AnnotationDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
 
         addDetailPaneEntry(normalLabel("Type:"),
                 lblType = linkLabel(),

@@ -54,7 +54,7 @@ public class ClassMemberDetailPane extends FixedListWithSignatureDetailPane {
         return buffer.toString();
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Name:"),
                            lblName = linkLabel(),

@@ -41,7 +41,7 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Target Type:"),
             lblType = highlightLabel());
 

@@ -32,7 +32,7 @@ public class ConstantMethodTypeDetailPane extends AbstractConstantInfoDetailPane
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Type:"),
                            lblType = linkLabel(),

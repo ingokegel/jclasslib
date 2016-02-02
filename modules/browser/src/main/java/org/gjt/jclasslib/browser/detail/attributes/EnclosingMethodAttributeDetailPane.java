@@ -36,7 +36,7 @@ public class EnclosingMethodAttributeDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Class index:"),
                 lblClass = linkLabel(),
                 lblClassVerbose = highlightLabel());

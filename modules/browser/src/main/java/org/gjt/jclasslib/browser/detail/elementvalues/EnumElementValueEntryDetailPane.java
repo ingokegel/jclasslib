@@ -31,7 +31,7 @@ public class EnumElementValueEntryDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Type name:"),
                 lblTypeNameIndex = linkLabel(),
                 lblTypeNameIndexVerbose = highlightLabel());

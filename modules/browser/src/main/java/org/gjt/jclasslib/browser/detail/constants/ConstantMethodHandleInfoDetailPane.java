@@ -25,7 +25,7 @@ public class ConstantMethodHandleInfoDetailPane extends AbstractConstantInfoDeta
     }
 
     @Override
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Reference kind:"),
             lblKind = normalLabel());
 

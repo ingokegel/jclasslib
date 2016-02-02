@@ -36,7 +36,7 @@ public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPa
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
 
         addDetailPaneEntry(normalLabel("Kind:"),
             lblKind = normalLabel(),

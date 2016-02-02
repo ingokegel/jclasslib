@@ -34,7 +34,7 @@ public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane
         super(services);
     }
     
-    protected void setupLabels() {
+    protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("High bytes:"),
                            lblHighBytes = highlightLabel());

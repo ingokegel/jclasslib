@@ -34,7 +34,7 @@ public class SignatureAttributeDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Signature index:"),
                 lblSignature = linkLabel(),
                 lblSignatureVerbose = highlightLabel());

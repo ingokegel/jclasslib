@@ -28,7 +28,7 @@ public class AnnotationDefaultAttributeDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Default value:"),
                 lblTag = highlightLabel(),
                 lblTagVerbose = highlightLabel());

@@ -31,7 +31,7 @@ public class GenericElementValueDetailPane extends FixedListDetailPane {
         super(services);
     }
 
-    protected void setupLabels() {
+    protected void addLabels() {
         addDetailPaneEntry(normalLabel("Tag:"),
                 lblTag = highlightLabel(),
                 lblTagVerbose = highlightLabel());
