@@ -11,10 +11,11 @@ import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.constants.ConstantMethodHandleInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
-public class ConstantMethodHandleInfoDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantMethodHandleInfoDetailPane extends AbstractConstantInfoDetailPane<ConstantMethodHandleInfo> {
 
     private ExtendedJLabel lblKind;
     private ExtendedJLabel lblReference;
@@ -34,12 +35,17 @@ public class ConstantMethodHandleInfoDetailPane extends AbstractConstantInfoDeta
             lblReferenceVerbose = highlightLabel());
     }
 
+    @NotNull
+    @Override
+    public Class<ConstantMethodHandleInfo> getConstantClass() {
+        return ConstantMethodHandleInfo.class;
+    }
 
     @Override
     public void show(TreePath treePath) {
 
         ClassFile classFile = getServices().getClassFile();
-        ConstantMethodHandleInfo entry = getConstant(treePath, ConstantMethodHandleInfo.class);
+        ConstantMethodHandleInfo entry = getConstant(treePath);
 
         lblKind.setText(entry.getType().getVerbose());
         constantPoolHyperlink(lblReference,

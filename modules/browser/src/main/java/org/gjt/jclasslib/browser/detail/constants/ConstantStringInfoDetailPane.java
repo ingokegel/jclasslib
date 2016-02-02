@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser.detail.constants;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.constants.ConstantStringInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
@@ -18,7 +19,7 @@ import javax.swing.tree.TreePath;
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane<ConstantStringInfo> {
 
     // Visual components
     
@@ -32,7 +33,13 @@ public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane
     public ConstantStringInfoDetailPane(BrowserServices services) {
         super(services);
     }
-    
+
+    @NotNull
+    @Override
+    public Class<ConstantStringInfo> getConstantClass() {
+        return ConstantStringInfo.class;
+    }
+
     protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("String:"),
@@ -42,7 +49,7 @@ public class ConstantStringInfoDetailPane extends AbstractConstantInfoDetailPane
 
     public void show(TreePath treePath) {
         
-        ConstantStringInfo entry = getConstant(treePath, ConstantStringInfo.class);
+        ConstantStringInfo entry = getConstant(treePath);
 
         constantPoolHyperlink(lblString,
                               lblStringVerbose,

@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.ConstantFloatInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
@@ -19,7 +20,7 @@ import javax.swing.tree.TreePath;
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane<ConstantFloatInfo> {
 
     // Visual components
     
@@ -33,7 +34,13 @@ public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane 
     public ConstantFloatInfoDetailPane(BrowserServices services) {
         super(services);
     }
-    
+
+    @NotNull
+    @Override
+    public Class<ConstantFloatInfo> getConstantClass() {
+        return ConstantFloatInfo.class;
+    }
+
     protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Bytes:"),
@@ -45,7 +52,7 @@ public class ConstantFloatInfoDetailPane extends AbstractConstantInfoDetailPane 
     }
 
     public void show(TreePath treePath) {
-        ConstantFloatInfo entry = getConstant(treePath, ConstantFloatInfo.class);
+        ConstantFloatInfo entry = getConstant(treePath);
         lblBytes.setText(entry.getFormattedBytes());
         lblFloat.setText(entry.getFloat());
 

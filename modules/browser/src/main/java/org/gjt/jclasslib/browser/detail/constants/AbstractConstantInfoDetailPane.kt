@@ -13,10 +13,12 @@ import org.gjt.jclasslib.structures.Constant
 
 import javax.swing.tree.TreePath
 
-abstract class AbstractConstantInfoDetailPane(services: BrowserServices) : FixedListDetailPane(services) {
-    protected fun <T : Constant> getConstant(treePath: TreePath, constantClass: Class<T>): T {
+abstract class AbstractConstantInfoDetailPane<T: Constant>(services: BrowserServices) : FixedListDetailPane(services) {
+    protected fun getConstant(treePath: TreePath): T {
         return constantClass.cast(getElement(treePath))
     }
+
+    abstract val constantClass: Class<T>
 }
 
 

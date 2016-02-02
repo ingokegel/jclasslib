@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute;
 import org.gjt.jclasslib.structures.constants.ConstantInvokeDynamicInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
@@ -19,7 +20,7 @@ import javax.swing.tree.TreePath;
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDetailPane<ConstantInvokeDynamicInfo> {
 
     // Visual components
 
@@ -35,6 +36,12 @@ public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDet
         super(services);
     }
 
+    @NotNull
+    @Override
+    public Class<ConstantInvokeDynamicInfo> getConstantClass() {
+        return ConstantInvokeDynamicInfo.class;
+    }
+
     protected void addLabels() {
 
         addDetailPaneEntry(normalLabel("Name and type:"),
@@ -47,7 +54,7 @@ public class ConstantInvokeDynamicInfoDetailPane extends AbstractConstantInfoDet
 
     public void show(TreePath treePath) {
 
-        ConstantInvokeDynamicInfo entry = getConstant(treePath, ConstantInvokeDynamicInfo.class);
+        ConstantInvokeDynamicInfo entry = getConstant(treePath);
 
         constantPoolHyperlink(lblNameAndType,
             lblNameAndTypeVerbose,

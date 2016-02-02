@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
@@ -19,7 +20,7 @@ import javax.swing.tree.TreePath;
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane<ConstantUtf8Info> {
 
     // Visual components
     
@@ -34,7 +35,13 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
     public ConstantUtf8InfoDetailPane(BrowserServices services) {
         super(services);
     }
-    
+
+    @NotNull
+    @Override
+    public Class<ConstantUtf8Info> getConstantClass() {
+        return ConstantUtf8Info.class;
+    }
+
     protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Length of byte array:"),
@@ -51,7 +58,7 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
 
     public void show(TreePath treePath) {
         
-        ConstantUtf8Info entry = getConstant(treePath, ConstantUtf8Info.class);
+        ConstantUtf8Info entry = getConstant(treePath);
         lblByteLength.setText(entry.getBytes().length);
         lblStringLength.setText(entry.getString().length());
         try {

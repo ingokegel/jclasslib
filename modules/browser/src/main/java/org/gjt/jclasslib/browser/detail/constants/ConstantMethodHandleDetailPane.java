@@ -10,13 +10,14 @@ package org.gjt.jclasslib.browser.detail.constants;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.constants.ConstantMethodHandleInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
 /**
  * Detail pane showing a <tt>CONSTANT_MethodHandle</tt> constant pool entry.
  */
-public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPane<ConstantMethodHandleInfo> {
 
     // Visual components
 
@@ -34,6 +35,12 @@ public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPa
      */
     public ConstantMethodHandleDetailPane(BrowserServices services) {
         super(services);
+    }
+
+    @NotNull
+    @Override
+    public Class<ConstantMethodHandleInfo> getConstantClass() {
+        return ConstantMethodHandleInfo.class;
     }
 
     protected void addLabels() {
@@ -59,7 +66,7 @@ public class ConstantMethodHandleDetailPane extends AbstractConstantInfoDetailPa
 
     public void show(TreePath treePath) {
 
-        ConstantMethodHandleInfo entry = getConstant(treePath, ConstantMethodHandleInfo.class);
+        ConstantMethodHandleInfo entry = getConstant(treePath);
         classElementOpener.setCPInfo(entry);
 
         lblKind.setText(entry.getType().getTag());

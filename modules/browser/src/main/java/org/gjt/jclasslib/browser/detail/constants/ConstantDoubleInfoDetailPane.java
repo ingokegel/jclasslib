@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser.detail.constants;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.constants.ConstantDoubleInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
@@ -18,7 +19,7 @@ import javax.swing.tree.TreePath;
  
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane<ConstantDoubleInfo> {
 
     // Visual components
     
@@ -33,7 +34,13 @@ public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane
     public ConstantDoubleInfoDetailPane(BrowserServices services) {
         super(services);
     }
-    
+
+    @NotNull
+    @Override
+    public Class<ConstantDoubleInfo> getConstantClass() {
+        return ConstantDoubleInfo.class;
+    }
+
     protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("High bytes:"),
@@ -49,7 +56,7 @@ public class ConstantDoubleInfoDetailPane extends AbstractConstantInfoDetailPane
 
     public void show(TreePath treePath) {
         
-        ConstantDoubleInfo entry = getConstant(treePath, ConstantDoubleInfo.class);
+        ConstantDoubleInfo entry = getConstant(treePath);
         lblHighBytes.setText(entry.getFormattedHighBytes());
         lblLowBytes.setText(entry.getFormattedLowBytes());
         lblDouble.setText(entry.getDouble());

@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser.detail.constants;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.constants.ConstantMethodTypeInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
@@ -17,7 +18,7 @@ import javax.swing.tree.TreePath;
     Detail pane showing a <tt>CONSTANT_MethodType</tt> constant pool entry.
  
 */
-public class ConstantMethodTypeDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantMethodTypeDetailPane extends AbstractConstantInfoDetailPane<ConstantMethodTypeInfo> {
 
     // Visual components
     
@@ -31,7 +32,13 @@ public class ConstantMethodTypeDetailPane extends AbstractConstantInfoDetailPane
     public ConstantMethodTypeDetailPane(BrowserServices services) {
         super(services);
     }
-    
+
+    @NotNull
+    @Override
+    public Class<ConstantMethodTypeInfo> getConstantClass() {
+        return ConstantMethodTypeInfo.class;
+    }
+
     protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Type:"),
@@ -42,7 +49,7 @@ public class ConstantMethodTypeDetailPane extends AbstractConstantInfoDetailPane
 
     public void show(TreePath treePath) {
         
-        ConstantMethodTypeInfo entry = getConstant(treePath, ConstantMethodTypeInfo.class);
+        ConstantMethodTypeInfo entry = getConstant(treePath);
 
         constantPoolHyperlink(lblType,
                               lblTypeVerbose,

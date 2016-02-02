@@ -10,15 +10,11 @@ package org.gjt.jclasslib.browser.detail.constants;
 import org.gjt.jclasslib.browser.BrowserServices;
 import org.gjt.jclasslib.structures.constants.ConstantNameAndTypeInfo;
 import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreePath;
 
-/**
-    Detail pane showing a <tt>CONSTANT_NameAndType</tt> constant pool entry.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class ConstantNameAndTypeInfoDetailPane extends AbstractConstantInfoDetailPane {
+public class ConstantNameAndTypeInfoDetailPane extends AbstractConstantInfoDetailPane<ConstantNameAndTypeInfo> {
 
     // Visual components
     
@@ -34,7 +30,13 @@ public class ConstantNameAndTypeInfoDetailPane extends AbstractConstantInfoDetai
     public ConstantNameAndTypeInfoDetailPane(BrowserServices services) {
         super(services);
     }
-    
+
+    @NotNull
+    @Override
+    public Class<ConstantNameAndTypeInfo> getConstantClass() {
+        return ConstantNameAndTypeInfo.class;
+    }
+
     protected void addLabels() {
         
         addDetailPaneEntry(normalLabel("Name:"),
@@ -48,7 +50,7 @@ public class ConstantNameAndTypeInfoDetailPane extends AbstractConstantInfoDetai
 
     public void show(TreePath treePath) {
         
-        ConstantNameAndTypeInfo entry = getConstant(treePath, ConstantNameAndTypeInfo.class);
+        ConstantNameAndTypeInfo entry = getConstant(treePath);
 
         constantPoolHyperlink(lblName,
                               lblNameVerbose,
