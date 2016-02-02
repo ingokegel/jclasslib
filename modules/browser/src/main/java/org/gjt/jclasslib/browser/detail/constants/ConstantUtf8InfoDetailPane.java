@@ -57,7 +57,7 @@ public class ConstantUtf8InfoDetailPane extends AbstractConstantInfoDetailPane {
         try {
             lblString.setText(entry.getVerbose());
         } catch (InvalidByteCodeException e) {
-            lblString.setText(MESSAGE_INVALID_CONSTANT_POOL_ENTRY);
+            lblString.setText("invalid constant pool entry");
         }
 
         super.show(treePath);
