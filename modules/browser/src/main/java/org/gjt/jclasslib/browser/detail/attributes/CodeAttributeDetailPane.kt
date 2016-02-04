@@ -25,7 +25,7 @@ class CodeAttributeDetailPane(services: BrowserServices) : AbstractDetailPane(se
 
     private val detailsPanes : List<AbstractDetailPane> = listOf(byteCodeDetailPane, exceptionTableDetailPane, miscDetailPane)
     private val displayComponentToDetailPane: Map<JComponent, AbstractDetailPane> =
-            detailsPanes.toMap { Pair(it.displayComponent, it) }
+            detailsPanes.associate { Pair(it.displayComponent, it) }
 
     private val tabbedPane: JTabbedPane = JTabbedPane().apply {
         detailsPanes.forEach {

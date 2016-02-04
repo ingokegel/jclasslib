@@ -163,7 +163,7 @@ abstract class TableDetailPane(services: BrowserServices) : AbstractDetailPane(s
     }
 
     private inner class TableLinkListener(component: JComponent) : LinkMouseListener(component) {
-        protected override fun isLink(point: Point): Boolean {
+        override fun isLink(point: Point): Boolean {
             val column = table.columnAtPoint(point)
             val row = table.rowAtPoint(point)
             return row >= 0 && column >= 0 &&
@@ -172,7 +172,7 @@ abstract class TableDetailPane(services: BrowserServices) : AbstractDetailPane(s
                     isLinkLabelHit(point, row, column)
         }
 
-        protected override fun link(point: Point) {
+        override fun link(point: Point) {
             link(table.rowAtPoint(point), table.columnAtPoint(point))
         }
 
