@@ -5,64 +5,18 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail.constants;
+package org.gjt.jclasslib.browser.detail.constants
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.constants.ConstantNameAndTypeInfo;
-import org.gjt.jclasslib.util.ExtendedJLabel;
-import org.jetbrains.annotations.NotNull;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.constants.ConstantNameAndTypeInfo
 
-import javax.swing.tree.TreePath;
+class ConstantNameAndTypeInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantNameAndTypeInfo>(services) {
+    override val constantClass: Class<ConstantNameAndTypeInfo>
+        get() = ConstantNameAndTypeInfo::class.java
 
-public class ConstantNameAndTypeInfoDetailPane extends AbstractConstantInfoDetailPane<ConstantNameAndTypeInfo> {
-
-    // Visual components
-    
-    private ExtendedJLabel lblName;
-    private ExtendedJLabel lblNameVerbose;
-    private ExtendedJLabel lblDescriptor;
-    private ExtendedJLabel lblDescriptorVerbose;
-    
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    public ConstantNameAndTypeInfoDetailPane(BrowserServices services) {
-        super(services);
+    override fun addLabels() {
+        addConstantPoolLink("Name:") { constant -> constant.nameIndex }
+        addConstantPoolLink("Descriptor:") { constant -> constant.descriptorIndex }
     }
-
-    @NotNull
-    @Override
-    public Class<ConstantNameAndTypeInfo> getConstantClass() {
-        return ConstantNameAndTypeInfo.class;
-    }
-
-    protected void addLabels() {
-        
-        addDetailPaneEntry(normalLabel("Name:"),
-                           lblName = linkLabel(),
-                           lblNameVerbose = highlightLabel());
-
-        addDetailPaneEntry(normalLabel("Descriptor:"),
-                           lblDescriptor = linkLabel(),
-                           lblDescriptorVerbose = highlightLabel());
-    }
-
-    public void show(TreePath treePath) {
-        
-        ConstantNameAndTypeInfo entry = getConstant(treePath);
-
-        constantPoolHyperlink(lblName,
-                              lblNameVerbose,
-                              entry.getNameIndex());
-
-        constantPoolHyperlink(lblDescriptor,
-                              lblDescriptorVerbose,
-                              entry.getDescriptorIndex());
-
-        super.show(treePath);
-        
-    }
-    
 }
 
