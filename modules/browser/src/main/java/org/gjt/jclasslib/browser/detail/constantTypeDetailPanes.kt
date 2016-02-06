@@ -12,24 +12,10 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
 
-class ConstantNameAndTypeInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantNameAndTypeInfo>(ConstantNameAndTypeInfo::class.java, services) {
-    override fun addLabels() {
-        addConstantPoolLink("Name:") { constant -> constant.nameIndex }
-        addConstantPoolLink("Descriptor:") { constant -> constant.descriptorIndex }
-    }
-}
-
 class ConstantClassInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantClassInfo>(ConstantClassInfo::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink("Class name:") { constant -> constant.nameIndex }
         addClassElementOpener()
-    }
-}
-
-class ConstantMethodHandleInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantMethodHandleInfo>(ConstantMethodHandleInfo::class.java, services) {
-    override fun addLabels() {
-        addDetail("Reference kind:") { constant -> constant.type.verbose }
-        addConstantPoolLink("Reference index :") { constant -> constant.referenceIndex }
     }
 }
 
@@ -41,17 +27,23 @@ class ConstantReferenceDetailPane(services: BrowserServices) : AbstractConstantI
     }
 }
 
-class ConstantUtf8InfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantUtf8Info>(ConstantUtf8Info::class.java, services) {
+class ConstantStringInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantStringInfo>(ConstantStringInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Length of byte array:") { constant -> constant.bytes.size.toString() }
-        addDetail("Length of string:") { constant -> constant.string.length.toString() }
-        addDetail("String") {constant ->
-            try {
-                constant.verbose
-            } catch (e: InvalidByteCodeException) {
-                "invalid constant pool entry"
-            }
-        }
+        addConstantPoolLink("String:") { constant -> constant.stringIndex }
+    }
+}
+
+class ConstantIntegerInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantIntegerInfo>(ConstantIntegerInfo::class.java, services) {
+    override fun addLabels() {
+        addDetail("Bytes:") { constant -> constant.formattedBytes }
+        addDetail("Integer:") { constant -> constant.int.toString() }
+    }
+}
+
+class ConstantFloatInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantFloatInfo>(ConstantFloatInfo::class.java, services) {
+    override fun addLabels() {
+        addDetail("Bytes:") { constant -> constant.formattedBytes }
+        addDetail("Float:") { constant -> constant.float.toString() }
     }
 }
 
@@ -71,17 +63,23 @@ class ConstantDoubleInfoDetailPane(services: BrowserServices) : AbstractConstant
     }
 }
 
-class ConstantFloatInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantFloatInfo>(ConstantFloatInfo::class.java, services) {
+class ConstantNameAndTypeInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantNameAndTypeInfo>(ConstantNameAndTypeInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Bytes:") { constant -> constant.formattedBytes }
-        addDetail("Float:") { constant -> constant.float.toString() }
+        addConstantPoolLink("Name:") { constant -> constant.nameIndex }
+        addConstantPoolLink("Descriptor:") { constant -> constant.descriptorIndex }
     }
 }
 
-class ConstantIntegerInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantIntegerInfo>(ConstantIntegerInfo::class.java, services) {
+class ConstantMethodTypeDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantMethodTypeInfo>(ConstantMethodTypeInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Bytes:") { constant -> constant.formattedBytes }
-        addDetail("Integer:") { constant -> constant.int.toString() }
+        addConstantPoolLink("Type:") { constant -> constant.descriptorIndex }
+    }
+}
+
+class ConstantMethodHandleInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantMethodHandleInfo>(ConstantMethodHandleInfo::class.java, services) {
+    override fun addLabels() {
+        addDetail("Reference kind:") { constant -> constant.type.verbose }
+        addConstantPoolLink("Reference index :") { constant -> constant.referenceIndex }
     }
 }
 
@@ -92,14 +90,16 @@ class ConstantInvokeDynamicInfoDetailPane(services: BrowserServices) : AbstractC
     }
 }
 
-class ConstantMethodTypeDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantMethodTypeInfo>(ConstantMethodTypeInfo::class.java, services) {
+class ConstantUtf8InfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantUtf8Info>(ConstantUtf8Info::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type:") { constant -> constant.descriptorIndex }
-    }
-}
-
-class ConstantStringInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantStringInfo>(ConstantStringInfo::class.java, services) {
-    override fun addLabels() {
-        addConstantPoolLink("String:") { constant -> constant.stringIndex }
+        addDetail("Length of byte array:") { constant -> constant.bytes.size.toString() }
+        addDetail("Length of string:") { constant -> constant.string.length.toString() }
+        addDetail("String") {constant ->
+            try {
+                constant.verbose
+            } catch (e: InvalidByteCodeException) {
+                "invalid constant pool entry"
+            }
+        }
     }
 }
