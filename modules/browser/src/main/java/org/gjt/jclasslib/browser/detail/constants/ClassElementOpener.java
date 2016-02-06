@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.NodeType;
 import org.gjt.jclasslib.browser.config.window.BrowserPath;
 import org.gjt.jclasslib.browser.config.window.CategoryHolder;
 import org.gjt.jclasslib.browser.config.window.ReferenceHolder;
+import org.gjt.jclasslib.browser.detail.AbstractConstantInfoDetailPane;
 import org.gjt.jclasslib.structures.Constant;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
 import org.gjt.jclasslib.structures.constants.*;
@@ -25,7 +26,7 @@ import java.awt.event.ActionListener;
 
     @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
 */
-public class ClassElementOpener implements ActionListener {
+public class ClassElementOpener extends JPanel {
 
     private JButton btnShow;
     private Constant constant;
@@ -35,72 +36,55 @@ public class ClassElementOpener implements ActionListener {
      * Constructor.
      * @param detailPane the parent detail pane.
      */
-    public ClassElementOpener(AbstractConstantInfoDetailPane detailPane) {
+    public ClassElementOpener(final AbstractConstantInfoDetailPane detailPane) {
         this.detailPane = detailPane;
 
         btnShow = new JButton("Show");
-        btnShow.addActionListener(this);
-    }
-
-    public void actionPerformed(ActionEvent event) {
-
-        try {
-            ConstantClassInfo classInfo = null;
-            BrowserPath browserPath = null;
-            if (constant instanceof ConstantClassInfo) {
-                classInfo = (ConstantClassInfo)constant;
-            } else if (constant instanceof ConstantReference) {
-                ConstantReference reference = (ConstantReference)constant;
-                ConstantNameAndTypeInfo nameAndType = reference.getNameAndTypeInfo();
-                classInfo = reference.getClassInfo();
-                NodeType category = null;
-                if (constant instanceof ConstantFieldrefInfo) {
-                    category = NodeType.FIELD;
-                } else if (constant instanceof ConstantMethodrefInfo || constant instanceof ConstantInterfaceMethodrefInfo){
-                    category = NodeType.METHOD;
-                }
-                if (category != null) {
-                    browserPath = new BrowserPath();
-                    browserPath.addPathComponent(new CategoryHolder(category));
-                    browserPath.addPathComponent(new ReferenceHolder(nameAndType.getName(), nameAndType.getDescriptor()));
+        btnShow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ConstantClassInfo classInfo = null;
+                    BrowserPath browserPath = null;
+                    if (constant instanceof ConstantClassInfo) {
+                        classInfo = (ConstantClassInfo)constant;
+                    } else if (constant instanceof ConstantReference) {
+                        ConstantReference reference = (ConstantReference)constant;
+                        ConstantNameAndTypeInfo nameAndType = reference.getNameAndTypeInfo();
+                        classInfo = reference.getClassInfo();
+                        NodeType category = null;
+                        if (constant instanceof ConstantFieldrefInfo) {
+                            category = NodeType.FIELD;
+                        } else if (constant instanceof ConstantMethodrefInfo || constant instanceof ConstantInterfaceMethodrefInfo){
+                            category = NodeType.METHOD;
+                        }
+                        if (category != null) {
+                            browserPath = new BrowserPath();
+                            browserPath.addPathComponent(new CategoryHolder(category));
+                            browserPath.addPathComponent(new ReferenceHolder(nameAndType.getName(), nameAndType.getDescriptor()));
+                        }
+                    }
+                    if (classInfo == null) {
+                        return;
+                    }
+                    String className = classInfo.getName().replace('/', '.');
+                    detailPane.getServices().openClassFile(className, browserPath);
+                } catch (InvalidByteCodeException ex) {
+                    ex.printStackTrace();
                 }
             }
-            if (classInfo == null) {
-                return;
-            }
-            String className = classInfo.getName().replace('/', '.');
-            detailPane.getServices().openClassFile(className, browserPath);
-        } catch (InvalidByteCodeException ex) {
-            ex.printStackTrace();
-        }
-    }
+        });
 
-    /**
-     * Add an opening button to the supplied detail pane.
-     * @param detailPane the detail pane.
-     * @param gridy the current <tt>gridy</tt> of the <tt>GridBagLayout</tt> of the detail pane.
-     * @return the number of added rows.
-     */
-    public int addSpecial(AbstractConstantInfoDetailPane detailPane, int gridy) {
-
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.weightx = 1;
-        gc.anchor = GridBagConstraints.WEST;
-        gc.insets = new Insets(5, 10, 0, 10);
-        gc.gridy = gridy;
-        gc.gridx = 0;
-        gc.gridwidth = 3;
-
-        detailPane.add(btnShow, gc);
-
-        return 1;
+        setLayout(new BorderLayout());
+        add(btnShow, BorderLayout.CENTER);
+        setOpaque(false);
     }
 
     /**
      * Set the constant pool info that is to be the source of the link.
      * @param constant the constant pool info.
      */
-    public void setCPInfo(Constant constant) {
+    public void setConstant(Constant constant) {
 
         this.constant = constant;
 

@@ -20,76 +20,61 @@ import java.util.ArrayList
 
 abstract class FixedListDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
 
-    private val detailPaneEntries = ArrayList<DetailPaneEntry>()
     private val scrollPane = JScrollPane(this).apply {
         GUIHelper.setDefaultScrollBarUnits(this)
         border = null
     }
+    protected var currentY = 0
 
     public override val wrapper: JComponent
         get() = scrollPane
 
     @JvmOverloads protected fun addDetailPaneEntry(key: ExtendedJLabel, value: TextDisplay?, comment: TextDisplay? = null) {
-        detailPaneEntries.add(DetailPaneEntry(key, value, comment))
+        add(key, gc() {
+            insets = Insets(1, 10, 0, 10)
+        })
+        if (value != null) {
+            add(value as JComponent, gc() {
+                gridx = 1
+                insets = Insets(1, 0, 0, 5)
+                if (comment == null) {
+                    gridwidth = 2
+                }
+            })
+        }
+        if (comment != null) {
+            add(comment as JComponent, gc() {
+                if (value == null) {
+                    gridx = 1
+                    gridwidth = 2
+                } else {
+                    gridx = 2
+                }
+                insets = Insets(1, 0, 0, 5)
+                fill = GridBagConstraints.HORIZONTAL
+            })
+            if (comment is ExtendedJLabel) {
+                comment.autoTooltip = true
+            }
+        }
+        currentY++
     }
 
     override fun setupComponent() {
-
-        addLabels()
         layout = GridBagLayout()
-
-        val gKey = GridBagConstraints().apply {
-            anchor = GridBagConstraints.NORTHWEST
-            insets = Insets(1, 10, 0, 10)
-        }
-
-        val gValue = GridBagConstraints().apply {
-            gridx = 1
-            anchor = GridBagConstraints.NORTHEAST
-            insets = Insets(1, 0, 0, 5)
-        }
-
-        val gComment = GridBagConstraints().apply {
-            gridx = 2
-            anchor = GridBagConstraints.NORTHWEST
-            insets = Insets(1, 0, 0, 5)
-            fill = GridBagConstraints.HORIZONTAL
-        }
-
-        val gCommentOnly = (gComment.clone() as GridBagConstraints).apply {
-            gridx = 1
-            gridwidth = 2
-        }
-
-        val gRemainder = GridBagConstraints().apply {
+        addLabels()
+        add(JPanel(), gc() {
             gridx = 2
             weightx = 1.0
             weighty = 1.0
             fill = GridBagConstraints.BOTH
-        }
+        })
+    }
 
-        detailPaneEntries.forEach { entry ->
-            gKey.gridy++
-            gComment.gridy++
-            gValue.gridy++
-            if (entry.key != null) {
-                add(entry.key, gKey)
-            }
-            if (entry.value != null) {
-                add(entry.value as JComponent, gValue)
-            }
-            if (entry.comment != null) {
-                add(entry.comment as JComponent, if (entry.value == null) gCommentOnly else gComment)
-                if (entry.comment is ExtendedJLabel) {
-                    entry.comment.autoTooltip = true
-                }
-            }
-        }
-
-        gRemainder.gridy = gKey.gridy + 1
-        gRemainder.gridy += addSpecial(gRemainder.gridy)
-
-        add(JPanel(), gRemainder)
+    protected fun gc(config: GridBagConstraints.() -> Unit) = GridBagConstraints().apply {
+        anchor = GridBagConstraints.NORTHWEST
+        gridy = currentY
+        config()
     }
 
     override fun show(treePath: TreePath) {
@@ -102,5 +87,4 @@ abstract class FixedListDetailPane(services: BrowserServices) : AbstractDetailPa
         return 0
     }
 
-    private class DetailPaneEntry(val key: ExtendedJLabel?, val value: TextDisplay?, val comment: TextDisplay?)
 }
