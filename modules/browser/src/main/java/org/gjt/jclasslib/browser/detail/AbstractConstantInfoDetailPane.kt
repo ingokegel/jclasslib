@@ -15,7 +15,6 @@
 package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.constants.ClassElementOpener
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import java.awt.GridBagConstraints

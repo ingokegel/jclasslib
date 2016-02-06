@@ -10,7 +10,6 @@ package org.gjt.jclasslib.browser.detail
 import org.gjt.jclasslib.browser.AbstractDetailPane
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
-import org.gjt.jclasslib.browser.detail.constants.*
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.ConstantType
 import java.awt.CardLayout
