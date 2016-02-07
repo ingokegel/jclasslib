@@ -11,7 +11,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an  ElementValuePair attribute structure.
+ * Describes an ElementValuePair attribute structure.
  */
 class ElementValuePair private constructor() : SubStructure() {
 

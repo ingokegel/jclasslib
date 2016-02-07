@@ -10,7 +10,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an  EnumElementValue attribute structure.
+ * Describes an EnumElementValue attribute structure.
  */
 class EnumElementValue : ElementValue(ElementValueType.ENUM) {
     /**

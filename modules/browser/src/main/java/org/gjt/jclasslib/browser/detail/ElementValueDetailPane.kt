@@ -7,10 +7,6 @@
 package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.elementvalues.ClassElementValueEntryDetailPane
-import org.gjt.jclasslib.browser.detail.elementvalues.ConstElementValueEntryDetailPane
-import org.gjt.jclasslib.browser.detail.elementvalues.EnumElementValueEntryDetailPane
-import org.gjt.jclasslib.browser.detail.elementvalues.GenericElementValueDetailPane
 import org.gjt.jclasslib.structures.elementvalues.ClassElementValue
 import org.gjt.jclasslib.structures.elementvalues.ConstElementValue
 import org.gjt.jclasslib.structures.elementvalues.ElementValue

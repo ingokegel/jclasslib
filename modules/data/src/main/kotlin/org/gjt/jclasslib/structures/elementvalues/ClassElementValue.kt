@@ -10,7 +10,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an  ClassElementValue attribute structure.
+ * Describes a ClassElementValue attribute structure.
  */
 class ClassElementValue : ElementValue(ElementValueType.CLASS) {
     /**

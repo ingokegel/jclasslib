@@ -8,9 +8,16 @@
 package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
+
+abstract class AbstractConstantInfoDetailPane<T : Constant>(constantClass: Class<T>, services: BrowserServices) : TypedDetailPane<T>(constantClass, services) {
+    protected fun addClassElementOpener() {
+        addClassElementOpener { constant -> constant }
+    }
+}
 
 class ConstantClassInfoDetailPane(services: BrowserServices) : AbstractConstantInfoDetailPane<ConstantClassInfo>(ConstantClassInfo::class.java, services) {
     override fun addLabels() {

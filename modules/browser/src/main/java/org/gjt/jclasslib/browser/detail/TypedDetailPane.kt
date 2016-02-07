@@ -8,7 +8,10 @@
 package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
+import java.awt.GridBagConstraints
+import java.awt.Insets
 import java.util.*
 import javax.swing.tree.TreePath
 
@@ -58,6 +61,22 @@ abstract class TypedDetailPane<T : Any>(
         }
     }
 
+    protected fun addClassElementOpener(constantResolver: (element: T) -> Constant) {
+        if (services.canOpenClassFiles()) {
+            val classElementOpener = ClassElementOpener(this)
+            add(classElementOpener, gc() {
+                weightx = 1.0
+                anchor = GridBagConstraints.WEST
+                insets = Insets(5, 10, 0, 10)
+                gridx = 0
+                gridwidth = 3
+            })
+            nextLine()
+            showHandlers.add { element ->
+                classElementOpener.setConstant(constantResolver(element))
+            }
+        }
+    }
     override fun show(treePath: TreePath) {
         super.show(treePath)
         element = getElement(treePath)

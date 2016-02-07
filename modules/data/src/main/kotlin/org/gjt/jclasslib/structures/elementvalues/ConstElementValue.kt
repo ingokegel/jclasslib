@@ -10,7 +10,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an  ConstElementValue attribute structure.
+ * Describes a ConstElementValue attribute structure.
  */
 class ConstElementValue(elementValueType: ElementValueType) : ElementValue(elementValueType) {
     /**

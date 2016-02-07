@@ -12,7 +12,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an  Annotation attribute structure.
+ * Describes an Annotation attribute structure.
  */
 class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), AnnotationData {
 

@@ -11,7 +11,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an  ElementValue attribute structure.
+ * Describes an ElementValue attribute structure.
  * @property elementValueType The type of the element value.
  */
 abstract class ElementValue(val elementValueType: ElementValueType) : SubStructure() {
