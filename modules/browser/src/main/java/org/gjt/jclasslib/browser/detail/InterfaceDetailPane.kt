@@ -5,52 +5,12 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail;
+package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.gjt.jclasslib.browser.BrowserServices
 
-import javax.swing.tree.TreePath;
-
-/**
-    Detail pane showing interface entries.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class InterfaceDetailPane extends FixedListDetailPane {
-
-    // Visual components
-    
-    private ExtendedJLabel lblInterface;
-    private ExtendedJLabel lblInterfaceVerbose;
-    
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    public InterfaceDetailPane(BrowserServices services) {
-        super(services);
+class InterfaceDetailPane(services: BrowserServices) : TypedDetailPane<Int>(Int::class.javaObjectType, services) {
+    override fun addLabels() {
+        addConstantPoolLink("Interface:") { index -> index }
     }
-    
-    protected void addLabels() {
-        
-        addDetailPaneEntry(normalLabel("Interface:"),
-                           lblInterface = linkLabel(),
-                           lblInterfaceVerbose = highlightLabel());
-
-    }
-
-    public void show(TreePath treePath) {
-        
-        int constantPoolIndex = (Integer)getElement(treePath);
-        
-        constantPoolHyperlink(lblInterface,
-                              lblInterfaceVerbose,
-                              constantPoolIndex);
-        
-        super.show(treePath);
-        
-    }
-    
 }
-
