@@ -5,113 +5,23 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail;
+package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.ClassFile
 
-import javax.swing.tree.TreePath;
-
-/**
-    Detail pane showing general information on the class file structure.
-    All fields in the <tt>ClassFile</tt> structure without substructure 
-    are incorporated in this pane.
- 
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class GeneralDetailPane extends FixedListDetailPane {
-    
-    // Visual components
-    
-    private ExtendedJLabel lblMinorVersion;
-    private ExtendedJLabel lblMajorVersion;
-    private ExtendedJLabel lblMajorVersionVerbose;
-    private ExtendedJLabel lblConstantPoolCount;
-    private ExtendedJLabel lblAccessFlags;
-    private ExtendedJLabel lblAccessFlagsVerbose;
-    private ExtendedJLabel lblThisClass;
-    private ExtendedJLabel lblThisClassVerbose;
-    private ExtendedJLabel lblSuperClass;
-    private ExtendedJLabel lblSuperClassVerbose;
-    private ExtendedJLabel lblInterfacesCount;
-    private ExtendedJLabel lblFieldsCount;
-    private ExtendedJLabel lblMethodsCount;
-    private ExtendedJLabel lblAttributesCount;
-
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    public GeneralDetailPane(BrowserServices services) {
-        super(services);
+class GeneralDetailPane(services: BrowserServices) : TypedDetailPane<ClassFile>(ClassFile::class.java, services) {
+    override fun addLabels() {
+        addDetail("Minor version:") { classFile -> classFile.minorVersion.toString() }
+        addDetail("Major version:") { classFile -> "${classFile.majorVersion} [${classFile.majorVersionVerbose}]" }
+        addDetail("Constant pool count:") { classFile -> classFile.constantPool.size.toString() }
+        addDetail("Access flags:") { classFile -> "${classFile.formattedAccessFlags} [${classFile.accessFlagsVerbose}]" }
+        addConstantPoolLink("This class:") { classFile -> classFile.thisClass }
+        addConstantPoolLink("Super class:") { classFile -> classFile.superClass }
+        addDetail("Interfaces count:") { classFile -> classFile.interfaces.size.toString() }
+        addDetail("Fields count:") { classFile -> classFile.fields.size.toString() }
+        addDetail("Methods count:") { classFile -> classFile.methods.size.toString() }
+        addDetail("Attributes count:") { classFile -> classFile.attributes.size.toString() }
     }
-    
-    protected void addLabels() {
-        
-        addDetailPaneEntry(normalLabel("Minor version:"),
-                           lblMinorVersion = highlightLabel());
-
-        addDetailPaneEntry(normalLabel("Major version:"),
-                           lblMajorVersion = highlightLabel(),
-                           lblMajorVersionVerbose = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("Constant pool count:"),
-                           lblConstantPoolCount = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("Access flags:"),
-                           lblAccessFlags = highlightLabel(), 
-                           lblAccessFlagsVerbose = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("This class:"),
-                           lblThisClass = linkLabel(),
-                           lblThisClassVerbose = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("Super class:"),
-                           lblSuperClass = linkLabel(),
-                           lblSuperClassVerbose = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("Interfaces count:"),
-                           lblInterfacesCount = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("Fields count:"),
-                           lblFieldsCount = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("Methods count:"),
-                           lblMethodsCount = highlightLabel());
-        
-        addDetailPaneEntry(normalLabel("Attributes count:"),
-                           lblAttributesCount = highlightLabel());
-
-    }
-
-    public void show(TreePath treePath) {
-        
-        ClassFile classFile = getServices().getClassFile();
-        
-        lblMinorVersion.setText(classFile.getMinorVersion());
-        lblMajorVersion.setText(classFile.getMajorVersion());
-        lblMajorVersionVerbose.setText("[" + classFile.getMajorVersionVerbose() + "]");
-        lblConstantPoolCount.setText(classFile.getConstantPool().length);
-
-        lblAccessFlags.setText(classFile.getFormattedAccessFlags());
-        lblAccessFlagsVerbose.setText("[" + classFile.getAccessFlagsVerbose() + "]");
-
-        constantPoolHyperlink(lblThisClass,
-                              lblThisClassVerbose,
-                              classFile.getThisClass());
-
-        constantPoolHyperlink(lblSuperClass,
-                              lblSuperClassVerbose,
-                              classFile.getSuperClass());
-        
-        lblInterfacesCount.setText(classFile.getInterfaces().length);
-        lblFieldsCount.setText(classFile.getFields().length);
-        lblMethodsCount.setText(classFile.getMethods().length);
-        lblAttributesCount.setText(classFile.getAttributes().length);
-
-        super.show(treePath);
-    }
-
 }
 

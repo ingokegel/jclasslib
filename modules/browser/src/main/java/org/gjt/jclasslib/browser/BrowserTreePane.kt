@@ -87,7 +87,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     }
 
     private fun buildTreeModel() = DefaultTreeModel(BrowserRootNode().apply {
-        add(NodeType.GENERAL, BrowserTreeNode("General Information", NodeType.GENERAL))
+        add(NodeType.GENERAL, BrowserTreeNode("General Information", NodeType.GENERAL, services.classFile))
         add(NodeType.CONSTANT_POOL, buildConstantPoolNode())
         add(NodeType.INTERFACE, buildInterfacesNode())
         add(NodeType.FIELD, buildFieldsNode())
