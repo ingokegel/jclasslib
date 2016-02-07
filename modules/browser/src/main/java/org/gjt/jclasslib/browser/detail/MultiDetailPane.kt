@@ -55,17 +55,23 @@ abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : Abstr
         @Suppress("UNCHECKED_CAST")
         val element = (treePath.lastPathComponent as BrowserTreeNode).element as T?
         if (element == null) {
-            showCard(NAME_UNKNOWN)
-            currentDetailPane = null
+            showEmptyCard()
         } else {
             val detailPane = elementClassToDetailPane[element.javaClass]
             if (detailPane != null) {
                 currentDetailPane = detailPane
                 showCard(element.javaClass.name)
                 detailPane.show(treePath)
+            } else {
+                showEmptyCard()
             }
         }
         genericInfoPane.show(treePath)
+    }
+
+    private fun showEmptyCard() {
+        showCard(NAME_UNKNOWN)
+        currentDetailPane = null
     }
 
     fun getDetailPane(elementValueClass: Class<out T>) : AbstractDetailPane? =
