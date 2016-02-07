@@ -38,7 +38,8 @@ abstract class AbstractDetailPane(val services: BrowserServices) : JPanel() {
 
     @JvmOverloads protected fun normalLabel(text: String = "") = ExtendedJLabel(text)
 
-    protected fun highlightLabel(): ExtendedJLabel = normalLabel().apply {
+    //TODO change normalLabel() to HtmlDisplayTextArea()
+    protected fun highlightLabel() = normalLabel().apply {
         foreground = COLOR_HIGHLIGHT
     }
 

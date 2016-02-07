@@ -42,6 +42,7 @@ abstract class RuntimeAnnotationsAttribute(classFile: ClassFile) : AttributeInfo
 
     override fun getAttributeLength(): Int = 2 + runtimeAnnotations.sumBy { it.length }
 
-    override fun getNumberOfAnnotations(): Int = runtimeAnnotations.size
+    override val numberOfAnnotations: Int
+        get() = runtimeAnnotations.size
 
 }

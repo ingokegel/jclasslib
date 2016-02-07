@@ -46,11 +46,9 @@ public class TypeAnnotationDetailPane extends FixedListDetailPane {
             lblType = highlightLabel());
 
         addDetailPaneEntry(normalLabel("Target Info:"),
-            null,
             txtInfo = highlightTextArea());
 
         addDetailPaneEntry(lblTypePath = normalLabel("Type path:"),
-            null,
             txtType = highlightTextArea());
 
         txtInfo.addHyperlinkListener(new HyperlinkListener() {

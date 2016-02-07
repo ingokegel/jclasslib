@@ -3,6 +3,9 @@ import java.util.List;
 
 public class Main<@Test T extends @Test Object> extends @Test Object implements @Test TestInterface {
 
+    public static final int TEST_INT = 1;
+    public static final String TEST_STRING = "123";
+
     private List<@Test String> strings;
 
     private @Test Object @Test2 [] data;

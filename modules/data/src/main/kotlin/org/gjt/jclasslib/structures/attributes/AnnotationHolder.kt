@@ -15,6 +15,5 @@ interface AnnotationHolder {
     /**
      * Number of contained annotations.
      */
-    fun getNumberOfAnnotations(): Int
-
+    val numberOfAnnotations: Int
 }
