@@ -24,7 +24,7 @@ abstract class FixedListDetailPane(services: BrowserServices) : AbstractDetailPa
         GUIHelper.setDefaultScrollBarUnits(this)
         border = null
     }
-    protected var currentY = 0
+    private var currentY = 0
 
     public override val wrapper: JComponent
         get() = scrollPane
@@ -57,6 +57,10 @@ abstract class FixedListDetailPane(services: BrowserServices) : AbstractDetailPa
                 comment.autoTooltip = true
             }
         }
+        nextLine()
+    }
+
+    protected fun nextLine() {
         currentY++
     }
 

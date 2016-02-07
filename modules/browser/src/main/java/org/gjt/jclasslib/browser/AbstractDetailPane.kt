@@ -52,7 +52,7 @@ abstract class AbstractDetailPane(val services: BrowserServices) : JPanel() {
         isUnderlined = true
     }
 
-    protected fun getElement(treePath: TreePath): Any? {
+    open protected fun getElement(treePath: TreePath): Any? {
         return (treePath.lastPathComponent as BrowserTreeNode).element
     }
 

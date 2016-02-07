@@ -5,108 +5,71 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser.detail;
+package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.structures.ClassFile;
-import org.gjt.jclasslib.structures.ClassMember;
-import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.ClassMember
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import java.awt.Insets
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
+import javax.swing.JButton
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+abstract class FixedListWithSignatureDetailPane<T : Any>(
+        elementClass : Class<T>,
+        services: BrowserServices,
+        protected val signatureMode: FixedListWithSignatureDetailPane.SignatureMode
+) : TypedDetailPane<T>(elementClass, services) {
 
-public abstract class FixedListWithSignatureDetailPane extends FixedListDetailPane {
-
-    private final SignatureMode signatureMode;
-    private JButton btnCopyToClipboard;
-
-    protected FixedListWithSignatureDetailPane(BrowserServices services, SignatureMode signatureMode) {
-        super(services);
-        this.signatureMode = signatureMode;
+    private val btnCopyToClipboard: JButton = JButton(signatureButtonText).apply {
+        addActionListener { copySignatureToClipboard() }
     }
 
-    protected abstract String getSignatureVerbose();
-    protected abstract String getSignatureButtonText();
+    protected abstract val signatureVerbose: String
+    protected abstract val signatureButtonText: String
 
-    protected SignatureMode getSignatureMode() {
-        return signatureMode;
+    override val clipboardText: String?
+        get() = signatureVerbose
+
+    override fun addLabels() {
+        add(btnCopyToClipboard, gc() {
+            insets = Insets(5, 10, 0, 10)
+            weightx = 1.0
+            gridx = 0
+            gridwidth = 3
+        })
+        nextLine()
     }
 
-    @Override
-    public String getClipboardText() {
-        return getSignatureVerbose();
+    private fun copySignatureToClipboard() {
+        val stringSelection = StringSelection(signatureVerbose)
+        Toolkit.getDefaultToolkit().systemClipboard.setContents(stringSelection, stringSelection)
     }
 
-    protected int addSpecial(int gridy) {
-
-        btnCopyToClipboard = new JButton(getSignatureButtonText());
-        btnCopyToClipboard.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                copySignatureToClipboard();
-            }
-        });
-
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.weightx = 1;
-        gc.anchor = GridBagConstraints.WEST;
-        gc.insets = new Insets(5, 10, 0, 10);
-        gc.gridy = gridy;
-        gc.gridx = 0;
-        gc.gridwidth = 3;
-
-        add(btnCopyToClipboard, gc);
-
-        return 1;
+    protected fun StringBuilder.appendSignature(classMember: ClassMember, signatureMode: SignatureMode) {
+        signatureMode.appendSignature(classMember, this)
     }
 
-    private void copySignatureToClipboard() {
-        String signatureVerbose = getSignatureVerbose();
-        if (signatureVerbose == null) {
-            return;
-        }
-        StringSelection stringSelection = new StringSelection(signatureVerbose);
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, stringSelection);
-
-    }
-
-    public enum SignatureMode {
+    enum class SignatureMode {
         FIELD {
-            @Override
-            public ClassMember[] getClassMembers(ClassFile classFile) {
-                return classFile.getFields();
-            }
-
-            @Override
-            public void appendSignature(ClassMember classMember, StringBuilder buffer) {
+            override fun appendSignature(classMember: ClassMember, buffer: StringBuilder) {
                 try {
-                    buffer.append(classMember.getDescriptor());
-                    buffer.append(' ');
-                    buffer.append(classMember.getName());
-                } catch (InvalidByteCodeException e) {
+                    buffer.append(classMember.descriptor).append(' ').append(classMember.name)
+                } catch (e: InvalidByteCodeException) {
+                    e.printStackTrace()
                 }
             }
         },
         METHOD {
-            @Override
-            public ClassMember[] getClassMembers(ClassFile classFile) {
-                return classFile.getMethods();
-            }
-
-            @Override
-            public void appendSignature(ClassMember classMember, StringBuilder buffer) {
+            override fun appendSignature(classMember: ClassMember, buffer: StringBuilder) {
                 try {
-                    buffer.append(classMember.getName());
-                    buffer.append(classMember.getDescriptor());
-                } catch (InvalidByteCodeException e) {
+                    buffer.append(classMember.name).append(classMember.descriptor)
+                } catch (e: InvalidByteCodeException) {
+                    e.printStackTrace()
                 }
             }
         };
 
-        public abstract ClassMember[] getClassMembers(ClassFile classFile);
-        public abstract void appendSignature(ClassMember classMember, StringBuilder buffer);
+        abstract fun appendSignature(classMember: ClassMember, buffer: StringBuilder)
     }
-
 }

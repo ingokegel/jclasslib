@@ -49,6 +49,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         return categoryToPath[category]!!
     }
 
+    @Suppress("unused")
     fun showMethod(methodName: String, methodSignature: String) {
         val methodsPath = categoryToPath[NodeType.METHOD] ?: return
         val methodsNode = methodsPath.lastPathComponent as TreeNode
@@ -132,7 +133,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
             buildClassMembersNode("Methods", NodeType.METHODS, NodeType.METHOD, services.classFile.methods)
 
     private fun buildClassMembersNode(text: String, containerType: NodeType, childType: NodeType, classMembers: Array<out ClassMember>) =
-            BrowserTreeNode(text, containerType).apply {
+            BrowserTreeNode(text, containerType, classMembers).apply {
                 val classMembersCount = classMembers.size
                 classMembers.forEachIndexed { i, classMember ->
                     try {
