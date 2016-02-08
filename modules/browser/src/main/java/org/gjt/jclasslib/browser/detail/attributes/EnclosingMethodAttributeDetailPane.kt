@@ -4,57 +4,15 @@
     License as published by the Free Software Foundation; either
     version 2 of the license, or (at your option) any later version.
 */
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.detail.FixedListDetailPane;
-import org.gjt.jclasslib.structures.attributes.EnclosingMethodAttribute;
-import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.TypedDetailPane
+import org.gjt.jclasslib.structures.attributes.EnclosingMethodAttribute
 
-import javax.swing.tree.TreePath;
-
-/**
- * Detail pane showing a <tt>Enclosing Method</tt> attribute.
- *
- * @author <a href="mailto:vitor.carreira@gmail.com">Vitor Carreira</a>
- *
- */
-public class EnclosingMethodAttributeDetailPane extends FixedListDetailPane {
-
-    // Visual components
-    private ExtendedJLabel lblClass;
-    private ExtendedJLabel lblClassVerbose;
-    private ExtendedJLabel lblMethod;
-    private ExtendedJLabel lblMethodVerbose;
-
-    /**
-     * Constructor.
-     *
-     * @param services the associated browser services.
-     */
-    public EnclosingMethodAttributeDetailPane(BrowserServices services) {
-        super(services);
-    }
-
-    protected void addLabels() {
-        addDetailPaneEntry(normalLabel("Class index:"),
-                lblClass = linkLabel(),
-                lblClassVerbose = highlightLabel());
-        addDetailPaneEntry(normalLabel("Method index:"),
-                lblMethod = linkLabel(),
-                lblMethodVerbose = highlightLabel());
-    }
-
-    public void show(TreePath treePath) {
-        EnclosingMethodAttribute attribute = (EnclosingMethodAttribute)getAttribute(treePath);
-        constantPoolHyperlink(lblClass,
-                lblClassVerbose,
-                attribute.getClassInfoIndex());
-
-        constantPoolHyperlink(lblMethod,
-                lblMethodVerbose,
-                attribute.getMethodInfoIndex());
-
-        super.show(treePath);
+class EnclosingMethodAttributeDetailPane(services: BrowserServices) : TypedDetailPane<EnclosingMethodAttribute>(EnclosingMethodAttribute::class.java, services) {
+    override fun addLabels() {
+        addConstantPoolLink("Class index:") { attribute -> attribute.classInfoIndex }
+        addConstantPoolLink("Method index:") { attribute -> attribute.methodInfoIndex }
     }
 }
