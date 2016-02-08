@@ -42,6 +42,10 @@ class CodeAttributeDetailPane(services: BrowserServices) : AbstractDetailPane(se
         tabbedPane.selectedIndex = detailsPanes.indexOf(byteCodeDetailPane)
     }
 
+    fun selectExceptionTableDetailPane() {
+        tabbedPane.selectedIndex = detailsPanes.indexOf(exceptionTableDetailPane)
+    }
+
     override fun show(treePath: TreePath) {
         detailsPanes.forEach { it.show(treePath) }
     }

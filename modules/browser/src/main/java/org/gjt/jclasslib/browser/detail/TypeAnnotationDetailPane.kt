@@ -16,6 +16,7 @@ package org.gjt.jclasslib.browser.detail
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.browser.NodeType
+import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.MethodInfo
 import org.gjt.jclasslib.structures.Structure
@@ -60,8 +61,12 @@ class TypeAnnotationDetailPane(services: BrowserServices) : TypedDetailPane<Type
     }
 
     private fun handleExceptionsLink(index: Int) {
-        val (path, attribute) = findAttributeViaParent(MethodInfo::class.java, ExceptionsAttribute::class.java)
-        handleListLink(index, path, attribute)
+        val path = findParentNode(CodeAttribute::class.java, tree.selectionPath)
+        selectPath(path)
+        val detailPane = services.browserComponent.detailPane.currentDetailPane as AttributeDetailPane
+        val codeAttributeDetailPane = detailPane.getDetailPane(CodeAttribute::class.java) as CodeAttributeDetailPane
+        codeAttributeDetailPane.selectExceptionTableDetailPane()
+        codeAttributeDetailPane.exceptionTableDetailPane.selectIndex(index)
     }
 
     private fun handleLocalVarLink(index: Int) {
@@ -111,8 +116,8 @@ class TypeAnnotationDetailPane(services: BrowserServices) : TypedDetailPane<Type
         get() = services.browserComponent.treePane.tree
 
     private fun findAttributeChildNode(path: TreePath, attributeClass: Class<out AttributeInfo>): TreePath {
-        val methodNode = path.lastPathComponent as BrowserTreeNode
-        methodNode.children().iterator().forEach {child ->
+        val node = path.lastPathComponent as BrowserTreeNode
+        node.children().iterator().forEach {child ->
             val attributeNode = child as BrowserTreeNode
             if (attributeNode.element?.javaClass == attributeClass) {
                 return path.pathByAddingChild(attributeNode)
