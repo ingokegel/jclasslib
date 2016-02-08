@@ -29,7 +29,7 @@ abstract class FixedListDetailPane(services: BrowserServices) : AbstractDetailPa
     public override val wrapper: JComponent
         get() = scrollPane
 
-    @JvmOverloads protected fun addDetailPaneEntry(key: ExtendedJLabel, value: TextDisplay?, comment: TextDisplay? = null) {
+    @JvmOverloads open protected fun addDetailPaneEntry(key: ExtendedJLabel, value: TextDisplay?, comment: TextDisplay? = null) {
         add(key, gc() {
             insets = Insets(1, 10, 0, 10)
         })

@@ -9,4 +9,5 @@ package org.gjt.jclasslib.util
 
 interface TextDisplay {
     fun setText(text: String)
+    fun setVisible(visible : Boolean)
 }

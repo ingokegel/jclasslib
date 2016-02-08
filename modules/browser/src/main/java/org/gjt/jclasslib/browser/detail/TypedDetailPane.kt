@@ -10,6 +10,8 @@ package org.gjt.jclasslib.browser.detail
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
+import org.gjt.jclasslib.util.ExtendedJLabel
+import org.gjt.jclasslib.util.TextDisplay
 import java.awt.GridBagConstraints
 import java.awt.Insets
 import java.util.*
@@ -59,6 +61,19 @@ abstract class TypedDetailPane<T : Any>(
         showHandlers.add { element ->
             nameLabel.text = textResolver(element)
         }
+    }
+
+    protected fun addMultiLineDetail(name: String, textResolver: (element: T) -> String) : LineControl<T> {
+        val nameLabel = highlightTextArea()
+        val keyLabel = normalLabel(name)
+        addDetailPaneEntry(keyLabel, nameLabel)
+        // TODO use multiline details and line control for all cases
+        val lineControl = LineControl<T>(keyLabel, nameLabel)
+        showHandlers.add { element ->
+            nameLabel.text = textResolver(element)
+            lineControl.show(element)
+        }
+        return lineControl
     }
 
     protected fun addClassElementOpener(constantResolver: (element: T) -> Constant) {
