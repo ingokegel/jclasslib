@@ -5,58 +5,16 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.detail.FixedListDetailPane;
-import org.gjt.jclasslib.structures.AttributeInfo;
-import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.TypedDetailPane
+import org.gjt.jclasslib.structures.AttributeInfo
 
-import javax.swing.tree.TreePath;
-
-/**
-    Detail pane showing the generic information which applies to all attribute.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class GenericAttributeDetailPane extends FixedListDetailPane {
-
-    // Visual components
-    
-    private ExtendedJLabel lblNameIndex;
-    private ExtendedJLabel lblLength;
-    
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    public GenericAttributeDetailPane(BrowserServices services) {
-        super(services);
+class GenericAttributeDetailPane(services: BrowserServices) : TypedDetailPane<AttributeInfo>(AttributeInfo::class.java, services) {
+    override fun addLabels() {
+        addConstantPoolLink("Attribute name index:") { attribute -> attribute.attributeNameIndex }
+        addDetail("Attribute length:") { attribute -> attribute.getAttributeLength().toString() }
     }
-    
-    protected void addLabels() {
-        
-        addDetailPaneEntry(normalLabel("Attribute name index:"),
-                           lblNameIndex = linkLabel(),
-                           null);
-
-        addDetailPaneEntry(normalLabel("Attribute length:"),
-                           lblLength = highlightLabel());
-    
-    }
-
-    public void show(TreePath treePath) {
-        
-        AttributeInfo attribute = getAttribute(treePath);
-
-        constantPoolHyperlink(lblNameIndex,
-                              null,
-                              attribute.getAttributeNameIndex());
-        
-        lblLength.setText(attribute.getAttributeLength());
-        
-        super.show(treePath);
-    }
-    
 }
 

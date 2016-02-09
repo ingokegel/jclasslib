@@ -10,8 +10,6 @@ package org.gjt.jclasslib.browser.detail
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
-import org.gjt.jclasslib.util.ExtendedJLabel
-import org.gjt.jclasslib.util.TextDisplay
 import java.awt.GridBagConstraints
 import java.awt.Insets
 import java.util.*
