@@ -8,10 +8,10 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.TypedDetailPane
+import org.gjt.jclasslib.browser.detail.FixedListDetailPane
 import org.gjt.jclasslib.structures.attributes.ConstantValueAttribute
 
-class ConstantValueAttributeDetailPane(services: BrowserServices) : TypedDetailPane<ConstantValueAttribute>(ConstantValueAttribute::class.java, services) {
+class ConstantValueAttributeDetailPane(services: BrowserServices) : FixedListDetailPane<ConstantValueAttribute>(ConstantValueAttribute::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink("Constant value index:") { attribute -> attribute.constantValueIndex }
     }

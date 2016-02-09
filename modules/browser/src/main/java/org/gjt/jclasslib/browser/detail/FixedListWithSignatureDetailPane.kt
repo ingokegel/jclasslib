@@ -19,7 +19,7 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
         elementClass : Class<T>,
         services: BrowserServices,
         protected val signatureMode: FixedListWithSignatureDetailPane.SignatureMode
-) : TypedDetailPane<T>(elementClass, services) {
+) : FixedListDetailPane<T>(elementClass, services) {
 
     private val btnCopyToClipboard: JButton = JButton(signatureButtonText).apply {
         addActionListener { copySignatureToClipboard() }

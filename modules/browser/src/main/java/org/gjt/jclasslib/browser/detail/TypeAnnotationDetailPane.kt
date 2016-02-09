@@ -25,7 +25,7 @@ import org.gjt.jclasslib.structures.attributes.TypeAnnotation
 import javax.swing.JTree
 import javax.swing.tree.TreePath
 
-class TypeAnnotationDetailPane(services: BrowserServices) : TypedDetailPane<TypeAnnotation>(TypeAnnotation::class.java, services) {
+class TypeAnnotationDetailPane(services: BrowserServices) : FixedListDetailPane<TypeAnnotation>(TypeAnnotation::class.java, services) {
     override fun addLabels() {
         addDetail("Target Type:") { typeAnnotation -> typeAnnotation.targetType.toString() }
 

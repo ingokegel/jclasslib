@@ -8,10 +8,10 @@
 package org.gjt.jclasslib.browser.detail.attributes.code
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.TypedDetailPane
+import org.gjt.jclasslib.browser.detail.FixedListDetailPane
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 
-class MiscDetailPane(services: BrowserServices) : TypedDetailPane<CodeAttribute>(CodeAttribute::class.java, services) {
+class MiscDetailPane(services: BrowserServices) : FixedListDetailPane<CodeAttribute>(CodeAttribute::class.java, services) {
     init {
         name = "Misc"
     }

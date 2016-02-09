@@ -9,7 +9,7 @@ package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserServices
 
-class InterfaceDetailPane(services: BrowserServices) : TypedDetailPane<Int>(Int::class.javaObjectType, services) {
+class InterfaceDetailPane(services: BrowserServices) : FixedListDetailPane<Int>(Int::class.javaObjectType, services) {
     override fun addLabels() {
         addConstantPoolLink("Interface:") { index -> index }
     }
