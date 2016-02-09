@@ -18,10 +18,8 @@ import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.browser.NodeType
 import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.MethodInfo
 import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
-import org.gjt.jclasslib.structures.attributes.ExceptionsAttribute
 import org.gjt.jclasslib.structures.attributes.LocalVariableTableAttribute
 import org.gjt.jclasslib.structures.attributes.TypeAnnotation
 import javax.swing.JTree
