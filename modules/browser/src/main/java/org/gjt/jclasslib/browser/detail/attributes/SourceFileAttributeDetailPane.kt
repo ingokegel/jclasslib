@@ -5,52 +5,15 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail.attributes;
+package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.BrowserServices;
-import org.gjt.jclasslib.browser.detail.FixedListDetailPane;
-import org.gjt.jclasslib.structures.attributes.SourceFileAttribute;
-import org.gjt.jclasslib.util.ExtendedJLabel;
+import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.TypedDetailPane
+import org.gjt.jclasslib.structures.attributes.SourceFileAttribute
 
-import javax.swing.tree.TreePath;
-
-/**
-    Detail pane showing a <tt>SourceFile</tt> attribute.
-
-    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
-*/
-public class SourceFileAttributeDetailPane extends FixedListDetailPane {
-
-    // Visual components
-    
-    private ExtendedJLabel lblSourceFile;
-    private ExtendedJLabel lblSourceFileVerbose;
-    
-    /**
-        Constructor.
-        @param services the associated browser services.
-     */
-    public SourceFileAttributeDetailPane(BrowserServices services) {
-        super(services);
+class SourceFileAttributeDetailPane(services: BrowserServices) : TypedDetailPane<SourceFileAttribute>(SourceFileAttribute::class.java, services) {
+    override fun addLabels() {
+        addConstantPoolLink("Source file name index:") { attribute -> attribute.sourceFileIndex }
     }
-    
-    protected void addLabels() {
-        
-        addDetailPaneEntry(normalLabel("Source file name index:"),
-                           lblSourceFile = linkLabel(),
-                           lblSourceFileVerbose = highlightLabel());
-    }
-
-    public void show(TreePath treePath) {
-        
-        SourceFileAttribute attribute = (SourceFileAttribute)getAttribute(treePath);
-
-        constantPoolHyperlink(lblSourceFile,
-                              lblSourceFileVerbose,
-                              attribute.getSourceFileIndex());
-        
-        super.show(treePath);
-    }
-    
 }
 
