@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.structures.InvalidByteCodeException
@@ -49,7 +49,7 @@ abstract class LinkColumn<T: Any>(name: String, width: Int = 90) : CachingColumn
 abstract class ConstantPoolLinkColumn<T: Any>(name: String, protected val services: BrowserServices, width: Int = 90) : LinkColumn<T>(name, width) {
     override fun createValue(row: T): Link {
         val constantPoolIndex = getConstantPoolIndex(row)
-        return Link(AbstractDetailPane.CPINFO_LINK_TEXT + constantPoolIndex)
+        return Link(DetailPane.CPINFO_LINK_TEXT + constantPoolIndex)
     }
 
     final override fun link(row: T) {
@@ -62,7 +62,7 @@ abstract class ConstantPoolLinkColumn<T: Any>(name: String, protected val servic
 abstract class NamedConstantPoolLinkColumn<T: Any>(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn<T>(name, services, width) {
     final override fun createValue(row: T): Link {
         val constantPoolIndex = getConstantPoolIndex(row)
-        return LinkWithComment(AbstractDetailPane.CPINFO_LINK_TEXT + constantPoolIndex, getComment(constantPoolIndex))
+        return LinkWithComment(DetailPane.CPINFO_LINK_TEXT + constantPoolIndex, getComment(constantPoolIndex))
     }
 
     open protected fun getComment(constantPoolIndex: Int) = getConstantPoolEntryName(constantPoolIndex)

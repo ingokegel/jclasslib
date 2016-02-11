@@ -13,9 +13,8 @@
 */
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.structures.Structure
 import java.awt.BorderLayout
 import java.awt.CardLayout
@@ -25,10 +24,10 @@ import javax.swing.JPanel
 import javax.swing.border.Border
 import javax.swing.tree.TreePath
 
-abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : AbstractDetailPane(services) {
+abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
 
-    private val elementClassToDetailPane = HashMap<Class<out T>, AbstractDetailPane>()
-    private var currentDetailPane : AbstractDetailPane? = null
+    private val elementClassToDetailPane = HashMap<Class<out T>, DetailPane<*>>()
+    private var currentDetailPane : DetailPane<*>? = null
 
     private val specificInfoPane: JPanel = JPanel().apply {
         border = createTitledBorder("Specific info:")
@@ -36,12 +35,12 @@ abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : Abstr
         add(JPanel(), NAME_UNKNOWN)
     }
 
-    private val genericInfoPane: AbstractDetailPane = createGenericInfoPane().apply {
+    private val genericInfoPane: DetailPane<*> = createGenericInfoPane().apply {
         border = createTitledBorder("Generic info:")
     }
 
     protected abstract fun addCards()
-    protected abstract fun createGenericInfoPane() : AbstractDetailPane
+    protected abstract fun createGenericInfoPane() : DetailPane<*>
 
     override fun setupComponent() {
         addCards()
@@ -53,7 +52,7 @@ abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : Abstr
 
     override fun show(treePath: TreePath) {
         @Suppress("UNCHECKED_CAST")
-        val element = (treePath.lastPathComponent as BrowserTreeNode).element as T?
+        val element = getElementOrNull(treePath)
         if (element == null) {
             showEmptyCard()
         } else {
@@ -74,7 +73,7 @@ abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : Abstr
         currentDetailPane = null
     }
 
-    fun getDetailPane(elementValueClass: Class<out T>) : AbstractDetailPane? =
+    fun getDetailPane(elementValueClass: Class<out T>) : DetailPane<*>? =
             elementClassToDetailPane[elementValueClass]
 
     override val clipboardText: String?
@@ -84,7 +83,7 @@ abstract class MultiDetailPane<T : Structure>(services: BrowserServices) : Abstr
         (specificInfoPane.layout as CardLayout).show(specificInfoPane, cardName)
     }
 
-    protected fun addCard(elementValueClass: Class<out T>, detailPane: AbstractDetailPane) {
+    protected fun addCard(elementValueClass: Class<out T>, detailPane: DetailPane<*>) {
         specificInfoPane.add(detailPane.displayComponent, elementValueClass.name)
         elementClassToDetailPane.put(elementValueClass, detailPane)
     }

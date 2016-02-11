@@ -57,5 +57,5 @@ enum class NodeType {
         override fun createDetailPanel(services: BrowserServices) = ArrayElementValueDetailPane(services)
     };
 
-    abstract fun createDetailPanel(services: BrowserServices): AbstractDetailPane
+    abstract fun createDetailPanel(services: BrowserServices): DetailPane<*>
 }

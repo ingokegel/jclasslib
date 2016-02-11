@@ -7,10 +7,10 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.FixedListDetailPane
+import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.SignatureAttribute
 
-class SignatureAttributeDetailPane(services: BrowserServices) : FixedListDetailPane<SignatureAttribute>(SignatureAttribute::class.java, services) {
+class SignatureAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SignatureAttribute>(SignatureAttribute::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink("Signature index:") { attribute -> attribute.signatureIndex}
     }

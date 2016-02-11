@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.ClassFile
 
-class GeneralDetailPane(services: BrowserServices) : FixedListDetailPane<ClassFile>(ClassFile::class.java, services) {
+class GeneralDetailPane(services: BrowserServices) : KeyValueDetailPane<ClassFile>(ClassFile::class.java, services) {
     override fun addLabels() {
         addDetail("Minor version:") { classFile -> classFile.minorVersion.toString() }
         addDetail("Major version:") { classFile -> "${classFile.majorVersion} [${classFile.majorVersionVerbose}]" }

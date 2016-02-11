@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.NodeType
 import org.gjt.jclasslib.browser.config.window.BrowserPath
 import org.gjt.jclasslib.browser.config.window.CategoryHolder
@@ -19,7 +19,7 @@ import java.awt.BorderLayout
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class ClassElementOpener(private val detailPane: AbstractDetailPane) : JPanel() {
+class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
 
     private var constant: Constant? = null
 

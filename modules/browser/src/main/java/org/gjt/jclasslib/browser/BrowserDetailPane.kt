@@ -17,8 +17,8 @@ import javax.swing.tree.TreePath
 
 class BrowserDetailPane(private val services: BrowserServices) : JPanel() {
 
-    private val nodeTypeToDetailPane = HashMap<NodeType, AbstractDetailPane>()
-    var currentDetailPane: AbstractDetailPane = EmptyDetailPane(services)
+    private val nodeTypeToDetailPane = HashMap<NodeType, DetailPane<*>>()
+    var currentDetailPane: DetailPane<*> = EmptyDetailPane(services)
         private set
 
     init {
@@ -41,7 +41,7 @@ class BrowserDetailPane(private val services: BrowserServices) : JPanel() {
     val attributeDetailPane: AttributeDetailPane
         get() = getDetailPane(NodeType.ATTRIBUTE) as AttributeDetailPane
 
-    private fun getDetailPane(nodeType: NodeType): AbstractDetailPane {
+    private fun getDetailPane(nodeType: NodeType): DetailPane<*> {
         return nodeTypeToDetailPane.getOrPut(nodeType) {
             nodeType.createDetailPanel(services).apply {
                 this@BrowserDetailPane.add(displayComponent, nodeType.name)

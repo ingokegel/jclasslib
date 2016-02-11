@@ -8,10 +8,10 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.FixedListDetailPane
+import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.SourceFileAttribute
 
-class SourceFileAttributeDetailPane(services: BrowserServices) : FixedListDetailPane<SourceFileAttribute>(SourceFileAttribute::class.java, services) {
+class SourceFileAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SourceFileAttribute>(SourceFileAttribute::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink("Source file name index:") { attribute -> attribute.sourceFileIndex }
     }

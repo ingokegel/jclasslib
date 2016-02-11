@@ -12,7 +12,7 @@ import org.gjt.jclasslib.structures.elementvalues.ConstElementValue
 import org.gjt.jclasslib.structures.elementvalues.ElementValue
 import org.gjt.jclasslib.structures.elementvalues.EnumElementValue
 
-class ElementValueDetailPane(services: BrowserServices) : MultiDetailPane<ElementValue>(services) {
+class ElementValueDetailPane(services: BrowserServices) : MultiDetailPane<ElementValue>(ElementValue::class.java, services) {
 
     override fun addCards() {
         addCard(ConstElementValue::class.java, ConstElementValueEntryDetailPane(services))

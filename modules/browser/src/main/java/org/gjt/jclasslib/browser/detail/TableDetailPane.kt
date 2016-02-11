@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
 import org.gjt.jclasslib.browser.detail.attributes.Link
@@ -28,7 +28,7 @@ import javax.swing.event.TableColumnModelListener
 import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 
-abstract class TableDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
+abstract class TableDetailPane<T: AttributeInfo>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
 
     protected val table: JTable = JTable().apply {
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
@@ -76,11 +76,11 @@ abstract class TableDetailPane(services: BrowserServices) : AbstractDetailPane(s
     private val tableModel: ColumnTableModel<*>
         get() = table.model as ColumnTableModel<*>
 
-    private val attributeToTableModel = WeakHashMap<AttributeInfo, ColumnTableModel<*>>()
+    private val attributeToTableModel = WeakHashMap<T, ColumnTableModel<*>>()
 
-    protected abstract fun createTableModel(attribute: AttributeInfo): ColumnTableModel<*>
+    protected abstract fun createTableModel(attribute: T): ColumnTableModel<*>
 
-    fun getTableModel(treePath: TreePath): TableModel = getCachedTableModel(getAttribute(treePath))
+    fun getTableModel(treePath: TreePath): TableModel = getCachedTableModel(getElement(treePath))
 
     fun link(row: Int, column: Int) {
         tableModel.link(row, column)
@@ -103,7 +103,7 @@ abstract class TableDetailPane(services: BrowserServices) : AbstractDetailPane(s
         }
     }
 
-    private fun getCachedTableModel(attribute: AttributeInfo): ColumnTableModel<*> =
+    private fun getCachedTableModel(attribute: T): ColumnTableModel<*> =
             attributeToTableModel.getOrPut(attribute) {
                 createTableModel(attribute)
             }
@@ -168,7 +168,7 @@ abstract class TableDetailPane(services: BrowserServices) : AbstractDetailPane(s
             val row = table.rowAtPoint(point)
             return row >= 0 && column >= 0 &&
                     table.getColumnClass(column) == Link::class.java &&
-                    table.model.getValueAt(row, column).toString() != AbstractDetailPane.CPINFO_LINK_TEXT + "0" &&
+                    table.model.getValueAt(row, column).toString() != DetailPane.CPINFO_LINK_TEXT + "0" &&
                     isLinkLabelHit(point, row, column)
         }
 

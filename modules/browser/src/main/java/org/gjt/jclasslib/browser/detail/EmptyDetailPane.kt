@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
-
 import javax.swing.tree.TreePath
 
-class EmptyDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
+class EmptyDetailPane(services: BrowserServices) : DetailPane<Any>(Any::class.java, services) {
 
     override fun show(treePath: TreePath) {
     }

@@ -12,7 +12,7 @@ import org.gjt.jclasslib.browser.detail.attributes.*
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.*
 
-class AttributeDetailPane(services: BrowserServices) : MultiDetailPane<AttributeInfo>(services) {
+class AttributeDetailPane(services: BrowserServices) : MultiDetailPane<AttributeInfo>(AttributeInfo::class.java, services) {
 
     override fun addCards() {
         addCard(ConstantValueAttribute::class.java, ConstantValueAttributeDetailPane(services))

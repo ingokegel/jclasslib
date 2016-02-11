@@ -7,25 +7,26 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ExceptionTableDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.MiscDetailPane
+import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JTabbedPane
 import javax.swing.tree.TreePath
 
-class CodeAttributeDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
+class CodeAttributeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(CodeAttribute::class.java, services) {
 
     val byteCodeDetailPane = ByteCodeDetailPane(services)
     val exceptionTableDetailPane = ExceptionTableDetailPane(services)
     val miscDetailPane = MiscDetailPane(services)
 
-    private val detailsPanes : List<AbstractDetailPane> = listOf(byteCodeDetailPane, exceptionTableDetailPane, miscDetailPane)
-    private val displayComponentToDetailPane: Map<JComponent, AbstractDetailPane> =
-            detailsPanes.associate { Pair(it.displayComponent, it) }
+    private val detailsPanes : List<DetailPane<*>> = listOf(byteCodeDetailPane, exceptionTableDetailPane, miscDetailPane)
+    private val displayComponentToDetailPane: Map<JComponent, DetailPane<*>> =
+            detailsPanes.associate { it.displayComponent to it }
 
     private val tabbedPane: JTabbedPane = JTabbedPane().apply {
         detailsPanes.forEach {

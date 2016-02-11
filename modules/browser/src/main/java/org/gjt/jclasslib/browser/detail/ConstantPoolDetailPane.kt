@@ -7,20 +7,20 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.ConstantType
+import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import java.awt.CardLayout
 import java.awt.Color
 import java.util.*
 import javax.swing.JPanel
 import javax.swing.tree.TreePath
 
-class ConstantPoolDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
+class ConstantPoolDetailPane(services: BrowserServices) : DetailPane<Constant>(Constant::class.java, services) {
 
-    private val constantTypeToDetailPane: EnumMap<ConstantType, AbstractDetailPane> = EnumMap(ConstantType::class.java)
+    private val constantTypeToDetailPane: EnumMap<ConstantType, ConstantDetailPane<*>> = EnumMap(ConstantType::class.java)
 
     override fun setupComponent() {
         layout = CardLayout()
@@ -43,9 +43,11 @@ class ConstantPoolDetailPane(services: BrowserServices) : AbstractDetailPane(ser
     }
 
     override fun show(treePath: TreePath) {
-        val constantPoolEntry = (treePath.lastPathComponent as BrowserTreeNode).element as Constant?
-        if (constantPoolEntry != null) {
-            val constantType = constantPoolEntry.constantType
+        val constant = getElement(treePath)
+        if (constant is ConstantPlaceholder) {
+            showCard(NAME_UNKNOWN)
+        } else {
+            val constantType = constant.constantType
             val detailPane = constantTypeToDetailPane[constantType]
             if (detailPane != null) {
                 detailPane.show(treePath)
@@ -55,12 +57,10 @@ class ConstantPoolDetailPane(services: BrowserServices) : AbstractDetailPane(ser
                 showCard(NAME_UNKNOWN)
 
             }
-        } else {
-            showCard(NAME_UNKNOWN)
         }
     }
 
-    private fun addCard(detailPane: AbstractDetailPane, constantType: ConstantType) {
+    private fun addCard(detailPane: ConstantDetailPane<*>, constantType: ConstantType) {
         add(detailPane.displayComponent, constantType.name)
         constantTypeToDetailPane.put(constantType, detailPane)
     }

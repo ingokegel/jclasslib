@@ -8,10 +8,10 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.FixedListDetailPane
+import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 
-class GenericAttributeDetailPane(services: BrowserServices) : FixedListDetailPane<AttributeInfo>(AttributeInfo::class.java, services) {
+class GenericAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<AttributeInfo>(AttributeInfo::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink("Attribute name index:") { attribute -> attribute.attributeNameIndex }
         addDetail("Attribute length:") { attribute -> attribute.getAttributeLength().toString() }

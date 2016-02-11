@@ -108,7 +108,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         constantPool.forEachIndexed { i, constant ->
             if (i > 0) {
                 add(if (constant is ConstantPlaceholder) {
-                    BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + "(large numeric continued)", NodeType.NO_CONTENT)
+                    BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + "(large numeric continued)", NodeType.NO_CONTENT, constant)
                 } else {
                     try {
                         BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + constant.constantType.verbose, NodeType.CONSTANT_POOL, constant)

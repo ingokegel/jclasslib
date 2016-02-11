@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.util.ExtendedTableCellRenderer
 import org.gjt.jclasslib.util.HtmlDisplayTextArea
 import java.awt.*
@@ -37,7 +37,7 @@ class LinkRenderer : TableCellRenderer {
 
     override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
         linkLineRenderer.apply {
-            if (value == null || value.toString() == AbstractDetailPane.CPINFO_LINK_TEXT + "0") {
+            if (value == null || value.toString() == DetailPane.CPINFO_LINK_TEXT + "0") {
                 foreground = standardForeground
                 isUnderlined = false
             } else {

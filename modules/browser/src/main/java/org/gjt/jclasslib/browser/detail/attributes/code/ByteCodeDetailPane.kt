@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
-import org.gjt.jclasslib.browser.AbstractDetailPane
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.bytecode.Instruction
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
@@ -21,7 +21,7 @@ import java.util.*
 import javax.swing.*
 import javax.swing.tree.TreePath
 
-class ByteCodeDetailPane(services: BrowserServices) : AbstractDetailPane(services) {
+class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(CodeAttribute::class.java, services) {
 
     private val instructionToURL = HashMap<String, String>()
 
@@ -92,7 +92,7 @@ class ByteCodeDetailPane(services: BrowserServices) : AbstractDetailPane(service
     }
 
     override fun show(treePath: TreePath) {
-        val attribute = getAttribute(treePath) as CodeAttribute
+        val attribute = getElement(treePath)
         if (byteCodeDisplay.codeAttribute != attribute) {
             withWaitCursor {
                 byteCodeDisplay.setCodeAttribute(attribute, services.classFile)

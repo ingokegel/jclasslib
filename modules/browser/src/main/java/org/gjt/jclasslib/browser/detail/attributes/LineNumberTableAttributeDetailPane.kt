@@ -9,14 +9,13 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
-import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.LineNumberTableAttribute
 import org.gjt.jclasslib.structures.attributes.LineNumberTableEntry
 import java.util.*
 
-class LineNumberTableAttributeDetailPane(services: BrowserServices) : TableDetailPane(services) {
+class LineNumberTableAttributeDetailPane(services: BrowserServices) : TableDetailPane<LineNumberTableAttribute>(LineNumberTableAttribute::class.java, services) {
 
-    override fun createTableModel(attribute: AttributeInfo) = AttributeTableModel((attribute as LineNumberTableAttribute).lineNumberTable)
+    override fun createTableModel(attribute: LineNumberTableAttribute) = AttributeTableModel(attribute.lineNumberTable)
 
     protected inner class AttributeTableModel(rows: Array<LineNumberTableEntry>) : ColumnTableModel<LineNumberTableEntry>(rows) {
         override fun buildColumns(columns: ArrayList<Column<LineNumberTableEntry>>) {
