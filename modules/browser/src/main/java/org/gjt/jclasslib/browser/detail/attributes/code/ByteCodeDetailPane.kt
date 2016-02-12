@@ -43,11 +43,10 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         DocumentLinkListener(this)
     }
 
-    private val counterDisplay: CounterDisplay = CounterDisplay()
+    private val counterDisplay: CounterDisplay = CounterDisplay(byteCodeDisplay)
 
     private val scrollPane: JScrollPane = JScrollPane(byteCodeDisplay).apply {
         viewport.background = Color.WHITE
-        setRowHeaderView(counterDisplay)
         object : MouseAdapter() {
             override fun mousePressed(event: MouseEvent?) {
                 requestFocus()
@@ -96,7 +95,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         if (byteCodeDisplay.codeAttribute != attribute) {
             withWaitCursor {
                 byteCodeDisplay.setCodeAttribute(attribute, services.classFile)
-                counterDisplay.init(byteCodeDisplay)
+                scrollPane.setRowHeaderView(CounterDisplay(byteCodeDisplay))
                 byteCodeDisplay.scrollRectToVisible(GUIHelper.RECT_ORIGIN)
                 scrollPane.validate()
                 scrollPane.repaint()
