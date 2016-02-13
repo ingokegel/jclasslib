@@ -13,6 +13,7 @@ import org.gjt.jclasslib.io.ByteCodeReader
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
+import org.gjt.jclasslib.util.LinkMouseListener
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.font.FontRenderContext
@@ -56,8 +57,17 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         get() = (graphics as Graphics2D).fontRenderContext
 
     init {
-        setupComponent()
-        setupEventHandlers()
+        border = BORDER
+        isDoubleBuffered = false
+        isOpaque = false
+
+        object : LinkMouseListener(this) {
+            override fun isLink(point: Point) = getLink(point) != null
+
+            override fun link(point: Point) {
+                this@ByteCodeDisplay.link(point)
+            }
+        }
     }
 
     override fun getPreferredScrollableViewportSize() = null
@@ -118,8 +128,6 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         }
     }
 
-    fun isLink(point: Point) = getLink(point) != null
-
     fun scrollToOffset(offset: Int) {
         val line = offsetToLine[offset] ?: return
         val target = Rectangle(0, line * lineHeight + MARGIN_Y + 1, 10, parent.height)
@@ -173,15 +181,6 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         } else {
             return textLayout
         }
-    }
-
-    private fun setupComponent() {
-        border = BORDER
-        isDoubleBuffered = false
-        isOpaque = false
-    }
-
-    private fun setupEventHandlers() {
     }
 
     private fun getLink(point: Point): BytecodeLink? {

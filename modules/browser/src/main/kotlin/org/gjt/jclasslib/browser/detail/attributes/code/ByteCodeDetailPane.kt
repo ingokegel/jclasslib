@@ -39,11 +39,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         byteCodeDisplay.copyToClipboard()
     }
 
-    private val byteCodeDisplay: ByteCodeDisplay = ByteCodeDisplay(this).apply {
-        DocumentLinkListener(this)
-    }
-
-    private val counterDisplay: CounterDisplay = CounterDisplay(byteCodeDisplay)
+    private val byteCodeDisplay: ByteCodeDisplay = ByteCodeDisplay(this)
 
     private val scrollPane: JScrollPane = JScrollPane(byteCodeDisplay).apply {
         viewport.background = Color.WHITE
@@ -120,15 +116,5 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     override val clipboardText: String?
         get() = byteCodeDisplay.clipboardText
 
-    //TODO move to BytecodeDisplay
-    private inner class DocumentLinkListener(private val byteCodeDisplay: ByteCodeDisplay) : LinkMouseListener(byteCodeDisplay) {
-        override fun isLink(point: Point): Boolean {
-            return byteCodeDisplay.isLink(point)
-        }
-
-        override fun link(point: Point) {
-            byteCodeDisplay.link(point)
-        }
-    }
 }
 
