@@ -8,23 +8,18 @@
 package org.gjt.jclasslib.util
 
 import com.install4j.api.Util
-
-import javax.swing.*
-import javax.swing.border.Border
-import java.awt.*
+import java.awt.Component
+import java.awt.Rectangle
+import java.awt.Window
 import java.net.MalformedURLException
 import java.net.URL
+import javax.swing.*
 
 object GUIHelper {
 
-    //TODO remove annotations
-    @JvmField
     val MESSAGE_TITLE = "jclasslib"
-    @JvmField
     val YES_NO_OPTIONS = arrayOf("Yes", "No")
-    @JvmField
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
-    @JvmField
     val WINDOW_BORDER = BorderFactory.createEmptyBorder(8, 8, 8, 8)
     val RECT_ORIGIN = Rectangle(0, 0, 0, 0)
 

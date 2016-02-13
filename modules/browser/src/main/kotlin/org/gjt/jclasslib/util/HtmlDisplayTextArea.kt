@@ -17,7 +17,7 @@ import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
-open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) : JEditorPane(), TextDisplay {
+open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDisplay {
 
     var inverted: Boolean = false
         set(inverted) {
@@ -147,7 +147,6 @@ open class HtmlDisplayTextArea @JvmOverloads constructor(text: String? = null) :
     override fun getBaselineResizeBehavior() = Component.BaselineResizeBehavior.CONSTANT_ASCENT
 
     companion object {
-        @JvmField // TODO remove annotation
         val COLOR_LINK = Color(0, 128, 0)
         private val NO_MARGIN = Insets(0, 0, 0, 0)
     }

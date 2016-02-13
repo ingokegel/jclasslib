@@ -42,8 +42,6 @@ class BrowserHistory(private val services: BrowserServices) {
         services.forwardAction.isEnabled = historyPointer < history.size - 1
     }
 
-    //TODO remove annotation
-    @JvmOverloads
     fun updateHistory(newPath: TreePath, offset: Int? = null) {
         val newEntry = BrowserHistoryEntry(newPath, offset)
         if (!checkForOffset(newEntry) && (historyPointer < 0 || newEntry != history[historyPointer])) {

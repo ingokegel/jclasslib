@@ -593,9 +593,7 @@ class BrowserMDIFrame : JFrame() {
         private val SETTINGS_WINDOW_MAXIMIZED = "windowMaximized"
 
         private val icons = hashMapOf<String, ImageIcon>()
-        @JvmField
         val ICON_APPLICATION_16 = getIcon("jclasslib_16.png")
-        @JvmField
         val ICON_APPLICATION_32 = getIcon("jclasslib_32.png")
 
 
