@@ -16,7 +16,7 @@ import javax.swing.event.HyperlinkEvent
 abstract class KeyValue<T : Any, L>(key: String, val valueLabel: L, val commentLabel: L? = null) where L : JComponent, L : TextDisplay {
 
     val keyLabel = ExtendedJLabel(key)
-    private var visibilityPredicate : ((T) -> Boolean)? = null
+    private var visibilityPredicate: ((T) -> Boolean)? = null
 
     fun visibilityPredicate(visibilityPredicate: (T) -> Boolean) {
         this.visibilityPredicate = visibilityPredicate

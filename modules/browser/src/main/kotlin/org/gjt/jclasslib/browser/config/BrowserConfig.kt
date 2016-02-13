@@ -19,7 +19,9 @@ class BrowserConfig : ClasspathComponent {
         @JvmName("getMDIConfig")
         get() = field
         @JvmName("setMDIConfig")
-        set(mdiConfig) {field = mdiConfig}
+        set(mdiConfig) {
+            field = mdiConfig
+        }
 
     var classpath: MutableList<ClasspathEntry> = ArrayList()
 

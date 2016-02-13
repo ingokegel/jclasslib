@@ -93,7 +93,7 @@ abstract class Structure {
     protected fun formatAccessFlagsVerbose(availableAccessFlags: EnumSet<AccessFlag>, accessFlags: Int): String {
 
         val matchingFlags = availableAccessFlags.filter { (accessFlags and it.flag) != 0 }
-        val handledFlags = matchingFlags.fold(0) {value, accessFlag -> value or accessFlag.flag}
+        val handledFlags = matchingFlags.fold(0) { value, accessFlag -> value or accessFlag.flag }
 
         return matchingFlags.
                 mapNotNull { if (it.verbose.isEmpty()) null else it.verbose }.

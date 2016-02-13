@@ -73,11 +73,11 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
         append(Integer.toHexString(component).padStart(2, '0'))
     }
 
-    private val htmlDocument : HTMLDocument?
-            get() = if (document is HTMLDocument) document as HTMLDocument else null
+    private val htmlDocument: HTMLDocument?
+        get() = if (document is HTMLDocument) document as HTMLDocument else null
 
-    private val styleSheet : StyleSheet?
-            get() = htmlDocument?.styleSheet
+    private val styleSheet: StyleSheet?
+        get() = htmlDocument?.styleSheet
 
     override fun setText(text: String) {
         super.setText(if (text.startsWith("<html>")) "<html>$text" else text)

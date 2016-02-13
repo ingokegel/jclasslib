@@ -30,7 +30,7 @@ class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: S
         }
     }
 
-    var classpathComponent: ClasspathComponent?  = null
+    var classpathComponent: ClasspathComponent? = null
         set(classpathComponent) {
             field?.removeClasspathChangeListener(classPathChangeListener)
             field = classpathComponent
@@ -40,7 +40,7 @@ class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: S
             clear()
         }
 
-    private val tree : JTree = JTree(ClassTreeNode()).apply {
+    private val tree: JTree = JTree(ClassTreeNode()).apply {
         isRootVisible = false
         showsRootHandles = true
         putClientProperty("JTree.lineStyle", "Angled")

@@ -191,7 +191,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
-    private fun BrowserTreeNode.addRuntimeAnnotations(attribute : RuntimeAnnotationsAttribute) {
+    private fun BrowserTreeNode.addRuntimeAnnotations(attribute: RuntimeAnnotationsAttribute) {
         val annotations = attribute.runtimeAnnotations
         annotations.forEachIndexed { i, annotation ->
             addSingleAnnotationNode(annotation, i, annotations.size)

@@ -94,7 +94,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected val showHandlers = ArrayList<(element: T) -> Unit>()
     protected var element: T? = null
 
-    protected fun addConstantPoolLink(key: String, indexResolver: (element: T) -> Int)  : DefaultKeyValue<T> {
+    protected fun addConstantPoolLink(key: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
         val keyValue = DefaultKeyValue<T>(key, linkLabel(), highlightLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -109,7 +109,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addAttributeLink(key: String, attributeClass: Class<BootstrapMethodsAttribute>, prefix: String, indexResolver: (element: T) -> Int) : DefaultKeyValue<T> {
+    protected fun addAttributeLink(key: String, attributeClass: Class<BootstrapMethodsAttribute>, prefix: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
         val keyValue = DefaultKeyValue<T>(key, linkLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -123,7 +123,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addDetail(key: String, textResolver: (element: T) -> String) : DefaultKeyValue<T> {
+    protected fun addDetail(key: String, textResolver: (element: T) -> String): DefaultKeyValue<T> {
         val keyValue = DefaultKeyValue<T>(key, highlightLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -132,7 +132,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addMultiLineDetail(key: String, textResolver: (element: T) -> String) : HtmlKeyValue<T> {
+    protected fun addMultiLineDetail(key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
         val keyValue = HtmlKeyValue<T>(key, highlightTextArea())
         addKeyValue(keyValue)
         showHandlers.add { element ->

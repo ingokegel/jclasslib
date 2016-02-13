@@ -31,7 +31,7 @@ class WindowState {
 
     }
 
-    override fun equals(other: Any?): Boolean{
+    override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
 
@@ -42,7 +42,7 @@ class WindowState {
         return true
     }
 
-    override fun hashCode(): Int{
+    override fun hashCode(): Int {
         return fileName?.hashCode() ?: 0
     }
 }
@@ -61,5 +61,6 @@ data class CategoryHolder(var category: NodeType = NodeType.NO_CONTENT) : PathCo
         category = NodeType.values().find { it.name.toLowerCase() == name } ?: NodeType.NO_CONTENT
     }
 }
+
 data class IndexHolder(var index: Int = -1) : PathComponent
 data class ReferenceHolder(var name: String = "", var type: String = "") : PathComponent

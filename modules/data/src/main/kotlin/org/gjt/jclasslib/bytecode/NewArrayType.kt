@@ -16,7 +16,7 @@ import org.gjt.jclasslib.structures.Lookup
  * @property verbose Verbose representation.
  */
 @Suppress("NOT_DOCUMENTED")
-enum class NewArrayType (override val tag: Int, val verbose: String) : ClassFileEnum {
+enum class NewArrayType(override val tag: Int, val verbose: String) : ClassFileEnum {
     BOOLEAN(4, "boolean"),
     CHAR(5, "char"),
     FLOAT(6, "float"),

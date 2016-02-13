@@ -34,7 +34,7 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
         action.invoke()
     }
 
-    fun accelerator(keyCode : Int, modifiers : Int = MENU_MODIFIER) {
+    fun accelerator(keyCode: Int, modifiers: Int = MENU_MODIFIER) {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(keyCode, modifiers))
     }
 

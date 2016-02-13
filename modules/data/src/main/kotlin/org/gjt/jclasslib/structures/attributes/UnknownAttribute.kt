@@ -17,7 +17,7 @@ import java.io.DataOutput
  * The class file can contain non-standard attributes that can be read, but that are not interpreted.
  * @property byteArrayLength Length of the unknown attribute.
  */
-class UnknownAttribute(val byteArrayLength : Int, classFile: ClassFile) : AttributeInfo(classFile) {
+class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Raw bytes of the unknown attribute.

@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.ClassMember
 
-class ClassMemberContainerDetailPane (services: BrowserServices, signatureMode: FixedListWithSignatureDetailPane.SignatureMode) :
+class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: FixedListWithSignatureDetailPane.SignatureMode) :
         FixedListWithSignatureDetailPane<Array<out ClassMember>>(Array<out ClassMember>::class.java, services, signatureMode) {
 
     override val signatureVerbose: String

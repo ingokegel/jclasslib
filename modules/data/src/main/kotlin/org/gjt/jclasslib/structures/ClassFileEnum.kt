@@ -14,5 +14,5 @@ interface ClassFileEnum {
     /**
      * The bytecode tag representing the enum value.
      */
-    val tag : Int
+    val tag: Int
 }

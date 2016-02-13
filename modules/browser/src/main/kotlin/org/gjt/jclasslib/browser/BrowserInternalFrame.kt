@@ -62,8 +62,7 @@ class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, pr
             if (GUIHelper.showOptionDialog(parentFrame,
                     "The class $className could not be found.\nYou can check your classpath configuration and try again.",
                     arrayOf("Setup classpath", "Cancel"),
-                    JOptionPane.WARNING_MESSAGE) == 0)
-            {
+                    JOptionPane.WARNING_MESSAGE) == 0) {
                 parentFrame.setupClasspathAction()
                 findResult = parentFrame.config.findClass(className)
             } else {
@@ -127,7 +126,7 @@ class BrowserInternalFrame(private val desktopManager: BrowserDesktopManager, pr
     private val parentFrame: BrowserMDIFrame
         get() = desktopManager.parentFrame
 
-    private fun readClassFile() : ClassFile {
+    private fun readClassFile(): ClassFile {
         try {
             val index = fileName.indexOf('!')
             if (index > -1) {

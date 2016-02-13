@@ -45,7 +45,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
         this.desktopManager = this@BrowserDesktopManager
     }
 
-    val selectedFrame : BrowserInternalFrame?
+    val selectedFrame: BrowserInternalFrame?
         get() = desktopPane.selectedFrame as BrowserInternalFrame?
 
     val nextInternalFrameBounds: Rectangle
@@ -223,7 +223,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
         }
     }
 
-    override fun activateFrame(frame : JInternalFrame) {
+    override fun activateFrame(frame: JInternalFrame) {
         super.activateFrame(frame)
         frameToMenuItem.values.forEach {
             it.isSelected = false
@@ -360,7 +360,8 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
 
     private fun getNextFrame(cycleDirection: CycleDirection): BrowserInternalFrame {
         val it = openFrames.listIterator()
-        while (it.hasNext() && it.next() !== desktopPane.selectedFrame) { }
+        while (it.hasNext() && it.next() !== desktopPane.selectedFrame) {
+        }
         when (cycleDirection) {
             CycleDirection.NEXT -> {
                 if (it.hasNext()) {
@@ -399,7 +400,7 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
         }
     }
 
-    private enum class CycleDirection {NEXT, PREVIOUS}
+    private enum class CycleDirection {NEXT, PREVIOUS }
 
     companion object {
         private val NEW_INTERNAL_X_OFFSET = 22

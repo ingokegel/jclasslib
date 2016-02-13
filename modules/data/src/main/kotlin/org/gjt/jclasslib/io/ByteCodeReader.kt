@@ -210,27 +210,27 @@ object ByteCodeReader {
 
             Opcode.BIPUSH,
             Opcode.LDC,
-            // subject to wide
+                // subject to wide
             Opcode.ILOAD,
-            // subject to wide
+                // subject to wide
             Opcode.LLOAD,
-            // subject to wide
+                // subject to wide
             Opcode.FLOAD,
-            // subject to wide
+                // subject to wide
             Opcode.DLOAD,
-            // subject to wide
+                // subject to wide
             Opcode.ALOAD,
-            // subject to wide
+                // subject to wide
             Opcode.ISTORE,
-            // subject to wide
+                // subject to wide
             Opcode.LSTORE,
-            // subject to wide
+                // subject to wide
             Opcode.FSTORE,
-            // subject to wide
+                // subject to wide
             Opcode.DSTORE,
-            // subject to wide
+                // subject to wide
             Opcode.ASTORE,
-            // subject to wide
+                // subject to wide
             Opcode.RET,
             Opcode.NEWARRAY ->
 
@@ -249,8 +249,8 @@ object ByteCodeReader {
             Opcode.ANEWARRAY,
             Opcode.CHECKCAST,
             Opcode.INSTANCEOF,
-            // the only immediate short instruction that does
-            // not have an immediate constant pool reference
+                // the only immediate short instruction that does
+                // not have an immediate constant pool reference
             Opcode.SIPUSH
             ->
 
@@ -282,7 +282,7 @@ object ByteCodeReader {
 
                 instruction = WideBranchInstruction(opcode)
 
-            // subject to wide
+        // subject to wide
             Opcode.IINC ->
 
                 instruction = IncrementInstruction(opcode, wide)

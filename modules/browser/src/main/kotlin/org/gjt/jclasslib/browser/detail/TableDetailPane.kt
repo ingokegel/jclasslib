@@ -28,7 +28,7 @@ import javax.swing.event.TableColumnModelListener
 import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 
-abstract class TableDetailPane<T: AttributeInfo>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
+abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
 
     protected val table: JTable = JTable().apply {
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
@@ -108,8 +108,8 @@ abstract class TableDetailPane<T: AttributeInfo>(elementClass: Class<T>, service
                 createTableModel(attribute)
             }
 
-    open protected val autoResizeMode : Int
-            get() = JTable.AUTO_RESIZE_OFF
+    open protected val autoResizeMode: Int
+        get() = JTable.AUTO_RESIZE_OFF
 
     open protected val isVariableRowHeight: Boolean
         get() = false
@@ -141,7 +141,7 @@ abstract class TableDetailPane<T: AttributeInfo>(elementClass: Class<T>, service
 
     private fun updateRowHeights() {
         for (row in 0..table.rowCount - 1) {
-            val rowHeight = (0..table.columnCount - 1).map {column ->
+            val rowHeight = (0..table.columnCount - 1).map { column ->
                 val c = table.prepareRenderer(table.getCellRenderer(row, column), row, column) as JComponent
                 c.size = c.preferredSize.apply {
                     width = table.columnModel.getColumn(column).width

@@ -29,13 +29,13 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
     override fun addLabels() {
         addDetail("Target Type:") { typeAnnotation -> typeAnnotation.targetType.toString() }
 
-        addMultiLineDetail("Target Info:") {typeAnnotation ->
+        addMultiLineDetail("Target Info:") { typeAnnotation ->
             typeAnnotation.targetInfo.verbose.replace("\n", "<br>")
         }.linkHandler { description ->
             handleLink(description)
         }
 
-        addMultiLineDetail("Type path:") {typeAnnotation ->
+        addMultiLineDetail("Type path:") { typeAnnotation ->
             StringBuilder().apply {
                 for (typePathEntry in typeAnnotation.typePathEntries) {
                     append(typePathEntry.typePathKind)
@@ -72,7 +72,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
         handleListLink(getLinkIndex(index, attribute), path, attribute)
     }
 
-    private fun <T : AttributeInfo> findAttributeViaParent(parentClass: Class<out Structure>, attributeClass: Class<T>): Pair<TreePath, T>  {
+    private fun <T : AttributeInfo> findAttributeViaParent(parentClass: Class<out Structure>, attributeClass: Class<T>): Pair<TreePath, T> {
         val path = findAttributeChildNode(findParentNode(parentClass, tree.selectionPath), attributeClass)
         return Pair(path, attributeClass.cast((path.lastPathComponent as BrowserTreeNode).element))
     }
@@ -110,12 +110,12 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
         }
     }
 
-    private val tree : JTree
+    private val tree: JTree
         get() = services.browserComponent.treePane.tree
 
     private fun findAttributeChildNode(path: TreePath, attributeClass: Class<out AttributeInfo>): TreePath {
         val node = path.lastPathComponent as BrowserTreeNode
-        node.children().iterator().forEach {child ->
+        node.children().iterator().forEach { child ->
             val attributeNode = child as BrowserTreeNode
             if (attributeNode.element?.javaClass == attributeClass) {
                 return path.pathByAddingChild(attributeNode)

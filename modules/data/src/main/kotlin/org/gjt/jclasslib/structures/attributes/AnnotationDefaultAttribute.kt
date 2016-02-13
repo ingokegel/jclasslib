@@ -22,7 +22,7 @@ class AnnotationDefaultAttribute private constructor(classFile: ClassFile) : Att
      * @param defaultValue the default element value
      * @param classFile the class file of which this structure is part of
      */
-    constructor(defaultValue : ElementValue, classFile: ClassFile) : this(classFile) {
+    constructor(defaultValue: ElementValue, classFile: ClassFile) : this(classFile) {
         this.defaultValue = defaultValue
     }
 

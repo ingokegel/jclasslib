@@ -42,11 +42,11 @@ abstract class CachingColumn<T : Any, R : Any>(name: String, width: Int, columnC
     protected abstract fun createValue(row: T): R
 }
 
-abstract class NumberColumn<T: Any>(name: String, width: Int = 60) : CachingColumn<T, Number>(name, width, Number::class.java)
-abstract class StringColumn<T: Any>(name: String, width: Int = 250) : CachingColumn<T, String>(name, width, String::class.java)
-abstract class LinkColumn<T: Any>(name: String, width: Int = 90) : CachingColumn<T, Link>(name, width, Link::class.java)
+abstract class NumberColumn<T : Any>(name: String, width: Int = 60) : CachingColumn<T, Number>(name, width, Number::class.java)
+abstract class StringColumn<T : Any>(name: String, width: Int = 250) : CachingColumn<T, String>(name, width, String::class.java)
+abstract class LinkColumn<T : Any>(name: String, width: Int = 90) : CachingColumn<T, Link>(name, width, Link::class.java)
 
-abstract class ConstantPoolLinkColumn<T: Any>(name: String, protected val services: BrowserServices, width: Int = 90) : LinkColumn<T>(name, width) {
+abstract class ConstantPoolLinkColumn<T : Any>(name: String, protected val services: BrowserServices, width: Int = 90) : LinkColumn<T>(name, width) {
     override fun createValue(row: T): Link {
         val constantPoolIndex = getConstantPoolIndex(row)
         return Link(DetailPane.CPINFO_LINK_TEXT + constantPoolIndex)
@@ -59,7 +59,7 @@ abstract class ConstantPoolLinkColumn<T: Any>(name: String, protected val servic
     protected abstract fun getConstantPoolIndex(row: T): Int
 }
 
-abstract class NamedConstantPoolLinkColumn<T: Any>(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn<T>(name, services, width) {
+abstract class NamedConstantPoolLinkColumn<T : Any>(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn<T>(name, services, width) {
     final override fun createValue(row: T): Link {
         val constantPoolIndex = getConstantPoolIndex(row)
         return LinkWithComment(DetailPane.CPINFO_LINK_TEXT + constantPoolIndex, getComment(constantPoolIndex))
@@ -79,4 +79,5 @@ abstract class NamedConstantPoolLinkColumn<T: Any>(name: String, services: Brows
 open class Link(val text: String) {
     override fun toString() = text
 }
+
 class LinkWithComment(linkValue: String, val commentValue: String) : Link(linkValue)

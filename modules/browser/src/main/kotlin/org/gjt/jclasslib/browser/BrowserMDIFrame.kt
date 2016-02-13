@@ -431,8 +431,7 @@ class BrowserMDIFrame : JFrame() {
             if (!selectedFile.exists() || GUIHelper.showOptionDialog(this,
                     "The file " + selectedFile.path + "\nexists. Do you want to overwrite this file?",
                     GUIHelper.YES_NO_OPTIONS,
-                    JOptionPane.QUESTION_MESSAGE) == 0)
-            {
+                    JOptionPane.QUESTION_MESSAGE) == 0) {
                 saveWorkspaceToFile(selectedFile)
                 workspaceFile = selectedFile
                 updateTitle()

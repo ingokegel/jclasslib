@@ -12,7 +12,7 @@ import org.gjt.jclasslib.structures.Structure
 /**
  * Base class for all sub-structures that are used in attribute infos.
  */
-abstract class SubStructure : Structure()  {
+abstract class SubStructure : Structure() {
 
     /**
      * The length of the structure in bytes.

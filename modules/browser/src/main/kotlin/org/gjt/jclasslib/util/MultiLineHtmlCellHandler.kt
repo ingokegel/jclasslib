@@ -29,7 +29,7 @@ import javax.swing.event.HyperlinkEvent
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-class MultiLineHtmlCellHandler(val linkHandler : (description: String) -> Unit = {}) : HtmlDisplayTextArea(), TableCellRenderer, TableCellEditor {
+class MultiLineHtmlCellHandler(val linkHandler: (description: String) -> Unit = {}) : HtmlDisplayTextArea(), TableCellRenderer, TableCellEditor {
 
     private val listeners = ArrayList<CellEditorListener>()
     private var table: JTable? = null
@@ -60,7 +60,7 @@ class MultiLineHtmlCellHandler(val linkHandler : (description: String) -> Unit =
             }
         })
 
-        addHyperlinkListener {e ->
+        addHyperlinkListener { e ->
             if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
                 linkHandler.invoke(e.description)
             }

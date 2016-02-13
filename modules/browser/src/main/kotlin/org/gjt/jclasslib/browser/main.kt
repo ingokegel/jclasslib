@@ -6,6 +6,7 @@
 */
 
 @file:JvmName("BrowserApplication")
+
 package org.gjt.jclasslib.browser
 
 import com.exe4j.runtime.util.LazyFileOutputStream
@@ -58,7 +59,7 @@ private fun registerStartupListener(frame: BrowserMDIFrame) {
 }
 
 private fun isLoadedFromJar(): Boolean =
-        BrowserMDIFrame::class.java.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:")}
+        BrowserMDIFrame::class.java.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:") }
 
 private fun splitupCommandLine(command: String): List<String> {
     val cmdList = ArrayList<String>()

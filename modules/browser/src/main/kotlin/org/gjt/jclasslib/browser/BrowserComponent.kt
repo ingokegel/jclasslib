@@ -87,7 +87,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
         }
     }
 
-    private fun buildPath(path: TreePath, category : NodeType, it: MutableIterator<PathComponent>): TreePath {
+    private fun buildPath(path: TreePath, category: NodeType, it: MutableIterator<PathComponent>): TreePath {
         if (it.hasNext()) {
             val pathComponent = it.next()
             val childIndex: Int

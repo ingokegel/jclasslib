@@ -221,7 +221,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         lineToLink.clear()
         invalidBranches.clear()
 
-        codeAttribute?.code?.let {code ->
+        codeAttribute?.code?.let { code ->
             try {
                 val instructions = ByteCodeReader.readByteCode(code)
                 verifyOffsets(instructions)

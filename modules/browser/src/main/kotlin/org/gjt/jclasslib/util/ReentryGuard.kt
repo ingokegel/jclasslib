@@ -11,7 +11,7 @@ class ReentryGuard {
     var inProgress = false
         private set
 
-    fun execute(function : () -> Unit) {
+    fun execute(function: () -> Unit) {
         if (inProgress) {
             return
         }

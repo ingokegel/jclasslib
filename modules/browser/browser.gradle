@@ -14,7 +14,7 @@ jar {
     archiveName = 'jclasslib-browser.jar'
     manifest {
         attributes(
-            "Main-Class": mainClassName
+                "Main-Class": mainClassName
         )
     }
 }

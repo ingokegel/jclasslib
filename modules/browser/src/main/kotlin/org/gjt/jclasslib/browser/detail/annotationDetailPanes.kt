@@ -13,9 +13,9 @@ import org.gjt.jclasslib.structures.attributes.AnnotationDefaultAttribute
 import org.gjt.jclasslib.structures.attributes.AnnotationHolder
 import org.gjt.jclasslib.structures.elementvalues.*
 
-class RuntimeAnnotationsAttributeDetailPane (services: BrowserServices) : KeyValueDetailPane<AnnotationHolder>(AnnotationHolder::class.java, services) {
+class RuntimeAnnotationsAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<AnnotationHolder>(AnnotationHolder::class.java, services) {
     override fun addLabels() {
-        addDetail("Number of annotations:") { annotationHolder -> annotationHolder.numberOfAnnotations.toString()}
+        addDetail("Number of annotations:") { annotationHolder -> annotationHolder.numberOfAnnotations.toString() }
     }
 }
 
@@ -41,8 +41,8 @@ class ElementValuePairDetailPane(services: BrowserServices) : KeyValueDetailPane
 
 class ArrayElementValueDetailPane(services: BrowserServices) : KeyValueDetailPane<ArrayElementValue>(ArrayElementValue::class.java, services) {
     override fun addLabels() {
-        addDetail("Tag:") { arrayElementValue -> arrayElementValue.elementValueType.let { "${it.charTag.toString()} <${it.verbose}>" }}
-        addDetail("Number of values:") { arrayElementValue -> arrayElementValue.elementValueEntries.size.toString()}
+        addDetail("Tag:") { arrayElementValue -> arrayElementValue.elementValueType.let { "${it.charTag.toString()} <${it.verbose}>" } }
+        addDetail("Number of values:") { arrayElementValue -> arrayElementValue.elementValueEntries.size.toString() }
     }
 }
 

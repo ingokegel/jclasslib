@@ -27,7 +27,7 @@ import javax.swing.tree.TreePath
 abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
 
     private val elementClassToDetailPane = HashMap<Class<out T>, DetailPane<*>>()
-    private var currentDetailPane : DetailPane<*>? = null
+    private var currentDetailPane: DetailPane<*>? = null
 
     private val specificInfoPane: JPanel = JPanel().apply {
         border = createTitledBorder("Specific info:")
@@ -40,7 +40,7 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
     }
 
     protected abstract fun addCards()
-    protected abstract fun createGenericInfoPane() : DetailPane<*>
+    protected abstract fun createGenericInfoPane(): DetailPane<*>
 
     override fun setupComponent() {
         addCards()
@@ -73,7 +73,7 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
         currentDetailPane = null
     }
 
-    fun getDetailPane(elementValueClass: Class<out T>) : DetailPane<*>? =
+    fun getDetailPane(elementValueClass: Class<out T>): DetailPane<*>? =
             elementClassToDetailPane[elementValueClass]
 
     override val clipboardText: String?

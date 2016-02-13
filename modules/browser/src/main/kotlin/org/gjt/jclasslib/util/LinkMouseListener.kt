@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
 import javax.swing.JComponent
 
-abstract class LinkMouseListener(val component : JComponent) : MouseAdapter(), MouseMotionListener {
+abstract class LinkMouseListener(val component: JComponent) : MouseAdapter(), MouseMotionListener {
 
     init {
         component.apply {

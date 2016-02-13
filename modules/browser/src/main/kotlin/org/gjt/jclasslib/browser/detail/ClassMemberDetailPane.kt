@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.ClassMember
 
-class ClassMemberDetailPane (services: BrowserServices, signatureMode: FixedListWithSignatureDetailPane.SignatureMode) :
+class ClassMemberDetailPane(services: BrowserServices, signatureMode: FixedListWithSignatureDetailPane.SignatureMode) :
         FixedListWithSignatureDetailPane<ClassMember>(ClassMember::class.java, services, signatureMode) {
 
     override val signatureVerbose: String
@@ -24,10 +24,11 @@ class ClassMemberDetailPane (services: BrowserServices, signatureMode: FixedList
         addConstantPoolLink("Name:") { classMember -> classMember.nameIndex }
         addConstantPoolLink("Descriptor:") { classMember -> classMember.descriptorIndex }
         addDetail("Access flags:") { classMember ->
-           "${classMember.formattedAccessFlags} [${classMember.accessFlagsVerbose}]"
+            "${classMember.formattedAccessFlags} [${classMember.accessFlagsVerbose}]"
         }
         super.addLabels()
     }
+
     override val signatureButtonText: String
         get() = "Copy signature to clipboard"
 }

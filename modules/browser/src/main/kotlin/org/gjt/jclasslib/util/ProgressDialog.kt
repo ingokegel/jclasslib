@@ -14,7 +14,7 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.*
 
-class ProgressDialog(parent: Window, message: String, var task: ()->Unit = {}) : JDialog(parent) {
+class ProgressDialog(parent: Window, message: String, var task: () -> Unit = {}) : JDialog(parent) {
 
     private val progressBar: JProgressBar = JProgressBar().apply {
         preferredSize = preferredSize.apply {
@@ -66,6 +66,7 @@ class ProgressDialog(parent: Window, message: String, var task: ()->Unit = {}) :
                     override fun doInBackground() {
                         task()
                     }
+
                     override fun done() {
                         isVisible = false
                     }

@@ -12,6 +12,6 @@ import org.gjt.jclasslib.structures.attributes.SignatureAttribute
 
 class SignatureAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SignatureAttribute>(SignatureAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Signature index:") { attribute -> attribute.signatureIndex}
+        addConstantPoolLink("Signature index:") { attribute -> attribute.signatureIndex }
     }
 }

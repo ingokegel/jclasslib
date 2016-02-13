@@ -24,7 +24,7 @@ class CodeAttributeDetailPane(services: BrowserServices) : DetailPane<CodeAttrib
     val exceptionTableDetailPane = ExceptionTableDetailPane(services)
     val miscDetailPane = MiscDetailPane(services)
 
-    private val detailsPanes : List<DetailPane<*>> = listOf(byteCodeDetailPane, exceptionTableDetailPane, miscDetailPane)
+    private val detailsPanes: List<DetailPane<*>> = listOf(byteCodeDetailPane, exceptionTableDetailPane, miscDetailPane)
     private val displayComponentToDetailPane: Map<JComponent, DetailPane<*>> =
             detailsPanes.associate { it.displayComponent to it }
 

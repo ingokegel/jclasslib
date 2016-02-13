@@ -38,10 +38,12 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDeta
                     override fun createValue(row: BootstrapMethodsEntry): String {
                         return row.verbose.replace("\n", "<br>")
                     }
+
                     override fun createTableCellRenderer() = createTableCellEditor()
                     override fun createTableCellEditor() = MultiLineHtmlCellHandler() { description ->
                         ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                     }
+
                     override fun isEditable(row: BootstrapMethodsEntry) = true
                 })
             }

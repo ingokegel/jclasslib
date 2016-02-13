@@ -16,7 +16,7 @@ import java.awt.datatransfer.StringSelection
 import javax.swing.JButton
 
 abstract class FixedListWithSignatureDetailPane<T : Any>(
-        elementClass : Class<T>,
+        elementClass: Class<T>,
         services: BrowserServices,
         protected val signatureMode: FixedListWithSignatureDetailPane.SignatureMode
 ) : KeyValueDetailPane<T>(elementClass, services) {

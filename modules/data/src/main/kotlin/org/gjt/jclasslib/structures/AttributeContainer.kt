@@ -27,7 +27,7 @@ interface AttributeContainer {
      * @return the found attribute, null if not found
      */
     fun findAttribute(attributeClass: Class<Any>): AttributeInfo? =
-            attributes.firstOrNull {it.javaClass == attributeClass}
+            attributes.firstOrNull { it.javaClass == attributeClass }
 
     /**
      * Get the length of all attributes as a number of bytes.

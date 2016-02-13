@@ -101,7 +101,7 @@ class ConstantUtf8InfoDetailPane(services: BrowserServices) : ConstantDetailPane
     override fun addLabels() {
         addDetail("Length of byte array:") { constant -> constant.bytes.size.toString() }
         addDetail("Length of string:") { constant -> constant.string.length.toString() }
-        addDetail("String") {constant ->
+        addDetail("String") { constant ->
             try {
                 constant.verbose
             } catch (e: InvalidByteCodeException) {

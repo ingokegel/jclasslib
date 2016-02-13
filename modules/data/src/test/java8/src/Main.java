@@ -8,7 +8,9 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
 
     private List<@Test String> strings;
 
-    private @Test Object @Test2 [] data;
+    private
+    @Test
+    Object @Test2 [] data;
 
     public static void main(String[] args) throws @Test Exception {
         new @Test Main();

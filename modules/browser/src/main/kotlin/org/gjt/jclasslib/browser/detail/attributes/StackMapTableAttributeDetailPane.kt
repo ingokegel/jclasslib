@@ -16,7 +16,7 @@ import org.gjt.jclasslib.util.MultiLineHtmlCellHandler
 import java.util.*
 import javax.swing.JTable
 
-class StackMapTableAttributeDetailPane(services: BrowserServices)  : TableDetailPane<StackMapTableAttribute>(StackMapTableAttribute::class.java, services) {
+class StackMapTableAttributeDetailPane(services: BrowserServices) : TableDetailPane<StackMapTableAttribute>(StackMapTableAttribute::class.java, services) {
 
     override fun createTableModel(attribute: StackMapTableAttribute) = AttributeTableModel(attribute.entries)
 
@@ -26,15 +26,16 @@ class StackMapTableAttributeDetailPane(services: BrowserServices)  : TableDetail
     override val autoResizeMode: Int
         get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
-    protected  inner class AttributeTableModel(rows: Array<StackMapFrameEntry>) : ColumnTableModel<StackMapFrameEntry>(rows) {
+    protected inner class AttributeTableModel(rows: Array<StackMapFrameEntry>) : ColumnTableModel<StackMapFrameEntry>(rows) {
         override fun buildColumns(columns: ArrayList<Column<StackMapFrameEntry>>) {
             super.buildColumns(columns)
             columns.add(object : StringColumn<StackMapFrameEntry>("Stack Map Frame", 600) {
                 override fun createValue(row: StackMapFrameEntry): String = row.verbose
                 override fun createTableCellRenderer() = createTableCellEditor()
-                override fun createTableCellEditor() = MultiLineHtmlCellHandler() {description ->
+                override fun createTableCellEditor() = MultiLineHtmlCellHandler() { description ->
                     ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                 }
+
                 override fun isEditable(row: StackMapFrameEntry): Boolean {
                     return true
                 }

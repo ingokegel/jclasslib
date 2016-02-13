@@ -13,7 +13,7 @@ package org.gjt.jclasslib.structures
  * @property enumClass The class of the enum
  * @property name A name for the enum for use in error messages
  */
-abstract class Lookup<T>(val enumClass : Class<T>, val name : String) where T : Enum<T>, T : ClassFileEnum {
+abstract class Lookup<T>(val enumClass: Class<T>, val name: String) where T : Enum<T>, T : ClassFileEnum {
 
     private val LOOKUP = arrayOfNulls<Any?>(enumClass.enumConstants.maxBy { it.tag }!!.tag + 1)
 

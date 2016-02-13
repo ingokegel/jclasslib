@@ -133,7 +133,7 @@ object ConstantPoolUtil {
             return index
         }
 
-        val newConstantPool = Array(constantPool.size + 1) {i ->
+        val newConstantPool = Array(constantPool.size + 1) { i ->
             when (i) {
                 constantPool.size -> newEntry
                 else -> constantPool[i]
