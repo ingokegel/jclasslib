@@ -14,19 +14,20 @@
 
 package org.gjt.jclasslib.util
 
-import javax.swing.*
-import javax.swing.border.EmptyBorder
-import javax.swing.event.CellEditorListener
-import javax.swing.event.ChangeEvent
-import javax.swing.table.TableCellEditor
-import javax.swing.table.TableCellRenderer
-import java.awt.*
+import java.awt.Component
+import java.awt.Point
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
-import java.util.ArrayList
-import java.util.EventObject
+import java.util.*
+import javax.swing.JTable
+import javax.swing.SwingUtilities
+import javax.swing.border.EmptyBorder
+import javax.swing.event.CellEditorListener
+import javax.swing.event.ChangeEvent
 import javax.swing.event.HyperlinkEvent
+import javax.swing.table.TableCellEditor
+import javax.swing.table.TableCellRenderer
 
 class MultiLineHtmlCellHandler(val linkHandler : (description: String) -> Unit = {}) : HtmlDisplayTextArea(), TableCellRenderer, TableCellEditor {
 

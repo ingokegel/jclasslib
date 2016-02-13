@@ -7,14 +7,18 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
-import javax.swing.*
-import java.awt.*
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Graphics
+import java.awt.Graphics2D
 import java.awt.font.FontRenderContext
 import java.awt.font.TextAttribute
 import java.awt.font.TextLayout
 import java.text.AttributedCharacterIterator
 import java.text.AttributedString
-import java.util.HashMap
+import java.util.*
+import javax.swing.JPanel
+import javax.swing.UIManager
 
 class CounterDisplay(val byteCodeDisplay: ByteCodeDisplay) : JPanel() {
 

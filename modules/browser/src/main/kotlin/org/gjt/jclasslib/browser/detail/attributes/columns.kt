@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import java.util.*
 import javax.swing.table.TableCellEditor

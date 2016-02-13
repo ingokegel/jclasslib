@@ -7,8 +7,10 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import javax.swing.*
-import java.awt.*
+import java.awt.Component
+import javax.swing.DefaultListCellRenderer
+import javax.swing.JList
+import javax.swing.UIManager
 
 class ClasspathCellRenderer : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(list: JList<*>, value: Any?, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component? {

@@ -9,9 +9,9 @@ package org.gjt.jclasslib.test;
 
 import org.gjt.jclasslib.io.ClassFileReader;
 import org.gjt.jclasslib.io.ClassFileWriter;
-import org.gjt.jclasslib.structures.Package;
 import org.gjt.jclasslib.structures.ClassFile;
 import org.gjt.jclasslib.structures.InvalidByteCodeException;
+import org.gjt.jclasslib.structures.Package;
 
 import java.io.*;
 import java.net.URL;

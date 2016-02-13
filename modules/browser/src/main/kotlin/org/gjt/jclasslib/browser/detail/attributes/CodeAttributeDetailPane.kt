@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ExceptionTableDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.MiscDetailPane

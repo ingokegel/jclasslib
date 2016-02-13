@@ -7,8 +7,9 @@
 
 package org.gjt.jclasslib.util
 
-import javax.swing.*
-import java.awt.*
+import java.awt.Component
+import java.awt.Graphics
+import javax.swing.Icon
 
 class EmptyIcon(private val width: Int, private val height: Int) : Icon {
 

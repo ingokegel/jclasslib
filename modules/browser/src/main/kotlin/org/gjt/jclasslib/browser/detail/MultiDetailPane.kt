@@ -13,8 +13,8 @@
 */
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.Structure
 import java.awt.BorderLayout
 import java.awt.CardLayout

@@ -9,8 +9,7 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.window.BrowserPath
 import org.gjt.jclasslib.structures.ClassFile
-
-import javax.swing.*
+import javax.swing.Action
 
 interface BrowserServices {
     val classFile: ClassFile

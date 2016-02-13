@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder

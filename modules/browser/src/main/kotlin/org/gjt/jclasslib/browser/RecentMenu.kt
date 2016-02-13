@@ -9,16 +9,15 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.EventQueue
-
-import javax.swing.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
 import java.io.IOException
-import java.util.LinkedList
-import java.util.TreeMap
+import java.util.*
 import java.util.prefs.BackingStoreException
 import java.util.prefs.Preferences
+import javax.swing.JMenu
+import javax.swing.JMenuItem
 
 class RecentMenu(private val frame: BrowserMDIFrame) : JMenu() {
 

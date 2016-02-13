@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.DetailPane
 import javax.swing.tree.TreePath
 
 class EmptyDetailPane(services: BrowserServices) : DetailPane<Any>(Any::class.java, services) {

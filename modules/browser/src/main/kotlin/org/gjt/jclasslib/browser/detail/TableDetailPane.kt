@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
 import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer

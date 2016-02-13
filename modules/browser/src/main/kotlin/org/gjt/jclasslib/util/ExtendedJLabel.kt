@@ -7,8 +7,13 @@
 
 package org.gjt.jclasslib.util
 
-import javax.swing.*
-import java.awt.*
+import java.awt.Dimension
+import java.awt.Graphics
+import java.awt.Rectangle
+import javax.swing.JLabel
+import javax.swing.Scrollable
+import javax.swing.SwingUtilities
+import javax.swing.UIManager
 
 open class ExtendedJLabel(text: String) : JLabel(text), Scrollable, TextDisplay {
 

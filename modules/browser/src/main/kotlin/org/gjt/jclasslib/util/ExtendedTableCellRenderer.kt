@@ -7,11 +7,13 @@
 
 package org.gjt.jclasslib.util
 
-import javax.swing.*
-import javax.swing.border.Border
+import java.awt.Color
+import java.awt.Component
+import java.awt.Rectangle
+import javax.swing.JTable
+import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
 import javax.swing.table.TableCellRenderer
-import java.awt.*
 
 class ExtendedTableCellRenderer : ExtendedJLabel(""), TableCellRenderer {
 

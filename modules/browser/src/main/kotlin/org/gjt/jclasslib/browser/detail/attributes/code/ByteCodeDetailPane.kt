@@ -7,14 +7,16 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.bytecode.Instruction
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
-import org.gjt.jclasslib.util.LinkMouseListener
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Cursor
+import java.awt.FlowLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.*
