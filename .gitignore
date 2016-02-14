@@ -1,3 +1,6 @@
+.gradle/
 .idea/workspace.xml
+.idea/shelf/
 build/
 media/
+.DS_Store
