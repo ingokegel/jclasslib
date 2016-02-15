@@ -335,7 +335,10 @@ class BrowserDesktopManager(val parentFrame: BrowserMDIFrame) : DefaultDesktopMa
         desktopPane.apply {
             preferredSize = null
             size = Dimension(0, 0)
-            revalidate()
+        }
+        parentFrame.contentPane.apply {
+            invalidate()
+            validate()
         }
     }
 
