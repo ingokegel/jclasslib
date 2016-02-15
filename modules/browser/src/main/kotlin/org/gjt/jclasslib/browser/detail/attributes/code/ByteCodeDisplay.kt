@@ -401,7 +401,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         appendString(targetOffset.toString(), STYLE_LINK)
         val endCharIndex = currentCharIndex
         lineToLink.put(currentLine, OffsetLink(startCharIndex, endCharIndex, sourceOffset, targetOffset))
-        appendString(" (" + if (branchOffset > 0) "+" else "" + branchOffset.toString() + ")", STYLE_IMMEDIATE_VALUE)
+        appendString(" (" + (if (branchOffset > 0) "+" else "") + branchOffset.toString() + ")", STYLE_IMMEDIATE_VALUE)
     }
 
     private val currentCharIndex: Int
