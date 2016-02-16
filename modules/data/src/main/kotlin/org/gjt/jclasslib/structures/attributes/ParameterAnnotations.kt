@@ -43,6 +43,6 @@ class ParameterAnnotations : SubStructure() {
      * The length of the structure in bytes.
      */
     override val length: Int
-        get() = 2 + runtimeAnnotations.sumBy { length }
+        get() = 2 + runtimeAnnotations.sumBy { it.length }
 
 }

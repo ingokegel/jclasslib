@@ -181,7 +181,7 @@ class ClassFile : Structure(), AttributeContainer {
         if (entryClass.isAssignableFrom(cpInfo.javaClass)) {
             return entryClass.cast(cpInfo)
         } else {
-            throw InvalidByteCodeException("constant pool entry at $index is not assignable to ${entryClass.name}")
+            throw InvalidByteCodeException("constant pool entry at $index of class ${cpInfo.javaClass.name} is not assignable to ${entryClass.name}")
         }
     }
 

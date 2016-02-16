@@ -94,7 +94,11 @@ interface AttributeContainer {
     fun AttributeContainer.writeAttributes(output: DataOutput) {
         val attributesCount = attributes.size
         output.writeShort(attributesCount)
-        attributes.forEach { it.write(output) }
+        attributes.forEach {
+            output.writeShort(it.attributeNameIndex)
+            output.writeInt(it.getAttributeLength())
+            it.write(output)
+        }
         if (isDebug) debug("wrote $attributesCount attributes")
     }
 }

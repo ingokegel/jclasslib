@@ -34,7 +34,7 @@ class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile)
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeShort(entries.size)
+        output.writeByte(entries.size)
         entries.forEach { it.write(output) }
     }
 
