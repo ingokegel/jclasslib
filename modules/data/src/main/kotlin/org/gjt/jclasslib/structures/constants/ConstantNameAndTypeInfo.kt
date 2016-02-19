@@ -34,7 +34,7 @@ class ConstantNameAndTypeInfo(classFile: ClassFile) : AbstractConstant(classFile
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
-        get() = name + descriptor
+        get() = "$name : $descriptor"
 
     /**
      * The name of this entry.
