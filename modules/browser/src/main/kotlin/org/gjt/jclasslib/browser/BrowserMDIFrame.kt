@@ -72,6 +72,12 @@ class BrowserMDIFrame : JFrame() {
         classpathSetupDialog.isVisible = true
     }
 
+    val newWindowAction = DefaultAction("New window", "Open a new window") {
+        BrowserMDIFrame().isVisible = true
+    }.apply {
+        accelerator(KeyEvent.VK_N)
+    }
+
     val newWorkspaceAction = DefaultAction("New workspace", "Close all frames and open a new workspace") {
         desktopManager.closeAllFrames()
         workspaceFile = null
@@ -105,10 +111,19 @@ class BrowserMDIFrame : JFrame() {
     }
 
     val quitAction = DefaultAction("Quit") {
-        saveSettings()
         saveWindowSettings()
+        exit()
+    }
+
+    val closeAction = DefaultAction("Close window") {
+        saveWindowSettings()
+        isVisible = false
         dispose()
-        System.exit(0)
+        if (getBrowserFrames().size == 0) {
+            exit()
+        }
+    }.apply {
+        accelerator(KeyEvent.VK_W)
     }
 
     val backwardAction = DefaultAction("Backward", "Move backward in the navigation history", "browser_backward_small.png", "browser_backward_large.png") {
@@ -188,7 +203,11 @@ class BrowserMDIFrame : JFrame() {
         add(stackWindowsAction)
     }
 
-    private var lastNormalFrameBounds: Rectangle? = null
+    private val normalFrameBounds: Rectangle
+        get() = if (isMaximized) getDefaultFrameBounds() else bounds
+
+    private val isMaximized: Boolean
+        get() = extendedState and Frame.MAXIMIZED_BOTH != 0
 
     private var workspaceFile: File? = null
     private var workspaceChooserPath = ""
@@ -294,6 +313,7 @@ class BrowserMDIFrame : JFrame() {
             add(JMenu("File").apply {
                 add(openClassFileAction)
                 addSeparator()
+                add(newWindowAction)
                 add(newWorkspaceAction)
                 add(openWorkspaceAction)
                 add(recentMenu)
@@ -304,6 +324,7 @@ class BrowserMDIFrame : JFrame() {
                 add(showHomepageAction)
                 add(showEjtAction)
                 addSeparator()
+                add(closeAction)
                 add(quitAction)
             })
 
@@ -328,6 +349,18 @@ class BrowserMDIFrame : JFrame() {
             })
         }
 
+    }
+
+    private fun setupWindowBounds() {
+        val activeBrowserFrame = getActiveBrowserFrame()
+        if (activeBrowserFrame != null) {
+            bounds = activeBrowserFrame.normalFrameBounds.apply {
+                x += NEW_FRAME_OFFSET
+                y += NEW_FRAME_OFFSET
+            }
+        } else {
+            loadWindowSettings()
+        }
     }
 
     private fun setupFrame() {
@@ -415,14 +448,6 @@ class BrowserMDIFrame : JFrame() {
         }
     }
 
-    private fun saveSettings() {
-        Preferences.userNodeForPackage(javaClass).apply {
-            put(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath)
-            put(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath)
-            recentMenu.save(this)
-        }
-    }
-
     private fun saveWorkspace() {
         val fileChooser = workspaceFileChooser
         val result = fileChooser.showSaveDialog(this)
@@ -501,54 +526,50 @@ class BrowserMDIFrame : JFrame() {
     private fun setupEventHandlers() {
 
         addWindowListener(object : WindowAdapter() {
-            override fun windowClosing(event: WindowEvent?) {
-                quitAction()
+            override fun windowClosing(event: WindowEvent) {
+                closeAction()
             }
         })
 
         addComponentListener(object : ComponentAdapter() {
-            override fun componentResized(event: ComponentEvent?) {
+            override fun componentResized(event: ComponentEvent) {
                 desktopManager.checkResizeInMaximizedState()
-                recordLastNormalFrameBounds()
-            }
-
-            override fun componentMoved(event: ComponentEvent?) {
-                recordLastNormalFrameBounds()
             }
         })
     }
 
     private fun saveWindowSettings() {
-
         val preferences = Preferences.userNodeForPackage(javaClass)
-
-        val maximized = extendedState and Frame.MAXIMIZED_BOTH != 0
-        preferences.putBoolean(SETTINGS_WINDOW_MAXIMIZED, maximized)
-
-        val frameBounds = if (maximized) lastNormalFrameBounds else bounds
-        if (frameBounds != null) {
-            preferences.apply {
+        preferences.putBoolean(SETTINGS_WINDOW_MAXIMIZED, isMaximized)
+        preferences.apply {
+            if (!isMaximized) {
+                val frameBounds = bounds
                 putInt(SETTINGS_WINDOW_WIDTH, frameBounds.width)
                 putInt(SETTINGS_WINDOW_HEIGHT, frameBounds.height)
                 putInt(SETTINGS_WINDOW_X, frameBounds.x)
                 putInt(SETTINGS_WINDOW_Y, frameBounds.y)
             }
+
+            put(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath)
+            put(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath)
+            recentMenu.save(this)
         }
     }
 
     private fun loadWindowSettings() {
 
         val preferences = Preferences.userNodeForPackage(javaClass)
-        val screenSize = Toolkit.getDefaultToolkit().screenSize
-        val screenBounds = Rectangle(screenSize)
+        val defaultFrameBounds = getDefaultFrameBounds()
 
-        val windowX = preferences.getInt(SETTINGS_WINDOW_X, (screenSize.getWidth() - DEFAULT_WINDOW_WIDTH).toInt() / 2)
-        val windowY = preferences.getInt(SETTINGS_WINDOW_Y, (screenSize.getHeight() - DEFAULT_WINDOW_HEIGHT).toInt() / 2)
-        val windowWidth = preferences.getInt(SETTINGS_WINDOW_WIDTH, DEFAULT_WINDOW_WIDTH)
-        val windowHeight = preferences.getInt(SETTINGS_WINDOW_HEIGHT, DEFAULT_WINDOW_HEIGHT)
+        val windowX = preferences.getInt(SETTINGS_WINDOW_X, defaultFrameBounds.x)
+        val windowY = preferences.getInt(SETTINGS_WINDOW_Y, defaultFrameBounds.y)
+        val windowWidth = preferences.getInt(SETTINGS_WINDOW_WIDTH, defaultFrameBounds.width)
+        val windowHeight = preferences.getInt(SETTINGS_WINDOW_HEIGHT, defaultFrameBounds.height)
 
         val frameBounds = Rectangle(windowX, windowY, windowWidth, windowHeight)
         // sanitize frame bounds
+        val screenSize = Toolkit.getDefaultToolkit().screenSize
+        val screenBounds = Rectangle(screenSize)
         frameBounds.translate(-Math.min(0, frameBounds.x), -Math.min(0, frameBounds.y))
         frameBounds.translate(-Math.max(0, frameBounds.x + frameBounds.width - screenSize.width), -Math.max(0, frameBounds.y + frameBounds.height - screenSize.height))
 
@@ -560,20 +581,21 @@ class BrowserMDIFrame : JFrame() {
 
     }
 
-    private fun recordLastNormalFrameBounds() {
-        if (extendedState and Frame.MAXIMIZED_BOTH == 0) {
-            val frameBounds = bounds
-            if (frameBounds.x >= 0 && frameBounds.y >= 0) {
-                lastNormalFrameBounds = frameBounds
-            }
-        }
+    private fun getDefaultFrameBounds(): Rectangle {
+        val screenSize = Toolkit.getDefaultToolkit().screenSize
+        return Rectangle(
+                (screenSize.getWidth() - DEFAULT_WINDOW_WIDTH).toInt() / 2,
+                (screenSize.getHeight() - DEFAULT_WINDOW_HEIGHT).toInt() / 2,
+                DEFAULT_WINDOW_WIDTH,
+                DEFAULT_WINDOW_HEIGHT
+        )
     }
 
     init {
         loadSettings()
         setupMenu()
         setupEventHandlers()
-        loadWindowSettings()
+        setupWindowBounds()
         setupFrame()
         updateTitle()
     }
@@ -584,6 +606,7 @@ class BrowserMDIFrame : JFrame() {
         private val SETTINGS_CLASSES_CHOOSER_PATH = "classesChooserPath"
         private val DEFAULT_WINDOW_WIDTH = 800
         private val DEFAULT_WINDOW_HEIGHT = 600
+        private val NEW_FRAME_OFFSET = 22
 
         private val SETTINGS_WINDOW_WIDTH = "windowWidth"
         private val SETTINGS_WINDOW_HEIGHT = "windowHeight"

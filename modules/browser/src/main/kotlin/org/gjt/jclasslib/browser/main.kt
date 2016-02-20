@@ -12,6 +12,7 @@ package org.gjt.jclasslib.browser
 import com.exe4j.runtime.util.LazyFileOutputStream
 import com.install4j.api.launcher.StartupNotification
 import java.awt.EventQueue
+import java.awt.Frame
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.PrintStream
@@ -37,9 +38,10 @@ fun main(args: Array<String>) {
         System.setErr(PrintStream(BufferedOutputStream(LazyFileOutputStream(stdErrFile.path)), true))
     }
 
+    registerStartupListener()
+
     EventQueue.invokeLater {
         BrowserMDIFrame().apply {
-            registerStartupListener(this)
             isVisible = true
             if (args.size > 0) {
                 openExternalFile(args[0])
@@ -48,11 +50,26 @@ fun main(args: Array<String>) {
     }
 }
 
-private fun registerStartupListener(frame: BrowserMDIFrame) {
+
+fun getBrowserFrames(): List<BrowserMDIFrame> = Frame.getFrames()
+        .mapNotNull { if (it is BrowserMDIFrame) it else null }
+        .filter { it.isVisible }
+
+fun getActiveBrowserFrame(): BrowserMDIFrame? = getBrowserFrames().firstOrNull { it.isActive }
+
+fun exit() {
+    System.exit(0)
+}
+
+
+private fun registerStartupListener() {
     StartupNotification.registerStartupListener { argLine ->
         splitupCommandLine(argLine).let { startupArgs ->
             if (startupArgs.size > 0) {
-                frame.openExternalFile(startupArgs[0])
+                val frames = getBrowserFrames()
+                frames.firstOrNull { it.isActive } ?: frames.elementAtOrElse(0) { BrowserMDIFrame() }.apply {
+                    openExternalFile(startupArgs[0])
+                }
             }
         }
     }
