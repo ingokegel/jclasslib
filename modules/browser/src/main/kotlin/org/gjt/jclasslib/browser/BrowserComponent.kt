@@ -24,7 +24,9 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     val detailPane: BrowserDetailPane = BrowserDetailPane(services)
     val treePane: BrowserTreePane = BrowserTreePane(services)
 
-    private val splitPane: JSplitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane, detailPane)
+    private val splitPane: JSplitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane, detailPane).apply {
+        isContinuousLayout = true
+    }
 
     init {
         layout = BorderLayout()
@@ -70,6 +72,9 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
                 }
             }
         }
+
+    val title: String
+        get() = services.classFile.simpleClassName
 
     private fun createBrowserPath(categoryNode: BrowserTreeNode, selectionPath: TreePath) = BrowserPath().apply {
         val category = categoryNode.type

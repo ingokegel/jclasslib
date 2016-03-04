@@ -55,6 +55,14 @@ fun getBrowserFrames(): List<BrowserMDIFrame> = Frame.getFrames()
         .mapNotNull { if (it is BrowserMDIFrame) it else null }
         .filter { it.isVisible }
 
+fun getNextBrowserFrame(browserFrame: BrowserMDIFrame) : BrowserMDIFrame = getBrowserFrames().run {
+    get((indexOf(browserFrame) + 1) % size)
+}
+
+fun getPreviousBrowserFrame(browserFrame: BrowserMDIFrame) : BrowserMDIFrame = getBrowserFrames().run {
+    get((indexOf(browserFrame) - 1 + size) % size)
+}
+
 fun getActiveBrowserFrame(): BrowserMDIFrame? = getBrowserFrames().firstOrNull { it.isActive }
 
 fun exit() {

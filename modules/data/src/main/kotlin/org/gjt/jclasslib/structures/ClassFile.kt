@@ -141,6 +141,12 @@ class ClassFile : Structure(), AttributeContainer {
         get() = getConstantPoolEntryName(thisClass)
 
     /**
+     * The simple name of this class without the package.
+     */
+    val simpleClassName: String
+        get() = thisClassName.takeLastWhile { it != '/' }
+
+    /**
      * The name of the super class.
      */
     val superClassName: String
