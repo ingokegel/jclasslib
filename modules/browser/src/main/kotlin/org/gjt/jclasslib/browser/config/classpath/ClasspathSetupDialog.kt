@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import org.gjt.jclasslib.browser.BrowserMDIFrame
+import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.MultiFileFilter
@@ -22,7 +22,7 @@ import java.awt.event.WindowEvent
 import java.util.*
 import javax.swing.*
 
-class ClasspathSetupDialog(private val frame: BrowserMDIFrame) : JDialog(frame) {
+class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
 
     private val listModel: DefaultListModel<ClasspathEntry> = DefaultListModel()
     private val lstElements: JList<ClasspathEntry> = JList(listModel).apply {

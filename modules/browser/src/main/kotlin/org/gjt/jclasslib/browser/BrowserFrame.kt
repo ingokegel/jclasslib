@@ -27,7 +27,7 @@ import java.io.*
 import java.util.prefs.Preferences
 import javax.swing.*
 
-class BrowserMDIFrame : JFrame() {
+class BrowserFrame : JFrame() {
 
     private val frameContent: FrameContent = FrameContent(this)
 
@@ -71,7 +71,7 @@ class BrowserMDIFrame : JFrame() {
     }
 
     val newWindowAction = DefaultAction("New window", "Open a new window") {
-        BrowserMDIFrame().isVisible = true
+        BrowserFrame().isVisible = true
     }.apply {
         accelerator(KeyEvent.VK_N)
     }
@@ -283,7 +283,7 @@ class BrowserMDIFrame : JFrame() {
                     try {
                         openClassFromFile(file)
                     } catch (e: IOException) {
-                        GUIHelper.showMessage(this@BrowserMDIFrame, e.message, JOptionPane.ERROR_MESSAGE)
+                        GUIHelper.showMessage(this@BrowserFrame, e.message, JOptionPane.ERROR_MESSAGE)
                     }
                 }
             }
@@ -588,7 +588,7 @@ class BrowserMDIFrame : JFrame() {
 
         fun getIcon(fileName: String): ImageIcon =
                 icons.getOrPut(fileName) {
-                    ImageIcon(BrowserMDIFrame::class.java.getResource("images/" + fileName))
+                    ImageIcon(BrowserFrame::class.java.getResource("images/" + fileName))
                 }
 
     }

@@ -41,7 +41,7 @@ fun main(args: Array<String>) {
     registerStartupListener()
 
     EventQueue.invokeLater {
-        BrowserMDIFrame().apply {
+        BrowserFrame().apply {
             isVisible = true
             if (args.size > 0) {
                 openExternalFile(args[0])
@@ -51,19 +51,19 @@ fun main(args: Array<String>) {
 }
 
 
-fun getBrowserFrames(): List<BrowserMDIFrame> = Frame.getFrames()
-        .mapNotNull { if (it is BrowserMDIFrame) it else null }
+fun getBrowserFrames(): List<BrowserFrame> = Frame.getFrames()
+        .mapNotNull { if (it is BrowserFrame) it else null }
         .filter { it.isVisible }
 
-fun getNextBrowserFrame(browserFrame: BrowserMDIFrame) : BrowserMDIFrame = getBrowserFrames().run {
+fun getNextBrowserFrame(browserFrame: BrowserFrame) : BrowserFrame = getBrowserFrames().run {
     get((indexOf(browserFrame) + 1) % size)
 }
 
-fun getPreviousBrowserFrame(browserFrame: BrowserMDIFrame) : BrowserMDIFrame = getBrowserFrames().run {
+fun getPreviousBrowserFrame(browserFrame: BrowserFrame) : BrowserFrame = getBrowserFrames().run {
     get((indexOf(browserFrame) - 1 + size) % size)
 }
 
-fun getActiveBrowserFrame(): BrowserMDIFrame? = getBrowserFrames().firstOrNull { it.isActive }
+fun getActiveBrowserFrame(): BrowserFrame? = getBrowserFrames().firstOrNull { it.isActive }
 
 fun exit() {
     System.exit(0)
@@ -75,7 +75,7 @@ private fun registerStartupListener() {
         splitupCommandLine(argLine).let { startupArgs ->
             if (startupArgs.size > 0) {
                 val frames = getBrowserFrames()
-                frames.firstOrNull { it.isActive } ?: frames.elementAtOrElse(0) { BrowserMDIFrame() }.apply {
+                frames.firstOrNull { it.isActive } ?: frames.elementAtOrElse(0) { BrowserFrame() }.apply {
                     openExternalFile(startupArgs[0])
                 }
             }
@@ -84,7 +84,7 @@ private fun registerStartupListener() {
 }
 
 private fun isLoadedFromJar(): Boolean =
-        BrowserMDIFrame::class.java.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:") }
+        BrowserFrame::class.java.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:") }
 
 private fun splitupCommandLine(command: String): List<String> {
     val cmdList = ArrayList<String>()

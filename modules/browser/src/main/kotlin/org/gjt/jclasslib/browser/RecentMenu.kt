@@ -19,7 +19,7 @@ import java.util.prefs.Preferences
 import javax.swing.JMenu
 import javax.swing.JMenuItem
 
-class RecentMenu(private val frame: BrowserMDIFrame) : JMenu() {
+class RecentMenu(private val frame: BrowserFrame) : JMenu() {
 
     private val recentWorkspaces = LinkedList<String>()
 

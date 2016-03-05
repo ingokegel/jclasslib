@@ -27,7 +27,7 @@ class BrowserTab(private val tabbedPane: BrowserTabbedPane, val fileName: String
     private val frameContent: FrameContent
         get() = tabbedPane.container
 
-    private val parentFrame: BrowserMDIFrame
+    private val parentFrame: BrowserFrame
         get() = frameContent.frame
 
     override val classFile: ClassFile = readClassFile()

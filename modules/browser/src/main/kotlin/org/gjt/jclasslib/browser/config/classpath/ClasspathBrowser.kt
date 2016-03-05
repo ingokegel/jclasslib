@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import org.gjt.jclasslib.browser.BrowserMDIFrame
+import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.ProgressDialog
@@ -19,7 +19,7 @@ import javax.swing.*
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-class ClasspathBrowser(private val frame: BrowserMDIFrame, private val header: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame) {
+class ClasspathBrowser(private val frame: BrowserFrame, private val header: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame) {
 
     private val classPathChangeListener = object : ClasspathChangeListener {
         override fun classpathChanged(event: ClasspathChangeEvent) {

@@ -15,7 +15,7 @@ import java.awt.Color
 import java.awt.Dimension
 import javax.swing.*
 
-class FrameContent(val frame: BrowserMDIFrame) : JPanel() {
+class FrameContent(val frame: BrowserFrame) : JPanel() {
 
     val wrappers = Position.values().map { TabbedPaneWrapper(it) }
 

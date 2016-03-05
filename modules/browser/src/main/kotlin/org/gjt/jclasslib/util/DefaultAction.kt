@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.util
 
-import org.gjt.jclasslib.browser.BrowserMDIFrame
+import org.gjt.jclasslib.browser.BrowserFrame
 import java.awt.Dimension
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
@@ -18,10 +18,10 @@ import javax.swing.KeyStroke
 
 class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: () -> Unit) : AbstractAction(name) {
     init {
-        val smallIcon = if (smallIconFileName != null) BrowserMDIFrame.getIcon(smallIconFileName) else GUIHelper.ICON_EMPTY
+        val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName) else GUIHelper.ICON_EMPTY
         putValue(SMALL_ICON, smallIcon)
         if (largeIconFileName != null) {
-            putValue(LARGE_ICON_KEY, BrowserMDIFrame.getIcon(largeIconFileName))
+            putValue(LARGE_ICON_KEY, BrowserFrame.getIcon(largeIconFileName))
         }
         if (shortDescription != null) {
             putValue(SHORT_DESCRIPTION, shortDescription)
