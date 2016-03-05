@@ -21,8 +21,12 @@ import java.util.jar.JarFile
 import javax.swing.Action
 import javax.swing.JOptionPane
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 
-class BrowserTab(private val tabbedPane: BrowserTabbedPane, val fileName: String, private val browserPath: BrowserPath?) : JPanel(), BrowserServices {
+class BrowserTab(val fileName: String, private val browserPath: BrowserPath?) : JPanel(), BrowserServices {
+
+    private val tabbedPane: BrowserTabbedPane
+        get() = SwingUtilities.getAncestorOfClass(BrowserTabbedPane::class.java, this) as BrowserTabbedPane
 
     private val frameContent: FrameContent
         get() = tabbedPane.container
@@ -92,6 +96,8 @@ class BrowserTab(private val tabbedPane: BrowserTabbedPane, val fileName: String
 
     private fun select() {
         tabbedPane.selectedComponent = this
+        tabbedPane.focus()
+        browserComponent.treePane.tree.requestFocus()
     }
 
     override fun canOpenClassFiles(): Boolean = true
