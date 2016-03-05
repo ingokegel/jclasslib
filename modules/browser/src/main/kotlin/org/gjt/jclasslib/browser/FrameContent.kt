@@ -46,6 +46,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         add(createComponent(splitMode), BorderLayout.CENTER)
         wrappers[Position.NW].focus()
         this.splitMode = splitMode
+        frame.splitActions.forEach { it.value.isEnabled = it.key != splitMode }
         revalidate()
     }
 

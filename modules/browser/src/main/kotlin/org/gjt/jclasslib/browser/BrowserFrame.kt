@@ -26,10 +26,10 @@ import java.beans.XMLEncoder
 import java.io.*
 import java.util.prefs.Preferences
 import javax.swing.*
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
 
 class BrowserFrame : JFrame() {
-
-    private val frameContent: FrameContent = FrameContent(this)
 
     val openClassFileAction = DefaultAction("Open class file", "Open a class file", "open_small.png", "open_large.png") {
         val result = classesFileChooser.showOpenDialog(this)
@@ -194,6 +194,17 @@ class BrowserFrame : JFrame() {
         splitActions.values.forEach {
             add(it)
         }
+        popupMenu.addPopupMenuListener(object: PopupMenuListener {
+            override fun popupMenuWillBecomeVisible(event: PopupMenuEvent) {
+                checkWindowActions()
+            }
+
+            override fun popupMenuWillBecomeInvisible(event: PopupMenuEvent) {
+            }
+
+            override fun popupMenuCanceled(event: PopupMenuEvent) {
+            }
+        })
     }
 
     private val normalFrameBounds: Rectangle
@@ -201,6 +212,8 @@ class BrowserFrame : JFrame() {
 
     private val isMaximized: Boolean
         get() = extendedState and Frame.MAXIMIZED_BOTH != 0
+
+    private val frameContent: FrameContent = FrameContent(this)
 
     private var workspaceFile: File? = null
     private var workspaceChooserPath = ""
@@ -502,7 +515,17 @@ class BrowserFrame : JFrame() {
             override fun windowClosing(event: WindowEvent) {
                 closeAction()
             }
+
+            override fun windowActivated(p0: WindowEvent?) {
+                checkWindowActions()
+            }
         })
+    }
+
+    private fun checkWindowActions() {
+        val multipleWindows = getBrowserFrames().size > 1
+        nextWindowAction.isEnabled = multipleWindows
+        previousWindowAction.isEnabled = multipleWindows
     }
 
     private fun saveWindowSettings() {
