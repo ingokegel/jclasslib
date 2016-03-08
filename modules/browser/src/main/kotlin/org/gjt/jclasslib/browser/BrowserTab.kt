@@ -50,32 +50,39 @@ class BrowserTab(val fileName: String) : JPanel(), BrowserServices {
         get() = parentFrame.forwardAction
 
     override fun openClassFile(className: String, browserPath: BrowserPath?) {
-        var findResult: FindResult? = parentFrame.config.findClass(className)
-        while (findResult == null) {
+        val findResult: FindResult? = findClass(className)
+        if (findResult != null) {
+            val openTab = frameContent.findTab(findResult.fileName)
+            if (openTab != null) {
+                openTab.apply {
+                    select()
+                    browserComponent.browserPath = browserPath
+                }
+            } else {
+                try {
+                    tabbedPane.addTab(findResult.fileName, browserPath)
+                } catch (e: IOException) {
+                    GUIHelper.showMessage(parentFrame, e.message, JOptionPane.ERROR_MESSAGE)
+                }
+
+            }
+        }
+    }
+
+    private tailrec fun findClass(className: String): FindResult? {
+        val findResult: FindResult? = parentFrame.config.findClass(className)
+        if (findResult != null) {
+            return findResult
+        } else {
             if (GUIHelper.showOptionDialog(parentFrame,
                     "The class $className could not be found.\nYou can check your classpath configuration and try again.",
                     arrayOf("Setup classpath", "Cancel"),
-                    JOptionPane.WARNING_MESSAGE) == 0) {
-                parentFrame.setupClasspathAction()
-                findResult = parentFrame.config.findClass(className)
+                    JOptionPane.WARNING_MESSAGE) != 0) {
+                return null
             } else {
-                return
+                parentFrame.setupClasspathAction()
+                return findClass(className)
             }
-        }
-
-        val openTab = frameContent.findTab(findResult.fileName)
-        if (openTab != null) {
-            openTab.apply {
-                select()
-                browserComponent.browserPath = browserPath
-            }
-        } else {
-            try {
-                tabbedPane.addTab(findResult.fileName, browserPath)
-            } catch (e: IOException) {
-                GUIHelper.showMessage(parentFrame, e.message, JOptionPane.ERROR_MESSAGE)
-            }
-
         }
     }
 

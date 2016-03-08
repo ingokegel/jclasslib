@@ -45,14 +45,14 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     fun split(splitMode: SplitMode) {
         removeAll()
         transferTabs(splitMode)
-        add(createComponent(splitMode), BorderLayout.CENTER)
+        add(getComponent(splitMode), BorderLayout.CENTER)
         wrappers[Position.NW].focus()
         this.splitMode = splitMode
         frame.splitActions.forEach { it.value.isEnabled = it.key != splitMode }
         revalidate()
     }
 
-    private fun createComponent(splitMode: SplitMode): JComponent = when (splitMode) {
+    private fun getComponent(splitMode: SplitMode): JComponent = when (splitMode) {
         SplitMode.NONE -> {
             wrappers[Position.NW]
         }

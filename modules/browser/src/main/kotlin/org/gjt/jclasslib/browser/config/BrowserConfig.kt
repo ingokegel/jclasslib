@@ -22,6 +22,10 @@ class BrowserConfig : ClasspathComponent {
     private val mergedEntries = HashSet<ClasspathEntry>()
     private val changeListeners = HashSet<ClasspathChangeListener>()
 
+    init {
+        addRuntimeLib()
+    }
+
     override fun addClasspathChangeListener(listener: ClasspathChangeListener) {
         changeListeners.add(listener)
     }
@@ -58,7 +62,17 @@ class BrowserConfig : ClasspathComponent {
         }
     }
 
-    fun addRuntimeLib() {
+    fun clear() {
+        empty()
+        addRuntimeLib()
+    }
+
+    private fun empty() {
+        classpath.clear()
+        mergedEntries.clear()
+    }
+
+    private fun addRuntimeLib() {
         val fileName = String::class.java.getResource("String.class").toExternalForm()
 
         val matchResult = Regex("jar:file:/(.*)!.*").matchEntire(fileName)
@@ -102,8 +116,7 @@ class BrowserConfig : ClasspathComponent {
     }
 
     fun readWorkspace(element: Element) {
-        classpath.clear()
-        mergedEntries.clear()
+        empty()
         element.childElements(NODE_NAME_CLASSPATH).firstOrNull()?.childElements()?.forEach { entryElement ->
             ClasspathEntry.create(entryElement)?.apply {
                 classpath.add(this)

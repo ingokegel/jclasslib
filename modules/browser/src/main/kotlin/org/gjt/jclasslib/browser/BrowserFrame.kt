@@ -38,6 +38,8 @@ import javax.xml.transform.stream.StreamResult
 
 class BrowserFrame : JFrame() {
 
+    val config: BrowserConfig = BrowserConfig()
+
     val openClassFileAction = DefaultAction("Open class file", "Open a class file", "open_small.png", "open_large.png") {
         val result = classesFileChooser.showOpenDialog(this)
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -86,7 +88,7 @@ class BrowserFrame : JFrame() {
     val newWorkspaceAction = DefaultAction("New workspace", "Close all class files and open a new workspace") {
         frameContent.closeAllTabs()
         workspaceFile = null
-        config = browserConfigWithRuntimeLib()
+        config.clear()
         updateTitle()
     }
 
@@ -144,7 +146,7 @@ class BrowserFrame : JFrame() {
         accelerator(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK)
     }
 
-    var reloadAction = DefaultAction("Reload", "Reload class file", "reload_small.png", "reload_large.png") {
+    val reloadAction = DefaultAction("Reload", "Reload class file", "reload_small.png", "reload_large.png") {
         try {
             frameContent.selectedTab?.reload()
         } catch (e: IOException) {
@@ -225,9 +227,6 @@ class BrowserFrame : JFrame() {
     private var workspaceFile: File? = null
     private var workspaceChooserPath = ""
     var classesChooserPath = ""
-    var config: BrowserConfig = browserConfigWithRuntimeLib()
-        private set
-
 
     private val workspaceFileChooser: JFileChooser by lazy {
         JFileChooser(workspaceChooserPath).apply {
@@ -250,9 +249,6 @@ class BrowserFrame : JFrame() {
     private val classpathBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, "Configured classpath:", true) }
     private val jarBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, "Classes in selected JAR file:", false) }
 
-    private fun browserConfigWithRuntimeLib() = BrowserConfig().apply { addRuntimeLib() }
-
-
     fun openWorkspace(file: File) {
 
         frameContent.closeAllTabs()
@@ -261,7 +257,6 @@ class BrowserFrame : JFrame() {
             override fun doInBackground() : Document = parseXml(file)
 
             override fun done() {
-                config = BrowserConfig()
                 get().documentElement.apply {
                     config.readWorkspace(this)
                     frameContent.readWorkspace(this)

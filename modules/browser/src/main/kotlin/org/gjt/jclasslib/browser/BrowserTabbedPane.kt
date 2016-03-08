@@ -68,6 +68,11 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
         focus()
     }
 
+    override fun removeAll() {
+        super.removeAll()
+        fireStateChanged()
+    }
+
     fun focus() {
         container.focus(this@BrowserTabbedPane)
     }

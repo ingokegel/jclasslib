@@ -123,9 +123,7 @@ class BrowserHistory(private val services: BrowserServices) {
         }
 
         override fun hashCode(): Int {
-            var result = treePath.hashCode()
-            result += 31 * result + (offset ?: 0)
-            return result
+            return 31 * treePath.hashCode() + (offset ?: 0)
         }
     }
 
