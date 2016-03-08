@@ -40,11 +40,9 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
             for (file in files) {
                 val entry: ClasspathEntry
                 if (file.isDirectory) {
-                    entry = ClasspathDirectoryEntry()
-                    entry.fileName = file.path
+                    entry = ClasspathDirectoryEntry(file.path)
                 } else {
-                    entry = ClasspathArchiveEntry()
-                    entry.fileName = file.path
+                    entry = ClasspathArchiveEntry(file.path)
 
                 }
                 if (!isInModel(entry)) {
@@ -113,7 +111,10 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
             }
         }
 
-        config.classpath = newEntries
+        config.classpath.apply {
+            clear()
+            addAll(newEntries)
+        }
         isVisible = false
     }
 

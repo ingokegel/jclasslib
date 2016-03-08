@@ -7,8 +7,10 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.config.window.BrowserPath
-import org.gjt.jclasslib.mdi.MDIConfig
+import kotlinx.dom.build.addElement
+import kotlinx.dom.childElements
+import org.gjt.jclasslib.browser.config.BrowserPath
+import org.w3c.dom.Element
 import java.awt.BorderLayout
 import java.awt.CardLayout
 import java.awt.Color
@@ -130,24 +132,23 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     fun openClassFile(fileName: String, browserPath: BrowserPath? = null): BrowserTab =
             focusedTabbedPane.addTab(fileName, browserPath)
 
-    fun applyMDIConfig(config: MDIConfig) {
-        config.internalFrameDescs.forEach { internalFrameDesc ->
-            val initParam = internalFrameDesc.initParam
-            if (initParam != null && initParam.fileName != null) {
-                openClassFile(initParam.fileName!!)
+    fun saveWorkspace(element: Element) {
+        element.addElement(NODE_NAME_TABS) {
+            setAttribute(ATTRIBUTE_SPLIT_MODE, splitMode.name)
+            wrappers.filter { it.isShowing }.forEach { wrapper ->
+                wrapper.saveWorkspace(this)
             }
         }
     }
 
-    fun createMDIConfig() = MDIConfig().apply {
-        internalFrameDescs = wrappers.flatMap { it.tabbedPane.tabs() }.map { tab ->
-            val internalFrameDesc = MDIConfig.InternalFrameDesc().apply {
-                initParam = tab.createWindowState()
+
+    fun readWorkspace(element: Element) {
+        element.childElements(NODE_NAME_TABS).firstOrNull()?.let { tabsElement ->
+            split(SplitMode.getByName(tabsElement.getAttribute(ATTRIBUTE_SPLIT_MODE)))
+            tabsElement.childElements(NODE_NAME_GROUP).forEach{ groupElement ->
+                val position = Position.getByName(groupElement.getAttribute(ATTRIBUTE_POSITION))
+                wrappers[position].readWorkspace(groupElement)
             }
-            if (tab === selectedTab) {
-                activeFrameDesc = internalFrameDesc
-            }
-            internalFrameDesc
         }
     }
 
@@ -155,9 +156,13 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
 
     enum class Position(val noneOpenMessage: String? = null) {
         NW("Open a class file"), NE(), SE(), SW();
+
+        companion object {
+            fun getByName(name : String?) = Position.values().firstOrNull { it.name == name } ?: Position.NW
+        }
     }
 
-    inner class TabbedPaneWrapper(private val position: Position) : JPanel() {
+    inner class TabbedPaneWrapper(val position: Position) : JPanel() {
         val tabbedPane = BrowserTabbedPane(this@FrameContent).apply {
             addChangeListener {
                 showCard(if (tabCount == 0 ) CARD_EMPTY else CARD_TABBED_PANE)
@@ -204,6 +209,24 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         fun focus() {
             tabbedPane.focus()
         }
+
+        fun saveWorkspace(element: Element) {
+            element.addElement(NODE_NAME_GROUP) {
+                setAttribute(ATTRIBUTE_POSITION, position.name)
+                tabbedPane.tabs().forEach { tab ->
+                    tab.saveWorkspace(this)
+                }
+            }
+        }
+
+        fun readWorkspace(element: Element) {
+            element.childElements(BrowserTab.NODE_NAME).forEach { tabElement ->
+                BrowserTab.create(tabElement).apply {
+                    tabbedPane.addTab(this)
+                    setBrowserPath(BrowserPath.create(tabElement))
+                }
+            }
+        }
     }
 
     companion object {
@@ -212,6 +235,11 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         val PREFERRED_SIZE = Dimension(100, 100)
         val EMPTY_BACKGROUND = Color(210, 210, 210)
         val TABBED_PANE_EMPTY_MESSAGE = "Drag class files to this area"
+
+        private val NODE_NAME_TABS = "tabs"
+        private val ATTRIBUTE_SPLIT_MODE = "splitMode"
+        private val NODE_NAME_GROUP = "group"
+        private val ATTRIBUTE_POSITION = "position"
     }
 }
 

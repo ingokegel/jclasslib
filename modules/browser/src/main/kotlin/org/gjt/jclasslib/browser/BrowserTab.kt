@@ -7,12 +7,13 @@
 
 package org.gjt.jclasslib.browser
 
+import kotlinx.dom.build.addElement
+import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.FindResult
-import org.gjt.jclasslib.browser.config.window.BrowserPath
-import org.gjt.jclasslib.browser.config.window.WindowState
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.GUIHelper
+import org.w3c.dom.Element
 import java.awt.BorderLayout
 import java.io.File
 import java.io.FileNotFoundException
@@ -23,7 +24,7 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
-class BrowserTab(val fileName: String, private val browserPath: BrowserPath?) : JPanel(), BrowserServices {
+class BrowserTab(val fileName: String) : JPanel(), BrowserServices {
 
     private val tabbedPane: BrowserTabbedPane
         get() = SwingUtilities.getAncestorOfClass(BrowserTabbedPane::class.java, this) as BrowserTabbedPane
@@ -80,9 +81,6 @@ class BrowserTab(val fileName: String, private val browserPath: BrowserPath?) : 
 
     init {
         readClassFile()
-        if (browserPath != null) {
-            browserComponent.browserPath = browserPath
-        }
         layout = BorderLayout()
         add(browserComponent, BorderLayout.CENTER)
     }
@@ -91,8 +89,6 @@ class BrowserTab(val fileName: String, private val browserPath: BrowserPath?) : 
         readClassFile()
         browserComponent.rebuild()
     }
-
-    fun createWindowState(): WindowState = WindowState(fileName, browserComponent.browserPath)
 
     private fun select() {
         tabbedPane.selectedComponent = this
@@ -104,6 +100,10 @@ class BrowserTab(val fileName: String, private val browserPath: BrowserPath?) : 
 
     override fun showURL(urlSpec: String) {
         GUIHelper.showURL(urlSpec)
+    }
+
+    fun setBrowserPath(browserPath: BrowserPath?) {
+        browserComponent.browserPath = browserPath
     }
 
     private fun readClassFile(): ClassFile {
@@ -129,6 +129,24 @@ class BrowserTab(val fileName: String, private val browserPath: BrowserPath?) : 
         } catch (ex: Exception) {
             ex.printStackTrace()
             throw IOException("The file $fileName does not seem to contain a class file")
+        }
+    }
+
+    fun saveWorkspace(element: Element) {
+        element.addElement(NODE_NAME) {
+            setAttribute(ATTRIBUTE_FILE_NAME, fileName)
+            browserComponent.browserPath?.let { browserPath ->
+                browserPath.saveWorkspace(this)
+            }
+        }
+    }
+
+    companion object {
+        val NODE_NAME = "tab"
+        private val ATTRIBUTE_FILE_NAME = "fileName"
+
+        fun create(element: Element): BrowserTab {
+            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME) ?: "")
         }
     }
 }

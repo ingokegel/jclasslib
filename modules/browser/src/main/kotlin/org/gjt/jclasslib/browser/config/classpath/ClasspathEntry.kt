@@ -7,24 +7,15 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import org.w3c.dom.Element
 import java.io.File
-import java.io.IOException
 import javax.swing.tree.DefaultTreeModel
 
-abstract class ClasspathEntry : ClasspathComponent {
+abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
 
-    var fileName: String? = null
-        set(fileName) {
-            field = fileName
-            try {
-                file = File(fileName).canonicalFile
-            } catch (e: IOException) {
-                file = null
-            }
-        }
+    val file : File = File(fileName).canonicalFile
 
-    protected var file: File? = null
-        private set
+    abstract fun saveWorkspace(element: Element)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -35,11 +26,11 @@ abstract class ClasspathEntry : ClasspathComponent {
         }
         other as ClasspathEntry
 
-        return fileName == other.fileName
+        return file == other.file
     }
 
     override fun hashCode(): Int {
-        return fileName?.hashCode() ?: 0
+        return file.hashCode()
     }
 
     // classpath entries are immutable
@@ -103,6 +94,12 @@ abstract class ClasspathEntry : ClasspathComponent {
 
     companion object {
         val CLASSFILE_SUFFIX = ".class"
+
+        fun create(element : Element) : ClasspathEntry? = when (element.nodeName) {
+            ClasspathDirectoryEntry.NODE_NAME -> ClasspathDirectoryEntry.create(element)
+            ClasspathArchiveEntry.NODE_NAME -> ClasspathArchiveEntry.create(element)
+            else -> null
+        }
     }
 
 }

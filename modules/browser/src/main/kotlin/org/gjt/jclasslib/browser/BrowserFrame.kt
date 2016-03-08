@@ -7,6 +7,10 @@
 
 package org.gjt.jclasslib.browser
 
+import kotlinx.dom.build.addElement
+import kotlinx.dom.createDocument
+import kotlinx.dom.createTransformer
+import kotlinx.dom.parseXml
 import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
@@ -15,19 +19,22 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.MultiFileFilter
+import org.w3c.dom.Document
+import org.w3c.dom.Node
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.beans.XMLDecoder
-import java.beans.XMLEncoder
 import java.io.*
 import java.util.prefs.Preferences
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
 
 class BrowserFrame : JFrame() {
 
@@ -183,7 +190,7 @@ class BrowserFrame : JFrame() {
         splitMode to DefaultAction(splitMode.actionName, splitMode.actionDescription) {
             frameContent.split(splitMode)
         }.apply {
-            accelerator(splitMode.accelator, DefaultAction.MENU_MODIFIER or KeyEvent.SHIFT_MASK)
+            accelerator(splitMode.accelerator, DefaultAction.MENU_MODIFIER or KeyEvent.SHIFT_MASK)
         }
     }
 
@@ -247,18 +254,24 @@ class BrowserFrame : JFrame() {
 
 
     fun openWorkspace(file: File) {
-        repaintNow()
-        withWaitCursor {
-            frameContent.closeAllTabs()
-            val decoder = XMLDecoder(FileInputStream(file))
-            config = decoder.readObject() as BrowserConfig
-            frameContent.applyMDIConfig(config.mdiConfig)
-            decoder.close()
-            recentMenu.addRecentWorkspace(file)
-        }
-        workspaceFile = file
-        updateTitle()
-        saveWorkspaceAsAction.isEnabled = true
+
+        frameContent.closeAllTabs()
+
+        object : SwingWorker<Document, Unit>() {
+            override fun doInBackground() : Document = parseXml(file)
+
+            override fun done() {
+                config = BrowserConfig()
+                get().documentElement.apply {
+                    config.readWorkspace(this)
+                    frameContent.readWorkspace(this)
+                }
+                recentMenu.addRecentWorkspace(file)
+                workspaceFile = file
+                updateTitle()
+                saveWorkspaceAsAction.isEnabled = true
+            }
+        }.execute()
     }
 
     private fun openClassFromFile(file: File): BrowserTab {
@@ -468,14 +481,15 @@ class BrowserFrame : JFrame() {
     }
 
     private fun saveWorkspaceToFile(file: File) {
-        config.mdiConfig = frameContent.createMDIConfig()
         try {
-            val fos = FileOutputStream(file)
-            val encoder = XMLEncoder(fos)
-            encoder.writeObject(config)
-            encoder.close()
+            FileWriter(file).use { writer ->
+                createDocument().addElement("workspace") {
+                    config.saveWorkspace(this)
+                    frameContent.saveWorkspace(this)
+                }.writeXml(writer)
+            }
             recentMenu.addRecentWorkspace(file)
-        } catch (e: FileNotFoundException) {
+        } catch (e: IOException) {
             GUIHelper.showMessage(this, "An error occurred while saving to " + file.path, JOptionPane.ERROR_MESSAGE)
         }
 
@@ -483,8 +497,17 @@ class BrowserFrame : JFrame() {
         saveWorkspaceAsAction.isEnabled = true
     }
 
+    fun Node.writeXml(writer: Writer): Unit {
+        createTransformer().apply {
+            setOutputProperty(OutputKeys.INDENT, "yes")
+            setOutputProperty(OutputKeys.STANDALONE, "yes")
+            setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
+            transform(DOMSource(this@writeXml), StreamResult(writer))
+        }
+    }
+
     private fun openClassFromJar(file: File): BrowserTab? {
-        val entry = ClasspathArchiveEntry().apply { fileName = file.path }
+        val entry = ClasspathArchiveEntry(file.path)
         jarBrowser.apply {
             clear()
             classpathComponent = entry

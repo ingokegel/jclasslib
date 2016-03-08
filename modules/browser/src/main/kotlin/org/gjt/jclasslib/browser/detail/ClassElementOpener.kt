@@ -9,9 +9,9 @@ package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.NodeType
-import org.gjt.jclasslib.browser.config.window.BrowserPath
-import org.gjt.jclasslib.browser.config.window.CategoryHolder
-import org.gjt.jclasslib.browser.config.window.ReferenceHolder
+import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.config.CategoryHolder
+import org.gjt.jclasslib.browser.config.ReferenceHolder
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.*

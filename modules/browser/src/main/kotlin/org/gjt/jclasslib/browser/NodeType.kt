@@ -58,4 +58,8 @@ enum class NodeType {
     };
 
     abstract fun createDetailPanel(services: BrowserServices): DetailPane<*>
+
+    companion object {
+        fun getByName(name : String?) = NodeType.values().firstOrNull { it.name == name } ?: null
+    }
 }

@@ -15,7 +15,7 @@ import javax.swing.UIManager
 class ClasspathCellRenderer : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(list: JList<*>, value: Any?, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component? {
         val entry = value as ClasspathEntry?
-        super.getListCellRendererComponent(list, entry?.fileName, index, isSelected, cellHasFocus)
+        super.getListCellRendererComponent(list, entry?.file?.path, index, isSelected, cellHasFocus)
 
         icon = UIManager.getIcon(if (entry is ClasspathDirectoryEntry) {
             "FileView.directoryIcon"

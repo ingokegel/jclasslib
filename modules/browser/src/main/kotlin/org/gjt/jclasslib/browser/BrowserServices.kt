@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.config.window.BrowserPath
+import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.structures.ClassFile
 import javax.swing.Action
 

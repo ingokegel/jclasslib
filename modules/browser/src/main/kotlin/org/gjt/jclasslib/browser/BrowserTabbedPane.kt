@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.config.window.BrowserPath
+import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.util.ClosableTabComponent
 import org.gjt.jclasslib.util.DnDTabbedPane
 import java.awt.Component
@@ -39,11 +39,12 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
     }
 
     fun addTab(fileName: String, browserPath: BrowserPath? = null) =
-            BrowserTab(fileName, browserPath).apply {
+            BrowserTab(fileName).apply {
                 addTab(this)
+                setBrowserPath(browserPath)
             }
 
-    private fun addTab(browserTab: BrowserTab) {
+    fun addTab(browserTab: BrowserTab) {
         addTab(browserTab.browserComponent.title, browserTab)
         selectedComponent = browserTab
     }

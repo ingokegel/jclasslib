@@ -7,13 +7,20 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import kotlinx.dom.build.addElement
+import org.w3c.dom.Element
 import java.io.File
 import javax.swing.tree.DefaultTreeModel
 
-class ClasspathDirectoryEntry : ClasspathEntry() {
+class ClasspathDirectoryEntry(fileName : String) : ClasspathEntry(fileName) {
+
+    override fun saveWorkspace(element: Element) {
+        element.addElement(NODE_NAME) {
+            setAttribute(ATTRIBUTE_PATH, file.path)
+        }
+    }
 
     override fun findClass(className: String): FindResult? {
-        val file = file ?: return null
         val classFile = File(file, className.replace('.', '/') + ".class")
         if (classFile.exists() && classFile.canRead()) {
             return FindResult(classFile.path)
@@ -22,9 +29,8 @@ class ClasspathDirectoryEntry : ClasspathEntry() {
     }
 
     override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
-        val directory = file ?: return
         val rootNode = model.root as ClassTreeNode
-        mergeDirectory(directory, rootNode, model, reset)
+        mergeDirectory(file, rootNode, model, reset)
     }
 
     private fun mergeDirectory(directory: File, parentNode: ClassTreeNode, model: DefaultTreeModel, reset: Boolean) {
@@ -47,4 +53,13 @@ class ClasspathDirectoryEntry : ClasspathEntry() {
 
     }
 
+    companion object {
+        val NODE_NAME = "directory"
+        private val ATTRIBUTE_PATH = "path"
+
+        fun create(element: Element) : ClasspathDirectoryEntry? {
+            val path = element.getAttribute(ATTRIBUTE_PATH)
+            return path?.let { ClasspathDirectoryEntry(path) } ?: null
+        }
+    }
 }

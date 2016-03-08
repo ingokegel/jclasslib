@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.config.window.*
+import org.gjt.jclasslib.browser.config.*
 import org.gjt.jclasslib.structures.ClassMember
 import org.gjt.jclasslib.structures.FieldInfo
 import org.gjt.jclasslib.structures.InvalidByteCodeException

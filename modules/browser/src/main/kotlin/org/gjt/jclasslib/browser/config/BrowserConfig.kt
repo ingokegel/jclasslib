@@ -7,23 +7,17 @@
 
 package org.gjt.jclasslib.browser.config
 
+import kotlinx.dom.build.addElement
+import kotlinx.dom.childElements
 import org.gjt.jclasslib.browser.config.classpath.*
-import org.gjt.jclasslib.mdi.MDIConfig
+import org.w3c.dom.Element
 import java.io.File
 import java.util.*
 import javax.swing.tree.DefaultTreeModel
 
 class BrowserConfig : ClasspathComponent {
-    // TODO XSL transform: remove annotations
-    var mdiConfig: MDIConfig = MDIConfig()
-        @JvmName("getMDIConfig")
-        get() = field
-        @JvmName("setMDIConfig")
-        set(mdiConfig) {
-            field = mdiConfig
-        }
 
-    var classpath: MutableList<ClasspathEntry> = ArrayList()
+    val classpath: MutableList<ClasspathEntry> = ArrayList()
 
     private val mergedEntries = HashSet<ClasspathEntry>()
     private val changeListeners = HashSet<ClasspathChangeListener>()
@@ -37,8 +31,7 @@ class BrowserConfig : ClasspathComponent {
     }
 
     fun addClasspathDirectory(directoryName: String) {
-        ClasspathDirectoryEntry().apply {
-            fileName = directoryName
+        ClasspathDirectoryEntry(directoryName).apply {
             if (addToClassPath(classpath)) {
                 fireClasspathChanged(false)
             }
@@ -46,8 +39,7 @@ class BrowserConfig : ClasspathComponent {
     }
 
     fun addClasspathArchive(archiveName: String) {
-        ClasspathArchiveEntry().apply {
-            fileName = archiveName
+        ClasspathArchiveEntry(archiveName).apply {
             if (addToClassPath(classpath)) {
                 fireClasspathChanged(false)
             }
@@ -99,6 +91,28 @@ class BrowserConfig : ClasspathComponent {
     private fun fireClasspathChanged(removal: Boolean) {
         val event = ClasspathChangeEvent(this, removal)
         changeListeners.forEach { listener -> listener.classpathChanged(event) }
+    }
+
+    fun saveWorkspace(element: Element) {
+        element.addElement(NODE_NAME_CLASSPATH) {
+            classpath.forEach {
+                it.saveWorkspace(this)
+            }
+        }
+    }
+
+    fun readWorkspace(element: Element) {
+        classpath.clear()
+        mergedEntries.clear()
+        element.childElements(NODE_NAME_CLASSPATH).firstOrNull()?.childElements()?.forEach { entryElement ->
+            ClasspathEntry.create(entryElement)?.apply {
+                classpath.add(this)
+            }
+        }
+    }
+
+    companion object {
+        private val NODE_NAME_CLASSPATH = "classpath"
     }
 
 }
