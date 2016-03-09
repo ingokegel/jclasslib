@@ -12,6 +12,8 @@ import kotlinx.dom.childElements
 import org.gjt.jclasslib.browser.config.classpath.*
 import org.w3c.dom.Element
 import java.io.File
+import java.net.URI
+import java.nio.file.Paths
 import java.util.*
 import javax.swing.tree.DefaultTreeModel
 
@@ -75,9 +77,9 @@ class BrowserConfig : ClasspathComponent {
     private fun addRuntimeLib() {
         val fileName = String::class.java.getResource("String.class").toExternalForm()
 
-        val matchResult = Regex("jar:file:/(.*)!.*").matchEntire(fileName)
+        val matchResult = Regex("jar:(file:/.*)!.*").matchEntire(fileName)
         if (matchResult != null) {
-            val path = matchResult.groups[1]?.value!!
+            val path = Paths.get(URI(matchResult.groups[1]?.value!!)).toString()
             addClasspathArchive(File(if (path.contains(':')) path else "/" + path).path)
             fireClasspathChanged(false)
         }
