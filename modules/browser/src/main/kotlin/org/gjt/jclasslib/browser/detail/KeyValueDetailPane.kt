@@ -15,12 +15,15 @@ import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.util.ExtendedJLabel
 import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.HtmlDisplayTextArea
+import org.gjt.jclasslib.util.TextDisplay
 import java.awt.*
 import java.awt.event.MouseListener
 import java.util.*
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JScrollPane
+import javax.swing.event.HyperlinkEvent
 import javax.swing.tree.TreePath
 
 abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
@@ -36,7 +39,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     public override val wrapper: JComponent
         get() = scrollPane
 
-    open protected fun addKeyValue(keyValue: KeyValue<T, *>) {
+    private fun addKeyValue(keyValue: KeyValue<T, *>) {
         add(keyValue.keyLabel as JComponent, gc() {
             insets = Insets(1, 10, 0, 10)
         })
@@ -170,4 +173,35 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         text = "<" + getConstantPoolEntryName(constantPoolIndex) + ">"
     }
 
+    abstract class KeyValue<T : Any, L>(key: String, val valueLabel: L, val commentLabel: L? = null) where L : JComponent, L : TextDisplay {
+
+        val keyLabel = ExtendedJLabel(key)
+        private var visibilityPredicate: ((T) -> Boolean)? = null
+
+        fun visibilityPredicate(visibilityPredicate: (T) -> Boolean) {
+            this.visibilityPredicate = visibilityPredicate
+        }
+
+        fun show(element: T) {
+            visibilityPredicate?.let {
+                val show = it(element)
+                keyLabel.isVisible = show
+                valueLabel.isVisible = show
+                commentLabel?.isVisible = show
+            }
+        }
+    }
+
+    class DefaultKeyValue<T : Any>(key: String, valueLabel: ExtendedJLabel, commentLabel: ExtendedJLabel? = null) : KeyValue<T, ExtendedJLabel>(key, valueLabel, commentLabel)
+
+    class HtmlKeyValue<T : Any>(key: String, valueLabel: HtmlDisplayTextArea, commentLabel: HtmlDisplayTextArea? = null) : KeyValue<T, HtmlDisplayTextArea>(key, valueLabel, commentLabel) {
+        fun linkHandler(handler: (String) -> Unit) {
+            valueLabel.addHyperlinkListener { e ->
+                if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+                    val description = e.description
+                    handler(description)
+                }
+            }
+        }
+    }
 }
