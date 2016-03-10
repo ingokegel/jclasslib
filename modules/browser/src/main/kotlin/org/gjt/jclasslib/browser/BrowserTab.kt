@@ -9,8 +9,10 @@ package org.gjt.jclasslib.browser
 
 import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.config.classpath.ClasspathJrtEntry
 import org.gjt.jclasslib.browser.config.classpath.FindResult
 import org.gjt.jclasslib.io.ClassFileReader
+import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.GUIHelper
 import org.w3c.dom.Element
@@ -115,8 +117,8 @@ class BrowserTab constructor(val fileName: String, frame : BrowserFrame) : JPane
     private fun readClassFile(frame : BrowserFrame): ClassFile {
         try {
             return when {
-                fileName.startsWith(JRT_PREFIX) -> {
-                    ClassFileReader.readFromInputStream(getJrtInputStream(fileName, File(frame.config.jreHome)))
+                fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
+                    ClassFileReader.readFromInputStream(getJrtInputStream(fileName.removePrefix(ClasspathJrtEntry.JRT_PREFIX), File(frame.config.jreHome)))
                 }
                 fileName.contains('!') -> {
                     val (jarFileName, classFileName) = fileName.split("!", limit = 2)

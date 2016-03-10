@@ -7,14 +7,14 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import org.gjt.jclasslib.browser.enumerateJrtClasses
-import org.gjt.jclasslib.browser.findClassInJrt
+import org.gjt.jclasslib.io.enumerateJrtClasses
+import org.gjt.jclasslib.io.findClassInJrt
 import org.w3c.dom.Element
 import java.nio.file.Files
 import javax.swing.tree.DefaultTreeModel
 
-class ClasspathJrtEntry(jreHome : String) : ClasspathEntry(jreHome) {
-    override fun findClass(className: String) = findClassInJrt(className, file)
+class ClasspathJrtEntry(jreHome: String) : ClasspathEntry(jreHome) {
+    override fun findClass(className: String) = findClassInJrt(className, file)?.let { FindResult("$JRT_PREFIX${it.toString()}") }
 
     override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
         enumerateJrtClasses(file) { path ->
@@ -26,5 +26,9 @@ class ClasspathJrtEntry(jreHome : String) : ClasspathEntry(jreHome) {
 
     override fun saveWorkspace(element: Element) {
         throw UnsupportedOperationException()
+    }
+
+    companion object {
+        val JRT_PREFIX = "jrt:"
     }
 }
