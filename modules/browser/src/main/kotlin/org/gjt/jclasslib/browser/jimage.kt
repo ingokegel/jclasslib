@@ -8,15 +8,14 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.classpath.FindResult
-import sun.misc.Unsafe
 import java.io.File
 import java.net.URI
+import java.net.URLClassLoader
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 
 val JRT_PREFIX = "jrt:"
-private val IMAGES = mapOf("bootImagePath" to "bootmodules", "extImagePath" to "extmodules", "appImagePath" to "appmodules")
 
 private val rootCache = mutableMapOf<File, Path>()
 
@@ -42,21 +41,8 @@ fun enumerateJrtClasses(jreHome: File, block : (path : Path) -> Unit) {
 }
 
 private fun getJrtRoot(jreHome: File) = rootCache.getOrPut(jreHome) {
-    initSystemImage(jreHome)
-    FileSystems.getFileSystem(URI("jrt:/")).getPath("/")
+    val classLoader = URLClassLoader(arrayOf(File(jreHome, "jrt-fs.jar").toURI().toURL()))
+    return FileSystems.newFileSystem(URI("jrt:/"), null, classLoader).getPath("/")
 }
 
-private fun initSystemImage(jreHome: File) {
-    val systemImagesClass = Class.forName("jdk.internal.jrtfs.SystemImages")
-    val modulesPath = jreHome.toPath().resolve("lib/modules")
-    val unsafe = Unsafe::class.java.getDeclaredField("theUnsafe").run {
-        isAccessible = true
-        get(null) as Unsafe
-    }
-    for ((variableName, imageName) in IMAGES) {
-        systemImagesClass.getDeclaredField(variableName).let {field ->
-            unsafe.putObjectVolatile(unsafe.staticFieldBase(field), unsafe.staticFieldOffset(field), modulesPath.resolve("$imageName.jimage"))
-        }
-    }
-}
 

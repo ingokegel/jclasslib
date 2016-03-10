@@ -6,7 +6,6 @@ mainClassName = 'org.gjt.jclasslib.browser.BrowserApplication'
 dependencies {
     // Download after install4j 6
     compile ':i4jruntime'
-    compile ':jrt-fs'
     compile 'org.jetbrains:annotations:13.0'
     compile "org.jetbrains.kotlinx:kotlinx.dom:0.0.9"
     compile project(':data')

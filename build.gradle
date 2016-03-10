@@ -46,7 +46,7 @@ allprojects {
 
     repositories {
         flatDir {
-            dirs libCompileDir, file('lib')
+            dirs libCompileDir
         }
         maven {
             url 'http://jcenter.bintray.com'

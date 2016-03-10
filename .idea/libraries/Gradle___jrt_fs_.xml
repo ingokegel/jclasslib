@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: :jrt-fs:">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/modules/browser/lib/jrt-fs.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
