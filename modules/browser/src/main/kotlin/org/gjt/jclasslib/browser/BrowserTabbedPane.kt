@@ -39,7 +39,7 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
     }
 
     fun addTab(fileName: String, browserPath: BrowserPath? = null) =
-            BrowserTab(fileName).apply {
+            BrowserTab(fileName, container.frame).apply {
                 addTab(this)
                 setBrowserPath(browserPath)
             }

@@ -21,5 +21,5 @@ interface ClasspathChangeListener : EventListener {
     fun classpathChanged(event: ClasspathChangeEvent)
 }
 
-class FindResult(val fileName: String)
+data class FindResult(val fileName: String)
 class ClasspathChangeEvent(source: Any, val isRemoval: Boolean) : EventObject(source)

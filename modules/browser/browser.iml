@@ -24,5 +24,6 @@
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx.dom:0.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: :jrt-fs:" level="project" />
   </component>
 </module>

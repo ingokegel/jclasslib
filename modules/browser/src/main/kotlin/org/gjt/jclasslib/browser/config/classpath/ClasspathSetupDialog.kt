@@ -11,14 +11,12 @@ import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.MultiFileFilter
-import java.awt.BorderLayout
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
-import java.awt.Insets
+import java.awt.*
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.io.File
 import java.util.*
 import javax.swing.*
 
@@ -32,6 +30,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
             checkEnabledStatus()
         }
     }
+    private val jreHomeTextField = TextField()
 
     private val addAction = DefaultAction("Add classpath entry", "Add a classpath entry (INS)", "add.png") {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -115,6 +114,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
             clear()
             addAll(newEntries)
         }
+        config.jreHome = jreHomeTextField.text.trim()
         isVisible = false
     }
 
@@ -134,22 +134,30 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         }
     }
 
+    private val jreFileChooser: JFileChooser by lazy {
+        JFileChooser(frame.classesChooserPath).apply {
+            dialogTitle = "Choose the JRE home directory"
+            fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        }
+    }
+
     init {
         setupComponent()
     }
 
     override fun setVisible(visible: Boolean) {
         if (visible) {
-            updateList()
+            updateData()
         }
         super.setVisible(visible)
     }
 
-    private fun updateList() {
+    private fun updateData() {
         listModel.clear()
         for (classpathEntry in frame.config.classpath) {
             listModel.addElement(classpathEntry)
         }
+        jreHomeTextField.text = frame.config.jreHome
     }
 
     private fun setupComponent() {
@@ -157,21 +165,36 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
             border = GUIHelper.WINDOW_BORDER
             layout = GridBagLayout()
             add(JLabel("Classpath:"), GridBagConstraints().apply {
+                gridx = 0
                 gridy = 0
-                weightx = 1.0
                 anchor = GridBagConstraints.NORTHWEST
             })
             add(createListPanel(), GridBagConstraints().apply {
+                gridx = 0
                 gridy = 1
                 insets = Insets(5, 0, 5, 0)
                 weightx = 1.0
                 weighty = 1.0
                 fill = GridBagConstraints.BOTH
+                gridwidth = GridBagConstraints.REMAINDER
             })
-            add(createButtonBox(), GridBagConstraints().apply {
+            add(JLabel("JRE home:"), GridBagConstraints().apply {
+                gridx = 0
+                gridy = 2
+                insets = Insets(5, 0, 10, 5)
+            })
+            add(createJreHomeChooser(), GridBagConstraints().apply {
+                gridx = 1
                 gridy = 2
                 weightx = 1.0
+                insets = Insets(5, 0, 10, 0)
                 fill = GridBagConstraints.HORIZONTAL
+            })
+            add(createButtonBox(), GridBagConstraints().apply {
+                gridy = 3
+                weightx = 1.0
+                fill = GridBagConstraints.HORIZONTAL
+                gridwidth = GridBagConstraints.REMAINDER
             })
         }
 
@@ -188,6 +211,22 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         })
 
         checkEnabledStatus()
+    }
+
+    private fun createJreHomeChooser(): Component {
+        return JPanel(BorderLayout()).apply {
+            add(jreHomeTextField, BorderLayout.CENTER)
+            add(JButton("Choose").apply {
+                addActionListener {
+                    fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
+
+                    if (jreFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                        jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
+                    }
+
+                }
+            }, BorderLayout.EAST)
+        }
     }
 
     private fun createListPanel() = JPanel().apply {

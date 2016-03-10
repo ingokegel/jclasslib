@@ -221,7 +221,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
 
         fun readWorkspace(element: Element) {
             element.childElements(BrowserTab.NODE_NAME).forEach { tabElement ->
-                BrowserTab.create(tabElement).apply {
+                BrowserTab.create(tabElement, frame).apply {
                     tabbedPane.addTab(this)
                     setBrowserPath(BrowserPath.create(tabElement))
                 }

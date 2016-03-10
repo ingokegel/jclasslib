@@ -22,12 +22,12 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathEntry(fileName) {
     }
 
     override fun findClass(className: String): FindResult? {
-        val internalClassName = className.replace('.', '/') + ".class"
+        val fileName = className.replace('.', '/') + ".class"
         try {
             val jarFile = JarFile(file)
-            val entry = jarFile.getJarEntry(internalClassName)
+            val entry = jarFile.getJarEntry(fileName)
             if (entry != null) {
-                return FindResult(file.path + "!" + internalClassName)
+                return FindResult(file.path + "!" + fileName)
             }
         } catch (e: IOException) {
         }
@@ -39,21 +39,12 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathEntry(fileName) {
             val jarFile = JarFile(file)
             jarFile.entries().iterator().forEach {
                 if (!it.isDirectory && it.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX)) {
-                    addEntry(stripClassSuffix(it.name), model, reset)
+                    addEntry(it.name, model, reset)
                 }
             }
         } catch (ex: IOException) {
         }
     }
-
-    private fun addEntry(path: String, model: DefaultTreeModel, reset: Boolean) {
-        val pathComponents = path.replace('\\', '/').split(Regex("/"))
-        var currentNode = model.root as ClassTreeNode
-        pathComponents.forEachIndexed { i, pathComponent ->
-            currentNode = addOrFindNode(pathComponent, currentNode, i < pathComponents.size - 1, model, reset)
-        }
-    }
-
 
     companion object {
         val NODE_NAME = "archive"

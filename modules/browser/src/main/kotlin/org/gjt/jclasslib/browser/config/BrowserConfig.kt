@@ -12,20 +12,16 @@ import kotlinx.dom.childElements
 import org.gjt.jclasslib.browser.config.classpath.*
 import org.w3c.dom.Element
 import java.io.File
-import java.net.URI
 import java.util.*
 import javax.swing.tree.DefaultTreeModel
 
 class BrowserConfig : ClasspathComponent {
 
     val classpath: MutableList<ClasspathEntry> = ArrayList()
+    var jreHome = System.getProperty("java.home")
 
     private val mergedEntries = HashSet<ClasspathEntry>()
     private val changeListeners = HashSet<ClasspathChangeListener>()
-
-    init {
-        addRuntimeLib()
-    }
 
     override fun addClasspathChangeListener(listener: ClasspathChangeListener) {
         changeListeners.add(listener)
@@ -64,24 +60,9 @@ class BrowserConfig : ClasspathComponent {
     }
 
     fun clear() {
-        empty()
-        addRuntimeLib()
-    }
-
-    private fun empty() {
+        jreHome = System.getProperty("java.home")
         classpath.clear()
         mergedEntries.clear()
-    }
-
-    private fun addRuntimeLib() {
-        val fileName = String::class.java.getResource("String.class").toExternalForm()
-
-        val matchResult = Regex("jar:(file:/.*)!.*").matchEntire(fileName)
-        if (matchResult != null) {
-            val path = File(URI(matchResult.groups[1]?.value!!)).path
-            addClasspathArchive(File(if (path.contains(':')) path else "/" + path).path)
-            fireClasspathChanged(false)
-        }
     }
 
     override fun findClass(className: String): FindResult? {
@@ -91,7 +72,7 @@ class BrowserConfig : ClasspathComponent {
                 return findResult
             }
         }
-        return null
+        return createJreEntry()?.findClass(className)
     }
 
     override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
@@ -100,6 +81,17 @@ class BrowserConfig : ClasspathComponent {
                 entry.mergeClassesIntoTree(model, reset)
                 mergedEntries.add(entry)
             }
+        }
+        createJreEntry()?.mergeClassesIntoTree(model, reset)
+    }
+
+    private fun createJreEntry(): ClasspathEntry? {
+        return if (File(jreHome, "lib/modules").exists()) {
+            ClasspathJrtEntry(jreHome)
+        } else if (File(jreHome, "lib/rt.jar").exists()) {
+            ClasspathArchiveEntry(File(jreHome, "lib/rt.jar").path)
+        } else {
+            return null
         }
     }
 
@@ -110,6 +102,7 @@ class BrowserConfig : ClasspathComponent {
 
     fun saveWorkspace(element: Element) {
         element.addElement(NODE_NAME_CLASSPATH) {
+            setAttribute(ATTRIBUTE_JRE_HOME, jreHome)
             classpath.forEach {
                 it.saveWorkspace(this)
             }
@@ -117,15 +110,19 @@ class BrowserConfig : ClasspathComponent {
     }
 
     fun readWorkspace(element: Element) {
-        empty()
-        element.childElements(NODE_NAME_CLASSPATH).firstOrNull()?.childElements()?.forEach { entryElement ->
-            ClasspathEntry.create(entryElement)?.apply {
-                classpath.add(this)
+        clear()
+        element.childElements(NODE_NAME_CLASSPATH).firstOrNull()?.let {classpathElement ->
+            jreHome = classpathElement.getAttribute(ATTRIBUTE_JRE_HOME).let { if (it.isEmpty() || !File(it).exists()) jreHome else it }
+            classpathElement.childElements().forEach { entryElement ->
+                ClasspathEntry.create(entryElement)?.apply {
+                    classpath.add(this)
+                }
             }
         }
     }
 
     companion object {
+        private val ATTRIBUTE_JRE_HOME = "jreHome"
         private val NODE_NAME_CLASSPATH = "classpath"
     }
 

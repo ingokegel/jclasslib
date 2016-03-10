@@ -68,8 +68,16 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
         return newNode
     }
 
-    protected fun stripClassSuffix(name: String): String {
-        return name.substring(0, name.length - CLASSFILE_SUFFIX.length)
+    protected fun String.stripClassSuffix(): String {
+        return this.substring(0, this.length - CLASSFILE_SUFFIX.length)
+    }
+
+    protected fun addEntry(path: String, model: DefaultTreeModel, reset: Boolean) {
+        val pathComponents = path.stripClassSuffix().replace('\\', '/').split(Regex("/"))
+        var currentNode = model.root as ClassTreeNode
+        pathComponents.forEachIndexed { i, pathComponent ->
+            currentNode = addOrFindNode(pathComponent, currentNode, i < pathComponents.size - 1, model, reset)
+        }
     }
 
     private fun insertNode(newNode: ClassTreeNode,

@@ -47,7 +47,7 @@ class ClasspathDirectoryEntry(fileName : String) : ClasspathEntry(fileName) {
                     }
                 }
             } else if (file.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX)) {
-                addOrFindNode(stripClassSuffix(file.name), parentNode, false, model, reset)
+                addOrFindNode(file.name.stripClassSuffix(), parentNode, false, model, reset)
             }
         }
 

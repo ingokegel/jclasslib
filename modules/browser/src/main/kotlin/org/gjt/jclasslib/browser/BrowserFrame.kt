@@ -227,6 +227,7 @@ class BrowserFrame : JFrame() {
     private var workspaceFile: File? = null
     private var workspaceChooserPath = ""
     var classesChooserPath = ""
+    var jreChooserPath = ""
 
     private val workspaceFileChooser: JFileChooser by lazy {
         JFileChooser(workspaceChooserPath).apply {
@@ -442,10 +443,12 @@ class BrowserFrame : JFrame() {
         menuBar.paintImmediately(0, 0, menuBar.width, menuBar.height)
     }
 
+    // TODO settings must be global
     private fun loadSettings() {
         Preferences.userNodeForPackage(javaClass).apply {
             workspaceChooserPath = get(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath)
             classesChooserPath = get(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath)
+            jreChooserPath = get(SETTINGS_JRE_CHOOSER_PATH, jreChooserPath)
             recentMenu.read(this)
         }
     }
@@ -560,6 +563,7 @@ class BrowserFrame : JFrame() {
 
             put(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath)
             put(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath)
+            put(SETTINGS_JRE_CHOOSER_PATH, jreChooserPath)
             recentMenu.save(this)
         }
     }
@@ -612,6 +616,7 @@ class BrowserFrame : JFrame() {
 
         private val SETTINGS_WORKSPACE_CHOOSER_PATH = "workspaceChooserPath"
         private val SETTINGS_CLASSES_CHOOSER_PATH = "classesChooserPath"
+        private val SETTINGS_JRE_CHOOSER_PATH = "jreChooserPath"
         private val DEFAULT_WINDOW_WIDTH = 800
         private val DEFAULT_WINDOW_HEIGHT = 600
         private val NEW_FRAME_OFFSET = 22

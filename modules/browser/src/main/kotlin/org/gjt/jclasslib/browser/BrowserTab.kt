@@ -24,7 +24,7 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
-class BrowserTab(val fileName: String) : JPanel(), BrowserServices {
+class BrowserTab constructor(val fileName: String, frame : BrowserFrame) : JPanel(), BrowserServices {
 
     private val tabbedPane: BrowserTabbedPane
         get() = SwingUtilities.getAncestorOfClass(BrowserTabbedPane::class.java, this) as BrowserTabbedPane
@@ -35,7 +35,7 @@ class BrowserTab(val fileName: String) : JPanel(), BrowserServices {
     private val parentFrame: BrowserFrame
         get() = frameContent.frame
 
-    override val classFile: ClassFile = readClassFile()
+    override val classFile: ClassFile = readClassFile(frame)
     override val browserComponent: BrowserComponent = BrowserComponent(this)
 
     override fun activate() {
@@ -87,13 +87,12 @@ class BrowserTab(val fileName: String) : JPanel(), BrowserServices {
     }
 
     init {
-        readClassFile()
         layout = BorderLayout()
         add(browserComponent, BorderLayout.CENTER)
     }
 
     fun reload() {
-        readClassFile()
+        readClassFile(parentFrame)
         browserComponent.rebuild()
     }
 
@@ -113,25 +112,30 @@ class BrowserTab(val fileName: String) : JPanel(), BrowserServices {
         browserComponent.browserPath = browserPath
     }
 
-    private fun readClassFile(): ClassFile {
+    private fun readClassFile(frame : BrowserFrame): ClassFile {
         try {
-            val index = fileName.indexOf('!')
-            if (index > -1) {
-                val jarFileName = fileName.substring(0, index)
-                val classFileName = fileName.substring(index + 1)
-                val jarFile = JarFile(jarFileName)
-                val jarEntry = jarFile.getJarEntry(classFileName)
-                if (jarEntry != null) {
-                    return ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry))
-                } else {
-                    throw IOException("The jar entry $classFileName was not found")
+            return when {
+                fileName.startsWith(JRT_PREFIX) -> {
+                    ClassFileReader.readFromInputStream(getJrtInputStream(fileName, File(frame.config.jreHome)))
                 }
-            } else {
-                return ClassFileReader.readFromFile(File(fileName))
+                fileName.contains('!') -> {
+                    val (jarFileName, classFileName) = fileName.split("!", limit = 2)
+                    val jarFile = JarFile(jarFileName)
+                    val jarEntry = jarFile.getJarEntry(classFileName)
+                    if (jarEntry != null) {
+                        ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry))
+                    } else {
+                        throw IOException("The jar entry $classFileName was not found")
+                    }
+                }
+                else -> {
+                    ClassFileReader.readFromFile(File(fileName))
+                }
             }
         } catch (ex: FileNotFoundException) {
             throw IOException("The file $fileName was not found")
         } catch (ex: IOException) {
+            ex.printStackTrace()
             throw IOException("An error occurred while reading " + fileName)
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -152,8 +156,8 @@ class BrowserTab(val fileName: String) : JPanel(), BrowserServices {
         val NODE_NAME = "tab"
         private val ATTRIBUTE_FILE_NAME = "fileName"
 
-        fun create(element: Element): BrowserTab {
-            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME) ?: "")
+        fun create(element: Element, frame : BrowserFrame): BrowserTab {
+            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME) ?: "", frame)
         }
     }
 }
