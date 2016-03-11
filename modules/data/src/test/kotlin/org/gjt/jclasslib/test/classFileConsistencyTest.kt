@@ -9,6 +9,8 @@ package org.gjt.jclasslib.test
 
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.ClassFileWriter
+import org.gjt.jclasslib.io.forEachClassInJrt
+import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.isDebug
 import org.testng.annotations.Test
 import java.io.ByteArrayInputStream
@@ -22,7 +24,7 @@ import java.util.jar.JarFile
 class Tests {
     @Test
     fun testCurrentJre() {
-        scanJar(File("${System.getProperty("java.home")}/lib/rt.jar"))
+        scanJre(System.getProperty("java.home"))
     }
 
     @Test
@@ -31,27 +33,35 @@ class Tests {
     }
 }
 
-fun scanJar(file: File) {
+fun scanJre(javaHome: String) {
+    val testStatistics = TestStatistics()
+    val rtJar = File("$javaHome/lib/rt.jar")
+    if (rtJar.exists()) {
+        scanJar(rtJar, testStatistics)
+    } else {
+        scanJrt(File(javaHome), testStatistics)
+    }
+    println("${testStatistics.count} classes checked, ${testStatistics.errors} errors")
+}
+
+fun scanJar(file: File, testStatistics: TestStatistics) {
     val jar = JarFile(file)
-    var count = 0
-    var errors = 0
     jar.entries().iterator().forEach { entry ->
-        val name = entry.name
-        if (name.endsWith(".class")) {
-            val className = name.removeSuffix(".class").replace("/", ".")
-            try {
-                if (!checkClassFile(className, JarInputStreamProvider(jar, entry))) {
-                    errors++
-                }
-            } catch (e: Throwable) {
-                error(className)
-                throw e
-            }
-            count++
+        val fileName = entry.name
+        if (fileName.endsWith(".class")) {
+            checkClassFile(fileName, JarInputStreamProvider(jar, entry), testStatistics)
         }
     }
-    println(count.toString() + " classes checked, " + errors + " errors")
 }
+
+fun scanJrt(jreHome: File, testStatistics: TestStatistics) {
+    forEachClassInJrt(jreHome) { path ->
+        val fileName = path.toString()
+        checkClassFile(fileName, JrtInputStreamProvider(fileName, jreHome), testStatistics)
+    }
+}
+
+data class TestStatistics(var count : Int = 0, var errors : Int = 0)
 
 interface InputStreamProvider {
     fun createInputStream(): InputStream
@@ -63,6 +73,23 @@ class JarInputStreamProvider(private val jarFile: JarFile, private val jarEntry:
 
 class UrlInputStreamProvider(private val url: URL) : InputStreamProvider {
     override fun createInputStream() = url.openConnection().inputStream
+}
+
+class JrtInputStreamProvider(private val fileName: String, private val jreHome : File) : InputStreamProvider {
+    override fun createInputStream() = getJrtInputStream(fileName, jreHome)
+}
+
+private fun checkClassFile(fileName: String, inputStreamProvider: InputStreamProvider, testStatistics: TestStatistics) {
+    val className = fileName.removeSuffix(".class").replace("/", ".")
+    try {
+        if (!checkClassFile(className, inputStreamProvider)) {
+            testStatistics.errors++
+        }
+    } catch (e: Throwable) {
+        error(className)
+        throw e
+    }
+    testStatistics.count++
 }
 
 fun checkClassFile(className: String, url: URL): Boolean {

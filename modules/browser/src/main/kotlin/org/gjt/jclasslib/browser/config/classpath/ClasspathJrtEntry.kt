@@ -7,20 +7,17 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import org.gjt.jclasslib.io.enumerateJrtClasses
 import org.gjt.jclasslib.io.findClassInJrt
+import org.gjt.jclasslib.io.forEachClassNameInJrt
 import org.w3c.dom.Element
-import java.nio.file.Files
 import javax.swing.tree.DefaultTreeModel
 
 class ClasspathJrtEntry(jreHome: String) : ClasspathEntry(jreHome) {
     override fun findClass(className: String) = findClassInJrt(className, file)?.let { FindResult("$JRT_PREFIX${it.toString()}") }
 
     override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
-        enumerateJrtClasses(file) { path ->
-            if (!Files.isDirectory(path) && path.toString().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
-                addEntry(path.toString(), model, reset)
-            }
+        forEachClassNameInJrt(file) { path ->
+            addEntry(path.toString(), model, reset)
         }
     }
 
