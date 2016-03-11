@@ -45,6 +45,9 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }, BorderLayout.CENTER)
     }
 
+    val root : BrowserTreeNode
+        get() = tree.model.root as BrowserTreeNode
+
     fun getPathForCategory(category: NodeType): TreePath {
         return categoryToPath[category]!!
     }
@@ -88,21 +91,21 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
     private fun buildTreeModel() = DefaultTreeModel(BrowserRootNode().apply {
         add(NodeType.GENERAL, BrowserTreeNode("General Information", NodeType.GENERAL, services.classFile))
-        add(NodeType.CONSTANT_POOL, buildConstantPoolNode())
+        add(NodeType.CONSTANT_POOL_ENTRY, buildConstantPoolNode())
         add(NodeType.INTERFACE, buildInterfacesNode())
         add(NodeType.FIELD, buildFieldsNode())
         add(NodeType.METHOD, buildMethodsNode())
         add(NodeType.ATTRIBUTE, buildAttributesNode())
     })
 
-    private inner class BrowserRootNode : BrowserTreeNode("Class file") {
+    private inner class BrowserRootNode : BrowserTreeNode("Class file", NodeType.NO_CONTENT) {
         fun add(nodeType: NodeType, node: BrowserTreeNode) {
             add(node)
             categoryToPath.put(nodeType, TreePath(arrayOf<Any>(this, node)))
         }
     }
 
-    private fun buildConstantPoolNode() = BrowserTreeNode("Constant Pool").apply {
+    private fun buildConstantPoolNode() = BrowserTreeNode("Constant Pool", NodeType.CONSTANT_POOL).apply {
         val constantPool = services.classFile.constantPool
         val constantPoolCount = constantPool.size
         constantPool.forEachIndexed { i, constant ->
@@ -111,7 +114,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
                     BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + "(large numeric continued)", NodeType.NO_CONTENT, constant)
                 } else {
                     try {
-                        BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + constant.constantType.verbose, NodeType.CONSTANT_POOL, constant)
+                        BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + constant.constantType.verbose, NodeType.CONSTANT_POOL_ENTRY, constant)
                     } catch (ex: InvalidByteCodeException) {
                         buildNullNode()
                     }
@@ -120,7 +123,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
-    private fun buildInterfacesNode() = BrowserTreeNode("Interfaces").apply {
+    private fun buildInterfacesNode() = BrowserTreeNode("Interfaces", NodeType.INTERFACES).apply {
         services.classFile.interfaces.forEachIndexed { i, interfaceIndex ->
             add(BrowserTreeNode("Interface " + i, NodeType.INTERFACE, interfaceIndex))
         }
@@ -147,11 +150,11 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
                 }
             }
 
-    private fun buildAttributesNode() = BrowserTreeNode("Attributes").apply {
+    private fun buildAttributesNode() = BrowserTreeNode("Attributes", NodeType.ATTRIBUTES).apply {
         addAttributeNodes(services.classFile)
     }
 
-    private fun buildNullNode() = BrowserTreeNode("[error] null")
+    private fun buildNullNode() = BrowserTreeNode("[error] null", NodeType.NO_CONTENT)
 
     private fun BrowserTreeNode.addAttributeNodes(structure: AttributeContainer) {
         val attributes = structure.attributes

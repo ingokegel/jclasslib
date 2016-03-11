@@ -167,6 +167,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
             addChangeListener {
                 showCard(if (tabCount == 0 ) CARD_EMPTY else CARD_TABBED_PANE)
                 wrappers.forEach { it.updateMessageLabel() }
+                frame.reloadAction.isEnabled = totalTabCount > 0
             }
         }
 

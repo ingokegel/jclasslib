@@ -31,7 +31,7 @@ class ConstantPoolHyperlinkListener(private val services: BrowserServices, priva
         }
 
         private fun linkPath(services: BrowserServices, constantPoolIndex: Int): TreePath {
-            val constantPoolPath = services.browserComponent.treePane.getPathForCategory(NodeType.CONSTANT_POOL)
+            val constantPoolPath = services.browserComponent.treePane.getPathForCategory(NodeType.CONSTANT_POOL_ENTRY)
             val constantPoolNode = constantPoolPath.lastPathComponent as BrowserTreeNode
             val targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1)
             return constantPoolPath.pathByAddingChild(targetNode)

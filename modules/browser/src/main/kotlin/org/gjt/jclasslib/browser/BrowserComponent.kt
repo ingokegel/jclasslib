@@ -8,10 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.*
-import org.gjt.jclasslib.structures.ClassMember
-import org.gjt.jclasslib.structures.FieldInfo
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import org.gjt.jclasslib.structures.MethodInfo
+import org.gjt.jclasslib.structures.*
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JSplitPane
@@ -36,92 +33,66 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
 
     var browserPath: BrowserPath?
         get() {
-            //TODO support general paths, not just methods and fields
             val selectionPath = treePane.tree.selectionPath
-            if (selectionPath == null || selectionPath.pathCount < 3) {
+            if (selectionPath == null || selectionPath.pathCount < 2) {
                 return null
             }
-            val categoryNode = selectionPath.getPathComponent(2) as BrowserTreeNode
-            if (categoryNode.type == NodeType.NO_CONTENT) {
-                return null
-            }
-            return createBrowserPath(categoryNode, selectionPath)
+            return createBrowserPath(selectionPath)
 
         }
         set(browserPath) {
-            if (browserPath == null) {
+            if (browserPath == null || browserPath.pathComponents.size == 0) {
                 return
             }
-            val pathComponents = browserPath.pathComponents
-            val it = pathComponents.iterator()
-            if (!it.hasNext()) {
-                return
-            }
-            val categoryComponent = it.next() as CategoryHolder
-            val category = categoryComponent.category
-            val initialCategoryPath: TreePath = treePane.getPathForCategory(category)
-            val path = buildPath(initialCategoryPath, category, it)
-            val pathObjects = path.path
-
+            val path = buildPath(browserPath.pathComponents)
             treePane.tree.apply {
                 expandPath(path)
                 selectionPath = path
-                if (pathObjects.size > 2) {
-                    val categoryPath = TreePath(arrayOf(pathObjects[0], pathObjects[1], pathObjects[2]))
-                    scrollPathToVisible(categoryPath)
-                }
+                scrollPathToVisible(path)
             }
         }
 
     val title: String
         get() = services.classFile.simpleClassName
 
-    private fun createBrowserPath(categoryNode: BrowserTreeNode, selectionPath: TreePath) = BrowserPath().apply {
-        val category = categoryNode.type
-        addPathComponent(CategoryHolder(category))
-        when (category) {
-            NodeType.METHOD -> {
-                addClassMemberPathComponent(categoryNode.element as MethodInfo, this, selectionPath)
+    private fun createBrowserPath(selectionPath: TreePath) = BrowserPath().apply {
+        try {
+            selectionPath.path.drop(1).map { it as BrowserTreeNode }.forEachIndexed { i, node ->
+                val element = node.element
+                if (i == 0) {
+                    addPathComponent(CategoryHolder(node.type))
+                } else {
+                    when (node.type) {
+                        NodeType.METHOD -> {
+                            addReferenceHolder(element as MethodInfo)
+                        }
+                        NodeType.FIELD -> {
+                            addReferenceHolder(element as FieldInfo)
+                        }
+                        NodeType.ATTRIBUTE -> {
+                            addPathComponent(AttributeHolder((element as AttributeInfo).name))
+                        }
+                        else -> {
+                            addPathComponent(IndexHolder(node.index))
+                        }
+                    }
+                }
             }
-            NodeType.FIELD -> {
-                addClassMemberPathComponent(categoryNode.element as FieldInfo, this, selectionPath)
-            }
-            else -> {
-                addPathComponent(IndexHolder(categoryNode.index))
-            }
+        } catch (ex: InvalidByteCodeException) {
         }
     }
 
-    private fun buildPath(path: TreePath, category: NodeType, it: MutableIterator<PathComponent>): TreePath {
-        if (it.hasNext()) {
-            val pathComponent = it.next()
-            val childIndex: Int
-            if (pathComponent is ReferenceHolder) {
-                try {
-                    if (category == NodeType.METHOD) {
-                        childIndex = services.classFile.getMethodIndex(pathComponent.name, pathComponent.type)
-                    } else if (category == NodeType.FIELD) {
-                        childIndex = services.classFile.getFieldIndex(pathComponent.name, pathComponent.type)
-                    } else {
-                        return path
-                    }
-                } catch (ex: InvalidByteCodeException) {
-                    return path
-                }
-
-            } else if (pathComponent is IndexHolder) {
-                childIndex = pathComponent.index
+    private fun buildPath(pathComponents: List<PathComponent>): TreePath {
+        val nodes = mutableListOf(treePane.root)
+        pathComponents.forEach { pathComponent ->
+            val node = nodes.last().firstOrNull() { pathComponent.matches(it) }
+            if (node != null) {
+                nodes.add(node)
             } else {
-                return path
+                return@forEach
             }
-            val lastNode = path.lastPathComponent as BrowserTreeNode
-            if (childIndex >= lastNode.childCount) {
-                return path
-            }
-            return buildPath(path.pathByAddingChild(lastNode.getChildAt(childIndex)), category, it)
-        } else {
-            return path
         }
+        return TreePath(nodes.toTypedArray())
     }
 
     fun rebuild() {
@@ -157,17 +128,8 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
         showDetailPaneForPath(selectedPath)
     }
 
-    private fun addClassMemberPathComponent(classMember: ClassMember, browserPath: BrowserPath, selectionPath: TreePath) {
-        try {
-            browserPath.addPathComponent(ReferenceHolder(classMember.name, classMember.descriptor))
-            if (selectionPath.pathCount > 3) {
-                for (i in 3..selectionPath.pathCount - 1) {
-                    val attributeNode = selectionPath.getPathComponent(i) as BrowserTreeNode
-                    browserPath.addPathComponent(IndexHolder(attributeNode.index))
-                }
-            }
-        } catch (ex: InvalidByteCodeException) {
-        }
+    private fun BrowserPath.addReferenceHolder(classMember: ClassMember) {
+        addPathComponent(ReferenceHolder(classMember.name, classMember.descriptor))
     }
 
     private fun showDetailPaneForPath(path: TreePath) {
