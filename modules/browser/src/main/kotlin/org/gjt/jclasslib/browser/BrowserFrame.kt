@@ -80,6 +80,7 @@ class BrowserFrame : JFrame() {
     }
 
     val newWindowAction = DefaultAction("New window", "Open a new window") {
+        saveWindowSettings()
         BrowserFrame().isVisible = true
     }.apply {
         accelerator(KeyEvent.VK_N)
@@ -237,7 +238,7 @@ class BrowserFrame : JFrame() {
     }
 
     private val classesFileChooser: JFileChooser by lazy {
-        JFileChooser(workspaceChooserPath).apply {
+        JFileChooser(classesChooserPath).apply {
             dialogTitle = "Choose class file or jar file"
             addChoosableFileFilter(MultiFileFilter("class", "class files"))
             addChoosableFileFilter(MultiFileFilter("jar", "jar files"))
@@ -443,7 +444,6 @@ class BrowserFrame : JFrame() {
         menuBar.paintImmediately(0, 0, menuBar.width, menuBar.height)
     }
 
-    // TODO settings must be global
     private fun loadSettings() {
         Preferences.userNodeForPackage(javaClass).apply {
             workspaceChooserPath = get(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath)
