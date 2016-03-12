@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser.config
 
 import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
+import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.config.classpath.*
 import org.w3c.dom.Element
 import java.io.File
@@ -111,7 +112,7 @@ class BrowserConfig : ClasspathComponent {
 
     fun readWorkspace(element: Element) {
         clear()
-        element.childElements(NODE_NAME_CLASSPATH).firstOrNull()?.let {classpathElement ->
+        element.firstChildElement(NODE_NAME_CLASSPATH)?.let {classpathElement ->
             jreHome = classpathElement.getAttribute(ATTRIBUTE_JRE_HOME).let { if (it.isEmpty() || !File(it).exists()) jreHome else it }
             classpathElement.childElements().forEach { entryElement ->
                 ClasspathEntry.create(entryElement)?.apply {

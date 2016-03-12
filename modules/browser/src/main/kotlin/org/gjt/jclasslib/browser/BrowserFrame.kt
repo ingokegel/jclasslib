@@ -9,8 +9,8 @@ package org.gjt.jclasslib.browser
 
 import kotlinx.dom.build.addElement
 import kotlinx.dom.createDocument
-import kotlinx.dom.createTransformer
 import kotlinx.dom.parseXml
+import kotlinx.dom.writeXmlString
 import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
@@ -20,21 +20,21 @@ import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.MultiFileFilter
 import org.w3c.dom.Document
-import org.w3c.dom.Node
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.io.*
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileWriter
+import java.io.IOException
 import java.util.prefs.Preferences
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.xml.transform.OutputKeys
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
 
 class BrowserFrame : JFrame() {
 
@@ -484,7 +484,11 @@ class BrowserFrame : JFrame() {
                 createDocument().addElement("workspace") {
                     config.saveWorkspace(this)
                     frameContent.saveWorkspace(this)
-                }.writeXml(writer)
+                }.writeXmlString(writer, mapOf(
+                    OutputKeys.INDENT to "yes",
+                    OutputKeys.STANDALONE to "yes",
+                    "{http://xml.apache.org/xslt}indent-amount" to "2"
+                ))
             }
             recentMenu.addRecentWorkspace(file)
         } catch (e: IOException) {
@@ -493,15 +497,6 @@ class BrowserFrame : JFrame() {
 
         GUIHelper.showMessage(this, "Workspace saved to " + file.path, JOptionPane.INFORMATION_MESSAGE)
         saveWorkspaceAsAction.isEnabled = true
-    }
-
-    fun Node.writeXml(writer: Writer): Unit {
-        createTransformer().apply {
-            setOutputProperty(OutputKeys.INDENT, "yes")
-            setOutputProperty(OutputKeys.STANDALONE, "yes")
-            setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
-            transform(DOMSource(this@writeXml), StreamResult(writer))
-        }
     }
 
     private fun openClassFromJar(file: File): BrowserTab? {

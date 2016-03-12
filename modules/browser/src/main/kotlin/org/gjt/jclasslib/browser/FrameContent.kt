@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser
 
 import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
+import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.w3c.dom.Element
 import java.awt.BorderLayout
@@ -143,9 +144,9 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
 
 
     fun readWorkspace(element: Element) {
-        element.childElements(NODE_NAME_TABS).firstOrNull()?.let { tabsElement ->
+        element.firstChildElement(NODE_NAME_TABS)?.let { tabsElement ->
             split(SplitMode.getByName(tabsElement.getAttribute(ATTRIBUTE_SPLIT_MODE)))
-            tabsElement.childElements(NODE_NAME_GROUP).forEach{ groupElement ->
+            tabsElement.childElements(NODE_NAME_GROUP).forEach { groupElement ->
                 val position = Position.getByName(groupElement.getAttribute(ATTRIBUTE_POSITION))
                 wrappers[position].readWorkspace(groupElement)
             }
@@ -158,7 +159,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         NW("Open a class file"), NE(), SE(), SW();
 
         companion object {
-            fun getByName(name : String?) = Position.values().firstOrNull { it.name == name } ?: Position.NW
+            fun getByName(name: String?) = Position.values().firstOrNull { it.name == name } ?: Position.NW
         }
     }
 

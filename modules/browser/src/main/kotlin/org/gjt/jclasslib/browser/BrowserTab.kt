@@ -159,7 +159,7 @@ class BrowserTab constructor(val fileName: String, frame : BrowserFrame) : JPane
         private val ATTRIBUTE_FILE_NAME = "fileName"
 
         fun create(element: Element, frame : BrowserFrame): BrowserTab {
-            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME) ?: "", frame)
+            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), frame)
         }
     }
 }

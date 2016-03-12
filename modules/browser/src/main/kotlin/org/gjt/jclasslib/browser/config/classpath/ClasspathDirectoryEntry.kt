@@ -57,9 +57,6 @@ class ClasspathDirectoryEntry(fileName : String) : ClasspathEntry(fileName) {
         val NODE_NAME = "directory"
         private val ATTRIBUTE_PATH = "path"
 
-        fun create(element: Element) : ClasspathDirectoryEntry? {
-            val path = element.getAttribute(ATTRIBUTE_PATH)
-            return path?.let { ClasspathDirectoryEntry(path) } ?: null
-        }
+        fun create(element: Element) = ClasspathDirectoryEntry(element.getAttribute(ATTRIBUTE_PATH))
     }
 }

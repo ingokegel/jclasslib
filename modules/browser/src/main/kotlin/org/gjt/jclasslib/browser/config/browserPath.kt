@@ -16,6 +16,7 @@ package org.gjt.jclasslib.browser.config
 
 import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
+import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.browser.NodeType
 import org.gjt.jclasslib.structures.AttributeInfo
@@ -41,7 +42,7 @@ class BrowserPath {
         val NODE_NAME = "path"
 
         fun create(element: Element): BrowserPath? {
-            return element.childElements(NODE_NAME).firstOrNull()?.let { pathElement ->
+            return element.firstChildElement(NODE_NAME)?.let { pathElement ->
                 BrowserPath().apply {
                     pathElement.childElements().forEach { pathComponentElement ->
                         PathComponent.create(pathComponentElement)?.let { pathComponent ->

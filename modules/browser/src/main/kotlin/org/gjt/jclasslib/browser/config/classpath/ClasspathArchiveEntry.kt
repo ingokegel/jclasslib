@@ -50,9 +50,6 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathEntry(fileName) {
         val NODE_NAME = "archive"
         private val ATTRIBUTE_PATH = "path"
 
-        fun create(element: Element) : ClasspathArchiveEntry? {
-            val path = element.getAttribute(ATTRIBUTE_PATH)
-            return path?.let { ClasspathArchiveEntry(path) } ?: null
-        }
+        fun create(element: Element) = ClasspathArchiveEntry(element.getAttribute(ATTRIBUTE_PATH))
     }
 }
