@@ -18,7 +18,7 @@ import java.util.*
 import javax.swing.JPanel
 import javax.swing.tree.TreePath
 
-class ConstantPoolDetailPane(services: BrowserServices) : DetailPane<Constant>(Constant::class.java, services) {
+class ConstantPoolEntryDetailPane(services: BrowserServices) : DetailPane<Constant>(Constant::class.java, services) {
 
     private val constantTypeToDetailPane: EnumMap<ConstantType, ConstantDetailPane<*>> = EnumMap(ConstantType::class.java)
 
