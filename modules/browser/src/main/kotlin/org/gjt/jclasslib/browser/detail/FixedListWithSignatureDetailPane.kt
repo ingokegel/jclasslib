@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.ClassMember
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import java.awt.Insets
@@ -59,6 +60,8 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
                     e.printStackTrace()
                 }
             }
+
+            override fun getAccessFlags() = AccessFlag.FIELD_ACCESS_FLAGS
         },
         METHOD {
             override fun appendSignature(classMember: ClassMember, buffer: StringBuilder) {
@@ -68,8 +71,11 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
                     e.printStackTrace()
                 }
             }
+
+            override fun getAccessFlags() = AccessFlag.METHOD_ACCESS_FLAGS
         };
 
         abstract fun appendSignature(classMember: ClassMember, buffer: StringBuilder)
+        abstract fun getAccessFlags() : Collection<AccessFlag>
     }
 }

@@ -7,10 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.ClassAttributeHyperlinkListener
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
-import org.gjt.jclasslib.browser.DetailPane
+import org.gjt.jclasslib.browser.*
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.util.ExtendedJLabel
@@ -23,6 +20,7 @@ import java.util.*
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JScrollPane
+import javax.swing.JTree
 import javax.swing.event.HyperlinkEvent
 import javax.swing.tree.TreePath
 
@@ -88,8 +86,17 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
 
     override fun show(treePath: TreePath) {
         scrollPane.viewport.viewPosition = Point(0, 0)
+        runShowHandlers(treePath)
+    }
+
+    private fun runShowHandlers(treePath: TreePath) {
         element = getElement(treePath)
         element?.let { element -> showHandlers.forEach { it.invoke(element) } }
+    }
+
+    override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode) {
+        super.updateFilter(tree, treeNode)
+        runShowHandlers(TreePath(treeNode.path))
     }
 
     protected abstract fun addLabels()

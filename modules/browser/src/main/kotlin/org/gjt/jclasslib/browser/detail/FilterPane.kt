@@ -9,16 +9,26 @@ package org.gjt.jclasslib.browser.detail
 
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.DetailPane
+import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.util.EnumButtonGroup
 import org.gjt.jclasslib.util.TitledSeparator
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-open class FilterPane(private val detailPane : DetailPane<*>) : JPanel() {
+abstract class FilterPane<T, S : Structure>(private val detailPane: DetailPane<*>) : JPanel() {
 
-    val filterText: String
-        get() = filterTextField.text.trim()
+    private val filterCheckboxes = getAllFilterKeys().associate {
+        it to JCheckBox(it.toString()).apply {
+            addActionListener {
+                updateFilter()
+            }
+        }
+    }
+
+    protected abstract fun getAllFilterKeys(): Collection<T>
+    protected abstract fun isElementTextFiltered(element: S, filterText: String): Boolean
+    protected abstract fun getFilterKeys(element: S): Collection<T>
 
     private val buttonGroup = EnumButtonGroup(FilterMode.values()) { selectedValue ->
         filterMode = selectedValue
@@ -63,7 +73,7 @@ open class FilterPane(private val detailPane : DetailPane<*>) : JPanel() {
     val isShowAll: Boolean
         get() = filterMode == FilterMode.ALL
 
-    var filterMode : FilterMode
+    var filterMode: FilterMode
         get() = buttonGroup.selectedValue
         set(filterMode) {
             buttonGroup.selectedValue = filterMode
@@ -82,20 +92,53 @@ open class FilterPane(private val detailPane : DetailPane<*>) : JPanel() {
                 updateFilter()
             }
         }), "wrap unrel")
+        filterCheckboxes.values.forEachIndexed { i, checkBox ->
+            add(filterComponent(checkBox), if (i % 2 == 0) "split, sgx col1, gapright para, $RADIO_BUTTON_INSET" else "sgx col2, wrap")
+        }
+        add(filterComponent(JButton("Toggle all").apply {
+            addActionListener {
+                toggleCheckboxes(!filterCheckboxes.values.all { it.isSelected })
+            }
+        }), "newline unrel, $RADIO_BUTTON_INSET")
     }
 
-    open protected fun textFilterEntered() {
+    protected fun <T : JComponent> filterComponent(component: T): T {
+        component.isEnabled = false
+        filterComponents.add(component)
+        return component
+    }
 
+    fun updateFilterCheckboxes(elements: Collection<S>) {
+        val filterText = filterTextField.text.trim()
+        val statistics = elements.filter { isElementTextFiltered(it, filterText) }.flatMap { getFilterKeys(it) }.
+                groupBy { it }.mapValues { it.value.size }
+        for ((filterKey, checkBox) in filterCheckboxes) {
+            filterCheckboxes[filterKey]?.apply {
+                text = "${filterKey.toString()} (${statistics[filterKey] ?: 0})"
+            }
+        }
+    }
+
+    fun isElementShown(element: S): Boolean {
+        return isShowAll || (
+                filterCheckboxes.any { it.key in getFilterKeys(element) && it.value.isSelected } &&
+                        isElementTextFiltered(element, filterTextField.text.trim())
+                )
     }
 
     private fun updateFilter() {
         detailPane.updateFilter()
     }
 
-    protected fun <T : JComponent> filterComponent(component : T) : T {
-        component.isEnabled = false
-        filterComponents.add(component)
-        return component
+    private fun textFilterEntered() {
+        if (filterCheckboxes.values.none { it.isSelected }) {
+            toggleCheckboxes(true)
+        }
+    }
+
+    private fun toggleCheckboxes(selected: Boolean) {
+        filterCheckboxes.values.forEach { it.isSelected = selected }
+        updateFilter()
     }
 
     enum class FilterMode(val verbose: String) {

@@ -67,7 +67,11 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         return accessFlags and flag == flag
     }
 
+    override fun toString() = verbose
+
     companion object {
+
+        fun decompose(accessFlags: Int): List<AccessFlag> = values().filter { it.isSet(accessFlags) }
 
         /**
          * Class access flags
