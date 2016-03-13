@@ -72,8 +72,13 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
                         NodeType.ATTRIBUTE -> {
                             addPathComponent(AttributeHolder((element as AttributeInfo).name))
                         }
+                        NodeType.CONSTANT_POOL_ENTRY -> {
+                            if (detailPane.constantPoolDetailPane.filterPane.isShowAll) {
+                                addIndexHolder(node)
+                            }
+                        }
                         else -> {
-                            addPathComponent(IndexHolder(node.index))
+                            addIndexHolder(node)
                         }
                     }
                 }
@@ -130,6 +135,10 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
 
     private fun BrowserPath.addReferenceHolder(classMember: ClassMember) {
         addPathComponent(ReferenceHolder(classMember.name, classMember.descriptor))
+    }
+
+    private fun BrowserPath.addIndexHolder(node: BrowserTreeNode) {
+        addPathComponent(IndexHolder(node.index))
     }
 
     private fun showDetailPaneForPath(path: TreePath) {

@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import org.gjt.jclasslib.browser.detail.FilterPane
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.tree.TreePath
@@ -31,7 +32,10 @@ class ConstantPoolHyperlinkListener(private val services: BrowserServices, priva
         }
 
         private fun linkPath(services: BrowserServices, constantPoolIndex: Int): TreePath {
-            val constantPoolPath = services.browserComponent.treePane.getPathForCategory(NodeType.CONSTANT_POOL_ENTRY)
+            val browserComponent = services.browserComponent
+            val constantPoolPath = browserComponent.treePane.getPathForCategory(NodeType.CONSTANT_POOL_ENTRY)
+            browserComponent.treePane.tree.selectionPath = constantPoolPath
+            browserComponent.detailPane.constantPoolDetailPane.filterPane.filterMode = FilterPane.FilterMode.ALL
             val constantPoolNode = constantPoolPath.lastPathComponent as BrowserTreeNode
             val targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1)
             return constantPoolPath.pathByAddingChild(targetNode)

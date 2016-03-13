@@ -8,15 +8,14 @@ dependencies {
     compile ':i4jruntime'
     compile 'org.jetbrains:annotations:13.0'
     compile "org.jetbrains.kotlinx:kotlinx.dom:0.0.10"
+    compile 'com.miglayout:miglayout-swing:5.0'
     compile project(':data')
 }
 
 jar {
     archiveName = 'jclasslib-browser.jar'
     manifest {
-        attributes(
-                "Main-Class": mainClassName
-        )
+        attributes("Main-Class": mainClassName)
     }
 }
 

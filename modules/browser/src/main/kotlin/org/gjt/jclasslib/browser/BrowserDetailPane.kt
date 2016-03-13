@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.detail.AttributeDetailPane
+import org.gjt.jclasslib.browser.detail.ConstantPoolDetailPane
 import org.gjt.jclasslib.browser.detail.EmptyDetailPane
 import java.awt.CardLayout
 import java.awt.Dimension
@@ -40,6 +41,9 @@ class BrowserDetailPane(private val services: BrowserServices) : JPanel() {
 
     val attributeDetailPane: AttributeDetailPane
         get() = getDetailPane(NodeType.ATTRIBUTE) as AttributeDetailPane
+
+    val constantPoolDetailPane: ConstantPoolDetailPane
+        get() = getDetailPane(NodeType.CONSTANT_POOL) as ConstantPoolDetailPane
 
     private fun getDetailPane(nodeType: NodeType): DetailPane<*> {
         return nodeTypeToDetailPane.getOrPut(nodeType) {

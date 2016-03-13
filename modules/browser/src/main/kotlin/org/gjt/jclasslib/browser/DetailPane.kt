@@ -13,6 +13,8 @@ import org.gjt.jclasslib.util.HtmlDisplayTextArea
 import java.awt.Color
 import javax.swing.JComponent
 import javax.swing.JPanel
+import javax.swing.JTree
+import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
 abstract class DetailPane<T : Any>(private val elementClass: Class<T>, val services: BrowserServices) : JPanel() {
@@ -52,8 +54,26 @@ abstract class DetailPane<T : Any>(private val elementClass: Class<T>, val servi
     }
 
     fun getElementOrNull(treePath: TreePath): T? {
-        return elementClass.cast((treePath.lastPathComponent as BrowserTreeNode).element)
+        return elementClass.cast(treeNode(treePath).element)
     }
+
+    fun treeNode(treePath: TreePath) = treePath.lastPathComponent as BrowserTreeNode
+
+    fun updateFilter() {
+        val tree = services.browserComponent.treePane.tree
+        val treeNode = tree.selectionPath.lastPathComponent as BrowserTreeNode
+        updateFilter(tree, treeNode)
+    }
+
+    protected open fun updateFilter(tree: JTree, treeNode: BrowserTreeNode) {
+        treeNode.filterChildren { node ->
+            isChildShown(node)
+        }
+        (tree.model as DefaultTreeModel).nodeStructureChanged(treeNode)
+        tree.expandPath(tree.selectionPath)
+    }
+
+    protected open fun isChildShown(node: BrowserTreeNode) = true
 
     protected fun getConstantPoolEntryName(constantPoolIndex: Int): String {
         try {

@@ -105,20 +105,21 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
-    private fun buildConstantPoolNode() = BrowserTreeNode("Constant Pool", NodeType.CONSTANT_POOL).apply {
+    private fun buildConstantPoolNode(): BrowserTreeNode {
         val constantPool = services.classFile.constantPool
-        val constantPoolCount = constantPool.size
-        constantPool.forEachIndexed { i, constant ->
-            if (i > 0) {
-                add(if (constant is ConstantPlaceholder) {
-                    BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + "(large numeric continued)", NodeType.NO_CONTENT, constant)
-                } else {
-                    try {
-                        BrowserTreeNode(getFormattedIndex(i, constantPoolCount) + constant.constantType.verbose, NodeType.CONSTANT_POOL_ENTRY, constant)
-                    } catch (ex: InvalidByteCodeException) {
-                        buildNullNode()
-                    }
-                })
+        return BrowserTreeNode("Constant Pool", NodeType.CONSTANT_POOL, constantPool).apply {
+            constantPool.forEachIndexed { i, constant ->
+                if (i > 0) {
+                    add(if (constant is ConstantPlaceholder) {
+                        BrowserTreeNode(getFormattedIndex(i, constantPool.size) + "(large numeric continued)", NodeType.NO_CONTENT, constant)
+                    } else {
+                        try {
+                            BrowserTreeNode(getFormattedIndex(i, constantPool.size) + constant.constantType.verbose, NodeType.CONSTANT_POOL_ENTRY, constant)
+                        } catch (ex: InvalidByteCodeException) {
+                            buildNullNode()
+                        }
+                    })
+                }
             }
         }
     }

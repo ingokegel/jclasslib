@@ -17,7 +17,7 @@ enum class NodeType {
         override fun createDetailPanel(services: BrowserServices) = GeneralDetailPane(services)
     },
     CONSTANT_POOL {
-        override fun createDetailPanel(services: BrowserServices) = EmptyDetailPane(services)
+        override fun createDetailPanel(services: BrowserServices) = ConstantPoolDetailPane(services)
     },
     CONSTANT_POOL_ENTRY {
         override fun createDetailPanel(services: BrowserServices) = ConstantPoolEntryDetailPane(services)
