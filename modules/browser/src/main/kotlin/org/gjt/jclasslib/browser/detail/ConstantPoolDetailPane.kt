@@ -7,13 +7,13 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.ConstantType
-import java.awt.BorderLayout
 import javax.swing.JTree
 import javax.swing.tree.TreePath
 
@@ -37,8 +37,8 @@ class ConstantPoolDetailPane(services: BrowserServices) : DetailPane<Array<Const
     override fun isChildShown(node: BrowserTreeNode) = filterPane.isElementShown(node.element as Constant)
 
     override fun setupComponent() {
-        layout = BorderLayout()
-        add(filterPane, BorderLayout.NORTH)
+        layout = MigLayout("wrap", "[grow]")
+        add(filterPane, "growx")
     }
 
 }

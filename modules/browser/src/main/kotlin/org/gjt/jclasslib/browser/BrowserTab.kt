@@ -26,7 +26,7 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
-class BrowserTab constructor(val fileName: String, frame : BrowserFrame) : JPanel(), BrowserServices {
+class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), BrowserServices {
 
     private val tabbedPane: BrowserTabbedPane
         get() = SwingUtilities.getAncestorOfClass(BrowserTabbedPane::class.java, this) as BrowserTabbedPane

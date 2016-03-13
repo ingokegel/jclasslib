@@ -11,7 +11,7 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.ClassMember
-import java.awt.GridBagConstraints
+import org.gjt.jclasslib.util.TitledSeparator
 import javax.swing.JTree
 import javax.swing.tree.TreePath
 
@@ -46,15 +46,9 @@ class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: F
         }.toString()
 
     override fun addLabels() {
-        add(filterPane, gc() {
-            gridx = 0
-            gridwidth = GridBagConstraints.REMAINDER
-            weightx = 1.0
-            fill = GridBagConstraints.HORIZONTAL
-        })
-        nextLine()
+        add(filterPane, "spanx, growx")
 
-        //TODO add separator
+        add(TitledSeparator("Displayed Members"), "newline para, spanx, growx")
         addDetail("Member count:") { classMembers -> classMembers.count { filterPane.isElementShown(it) }.toString() }
         super.addLabels()
     }

@@ -32,7 +32,7 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
     }
 
     val selectedTab: BrowserTab?
-        get() = selectedComponent as BrowserTab
+        get() = selectedComponent as BrowserTab?
 
     fun transferTabsFrom(other: BrowserTabbedPane) {
         other.tabs().toList().forEach { addTab(it) }
@@ -75,6 +75,7 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
 
     fun focus() {
         container.focus(this@BrowserTabbedPane)
+        selectedTab?.browserComponent?.history?.updateActions()
     }
 
 }

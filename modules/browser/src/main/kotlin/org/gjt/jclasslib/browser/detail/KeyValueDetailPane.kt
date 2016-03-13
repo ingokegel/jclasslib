@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.*
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
@@ -14,11 +15,11 @@ import org.gjt.jclasslib.util.ExtendedJLabel
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.HtmlDisplayTextArea
 import org.gjt.jclasslib.util.TextDisplay
-import java.awt.*
+import java.awt.Cursor
+import java.awt.Point
 import java.awt.event.MouseListener
 import java.util.*
 import javax.swing.JComponent
-import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTree
 import javax.swing.event.HyperlinkEvent
@@ -30,7 +31,6 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         GUIHelper.setDefaultScrollBarUnits(this)
         border = null
     }
-    private var currentY = 0
 
     private val labelToMouseListener = HashMap<ExtendedJLabel, MouseListener>()
 
@@ -38,50 +38,21 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         get() = scrollPane
 
     private fun addKeyValue(keyValue: KeyValue<T, *>) {
-        add(keyValue.keyLabel as JComponent, gc() {
-            insets = Insets(1, 10, 0, 10)
-        })
+        add(keyValue.keyLabel as JComponent)
         val valueLabel = keyValue.valueLabel
         val commentLabel = keyValue.commentLabel
-        add(valueLabel, gc() {
-            gridx = 1
-            insets = Insets(1, 0, 0, 5)
-            if (commentLabel == null) {
-                gridwidth = 2
-            }
-        })
+        add(valueLabel, if (commentLabel == null) "spanx 2" else "")
         if (commentLabel != null) {
-            add(commentLabel, gc() {
-                gridx = 2
-                insets = Insets(1, 0, 0, 5)
-                fill = GridBagConstraints.HORIZONTAL
-            })
+            add(commentLabel, "growx")
             if (commentLabel is ExtendedJLabel) {
                 commentLabel.autoTooltip = true
             }
         }
-        nextLine()
-    }
-
-    protected fun nextLine() {
-        currentY++
     }
 
     override fun setupComponent() {
-        layout = GridBagLayout()
+        layout = MigLayout("wrap", "[][][grow]")
         addLabels()
-        add(JPanel(), gc() {
-            gridx = 2
-            weightx = 1.0
-            weighty = 1.0
-            fill = GridBagConstraints.BOTH
-        })
-    }
-
-    protected fun gc(config: GridBagConstraints.() -> Unit) = GridBagConstraints().apply {
-        anchor = GridBagConstraints.NORTHWEST
-        gridy = currentY
-        config()
     }
 
     override fun show(treePath: TreePath) {
@@ -155,14 +126,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected fun addClassElementOpener(constantResolver: (element: T) -> Constant) {
         if (services.canOpenClassFiles()) {
             val classElementOpener = ClassElementOpener(this)
-            add(classElementOpener, gc() {
-                weightx = 1.0
-                anchor = GridBagConstraints.WEST
-                insets = Insets(5, 10, 0, 10)
-                gridx = 0
-                gridwidth = 3
-            })
-            nextLine()
+            add(classElementOpener, "newline unrel, spanx")
             showHandlers.add { element ->
                 classElementOpener.setConstant(constantResolver(element))
             }

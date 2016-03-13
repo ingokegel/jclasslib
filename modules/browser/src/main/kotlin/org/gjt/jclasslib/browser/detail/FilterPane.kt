@@ -61,10 +61,9 @@ abstract class FilterPane<T, S : Structure>(private val detailPane: DetailPane<*
     private val filterComponents = mutableSetOf<JComponent>()
 
     init {
-        layout = MigLayout("wrap", "[grow]")
+        layout = MigLayout("insets 0, wrap", "[grow]")
 
         add(TitledSeparator("Filter"), "growx")
-        add(JSeparator(JSeparator.HORIZONTAL))
         add(buttonGroup.radioButtons[FilterMode.ALL])
         add(buttonGroup.radioButtons[FilterMode.SELECTED], "wrap unrel")
         addComponents()

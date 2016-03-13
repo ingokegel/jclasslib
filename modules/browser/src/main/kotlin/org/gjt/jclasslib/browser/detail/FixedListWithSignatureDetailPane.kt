@@ -11,7 +11,6 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.ClassMember
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.awt.Insets
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import javax.swing.JButton
@@ -33,13 +32,7 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
         get() = signatureVerbose
 
     override fun addLabels() {
-        add(btnCopyToClipboard, gc() {
-            insets = Insets(5, 10, 0, 10)
-            weightx = 1.0
-            gridx = 0
-            gridwidth = 3
-        })
-        nextLine()
+        add(btnCopyToClipboard, "newline unrel, spanx")
     }
 
     private fun copySignatureToClipboard() {

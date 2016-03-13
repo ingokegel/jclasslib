@@ -89,10 +89,10 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
 
     private fun getCategory(constant: ConstantReference): NodeType? = when (constant) {
         is ConstantFieldrefInfo -> {
-            NodeType.FIELD
+            NodeType.FIELDS
         }
         is ConstantMethodrefInfo, is ConstantInterfaceMethodrefInfo -> {
-            NodeType.METHOD
+            NodeType.METHODS
         }
         else -> {
             null
