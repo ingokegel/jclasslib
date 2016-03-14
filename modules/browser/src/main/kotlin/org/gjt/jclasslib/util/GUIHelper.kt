@@ -23,6 +23,8 @@ object GUIHelper {
     val WINDOW_BORDER = BorderFactory.createEmptyBorder(8, 8, 8, 8)
     val RECT_ORIGIN = Rectangle(0, 0, 0, 0)
 
+    fun isMacos() = System.getProperty("os.name").toLowerCase().startsWith("mac")
+
     fun showOptionDialog(parent: Component, message: String, options: Array<String>, messageType: Int): Int {
         return JOptionPane.showOptionDialog(parent,
                 message,
