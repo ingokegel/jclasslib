@@ -13,4 +13,6 @@ class InterfaceDetailPane(services: BrowserServices) : KeyValueDetailPane<Int>(I
     override fun addLabels() {
         addConstantPoolLink("Interface:") { index -> index }
     }
+
+    override fun hasInsets() = true
 }

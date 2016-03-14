@@ -13,15 +13,14 @@
 */
 package org.gjt.jclasslib.browser.detail
 
+import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.Structure
-import java.awt.BorderLayout
+import org.gjt.jclasslib.util.TitledSeparator
 import java.awt.CardLayout
 import java.util.*
-import javax.swing.BorderFactory
 import javax.swing.JPanel
-import javax.swing.border.Border
 import javax.swing.tree.TreePath
 
 abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
@@ -30,14 +29,11 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
     private var currentDetailPane: DetailPane<*>? = null
 
     private val specificInfoPane: JPanel = JPanel().apply {
-        border = createTitledBorder("Specific info:")
         layout = CardLayout()
         add(JPanel(), NAME_UNKNOWN)
     }
 
-    private val genericInfoPane: DetailPane<*> = createGenericInfoPane().apply {
-        border = createTitledBorder("Generic info:")
-    }
+    private val genericInfoPane: DetailPane<*> = createGenericInfoPane()
 
     protected abstract fun addCards()
     protected abstract fun createGenericInfoPane(): DetailPane<*>
@@ -45,9 +41,11 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
     override fun setupComponent() {
         addCards()
 
-        layout = BorderLayout()
-        add(genericInfoPane.displayComponent, BorderLayout.NORTH)
-        add(specificInfoPane, BorderLayout.CENTER)
+        layout = MigLayout("wrap", "[grow]", "[][shrinkprio 50]para[][grow]")
+        add(TitledSeparator("Generic info"), "growx")
+        add(genericInfoPane.displayComponent, "growx")
+        add(TitledSeparator("Specific info"), "growx")
+        add(specificInfoPane, "grow")
     }
 
     override fun show(treePath: TreePath) {
@@ -86,10 +84,6 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
     protected fun addCard(elementValueClass: Class<out T>, detailPane: DetailPane<*>) {
         specificInfoPane.add(detailPane.displayComponent, elementValueClass.name)
         elementClassToDetailPane.put(elementValueClass, detailPane)
-    }
-
-    private fun createTitledBorder(title: String): Border {
-        return BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), title)
     }
 
     companion object {

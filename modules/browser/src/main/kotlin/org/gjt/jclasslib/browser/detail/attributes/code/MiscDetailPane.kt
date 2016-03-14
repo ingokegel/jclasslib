@@ -21,5 +21,7 @@ class MiscDetailPane(services: BrowserServices) : KeyValueDetailPane<CodeAttribu
         addDetail("Maximum local variables:") { attribute -> attribute.maxLocals.toString() }
         addDetail("Code length:") { attribute -> attribute.code.size.toString() }
     }
+
+    override fun hasInsets() = true
 }
 

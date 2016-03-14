@@ -17,6 +17,8 @@ abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, service
     protected fun addClassElementOpener() {
         addClassElementOpener { constant -> constant }
     }
+
+    override fun hasInsets() = true
 }
 
 class ConstantClassInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantClassInfo>(ConstantClassInfo::class.java, services) {

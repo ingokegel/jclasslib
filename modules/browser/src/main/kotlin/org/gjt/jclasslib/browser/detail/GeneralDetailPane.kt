@@ -23,5 +23,7 @@ class GeneralDetailPane(services: BrowserServices) : KeyValueDetailPane<ClassFil
         addDetail("Methods count:") { classFile -> classFile.methods.size.toString() }
         addDetail("Attributes count:") { classFile -> classFile.attributes.size.toString() }
     }
+
+    override fun hasInsets() = true
 }
 

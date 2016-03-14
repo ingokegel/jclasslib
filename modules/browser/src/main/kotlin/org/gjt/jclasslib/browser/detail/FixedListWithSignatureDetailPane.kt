@@ -35,6 +35,8 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
         add(btnCopyToClipboard, "newline unrel, spanx")
     }
 
+    override fun hasInsets() = true
+
     private fun copySignatureToClipboard() {
         val stringSelection = StringSelection(signatureVerbose)
         Toolkit.getDefaultToolkit().systemClipboard.setContents(stringSelection, stringSelection)

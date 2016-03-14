@@ -51,9 +51,11 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     }
 
     override fun setupComponent() {
-        layout = MigLayout("wrap", "[][][grow]")
+        layout = MigLayout("wrap" + if (hasInsets()) "" else ", insets 0", "[][][grow]")
         addLabels()
     }
+
+    protected open fun hasInsets() = false
 
     override fun show(treePath: TreePath) {
         scrollPane.viewport.viewPosition = Point(0, 0)
