@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":data:test" external.linked.project.path="$MODULE_DIR$/../../../../modules/data" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="GRADLE" external.system.module.group="jclasslib" external.system.module.type="sourceSet" external.system.module.version="4.3.1" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+    <output-test url="file://$MODULE_DIR$/../../../../build/gradle/data/classes/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../../modules/data/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../../modules/data/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../../modules/data/src/test/kotlin" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../../modules/data/src/test/resources" type="java-test-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="data_main" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.testng:testng:6.8.8" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.beanshell:bsh:2.0b4" level="project" />
+    <orderEntry type="library" name="Gradle: com.beust:jcommander:1.27" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="data_main" />
+</module>

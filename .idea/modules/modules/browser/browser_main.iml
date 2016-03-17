@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":browser:main" external.linked.project.path="$MODULE_DIR$/../../../../modules/browser" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="GRADLE" external.system.module.group="jclasslib" external.system.module.type="sourceSet" external.system.module.version="4.3.1" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/../../../../build/gradle/browser/classes/main" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../../modules/browser/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../../modules/browser/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../../modules/browser/src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../../modules/browser/src/main/resources" type="java-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: :i4jruntime:" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx.dom:0.0.10" level="project" />
+    <orderEntry type="library" name="Gradle: com.miglayout:miglayout-swing:5.0" level="project" />
+    <orderEntry type="module" module-name="data_main" />
+    <orderEntry type="library" name="Gradle: com.miglayout:miglayout-core:5.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.1" level="project" />
+  </component>
+</module>

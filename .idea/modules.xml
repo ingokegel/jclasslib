@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/modules/browser/browser.iml" filepath="$PROJECT_DIR$/modules/browser/browser.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/data/data.iml" filepath="$PROJECT_DIR$/modules/data/data.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/installer/installer.iml" filepath="$PROJECT_DIR$/modules/installer/installer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jclasslib.iml" filepath="$PROJECT_DIR$/jclasslib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/browser/browser.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/browser/browser.iml" group="browser" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/browser/browser_main.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/browser/browser_main.iml" group="browser" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/browser/browser_test.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/browser/browser_test.iml" group="browser" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/data/data.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/data/data.iml" group="data" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/data/data_main.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/data/data_main.iml" group="data" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/data/data_test.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/data/data_test.iml" group="data" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/installer/installer.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/installer/installer.iml" group="installer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jclasslib.iml" filepath="$PROJECT_DIR$/.idea/modules/jclasslib.iml" />
     </modules>
   </component>
 </project>
