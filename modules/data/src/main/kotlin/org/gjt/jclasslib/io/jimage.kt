@@ -17,8 +17,18 @@ import java.nio.file.Path
 private val modulesRootsCache = mutableMapOf<File, Path>()
 private val CLASSFILE_SUFFIX = ".class"
 
+/**
+ * Get an input stream to a class file in the JRE.
+ * @param fileName the file name to the class file in the JRT, including the module
+ * @param jreHome the home directory of the JRE
+ */
 fun getJrtInputStream(fileName: String, jreHome: File) = Files.newInputStream(getModulesRoot(jreHome).resolve(fileName))
 
+/**
+ * Find a class in the JRT (Java 9+)
+ * @param className the class name
+ * @param jreHome the home directory of the JRE
+ */
 fun findClassInJrt(className: String, jreHome: File): Path? {
     val fileName = className.replace('.', '/') + CLASSFILE_SUFFIX
     Files.newDirectoryStream(getModulesRoot(jreHome)).forEach { module ->
@@ -30,6 +40,11 @@ fun findClassInJrt(className: String, jreHome: File): Path? {
     return null
 }
 
+/**
+ * Iterate over all classes in the JRT (Java 9+)
+ * @param jreHome the home directory of the JRE
+ * @param block the code that should be executed for each class
+ */
 fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
     Files.walk(getModulesRoot(jreHome)).forEach { path ->
         if (path.nameCount > 2 && !Files.isDirectory(path) && path.toString().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
@@ -38,6 +53,11 @@ fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
     }
 }
 
+/**
+ * Iterate over all class names in the JRT (Java 9+)
+ * @param jreHome the home directory of the JRE
+ * @param block the code that should be executed for each class name
+ */
 fun forEachClassNameInJrt(jreHome: File, block : (className :String) -> Unit) {
     forEachClassInJrt(jreHome) { path ->
         block(path.subpath(2, path.nameCount).toString())

@@ -22,7 +22,7 @@ task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
 }
 
 task doc {
-    dependsOn dokka, dokkaJavadoc
+    dependsOn dokka // TODO add dokkaJavadoc dependency when javadoc works again
 }
 
 task copyDist(type: Copy, dependsOn: jar) {
