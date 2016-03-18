@@ -1,29 +1,18 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="bytecode viewer" type="Application" factoryName="Application">
-    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="emma" />
+  <configuration default="false" name="bytecode viewer" type="JetRunConfigurationType" factoryName="Kotlin">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="org.gjt.jclasslib.browser.BrowserApplication" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    <option name="WORKING_DIRECTORY" value="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
-    <option name="ENABLE_SWING_INSPECTOR" value="false" />
-    <option name="ENV_VARIABLES" />
     <option name="PASS_PARENT_ENVS" value="true" />
     <module name="browser_main" />
     <envs />
-    <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="52199" />
-      <option name="TRANSPORT" value="0" />
-      <option name="LOCAL" value="true" />
-    </RunnerSettings>
     <RunnerSettings RunnerId="JProfiler">
       <option name="WINDOW" value="false" />
     </RunnerSettings>
-    <RunnerSettings RunnerId="Run" />
-    <ConfigurationWrapper RunnerId="Debug" />
-    <ConfigurationWrapper RunnerId="JProfiler" />
-    <ConfigurationWrapper RunnerId="Run" />
     <method />
   </configuration>
 </component>
