@@ -44,9 +44,25 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
 
     fun createImageButton() = JButton(this).apply {
         text = null
-        minimumSize = IMAGE_BUTTON_SIZE
-        preferredSize = IMAGE_BUTTON_SIZE
-        maximumSize = IMAGE_BUTTON_SIZE
+        fixedSize(IMAGE_BUTTON_SIZE)
+        if (GUIHelper.isMacOs()) {
+            putClientProperty("JButton.buttonType", "toolbar")
+        }
+    }
+
+    fun createToolBarButton() = JButton(this).apply {
+        text = null
+        fixedSize(TOOL_BAR_BUTTON_SIZE)
+        isFocusable = false
+        if (GUIHelper.isMacOs()) {
+            putClientProperty("JButton.buttonType", "toolbar")
+        }
+    }
+
+    private fun JButton.fixedSize(size: Dimension) {
+        minimumSize = size
+        preferredSize = size
+        maximumSize = size
     }
 
     fun createTextButton() = JButton(this).apply {
@@ -61,7 +77,8 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
 
     companion object {
         val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMask
-        private val IMAGE_BUTTON_SIZE = Dimension(30, 30)
+        private val IMAGE_BUTTON_SIZE = Dimension(26, 26)
+        private val TOOL_BAR_BUTTON_SIZE = Dimension(35, 35)
     }
 
 

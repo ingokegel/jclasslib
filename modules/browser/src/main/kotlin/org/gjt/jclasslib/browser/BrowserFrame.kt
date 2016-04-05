@@ -421,18 +421,18 @@ class BrowserFrame : JFrame() {
     }
 
     private fun buildToolbar(): JToolBar = JToolBar().apply {
-        add(openClassFileAction)
-        add(browseClasspathAction)
+        add(openClassFileAction.createToolBarButton())
+        add(browseClasspathAction.createToolBarButton())
         addSeparator()
-        add(openWorkspaceAction)
-        add(saveWorkspaceAction)
+        add(openWorkspaceAction.createToolBarButton())
+        add(saveWorkspaceAction.createToolBarButton())
         addSeparator()
-        add(backwardAction)
-        add(forwardAction)
+        add(backwardAction.createToolBarButton())
+        add(forwardAction.createToolBarButton())
         addSeparator()
-        add(reloadAction)
+        add(reloadAction.createToolBarButton())
         addSeparator()
-        add(showHomepageAction)
+        add(showHomepageAction.createToolBarButton())
 
         isFloatable = false
     }
