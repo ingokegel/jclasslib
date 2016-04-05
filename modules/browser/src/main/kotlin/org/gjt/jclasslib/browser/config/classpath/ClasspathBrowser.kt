@@ -7,13 +7,11 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.ProgressDialog
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
-import java.awt.Insets
 import java.awt.event.*
 import javax.swing.*
 import javax.swing.tree.DefaultTreeModel
@@ -129,25 +127,28 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
 
     private fun setupComponent() {
         (contentPane as JComponent).apply {
-            border = GUIHelper.WINDOW_BORDER
-            layout = GridBagLayout()
+            layout = MigLayout("wrap", "[grow]", "[][grow]para[nogrid]")
 
-            add(JLabel(header), GridBagConstraints().apply {
-                gridy = 0
-                weightx = 1.0
-                anchor = GridBagConstraints.NORTHWEST
-            })
-            add(JScrollPane(tree), GridBagConstraints().apply {
-                gridy = 1
-                insets = Insets(5, 0, 5, 0)
-                weightx = 1.0
-                weighty = 1.0
-                fill = GridBagConstraints.BOTH
-            })
-            add(createButtonBox(), GridBagConstraints().apply {
-                gridy = 2
-                weightx = 1.0
-                fill = GridBagConstraints.HORIZONTAL
+            add(JLabel(header))
+            add(JScrollPane(tree), "grow")
+
+            if (updateClassPathFromFrame) {
+                add(setupAction.createTextButton(), "tag help2")
+            }
+            add(syncAction.createTextButton(), "tag help2")
+            add(okAction.createTextButton().apply {
+                this@ClasspathBrowser.getRootPane().defaultButton = this
+            }, "tag ok")
+            add(cancelAction.createTextButton(), "tag cancel")
+
+            addWindowListener(object : WindowAdapter() {
+                override fun windowClosing(event: WindowEvent?) {
+                    cancelAction()
+                }
+
+                override fun windowActivated(e: WindowEvent?) {
+                    conditionalUpdate()
+                }
             })
         }
 
@@ -156,28 +157,6 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
         title = "Choose a class"
         GUIHelper.centerOnParentWindow(this, owner)
         defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
-    }
-
-    private fun createButtonBox() = Box.createHorizontalBox().apply {
-        if (updateClassPathFromFrame) {
-            add(setupAction.createTextButton())
-        }
-        add(syncAction.createTextButton())
-        add(Box.createHorizontalGlue())
-        add(okAction.createTextButton().apply {
-            this@ClasspathBrowser.getRootPane().defaultButton = this
-        })
-        add(cancelAction.createTextButton())
-
-        addWindowListener(object : WindowAdapter() {
-            override fun windowClosing(event: WindowEvent?) {
-                cancelAction()
-            }
-
-            override fun windowActivated(e: WindowEvent?) {
-                conditionalUpdate()
-            }
-        })
     }
 
     private fun conditionalUpdate() {

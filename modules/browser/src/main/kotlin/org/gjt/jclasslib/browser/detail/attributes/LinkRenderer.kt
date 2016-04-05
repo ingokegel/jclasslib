@@ -7,10 +7,13 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.util.ExtendedTableCellRenderer
 import org.gjt.jclasslib.util.HtmlDisplayTextArea
-import java.awt.*
+import java.awt.Color
+import java.awt.Component
+import java.awt.Point
 import javax.swing.JPanel
 import javax.swing.JTable
 import javax.swing.table.TableCellRenderer
@@ -20,19 +23,9 @@ class LinkRenderer : TableCellRenderer {
     private val linkLineRenderer = ExtendedTableCellRenderer()
     private val infoLineRenderer = ExtendedTableCellRenderer()
     private val standardForeground: Color? = linkLineRenderer.foreground
-    private val panel = JPanel(GridBagLayout()).apply {
-        val gc = GridBagConstraints().apply {
-            anchor = GridBagConstraints.NORTHWEST
-            gridx = 0
-        }
-        add(linkLineRenderer, gc)
-        add(infoLineRenderer, gc)
-        add(JPanel().apply { isOpaque = false }, GridBagConstraints().apply {
-            gridx = 0
-            weighty = 1.0
-            weightx = 1.0
-            fill = GridBagConstraints.BOTH
-        })
+    private val panel = JPanel(MigLayout("insets 0, gapy 0, wrap")).apply {
+        add(linkLineRenderer)
+        add(infoLineRenderer)
     }
 
     override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {

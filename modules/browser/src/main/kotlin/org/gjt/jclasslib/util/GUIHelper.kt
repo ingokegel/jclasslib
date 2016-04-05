@@ -20,10 +20,9 @@ object GUIHelper {
     val MESSAGE_TITLE = "jclasslib"
     val YES_NO_OPTIONS = arrayOf("Yes", "No")
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
-    val WINDOW_BORDER = BorderFactory.createEmptyBorder(8, 8, 8, 8)
     val RECT_ORIGIN = Rectangle(0, 0, 0, 0)
 
-    fun isMacos() = System.getProperty("os.name").toLowerCase().startsWith("mac")
+    fun isMacOs() = System.getProperty("os.name").toLowerCase().startsWith("mac")
 
     fun showOptionDialog(parent: Component, message: String, options: Array<String>, messageType: Int): Int {
         return JOptionPane.showOptionDialog(parent,

@@ -24,7 +24,7 @@ class ClosableTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLay
         })
         add(CloseButton())
         val originalForeground = foreground
-        if (GUIHelper.isMacos()) {
+        if (GUIHelper.isMacOs()) {
             tabbedPane.addChangeListener {
                 val selectedIndex = tabbedPane.selectedIndex
                 if (selectedIndex >= 0) {

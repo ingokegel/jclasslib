@@ -7,11 +7,13 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.MultiFileFilter
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.TextField
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
@@ -162,43 +164,28 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
 
     private fun setupComponent() {
         (contentPane as JComponent).apply {
-            border = GUIHelper.WINDOW_BORDER
-            layout = GridBagLayout()
-            add(JLabel("Classpath:"), GridBagConstraints().apply {
-                gridx = 0
-                gridy = 0
-                anchor = GridBagConstraints.NORTHWEST
-            })
-            add(createListPanel(), GridBagConstraints().apply {
-                gridx = 0
-                gridy = 1
-                insets = Insets(5, 0, 5, 0)
-                weightx = 1.0
-                weighty = 1.0
-                fill = GridBagConstraints.BOTH
-                gridwidth = GridBagConstraints.REMAINDER
-            })
-            add(JLabel("JRE home:"), GridBagConstraints().apply {
-                gridx = 0
-                gridy = 2
-                insets = Insets(5, 0, 10, 5)
-            })
-            add(createJreHomeChooser(), GridBagConstraints().apply {
-                gridx = 1
-                gridy = 2
-                weightx = 1.0
-                insets = Insets(5, 0, 10, 0)
-                fill = GridBagConstraints.HORIZONTAL
-            })
-            add(createButtonBox(), GridBagConstraints().apply {
-                gridy = 3
-                weightx = 1.0
-                fill = GridBagConstraints.HORIZONTAL
-                gridwidth = GridBagConstraints.REMAINDER
-            })
+            layout = MigLayout("wrap", "[grow]")
+            add(createListPanel(), "pushy, grow")
+            add(JLabel("JRE home:"), "split")
+            add(jreHomeTextField, "grow")
+            add(JButton("Choose").apply {
+                addActionListener {
+                    fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
+
+                    if (jreFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                        jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
+                    }
+
+                }
+            }, "wrap para")
+            add(okAction.createTextButton().apply {
+                this@ClasspathSetupDialog.getRootPane().defaultButton = this
+
+            }, "split, tag ok")
+            add(cancelAction.createTextButton(), "tag cancel")
         }
 
-        setSize(500, 300)
+        setSize(600, 400)
         isModal = true
         title = "Setup classpath"
         GUIHelper.centerOnParentWindow(this, owner)
@@ -211,22 +198,6 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         })
 
         checkEnabledStatus()
-    }
-
-    private fun createJreHomeChooser(): Component {
-        return JPanel(BorderLayout()).apply {
-            add(jreHomeTextField, BorderLayout.CENTER)
-            add(JButton("Choose").apply {
-                addActionListener {
-                    fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
-
-                    if (jreFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                        jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
-                    }
-
-                }
-            }, BorderLayout.EAST)
-        }
     }
 
     private fun createListPanel() = JPanel().apply {
@@ -243,15 +214,6 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         add(Box.createVerticalGlue())
         add(upAction.createImageButton())
         add(downAction.createImageButton())
-    }
-
-    private fun createButtonBox() = Box.createHorizontalBox().apply {
-        add(Box.createHorizontalGlue())
-        add(okAction.createTextButton().apply {
-            this@ClasspathSetupDialog.getRootPane().defaultButton = this
-
-        })
-        add(cancelAction.createTextButton())
     }
 
     private fun isInModel(entry: ClasspathEntry): Boolean = listModel.elements().toList().any { it == entry }

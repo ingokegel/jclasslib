@@ -7,8 +7,7 @@
 
 package org.gjt.jclasslib.util
 
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
+import net.miginfocom.swing.MigLayout
 import java.awt.Window
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
@@ -39,19 +38,10 @@ class ProgressDialog(parent: Window, message: String, var task: () -> Unit = {})
 
     private fun setupComponent() {
         (contentPane as JPanel).apply {
-            border = GUIHelper.WINDOW_BORDER
-            layout = GridBagLayout()
+            layout = MigLayout("wrap", "[grow]")
 
-            val gc = GridBagConstraints().apply {
-                gridx = 0
-                gridy = GridBagConstraints.RELATIVE
-                anchor = GridBagConstraints.NORTHWEST
-            }
-            add(messageLabel, gc)
-            add(progressBar, gc.apply {
-                fill = GridBagConstraints.HORIZONTAL
-                weightx = 1.0
-            })
+            add(messageLabel)
+            add(progressBar, "growx")
 
             title = GUIHelper.MESSAGE_TITLE
             isModal = true
