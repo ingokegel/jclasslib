@@ -16,6 +16,8 @@ import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.LinkMouseListener
 import java.awt.*
 import java.awt.datatransfer.StringSelection
+import java.awt.event.MouseEvent
+import java.awt.event.MouseMotionAdapter
 import java.awt.font.FontRenderContext
 import java.awt.font.TextAttribute
 import java.awt.font.TextLayout
@@ -36,7 +38,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
     private var offsetBlank: String? = null
     private val offsetToLine = HashMap<Int, Int>()
     private val lines = ArrayList<AttributedString>()
-    private val textLines = ArrayList<String>()
+    val textLines = ArrayList<String>()
     private val lineToLink = HashMap<Int, BytecodeLink>()
     private val invalidBranches = HashSet<Instruction>()
 
@@ -51,15 +53,25 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
     var ascent: Int = 0
         private set
 
+    val scrollPane : JScrollPane
+        get() = detailPane.scrollPane
+
     private var characterWidth: Int = 0
 
     private val frc: FontRenderContext
         get() = (graphics as Graphics2D).fontRenderContext
 
+    val selectedText: String?
+        get() = highlightHandler.selectedText
+
+    private val highlightHandler : HighlightHandler = HighlightHandler(this)
+
     init {
         border = BORDER
         isDoubleBuffered = false
         isOpaque = false
+
+        TextTransferHandler.install(this)
 
         object : LinkMouseListener(this) {
             override fun isLink(point: Point) = getLink(point) != null
@@ -68,6 +80,14 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
                 this@ByteCodeDisplay.link(point)
             }
         }
+
+        addMouseMotionListener(object : MouseMotionAdapter() {
+            override fun mouseDragged(e: MouseEvent) {
+                scrollRectToVisible(Rectangle(e.x, e.y, 1, 1))
+            }
+        })
+
+        autoscrolls = true
     }
 
     override fun getPreferredScrollableViewportSize() = null
@@ -94,7 +114,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
             return 1
         } else {
             val currentY = viewport.viewPosition.y
-            val rawTargetY = currentY + if (direction < 0) -1 else 1 * viewport.height
+            val rawTargetY = currentY + (if (direction < 0) -1 else 1) * viewport.height
             val line = 1f * (rawTargetY - MARGIN_Y) / lineHeight
             val targetLine = (if (direction < 0) Math.ceil(line.toDouble()) else Math.floor(line.toDouble())).toInt()
             val targetY = MARGIN_Y + targetLine * lineHeight + 1
@@ -169,10 +189,11 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         for (i in startLine..endLine - 1) {
             val textLayout = getOrCreateTextLayout(i)
             textLayout.draw(g, 0f, i * lineHeight + textLayout.ascent)
+            highlightHandler.drawHighlight(i, textLayout, g)
         }
     }
 
-    private fun getOrCreateTextLayout(i: Int): TextLayout {
+    fun getOrCreateTextLayout(i: Int): TextLayout {
         val textLayout: TextLayout? = textLayouts[i]
         if (textLayout == null) {
             return TextLayout(lines[i].iterator, frc).apply {
@@ -220,6 +241,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         offsetToLine.clear()
         lineToLink.clear()
         invalidBranches.clear()
+        highlightHandler.reset()
 
         codeAttribute?.code?.let { code ->
             try {

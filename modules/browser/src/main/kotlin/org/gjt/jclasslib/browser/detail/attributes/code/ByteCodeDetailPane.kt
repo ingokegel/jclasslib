@@ -43,7 +43,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
 
     private val byteCodeDisplay: ByteCodeDisplay = ByteCodeDisplay(this)
 
-    private val scrollPane: JScrollPane = JScrollPane(byteCodeDisplay).apply {
+    val scrollPane: JScrollPane = JScrollPane(byteCodeDisplay).apply {
         viewport.background = Color.WHITE
         object : MouseAdapter() {
             override fun mousePressed(event: MouseEvent?) {
