@@ -64,9 +64,9 @@ class HighlightHandler(private val byteCodeDisplay: ByteCodeDisplay) : MouseAdap
                 endOffset = hlStartOffset
             }
             val buffer = StringBuilder()
-            val it = byteCodeDisplay.textLines.listIterator(startLine)
+            val it = byteCodeDisplay.lines.listIterator(startLine)
             for (i in startLine..endLine) {
-                val lineText = it.next()
+                val lineText = it.next().plainText
                 if (i == startLine && i == endLine) {
                     buffer.append(lineText.substring(Math.min(startOffset, endOffset), Math.max(startOffset, endOffset)))
                 } else if (i == startLine) {
@@ -120,7 +120,7 @@ class HighlightHandler(private val byteCodeDisplay: ByteCodeDisplay) : MouseAdap
 
     private fun setAnchor(point: Point, start: Boolean) {
         val scrollPane = byteCodeDisplay.scrollPane
-        val lines = byteCodeDisplay.textLines
+        val lines = byteCodeDisplay.lines
         val lineHeight = byteCodeDisplay.lineHeight
 
         if (lineHeight == 0 || lines.size == 0) {
@@ -143,16 +143,16 @@ class HighlightHandler(private val byteCodeDisplay: ByteCodeDisplay) : MouseAdap
     }
 
     private fun calculatePosition(x: Int, y: Int, lineHeight: Int): Pair<Int, Int> {
-        val lines = byteCodeDisplay.textLines
+        val lines = byteCodeDisplay.lines
         val line = y / lineHeight
         if (line < 0) {
             return 0 to 0
         } else if (line >= lines.size) {
-            return lines.size - 1 to lines.last().length
+            return lines.size - 1 to lines.last().plainText.length
         } else {
-            val textLayout = byteCodeDisplay.getOrCreateTextLayout(line)
+            val textLayout = byteCodeDisplay.lines[line].textLayout
             if (x >= textLayout.advance) {
-                return line to lines[line].length
+                return line to lines[line].plainText.length
             } else {
                 val textHitInfo = textLayout.hitTestChar(x.toFloat(), (y - line * lineHeight).toFloat())
                 return line to Math.max(0, textHitInfo.charIndex)

@@ -37,16 +37,13 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
     private var offsetWidth: Int = 0
     private var offsetBlank: String? = null
     private val offsetToLine = HashMap<Int, Int>()
-    private val lines = ArrayList<AttributedString>()
-    val textLines = ArrayList<String>()
+    val lines = ArrayList<TextLine>()
     private val lineToLink = HashMap<Int, BytecodeLink>()
     private val invalidBranches = HashSet<Instruction>()
 
     private val currentLineCache = LinkedList<LineCacheEntry>()
     private var currentHeight: Float = 0.toFloat()
     private var currentWidth: Float = 0.toFloat()
-
-    private var textLayouts = arrayOf<TextLayout?>()
 
     var lineHeight: Int = 0
         private set
@@ -161,8 +158,8 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
 
     val clipboardText: String
         get() = StringBuilder().apply {
-            for (line in textLines) {
-                append(line)
+            for (line in lines) {
+                append(line.plainText)
                 append('\n')
             }
         }.toString()
@@ -187,20 +184,9 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         val startLine = Math.max(0, clipBounds.y / lineHeight - 1)
         val endLine = Math.min(lines.size, (clipBounds.y + clipBounds.height) / lineHeight + 1)
         for (i in startLine..endLine - 1) {
-            val textLayout = getOrCreateTextLayout(i)
+            val textLayout = lines[i].textLayout
             textLayout.draw(g, 0f, i * lineHeight + textLayout.ascent)
             highlightHandler.drawHighlight(i, textLayout, g)
-        }
-    }
-
-    fun getOrCreateTextLayout(i: Int): TextLayout {
-        val textLayout: TextLayout? = textLayouts[i]
-        if (textLayout == null) {
-            return TextLayout(lines[i].iterator, frc).apply {
-                textLayouts[i] = this
-            }
-        } else {
-            return textLayout
         }
     }
 
@@ -213,7 +199,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         val line = y / lineHeight
         val link = lineToLink[line] ?: return null
 
-        val textLayout = getOrCreateTextLayout(line)
+        val textLayout = lines[line].textLayout
         val textHitInfo = textLayout.hitTestChar(x.toFloat(), (y - line * lineHeight).toFloat())
         val charIndex = textHitInfo.charIndex
         if (charIndex >= link.startCharIndex && charIndex < link.endCharIndex) {
@@ -235,9 +221,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
         lineHeight = 0
         currentHeight = 0f
         currentWidth = 0f
-        textLines.clear()
         lines.clear()
-        textLayouts = arrayOf()
         offsetToLine.clear()
         lineToLink.clear()
         invalidBranches.clear()
@@ -250,7 +234,6 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
                 calculateOffsetWidth(instructions)
                 detailPane.setCurrentInstructions(instructions)
                 instructions.forEach { instruction -> addInstructionToDocument(instruction) }
-                textLayouts = arrayOfNulls(lines.size)
             } catch (ex: IOException) {
                 ex.printStackTrace()
             }
@@ -445,8 +428,7 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
             attrString.addAttributes(entry.attributes, startCharIndex, endCharIndex)
             startCharIndex = endCharIndex
         }
-        lines.add(attrString)
-        textLines.add(text)
+        lines.add(TextLine(text, attrString, TextLayout(attrString.iterator, frc)))
 
         if (lineHeight == 0) {
             TextLayout(attrString.iterator, frc).let {
@@ -476,6 +458,11 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
     private open class BytecodeLink(val startCharIndex: Int, val endCharIndex: Int, var sourceOffset: Int)
     private class ConstantPoolLink(startCharIndex: Int, endCharIndex: Int, sourceOffset: Int, val cpIndex: Int) : BytecodeLink(startCharIndex, endCharIndex, sourceOffset)
     private class OffsetLink(startCharIndex: Int, endCharIndex: Int, sourceOffset: Int, val targetOffset: Int) : BytecodeLink(startCharIndex, endCharIndex, sourceOffset)
+    class TextLine(val plainText: String, val attrText: AttributedString, var textLayout: TextLayout) {
+        fun updateLayout(frc: FontRenderContext) {
+            textLayout = TextLayout(attrText.iterator, frc)
+        }
+    }
 
     companion object {
 
