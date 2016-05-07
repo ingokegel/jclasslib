@@ -7,238 +7,50 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.bytecode.*
 import org.gjt.jclasslib.io.ByteCodeReader
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
-import org.gjt.jclasslib.util.LinkMouseListener
-import java.awt.*
-import java.awt.datatransfer.StringSelection
-import java.awt.event.MouseEvent
-import java.awt.event.MouseMotionAdapter
-import java.awt.font.FontRenderContext
-import java.awt.font.TextAttribute
-import java.awt.font.TextLayout
+import org.gjt.jclasslib.util.BatchDocument
+import java.awt.Color
 import java.io.IOException
-import java.text.AttributedString
 import java.util.*
-import javax.swing.*
-import javax.swing.border.Border
-import javax.swing.border.EmptyBorder
+import javax.swing.text.*
 
-class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Scrollable {
+class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane, private val styles: StyleContext, private val attribute: CodeAttribute, private val classFile: ClassFile) : BatchDocument(styles) {
 
-    var codeAttribute: CodeAttribute? = null
+    private val offsetToPosition = HashMap<Int, Int>()
+    private val lineStartPositions = ArrayList<Int>()
+    val opcodeCounterDocument = BatchDocument(styles)
+    var opcodeCounterWidth: Int = 0
         private set
-    private var classFile: ClassFile? = null
-
     private var offsetWidth: Int = 0
-    private var offsetBlank: String? = null
-    private val offsetToLine = HashMap<Int, Int>()
-    val lines = ArrayList<TextLine>()
-    private val lineToLink = HashMap<Int, BytecodeLink>()
     private val invalidBranches = HashSet<Instruction>()
 
-    private val currentLineCache = LinkedList<LineCacheEntry>()
-    private var currentHeight: Float = 0.toFloat()
-    private var currentWidth: Float = 0.toFloat()
-
-    var lineHeight: Int = 0
-        private set
-    var ascent: Int = 0
-        private set
-
-    val scrollPane : JScrollPane
-        get() = detailPane.scrollPane
-
-    private var characterWidth: Int = 0
-
-    private val frc: FontRenderContext
-        get() = (graphics as Graphics2D).fontRenderContext
-
-    val selectedText: String?
-        get() = highlightHandler.selectedText
-
-    private val highlightHandler : HighlightHandler = HighlightHandler(this)
-
     init {
-        border = BORDER
-        isDoubleBuffered = false
-        isOpaque = false
+        putProperty("tabSize", 4)
+        setupDocument()
+    }
 
-        TextTransferHandler.install(this)
+    fun getPosition(offset: Int): Int = offsetToPosition[offset] ?: 0
 
-        object : LinkMouseListener(this) {
-            override fun isLink(point: Point) = getLink(point) != null
+    fun getLineStartPosition(lineNumber: Int) = lineStartPositions.getOrElse(lineNumber - 1) { if (it < 0) 0 else length }
 
-            override fun link(point: Point) {
-                this@ByteCodeDisplay.link(point)
+    private fun setupDocument() {
+        try {
+            val instructions = ByteCodeReader.readByteCode(attribute.code)
+            verifyOffsets(instructions)
+            calculateOffsetWidth(instructions)
+            detailPane.setCurrentInstructions(instructions)
+            val instructionLineCounts = instructions.map {
+                addInstructionToDocument(it)
             }
+            processBatchUpdates(0)
+            createOpcodeCounterDocument(instructionLineCounts)
+        } catch (ex: IOException) {
+            ex.printStackTrace()
         }
-
-        addMouseMotionListener(object : MouseMotionAdapter() {
-            override fun mouseDragged(e: MouseEvent) {
-                scrollRectToVisible(Rectangle(e.x, e.y, 1, 1))
-            }
-        })
-
-        autoscrolls = true
-    }
-
-    override fun getPreferredScrollableViewportSize() = null
-
-    override fun getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int {
-        if (orientation == SwingConstants.HORIZONTAL) {
-            return 10
-        } else if (lineHeight == 0) {
-            return 1
-        } else {
-            val currentY = (parent as JViewport).viewPosition.y
-            val line = 1f * (currentY - MARGIN_Y) / lineHeight
-            val targetLine = (if (direction < 0) Math.floor(line.toDouble()) - 1 else Math.ceil(line.toDouble()) + 1).toInt()
-            val targetY = MARGIN_Y + targetLine * lineHeight + 1
-            return Math.abs(currentY - targetY)
-        }
-    }
-
-    override fun getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int {
-        val viewport = parent as JViewport
-        if (orientation == SwingConstants.HORIZONTAL) {
-            return viewport.width
-        } else if (lineHeight == 0) {
-            return 1
-        } else {
-            val currentY = viewport.viewPosition.y
-            val rawTargetY = currentY + (if (direction < 0) -1 else 1) * viewport.height
-            val line = 1f * (rawTargetY - MARGIN_Y) / lineHeight
-            val targetLine = (if (direction < 0) Math.ceil(line.toDouble()) else Math.floor(line.toDouble())).toInt()
-            val targetY = MARGIN_Y + targetLine * lineHeight + 1
-            return Math.abs(currentY - targetY)
-        }
-    }
-
-    override fun getScrollableTracksViewportWidth() = false
-    override fun getScrollableTracksViewportHeight() = false
-
-    val lineCount: Int
-        get() = lines.size
-
-    fun setCodeAttribute(codeAttribute: CodeAttribute, classFile: ClassFile) {
-        this.codeAttribute = codeAttribute
-        this.classFile = classFile
-        setupTextLayouts()
-        invalidate()
-    }
-
-    fun link(point: Point) {
-        val link = getLink(point) ?: return
-        updateHistory(link.sourceOffset)
-
-        if (link is ConstantPoolLink) {
-            ConstantPoolHyperlinkListener.link(detailPane.services, link.cpIndex)
-        } else if (link is OffsetLink) {
-            val targetOffset = link.targetOffset
-            scrollToOffset(targetOffset)
-            updateHistory(targetOffset)
-        }
-    }
-
-    fun scrollToOffset(offset: Int) {
-        val line = offsetToLine[offset] ?: return
-        val target = Rectangle(0, line * lineHeight + MARGIN_Y + 1, 10, parent.height)
-        scrollRectToVisible(target)
-    }
-
-    fun copyToClipboard() {
-        val stringSelection = StringSelection(clipboardText)
-        Toolkit.getDefaultToolkit().systemClipboard.setContents(stringSelection, stringSelection)
-    }
-
-    val clipboardText: String
-        get() = StringBuilder().apply {
-            for (line in lines) {
-                append(line.plainText)
-                append('\n')
-            }
-        }.toString()
-
-    override fun paintComponent(graphics: Graphics) {
-        if (lineHeight == 0) {
-            return
-        }
-        (graphics as Graphics2D).apply {
-            translate(MARGIN_X, MARGIN_Y)
-            val oldPaint = paint
-            paint = Color.WHITE
-            fill(clipBounds)
-            paint = oldPaint
-            drawLines(this)
-            translate(-MARGIN_X, -MARGIN_Y)
-        }
-    }
-
-    private fun drawLines(g: Graphics2D) {
-        val clipBounds = g.clipBounds
-        val startLine = Math.max(0, clipBounds.y / lineHeight - 1)
-        val endLine = Math.min(lines.size, (clipBounds.y + clipBounds.height) / lineHeight + 1)
-        for (i in startLine..endLine - 1) {
-            val textLayout = lines[i].textLayout
-            textLayout.draw(g, 0f, i * lineHeight + textLayout.ascent)
-            highlightHandler.drawHighlight(i, textLayout, g)
-        }
-    }
-
-    private fun getLink(point: Point): BytecodeLink? {
-        if (lineHeight == 0) {
-            return null
-        }
-        val x = point.x - MARGIN_X
-        val y = point.y - MARGIN_Y
-        val line = y / lineHeight
-        val link = lineToLink[line] ?: return null
-
-        val textLayout = lines[line].textLayout
-        val textHitInfo = textLayout.hitTestChar(x.toFloat(), (y - line * lineHeight).toFloat())
-        val charIndex = textHitInfo.charIndex
-        if (charIndex >= link.startCharIndex && charIndex < link.endCharIndex) {
-            return link
-        } else {
-            return null
-        }
-    }
-
-    private fun updateHistory(offset: Int) {
-        val services = detailPane.services
-        val treePath = services.browserComponent.treePane.tree.selectionPath
-
-        val history = services.browserComponent.history
-        history.updateHistory(treePath, offset)
-    }
-
-    private fun setupTextLayouts() {
-        lineHeight = 0
-        currentHeight = 0f
-        currentWidth = 0f
-        lines.clear()
-        offsetToLine.clear()
-        lineToLink.clear()
-        invalidBranches.clear()
-        highlightHandler.reset()
-
-        codeAttribute?.code?.let { code ->
-            try {
-                val instructions = ByteCodeReader.readByteCode(code)
-                verifyOffsets(instructions)
-                calculateOffsetWidth(instructions)
-                detailPane.setCurrentInstructions(instructions)
-                instructions.forEach { instruction -> addInstructionToDocument(instruction) }
-            } catch (ex: IOException) {
-                ex.printStackTrace()
-            }
-        }
-        preferredSize = Dimension(currentWidth.toInt() + 2 * MARGIN_X, currentHeight.toInt() + 2 * MARGIN_Y)
     }
 
     private fun verifyOffsets(instructions: ArrayList<Instruction>) {
@@ -267,37 +79,33 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
 
     private fun calculateOffsetWidth(instructions: List<Instruction>) {
         offsetWidth = instructions.lastOrNull()?.offset?.toString()?.length ?: 1
-        offsetBlank = StringBuilder(offsetWidth).apply {
-            for (i in 0..offsetWidth - 1) {
-                append(' ')
-            }
-        }.toString()
     }
 
-    private fun addInstructionToDocument(instruction: Instruction) {
+    private fun addInstructionToDocument(instruction: Instruction): Int {
         val offset = instruction.offset
         addOffsetReference(offset)
         appendString(getPaddedValue(offset, offsetWidth), STYLE_OFFSET)
         appendString(" " + instruction.opcode.verbose, STYLE_INSTRUCTION)
-        addOpcodeSpecificInfo(instruction)
-        newLine()
+        val additionalLines = addOpcodeSpecificInfo(instruction)
+        appendBatchLineFeed(STYLE_NORMAL)
+        return additionalLines + 1
     }
 
     private fun addOffsetReference(offset: Int) {
-        offsetToLine.put(offset, currentLine)
+        offsetToPosition.put(offset, length)
     }
 
-    private fun addOpcodeSpecificInfo(instruction: Instruction) {
-        when (instruction) {
-            is ImmediateByteInstruction -> addImmediateByteSpecificInfo(instruction)
-            is ImmediateShortInstruction -> addImmediateShortSpecificInfo(instruction)
-            is AbstractBranchInstruction -> addBranchSpecificInfo(instruction)
-            is TableSwitchInstruction -> addTableSwitchSpecificInfo(instruction)
-            is LookupSwitchInstruction -> addLookupSwitchSpecificInfo(instruction)
-        }
-    }
+    private fun addOpcodeSpecificInfo(instruction: Instruction): Int =
+            when (instruction) {
+                is ImmediateByteInstruction -> addImmediateByteSpecificInfo(instruction)
+                is ImmediateShortInstruction -> addImmediateShortSpecificInfo(instruction)
+                is AbstractBranchInstruction -> addBranchSpecificInfo(instruction)
+                is TableSwitchInstruction -> addTableSwitchSpecificInfo(instruction)
+                is LookupSwitchInstruction -> addLookupSwitchSpecificInfo(instruction)
+                else -> 0
+            }
 
-    private fun addImmediateByteSpecificInfo(instruction: ImmediateByteInstruction) {
+    private fun addImmediateByteSpecificInfo(instruction: ImmediateByteInstruction): Int {
         val opcode = instruction.opcode
         val sourceOffset = instruction.offset
         val immediateByte = instruction.immediateByte
@@ -321,9 +129,10 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
                 appendString(" " + instruction.incrementConst, STYLE_IMMEDIATE_VALUE)
             }
         }
+        return 0
     }
 
-    private fun addImmediateShortSpecificInfo(instruction: ImmediateShortInstruction) {
+    private fun addImmediateShortSpecificInfo(instruction: ImmediateShortInstruction): Int {
         val opcode = instruction.opcode
         val sourceOffset = instruction.offset
         val immediateShort = instruction.immediateShort
@@ -337,60 +146,69 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
                 appendString(" dim " + instruction.dimensions, STYLE_IMMEDIATE_VALUE)
             }
         }
+        return 0
     }
 
-    private fun addBranchSpecificInfo(instruction: AbstractBranchInstruction) {
+    private fun addBranchSpecificInfo(instruction: AbstractBranchInstruction): Int {
         val branchOffset = instruction.branchOffset
         val instructionOffset = instruction.offset
         addOffsetLink(branchOffset, instructionOffset)
         if (invalidBranches.contains(instruction)) {
             appendString(" [INVALID BRANCH]", STYLE_NORMAL)
         }
+        return 0
     }
 
-    private fun addTableSwitchSpecificInfo(instruction: TableSwitchInstruction) {
+    private fun addTableSwitchSpecificInfo(instruction: TableSwitchInstruction): Int {
         val instructionOffset = instruction.offset
         val lowByte = instruction.lowByte
         val highByte = instruction.highByte
         val jumpOffsets = instruction.jumpOffsets
+
         appendString(" $lowByte to $highByte", STYLE_IMMEDIATE_VALUE)
-        newLine()
 
         for (i in 0..highByte - lowByte) {
-            appendString(offsetBlank + TAB_STRING + (i + lowByte) + ": ", STYLE_IMMEDIATE_VALUE)
+            appendString("\u0009" + (i + lowByte) + ": ", STYLE_IMMEDIATE_VALUE)
             addOffsetLink(jumpOffsets[i], instructionOffset)
-            newLine()
+            appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)
 
         }
-        appendString(offsetBlank + TAB_STRING + "default: ", STYLE_IMMEDIATE_VALUE)
+        appendString("\u0009default: ", STYLE_IMMEDIATE_VALUE)
         addOffsetLink(instruction.defaultOffset, instructionOffset)
+
+        return highByte - lowByte + 2
     }
 
-    private fun addLookupSwitchSpecificInfo(instruction: LookupSwitchInstruction) {
+    private fun addLookupSwitchSpecificInfo(instruction: LookupSwitchInstruction): Int {
+
         val instructionOffset = instruction.offset
         val matchOffsetPairs = instruction.matchOffsetPairs
         val matchOffsetPairsCount = matchOffsetPairs.size
+
         appendString(" " + matchOffsetPairsCount, STYLE_IMMEDIATE_VALUE)
-        newLine()
+        appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)
 
         matchOffsetPairs.forEach { matchOffsetPair ->
-            appendString(offsetBlank + TAB_STRING + matchOffsetPair.match + ": ", STYLE_IMMEDIATE_VALUE)
+            appendString("\u0009" + matchOffsetPair.match + ": ", STYLE_IMMEDIATE_VALUE)
             addOffsetLink(matchOffsetPair.offset, instructionOffset)
-            newLine()
+            appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)
         }
-        appendString(offsetBlank + TAB_STRING + "default: ", STYLE_IMMEDIATE_VALUE)
+
+        appendString("\u0009default: ", STYLE_IMMEDIATE_VALUE)
         addOffsetLink(instruction.defaultOffset, instructionOffset)
+
+        return matchOffsetPairsCount + 1
     }
 
     private fun addConstantPoolLink(constantPoolIndex: Int, sourceOffset: Int) {
-        appendString(" ", STYLE_NORMAL)
-        val startCharIndex = currentCharIndex
-        appendString("#" + constantPoolIndex, STYLE_LINK)
-        val endCharIndex = currentCharIndex
-        lineToLink.put(currentLine, ConstantPoolLink(startCharIndex, endCharIndex, sourceOffset, constantPoolIndex))
 
+        val currentLinkStyle = styles.addAttribute(STYLE_LINK, ATTRIBUTE_NAME_LINK,
+                DocumentLink(constantPoolIndex, sourceOffset, DocumentLinkType.CONSTANT_POOL_LINK))
+
+        appendString(" ", STYLE_NORMAL)
+        appendString("#" + constantPoolIndex, currentLinkStyle)
         try {
-            val name = classFile?.getConstantPoolEntryName(constantPoolIndex) ?: ""
+            val name = classFile.getConstantPoolEntryName(constantPoolIndex)
             if (name.length > 0) {
                 appendString(" <$name>", STYLE_SMALL)
             }
@@ -400,103 +218,95 @@ class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane) : JPanel(), Sc
     }
 
     private fun addOffsetLink(branchOffset: Int, sourceOffset: Int) {
-        val targetOffset = branchOffset + sourceOffset
+        val totalOffset = branchOffset + sourceOffset
+        val currentLinkStyle = styles.addAttribute(STYLE_LINK, ATTRIBUTE_NAME_LINK,
+                DocumentLink(totalOffset, sourceOffset, DocumentLinkType.OFFSET_LINK))
         appendString(" ", STYLE_NORMAL)
-        val startCharIndex = currentCharIndex
-        appendString(targetOffset.toString(), STYLE_LINK)
-        val endCharIndex = currentCharIndex
-        lineToLink.put(currentLine, OffsetLink(startCharIndex, endCharIndex, sourceOffset, targetOffset))
+        appendString(totalOffset.toString(), currentLinkStyle)
         appendString(" (" + (if (branchOffset > 0) "+" else "") + branchOffset.toString() + ")", STYLE_IMMEDIATE_VALUE)
     }
 
-    private val currentCharIndex: Int
-        get() = currentLineCache.sumBy { it.text.length }
-
-    private val currentLine: Int
-        get() = lines.size
-
-    private fun appendString(text: String, attributes: Map<TextAttribute, Any>) {
-        currentLineCache.add(LineCacheEntry(text, attributes))
+    override fun appendBatchLineFeed(attributes: AttributeSet) {
+        super.appendBatchLineFeed(attributes)
+        lineStartPositions.add(length)
     }
 
-    private fun newLine() {
-        val text = currentLineText
-        val attrString = AttributedString(text, STYLE_BASE)
-        var startCharIndex = 0
-        for (entry in currentLineCache) {
-            val endCharIndex = startCharIndex + entry.text.length
-            attrString.addAttributes(entry.attributes, startCharIndex, endCharIndex)
-            startCharIndex = endCharIndex
+    private fun appendString(string: String, attributes: AttributeSet) {
+        try {
+            appendBatchString(string, attributes)
+        } catch (ex: BadLocationException) {
+            ex.printStackTrace()
         }
-        lines.add(TextLine(text, attrString, TextLayout(attrString.iterator, frc)))
-
-        if (lineHeight == 0) {
-            TextLayout(attrString.iterator, frc).let {
-                lineHeight = (it.ascent + it.descent + it.leading).toInt()
-                ascent = it.ascent.toInt()
-            }
-            TextLayout("0", STYLE_BASE, frc).let {
-                characterWidth = it.advance.toInt()
-            }
-        }
-        currentHeight += lineHeight.toFloat()
-        currentWidth = Math.max(currentWidth, (characterWidth * text.length).toFloat())
-
-        currentLineCache.clear()
     }
 
-    private val currentLineText: String
-        get() = StringBuilder(currentCharIndex).apply {
-            for (entry in currentLineCache) {
-                append(entry.text)
+    private fun createOpcodeCounterDocument(instructionLineCounts: List<Int>) {
+        val numberOfOpcodes = instructionLineCounts.size
+        opcodeCounterWidth = (numberOfOpcodes - 1).toString().length
+        try {
+            for (i in 0..numberOfOpcodes - 1) {
+                opcodeCounterDocument.appendBatchString(getPaddedValue(i, opcodeCounterWidth), STYLE_LINE_NUMBER)
+                for (j in 0..instructionLineCounts[i] - 1) {
+                    opcodeCounterDocument.appendBatchLineFeed(STYLE_NORMAL)
+                }
             }
-        }.toString()
-
-
-    private class LineCacheEntry(val text: String, val attributes: Map<TextAttribute, Any>)
-
-    private open class BytecodeLink(val startCharIndex: Int, val endCharIndex: Int, var sourceOffset: Int)
-    private class ConstantPoolLink(startCharIndex: Int, endCharIndex: Int, sourceOffset: Int, val cpIndex: Int) : BytecodeLink(startCharIndex, endCharIndex, sourceOffset)
-    private class OffsetLink(startCharIndex: Int, endCharIndex: Int, sourceOffset: Int, val targetOffset: Int) : BytecodeLink(startCharIndex, endCharIndex, sourceOffset)
-    class TextLine(val plainText: String, val attrText: AttributedString, var textLayout: TextLayout) {
-        fun updateLayout(frc: FontRenderContext) {
-            textLayout = TextLayout(attrText.iterator, frc)
+            opcodeCounterDocument.processBatchUpdates(0)
+        } catch (ex: BadLocationException) {
+            ex.printStackTrace()
         }
+    }
+
+    class DocumentLink(val index: Int, val sourceOffset: Int, val type: DocumentLinkType)
+
+    enum class DocumentLinkType {
+        CONSTANT_POOL_LINK, OFFSET_LINK
     }
 
     companion object {
+        val ATTRIBUTE_NAME_LINK = "attributeLink"
+        val STYLE_NORMAL: MutableAttributeSet
+        val STYLE_SMALL: MutableAttributeSet
+        val STYLE_LINK: MutableAttributeSet
+        val STYLE_OFFSET: MutableAttributeSet
+        val STYLE_INSTRUCTION: MutableAttributeSet
+        val STYLE_IMMEDIATE_VALUE: MutableAttributeSet
+        val STYLE_LINE_NUMBER: MutableAttributeSet
 
-        val MARGIN_X = 3
-        val MARGIN_Y = 3
-        val BORDER: Border = EmptyBorder(MARGIN_Y, MARGIN_X, MARGIN_Y, MARGIN_X)
+        private val LINE_NUMBERS_FONT_DIFF = 2
 
-        private val BASE_FONT = UIManager.getFont("TextArea.font")
-        private val STYLE_BASE = mapOf<TextAttribute, Any>(
-                TextAttribute.FAMILY to "MonoSpaced",
-                TextAttribute.SIZE to BASE_FONT.size.toFloat()
-        )
-        private val STYLE_NORMAL = mapOf<TextAttribute, Any>()
-        private val STYLE_SMALL = mapOf<TextAttribute, Any>(
-                TextAttribute.SIZE to (BASE_FONT.size - 1).toFloat()
-        )
-        private val STYLE_LINK = mapOf<TextAttribute, Any>(
-                TextAttribute.FOREGROUND to Color(0, 128, 0),
-                TextAttribute.WEIGHT to TextAttribute.WEIGHT_BOLD,
-                TextAttribute.UNDERLINE to TextAttribute.UNDERLINE_ON
-        )
-        private val STYLE_OFFSET = mapOf<TextAttribute, Any>(
-                TextAttribute.FOREGROUND to Color(128, 0, 0)
-        )
-        private val STYLE_INSTRUCTION = mapOf<TextAttribute, Any>(
-                TextAttribute.WEIGHT to TextAttribute.WEIGHT_BOLD
-        )
-        private val STYLE_IMMEDIATE_VALUE = mapOf<TextAttribute, Any>(
-                TextAttribute.FOREGROUND to Color.magenta,
-                TextAttribute.WEIGHT to TextAttribute.WEIGHT_BOLD
-        )
-        private val TAB_STRING = "        "
+        init {
+            STYLE_NORMAL = SimpleAttributeSet()
 
-        fun getPaddedValue(number: Int, width: Int) = StringBuilder().apply {
+            STYLE_LINK = SimpleAttributeSet().apply {
+                StyleConstants.setForeground(this, Color(0, 128, 0))
+                StyleConstants.setBold(this, true)
+                StyleConstants.setUnderline(this, true)
+            }
+
+            STYLE_OFFSET = SimpleAttributeSet().apply {
+                StyleConstants.setForeground(this, Color(128, 0, 0))
+            }
+
+            STYLE_INSTRUCTION = SimpleAttributeSet().apply {
+                StyleConstants.setBold(this, true)
+            }
+
+            STYLE_IMMEDIATE_VALUE = SimpleAttributeSet().apply {
+                StyleConstants.setForeground(this, Color.magenta)
+                StyleConstants.setBold(this, true)
+            }
+
+            STYLE_LINE_NUMBER = SimpleAttributeSet().apply {
+                StyleConstants.setForeground(this, Color(128, 128, 128))
+                StyleConstants.setFontSize(this, StyleConstants.getFontSize(this) - LINE_NUMBERS_FONT_DIFF)
+            }
+
+            STYLE_SMALL = SimpleAttributeSet().apply {
+                StyleConstants.setFontSize(this, StyleConstants.getFontSize(this) - 1)
+            }
+
+        }
+
+        private fun getPaddedValue(number: Int, width: Int) = StringBuilder().apply {
             val value = number.toString()
             val valueLength = value.length
             for (i in valueLength..width - 1) {
