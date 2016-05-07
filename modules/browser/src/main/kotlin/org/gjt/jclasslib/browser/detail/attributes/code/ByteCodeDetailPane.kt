@@ -10,8 +10,8 @@ package org.gjt.jclasslib.browser.detail.attributes.code
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.DetailPane
-import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDisplay.DocumentLink
-import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDisplay.DocumentLinkType
+import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.DocumentLink
+import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.DocumentLinkType
 import org.gjt.jclasslib.bytecode.Instruction
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.DefaultAction
@@ -85,11 +85,11 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     override fun show(treePath: TreePath) {
         val attribute = getElement(treePath)
         val byteCodeDocument = attributeToByteCodeDocument.getOrPut(attribute) {
-            ByteCodeDisplay(this, styles, attribute, services.classFile)
+            ByteCodeDocument(this, styles, attribute, services.classFile)
         }
 
         if (byteCodeTextPane.document !== byteCodeDocument) {
-            val characterWidth: Int = getFontMetrics(styles.getFont(ByteCodeDisplay.STYLE_LINE_NUMBER)).charWidth('0')
+            val characterWidth: Int = getFontMetrics(styles.getFont(ByteCodeDocument.STYLE_LINE_NUMBER)).charWidth('0')
             val opcodeCounterSize = Dimension(characterWidth * byteCodeDocument.opcodeCounterWidth + LINE_NUMBERS_OFFSET, 0)
 
             withWaitCursor {
@@ -154,8 +154,8 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     private val lineHeight: Int
         get() = getFontMetrics(byteCodeTextPane.font).height
 
-    private val byteCodeDocument: ByteCodeDisplay
-        get() = byteCodeTextPane.document as ByteCodeDisplay
+    private val byteCodeDocument: ByteCodeDocument
+        get() = byteCodeTextPane.document as ByteCodeDocument
 
 
     private inner class DocumentLinkListener(private val textPane: JTextPane) : MouseAdapter(), MouseMotionListener {
@@ -199,7 +199,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         private fun getLinkAttribute(position: Int): DocumentLink? {
             val document = textPane.document as DefaultStyledDocument
             val element = document.getCharacterElement(position) as AbstractElement
-            return element.getAttribute(ByteCodeDisplay.ATTRIBUTE_NAME_LINK) as DocumentLink?
+            return element.getAttribute(ByteCodeDocument.ATTRIBUTE_NAME_LINK) as DocumentLink?
         }
     }
 
@@ -242,7 +242,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         private val origin = Rectangle(0, 0, 0, 0)
         private val LINE_NUMBERS_OFFSET = 9
         private val styles = StyleContext()
-        private val attributeToByteCodeDocument = WeakHashMap<CodeAttribute, ByteCodeDisplay>()
+        private val attributeToByteCodeDocument = WeakHashMap<CodeAttribute, ByteCodeDocument>()
     }
 }
 

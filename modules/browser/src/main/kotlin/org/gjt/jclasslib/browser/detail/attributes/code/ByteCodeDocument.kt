@@ -18,7 +18,7 @@ import java.io.IOException
 import java.util.*
 import javax.swing.text.*
 
-class ByteCodeDisplay(private val detailPane: ByteCodeDetailPane, private val styles: StyleContext, private val attribute: CodeAttribute, private val classFile: ClassFile) : BatchDocument(styles) {
+class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val styles: StyleContext, private val attribute: CodeAttribute, private val classFile: ClassFile) : BatchDocument(styles) {
 
     private val offsetToPosition = HashMap<Int, Int>()
     private val lineStartPositions = ArrayList<Int>()
