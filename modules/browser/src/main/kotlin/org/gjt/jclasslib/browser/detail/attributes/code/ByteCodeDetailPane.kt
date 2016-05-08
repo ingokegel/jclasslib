@@ -10,8 +10,7 @@ package org.gjt.jclasslib.browser.detail.attributes.code
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.DetailPane
-import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.DocumentLink
-import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.DocumentLinkType
+import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.*
 import org.gjt.jclasslib.bytecode.Instruction
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.DefaultAction
@@ -131,17 +130,17 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         }
     }
 
-    private fun link(link: DocumentLink) {
-        val linkType = link.type
-        val sourceOffset = link.sourceOffset
-        updateHistory(sourceOffset)
-
-        if (linkType == DocumentLinkType.CONSTANT_POOL_LINK) {
-            ConstantPoolHyperlinkListener.link(services, link.index)
-        } else if (linkType == DocumentLinkType.OFFSET_LINK) {
-            scrollToOffset(link.index)
-            val targetOffset = link.index
-            updateHistory(targetOffset)
+    private fun link(link: Link) {
+        if (link is DocumentLink) {
+            val sourceOffset = link.sourceOffset
+            updateHistory(sourceOffset)
+        }
+        when (link) {
+            is ConstantPoolLink -> ConstantPoolHyperlinkListener.link(services, link.constantPoolIndex)
+            is OffsetLink -> {
+                scrollToOffset(link.targetOffset)
+                updateHistory(link.targetOffset)
+            }
         }
     }
 
@@ -196,10 +195,10 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
             return getLinkAttribute(position) != null
         }
 
-        private fun getLinkAttribute(position: Int): DocumentLink? {
+        private fun getLinkAttribute(position: Int): Link? {
             val document = textPane.document as DefaultStyledDocument
             val element = document.getCharacterElement(position) as AbstractElement
-            return element.getAttribute(ByteCodeDocument.ATTRIBUTE_NAME_LINK) as DocumentLink?
+            return element.getAttribute(ByteCodeDocument.ATTRIBUTE_NAME_LINK) as Link?
         }
     }
 

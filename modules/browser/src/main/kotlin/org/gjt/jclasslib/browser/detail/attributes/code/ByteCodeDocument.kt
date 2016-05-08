@@ -203,7 +203,7 @@ class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val s
     private fun addConstantPoolLink(constantPoolIndex: Int, sourceOffset: Int) {
 
         val currentLinkStyle = styles.addAttribute(STYLE_LINK, ATTRIBUTE_NAME_LINK,
-                DocumentLink(constantPoolIndex, sourceOffset, DocumentLinkType.CONSTANT_POOL_LINK))
+                ConstantPoolLink(constantPoolIndex, sourceOffset))
 
         appendString(" ", STYLE_NORMAL)
         appendString("#" + constantPoolIndex, currentLinkStyle)
@@ -220,7 +220,7 @@ class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val s
     private fun addOffsetLink(branchOffset: Int, sourceOffset: Int) {
         val totalOffset = branchOffset + sourceOffset
         val currentLinkStyle = styles.addAttribute(STYLE_LINK, ATTRIBUTE_NAME_LINK,
-                DocumentLink(totalOffset, sourceOffset, DocumentLinkType.OFFSET_LINK))
+                OffsetLink(totalOffset, sourceOffset))
         appendString(" ", STYLE_NORMAL)
         appendString(totalOffset.toString(), currentLinkStyle)
         appendString(" (" + (if (branchOffset > 0) "+" else "") + branchOffset.toString() + ")", STYLE_IMMEDIATE_VALUE)
@@ -255,11 +255,12 @@ class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val s
         }
     }
 
-    class DocumentLink(val index: Int, val sourceOffset: Int, val type: DocumentLinkType)
-
-    enum class DocumentLinkType {
-        CONSTANT_POOL_LINK, OFFSET_LINK
+    interface Link
+    interface DocumentLink : Link {
+        val sourceOffset: Int
     }
+    data class OffsetLink(val targetOffset: Int, override val sourceOffset: Int) : DocumentLink
+    data class ConstantPoolLink(val constantPoolIndex: Int, override val sourceOffset: Int) : DocumentLink
 
     companion object {
         val ATTRIBUTE_NAME_LINK = "attributeLink"
