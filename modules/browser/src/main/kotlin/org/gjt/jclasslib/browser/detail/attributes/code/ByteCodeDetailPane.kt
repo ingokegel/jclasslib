@@ -241,8 +241,24 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     companion object {
         private val origin = Rectangle(0, 0, 0, 0)
         private val LINE_NUMBERS_OFFSET = 9
-        private val styles = StyleContext()
+        private val styles = object : StyleContext() {
+
+            data class FontInfo(val family: String, val style: Int, val size: Int)
+
+            private val fontCache = HashMap<FontInfo, Font>()
+
+            // Font queries in StyleContext are very slow because they call String.intern().
+            // Caching in derived class fixes the problem.
+            override fun getFont(family: String, style: Int, size: Int) =
+                    fontCache.getOrPut(FontInfo(family, style, size)) {
+                        super.getFont(family, style, size)
+                    }
+        }
         private val attributeToByteCodeDocument = WeakHashMap<CodeAttribute, ByteCodeDocument>()
+
     }
+
 }
+
+
 

@@ -7,17 +7,14 @@
 
 package org.gjt.jclasslib.util
 
-import java.awt.Font
-import java.util.*
 import javax.swing.text.AttributeSet
 import javax.swing.text.DefaultStyledDocument
 import javax.swing.text.StyleContext
 
-open class BatchDocument(styles : StyleContext = StyleContext()) : DefaultStyledDocument(styles) {
+open class BatchDocument(styles: StyleContext = StyleContext()) : DefaultStyledDocument(styles) {
 
     private val batch = arrayListOf<DefaultStyledDocument.ElementSpec>()
-    private val fontCache = HashMap<AttributeSet, Font>()
-    private var batchLength : Int = 0
+    private var batchLength: Int = 0
 
     fun appendBatchString(string: String, attributes: AttributeSet) {
         val attributesCopy = attributes.copyAttributes()
@@ -53,12 +50,6 @@ open class BatchDocument(styles : StyleContext = StyleContext()) : DefaultStyled
         super.getLength()
     } else {
         batchLength
-    }
-
-    override fun getFont(attr: AttributeSet): Font {
-        return fontCache.getOrPut(attr) {
-            super.getFont(attr)
-        }
     }
 
     companion object {
