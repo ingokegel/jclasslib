@@ -13,21 +13,21 @@ import javax.swing.text.StyleContext
 
 open class BatchDocument(styles: StyleContext = StyleContext()) : DefaultStyledDocument(styles) {
 
-    private val batch = arrayListOf<DefaultStyledDocument.ElementSpec>()
+    private val batch = arrayListOf<ElementSpec>()
     private var batchLength: Int = 0
 
     fun appendBatchString(string: String, attributes: AttributeSet) {
         val attributesCopy = attributes.copyAttributes()
         val chars = string.toCharArray()
-        addBatch(DefaultStyledDocument.ElementSpec(attributesCopy, DefaultStyledDocument.ElementSpec.ContentType, chars, 0, string.length))
+        addBatch(ElementSpec(attributesCopy, ElementSpec.ContentType, chars, 0, string.length))
     }
 
     open fun appendBatchLineFeed(attributes: AttributeSet) {
-        addBatch(ElementSpec(attributes, ElementSpec.ContentType, EOL_ARRAY, 0, 1))
+        addBatch(ElementSpec(attributes, ElementSpec.ContentType, EOL_ARRAY, 0, EOL_ARRAY.size))
         val paragraph = getParagraphElement(0)
         val paragraphAttributes = paragraph.attributes
-        addBatch(DefaultStyledDocument.ElementSpec(null, DefaultStyledDocument.ElementSpec.EndTagType))
-        addBatch(DefaultStyledDocument.ElementSpec(paragraphAttributes, DefaultStyledDocument.ElementSpec.StartTagType))
+        addBatch(ElementSpec(null, ElementSpec.EndTagType))
+        addBatch(ElementSpec(paragraphAttributes, ElementSpec.StartTagType))
     }
 
     private fun addBatch(elementSpec: ElementSpec) {
@@ -39,9 +39,9 @@ open class BatchDocument(styles: StyleContext = StyleContext()) : DefaultStyledD
     }
 
     fun processBatchUpdates(offset: Int) {
-        val inserts = arrayOfNulls<DefaultStyledDocument.ElementSpec>(batch.size)
+        val inserts = arrayOfNulls<ElementSpec>(batch.size)
         batch.toArray<ElementSpec>(inserts)
-        super.insert(offset, inserts)
+        insert(offset, inserts)
         batch.clear()
         batchLength = 0
     }

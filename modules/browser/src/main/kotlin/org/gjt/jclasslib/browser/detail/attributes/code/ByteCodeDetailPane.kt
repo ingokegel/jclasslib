@@ -32,9 +32,8 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         autoscrolls = false
     }
 
-    private val scrollPane: JScrollPane = JScrollPane(ScrollableShield(byteCodeTextPane)).apply {
+    private val scrollPane: JScrollPane = JScrollPane(byteCodeTextPane).apply {
         setRowHeaderView(opcodeCounterTextPane)
-        verticalScrollBar.unitIncrement = lineHeight
     }
 
     init {
@@ -240,6 +239,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         var preventDrag: Boolean = false
 
         init {
+            editorKit = ByteCodeEditorKit()
             font = Font("MonoSpaced".intern(), 0, UIManager.getFont("TextArea.font").size)
             isEditable = false
             DocumentLinkListener(this)
@@ -249,7 +249,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
                         if (direction == SwingConstants.WEST || direction == SwingConstants.EAST || byteCodeTextPane.selectedText != null) {
                             super.getNextVisualPositionFrom(text, pos, bias, direction, biasRet)
                         } else {
-                            val viewRect = (parent.parent as JViewport).viewRect
+                            val viewRect = (parent as JViewport).viewRect
                             val lineHeight = lineHeight
                             val nextLineNumber = if (direction == SwingConstants.SOUTH) (viewRect.height + viewRect.y) / lineHeight else viewRect.y / lineHeight - 1
                             byteCodeDocument.getLineStartPosition(nextLineNumber)
@@ -264,13 +264,6 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
             super.processMouseMotionEvent(e)
         }
 
-    }
-
-    private class ScrollableShield(val byteCodeTextPane: JTextPane) : JPanel() {
-        init {
-            layout = BorderLayout()
-            add(byteCodeTextPane, BorderLayout.CENTER)
-        }
     }
 
     class LinkHighlightPainter(private val underlineStroke: Stroke) : Highlighter.HighlightPainter {
