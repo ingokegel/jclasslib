@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.util
 
+import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Rectangle
@@ -20,6 +21,7 @@ open class ExtendedJLabel(text: String) : JLabel(text), Scrollable, TextDisplay 
     var isUnderlined = false
         set(underlined) {
             field = underlined
+            cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
             repaint()
         }
     var autoTooltip = false
@@ -41,26 +43,6 @@ open class ExtendedJLabel(text: String) : JLabel(text), Scrollable, TextDisplay 
         if (autoTooltip) {
             toolTipText = text
         }
-    }
-
-    fun setText(number: Short) {
-        text = number.toString()
-    }
-
-    fun setText(number: Int) {
-        text = number.toString()
-    }
-
-    fun setText(number: Double) {
-        text = number.toString()
-    }
-
-    fun setText(number: Float) {
-        text = number.toString()
-    }
-
-    fun setText(number: Long) {
-        text = number.toString()
     }
 
     override fun paint(g: Graphics) {

@@ -11,9 +11,7 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.*
-import org.gjt.jclasslib.bytecode.Instruction
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
-import org.gjt.jclasslib.util.DefaultAction
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -26,21 +24,7 @@ import javax.swing.tree.TreePath
 
 class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(CodeAttribute::class.java, services) {
 
-    private val instructionToURL = HashMap<String, String>()
-
-    private val showDescriptionAction = DefaultAction("Show Description", "Show detailed information about the selected instruction.") {
-        val opcode = instructionsDropDown.selectedItem
-        if (opcode != null) {
-            val url = instructionToURL[opcode]
-            if (url != null) {
-                services.showURL(url)
-            }
-        }
-    }
-
-    private val instructionsDropDown = JComboBox<String>()
-
-    private val byteCodeTextPane: JTextPane = ByteCodeTextPane()
+    private val byteCodeTextPane = ByteCodeTextPane()
 
     private val opcodeCounterTextPane: JTextPane = OpcodeCounterTextPane().apply {
         isEnabled = false
@@ -59,32 +43,13 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
 
     override fun setupComponent() {
         layout = BorderLayout()
-        add(Box.createHorizontalBox().apply {
-            add(JPanel(FlowLayout(FlowLayout.LEFT, 6, 0)).apply {
-                add(JLabel("Used instructions:"))
-                add(instructionsDropDown, BorderLayout.CENTER)
-                add(showDescriptionAction.createTextButton())
-            })
-        }, BorderLayout.SOUTH)
         add(scrollPane, BorderLayout.CENTER)
-    }
-
-    fun setCurrentInstructions(instructions: List<Instruction>) {
-        instructionToURL.clear()
-        val mnemonics = TreeSet<String>()
-        instructions.forEach { instruction ->
-            val verbose = instruction.opcode.verbose
-            if (mnemonics.add(verbose)) {
-                instructionToURL.put(verbose, instruction.opcode.docUrl)
-            }
-        }
-        instructionsDropDown.model = DefaultComboBoxModel(mnemonics.toTypedArray())
     }
 
     override fun show(treePath: TreePath) {
         val attribute = getElement(treePath)
         val byteCodeDocument = attributeToByteCodeDocument.getOrPut(attribute) {
-            ByteCodeDocument(this, styles, attribute, services.classFile)
+            ByteCodeDocument(styles, attribute, services.classFile)
         }
 
         if (byteCodeTextPane.document !== byteCodeDocument) {
@@ -130,7 +95,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         }
     }
 
-    private fun link(link: Link) {
+    private fun linkTriggered(link: Link) {
         if (link is DocumentLink) {
             val sourceOffset = link.sourceOffset
             updateHistory(sourceOffset)
@@ -140,6 +105,9 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
             is OffsetLink -> {
                 scrollToOffset(link.targetOffset)
                 updateHistory(link.targetOffset)
+            }
+            is SpecLink -> {
+                services.showURL(link.opcode.docUrl)
             }
         }
     }
@@ -161,6 +129,9 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         private val defaultCursor: Cursor
         private val defaultCursorType: Int
         private val handCursor: Cursor
+        private var activeElement : AbstractElement? = null
+        private var oldAttributes: AttributeSet? = null
+        private var activeHighlight: Any? = null
 
         init {
             textPane.addMouseListener(this)
@@ -171,34 +142,89 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
             handCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
         }
 
-        override fun mouseClicked(event: MouseEvent?) {
-            val position = textPane.viewToModel(event!!.point)
-            val linkAttribute = getLinkAttribute(position)
-            if (linkAttribute != null) {
-                link(linkAttribute)
+        override fun mousePressed(event: MouseEvent) {
+            val element = getTextElement(event)
+            if (element.isDocumentLink) {
+                byteCodeTextPane.preventDrag = true
+                oldAttributes = element.copyAttributes()
+                byteCodeDocument.modifyDocument {
+                    element.addAttribute(StyleConstants.Foreground, ByteCodeDocument.ACTIVE_LINK_COLOR)
+                    modifiedElement(element)
+                }
             }
         }
 
-        override fun mouseDragged(event: MouseEvent?) {
-        }
-
-        override fun mouseMoved(event: MouseEvent?) {
-            val position = textPane.viewToModel(event!!.point)
-            if (textPane.cursor.type == defaultCursorType && isLink(position)) {
-                textPane.cursor = handCursor
-            } else if (!isLink(position)) {
-                textPane.cursor = defaultCursor
+        override fun mouseReleased(event: MouseEvent) {
+            activeElement?.let { element ->
+                if (element.isDocumentLink) {
+                    byteCodeTextPane.preventDrag = false
+                    byteCodeDocument.modifyDocument {
+                        element.removeAttribute(element)
+                        element.addAttributes(oldAttributes)
+                        modifiedElement(element)
+                    }
+                    oldAttributes = null
+                }
             }
         }
 
-        private fun isLink(position: Int): Boolean {
-            return getLinkAttribute(position) != null
+        override fun mouseClicked(event: MouseEvent) {
+            val link = getTextElement(event).link
+            if (link != null) {
+                removeActiveHighlight()
+                linkTriggered(link)
+            }
         }
 
-        private fun getLinkAttribute(position: Int): Link? {
+        override fun mouseDragged(event: MouseEvent) {
+        }
+
+        override fun mouseMoved(event: MouseEvent) {
+            val textElement = getTextElement(event)
+            if (textElement !== activeElement) {
+                removeActiveHighlight()
+                activeElement = textElement
+                textElement.mouseEnter()
+                textPane.cursor = if (textElement.isLink) handCursor else defaultCursor
+            }
+        }
+
+        override fun mouseExited(e: MouseEvent?) {
+            if (!byteCodeTextPane.preventDrag) {
+                removeActiveHighlight()
+                activeElement = null
+            }
+        }
+
+        private fun getTextElement(event: MouseEvent): AbstractElement {
+            val position = textPane.viewToModel(event.point)
             val document = textPane.document as DefaultStyledDocument
-            val element = document.getCharacterElement(position) as AbstractElement
-            return element.getAttribute(ByteCodeDocument.ATTRIBUTE_NAME_LINK) as Link?
+            return document.getCharacterElement(position) as AbstractElement
+        }
+
+        private val AbstractElement.link: Link?
+            get() = this.getAttribute(ByteCodeDocument.ATTRIBUTE_NAME_LINK) as Link?
+
+        private val AbstractElement.hoverHighlight: Stroke?
+            get() = this.getAttribute(ByteCodeDocument.ATTRIBUTE_NAME_HOVER_HIGHLIGHT) as Stroke?
+
+        private val AbstractElement.isLink : Boolean
+            get() = this.link != null
+
+        private val AbstractElement.isDocumentLink : Boolean
+            get() = this.link is DocumentLink
+
+        private fun AbstractElement.mouseEnter() {
+            this.hoverHighlight?.let { stroke ->
+                activeHighlight = textPane.highlighter.addHighlight(this.startOffset, this.endOffset, LinkHighlightPainter(stroke))
+            }
+        }
+
+        private fun removeActiveHighlight() {
+            activeHighlight?.let { highlight ->
+                textPane.highlighter.removeHighlight(highlight)
+                activeHighlight = null
+            }
         }
     }
 
@@ -211,6 +237,8 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     }
 
     private inner open class ByteCodeTextPane : JTextPane() {
+        var preventDrag: Boolean = false
+
         init {
             font = Font("MonoSpaced".intern(), 0, UIManager.getFont("TextArea.font").size)
             isEditable = false
@@ -228,12 +256,43 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
                         }
             }
         }
+
+        override fun processMouseMotionEvent(e: MouseEvent) {
+            if (preventDrag && e.id == MouseEvent.MOUSE_DRAGGED) {
+                return
+            }
+            super.processMouseMotionEvent(e)
+        }
+
     }
 
     private class ScrollableShield(val byteCodeTextPane: JTextPane) : JPanel() {
         init {
             layout = BorderLayout()
             add(byteCodeTextPane, BorderLayout.CENTER)
+        }
+    }
+
+    class LinkHighlightPainter(private val underlineStroke: Stroke) : Highlighter.HighlightPainter {
+        override fun paint(g: Graphics, startOffset: Int, endOffset: Int, bounds: Shape, c: JTextComponent) {
+            try {
+                val textUi = c.ui
+                val startRect = textUi.modelToView(c, startOffset)
+                val endRect = textUi.modelToView(c, endOffset)
+                val totalRect = startRect.union(endRect)
+
+                val y = totalRect.y + totalRect.height - 1
+                (g as Graphics2D).apply {
+                    val oldStroke = stroke
+                    val oldColor = color
+                    stroke = underlineStroke
+                    color = c.foreground
+                    drawLine(totalRect.x, y, totalRect.x + totalRect.width, y)
+                    stroke = oldStroke
+                    color = oldColor
+                }
+            } catch (e: BadLocationException) {
+            }
         }
     }
 
@@ -258,6 +317,3 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     }
 
 }
-
-
-

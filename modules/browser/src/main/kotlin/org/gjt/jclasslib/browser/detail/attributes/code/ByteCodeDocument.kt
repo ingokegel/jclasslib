@@ -13,12 +13,14 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.BatchDocument
+import java.awt.BasicStroke
 import java.awt.Color
 import java.io.IOException
 import java.util.*
+import javax.swing.event.DocumentEvent
 import javax.swing.text.*
 
-class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val styles: StyleContext, private val attribute: CodeAttribute, private val classFile: ClassFile) : BatchDocument(styles) {
+class ByteCodeDocument(private val styles: StyleContext, private val attribute: CodeAttribute, private val classFile: ClassFile) : BatchDocument(styles) {
 
     private val offsetToPosition = HashMap<Int, Int>()
     private val lineStartPositions = ArrayList<Int>()
@@ -37,12 +39,24 @@ class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val s
 
     fun getLineStartPosition(lineNumber: Int) = lineStartPositions.getOrElse(lineNumber - 1) { if (it < 0) 0 else length }
 
+    fun modifyDocument(block: DocumentModification.() -> Unit) {
+        writeLock()
+        try {
+            val documentModification = DocumentModification()
+            documentModification.block()
+            documentModification.modifiedRanges.forEach { range ->
+                fireChangedUpdate(DefaultDocumentEvent(range.start, range.last - range.first, DocumentEvent.EventType.CHANGE))
+            }
+        } finally {
+            writeUnlock()
+        }
+    }
+
     private fun setupDocument() {
         try {
             val instructions = ByteCodeReader.readByteCode(attribute.code)
             verifyOffsets(instructions)
             calculateOffsetWidth(instructions)
-            detailPane.setCurrentInstructions(instructions)
             val instructionLineCounts = instructions.map {
                 addInstructionToDocument(it)
             }
@@ -85,7 +99,11 @@ class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val s
         val offset = instruction.offset
         addOffsetReference(offset)
         appendString(getPaddedValue(offset, offsetWidth), STYLE_OFFSET)
-        appendString(" " + instruction.opcode.verbose, STYLE_INSTRUCTION)
+        appendString(" ", STYLE_NORMAL)
+
+        val linkStyle = styles.addAttribute(STYLE_INSTRUCTION, ATTRIBUTE_NAME_LINK, SpecLink(instruction.opcode))
+        appendString(instruction.opcode.verbose, linkStyle)
+
         val additionalLines = addOpcodeSpecificInfo(instruction)
         appendBatchLineFeed(STYLE_NORMAL)
         return additionalLines + 1
@@ -255,65 +273,105 @@ class ByteCodeDocument(private val detailPane: ByteCodeDetailPane, private val s
         }
     }
 
+    private fun getPaddedValue(number: Int, width: Int) = StringBuilder().apply {
+        val value = number.toString()
+        val valueLength = value.length
+        for (i in valueLength..width - 1) {
+            append(' ')
+        }
+        append(value)
+    }.toString()
+
     interface Link
     interface DocumentLink : Link {
         val sourceOffset: Int
     }
+
     data class OffsetLink(val targetOffset: Int, override val sourceOffset: Int) : DocumentLink
     data class ConstantPoolLink(val constantPoolIndex: Int, override val sourceOffset: Int) : DocumentLink
+    data class SpecLink(val opcode: Opcode) : Link
+
+    class DocumentModification {
+        var modifiedRanges = mutableListOf<IntRange>()
+
+        fun modifiedRange(range: IntRange) {
+            modifiedRanges.add(range)
+        }
+
+        fun modifiedElement(element: AbstractElement) {
+            modifiedRange(element.startOffset..element.endOffset)
+        }
+    }
 
     companion object {
         val ATTRIBUTE_NAME_LINK = "attributeLink"
-        val STYLE_NORMAL: MutableAttributeSet
-        val STYLE_SMALL: MutableAttributeSet
-        val STYLE_LINK: MutableAttributeSet
-        val STYLE_OFFSET: MutableAttributeSet
-        val STYLE_INSTRUCTION: MutableAttributeSet
-        val STYLE_IMMEDIATE_VALUE: MutableAttributeSet
-        val STYLE_LINE_NUMBER: MutableAttributeSet
+        val ATTRIBUTE_NAME_HOVER_HIGHLIGHT = "hoverHighlight"
 
-        private val LINE_NUMBERS_FONT_DIFF = 2
+        val ACTIVE_LINK_COLOR = Color(196, 0, 0)
 
-        init {
-            STYLE_NORMAL = SimpleAttributeSet()
+        private val DOTTED_STROKE = BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0.toFloat(), floatArrayOf(3.toFloat(), 4.toFloat()), 0.0f)
 
-            STYLE_LINK = SimpleAttributeSet().apply {
-                StyleConstants.setForeground(this, Color(0, 128, 0))
-                StyleConstants.setBold(this, true)
-                StyleConstants.setUnderline(this, true)
-            }
-
-            STYLE_OFFSET = SimpleAttributeSet().apply {
-                StyleConstants.setForeground(this, Color(128, 0, 0))
-            }
-
-            STYLE_INSTRUCTION = SimpleAttributeSet().apply {
-                StyleConstants.setBold(this, true)
-            }
-
-            STYLE_IMMEDIATE_VALUE = SimpleAttributeSet().apply {
-                StyleConstants.setForeground(this, Color.magenta)
-                StyleConstants.setBold(this, true)
-            }
-
-            STYLE_LINE_NUMBER = SimpleAttributeSet().apply {
-                StyleConstants.setForeground(this, Color(128, 128, 128))
-                StyleConstants.setFontSize(this, StyleConstants.getFontSize(this) - LINE_NUMBERS_FONT_DIFF)
-            }
-
-            STYLE_SMALL = SimpleAttributeSet().apply {
-                StyleConstants.setFontSize(this, StyleConstants.getFontSize(this) - 1)
-            }
-
+        val STYLE_NORMAL = style()
+        val STYLE_SMALL = style {
+            fontSize -= 1
+        }
+        val STYLE_LINK = style {
+            foreground = Color(0, 128, 0)
+            bold = true
+            underline = true
+        }
+        val STYLE_OFFSET = style {
+            foreground = Color(128, 0, 0)
+        }
+        val STYLE_INSTRUCTION = style {
+            bold = true
+            attribute(ATTRIBUTE_NAME_HOVER_HIGHLIGHT, DOTTED_STROKE)
+        }
+        val STYLE_IMMEDIATE_VALUE = style {
+            foreground = Color.MAGENTA
+            bold = true
+        }
+        val STYLE_LINE_NUMBER = style {
+            foreground = Color(128, 128, 128)
+            fontSize -= 2
         }
 
-        private fun getPaddedValue(number: Int, width: Int) = StringBuilder().apply {
-            val value = number.toString()
-            val valueLength = value.length
-            for (i in valueLength..width - 1) {
-                append(' ')
+        fun style(init: StyleBuilder.() -> Unit = {}): AttributeSet {
+            val styleBuilder = StyleBuilder()
+            styleBuilder.init()
+            return styleBuilder.attributeSet
+        }
+
+        class StyleBuilder {
+            val attributeSet = SimpleAttributeSet()
+
+            var fontSize: Int
+                get() = StyleConstants.getFontSize(attributeSet)
+                set(fontSize) {
+                    StyleConstants.setFontSize(attributeSet, fontSize)
+                }
+
+            var foreground: Color
+                get() = StyleConstants.getForeground(attributeSet)
+                set(color) {
+                    StyleConstants.setForeground(attributeSet, color)
+                }
+
+            var bold: Boolean
+                get() = StyleConstants.isBold(attributeSet)
+                set(bold) {
+                    StyleConstants.setBold(attributeSet, bold)
+                }
+
+            var underline: Boolean
+                get() = StyleConstants.isUnderline(attributeSet)
+                set(bold) {
+                    StyleConstants.setUnderline(attributeSet, bold)
+                }
+
+            fun attribute(name: String, value: Any) {
+                attributeSet.addAttribute(name, value)
             }
-            append(value)
-        }.toString()
+        }
     }
 }
