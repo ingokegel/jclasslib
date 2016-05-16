@@ -226,7 +226,7 @@ enum class Opcode(override val tag: Int, val verbose: String, private val docAnc
      * The URL to the documentation in the JVM spec
      */
     val docUrl: String
-        get() = "http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.$docAnchorSuffix"
+        get() = "http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.$docAnchorSuffix"
 
     companion object : Lookup<Opcode>(Opcode::class.java, "opcode")
 }
