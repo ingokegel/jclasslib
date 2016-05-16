@@ -8,7 +8,7 @@ buildDir = file('build/gradle')
 ext.externalLibsDir = file("$buildDir/externalLibs")
 
 buildscript {
-    ext.kotlinVersion = '1.0.1'
+    ext.kotlinVersion = '1.0.2'
 
     repositories {
         flatDir {
@@ -24,7 +24,7 @@ buildscript {
         // for local dokka in lib-compile
         //classpath ':dokka-fatjar'
         //classpath ':dokka-gradle-plugin'
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.7"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.8"
 
         // Download after install4j 6
         classpath ':i4jgradle'
