@@ -96,8 +96,7 @@ class ClassFile : Structure(), AttributeContainer {
      * @param constant the constant pool entry
      */
     fun getConstantPoolIndex(constant: Constant): Int {
-        val index = constantPoolEntryToIndex[constant]
-        return if (index != null) index else -1
+        return constantPoolEntryToIndex[constant] ?: -1
     }
 
     /**

@@ -23,7 +23,6 @@ object ConstantPoolUtil {
      * @param className the name of the referenced class
      * @param methodName the name of the referenced method
      * @param methodSignature the signature of the referenced method
-     * @param sizeDelta the minimum increment by which the array holding the
      * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantMethodRef
      */
@@ -46,7 +45,6 @@ object ConstantPoolUtil {
      * @param className the name of the referenced class
      * @param fieldName the name of the referenced field
      * @param fieldType the type of the referenced field
-     * @param sizeDelta the minimum increment by which the array holding the
      * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantMethodRef
      */
@@ -67,7 +65,6 @@ object ConstantPoolUtil {
      * @param classFile the class file whose constant pool is to be edited
      * @param name the name
      * @param descriptor the descriptor
-     * @param sizeDelta the minimum increment by which the array holding the
      * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantNameAndTypeInfo
      */
@@ -88,7 +85,6 @@ object ConstantPoolUtil {
      * constant pool of a ClassFile.
      * @param classFile the class file whose constant pool is to be edited
      * @param className the name of the referenced class
-     * @param sizeDelta the minimum increment by which the array holding the
      * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantClassInfo
      */
@@ -106,7 +102,6 @@ object ConstantPoolUtil {
      * constant pool of a ClassFile.
      * @param classFile the class file whose constant pool is to be edited
      * @param string the string
-     * @param sizeDelta the minimum increment by which the array holding the
      * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantUTF8Info
      */
@@ -122,7 +117,6 @@ object ConstantPoolUtil {
      * constant pool of a ClassFile.
      * @param classFile the class file whose constant pool is to be edited
      * @param newEntry the new constant pool entry
-     * @param sizeDelta the minimum increment by which the array holding the
      * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added constant pool entry
      */

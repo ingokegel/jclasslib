@@ -9,7 +9,6 @@ package org.gjt.jclasslib.util
 
 import com.install4j.api.Util
 import java.awt.Component
-import java.awt.Rectangle
 import java.awt.Window
 import java.net.MalformedURLException
 import java.net.URL
@@ -20,7 +19,6 @@ object GUIHelper {
     val MESSAGE_TITLE = "jclasslib"
     val YES_NO_OPTIONS = arrayOf("Yes", "No")
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
-    val RECT_ORIGIN = Rectangle(0, 0, 0, 0)
 
     fun isMacOs() = System.getProperty("os.name").toLowerCase().startsWith("mac")
 

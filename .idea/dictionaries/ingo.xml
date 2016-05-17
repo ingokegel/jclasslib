@@ -135,6 +135,7 @@
       <w>opcodes</w>
       <w>putfield</w>
       <w>putstatic</w>
+      <w>redistributors</w>
       <w>saload</w>
       <w>sastore</w>
       <w>scroller</w>

@@ -9,7 +9,6 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.EventQueue
-import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
 import java.io.IOException
@@ -80,11 +79,9 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
     private fun updateContents() {
         removeAll()
         if (recentWorkspaces.size > 0) {
-            val workspaceOpenListener = object : ActionListener {
-                override fun actionPerformed(event: ActionEvent) {
-                    isPopupMenuVisible = false
-                    EventQueue.invokeLater { frame.openWorkspace(File((event.source as JMenuItem).text)) }
-                }
+            val workspaceOpenListener = ActionListener { event ->
+                isPopupMenuVisible = false
+                EventQueue.invokeLater { frame.openWorkspace(File((event.source as JMenuItem).text)) }
             }
             recentWorkspaces.forEach { fileName ->
                 add(JMenuItem(fileName).apply {

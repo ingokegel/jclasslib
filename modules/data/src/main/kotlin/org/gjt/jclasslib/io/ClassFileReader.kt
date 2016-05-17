@@ -68,7 +68,7 @@ object ClassFileReader {
 
     /**
      * Converts a class file to a ClassFile structure.
-     * @param input the input stream from which to read the ClassFile structure
+     * @param stream the input stream from which to read the ClassFile structure
      * @return the new ClassFile structure
      */
     @Throws(InvalidByteCodeException::class, IOException::class)

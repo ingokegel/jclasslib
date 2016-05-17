@@ -26,7 +26,6 @@ class ConstantLongInfo(classFile: ClassFile) : ConstantLargeNumeric(classFile) {
 
     /**
      * The long value of this constant pool entry.
-     * @param number the value
      */
     var long: Long
         get() = (highBytes.toLong() shl 32) or (lowBytes.toLong() and 0xFFFFFFFF)
