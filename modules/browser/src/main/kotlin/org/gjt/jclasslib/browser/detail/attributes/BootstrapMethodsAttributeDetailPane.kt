@@ -26,7 +26,7 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDeta
     override val autoResizeMode: Int
         get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
-    protected inner class AttributeTableModel(rows: Array<BootstrapMethodsEntry>) : ColumnTableModel<BootstrapMethodsEntry>(rows) {
+    inner class AttributeTableModel(rows: Array<BootstrapMethodsEntry>) : ColumnTableModel<BootstrapMethodsEntry>(rows) {
 
         override fun buildColumns(columns: ArrayList<Column<BootstrapMethodsEntry>>) {
             super.buildColumns(columns)

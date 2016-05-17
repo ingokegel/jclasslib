@@ -16,7 +16,7 @@ class ExceptionsAttributeDetailPane(services: BrowserServices) : TableDetailPane
 
     override fun createTableModel(attribute: ExceptionsAttribute) = AttributeTableModel(attribute.exceptionIndexTable)
 
-    protected inner class AttributeTableModel(rows: IntArray) : ColumnTableModel<Int>(rows.toTypedArray()) {
+    inner class AttributeTableModel(rows: IntArray) : ColumnTableModel<Int>(rows.toTypedArray()) {
         override fun buildColumns(columns: ArrayList<Column<Int>>) {
             super.buildColumns(columns)
             columns.apply {

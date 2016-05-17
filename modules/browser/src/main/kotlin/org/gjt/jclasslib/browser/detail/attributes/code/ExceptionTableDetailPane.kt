@@ -28,7 +28,7 @@ class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane<Code
     override val rowHeightFactor: Float
         get() = 2f
 
-    protected inner class AttributeTableModel(rows: Array<ExceptionTableEntry>) : ColumnTableModel<ExceptionTableEntry>(rows) {
+    inner class AttributeTableModel(rows: Array<ExceptionTableEntry>) : ColumnTableModel<ExceptionTableEntry>(rows) {
 
         override fun buildColumns(columns: ArrayList<Column<ExceptionTableEntry>>) {
             super.buildColumns(columns)

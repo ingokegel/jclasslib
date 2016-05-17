@@ -20,7 +20,7 @@ class InnerClassesAttributeDetailPane(services: BrowserServices) : TableDetailPa
     override val rowHeightFactor: Float
         get() = 2f
 
-    protected inner class AttributeTableModel(rows: Array<InnerClassesEntry>) : ColumnTableModel<InnerClassesEntry>(rows) {
+    inner class AttributeTableModel(rows: Array<InnerClassesEntry>) : ColumnTableModel<InnerClassesEntry>(rows) {
 
         override fun buildColumns(columns: ArrayList<Column<InnerClassesEntry>>) {
             super.buildColumns(columns)

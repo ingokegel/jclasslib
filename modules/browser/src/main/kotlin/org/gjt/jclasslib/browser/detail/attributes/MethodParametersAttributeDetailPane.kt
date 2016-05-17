@@ -20,7 +20,7 @@ class MethodParametersAttributeDetailPane(services: BrowserServices) : TableDeta
     override val rowHeightFactor: Float
         get() = 2f
 
-    protected inner class AttributeTableModel(rows: Array<MethodParametersEntry>) : ColumnTableModel<MethodParametersEntry>(rows) {
+    inner class AttributeTableModel(rows: Array<MethodParametersEntry>) : ColumnTableModel<MethodParametersEntry>(rows) {
 
         override fun buildColumns(columns: ArrayList<Column<MethodParametersEntry>>) {
             super.buildColumns(columns)

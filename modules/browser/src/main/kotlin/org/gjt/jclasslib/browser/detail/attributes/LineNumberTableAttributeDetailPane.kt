@@ -17,7 +17,7 @@ class LineNumberTableAttributeDetailPane(services: BrowserServices) : TableDetai
 
     override fun createTableModel(attribute: LineNumberTableAttribute) = AttributeTableModel(attribute.lineNumberTable)
 
-    protected inner class AttributeTableModel(rows: Array<LineNumberTableEntry>) : ColumnTableModel<LineNumberTableEntry>(rows) {
+    inner class AttributeTableModel(rows: Array<LineNumberTableEntry>) : ColumnTableModel<LineNumberTableEntry>(rows) {
         override fun buildColumns(columns: ArrayList<Column<LineNumberTableEntry>>) {
             super.buildColumns(columns)
             columns.apply {

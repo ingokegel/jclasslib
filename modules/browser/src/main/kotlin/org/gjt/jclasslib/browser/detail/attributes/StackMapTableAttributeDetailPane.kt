@@ -26,7 +26,7 @@ class StackMapTableAttributeDetailPane(services: BrowserServices) : TableDetailP
     override val autoResizeMode: Int
         get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
-    protected inner class AttributeTableModel(rows: Array<StackMapFrameEntry>) : ColumnTableModel<StackMapFrameEntry>(rows) {
+    inner class AttributeTableModel(rows: Array<StackMapFrameEntry>) : ColumnTableModel<StackMapFrameEntry>(rows) {
         override fun buildColumns(columns: ArrayList<Column<StackMapFrameEntry>>) {
             super.buildColumns(columns)
             columns.add(object : StringColumn<StackMapFrameEntry>("Stack Map Frame", 600) {
