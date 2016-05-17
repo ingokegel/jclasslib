@@ -338,6 +338,8 @@ class ByteCodeDocument(private val styles: StyleContext, private val attribute: 
 
         fun style(init: StyleBuilder.() -> Unit = {}): AttributeSet {
             val styleBuilder = StyleBuilder()
+            // The next line explicitly sets the font size on the attribute set, this is needed for HiDPI displays
+            styleBuilder.fontSize += 0
             styleBuilder.init()
             return styleBuilder.attributeSet
         }
