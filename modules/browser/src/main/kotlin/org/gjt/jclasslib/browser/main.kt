@@ -10,6 +10,7 @@
 package org.gjt.jclasslib.browser
 
 import com.exe4j.runtime.util.LazyFileOutputStream
+import com.install4j.api.Util
 import com.install4j.api.launcher.StartupNotification
 import java.awt.EventQueue
 import java.awt.Frame
@@ -39,6 +40,9 @@ fun main(args: Array<String>) {
     }
 
     registerStartupListener()
+    if (Util.isMacOS()) {
+        MacEventHandler.init()
+    }
 
     EventQueue.invokeLater {
         BrowserFrame().apply {
@@ -75,7 +79,7 @@ private fun registerStartupListener() {
         splitupCommandLine(argLine).let { startupArgs ->
             if (startupArgs.size > 0) {
                 val frames = getBrowserFrames()
-                frames.firstOrNull { it.isActive } ?: frames.elementAtOrElse(0) { BrowserFrame() }.apply {
+                frames.elementAtOrElse(0) { BrowserFrame().apply { isVisible = true } }.apply {
                     openExternalFile(startupArgs[0])
                 }
             }

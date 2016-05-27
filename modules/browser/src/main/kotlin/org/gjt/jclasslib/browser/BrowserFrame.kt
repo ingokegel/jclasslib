@@ -204,7 +204,7 @@ class BrowserFrame : JFrame() {
         splitActions.values.forEach {
             add(it)
         }
-        popupMenu.addPopupMenuListener(object: PopupMenuListener {
+        popupMenu.addPopupMenuListener(object : PopupMenuListener {
             override fun popupMenuWillBecomeVisible(event: PopupMenuEvent) {
                 checkWindowActions()
             }
@@ -256,7 +256,7 @@ class BrowserFrame : JFrame() {
         frameContent.closeAllTabs()
 
         object : SwingWorker<Document, Unit>() {
-            override fun doInBackground() : Document = parseXml(file)
+            override fun doInBackground(): Document = parseXml(file)
 
             override fun done() {
                 get().documentElement.apply {
@@ -377,7 +377,7 @@ class BrowserFrame : JFrame() {
         contentPane.layout = BorderLayout(5, 5)
         contentPane.add(frameContent, BorderLayout.CENTER)
         contentPane.add(buildToolbar(), BorderLayout.NORTH)
-        iconImages = listOf(ICON_APPLICATION_16, ICON_APPLICATION_32).map { it.image }
+        iconImages = ICON_IMAGES
 
         contentPane.transferHandler = object : TransferHandler() {
             override fun canImport(support: TransferHandler.TransferSupport): Boolean {
@@ -485,9 +485,9 @@ class BrowserFrame : JFrame() {
                     config.saveWorkspace(this)
                     frameContent.saveWorkspace(this)
                 }.writeXmlString(writer, mapOf(
-                    OutputKeys.INDENT to "yes",
-                    OutputKeys.STANDALONE to "yes",
-                    "{http://xml.apache.org/xslt}indent-amount" to "2"
+                        OutputKeys.INDENT to "yes",
+                        OutputKeys.STANDALONE to "yes",
+                        "{http://xml.apache.org/xslt}indent-amount" to "2"
                 ))
             }
             recentMenu.addRecentWorkspace(file)
@@ -623,8 +623,7 @@ class BrowserFrame : JFrame() {
         private val SETTINGS_WINDOW_MAXIMIZED = "windowMaximized"
 
         private val icons = hashMapOf<String, ImageIcon>()
-        val ICON_APPLICATION_16 = getIcon("jclasslib_16.png")
-        val ICON_APPLICATION_32 = getIcon("jclasslib_32.png")
+        val ICON_IMAGES = listOf(16, 32, 128, 256).map { getIcon("jclasslib_$it.png").image }
 
 
         fun getIcon(fileName: String): ImageIcon =

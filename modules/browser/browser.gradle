@@ -4,10 +4,10 @@ apply plugin: 'application'
 mainClassName = 'org.gjt.jclasslib.browser.BrowserApplication'
 
 dependencies {
-    // Download after install4j 6
-    compile ':i4jruntime'
+    compileOnly ':apple'
+    compileOnly 'com.install4j:install4j-runtime:6.1.1'
     compile 'org.jetbrains:annotations:13.0'
-    compile "org.jetbrains.kotlinx:kotlinx.dom:0.0.10"
+    compile 'org.jetbrains.kotlinx:kotlinx.dom:0.0.10'
     compile 'com.miglayout:miglayout-swing:5.0'
     compile project(':data')
 }

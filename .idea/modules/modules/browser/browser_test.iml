@@ -11,7 +11,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="browser_main" />
-    <orderEntry type="library" name="Gradle: :i4jruntime:" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx.dom:0.0.10" level="project" />
     <orderEntry type="library" name="Gradle: com.miglayout:miglayout-swing:5.0" level="project" />

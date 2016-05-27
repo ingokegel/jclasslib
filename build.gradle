@@ -17,6 +17,9 @@ buildscript {
         maven {
             url 'http://jcenter.bintray.com'
         }
+        maven {
+            url 'http://maven.ej-technologies.com/repository'
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -24,18 +27,9 @@ buildscript {
         // for local dokka in lib-compile
         //classpath ':dokka-fatjar'
         //classpath ':dokka-gradle-plugin'
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.8"
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.8'
+        classpath "com.install4j:install4j-gradle:6.1.1"
 
-        // Download after install4j 6
-        classpath ':i4jgradle'
-
-        // remove the next two entries after gradle-bintray-plugin is updated with pull request
-        classpath ':gradle-bintray-plugin'
-        classpath('org.codehaus.groovy.modules.http-builder:http-builder:0.6') {
-            exclude(module: 'groovy')
-        }
-
-        //classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
     }
 }
 
@@ -50,6 +44,9 @@ allprojects {
         }
         maven {
             url 'http://jcenter.bintray.com'
+        }
+        maven {
+            url 'http://maven.ej-technologies.com/repository'
         }
     }
 

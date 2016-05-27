@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.install4j:install4j-runtime:6.1.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.install4j/install4j-runtime/6.1.1/6a03e14dcfbc01c6331ea62e94566b58d026e7f6/install4j-runtime-6.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.install4j/install4j-runtime/6.1.1/c73b37a742b46be213e8af49cba2f7810a50e841/install4j-runtime-6.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
