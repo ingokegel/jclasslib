@@ -17,6 +17,14 @@ task media(type: Install4jTask) {
     dependsOn ':dist', ':clean'
     projectFile = file('resources/jclasslib.install4j')
     release = version
+    disableSigning = !project.hasProperty("winCertPath") || !project.hasProperty("macCertPath")
+    winKeystorePassword=project.findProperty("winKeystorePassword") ?: ''
+    macKeystorePassword=project.findProperty("macKeystorePassword") ?: ''
+
+    variables = [
+            winCertPath: project.findProperty("winCertPath") ?: '',
+            macCertPath: project.findProperty("macCertPath") ?: '',
+    ]
 
     doFirst {
         if (!project.hasProperty('install4jHomeDir')) {
