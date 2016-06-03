@@ -114,7 +114,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     private fun updateHistory(offset: Int) {
         val treePath = services.browserComponent.treePane.tree.selectionPath
         val history = services.browserComponent.history
-        history.updateHistory(treePath, offset)
+        history.addHistoryEntry(treePath, offset)
     }
 
     private val lineHeight: Int

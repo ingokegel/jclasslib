@@ -129,7 +129,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
         services.activate()
 
         val selectedPath = selectionEvent.path
-        history.updateHistory(selectedPath)
+        history.addHistoryEntry(selectedPath)
         showDetailPaneForPath(selectedPath)
     }
 

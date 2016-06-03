@@ -323,7 +323,7 @@ class BrowserFrame : JFrame() {
                 add(newWindowAction)
                 add(newWorkspaceAction)
                 add(openWorkspaceAction)
-                add(recentMenu)
+                recentMenu.addTo(this)
                 addSeparator()
                 add(saveWorkspaceAction)
                 add(saveWorkspaceAsAction)

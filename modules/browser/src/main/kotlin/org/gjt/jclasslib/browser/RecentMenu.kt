@@ -17,6 +17,8 @@ import java.util.prefs.BackingStoreException
 import java.util.prefs.Preferences
 import javax.swing.JMenu
 import javax.swing.JMenuItem
+import javax.swing.event.MenuEvent
+import javax.swing.event.MenuListener
 
 class RecentMenu(private val frame: BrowserFrame) : JMenu() {
 
@@ -74,6 +76,21 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
 
         var count = 0
         recentWorkspaces.forEach { fileName -> recentNode.put(count++.toString(), fileName) }
+    }
+
+    fun addTo(parentMenu: JMenu) {
+        parentMenu.addMenuListener(object: MenuListener {
+            override fun menuSelected(e: MenuEvent) {
+                updateContents()
+            }
+
+            override fun menuCanceled(e: MenuEvent) {
+            }
+
+            override fun menuDeselected(e: MenuEvent) {
+            }
+        })
+        parentMenu.add(this)
     }
 
     private fun updateContents() {
