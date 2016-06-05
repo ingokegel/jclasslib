@@ -61,8 +61,7 @@ class BrowserFrame : JFrame() {
 
     val browseClasspathAction = DefaultAction("Browse classpath", "Browse the current classpath to open a class file", "tree_small.png", "tree_large.png") {
         classpathBrowser.isVisible = true
-        val selectedClassName = classpathBrowser.selectedClassName
-        if (!selectedClassName.isEmpty()) {
+        classpathBrowser.selectedClassNames.forEach {selectedClassName ->
             val findResult = config.findClass(selectedClassName)
             if (findResult != null) {
                 repaintNow()
@@ -271,7 +270,7 @@ class BrowserFrame : JFrame() {
         }.execute()
     }
 
-    private fun openClassFromFile(file: File): BrowserTab {
+    fun openClassFromFile(file: File): BrowserTab {
         val tab = frameContent.openClassFile(file.path)
         val classFile = tab.classFile
         try {
@@ -499,18 +498,18 @@ class BrowserFrame : JFrame() {
         saveWorkspaceAsAction.isEnabled = true
     }
 
-    private fun openClassFromJar(file: File): BrowserTab? {
+    fun openClassFromJar(file: File) {
         val entry = ClasspathArchiveEntry(file.path)
         jarBrowser.apply {
             clear()
             classpathComponent = entry
             isVisible = true
         }
-        val selectedClassName = jarBrowser.selectedClassName
-        val fileName = file.path + "!" + selectedClassName + ".class"
-        val tab = frameContent.openClassFile(fileName)
-        config.addClasspathArchive(file.path)
-        return tab
+        jarBrowser.selectedClassNames.forEach { selectedClassName ->
+            val fileName = file.path + "!" + selectedClassName + ".class"
+            frameContent.openClassFile(fileName)
+            config.addClasspathArchive(file.path)
+        }
     }
 
     private fun withWaitCursor(function: () -> Unit) {

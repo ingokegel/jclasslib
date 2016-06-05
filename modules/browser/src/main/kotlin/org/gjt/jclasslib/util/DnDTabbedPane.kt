@@ -34,7 +34,7 @@ open class DnDTabbedPane : JTabbedPane() {
         DragSource().createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, createDragGestureListener())
     }
 
-    fun addDropTarget(component: JComponent, dropNotifier : () -> Unit = {}) {
+    fun addDropTarget(component: JComponent, dropNotifier: () -> Unit = {}) {
         DropTarget(component, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(dropNotifier), true)
     }
 
@@ -93,8 +93,8 @@ open class DnDTabbedPane : JTabbedPane() {
     private fun getTabTransferData(event: DropTargetDropEvent) =
             event.transferable.getTransferData(FLAVOR) as TabTransferData
 
-    private fun getTabTransferData(event: DropTargetDragEvent) =
-            event.transferable.getTransferData(FLAVOR) as TabTransferData
+    private fun getTabTransferData(transferable: Transferable) =
+            transferable.getTransferData(FLAVOR) as TabTransferData
 
     private fun getTabTransferData(event: DragSourceDragEvent) =
             event.dragSourceContext.transferable.getTransferData(FLAVOR) as TabTransferData?
@@ -134,7 +134,7 @@ open class DnDTabbedPane : JTabbedPane() {
         }
 
         for (i in 0..tabCount - 1) {
-            val r = getBoundsAt(i)
+            val r = getBoundsAt(i) ?: continue
             if (isTopOrBottom) {
                 r.setRect(r.x - r.width / 2, r.y, r.width, r.height)
             } else {
@@ -146,7 +146,7 @@ open class DnDTabbedPane : JTabbedPane() {
             }
         }
 
-        val r = getBoundsAt(tabCount - 1)
+        val r = getLastVisibleTabBound() ?: return -1
         if (isTopOrBottom) {
             val x = r.x + r.width / 2
             r.setRect(x, r.y, width - x, r.height)
@@ -156,6 +156,34 @@ open class DnDTabbedPane : JTabbedPane() {
         }
 
         return if (r.contains(point)) tabCount else -1
+    }
+
+    private fun getFirstVisibleTabBound(): Rectangle? {
+        return getNextVisibleTabBound(-1)
+    }
+
+    private fun getNextVisibleTabBound(index : Int): Rectangle? {
+        for (i in index + 1..tabCount - 1) {
+            return getBoundsAt(i) ?: continue
+        }
+        return null
+    }
+
+    private fun getPreviousVisibleTabBound(index : Int): Rectangle? {
+        for (i in index - 1 downTo 0) {
+            return getBoundsAt(i) ?: continue
+        }
+        return null
+    }
+
+    private fun getLastVisibleTabBound(): Rectangle? {
+        return getPreviousVisibleTabBound(tabCount)
+    }
+
+    // Nullable return value is important because tabs will be hidden for tab overflow
+    // and the bounds of such tabs are null
+    override fun getBoundsAt(index: Int): Rectangle? {
+        return super.getBoundsAt(index)
     }
 
     private fun convertTab(data: TabTransferData, targetIndex: Int) {
@@ -214,15 +242,15 @@ open class DnDTabbedPane : JTabbedPane() {
             isDrawRect = false
             return
         } else if (next == 0) {
-            val rect = getBoundsAt(0)
+            val rect = getFirstVisibleTabBound() ?: return
             line.setRect(rect.x - LINE_WIDTH / 2, rect.y, LINE_WIDTH, rect.height)
             isDrawRect = true
         } else if (next == tabCount) {
-            val rect = getBoundsAt(tabCount - 1)
+            val rect = getLastVisibleTabBound() ?: return
             line.setRect(rect.x + rect.width - LINE_WIDTH / 2, rect.y, LINE_WIDTH, rect.height)
             isDrawRect = true
         } else {
-            val rect = getBoundsAt(next - 1)
+            val rect = getPreviousVisibleTabBound(next) ?: return
             line.setRect(rect.x + rect.width - LINE_WIDTH / 2, rect.y, LINE_WIDTH, rect.height)
             isDrawRect = true
         }
@@ -243,15 +271,15 @@ open class DnDTabbedPane : JTabbedPane() {
             isDrawRect = false
             return
         } else if (next == tabCount) {
-            val rect = getBoundsAt(tabCount - 1)
+            val rect = getLastVisibleTabBound() ?: return
             line.setRect(rect.x, rect.y + rect.height - LINE_WIDTH / 2, rect.width, LINE_WIDTH)
             isDrawRect = true
         } else if (next == 0) {
-            val rect = getBoundsAt(0)
+            val rect = getFirstVisibleTabBound() ?: return
             line.setRect(rect.x, -LINE_WIDTH / 2, rect.width, LINE_WIDTH)
             isDrawRect = true
         } else {
-            val rect = getBoundsAt(next - 1)
+            val rect = getPreviousVisibleTabBound(next) ?: return
             line.setRect(rect.x, rect.y + rect.height - LINE_WIDTH / 2, rect.width, LINE_WIDTH)
             isDrawRect = true
         }
@@ -261,11 +289,11 @@ open class DnDTabbedPane : JTabbedPane() {
         this.setRect(0, 0, 0, 0)
     }
 
-    fun Rectangle2D.Double.setRect(x : Int, y : Int, width : Int, height: Int) {
+    fun Rectangle2D.Double.setRect(x: Int, y: Int, width: Int, height: Int) {
         this.setRect(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
     }
 
-    fun Rectangle.setRect(x : Int, y : Int, width : Int, height: Int) {
+    fun Rectangle.setRect(x: Int, y: Int, width: Int, height: Int) {
         this.setRect(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
     }
 
@@ -274,11 +302,15 @@ open class DnDTabbedPane : JTabbedPane() {
         val image = BufferedImage(c.width, c.height, BufferedImage.TYPE_INT_ARGB)
         c.paint(image.graphics)
         GLASS_PANE.apply {
-            val rect = getBoundsAt(tabIndex)
+            val rect = getBoundsAt(tabIndex) ?: return
             setImage(image.getSubimage(rect.x, rect.y, rect.width, rect.height))
             setPoint(buildGhostLocation(tabPt))
             isVisible = true
         }
+    }
+
+    protected open fun isDataFlavorSupported(transferable: Transferable) = false
+    protected open fun handleDrop(event: DropTargetDropEvent) {
     }
 
     public override fun paintComponent(g: Graphics) {
@@ -339,8 +371,8 @@ open class DnDTabbedPane : JTabbedPane() {
 
     private inner class TabDropTargetListener(private val dropNotifier: () -> Unit) : DropTargetListener {
         override fun dragEnter(event: DropTargetDragEvent) {
-            if (isDragAcceptable(event)) {
-                event.acceptDrag(event.dropAction)
+            if (isDropAcceptable(event.transferable)) {
+                event.acceptDrag(DnDConstants.ACTION_COPY)
             } else {
                 event.rejectDrag()
             }
@@ -354,22 +386,27 @@ open class DnDTabbedPane : JTabbedPane() {
         }
 
         override fun dragOver(event: DropTargetDragEvent) {
-            val data = getTabTransferData(event)
-            if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM) {
-                initTargetLeftRightLine(getTargetTabIndex(event.location), data)
-            } else {
-                initTargetTopBottomLine(getTargetTabIndex(event.location), data)
+            if (isTabTransfer(event.transferable)) {
+                val data = getTabTransferData(event.transferable)
+                if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM) {
+                    initTargetLeftRightLine(getTargetTabIndex(event.location), data)
+                } else {
+                    initTargetTopBottomLine(getTargetTabIndex(event.location), data)
+                }
+                repaint()
+                GLASS_PANE.setPoint(buildGhostLocation(event.location))
+                GLASS_PANE.repaint()
             }
-            repaint()
-            GLASS_PANE.setPoint(buildGhostLocation(event.location))
-            GLASS_PANE.repaint()
         }
 
         override fun drop(event: DropTargetDropEvent) {
-            if (isDropAcceptable(event)) {
+            if (isTabTransfer(event.transferable)) {
+                event.acceptDrop(event.dropAction)
                 convertTab(getTabTransferData(event), getTargetTabIndex(event.location))
                 event.dropComplete(true)
                 dropNotifier()
+            } else if (isDataFlavorSupported(event.transferable)) {
+                handleDrop(event)
             } else {
                 event.dropComplete(false)
             }
@@ -377,14 +414,14 @@ open class DnDTabbedPane : JTabbedPane() {
             repaint()
         }
 
-        fun isDragAcceptable(event: DropTargetDragEvent): Boolean {
-            val t = event.transferable ?: return false
-            return t.isDataFlavorSupported(event.currentDataFlavors[0]) && isDataAcceptable(getTabTransferData(event))
+        private fun isDropAcceptable(transferable: Transferable?): Boolean {
+            if (transferable == null) return false
+            return isTabTransfer(transferable) || isDataFlavorSupported(transferable)
         }
 
-        fun isDropAcceptable(event: DropTargetDropEvent): Boolean {
-            val t = event.transferable ?: return false
-            return t.isDataFlavorSupported(event.currentDataFlavors[0]) && isDataAcceptable(getTabTransferData(event))
+        private fun isTabTransfer(transferable: Transferable?): Boolean {
+            if (transferable == null) return false
+            return transferable.isDataFlavorSupported(FLAVOR) && isDataAcceptable(getTabTransferData(transferable))
         }
 
         private fun isDataAcceptable(data: TabTransferData?): Boolean {

@@ -11,10 +11,16 @@ import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.util.ClosableTabComponent
 import org.gjt.jclasslib.util.DnDTabbedPane
 import java.awt.Component
+import java.awt.EventQueue
+import java.awt.datatransfer.DataFlavor
+import java.awt.datatransfer.Transferable
+import java.awt.dnd.DnDConstants
+import java.awt.dnd.DropTargetDropEvent
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.io.File
 import javax.swing.Icon
 
 class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
@@ -78,5 +84,27 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
         selectedTab?.browserComponent?.history?.updateActions()
     }
 
+    override fun isDataFlavorSupported(transferable: Transferable): Boolean {
+        return transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
+    }
+
+    override fun handleDrop(event: DropTargetDropEvent) {
+        event.acceptDrop(DnDConstants.ACTION_COPY)
+        val files = (event.transferable.getTransferData(DataFlavor.javaFileListFlavor) as List<*>).map { it as File }
+        EventQueue.invokeLater {
+            focus()
+            if (files.size == 1 && files.all { it.extension == "jar" }) {
+                container.frame.openClassFromJar(files[0])
+                event.dropComplete(true)
+            } else if (files.all { it.extension == "class" }) {
+                files.forEach { file ->
+                    container.frame.openClassFromFile(file)
+                }
+                event.dropComplete(true)
+            } else {
+                event.dropComplete(false)
+            }
+        }
+    }
 }
 

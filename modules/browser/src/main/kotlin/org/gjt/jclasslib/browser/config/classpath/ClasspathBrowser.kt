@@ -92,19 +92,19 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
      * Get the name of the selected class.
      * @return the name
      */
-    val selectedClassName: String
+    val selectedClassNames: Collection<String>
         get() {
-            val buffer = StringBuilder()
-            val selectionPath = tree.selectionPath
-            if (selectionPath != null) {
+            val selectionPaths = tree.selectionPaths?.toList() ?: emptyList()
+            return selectionPaths.map {selectionPath ->
+                val buffer = StringBuilder()
                 for (i in 1..selectionPath.pathCount - 1) {
                     if (buffer.length > 0) {
                         buffer.append('/')
                     }
                     buffer.append(selectionPath.getPathComponent(i).toString())
                 }
+                buffer.toString()
             }
-            return buffer.toString()
         }
 
     init {
