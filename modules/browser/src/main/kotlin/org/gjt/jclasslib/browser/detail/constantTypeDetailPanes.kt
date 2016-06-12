@@ -60,7 +60,7 @@ class ConstantLongInfoDetailPane(services: BrowserServices) : ConstantDetailPane
     override fun addLabels() {
         addDetail("High bytes:") { constant -> constant.formattedHighBytes }
         addDetail("Low bytes:") { constant -> constant.formattedLowBytes }
-        addDetail("Double") { constant -> constant.long.toString() }
+        addDetail("Long") { constant -> constant.long.toString() }
     }
 }
 
