@@ -11,4 +11,4 @@ jclasslib bytecode viewer is released under the [GPL, Version 2.0](https://www.g
 
 ## Download
 
-Installers can be downloaded from [bintray](https://bintray.com/ingokegel/generic/jclasslib/view).
+Installers can be downloaded from the [releases section](releases).
