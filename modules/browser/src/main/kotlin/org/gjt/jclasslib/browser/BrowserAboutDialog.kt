@@ -40,6 +40,7 @@ class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
             add(JLabel("Version " + getVersion()))
             add(JLabel("Copyright ej-technologies GmbH, 2001-" + Calendar.getInstance().get(Calendar.YEAR)))
             add(JLabel("Licensed under the General Public License"))
+            add(JLabel("Icons by iconexperience.com"))
 
             contentPane.add(okAction.createTextButton().apply {
                 this@BrowserAboutDialog.getRootPane().defaultButton = this
