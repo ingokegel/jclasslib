@@ -37,7 +37,7 @@ class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), Browser
     private val parentFrame: BrowserFrame
         get() = frameContent.frame
 
-    override val classFile: ClassFile = readClassFile(frame)
+    override var classFile: ClassFile = readClassFile(frame)
     override val browserComponent: BrowserComponent = BrowserComponent(this)
 
     override fun activate() {
@@ -94,7 +94,7 @@ class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), Browser
     }
 
     fun reload() {
-        readClassFile(parentFrame)
+        classFile = readClassFile(parentFrame)
         browserComponent.rebuild()
     }
 
