@@ -146,7 +146,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         text = "<" + getConstantPoolEntryName(constantPoolIndex) + ">"
     }
 
-    abstract class KeyValue<T : Any, L>(key: String, val valueLabel: L, val commentLabel: L? = null) where L : JComponent, L : TextDisplay {
+    abstract class KeyValue<T : Any, out L>(key: String, val valueLabel: L, val commentLabel: L? = null) where L : JComponent, L : TextDisplay {
 
         val keyLabel = ExtendedJLabel(key)
         private var visibilityPredicate: ((T) -> Boolean)? = null

@@ -63,7 +63,7 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
 
     fun tabs() = Iterable {
         object : Iterator<BrowserTab> {
-            var index = 0;
+            var index = 0
             override fun next() = getComponentAt(index++) as BrowserTab
             override fun hasNext() = index < tabCount
         }

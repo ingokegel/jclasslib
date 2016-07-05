@@ -16,7 +16,7 @@ import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-abstract class FilterPane<T, S : Structure>(private val detailPane: DetailPane<*>) : JPanel() {
+abstract class FilterPane<out T, in S : Structure>(private val detailPane: DetailPane<*>) : JPanel() {
 
     private val filterCheckboxes = getAllFilterKeys().associate {
         it to JCheckBox(it.toString()).apply {

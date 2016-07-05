@@ -53,7 +53,7 @@ interface AttributeContainer {
                 create(attributeLength, cpInfoName.string, input, classFile).apply {
                     this.attributeNameIndex = attributeNameIndex
                     if (this !is AnnotationDefaultAttribute) {
-                        read(input);
+                        read(input)
                     }
                 }
             }

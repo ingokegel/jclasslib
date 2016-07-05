@@ -32,7 +32,7 @@ object ByteCodeReader {
 
         val instructions = ArrayList<Instruction>()
         if (prependInstructions != null) {
-            instructions.addAll(prependInstructions);
+            instructions.addAll(prependInstructions)
         }
 
         var nextWide = false

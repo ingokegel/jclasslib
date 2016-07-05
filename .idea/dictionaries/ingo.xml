@@ -139,6 +139,7 @@
       <w>saload</w>
       <w>sastore</w>
       <w>scroller</w>
+      <w>shrinkprio</w>
       <w>sipush</w>
       <w>supertype</w>
       <w>tableswitch</w>

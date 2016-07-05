@@ -17,7 +17,7 @@ import javax.swing.JTree
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-abstract class DetailPane<T : Any>(private val elementClass: Class<T>, val services: BrowserServices) : JPanel() {
+abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val services: BrowserServices) : JPanel() {
 
     abstract fun show(treePath: TreePath)
     protected abstract fun setupComponent()

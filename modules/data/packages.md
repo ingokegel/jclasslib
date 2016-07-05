@@ -17,7 +17,7 @@ the `org.gjt.jclasslib.io.ClassFileReader`, they have to be created through the
 # Package org.gjt.jclasslib.io
 
 This package contains classes which convert between the class file format and
-the reprensentations defined in the packages `org.gjt.jclasslib.structures`
+the representations defined in the packages `org.gjt.jclasslib.structures`
 and `org.gjt.jclasslib.bytecode`.
 
 

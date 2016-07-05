@@ -103,7 +103,7 @@ class ClassFile : Structure(), AttributeContainer {
      * Set all constant pool entries where the new array
      * of constant pool entries must start with the old constant pool. If
      * you delete entries, use setConstantPool.
-     * @param enlargedConstantPool the enlagre constant pool
+     * @param enlargedConstantPool the enlarged constant pool
      */
     fun enlargeConstantPool(enlargedConstantPool: Array<Constant>) {
         for (i in constantPool.size..enlargedConstantPool.size - 1) {

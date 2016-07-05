@@ -66,7 +66,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
                     caretPosition = 0
                     scrollRectToVisible(origin)
                 }
-            };
+            }
         }
     }
 
