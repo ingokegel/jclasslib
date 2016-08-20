@@ -30,7 +30,7 @@ abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : Tab
                     override fun createValue(row: LocalVariableEntry) = row.startPc
                 })
                 add(object : NumberColumn<LocalVariableEntry>("Length") {
-                    override fun createValue(row: LocalVariableEntry) = row.length
+                    override fun createValue(row: LocalVariableEntry) = row.targetLength
                 })
                 add(object : NumberColumn<LocalVariableEntry>("Index") {
                     override fun createValue(row: LocalVariableEntry) = row.index
