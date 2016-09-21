@@ -42,13 +42,14 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
         }
         set(browserPath) {
             if (browserPath == null || browserPath.pathComponents.size == 0) {
-                return
-            }
-            val path = buildPath(browserPath.pathComponents)
-            treePane.tree.apply {
-                expandPath(path)
-                selectionPath = path
-                scrollPathToVisible(path)
+                treePane.tree.addSelectionRow(0)
+            } else {
+                val path = buildPath(browserPath.pathComponents)
+                treePane.tree.apply {
+                    expandPath(path)
+                    selectionPath = path
+                    scrollPathToVisible(path)
+                }
             }
         }
 
