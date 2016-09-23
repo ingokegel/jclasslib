@@ -21,8 +21,8 @@ class ClassMemberDetailPane(services: BrowserServices, signatureMode: FixedListW
         }.toString()
 
     override fun addLabels() {
-        addConstantPoolLink("Name:") { classMember -> classMember.nameIndex }
-        addConstantPoolLink("Descriptor:") { classMember -> classMember.descriptorIndex }
+        addConstantPoolLink("Name:", ClassMember::nameIndex)
+        addConstantPoolLink("Descriptor:", ClassMember::descriptorIndex)
         addDetail("Access flags:") { classMember ->
             "${classMember.formattedAccessFlags} [${classMember.accessFlagsVerbose}]"
         }

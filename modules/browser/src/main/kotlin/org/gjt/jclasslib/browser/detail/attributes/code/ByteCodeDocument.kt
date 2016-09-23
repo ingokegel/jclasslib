@@ -131,11 +131,10 @@ class ByteCodeDocument(private val styles: StyleContext, private val attribute: 
         if (opcode === Opcode.LDC) {
             addConstantPoolLink(immediateByte, sourceOffset)
         } else if (opcode === Opcode.NEWARRAY) {
-            val verbose: String
-            try {
-                verbose = NewArrayType.getFromTag(immediateByte).verbose
+            val verbose: String = try {
+                NewArrayType.getFromTag(immediateByte).verbose
             } catch (e: InvalidByteCodeException) {
-                verbose = "invalid array type"
+                "invalid array type"
             }
             appendString(" $immediateByte ($verbose)", STYLE_IMMEDIATE_VALUE)
         } else if (opcode === Opcode.BIPUSH) {

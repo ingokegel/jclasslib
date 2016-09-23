@@ -13,7 +13,7 @@ import org.w3c.dom.Element
 import javax.swing.tree.DefaultTreeModel
 
 class ClasspathJrtEntry(jreHome: String) : ClasspathEntry(jreHome) {
-    override fun findClass(className: String) = findClassInJrt(className, file)?.let { FindResult("$JRT_PREFIX${it.toString()}") }
+    override fun findClass(className: String) = findClassInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it") }
 
     override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
         forEachClassNameInJrt(file) { path ->

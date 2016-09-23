@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.io
 
 import java.io.File
+import java.io.InputStream
 import java.net.URI
 import java.net.URLClassLoader
 import java.nio.file.FileSystems
@@ -22,7 +23,7 @@ private val CLASSFILE_SUFFIX = ".class"
  * @param fileName the file name to the class file in the JRT, including the module
  * @param jreHome the home directory of the JRE
  */
-fun getJrtInputStream(fileName: String, jreHome: File) = Files.newInputStream(getModulesRoot(jreHome).resolve(fileName))
+fun getJrtInputStream(fileName: String, jreHome: File): InputStream = Files.newInputStream(getModulesRoot(jreHome).resolve(fileName))
 
 /**
  * Find a class in the JRT (Java 9+)

@@ -415,9 +415,7 @@ open class DnDTabbedPane : JTabbedPane() {
         var drawDrag = false
 
         fun repaintGlassPanes() {
-            glassPanes.values.forEach {
-                it.repaint()
-            }
+            glassPanes.values.forEach(GhostGlassPane::repaint)
         }
 
         fun hideGlassPanes() {

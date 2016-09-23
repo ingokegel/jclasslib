@@ -19,7 +19,7 @@ import javax.swing.tree.DefaultTreeModel
 class BrowserConfig : ClasspathComponent {
 
     val classpath: MutableList<ClasspathEntry> = ArrayList()
-    var jreHome = System.getProperty("java.home")
+    var jreHome: String = System.getProperty("java.home")
 
     private val mergedEntries = HashSet<ClasspathEntry>()
     private val changeListeners = HashSet<ClasspathChangeListener>()

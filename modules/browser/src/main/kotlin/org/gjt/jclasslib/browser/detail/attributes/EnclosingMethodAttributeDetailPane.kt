@@ -12,7 +12,7 @@ import org.gjt.jclasslib.structures.attributes.EnclosingMethodAttribute
 
 class EnclosingMethodAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<EnclosingMethodAttribute>(EnclosingMethodAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class index:") { attribute -> attribute.classInfoIndex }
-        addConstantPoolLink("Method index:") { attribute -> attribute.methodInfoIndex }
+        addConstantPoolLink("Class index:", EnclosingMethodAttribute::classInfoIndex)
+        addConstantPoolLink("Method index:", EnclosingMethodAttribute::methodInfoIndex)
     }
 }

@@ -13,7 +13,7 @@ import org.gjt.jclasslib.structures.AttributeInfo
 
 class GenericAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<AttributeInfo>(AttributeInfo::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Attribute name index:") { attribute -> attribute.attributeNameIndex }
+        addConstantPoolLink("Attribute name index:", AttributeInfo::attributeNameIndex)
         addDetail("Attribute length:") { attribute -> attribute.getAttributeLength().toString() }
     }
 }

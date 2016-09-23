@@ -23,51 +23,51 @@ abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, service
 
 class ConstantClassInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantClassInfo>(ConstantClassInfo::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class name:") { constant -> constant.nameIndex }
+        addConstantPoolLink("Class name:", ConstantClassInfo::nameIndex)
         addClassElementOpener()
     }
 }
 
 class ConstantReferenceDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantReference>(ConstantReference::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class name:") { constant -> constant.classIndex }
-        addConstantPoolLink("Name and type:") { constant -> constant.nameAndTypeIndex }
+        addConstantPoolLink("Class name:", ConstantReference::classIndex)
+        addConstantPoolLink("Name and type:", ConstantReference::nameAndTypeIndex)
         addClassElementOpener()
     }
 }
 
 class ConstantStringInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantStringInfo>(ConstantStringInfo::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("String:") { constant -> constant.stringIndex }
+        addConstantPoolLink("String:", ConstantStringInfo::stringIndex)
     }
 }
 
 class ConstantIntegerInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantIntegerInfo>(ConstantIntegerInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Bytes:") { constant -> constant.formattedBytes }
+        addDetail("Bytes:", ConstantIntegerInfo::formattedBytes)
         addDetail("Integer:") { constant -> constant.int.toString() }
     }
 }
 
 class ConstantFloatInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantFloatInfo>(ConstantFloatInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Bytes:") { constant -> constant.formattedBytes }
+        addDetail("Bytes:", ConstantFloatInfo::formattedBytes)
         addDetail("Float:") { constant -> constant.float.toString() }
     }
 }
 
 class ConstantLongInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantLongInfo>(ConstantLongInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("High bytes:") { constant -> constant.formattedHighBytes }
-        addDetail("Low bytes:") { constant -> constant.formattedLowBytes }
+        addDetail("High bytes:", ConstantLongInfo::formattedHighBytes)
+        addDetail("Low bytes:", ConstantLongInfo::formattedLowBytes)
         addDetail("Long") { constant -> constant.long.toString() }
     }
 }
 
 class ConstantDoubleInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantDoubleInfo>(ConstantDoubleInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("High bytes:") { constant -> constant.formattedHighBytes }
-        addDetail("Low bytes:") { constant -> constant.formattedLowBytes }
+        addDetail("High bytes:", ConstantDoubleInfo::formattedHighBytes)
+        addDetail("Low bytes:", ConstantDoubleInfo::formattedLowBytes)
         addDetail("Double") { constant -> constant.double.toString() }
     }
 }
@@ -81,7 +81,7 @@ class ConstantNameAndTypeInfoDetailPane(services: BrowserServices) : ConstantDet
 
 class ConstantMethodTypeDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantMethodTypeInfo>(ConstantMethodTypeInfo::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type:") { constant -> constant.descriptorIndex }
+        addConstantPoolLink("Type:", ConstantMethodTypeInfo::descriptorIndex)
     }
 }
 

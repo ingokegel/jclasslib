@@ -21,7 +21,7 @@ class RuntimeAnnotationsAttributeDetailPane(services: BrowserServices) : KeyValu
 
 class AnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<AnnotationData>(AnnotationData::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type:") { annotationData -> annotationData.typeIndex }
+        addConstantPoolLink("Type:", AnnotationData::typeIndex)
         addDetail("Number of entries:") { annotationData -> annotationData.elementValuePairEntries.size.toString() }
     }
 }
@@ -34,40 +34,40 @@ class AnnotationDefaultAttributeDetailPane(services: BrowserServices) : KeyValue
 
 class ElementValuePairDetailPane(services: BrowserServices) : KeyValueDetailPane<ElementValuePair>(ElementValuePair::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Element name:") { elementValuePair -> elementValuePair.elementNameIndex }
-        addDetail("Value tag:") { elementValuePair -> "${elementValuePair.elementValue.elementValueType.charTag.toString()} <${elementValuePair.elementValue.elementValueType.verbose}>" }
+        addConstantPoolLink("Element name:", ElementValuePair::elementNameIndex)
+        addDetail("Value tag:") { elementValuePair -> "${elementValuePair.elementValue.elementValueType.charTag} <${elementValuePair.elementValue.elementValueType.verbose}>" }
     }
 }
 
 class ArrayElementValueDetailPane(services: BrowserServices) : KeyValueDetailPane<ArrayElementValue>(ArrayElementValue::class.java, services) {
     override fun addLabels() {
-        addDetail("Tag:") { arrayElementValue -> arrayElementValue.elementValueType.let { "${it.charTag.toString()} <${it.verbose}>" } }
+        addDetail("Tag:") { arrayElementValue -> arrayElementValue.elementValueType.let { "${it.charTag} <${it.verbose}>" } }
         addDetail("Number of values:") { arrayElementValue -> arrayElementValue.elementValueEntries.size.toString() }
     }
 }
 
 class GenericElementValueDetailPane(services: BrowserServices) : KeyValueDetailPane<ElementValue>(ElementValue::class.java, services) {
     override fun addLabels() {
-        addDetail("Tag:") { elementValue -> "${elementValue.elementValueType.charTag.toString()} <${elementValue.elementValueType.verbose}>" }
+        addDetail("Tag:") { elementValue -> "${elementValue.elementValueType.charTag} <${elementValue.elementValueType.verbose}>" }
     }
 }
 
 class EnumElementValueEntryDetailPane(services: BrowserServices) : KeyValueDetailPane<EnumElementValue>(EnumElementValue::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type name:") { elementValue -> elementValue.typeNameIndex }
-        addConstantPoolLink("Const name:") { elementValue -> elementValue.constNameIndex }
+        addConstantPoolLink("Type name:", EnumElementValue::typeNameIndex)
+        addConstantPoolLink("Const name:", EnumElementValue::constNameIndex)
     }
 }
 
 class ClassElementValueEntryDetailPane(services: BrowserServices) : KeyValueDetailPane<ClassElementValue>(ClassElementValue::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class info:") { elementValue -> elementValue.classInfoIndex }
+        addConstantPoolLink("Class info:", ClassElementValue::classInfoIndex)
     }
 }
 
 class ConstElementValueEntryDetailPane(services: BrowserServices) : KeyValueDetailPane<ConstElementValue>(ConstElementValue::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type name:") { elementValue -> elementValue.constValueIndex }
+        addConstantPoolLink("Type name:", ConstElementValue::constValueIndex)
     }
 }
 

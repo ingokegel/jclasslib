@@ -58,7 +58,7 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
                 return newNode
             } else if (newNodeName == childNodeName) {
                 return childNode
-            } else if (newNodeName.compareTo(childNodeName) < 0) {
+            } else if (newNodeName < childNodeName) {
                 insertNode(newNode, parentNode, i, model, reset)
                 return newNode
             }

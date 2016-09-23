@@ -292,9 +292,9 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
     companion object {
         private val origin = Rectangle(0, 0, 0, 0)
         private val LINE_NUMBERS_OFFSET = 9
-        private val styles = object : StyleContext() {
 
-            data class FontInfo(val family: String, val style: Int, val size: Int)
+        private data class FontInfo(val family: String, val style: Int, val size: Int)
+        private val styles = object : StyleContext() {
 
             private val fontCache = HashMap<FontInfo, Font>()
 

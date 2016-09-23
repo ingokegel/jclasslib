@@ -16,8 +16,8 @@ class GeneralDetailPane(services: BrowserServices) : KeyValueDetailPane<ClassFil
         addDetail("Major version:") { classFile -> "${classFile.majorVersion} [${classFile.majorVersionVerbose}]" }
         addDetail("Constant pool count:") { classFile -> classFile.constantPool.size.toString() }
         addDetail("Access flags:") { classFile -> "${classFile.formattedAccessFlags} [${classFile.accessFlagsVerbose}]" }
-        addConstantPoolLink("This class:") { classFile -> classFile.thisClass }
-        addConstantPoolLink("Super class:") { classFile -> classFile.superClass }
+        addConstantPoolLink("This class:", ClassFile::thisClass)
+        addConstantPoolLink("Super class:", ClassFile::superClass)
         addDetail("Interfaces count:") { classFile -> classFile.interfaces.size.toString() }
         addDetail("Fields count:") { classFile -> classFile.fields.size.toString() }
         addDetail("Methods count:") { classFile -> classFile.methods.size.toString() }

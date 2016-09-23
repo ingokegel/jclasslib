@@ -68,11 +68,11 @@ interface InputStreamProvider {
 }
 
 class JarInputStreamProvider(private val jarFile: JarFile, private val jarEntry: JarEntry) : InputStreamProvider {
-    override fun createInputStream() = jarFile.getInputStream(jarEntry)
+    override fun createInputStream(): InputStream = jarFile.getInputStream(jarEntry)
 }
 
 class UrlInputStreamProvider(private val url: URL) : InputStreamProvider {
-    override fun createInputStream() = url.openConnection().inputStream
+    override fun createInputStream(): InputStream = url.openConnection().inputStream
 }
 
 class JrtInputStreamProvider(private val fileName: String, private val jreHome : File) : InputStreamProvider {

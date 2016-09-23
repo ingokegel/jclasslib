@@ -76,7 +76,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Class access flags
          */
-        val CLASS_ACCESS_FLAGS = EnumSet.of(
+        val CLASS_ACCESS_FLAGS = enumSet(
                 PUBLIC,
                 FINAL,
                 SUPER,
@@ -89,7 +89,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Inner class access flags
          */
-        val INNER_CLASS_ACCESS_FLAGS = EnumSet.of(
+        val INNER_CLASS_ACCESS_FLAGS = enumSet(
                 PUBLIC,
                 PRIVATE,
                 PROTECTED,
@@ -104,7 +104,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Field access flags
          */
-        val FIELD_ACCESS_FLAGS = EnumSet.of(
+        val FIELD_ACCESS_FLAGS = enumSet(
                 PUBLIC,
                 PRIVATE,
                 PROTECTED,
@@ -118,7 +118,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Method access flags
          */
-        val METHOD_ACCESS_FLAGS = EnumSet.of(
+        val METHOD_ACCESS_FLAGS = enumSet(
                 PUBLIC,
                 PRIVATE,
                 PROTECTED,
@@ -135,10 +135,13 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Access flags for MethodParameters attribute
          */
-        val METHOD_PARAMETERS_ACCESS_FLAGS: EnumSet<AccessFlag> = EnumSet.of(
+        val METHOD_PARAMETERS_ACCESS_FLAGS = enumSet(
                 FINAL,
                 SYNTHETIC,
                 MANDATED
         )
+
+        private fun enumSet(accessFlag: AccessFlag, vararg accessFlags: AccessFlag) : EnumSet<AccessFlag> =
+                EnumSet.of(accessFlag, *accessFlags)
     }
 }

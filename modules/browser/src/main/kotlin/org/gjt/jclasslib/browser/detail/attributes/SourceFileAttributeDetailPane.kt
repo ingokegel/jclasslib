@@ -13,7 +13,7 @@ import org.gjt.jclasslib.structures.attributes.SourceFileAttribute
 
 class SourceFileAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SourceFileAttribute>(SourceFileAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Source file name index:") { attribute -> attribute.sourceFileIndex }
+        addConstantPoolLink("Source file name index:", SourceFileAttribute::sourceFileIndex)
     }
 }
 
