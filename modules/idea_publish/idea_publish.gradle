@@ -1,0 +1,25 @@
+plugins {
+    id 'org.jetbrains.intellij' version '0.1.10'
+}
+apply plugin: 'kotlin'
+
+intellij {
+    version 'IC-2016.2.5'
+    pluginName 'jclasslib'
+}
+
+sourceSets {
+    main {
+        kotlin {
+            srcDirs += "../idea/src/main/kotlin"
+        }
+        resources {
+            srcDirs += "../idea/src/main/resources"
+        }
+    }
+}
+
+dependencies {
+    compile project(':browser')
+    compileOnly ':byteCodeViewer'
+}

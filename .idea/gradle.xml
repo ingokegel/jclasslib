@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/modules/browser" />
             <option value="$PROJECT_DIR$/modules/data" />
+            <option value="$PROJECT_DIR$/modules/idea_publish" />
             <option value="$PROJECT_DIR$/modules/installer" />
           </set>
         </option>
