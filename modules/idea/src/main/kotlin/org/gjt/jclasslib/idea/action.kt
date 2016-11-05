@@ -27,6 +27,9 @@ import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.IconLoader
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import com.intellij.psi.util.*
@@ -35,7 +38,6 @@ import org.gjt.jclasslib.structures.ClassFile
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.InputStream
 
 class ShowBytecodeAction : AnAction() {
 
@@ -52,27 +54,42 @@ class ShowBytecodeAction : AnAction() {
 
         ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Locating class file ...") {
             var classFile: ClassFile? = null
+            var virtualFile: VirtualFile? = null
             var errorMessage: String? = null
 
             override fun run(indicator: ProgressIndicator) {
-                classFile = ApplicationManager.getApplication().runReadAction(Computable<ClassFile> {
+                virtualFile = ApplicationManager.getApplication().runReadAction(Computable<VirtualFile> {
                     try {
                         getClassFile(psiElement)
-                    } catch(e: FileNotFoundException) {
-                        errorMessage = "Class file could not be found" + (if (e.message.isNullOrBlank()) "" else ": " + e.message)
-                        null
                     } catch(e: Exception) {
-                        errorMessage = "Error reading class file: " + e.message
+                        errorMessage = "Class file could not be found" + (if (e.message.isNullOrBlank()) "" else ": " + e.message)
                         null
                     }
                 })
+                try {
+                    classFile = virtualFile?.readClassFile()
+                } catch(e: Exception) {
+                    errorMessage = "Error reading class file: " + e.message
+                }
             }
 
             override fun onSuccess() {
                 if (!project.isDisposed && errorMessage != null && myTitle != null) {
                     Messages.showWarningDialog(project, errorMessage, "jclasslib bytecode viewer")
                 } else {
-                    Messages.showMessageDialog("Got class file " + classFile, "jclasslib", Messages.getInformationIcon())
+                    //Messages.showMessageDialog("Got class file " + classFile, "jclasslib", Messages.getInformationIcon())
+                    virtualFile?.let { virtualFile ->
+                        val toolWindow = ToolWindowManager.getInstance(project).getToolWindow(BytecodeContentManager.TOOL_WINDOW_ID)
+                        val panel = BytecodeToolWindowPanel()
+                        toolWindow.contentManager.apply {
+                            val content = factory.createContent(panel, virtualFile.name, false)
+                            panel.content = content
+                            addContent(content)
+                            setSelectedContent(content, true)
+                        }
+                        toolWindow.activate(null)
+                    }
+
                     //TODO continue
                 }
             }
@@ -99,7 +116,7 @@ class ShowBytecodeAction : AnAction() {
 
     private fun findElementInFile(psiFile: PsiFile?, editor: Editor): PsiElement? = psiFile?.findElementAt(editor.caretModel.offset)
 
-    private fun getClassFile(psiElement: PsiElement): ClassFile {
+    private fun getClassFile(psiElement: PsiElement): VirtualFile {
         val containingClass = ByteCodeViewerManager.getContainingClass(psiElement) ?: throw FileNotFoundException("<containing class>")
         val classVMName = getClassName(containingClass) ?: throw FileNotFoundException("<class name>")
         val module = ModuleUtilCore.findModuleForPsiElement(psiElement)
@@ -110,7 +127,7 @@ class ShowBytecodeAction : AnAction() {
         }
     }
 
-    private fun getClassFileNoModule(psiElement: PsiElement, containingClass: PsiClass, classVMName: String): ClassFile {
+    private fun getClassFileNoModule(psiElement: PsiElement, containingClass: PsiClass, classVMName: String): VirtualFile {
         val project = containingClass.project
         val qualifiedName = PsiUtil.getTopLevelClass(psiElement)?.qualifiedName ?: throw FileNotFoundException("<top level class>")
         JavaPsiFacade.getInstance(project).findClass(qualifiedName, psiElement.resolveScope)?.let { psiClass ->
@@ -120,10 +137,7 @@ class ShowBytecodeAction : AnAction() {
                 try {
                     val rootForFile = fileIndex.getClassRootForFile(virtualFile)
                     if (rootForFile != null) {
-                        val classFile = rootForFile.findFileByRelativePath("/" + classVMName.replace('.', '/') + ".class")
-                        if (classFile != null) {
-                            return readClassFile(classFile.inputStream)
-                        }
+                        return rootForFile.findFileByRelativePath("/" + classVMName.replace('.', '/') + ".class") ?: throw FileNotFoundException()
                     }
                 } catch (e: IOException) {
                     LOG.error(e)
@@ -133,7 +147,7 @@ class ShowBytecodeAction : AnAction() {
         throw FileNotFoundException()
     }
 
-    private fun getClassFileModule(module: Module, containingClass: PsiClass, classVMName: String): ClassFile {
+    private fun getClassFileModule(module: Module, containingClass: PsiClass, classVMName: String): VirtualFile {
         val virtualFile = containingClass.containingFile.virtualFile ?: throw FileNotFoundException("<virtual file>")
         val moduleExtension = CompilerModuleExtension.getInstance(module) ?: throw FileNotFoundException("<module extension>")
         val file = File(if (ProjectRootManager.getInstance(module.project).fileIndex.isInTestSourceContent(virtualFile)) {
@@ -144,14 +158,14 @@ class ShowBytecodeAction : AnAction() {
             compilerOutputPath.path
         } + "/" + classVMName.replace('.', '/') + ".class")
 
-        if (file.exists()) {
-            return readClassFile(file.inputStream())
+        return if (file.exists()) {
+            LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
         } else {
-            throw FileNotFoundException(file.path)
-        }
+            null
+        } ?: throw FileNotFoundException(file.path)
     }
 
-    private fun readClassFile(inputStream: InputStream): ClassFile = ClassFileReader.readFromInputStream(inputStream)
+    private fun VirtualFile.readClassFile(): ClassFile = ClassFileReader.readFromInputStream(inputStream)
 
     private fun getClassName(containingClass: PsiClass): String? {
         if (containingClass is PsiAnonymousClass) {
@@ -163,7 +177,7 @@ class ShowBytecodeAction : AnAction() {
     }
 
     companion object {
-        private val ICON = IconLoader.getIcon("/icons/jclasslib.png") // 13x13
+        val ICON = IconLoader.getIcon("/icons/jclasslib.png") // 13x13
         private val LOG = Logger.getInstance("#" + ShowBytecodeAction::class.java.name)
     }
 }
