@@ -17,7 +17,7 @@ open class BrowserTreeNode(text: String, val type: NodeType, val element: Any? =
     val originalChildren = ArrayList<BrowserTreeNode>()
 
     @Suppress("UNCHECKED_CAST")
-    override fun iterator() = children.iterator() as Iterator<BrowserTreeNode>
+    override fun iterator() = (children ?: emptyList<BrowserTreeNode>()).iterator() as Iterator<BrowserTreeNode>
 
     fun filterChildren(predicate: (node: BrowserTreeNode) -> Boolean) {
         if (originalChildren.isEmpty()) {
