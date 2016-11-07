@@ -17,10 +17,4 @@
       <add-to-group group-id="QuickActions" anchor="after" relative-to-action="QuickJavaDoc"/>
     </action>
   </actions>
-
-  <project-components>
-    <component>
-      <implementation-class>org.gjt.jclasslib.idea.BytecodeContentManager</implementation-class>
-    </component>
-  </project-components>
 </idea-plugin>
