@@ -23,6 +23,7 @@ import javax.swing.UIManager
 val APPLICATION_TITLE = "Bytecode viewer"
 val SYSTEM_PROPERTY_LAF_DEFAULT = "jclasslib.laf.default"
 val WORKSPACE_FILE_SUFFIX = "jcw"
+val WEB_SITE_URL = "http://www.ej-technologies.com/products/jclasslib/overview.html"
 
 fun main(args: Array<String>) {
 

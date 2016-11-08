@@ -159,7 +159,7 @@ class BrowserFrame : JFrame() {
     }
 
     val showHomepageAction = DefaultAction("jclasslib on the web", "Visit jclasslib on the web", "web_small.png", "web_large.png") {
-        GUIHelper.showURL("http://www.ej-technologies.com/products/jclasslib/overview.html")
+        GUIHelper.showURL(WEB_SITE_URL)
     }
 
     val showEjtAction = DefaultAction("ej-technologies on the web", "Visit ej-technologies on the web", "web_small.png") {

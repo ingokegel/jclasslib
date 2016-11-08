@@ -241,6 +241,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         init {
             editorKit = ByteCodeEditorKit()
             font = Font("MonoSpaced".intern(), 0, UIManager.getFont("TextArea.font").size)
+            background = UIManager.getColor("TextField.background")
             isEditable = false
             DocumentLinkListener(this)
 

@@ -8,11 +8,12 @@
 package org.gjt.jclasslib.idea
 
 import com.intellij.icons.AllIcons
+import com.intellij.ide.BrowserUtil
 import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.impl.ContentManagerWatcher
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
@@ -23,8 +24,10 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.ui.content.Content
+import com.intellij.util.PlatformIcons
 import org.gjt.jclasslib.browser.BrowserComponent
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.WEB_SITE_URL
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
@@ -57,6 +60,7 @@ fun showClassFile(virtualFile: VirtualFile, browserPath: BrowserPath?, project: 
 }
 
 private fun readClassFile(virtualFile: VirtualFile, project: Project): ClassFile? {
+    virtualFile.refresh(false, false)
     try {
         return ClassFileReader.readFromInputStream(virtualFile.inputStream)
     } catch(e: Exception) {
@@ -84,7 +88,13 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
 
     lateinit var content: Content
 
-    private val backwardActionDelegate: AnAction = object : AnAction(), DumbAware {
+    private val closeAction: AnAction = object : CloseTabToolbarAction() {
+        override fun actionPerformed(e: AnActionEvent) {
+            content.manager.removeContent(content, true)
+        }
+    }
+
+    private val backwardActionDelegate: AnAction = object : DumbAwareAction() {
         init {
             templatePresentation.apply {
                 icon = AllIcons.Actions.Back
@@ -101,7 +111,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
         }
     }
 
-    private val forwardActionDelegate: AnAction = object : AnAction(), DumbAware {
+    private val forwardActionDelegate: AnAction = object : DumbAwareAction() {
         init {
             templatePresentation.apply {
                 icon = AllIcons.Actions.Forward
@@ -118,10 +128,10 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
         }
     }
 
-    private val reloadActionDelegate: AnAction = object : AnAction(), DumbAware {
+    private val reloadAction: AnAction = object : DumbAwareAction() {
         init {
             templatePresentation.apply {
-                icon = AllIcons.Actions.Refresh
+                icon = PlatformIcons.SYNCHRONIZE_ICON
                 text = "Reload"
             }
         }
@@ -132,6 +142,19 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
                 classFile = newClassFile
                 browserComponent.rebuild()
             }
+        }
+    }
+
+    private val webAction: AnAction = object : DumbAwareAction() {
+        init {
+            templatePresentation.apply {
+                icon = PlatformIcons.WEB_ICON
+                text = "Show web site"
+            }
+        }
+
+        override fun actionPerformed(e: AnActionEvent) {
+            showURL(WEB_SITE_URL)
         }
     }
 
@@ -154,15 +177,17 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
     override fun canOpenClassFiles(): Boolean = true
 
     override fun showURL(urlSpec: String) {
-        throw UnsupportedOperationException("not implemented")
+        BrowserUtil.browse(urlSpec)
     }
 
     init {
         val actionGroup = DefaultActionGroup().apply {
-            add(CloseAction())
+            add(closeAction)
             add(backwardActionDelegate)
             add(forwardActionDelegate)
-            add(reloadActionDelegate)
+            add(reloadAction)
+            addSeparator()
+            add(webAction)
         }
         val actionToolbar = ActionManager.getInstance().createActionToolbar("bytecodeToolBar", actionGroup, true).apply {
             setTargetComponent(this@BytecodeToolWindowPanel)
@@ -171,16 +196,15 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
         setContent(browserComponent)
     }
 
-    private inner class CloseAction : CloseTabToolbarAction() {
-        override fun actionPerformed(e: AnActionEvent) {
-            content.manager.removeContent(content, true)
-        }
-    }
-
     private inner class ActionDelegate(private val anAction: AnAction) : AbstractAction() {
         override fun actionPerformed(e: ActionEvent?) {
             anAction.actionPerformed(AnActionEvent.createFromAnAction(anAction, null, ActionPlaces.TOOLBAR, DataManager.getInstance().getDataContext(browserComponent)))
         }
     }
 
+    companion object {
+        init {
+            initUiFacades()
+        }
+    }
 }

@@ -15,16 +15,15 @@ import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue
 import org.gjt.jclasslib.structures.elementvalues.ArrayElementValue
 import org.gjt.jclasslib.structures.elementvalues.ElementValue
 import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
+import org.gjt.jclasslib.util.TreeIcon
+import org.gjt.jclasslib.util.treeIcons
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.util.*
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTree
-import javax.swing.tree.DefaultTreeModel
-import javax.swing.tree.TreeNode
-import javax.swing.tree.TreePath
-import javax.swing.tree.TreeSelectionModel
+import javax.swing.tree.*
 
 class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
@@ -35,6 +34,11 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         isRootVisible = false
         showsRootHandles = true
         transferHandler = BrowserNodeTransferHandler(services)
+        cellRenderer = DefaultTreeCellRenderer().apply {
+            treeIcons[TreeIcon.CLOSED]?.apply { closedIcon = this }
+            treeIcons[TreeIcon.OPEN]?.apply { openIcon = this }
+            treeIcons[TreeIcon.LEAF]?.apply { leafIcon = this }
+        }
     }
 
     init {
@@ -45,7 +49,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }, BorderLayout.CENTER)
     }
 
-    val root : BrowserTreeNode
+    val root: BrowserTreeNode
         get() = tree.model.root as BrowserTreeNode
 
     fun getPathForCategory(category: NodeType): TreePath {

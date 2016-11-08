@@ -9,9 +9,11 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.*
 import org.gjt.jclasslib.structures.*
+import org.gjt.jclasslib.util.SplitDirection
+import org.gjt.jclasslib.util.SplitterFacade
+import org.gjt.jclasslib.util.splitterFactory
 import java.awt.BorderLayout
 import javax.swing.JComponent
-import javax.swing.JSplitPane
 import javax.swing.event.TreeSelectionEvent
 import javax.swing.event.TreeSelectionListener
 import javax.swing.tree.TreePath
@@ -21,13 +23,11 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     val detailPane: BrowserDetailPane = BrowserDetailPane(services)
     val treePane: BrowserTreePane = BrowserTreePane(services)
 
-    private val splitPane: JSplitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane, detailPane).apply {
-        isContinuousLayout = true
-    }
+    private val splitPane: SplitterFacade = splitterFactory(SplitDirection.HORIZONTAL, treePane, detailPane)
 
     init {
         layout = BorderLayout()
-        add(splitPane, BorderLayout.CENTER)
+        add(splitPane.component, BorderLayout.CENTER)
         treePane.tree.addTreeSelectionListener(this)
     }
 
