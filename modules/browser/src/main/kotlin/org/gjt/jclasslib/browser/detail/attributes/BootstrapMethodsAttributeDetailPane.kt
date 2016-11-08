@@ -40,7 +40,7 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDeta
                     }
 
                     override fun createTableCellRenderer() = createTableCellEditor()
-                    override fun createTableCellEditor() = MultiLineHtmlCellHandler() { description ->
+                    override fun createTableCellEditor() = MultiLineHtmlCellHandler { description ->
                         ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                     }
 

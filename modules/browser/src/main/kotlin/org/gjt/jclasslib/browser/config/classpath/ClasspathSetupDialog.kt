@@ -101,16 +101,12 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         val config = frame.config
         val oldEntries = ArrayList(config.classpath)
 
-        for (oldEntry in oldEntries) {
-            if (!newEntries.contains(oldEntry)) {
-                config.removeClasspathEntry(oldEntry)
-            }
-        }
-        for (newEntry in newEntries) {
-            if (!oldEntries.contains(newEntry)) {
-                config.addClasspathEntry(newEntry)
-            }
-        }
+        oldEntries
+                .filterNot { newEntries.contains(it) }
+                .forEach { config.removeClasspathEntry(it) }
+        newEntries
+                .filterNot { oldEntries.contains(it) }
+                .forEach { config.addClasspathEntry(it) }
 
         config.classpath.apply {
             clear()

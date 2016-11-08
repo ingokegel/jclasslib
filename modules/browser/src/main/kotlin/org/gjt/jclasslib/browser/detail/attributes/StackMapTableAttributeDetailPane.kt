@@ -32,7 +32,7 @@ class StackMapTableAttributeDetailPane(services: BrowserServices) : TableDetailP
             columns.add(object : StringColumn<StackMapFrameEntry>("Stack Map Frame", 600) {
                 override fun createValue(row: StackMapFrameEntry): String = row.verbose
                 override fun createTableCellRenderer() = createTableCellEditor()
-                override fun createTableCellEditor() = MultiLineHtmlCellHandler() { description ->
+                override fun createTableCellEditor() = MultiLineHtmlCellHandler { description ->
                     ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                 }
 

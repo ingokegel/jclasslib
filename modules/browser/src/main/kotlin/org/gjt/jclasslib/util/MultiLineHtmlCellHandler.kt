@@ -95,7 +95,7 @@ class MultiLineHtmlCellHandler(val linkHandler: (description: String) -> Unit = 
         }
         font = table.font
         border = EmptyBorder(1, 1, 1, 1)
-        text = if (value == null) "" else value.toString()
+        text = value?.toString() ?: ""
         return this
     }
 

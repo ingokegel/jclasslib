@@ -75,7 +75,7 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
             elementClassToDetailPane[elementValueClass]
 
     override val clipboardText: String?
-        get() = currentDetailPane?.let { it.clipboardText }
+        get() = currentDetailPane?.clipboardText
 
     private fun showCard(cardName: String) {
         (specificInfoPane.layout as CardLayout).show(specificInfoPane, cardName)

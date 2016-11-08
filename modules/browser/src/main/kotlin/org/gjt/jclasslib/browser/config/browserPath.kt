@@ -50,7 +50,7 @@ class BrowserPath {
                         }
                     }
                 }
-            } ?: null
+            }
         }
     }
 }
@@ -87,7 +87,7 @@ data class CategoryHolder(val category: NodeType = NodeType.NO_CONTENT) : PathCo
 
         fun create(element: Element): CategoryHolder? {
             val nodeType = NodeType.getByName(element.getAttribute(ATTRIBUTE_NAME))
-            return nodeType?.let { CategoryHolder(nodeType) } ?: null
+            return nodeType?.let { CategoryHolder(nodeType) }
         }
     }
 }

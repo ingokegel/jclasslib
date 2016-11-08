@@ -148,9 +148,7 @@ class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), Browser
     fun saveWorkspace(element: Element) {
         element.addElement(NODE_NAME) {
             setAttribute(ATTRIBUTE_FILE_NAME, fileName)
-            browserComponent.browserPath?.let { browserPath ->
-                browserPath.saveWorkspace(this)
-            }
+            browserComponent.browserPath?.saveWorkspace(this)
         }
     }
 

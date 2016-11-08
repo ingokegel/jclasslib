@@ -30,7 +30,7 @@ abstract class Lookup<T>(val enumClass: Class<T>, val name: String) where T : En
     @Throws(InvalidByteCodeException::class)
     fun getFromTag(tag: Int): T {
         if (tag < LOOKUP.size && tag >= 0) {
-            val constant = LOOKUP[tag.toInt()]
+            val constant = LOOKUP[tag]
             if (constant != null) {
                 @Suppress("UNCHECKED_CAST")
                 return constant as T

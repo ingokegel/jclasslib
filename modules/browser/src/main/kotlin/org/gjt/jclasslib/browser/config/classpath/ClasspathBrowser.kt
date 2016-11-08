@@ -98,7 +98,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
             return selectionPaths.map {selectionPath ->
                 val buffer = StringBuilder()
                 for (i in 1..selectionPath.pathCount - 1) {
-                    if (buffer.length > 0) {
+                    if (buffer.isNotEmpty()) {
                         buffer.append('/')
                     }
                     buffer.append(selectionPath.getPathComponent(i).toString())

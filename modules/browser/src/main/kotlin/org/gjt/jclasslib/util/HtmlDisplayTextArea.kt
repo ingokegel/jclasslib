@@ -125,7 +125,7 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
         val correctedBounds = view.getChildAllocation(index, bounds) ?: return -1
         val child = view.getView(index)
         if (view is javax.swing.text.ParagraphView) {
-            val rect: Rectangle = if (correctedBounds is Rectangle) correctedBounds else correctedBounds.bounds
+            val rect: Rectangle = correctedBounds as? Rectangle ?: correctedBounds.bounds
             return rect.y + (rect.height * child.getAlignment(View.Y_AXIS)).toInt()
         } else {
             return getBaseline(child, correctedBounds)

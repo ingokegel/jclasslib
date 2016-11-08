@@ -43,7 +43,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
                 }
             }.toString()
         }.visibilityPredicate { typeAnnotation ->
-            typeAnnotation.typePathEntries.size > 0
+            typeAnnotation.typePathEntries.isNotEmpty()
         }
     }
 

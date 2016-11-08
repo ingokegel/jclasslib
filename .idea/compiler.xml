@@ -24,6 +24,8 @@
       <module name="data_main" target="1.6" />
       <module name="data_test" target="1.6" />
       <module name="idea_main" target="1.6" />
+      <module name="idea_publish_main" target="1.6" />
+      <module name="idea_publish_test" target="1.6" />
       <module name="idea_test" target="1.6" />
     </bytecodeTargetLevel>
   </component>

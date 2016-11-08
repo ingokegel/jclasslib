@@ -226,7 +226,7 @@ class ByteCodeDocument(private val styles: StyleContext, private val attribute: 
         appendString("#" + constantPoolIndex, currentLinkStyle)
         try {
             val name = classFile.getConstantPoolEntryName(constantPoolIndex)
-            if (name.length > 0) {
+            if (name.isNotEmpty()) {
                 appendString(" <$name>", STYLE_SMALL)
             }
         } catch (ex: InvalidByteCodeException) {

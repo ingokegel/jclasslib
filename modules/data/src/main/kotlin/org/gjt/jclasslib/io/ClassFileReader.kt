@@ -30,27 +30,26 @@ object ClassFileReader {
     @JvmStatic
     fun readFromClassPath(classPath: Array<String>, packageName: String, className: String): ClassFile? {
 
-        val relativePath = packageName.replace('.', File.separatorChar) + (if (packageName.length == 0) "" else File.separator) + className + ".class"
+        val relativePath = packageName.replace('.', File.separatorChar) + (if (packageName.isEmpty()) "" else File.separator) + className + ".class"
         val jarRelativePath = relativePath.replace(File.separatorChar, '/')
-        for (singlePath in classPath) {
-            val currentClassPathEntry = File(singlePath)
-            if (!currentClassPathEntry.exists()) {
-                continue
-            }
-            if (currentClassPathEntry.isDirectory) {
-                val testFile = File(currentClassPathEntry, relativePath)
-                if (testFile.exists()) {
-                    return readFromFile(testFile)
-                }
-            } else if (currentClassPathEntry.isFile) {
-                JarFile(currentClassPathEntry).use { jarFile ->
-                    val jarEntry = jarFile.getJarEntry(jarRelativePath)
-                    if (jarEntry != null) {
-                        return readFromInputStream(jarFile.getInputStream(jarEntry))
+        classPath
+                .map(::File)
+                .filter(File::exists)
+                .forEach {classPathEntry ->
+                    if (classPathEntry.isDirectory) {
+                        val testFile = File(classPathEntry, relativePath)
+                        if (testFile.exists()) {
+                            return readFromFile(testFile)
+                        }
+                    } else if (classPathEntry.isFile) {
+                        JarFile(classPathEntry).use { jarFile ->
+                            val jarEntry = jarFile.getJarEntry(jarRelativePath)
+                            if (jarEntry != null) {
+                                return readFromInputStream(jarFile.getInputStream(jarEntry))
+                            }
+                        }
                     }
                 }
-            }
-        }
 
         return null
     }

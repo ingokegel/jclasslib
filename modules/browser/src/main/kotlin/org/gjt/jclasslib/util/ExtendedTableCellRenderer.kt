@@ -93,7 +93,7 @@ class ExtendedTableCellRenderer : ExtendedJLabel(""), TableCellRenderer {
     }
 
     private fun setValue(value: Any?) {
-        text = if (value == null) "" else value.toString()
+        text = value?.toString() ?: ""
     }
 
     companion object {

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: :byteCodeViewer:">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib-compile/byteCodeViewer.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

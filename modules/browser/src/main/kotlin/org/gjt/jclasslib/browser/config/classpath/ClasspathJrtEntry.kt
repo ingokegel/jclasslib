@@ -17,7 +17,7 @@ class ClasspathJrtEntry(jreHome: String) : ClasspathEntry(jreHome) {
 
     override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
         forEachClassNameInJrt(file) { path ->
-            addEntry(path.toString(), model, reset)
+            addEntry(path, model, reset)
         }
     }
 

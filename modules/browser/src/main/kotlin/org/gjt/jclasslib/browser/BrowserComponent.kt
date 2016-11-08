@@ -91,7 +91,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     private fun buildPath(pathComponents: List<PathComponent>): TreePath {
         val nodes = mutableListOf(treePane.root)
         pathComponents.forEach { pathComponent ->
-            val node = nodes.last().firstOrNull() { pathComponent.matches(it) }
+            val node = nodes.last().firstOrNull { pathComponent.matches(it) }
             if (node != null) {
                 nodes.add(node)
             } else {

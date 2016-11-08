@@ -125,7 +125,7 @@ class BrowserFrame : JFrame() {
         saveWindowSettings()
         isVisible = false
         dispose()
-        if (getBrowserFrames().size == 0) {
+        if (getBrowserFrames().isEmpty()) {
             exit()
         }
     }.apply {

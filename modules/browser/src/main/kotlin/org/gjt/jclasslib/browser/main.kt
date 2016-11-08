@@ -48,7 +48,7 @@ fun main(args: Array<String>) {
     EventQueue.invokeLater {
         BrowserFrame().apply {
             isVisible = true
-            if (args.size > 0) {
+            if (args.isNotEmpty()) {
                 openExternalFile(args[0])
             }
         }
@@ -78,7 +78,7 @@ fun exit() {
 private fun registerStartupListener() {
     StartupNotification.registerStartupListener { argLine ->
         splitupCommandLine(argLine).let { startupArgs ->
-            if (startupArgs.size > 0) {
+            if (startupArgs.isNotEmpty()) {
                 val frames = getBrowserFrames()
                 frames.elementAtOrElse(0) { BrowserFrame().apply { isVisible = true } }.apply {
                     openExternalFile(startupArgs[0])
@@ -99,7 +99,7 @@ private fun splitupCommandLine(command: String): List<String> {
     while (tokenizer.hasMoreTokens()) {
         val token = tokenizer.nextToken()
         if (token == "\"") {
-            if (insideQuotes && argument.length > 0) {
+            if (insideQuotes && argument.isNotEmpty()) {
                 cmdList.add(argument.toString())
                 argument.setLength(0)
             }
@@ -107,7 +107,7 @@ private fun splitupCommandLine(command: String): List<String> {
         } else if (" ".contains(token)) {
             if (insideQuotes) {
                 argument.append(" ")
-            } else if (argument.length > 0) {
+            } else if (argument.isNotEmpty()) {
                 cmdList.add(argument.toString())
                 argument.setLength(0)
             }
@@ -115,7 +115,7 @@ private fun splitupCommandLine(command: String): List<String> {
             argument.append(token)
         }
     }
-    if (argument.length > 0) {
+    if (argument.isNotEmpty()) {
         cmdList.add(argument.toString())
     }
     return cmdList
