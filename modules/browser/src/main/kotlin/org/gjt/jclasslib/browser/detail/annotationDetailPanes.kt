@@ -24,6 +24,8 @@ class AnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<Annot
         addConstantPoolLink("Type:", AnnotationData::typeIndex)
         addDetail("Number of entries:") { annotationData -> annotationData.elementValuePairEntries.size.toString() }
     }
+
+    override fun hasInsets() = true
 }
 
 class AnnotationDefaultAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<AnnotationDefaultAttribute>(AnnotationDefaultAttribute::class.java, services) {
@@ -37,6 +39,8 @@ class ElementValuePairDetailPane(services: BrowserServices) : KeyValueDetailPane
         addConstantPoolLink("Element name:", ElementValuePair::elementNameIndex)
         addDetail("Value tag:") { elementValuePair -> "${elementValuePair.elementValue.elementValueType.charTag} <${elementValuePair.elementValue.elementValueType.verbose}>" }
     }
+
+    override fun hasInsets() = true
 }
 
 class ArrayElementValueDetailPane(services: BrowserServices) : KeyValueDetailPane<ArrayElementValue>(ArrayElementValue::class.java, services) {
@@ -44,6 +48,8 @@ class ArrayElementValueDetailPane(services: BrowserServices) : KeyValueDetailPan
         addDetail("Tag:") { arrayElementValue -> arrayElementValue.elementValueType.let { "${it.charTag} <${it.verbose}>" } }
         addDetail("Number of values:") { arrayElementValue -> arrayElementValue.elementValueEntries.size.toString() }
     }
+
+    override fun hasInsets() = true
 }
 
 class GenericElementValueDetailPane(services: BrowserServices) : KeyValueDetailPane<ElementValue>(ElementValue::class.java, services) {
