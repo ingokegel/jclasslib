@@ -9,9 +9,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/data/data_main.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/data/data_main.iml" group="data" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/data/data_test.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/data/data_test.iml" group="data" />
       <module fileurl="file://$PROJECT_DIR$/modules/idea/idea.iml" filepath="$PROJECT_DIR$/modules/idea/idea.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/idea_publish/idea_publish.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/idea_publish/idea_publish.iml" group="idea_publish" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/idea_publish/idea_publish_main.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/idea_publish/idea_publish_main.iml" group="idea_publish" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/idea_publish/idea_publish_test.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/idea_publish/idea_publish_test.iml" group="idea_publish" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/modules/installer/installer.iml" filepath="$PROJECT_DIR$/.idea/modules/modules/installer/installer.iml" group="installer" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jclasslib.iml" filepath="$PROJECT_DIR$/.idea/modules/jclasslib.iml" />
     </modules>
