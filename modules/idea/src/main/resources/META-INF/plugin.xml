@@ -6,7 +6,7 @@
   <version>5.0</version>
   <idea-version since-build="162"/>
 
-  <depends>ByteCodeViewer</depends>
+  <depends optional="true">ByteCodeViewer</depends>
 
   <extensions defaultExtensionNs="com.intellij">
   </extensions>

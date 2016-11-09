@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.idea
 
-import com.intellij.byteCodeViewer.ByteCodeViewerManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -25,7 +24,7 @@ class ShowBytecodeAction : AnAction() {
 
     override fun update(e: AnActionEvent) {
         e.presentation.apply {
-            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && ByteCodeViewerManager.getContainingClass(this) != null } ?: false
+            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && getContainingClass(this) != null } ?: false
             icon = ICON
         }
     }

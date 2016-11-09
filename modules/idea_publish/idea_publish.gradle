@@ -9,7 +9,7 @@ buildscript {
     }
 }
 
-if (!Boolean.getBoolean("idea.resolveSourceSetDependencies")) { // This VM parameter is passed to gradle when the project is imported by IJ
+if (System.getProperty("idea.resolveSourceSetDependencies") == null) { // This VM parameter is passed to gradle when the project is imported by IJ
     apply plugin: 'org.jetbrains.intellij'
     apply plugin: 'kotlin'
 
@@ -33,5 +33,4 @@ if (!Boolean.getBoolean("idea.resolveSourceSetDependencies")) { // This VM param
         compile project(':browser')
         compileOnly ':byteCodeViewer'
     }
-
 }

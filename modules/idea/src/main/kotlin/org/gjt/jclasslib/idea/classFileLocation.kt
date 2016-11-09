@@ -8,9 +8,11 @@
 package org.gjt.jclasslib.idea
 
 import com.intellij.byteCodeViewer.ByteCodeViewerManager
+import com.intellij.ide.plugins.PluginManager
 import com.intellij.ide.util.JavaAnonymousClassesHelper
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.progress.ProgressIndicator
@@ -23,10 +25,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiAnonymousClass
-import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiElement
+import com.intellij.psi.*
 import com.intellij.psi.util.ClassUtil
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
@@ -35,6 +34,9 @@ import org.gjt.jclasslib.browser.config.BrowserPath
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+
+// Use CompilerPathsEx.findClassFileInOutput after IDEA 2016.3 to locate class file, see:
+// https://github.com/JetBrains/intellij-community/commit/92ad8f3bd4c580cc81184b2a03842a
 
 val LOG: Logger = Logger.getInstance("#jclasslib")
 
@@ -65,7 +67,7 @@ fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Pr
 }
 
 private fun getClassFile(psiElement: PsiElement): VirtualFile {
-    val containingClass = ByteCodeViewerManager.getContainingClass(psiElement) ?: throw FileNotFoundException("<containing class>")
+    val containingClass = getContainingClass(psiElement) ?: throw FileNotFoundException("<containing class>")
     val classVMName = getClassName(containingClass) ?: throw FileNotFoundException("<class name>")
     val module = ModuleUtilCore.findModuleForPsiElement(psiElement)
     return if (module == null) {
@@ -122,3 +124,16 @@ private fun getClassName(containingClass: PsiClass): String? {
     }
 }
 
+fun getContainingClass(psiElement: PsiElement): PsiClass? {
+    val byteCodeViewerPlugin = PluginManager.getPlugin(PluginId.getId("ByteCodeViewer"))
+    if (byteCodeViewerPlugin != null && byteCodeViewerPlugin.isEnabled) {
+        return ByteCodeViewerManager.getContainingClass(psiElement)
+    } else {
+        val containingClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass::class.java, false)
+        return if (containingClass is PsiTypeParameter) {
+            getContainingClass(containingClass)
+        } else {
+            containingClass
+        }
+    }
+}
