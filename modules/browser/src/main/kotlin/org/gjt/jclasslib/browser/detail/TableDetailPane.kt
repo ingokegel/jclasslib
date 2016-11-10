@@ -15,7 +15,6 @@ import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.LinkMouseListener
 import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.Point
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
@@ -117,7 +116,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
     override fun setupComponent() {
         layout = BorderLayout()
         add(JScrollPane(table).apply {
-            viewport.background = Color.WHITE
+            viewport.background = UIManager.getColor("Table.background")
         }, BorderLayout.CENTER)
     }
 

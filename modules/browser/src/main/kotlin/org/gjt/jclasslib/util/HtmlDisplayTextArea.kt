@@ -23,8 +23,8 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
         set(inverted) {
             field = inverted
             styleSheet?.apply {
-                addRule("a {color : #" + getHexValue(if (inverted) foreground else COLOR_LINK) + " }")
-                addRule("a:active {color : #" + getHexValue(if (inverted) foreground else COLOR_LINK) + " }")
+                addRule("a {color : #" + getHexValue(if (inverted) foreground else getLinkColor()) + " }")
+                addRule("a:active {color : #" + getHexValue(if (inverted) foreground else getActiveLinkColor()) + " }")
             }
         }
 
@@ -147,7 +147,6 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
     override fun getBaselineResizeBehavior() = Component.BaselineResizeBehavior.CONSTANT_ASCENT
 
     companion object {
-        val COLOR_LINK = Color(0, 128, 0)
         private val NO_MARGIN = Insets(0, 0, 0, 0)
     }
 

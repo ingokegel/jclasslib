@@ -10,7 +10,8 @@ package org.gjt.jclasslib.browser
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.ExtendedJLabel
 import org.gjt.jclasslib.util.HtmlDisplayTextArea
-import java.awt.Color
+import org.gjt.jclasslib.util.getLinkColor
+import org.gjt.jclasslib.util.getValueColor
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTree
@@ -36,15 +37,15 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
     protected fun normalLabel(text: String = "") = ExtendedJLabel(text)
 
     protected fun highlightLabel() = normalLabel().apply {
-        foreground = COLOR_HIGHLIGHT
+        foreground = getValueColor()
     }
 
     protected fun highlightTextArea() = HtmlDisplayTextArea().apply {
-        foreground = COLOR_HIGHLIGHT
+        foreground = getValueColor()
     }
 
     protected fun linkLabel(): ExtendedJLabel = normalLabel().apply {
-        foreground = HtmlDisplayTextArea.COLOR_LINK
+        foreground = getLinkColor()
         isRequestFocusEnabled = true
         isUnderlined = true
     }
@@ -85,6 +86,5 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
 
     companion object {
         val CPINFO_LINK_TEXT = "cp_info #"
-        protected val COLOR_HIGHLIGHT = Color(128, 0, 0)
     }
 }

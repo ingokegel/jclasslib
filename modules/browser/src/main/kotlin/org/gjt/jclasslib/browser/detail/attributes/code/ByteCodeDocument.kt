@@ -13,6 +13,8 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.BatchDocument
+import org.gjt.jclasslib.util.getLinkColor
+import org.gjt.jclasslib.util.getValueColor
 import java.awt.BasicStroke
 import java.awt.Color
 import java.io.IOException
@@ -306,8 +308,6 @@ class ByteCodeDocument(private val styles: StyleContext, private val attribute: 
         val ATTRIBUTE_NAME_LINK = "attributeLink"
         val ATTRIBUTE_NAME_HOVER_HIGHLIGHT = "hoverHighlight"
 
-        val ACTIVE_LINK_COLOR = Color(196, 0, 0)
-
         private val DOTTED_STROKE = BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0.toFloat(), floatArrayOf(3.toFloat(), 4.toFloat()), 0.0f)
 
         val STYLE_NORMAL = style()
@@ -315,12 +315,12 @@ class ByteCodeDocument(private val styles: StyleContext, private val attribute: 
             fontSize -= 1
         }
         val STYLE_LINK = style {
-            foreground = Color(0, 128, 0)
+            foreground = getLinkColor()
             bold = true
             underline = true
         }
         val STYLE_OFFSET = style {
-            foreground = Color(128, 0, 0)
+            foreground = getValueColor()
         }
         val STYLE_INSTRUCTION = style {
             bold = true

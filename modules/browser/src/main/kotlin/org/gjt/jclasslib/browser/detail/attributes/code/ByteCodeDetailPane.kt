@@ -12,6 +12,7 @@ import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.*
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
+import org.gjt.jclasslib.util.getActiveLinkColor
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -147,7 +148,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
                 byteCodeTextPane.preventDrag = true
                 oldAttributes = element.copyAttributes()
                 byteCodeDocument.modifyDocument {
-                    element.addAttribute(StyleConstants.Foreground, ByteCodeDocument.ACTIVE_LINK_COLOR)
+                    element.addAttribute(StyleConstants.Foreground, getActiveLinkColor())
                     modifiedElement(element)
                 }
             }

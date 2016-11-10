@@ -7,21 +7,41 @@
 
 package org.gjt.jclasslib.idea
 
+import com.intellij.execution.process.ConsoleHighlighter
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.JBTabsPaneImpl
 import org.gjt.jclasslib.util.*
+import java.awt.Color
 import javax.swing.JComponent
 import javax.swing.SwingConstants
+import com.intellij.openapi.editor.colors.ColorKey as IJColorKey
 
 fun initUiFacades() {
     splitterFactory = ::JBSplitterFacade
     tabPaneFactory = ::JBTabsFacade
 
-    treeIcons[TreeIcon.CLOSED] = AllIcons.Nodes.TreeClosed
-    treeIcons[TreeIcon.OPEN] = AllIcons.Nodes.TreeOpen
-    treeIcons[TreeIcon.LEAF] = AllIcons.FileTypes.Any_type
+    treeIcons = mapOf(
+            TreeIcon.CLOSED to AllIcons.Nodes.TreeClosed,
+            TreeIcon.OPEN to AllIcons.Nodes.TreeOpen,
+            TreeIcon.LEAF to AllIcons.FileTypes.Any_type
+    )
+
+    colors = mutableMapOf<ColorKey, Color>().apply {
+        addColorMapping(ColorKey.VALUE, ConsoleHighlighter.RED)
+        addColorMapping(ColorKey.LINK, ConsoleHighlighter.GREEN)
+        addColorMapping(ColorKey.ACTIVE_LINK, ConsoleHighlighter.GREEN_BRIGHT)
+    }
+}
+
+private fun MutableMap<ColorKey, Color>.addColorMapping(colorKey: ColorKey, attributesKey: TextAttributesKey) {
+    val scheme = EditorColorsManager.getInstance().globalScheme
+    scheme.getAttributes(TextAttributesKey.createTextAttributesKey(attributesKey.externalName))?.let { attributes ->
+        put(colorKey, attributes.foregroundColor)
+    }
 }
 
 private class JBSplitterFacade(splitDirection: SplitDirection, first: JComponent, second: JComponent) : JBSplitter(splitDirection == SplitDirection.VERTICAL), SplitterFacade {
@@ -35,7 +55,7 @@ private class JBSplitterFacade(splitDirection: SplitDirection, first: JComponent
         get() = this
 }
 
-private class JBTabsFacade : JBTabsPaneImpl(null, SwingConstants.TOP, Disposable {  }), TabbedPaneFacade {
+private class JBTabsFacade : JBTabsPaneImpl(null, SwingConstants.TOP, Disposable { }), TabbedPaneFacade {
     override fun addTabAtEnd(name: String, component: JComponent) {
         insertTab(name, null, component, null, -1)
     }

@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail.attributes
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.util.ExtendedTableCellRenderer
-import org.gjt.jclasslib.util.HtmlDisplayTextArea
+import org.gjt.jclasslib.util.getLinkColor
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
@@ -34,7 +34,7 @@ class LinkRenderer : TableCellRenderer {
                 foreground = standardForeground
                 isUnderlined = false
             } else {
-                foreground = HtmlDisplayTextArea.COLOR_LINK
+                foreground = getLinkColor()
                 isUnderlined = true
             }
             getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
