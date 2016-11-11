@@ -14,8 +14,13 @@ apply plugin: 'kotlin'
 intellij {
     version 'IC-2016.2.5'
     pluginName 'jclasslib'
-    intellij.plugins = ['ByteCodeViewer']
-    intellij.sandboxDirectory = file("$rootProject.buildDir/../idea_sandbox")
+    plugins = ['ByteCodeViewer']
+    sandboxDirectory = file("$rootProject.buildDir/../idea_sandbox")
+
+    publish {
+        username=project.findProperty("intellij.publish.username") ?: ''
+        password=project.findProperty("intellij.publish.password") ?: ''
+    }
 }
 
 dependencies {
