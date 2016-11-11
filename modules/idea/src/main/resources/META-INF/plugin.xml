@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin version="2" url="https://github.com/ingokegel/jclasslib">
-  <name>jclasslib</name>
-  <description>Bytecode viewer for Java class files</description>
-  <version>5.0</version>
-  <vendor url="https://github.com/ingokegel/jclasslib" email="jclasslib@ej-technologies.com">Ingo Kegel</vendor>
-  <idea-version since-build="162"/>
+    <id>jclasslib</id>
+    <name>jclasslib Bytecode viewer</name>
+    <description>Bytecode viewer for Java class files</description>
+    <version>5.0</version>
+    <vendor url="https://github.com/ingokegel/jclasslib">Ingo Kegel</vendor>
+    <idea-version since-build="162"/>
 
-  <depends optional="true">ByteCodeViewer</depends>
-  <depends optional="true">org.jetbrains.kotlin</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends optional="true">ByteCodeViewer</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
 
-  <actions>
-    <action id="ShowByteCodeJclasslib" class="org.gjt.jclasslib.idea.ShowBytecodeAction"
-            text="Show Bytecode With jclasslib">
-      <add-to-group group-id="QuickActions" anchor="after" relative-to-action="QuickJavaDoc"/>
-    </action>
-  </actions>
+    <actions>
+        <action id="ShowByteCodeJclasslib" class="org.gjt.jclasslib.idea.ShowBytecodeAction"
+                text="Show Bytecode With jclasslib">
+            <add-to-group group-id="QuickActions" anchor="after" relative-to-action="QuickJavaDoc"/>
+        </action>
+    </actions>
 </idea-plugin>
