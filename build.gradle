@@ -84,8 +84,10 @@ allprojects {
     }
 }
 
-task clean << {
-    delete externalLibsDir
+task clean {
+    doLast {
+        delete externalLibsDir
+    }
 }
 
 task test()

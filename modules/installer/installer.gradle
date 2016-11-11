@@ -8,15 +8,17 @@ install4j {
     }
 }
 
-task clean << {
-    delete mediaDir
+task clean {
+    doLast {
+        delete mediaDir
+    }
 }
 
 task media(type: Install4jTask) {
 
     dependsOn ':dist', ':clean'
     projectFile = file('resources/jclasslib.install4j')
-    release = version
+    release = version as String
     disableSigning = !project.hasProperty("winCertPath") || !project.hasProperty("macCertPath")
     winKeystorePassword=project.findProperty("winKeystorePassword") ?: ''
     macKeystorePassword=project.findProperty("macKeystorePassword") ?: ''
