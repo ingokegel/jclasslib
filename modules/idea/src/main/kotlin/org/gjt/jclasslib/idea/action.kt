@@ -24,7 +24,7 @@ class ShowBytecodeAction : AnAction() {
 
     override fun update(e: AnActionEvent) {
         e.presentation.apply {
-            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && getContainingClass(this) != null } ?: false
+            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && getContainingClassName(this) != null } ?: false
             icon = ICON
         }
     }

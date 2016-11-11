@@ -1,0 +1,24 @@
+/*
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the license, or (at your option) any later version.
+ */
+
+plugins {
+  id "org.jetbrains.intellij" version "0.1.10"
+}
+
+apply plugin: 'kotlin'
+
+intellij {
+    version 'IC-2016.2.5'
+    pluginName 'jclasslib'
+    intellij.plugins = ['ByteCodeViewer']
+    intellij.sandboxDirectory = file("$rootProject.buildDir/../idea_sandbox")
+}
+
+dependencies {
+    compile project(':browser')
+    compileOnly "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
+}

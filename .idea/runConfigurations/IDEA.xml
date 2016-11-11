@@ -1,12 +1,21 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="IDEA" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
-    <module name="idea" />
-    <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-    <option name="PROGRAM_PARAMETERS" value="" />
-    <log_file path="$USER_HOME$/.IntelliJIdea2016.2/system/plugins-sandbox/system/log/idea.log" checked="true" skipped="true" show_all="false" alias="IDEA LOG" />
-    <RunnerSettings RunnerId="JProfiler">
-      <option name="WINDOW" value="false" />
-    </RunnerSettings>
+  <configuration default="false" name="IDEA" type="GradleRunConfiguration" factoryName="Gradle">
+    <log_file path="$PROJECT_DIR$/build/idea_sandbox/system/log/idea.log" checked="true" skipped="true" show_all="false" alias="IDEA" />
+    <ExternalSystemSettings>
+      <option name="executionName" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/modules/idea" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="scriptParameters" value="--stacktrace" />
+      <option name="taskDescriptions">
+        <list />
+      </option>
+      <option name="taskNames">
+        <list>
+          <option value="runIdea" />
+        </list>
+      </option>
+      <option name="vmOptions" value="" />
+    </ExternalSystemSettings>
     <method />
   </configuration>
 </component>

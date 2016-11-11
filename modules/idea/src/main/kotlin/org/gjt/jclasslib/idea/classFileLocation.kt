@@ -31,6 +31,9 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
 import com.intellij.psi.util.PsiUtilCore
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.jetbrains.kotlin.fileClasses.javaFileFacadeFqName
+import org.jetbrains.kotlin.psi.KtClassOrObject
+import org.jetbrains.kotlin.psi.KtFile
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -67,18 +70,17 @@ fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Pr
 }
 
 private fun getClassFile(psiElement: PsiElement): VirtualFile {
-    val containingClass = getContainingClass(psiElement) ?: throw FileNotFoundException("<containing class>")
-    val classVMName = getClassName(containingClass) ?: throw FileNotFoundException("<class name>")
+    val classVMName = getContainingClassName(psiElement) ?: throw FileNotFoundException("<containing class>")
     val module = ModuleUtilCore.findModuleForPsiElement(psiElement)
     return if (module == null) {
-        getClassFileNoModule(psiElement, containingClass, classVMName)
+        getClassFileNoModule(psiElement, classVMName)
     } else {
-        getClassFileModule(module, containingClass, classVMName)
+        getClassFileModule(module, psiElement, classVMName)
     }
 }
 
-private fun getClassFileNoModule(psiElement: PsiElement, containingClass: PsiClass, classVMName: String): VirtualFile {
-    val project = containingClass.project
+private fun getClassFileNoModule(psiElement: PsiElement, classVMName: String): VirtualFile {
+    val project = psiElement.project
     val qualifiedName = PsiUtil.getTopLevelClass(psiElement)?.qualifiedName ?: throw FileNotFoundException("<top level class>")
     JavaPsiFacade.getInstance(project).findClass(qualifiedName, psiElement.resolveScope)?.let { psiClass ->
         val virtualFile = PsiUtilCore.getVirtualFile(psiClass)
@@ -97,8 +99,8 @@ private fun getClassFileNoModule(psiElement: PsiElement, containingClass: PsiCla
     throw FileNotFoundException()
 }
 
-private fun getClassFileModule(module: Module, containingClass: PsiClass, classVMName: String): VirtualFile {
-    val virtualFile = containingClass.containingFile.virtualFile ?: throw FileNotFoundException("<virtual file>")
+private fun getClassFileModule(module: Module, psiElement: PsiElement, classVMName: String): VirtualFile {
+    val virtualFile = psiElement.containingFile.virtualFile ?: throw FileNotFoundException("<virtual file>")
     val moduleExtension = CompilerModuleExtension.getInstance(module) ?: throw FileNotFoundException("<module extension>")
     val file = File(if (ProjectRootManager.getInstance(module.project).fileIndex.isInTestSourceContent(virtualFile)) {
         val pathForTests = moduleExtension.compilerOutputPathForTests ?: throw FileNotFoundException("<compilerOutputPathForTests>")
@@ -115,25 +117,56 @@ private fun getClassFileModule(module: Module, containingClass: PsiClass, classV
     } ?: throw FileNotFoundException(file.path)
 }
 
-private fun getClassName(containingClass: PsiClass): String? {
-    if (containingClass is PsiAnonymousClass) {
-        val containingClassOfAnonymous = PsiTreeUtil.getParentOfType(containingClass, PsiClass::class.java) ?: return null
-        return getClassName(containingClassOfAnonymous) + JavaAnonymousClassesHelper.getName(containingClass)
+fun getContainingClassName(psiElement: PsiElement): String? = if (psiElement.language.id == "kotlin") {
+    getContainingClassNameKotlin(psiElement)
+} else {
+    getContainingClassNameJava(psiElement)
+}
+
+private fun getContainingClassNameKotlin(psiElement: PsiElement): String? {
+    var parentElement = psiElement.parent
+    while (parentElement != null) {
+        if (parentElement is KtClassOrObject) {
+            val fqName = parentElement.fqName?.asString()
+            if (fqName != null) {
+                return fqName
+            }
+        } else if (parentElement is KtFile) {
+            return parentElement.javaFileFacadeFqName.asString()
+        }
+        parentElement = parentElement.parent
+    }
+    return null
+}
+
+private fun getContainingClassNameJava(psiElement: PsiElement): String? {
+    val containingClass = getContainingClassJava(psiElement)
+    return if (containingClass != null) {
+        getClassNameJava(containingClass)
     } else {
-        return ClassUtil.getJVMClassName(containingClass)
+        null
     }
 }
 
-fun getContainingClass(psiElement: PsiElement): PsiClass? {
+private fun getContainingClassJava(psiElement: PsiElement): PsiClass? {
     val byteCodeViewerPlugin = PluginManager.getPlugin(PluginId.getId("ByteCodeViewer"))
     if (byteCodeViewerPlugin != null && byteCodeViewerPlugin.isEnabled) {
         return ByteCodeViewerManager.getContainingClass(psiElement)
     } else {
         val containingClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass::class.java, false)
         return if (containingClass is PsiTypeParameter) {
-            getContainingClass(containingClass)
+            getContainingClassJava(containingClass)
         } else {
             containingClass
         }
+    }
+}
+
+private fun getClassNameJava(containingClass: PsiClass): String? {
+    if (containingClass is PsiAnonymousClass) {
+        val containingClassOfAnonymous = PsiTreeUtil.getParentOfType(containingClass, PsiClass::class.java) ?: return null
+        return getClassNameJava(containingClassOfAnonymous) + JavaAnonymousClassesHelper.getName(containingClass)
+    } else {
+        return ClassUtil.getJVMClassName(containingClass)
     }
 }

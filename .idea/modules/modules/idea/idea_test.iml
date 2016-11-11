@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":idea:test" external.linked.project.path="$MODULE_DIR$/../../../../modules/idea" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="GRADLE" external.system.module.group="jclasslib" external.system.module.type="sourceSet" external.system.module.version="5.0" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":idea:test" external.linked.project.path="$MODULE_DIR$/../../../../modules/idea" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="GRADLE" external.system.module.group="jclasslib" external.system.module.type="sourceSet" external.system.module.version="5.1-beta2" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
     <output-test url="file://$MODULE_DIR$/../../../../build/gradle/idea/classes/test" />
     <exclude-output />
@@ -11,6 +11,16 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="idea_main" />
+    <orderEntry type="module" module-name="browser_main" />
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Program Files/Java/jdk1.8.0_60/lib/tools.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module-library">
       <library name="Gradle: com.jetbrains:idea:2016.2.5">
         <CLASSES>
@@ -125,18 +135,18 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_60/lib/tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.5" level="project" />
+    <orderEntry type="library" name="Gradle: com.miglayout:miglayout-core:5.0" level="project" />
     <orderEntry type="library" name="Gradle: com.beust:jcommander:1.27" level="project" />
     <orderEntry type="library" name="Gradle: org.beanshell:bsh:2.0b4" level="project" />
+    <orderEntry type="module" module-name="data_main" />
+    <orderEntry type="library" name="Gradle: com.miglayout:miglayout-swing:5.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx.dom:0.0.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.install4j:install4j-runtime:6.1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.testng:testng:6.8.8" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.plugins:ByteCodeViewer:2016.2.5" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="idea_main" />
 </module>
