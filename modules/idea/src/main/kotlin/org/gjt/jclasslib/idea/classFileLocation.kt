@@ -124,8 +124,8 @@ fun getContainingClassName(psiElement: PsiElement): String? = if (psiElement.lan
 }
 
 private fun getContainingClassNameKotlin(psiElement: PsiElement): String? {
-    var parentElement = psiElement.parent
-    while (parentElement != null) {
+    val parentElement = psiElement.parent
+    if (parentElement != null) {
         if (parentElement is KtClassOrObject) {
             val fqName = parentElement.fqName?.asString()
             if (fqName != null) {
@@ -134,7 +134,7 @@ private fun getContainingClassNameKotlin(psiElement: PsiElement): String? {
         } else if (parentElement is KtFile) {
             return parentElement.javaFileFacadeFqName.asString()
         }
-        parentElement = parentElement.parent
+        return getContainingClassNameKotlin(parentElement)
     }
     return null
 }
