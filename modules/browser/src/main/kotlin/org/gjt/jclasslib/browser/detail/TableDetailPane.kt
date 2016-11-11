@@ -45,7 +45,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
             override fun mouseMoved(e: MouseEvent) {
                 val col = columnAtPoint(e.point)
                 val row = rowAtPoint(e.point)
-                if (col >= 0 && model.isCellEditable(row, col)) {
+                if (col >= 0 && row >= 0 && model.isCellEditable(row, col)) {
                     editCellAt(row, col)
                 }
             }
