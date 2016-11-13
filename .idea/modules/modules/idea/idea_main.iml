@@ -128,7 +128,7 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_60/lib/tools.jar!/" />
+          <root url="jar://$JAVA8_HOME$/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
