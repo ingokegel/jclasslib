@@ -8,10 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import org.gjt.jclasslib.util.ExtendedJLabel
-import org.gjt.jclasslib.util.HtmlDisplayTextArea
-import org.gjt.jclasslib.util.getLinkColor
-import org.gjt.jclasslib.util.getValueColor
+import org.gjt.jclasslib.util.*
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTree
@@ -41,6 +38,10 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
     }
 
     protected fun highlightTextArea() = HtmlDisplayTextArea().apply {
+        foreground = getValueColor()
+    }
+
+    protected fun multiLineLabel() = MultiLineLabel().apply {
         foreground = getValueColor()
     }
 

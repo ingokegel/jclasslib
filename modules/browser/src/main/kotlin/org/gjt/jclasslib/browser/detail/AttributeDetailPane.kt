@@ -19,6 +19,7 @@ class AttributeDetailPane(services: BrowserServices) : MultiDetailPane<Attribute
         addCard(CodeAttribute::class.java, CodeAttributeDetailPane(services))
         addCard(ExceptionsAttribute::class.java, ExceptionsAttributeDetailPane(services))
         addCard(InnerClassesAttribute::class.java, InnerClassesAttributeDetailPane(services))
+        addCard(SourceDebugExtensionAttribute::class.java, SourceDebugExtensionAttributeDetailPane(services))
         addCard(SourceFileAttribute::class.java, SourceFileAttributeDetailPane(services))
         addCard(LineNumberTableAttribute::class.java, LineNumberTableAttributeDetailPane(services))
         addCard(LocalVariableTableAttribute::class.java, LocalVariableTableAttributeDetailPane(services))

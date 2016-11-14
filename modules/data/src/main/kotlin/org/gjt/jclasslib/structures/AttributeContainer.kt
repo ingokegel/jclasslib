@@ -66,6 +66,7 @@ interface AttributeContainer {
         CodeAttribute.ATTRIBUTE_NAME -> CodeAttribute(classFile)
         ExceptionsAttribute.ATTRIBUTE_NAME -> ExceptionsAttribute(classFile)
         InnerClassesAttribute.ATTRIBUTE_NAME -> InnerClassesAttribute(classFile)
+        SourceDebugExtensionAttribute.ATTRIBUTE_NAME -> SourceDebugExtensionAttribute(attributeLength, classFile)
         SyntheticAttribute.ATTRIBUTE_NAME -> SyntheticAttribute(classFile)
         SourceFileAttribute.ATTRIBUTE_NAME -> SourceFileAttribute(classFile)
         LineNumberTableAttribute.ATTRIBUTE_NAME -> LineNumberTableAttribute(classFile)

@@ -29,13 +29,13 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
     override fun addLabels() {
         addDetail("Target Type:") { typeAnnotation -> typeAnnotation.targetType.toString() }
 
-        addMultiLineDetail("Target Info:") { typeAnnotation ->
+        addMultiLineHtmlDetail("Target Info:") { typeAnnotation ->
             typeAnnotation.targetInfo.verbose.replace("\n", "<br>")
         }.linkHandler { description ->
             handleLink(description)
         }
 
-        addMultiLineDetail("Type path:") { typeAnnotation ->
+        addMultiLineHtmlDetail("Type path:") { typeAnnotation ->
             StringBuilder().apply {
                 for (typePathEntry in typeAnnotation.typePathEntries) {
                     append(typePathEntry.typePathKind)

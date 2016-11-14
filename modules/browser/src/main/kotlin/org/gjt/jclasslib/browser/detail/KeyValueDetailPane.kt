@@ -11,10 +11,7 @@ import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.*
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
-import org.gjt.jclasslib.util.ExtendedJLabel
-import org.gjt.jclasslib.util.GUIHelper
-import org.gjt.jclasslib.util.HtmlDisplayTextArea
-import org.gjt.jclasslib.util.TextDisplay
+import org.gjt.jclasslib.util.*
 import java.awt.Cursor
 import java.awt.Point
 import java.awt.event.MouseListener
@@ -41,7 +38,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         add(keyValue.keyLabel as JComponent)
         val valueLabel = keyValue.valueLabel
         val commentLabel = keyValue.commentLabel
-        add(valueLabel, if (commentLabel == null) "spanx 2" else "")
+        add(valueLabel, if (commentLabel == null) "growx, spanx 2" else "")
         if (commentLabel != null) {
             add(commentLabel, "growx")
             if (commentLabel is ExtendedJLabel) {
@@ -115,8 +112,18 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addMultiLineDetail(key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
+    protected fun addMultiLineHtmlDetail(key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
         val keyValue = HtmlKeyValue<T>(key, highlightTextArea())
+        addKeyValue(keyValue)
+        showHandlers.add { element ->
+            keyValue.valueLabel.text = textResolver(element)
+            keyValue.show(element)
+        }
+        return keyValue
+    }
+
+    protected fun addMultiLinePlainDetail(key: String, textResolver: (element: T) -> String): MultiLineKeyValue<T> {
+        val keyValue = MultiLineKeyValue<T>(key, multiLineLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
             keyValue.valueLabel.text = textResolver(element)
@@ -166,6 +173,8 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     }
 
     class DefaultKeyValue<T : Any>(key: String, valueLabel: ExtendedJLabel, commentLabel: ExtendedJLabel? = null) : KeyValue<T, ExtendedJLabel>(key, valueLabel, commentLabel)
+
+    class MultiLineKeyValue<T : Any>(key: String, multiLineLabel: MultiLineLabel) : KeyValue<T, MultiLineLabel>(key, multiLineLabel, null)
 
     class HtmlKeyValue<T : Any>(key: String, valueLabel: HtmlDisplayTextArea, commentLabel: HtmlDisplayTextArea? = null) : KeyValue<T, HtmlDisplayTextArea>(key, valueLabel, commentLabel) {
         fun linkHandler(handler: (String) -> Unit) {
