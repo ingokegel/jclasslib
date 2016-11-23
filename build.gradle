@@ -1,6 +1,6 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
-version = '5.1-beta2'
+version = '5.1-beta3'
 ext.mediaDir = file('media')
 ext.libCompileDir = file('lib-compile')
 

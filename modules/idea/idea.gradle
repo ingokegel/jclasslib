@@ -9,6 +9,7 @@ intellij {
     pluginName 'jclasslib'
     plugins = ['ByteCodeViewer']
     sandboxDirectory = file("$rootProject.buildDir/../idea_sandbox")
+    updateSinceUntilBuild = false
 
     publish {
         username=project.findProperty("intellij.publish.username") ?: ''
