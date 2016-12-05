@@ -90,6 +90,11 @@ task clean {
     }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 task test()
 task dist()
 
