@@ -1,5 +1,7 @@
 .gradle/
 .idea/workspace.xml
+.idea/modules.xml
+.idea/modules/
 .idea/shelf/
 build/
 media/
