@@ -21,3 +21,9 @@ dependencies {
     compile project(':browser')
     compileOnly "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
 }
+
+clean {
+    doLast {
+        delete file("${intellij.sandboxDirectory}/plugins")
+    }
+}
