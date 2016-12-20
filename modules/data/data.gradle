@@ -1,6 +1,8 @@
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 
+apply from: file('../publish_include.gradle')
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
