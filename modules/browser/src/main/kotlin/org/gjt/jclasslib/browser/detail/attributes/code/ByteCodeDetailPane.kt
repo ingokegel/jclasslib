@@ -126,9 +126,6 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
 
 
     private inner class DocumentLinkListener(private val textPane: JTextPane) : MouseAdapter(), MouseMotionListener {
-        private val defaultCursor: Cursor
-        private val defaultCursorType: Int
-        private val handCursor: Cursor
         private var activeElement : AbstractElement? = null
         private var oldAttributes: AttributeSet? = null
         private var activeHighlight: Any? = null
@@ -136,10 +133,6 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
         init {
             textPane.addMouseListener(this)
             textPane.addMouseMotionListener(this)
-
-            defaultCursor = Cursor.getDefaultCursor()
-            defaultCursorType = defaultCursor.type
-            handCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
         }
 
         override fun mousePressed(event: MouseEvent) {
@@ -185,7 +178,7 @@ class ByteCodeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(
                 removeActiveHighlight()
                 activeElement = textElement
                 textElement.mouseEnter()
-                textPane.cursor = if (textElement.isLink) handCursor else defaultCursor
+                textPane.cursor = if (textElement.isLink) Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) else Cursor.getDefaultCursor()
             }
         }
 

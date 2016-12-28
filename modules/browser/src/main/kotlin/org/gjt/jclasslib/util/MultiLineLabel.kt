@@ -9,6 +9,4 @@ package org.gjt.jclasslib.util
 
 import com.install4j.runtime.util.DisplayTextArea
 
-class MultiLineLabel : DisplayTextArea(), TextDisplay {
-
-}
+class MultiLineLabel : DisplayTextArea(), TextDisplay

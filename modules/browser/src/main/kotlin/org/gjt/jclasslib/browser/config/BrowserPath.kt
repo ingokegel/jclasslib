@@ -137,9 +137,7 @@ data class AttributeHolder(val name: String) : PathComponent {
         }
     }
 
-    override fun matches(node: BrowserTreeNode) = (node.element as AttributeInfo).let { attributeInfo ->
-        attributeInfo.name == name
-    }
+    override fun matches(node: BrowserTreeNode) = (node.element as AttributeInfo).name == name
 
     companion object {
         val NODE_NAME = "attribute"

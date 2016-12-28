@@ -92,6 +92,7 @@
       <w>impdep</w>
       <w>imul</w>
       <w>ineg</w>
+      <w>ingokegel</w>
       <w>instanceof</w>
       <w>invokeinterface</w>
       <w>invokespecial</w>
@@ -141,8 +142,10 @@
       <w>scroller</w>
       <w>shrinkprio</w>
       <w>sipush</w>
+      <w>sourcefile</w>
       <w>supertype</w>
       <w>tableswitch</w>
+      <w>targettype</w>
       <w>typeannotation</w>
       <w>vetoable</w>
       <w>vitor</w>
