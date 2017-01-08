@@ -12,7 +12,14 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
     @Test
     Object @Test2 [] data;
 
+    public static void main() {
+        handleTest((p) -> System.out.println("abc"));
+    }
+
     public static void main(String[] args) throws @Test Exception {
+        Nested.main();
+        Nested.xyz();
+        main();
         new @Test Main();
 
         @Test int i = 0, j, k;
@@ -37,6 +44,19 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
             e.printStackTrace();
         }
 
+        try {
+            handleTest((p) -> System.err.println("test"));
+        } catch (@Test Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            handleTest((p) -> handleTest(data1 -> System.err.println("level 2")));
+        } catch (@Test Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Test2(one = "1", two = true, three = TestEnum.THREE, four = String.class, other = @Test("test"), otherArray = {@Test("x"), @Test("y")})
@@ -55,6 +75,19 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
 
     public static void testMethod(int[] data) {
 
+    }
+
+    private static class Nested {
+        static void xyz() {
+            handleTest(Main::testMethod);
+            handleTest((p) -> System.out.println("test"));
+
+        }
+
+        static void main() {
+            handleTest(Main::testMethod);
+            handleTest((p) -> System.out.println("test"));
+        }
     }
 
 
