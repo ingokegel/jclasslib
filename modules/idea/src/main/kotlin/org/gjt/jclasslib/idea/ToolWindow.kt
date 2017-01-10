@@ -22,7 +22,11 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiAnonymousClass
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.content.Content
 import com.intellij.util.PlatformIcons
 import org.gjt.jclasslib.browser.BrowserComponent
@@ -166,7 +170,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
     override val forwardAction: Action = ActionDelegate(forwardActionDelegate)
 
     override fun openClassFile(className: String, browserPath: BrowserPath?) {
-        val psiClass = JavaPsiFacade.getInstance(project).findClass(className, GlobalSearchScope.allScope(project))
+        val psiClass = findClass(className)
         if (psiClass != null) {
             openClassFile(psiClass, browserPath, project)
         } else {
@@ -200,6 +204,52 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
         override fun actionPerformed(e: ActionEvent?) {
             anAction.actionPerformed(AnActionEvent.createFromAnAction(anAction, null, ActionPlaces.TOOLBAR, DataManager.getInstance().getDataContext(browserComponent)))
         }
+    }
+
+    private fun findClass(className: String): PsiClass? {
+        return if (className.contains('$')) {
+            findClass(null, className.split("\\$".toRegex()).toTypedArray(), 0)
+        } else {
+            findClass(null, className)
+        }
+    }
+
+    private fun findClass(parent: PsiClass?, names: Array<String>, index: Int): PsiClass? {
+        for (i in index..names.size - 1) {
+            val psiClass = findClass(parent, names.slice(index..i).joinToString("$"))
+            if (psiClass != null) {
+                if (i < names.size - 1) {
+                    val maxPsiClass = findClass(psiClass, names, i + 1)
+                    if (maxPsiClass != null) {
+                        return maxPsiClass
+                    }
+                } else {
+                    return psiClass
+                }
+            }
+        }
+        return null
+    }
+
+    private fun findClass(parent: PsiClass?, name: String): PsiClass? {
+        return if (parent == null) {
+            JavaPsiFacade.getInstance(project).findClass(name, GlobalSearchScope.allScope(project))
+        } else if (Character.isJavaIdentifierStart(name[0])) {
+            parent.findInnerClassByName(name, false)
+        } else if (name.matches("\\d+".toRegex())) {
+            findAnonymousClass(parent, Integer.parseInt(name) - 1)
+        } else {
+            null
+        }
+    }
+
+    private fun findAnonymousClass(psiClass: PsiClass, index: Int): PsiClass? {
+        val classes = psiClass.getAnonymousClasses()
+        return if (index >= 0 && index < classes.size) classes[index] as PsiClass else null
+    }
+
+    private fun PsiClass.getAnonymousClasses(): Array<out PsiElement> = PsiTreeUtil.collectElements(this) { e ->
+        e is PsiAnonymousClass && PsiTreeUtil.getParentOfType(e, PsiClass::class.java) == this
     }
 
     companion object {
