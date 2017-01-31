@@ -43,8 +43,12 @@ interface AttributeContainer {
     fun AttributeContainer.readAttributes(input: DataInput, classFile: ClassFile) {
         val attributesCount = input.readUnsignedShort()
         if (java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_ATTRIBUTES)) {
-            input.skipBytes(2)
-            input.skipBytes(input.readInt())
+            attributes = Array(attributesCount) {
+                input.skipBytes(2)
+                val attributeLength = input.readInt()
+                input.skipBytes(attributeLength)
+                UnknownAttribute(attributeLength, classFile)
+            }
         } else {
             attributes = Array(attributesCount) {
                 val attributeNameIndex = input.readUnsignedShort()
