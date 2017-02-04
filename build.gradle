@@ -2,7 +2,7 @@ apply plugin: 'idea'
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
-version = '5.1-beta4'
+version = '5.1'
 ext.mediaDir = file('media')
 ext.libCompileDir = file('lib-compile')
 
@@ -94,7 +94,7 @@ task clean {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.2.1'
+    gradleVersion = '3.3'
     distributionType = Wrapper.DistributionType.ALL
 }
 
