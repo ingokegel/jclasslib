@@ -170,12 +170,25 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
     override val forwardAction: Action = ActionDelegate(forwardActionDelegate)
 
     override fun openClassFile(className: String, browserPath: BrowserPath?) {
-        val psiClass = findClass(className)
-        if (psiClass != null) {
-            openClassFile(psiClass, browserPath, project)
+        val virtualClassFile = getRoot().findFileByRelativePath(className.replace('.', '/') + ".class")
+        if (virtualClassFile != null) {
+            showClassFile(virtualClassFile, browserPath, project)
         } else {
-            Messages.showWarningDialog(project, "Class $className could not be found", "jclasslib bytecode viewer")
+            val psiClass = findClass(className)
+            if (psiClass != null) {
+                openClassFile(psiClass, browserPath, project)
+            } else {
+                Messages.showWarningDialog(project, "Class $className could not be found", "jclasslib bytecode viewer")
+            }
         }
+    }
+
+    private fun getRoot() : VirtualFile {
+        var root = virtualFile
+        (0..classFile.thisClassName.count { it == '/' }).forEach {
+            root = root.parent
+        }
+        return root
     }
 
     override fun canOpenClassFiles(): Boolean = true

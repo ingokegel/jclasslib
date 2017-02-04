@@ -18,4 +18,8 @@
             <add-to-group group-id="QuickActions" anchor="after" relative-to-action="QuickJavaDoc"/>
         </action>
     </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="org.gjt.jclasslib.idea.KotlinClassNameProvider"/>
+    </extensions>
 </idea-plugin>
