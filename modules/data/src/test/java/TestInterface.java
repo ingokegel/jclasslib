@@ -1,3 +1,3 @@
 public interface TestInterface {
-    public void run(int[] data);
+    void run(int[] data);
 }

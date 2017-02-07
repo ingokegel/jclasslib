@@ -29,7 +29,7 @@ class Tests {
 
     @Test
     fun test() {
-        checkClassFile("Main", InputStreamProvider::class.java.getResource("/java8/Main.class"))
+        checkClassFile("Main", InputStreamProvider::class.java.getResource("/Main.class"))
     }
 }
 

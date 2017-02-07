@@ -1,7 +1,5 @@
 apply plugin: 'idea'
 
-import org.apache.tools.ant.taskdefs.condition.Os
-
 version = '5.1'
 ext.mediaDir = file('media')
 ext.libCompileDir = file('lib-compile')
@@ -63,19 +61,8 @@ allprojects {
 
         tasks.withType(JavaCompile).each {JavaCompile compileJava ->
             compileJava.with {
-                String java6Home = System.getenv()['JAVA_1_6_HOME']
-                if (java6Home) {
-                    if (Os.isFamily(Os.FAMILY_MAC)) {
-                        options.bootClasspath = "${java6Home}/../Classes/classes.jar"
-                    } else {
-                        options.bootClasspath = "${java6Home}/jre/lib/rt.jar"
-                    }
-                } else {
-                    println 'Warning: Set JAVA_1_6_HOME to a Java 6 JDK'
-                }
-
-                sourceCompatibility = '1.6'
-                targetCompatibility = '1.6'
+                sourceCompatibility = '1.8'
+                targetCompatibility = '1.8'
             }
         }
 
