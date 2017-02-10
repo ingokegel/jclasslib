@@ -37,6 +37,11 @@ publishing {
             artifact sourcesJar {
                 classifier "sources"
             }
+            pom.withXml {
+                asNode().find { it.name().getLocalPart() == 'dependencies' }.children().removeAll() {
+                    it.groupId.text() == 'com.install4j'
+                }
+            }
         }
     }
 }
