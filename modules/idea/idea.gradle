@@ -7,7 +7,7 @@ apply plugin: 'kotlin'
 intellij {
     version 'IC-2016.2.5'
     pluginName 'jclasslib'
-    plugins 'ByteCodeViewer', 'Kotlin'
+    plugins 'ByteCodeViewer', "org.jetbrains.kotlin:$kotlinVersion-IJ2016.2-1@EAP-1.1"
     sandboxDirectory "$rootProject.buildDir/../idea_sandbox"
     updateSinceUntilBuild false
 
@@ -19,7 +19,8 @@ intellij {
 
 dependencies {
     compile project(':browser')
-    compileOnly "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
+    // explicit Kotlin dependency to prevent the intellij plugin from adding the Kotlin libraries in the lib directory
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
 clean {

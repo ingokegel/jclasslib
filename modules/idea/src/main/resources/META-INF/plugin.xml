@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
-<idea-plugin version="2" url="https://github.com/ingokegel/jclasslib">
+<idea-plugin url="https://github.com/ingokegel/jclasslib">
     <id>jclasslib</id>
     <name>jclasslib Bytecode viewer</name>
     <description>Bytecode viewer for Java class files</description>
