@@ -1,6 +1,7 @@
 .gradle/
 .idea/workspace.xml
 .idea/modules.xml
+.idea/gradle_extensions.xml
 .idea/modules/
 .idea/libraries/
 .idea/shelf/
