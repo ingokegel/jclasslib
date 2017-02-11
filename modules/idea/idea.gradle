@@ -7,9 +7,9 @@ apply plugin: 'kotlin'
 intellij {
     version 'IC-2016.2.5'
     pluginName 'jclasslib'
-    plugins = ['ByteCodeViewer', 'Kotlin']
-    sandboxDirectory = file("$rootProject.buildDir/../idea_sandbox")
-    updateSinceUntilBuild = false
+    plugins 'ByteCodeViewer', 'Kotlin'
+    sandboxDirectory "$rootProject.buildDir/../idea_sandbox"
+    updateSinceUntilBuild false
 
     publish {
         username=project.findProperty("intellij.publish.username") ?: ''
