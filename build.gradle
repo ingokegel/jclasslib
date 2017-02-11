@@ -71,6 +71,11 @@ allprojects {
                 useTestNG()
             }
         }
+
+    }
+    
+    plugins.withId("kotlin") {
+        tasks.getByName("compileKotlin").kotlinOptions.languageVersion = "1.0"
     }
 }
 
