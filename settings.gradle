@@ -1,9 +1,14 @@
 file('modules').listFiles()
-  .findAll {it.isDirectory() && !it.name.startsWith('.') && new File(it, it.name + '.gradle').exists()}
+  .findAll {it.isDirectory() && !it.name.startsWith('.') && (new File(it, it.name + '.gradle').exists() || new File(it, it.name + '.gradle.kts').exists())}
   .each { File dir ->
     include dir.name
     ProjectDescriptor project = findProject(':' + dir.name)
     project.projectDir = dir
-    project.buildFileName = "${dir.name}.gradle"
+    def groovyBuildScript = new File(project.projectDir, "${dir.name}.gradle")
+    if (groovyBuildScript.exists()) {
+        project.buildFileName = groovyBuildScript.name
+    } else {
+        project.buildFileName = groovyBuildScript.name + ".kts"
+    }
 }
 
