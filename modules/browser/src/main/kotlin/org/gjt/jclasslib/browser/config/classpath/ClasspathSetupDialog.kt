@@ -215,7 +215,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
     private fun isInModel(entry: ClasspathEntry): Boolean = listModel.elements().toList().any { it == entry }
 
     private fun selectIndex(newSelectedIndex: Int) {
-        val cappedSelectedIndex = Math.min(newSelectedIndex, listModel.size - 1)
+        val cappedSelectedIndex = minOf(newSelectedIndex, listModel.size - 1)
         if (cappedSelectedIndex > -1) {
             lstElements.selectedIndex = cappedSelectedIndex
             lstElements.ensureIndexIsVisible(cappedSelectedIndex)

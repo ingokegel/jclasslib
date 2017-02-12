@@ -576,8 +576,8 @@ class BrowserFrame : JFrame() {
         // sanitize frame bounds
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val screenBounds = Rectangle(screenSize)
-        frameBounds.translate(-Math.min(0, frameBounds.x), -Math.min(0, frameBounds.y))
-        frameBounds.translate(-Math.max(0, frameBounds.x + frameBounds.width - screenSize.width), -Math.max(0, frameBounds.y + frameBounds.height - screenSize.height))
+        frameBounds.translate(-minOf(0, frameBounds.x), -Math.min(0, frameBounds.y))
+        frameBounds.translate(-maxOf(0, frameBounds.x + frameBounds.width - screenSize.width), -Math.max(0, frameBounds.y + frameBounds.height - screenSize.height))
 
         bounds = screenBounds.intersection(frameBounds)
 
