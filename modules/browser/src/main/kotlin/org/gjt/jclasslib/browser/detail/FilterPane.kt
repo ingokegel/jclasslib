@@ -109,8 +109,10 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
 
     fun updateFilterCheckboxes(elements: Collection<S>) {
         val filterText = filterTextField.text.trim()
-        val statistics = elements.filter { isElementTextFiltered(it, filterText) }.flatMap { getFilterKeys(it) }.
-                groupBy { it }.mapValues { it.value.size }
+        val statistics = elements.filter { isElementTextFiltered(it, filterText) }
+                .flatMap { getFilterKeys(it) }
+                .groupingBy { it }
+                .eachCount()
         filterCheckboxes.keys.forEach {filterKey ->
             filterCheckboxes[filterKey]?.apply {
                 text = "${filterKey.toString()} (${statistics[filterKey] ?: 0})"
