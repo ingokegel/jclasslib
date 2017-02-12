@@ -2,12 +2,11 @@ apply plugin: 'idea'
 
 version = '5.1'
 ext.mediaDir = file('media')
-ext.libCompileDir = file('lib-compile')
 
 buildDir = file('build/gradle')
 ext.externalLibsDir = file("$buildDir/externalLibs")
 
-buildscript {
+buildscript {scriptHandler ->
     ext.kotlinVersion = '1.1.0-beta-38'
 
     repositories {
@@ -15,18 +14,11 @@ buildscript {
             dirs 'lib-compile'
         }
         maven {
-            url 'http://jcenter.bintray.com'
-        }
-        maven {
-            url 'http://maven.ej-technologies.com/repository'
-        }
-        maven {
             url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
         }
-        maven {
-            url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1'
-        }
     }
+    apply from: file('repositories.gradle'), to: scriptHandler
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
@@ -47,18 +39,10 @@ allprojects {
 
     repositories {
         flatDir {
-            dirs libCompileDir, file('lib')
-        }
-        maven {
-            url 'http://jcenter.bintray.com'
-        }
-        maven {
-            url 'http://maven.ej-technologies.com/repository'
-        }
-        maven {
-            url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1'
+            dirs file('lib'), file("$rootDir/lib-compile")
         }
     }
+    apply from: file("$rootDir/repositories.gradle")
 
     plugins.withType(JavaPlugin).whenPluginAdded {
         dependencies {
