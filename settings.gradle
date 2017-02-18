@@ -1,3 +1,4 @@
+rootProject.buildFileName = "build.gradle.kts"
 file('modules').listFiles()
   .findAll {it.isDirectory() && !it.name.startsWith('.') && (new File(it, it.name + '.gradle').exists() || new File(it, it.name + '.gradle.kts').exists())}
   .each { File dir ->
