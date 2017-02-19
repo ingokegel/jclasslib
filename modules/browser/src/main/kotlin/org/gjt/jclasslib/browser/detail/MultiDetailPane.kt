@@ -47,10 +47,10 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
         if (element == null) {
             showEmptyCard()
         } else {
-            val detailPane = elementClassToDetailPane[element.javaClass]
+            val detailPane = elementClassToDetailPane[element::class.java]
             if (detailPane != null) {
                 currentDetailPane = detailPane
-                showCard(element.javaClass.name)
+                showCard(element::class.java.name)
                 detailPane.show(treePath)
             } else {
                 showEmptyCard()

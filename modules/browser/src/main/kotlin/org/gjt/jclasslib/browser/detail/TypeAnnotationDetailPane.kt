@@ -93,7 +93,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
     private fun handleListLink(index: Int, path: TreePath, attribute: AttributeInfo) {
         selectPath(path)
         val detailPane = services.browserComponent.detailPane.currentDetailPane as AttributeDetailPane
-        (detailPane.getDetailPane(attribute.javaClass) as TableDetailPane).selectIndex(index)
+        (detailPane.getDetailPane(attribute::class.java) as TableDetailPane).selectIndex(index)
     }
 
     private fun selectPath(path: TreePath) {
@@ -110,7 +110,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
         val node = path.lastPathComponent as BrowserTreeNode
         node.children().iterator().forEach { child ->
             val attributeNode = child as BrowserTreeNode
-            if (attributeNode.element?.javaClass == attributeClass) {
+            if (attributeNode.element?.let { it::class.java } == attributeClass) {
                 return path.pathByAddingChild(attributeNode)
             }
         }
@@ -122,7 +122,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
             throw RuntimeException("No parent node with element class $elementClass found")
         }
         val node = path.lastPathComponent as BrowserTreeNode
-        if (node.element?.javaClass == elementClass) {
+        if (node.element?.let { it::class.java } == elementClass) {
             return path
         } else {
             return findParentNode(elementClass, path.parentPath)

@@ -183,10 +183,10 @@ class ClassFile : Structure(), AttributeContainer {
         checkValidConstantPoolIndex(index)
 
         val cpInfo = constantPool[index]
-        if (entryClass.isAssignableFrom(cpInfo.javaClass)) {
+        if (entryClass.isAssignableFrom(cpInfo::class.java)) {
             return entryClass.cast(cpInfo)
         } else {
-            throw InvalidByteCodeException("constant pool entry at $index of class ${cpInfo.javaClass.name} is not assignable to ${entryClass.name}")
+            throw InvalidByteCodeException("constant pool entry at $index of class ${cpInfo::class.java.name} is not assignable to ${entryClass.name}")
         }
     }
 

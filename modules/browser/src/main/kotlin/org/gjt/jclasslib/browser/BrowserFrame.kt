@@ -444,7 +444,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun loadSettings() {
-        Preferences.userNodeForPackage(javaClass).apply {
+        Preferences.userNodeForPackage(this::class.java).apply {
             workspaceChooserPath = get(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath)
             classesChooserPath = get(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath)
             jreChooserPath = get(SETTINGS_JRE_CHOOSER_PATH, jreChooserPath)
@@ -544,7 +544,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun saveWindowSettings() {
-        val preferences = Preferences.userNodeForPackage(javaClass)
+        val preferences = Preferences.userNodeForPackage(this::class.java)
         preferences.putBoolean(SETTINGS_WINDOW_MAXIMIZED, isMaximized)
         preferences.apply {
             if (!isMaximized) {
@@ -564,7 +564,7 @@ class BrowserFrame : JFrame() {
 
     private fun loadWindowSettings() {
 
-        val preferences = Preferences.userNodeForPackage(javaClass)
+        val preferences = Preferences.userNodeForPackage(this::class.java)
         val defaultFrameBounds = getDefaultFrameBounds()
 
         val windowX = preferences.getInt(SETTINGS_WINDOW_X, defaultFrameBounds.x)
