@@ -1,19 +1,8 @@
 import com.install4j.gradle.Install4jExtension
 import com.install4j.gradle.Install4jTask
 
-buildscript {
-    dependencies {
-        repositories {
-            maven {
-                setUrl("http://maven.ej-technologies.com/repository")
-            }
-        }
-        classpath("com.install4j:install4j-gradle:6.1.1")
-    }
-}
-
-apply {
-    plugin("install4j")
+plugins {
+    id("com.install4j.gradle") version "6.1.4"
 }
 
 val install4jHomeDir by project
