@@ -1,3 +1,6 @@
+//TODO As of 0.7.0-SNAPSHOT this cannot be modularized in GSK
+// also: Common classpath in root project or buildSrc is unavailable
+
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
