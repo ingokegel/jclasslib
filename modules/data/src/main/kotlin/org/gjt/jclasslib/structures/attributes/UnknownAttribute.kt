@@ -31,9 +31,7 @@ class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : Attribu
     override fun writeData(output: DataOutput) {
         output.writeShort(attributeNameIndex)
         output.writeInt(getAttributeLength())
-        if (this::class.java == AttributeInfo::class.java) {
-            output.write(info)
-        }
+        output.write(info)
     }
 
     override fun getAttributeLength(): Int {
