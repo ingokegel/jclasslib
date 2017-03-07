@@ -7,7 +7,8 @@ apply plugin: 'kotlin'
 intellij {
     version 'IC-2016.2.5'
     pluginName 'jclasslib'
-    plugins 'ByteCodeViewer', "org.jetbrains.kotlin:$kotlinVersion-IJ2016.2-1@EAP-1.1"
+    // See https://plugins.jetbrains.com/plugin/6954-kotlin for kotlin plugin versions, add channel with @EAP-1.1 at the end of the plugin ID
+    plugins 'ByteCodeViewer', "org.jetbrains.kotlin:$kotlinVersion-release-IJ2016.2-1"
     sandboxDirectory "$rootProject.buildDir/../idea_sandbox"
     updateSinceUntilBuild false
 
