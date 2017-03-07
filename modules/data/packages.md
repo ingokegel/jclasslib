@@ -2,8 +2,6 @@
 
 This module contains the code that can reads and write Java bytecode.
 
-<!-- TODO convert code sections for packages to links once dokka supports this -->
-
 # Package org.gjt.jclasslib.bytecode
 
 This package contains classes which are wrappers for opcode instructions contained
@@ -17,8 +15,8 @@ the [org.gjt.jclasslib.io.ClassFileReader], they have to be created through the
 # Package org.gjt.jclasslib.io
 
 This package contains classes which convert between the class file format and
-the representations defined in the packages `org.gjt.jclasslib.structures`
-and `org.gjt.jclasslib.bytecode`.
+the representations defined in the packages [org.gjt.jclasslib.structures]
+and [org.gjt.jclasslib.bytecode].
 
 
 # Package org.gjt.jclasslib.structures
@@ -26,9 +24,9 @@ and `org.gjt.jclasslib.bytecode`.
 This package contains classes mirroring the data structures of the class file format.
 
 Most data structures mirror those defined in the 
-[Java virtual machine specification](http://java.sun.com/docs/books/vmspec/)
-Attributes have been grouped in the `attributes` subpackage, constant pool entries
-are found in the `constants` subpackage.
+[Java virtual machine specification](http://java.sun.com/docs/books/vmspec/).
+Attributes have been grouped in the [org.gjt.jclasslib.structures.attributes] subpackage, 
+constant pool entries are found in the [org.gjt.jclasslib.structures.constants] subpackage.
 
 
 # Package org.gjt.jclasslib.structures.attributes

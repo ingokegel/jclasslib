@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: org.jetbrains.plugins:ByteCodeViewer:2016.2.5">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.2.5/9da18bcb3f042e1e81dad469b2c5e99603412cd0/ideaIC-2016.2.5/plugins/ByteCodeViewer/lib/byteCodeViewer.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

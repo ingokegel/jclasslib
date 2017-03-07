@@ -21,7 +21,7 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
         if (this === other) {
             return true
         }
-        if (other?.javaClass != javaClass) {
+        if (other == null || other::class.java != this::class.java) {
             return false
         }
         other as ClasspathEntry

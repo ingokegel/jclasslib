@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: :apple:">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib-compile/apple.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

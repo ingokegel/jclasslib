@@ -1,11 +1,4 @@
 /*
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public
- License as published by the Free Software Foundation; either
- version 2 of the license, or (at your option) any later version.
- */
-
-/*
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
@@ -54,10 +47,10 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
         if (element == null) {
             showEmptyCard()
         } else {
-            val detailPane = elementClassToDetailPane[element.javaClass]
+            val detailPane = elementClassToDetailPane[element::class.java]
             if (detailPane != null) {
                 currentDetailPane = detailPane
-                showCard(element.javaClass.name)
+                showCard(element::class.java.name)
                 detailPane.show(treePath)
             } else {
                 showEmptyCard()

@@ -1,5 +1,5 @@
 plugins {
-  id "org.jetbrains.intellij" version "0.1.10"
+  id "org.jetbrains.intellij" version "0.2.1"
 }
 
 apply plugin: 'kotlin'
@@ -7,9 +7,10 @@ apply plugin: 'kotlin'
 intellij {
     version 'IC-2016.2.5'
     pluginName 'jclasslib'
-    plugins = ['ByteCodeViewer', 'Kotlin']
-    sandboxDirectory = file("$rootProject.buildDir/../idea_sandbox")
-    updateSinceUntilBuild = false
+    // See https://plugins.jetbrains.com/plugin/6954-kotlin for kotlin plugin versions, add channel with @EAP-1.1 at the end of the plugin ID
+    plugins 'ByteCodeViewer', "org.jetbrains.kotlin:$kotlinVersion-release-IJ2016.2-1"
+    sandboxDirectory "$rootProject.buildDir/../idea_sandbox"
+    updateSinceUntilBuild false
 
     publish {
         username=project.findProperty("intellij.publish.username") ?: ''
@@ -19,7 +20,8 @@ intellij {
 
 dependencies {
     compile project(':browser')
-    compileOnly "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
+    // explicit Kotlin dependency to prevent the intellij plugin from adding the Kotlin libraries in the lib directory
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
 clean {

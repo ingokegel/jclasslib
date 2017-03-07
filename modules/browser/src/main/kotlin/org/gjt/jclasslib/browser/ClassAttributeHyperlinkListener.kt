@@ -35,7 +35,7 @@ class ClassAttributeHyperlinkListener(private val services: BrowserServices, pri
     }
 
     private fun findChildNode(attributesNode: BrowserTreeNode, attributeInfoClass: Class<out AttributeInfo>): BrowserTreeNode? {
-        return attributesNode.find { it.element?.javaClass == attributeInfoClass }
+        return attributesNode.find { it.element?.let { it::class.java } == attributeInfoClass }
     }
 }
 

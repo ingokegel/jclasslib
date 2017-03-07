@@ -2,35 +2,30 @@ apply plugin: 'idea'
 
 version = '5.1'
 ext.mediaDir = file('media')
-ext.libCompileDir = file('lib-compile')
 
 buildDir = file('build/gradle')
 ext.externalLibsDir = file("$buildDir/externalLibs")
 
-buildscript {
-    ext.kotlinVersion = '1.0.6'
+buildscript {scriptHandler ->
+    ext.kotlinVersion = '1.1.0'
 
     repositories {
         flatDir {
             dirs 'lib-compile'
         }
         maven {
-            url 'http://jcenter.bintray.com'
-        }
-        maven {
-            url 'http://maven.ej-technologies.com/repository'
-        }
-        maven {
             url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
         }
     }
+    apply from: file('repositories.gradle'), to: scriptHandler
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         // for local dokka in lib-compile
         //classpath ':dokka-fatjar'
         //classpath ':dokka-gradle-plugin'
-        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.9'
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.9.13'
         classpath "com.install4j:install4j-gradle:6.1.1"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
@@ -44,15 +39,10 @@ allprojects {
 
     repositories {
         flatDir {
-            dirs libCompileDir, file('lib')
-        }
-        maven {
-            url 'http://jcenter.bintray.com'
-        }
-        maven {
-            url 'http://maven.ej-technologies.com/repository'
+            dirs file('lib'), file("$rootDir/lib-compile")
         }
     }
+    apply from: file("$rootDir/repositories.gradle")
 
     plugins.withType(JavaPlugin).whenPluginAdded {
         dependencies {
@@ -71,6 +61,11 @@ allprojects {
                 useTestNG()
             }
         }
+
+    }
+    
+    plugins.withId("kotlin") {
+        tasks.getByName("compileKotlin").kotlinOptions.languageVersion = "1.1"
     }
 }
 
