@@ -5,12 +5,17 @@ import java.util.function.Predicate;
 
 public class Main<@Test T extends @Test Object> extends @Test Object implements @Test TestInterface {
 
+    private static TestInterface staticField =  ((p) -> System.err.println("static"));
+
     static {
         handleTest((p) -> System.err.println("clinit"));
+        handleTest(staticField);
     }
 
     public static final int TEST_INT = 1;
     public static final String TEST_STRING = "123";
+
+    private TestInterface nonStaticField =  ((p) -> System.err.println("static"));
 
     private List<@Test String> strings;
 
@@ -20,6 +25,7 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
 
     public Main() {
         handleTest((p) -> System.err.println("init"));
+        handleTest(nonStaticField);
     }
 
     public static void main() {
@@ -66,6 +72,26 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
             e.printStackTrace();
         }
 
+        class LocalClass {
+            void testLocal() {
+                class LoadClass2 {
+                    void testLocal() {
+                        System.err.println("local");
+                    }
+                }
+                System.err.println("local");
+                new LoadClass2().testLocal();
+            }
+        }
+
+        class LocalClass2 {
+            void testLocal() {
+                System.err.println("local");
+            }
+        }
+
+        new LocalClass().testLocal();
+        new LocalClass2().testLocal();
 
     }
 
@@ -75,6 +101,19 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
     }
 
     private static void handleTest(@Test TestInterface t2) {
+        class LocalClass {
+            class InnerLocalClass {
+                void testInnerLocal() {
+                    System.err.println("local");
+                }
+            }
+
+            void testLocal() {
+                System.err.println("local");
+                new InnerLocalClass().testInnerLocal();
+            }
+        }
+        new LocalClass().testLocal();
         t2.run(new int[0]);
     }
 
@@ -86,8 +125,13 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
     public static void testMethod(int[] data) {
 
     }
+    private static class NestedBase {
+        public NestedBase() {
+            System.out.println("base");
+        }
+    }
 
-    private static class Nested {
+    private static class Nested extends NestedBase {
 
         private int c;
 
