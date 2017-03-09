@@ -7,7 +7,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 apply {
     plugin("kotlin")
     plugin("org.jetbrains.dokka")
-    from(file("../publish.gradle"))
+    plugin("maven-publish")
 }
 
 val kotlinVersion = rootProject.extra["kotlinVersion"]

@@ -8,7 +8,7 @@ plugins {
 
 apply {
     plugin("kotlin")
-    from(file("../publish.gradle"))
+    plugin("maven-publish")
 }
 
 application {
