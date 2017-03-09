@@ -27,7 +27,7 @@ buildscript {
     extra["kotlinVersionMain"] = kotlinVersionParts[0]
     extra["kotlinVersionHotfix"] = if (kotlinVersionParts.length > 1) "-${kotlinVersionParts[1]}" else  ""
 
-    val mavenUrls = listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository", "http://dl.bintray.com/kotlin/kotlin-eap-1.1")
+    val mavenUrls = listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository")
     extra["mavenUrls"] = mavenUrls
 
     repositories {
@@ -46,6 +46,7 @@ buildscript {
 
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${extra["kotlinVersion"]}")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.13")
 
         // for local dokka in lib-compile
         //classpath ':dokka-fatjar'

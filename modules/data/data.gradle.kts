@@ -4,22 +4,11 @@ import org.gradle.api.tasks.Copy
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaTask
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        //TODO convert to plugins dependency once that works
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.13")
-    }
-}
-
 apply {
     plugin("kotlin")
     plugin("org.jetbrains.dokka")
     from(file("../publish.gradle"))
 }
-
 
 val kotlinVersion = rootProject.extra["kotlinVersion"]
 dependencies {

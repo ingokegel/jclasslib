@@ -11,7 +11,7 @@ apply {
     from(file("../publish.gradle"))
 }
 
-configure<ApplicationPluginConvention>() {
+application {
     mainClassName = "org.gjt.jclasslib.browser.BrowserApplication"
 }
 
