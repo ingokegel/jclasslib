@@ -89,6 +89,7 @@ interface AttributeContainer {
         BootstrapMethodsAttribute.ATTRIBUTE_NAME -> BootstrapMethodsAttribute(classFile)
         StackMapTableAttribute.ATTRIBUTE_NAME -> StackMapTableAttribute(classFile)
         MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute(classFile)
+        ModuleAttribute.ATTRIBUTE_NAME -> ModuleAttribute(classFile)
         else -> UnknownAttribute(attributeLength, classFile)
     }
 
