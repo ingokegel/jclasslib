@@ -99,6 +99,18 @@ enum class ConstantType(override val tag: Int, val verbose: String, val size: In
      */
     UTF8(1, "CONSTANT_Utf8_info", 0) {
         override fun create(classFile: ClassFile, input: DataInput): Constant = ConstantUtf8Info(classFile)
+    },
+    /**
+     * See [ConstantModuleInfo]
+     */
+    MODULE(19, "CONSTANT_Module_info", 2) {
+        override fun create(classFile: ClassFile, input: DataInput): Constant = ConstantModuleInfo(classFile)
+    },
+    /**
+     * See [ConstantPackageInfo]
+     */
+    PACKAGE(20, "CONSTANT_Package_info", 2) {
+        override fun create(classFile: ClassFile, input: DataInput): Constant = ConstantPackageInfo(classFile)
     };
 
     /**

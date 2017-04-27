@@ -21,11 +21,29 @@ abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, service
     override fun hasInsets() = true
 }
 
-class ConstantClassInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantClassInfo>(ConstantClassInfo::class.java, services) {
+abstract class ConstantNameInfoDetailPane<T : ConstantNameInfo>(constantClass: Class<T>, services: BrowserServices) : ConstantDetailPane<T>(constantClass, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class name:", ConstantClassInfo::nameIndex)
+        addConstantPoolLink(getTargetName() + " name:", ConstantNameInfo::nameIndex)
+    }
+
+    protected abstract fun getTargetName(): String
+}
+
+class ConstantClassInfoDetailPane(services: BrowserServices) : ConstantNameInfoDetailPane<ConstantClassInfo>(ConstantClassInfo::class.java, services) {
+    override fun addLabels() {
+        super.addLabels()
         addClassElementOpener()
     }
+
+    override fun getTargetName() = "Class"
+}
+
+class ConstantModuleInfoDetailPane(services: BrowserServices) : ConstantNameInfoDetailPane<ConstantModuleInfo>(ConstantModuleInfo::class.java, services) {
+    override fun getTargetName() = "Module"
+}
+
+class ConstantPackageInfoDetailPane(services: BrowserServices) : ConstantNameInfoDetailPane<ConstantPackageInfo>(ConstantPackageInfo::class.java, services) {
+    override fun getTargetName() = "Package"
 }
 
 class ConstantReferenceDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantReference>(ConstantReference::class.java, services) {

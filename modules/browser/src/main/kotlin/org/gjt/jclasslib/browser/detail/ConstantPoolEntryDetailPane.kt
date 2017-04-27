@@ -40,6 +40,8 @@ class ConstantPoolEntryDetailPane(services: BrowserServices) : DetailPane<Consta
         addCard(ConstantInvokeDynamicInfoDetailPane(services), ConstantType.INVOKE_DYNAMIC)
         addCard(ConstantMethodHandleInfoDetailPane(services), ConstantType.METHOD_HANDLE)
         addCard(ConstantMethodTypeDetailPane(services), ConstantType.METHOD_TYPE)
+        addCard(ConstantModuleInfoDetailPane(services), ConstantType.MODULE)
+        addCard(ConstantPackageInfoDetailPane(services), ConstantType.PACKAGE)
     }
 
     override fun show(treePath: TreePath) {
