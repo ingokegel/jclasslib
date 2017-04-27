@@ -76,7 +76,7 @@ task clean {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
+    gradleVersion = '3.5'
     distributionType = Wrapper.DistributionType.ALL
 }
 
