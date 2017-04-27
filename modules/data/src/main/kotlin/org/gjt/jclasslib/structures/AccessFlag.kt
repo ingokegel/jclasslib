@@ -58,7 +58,11 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
     /**
      * new in Java 8
      */
-    MANDATED(0x8000, "mandated");
+    MANDATED(0x8000, "mandated"),
+    /**
+     * new in Java 9
+     */
+    MODULE(0x8000, "module");
 
     /** Checks if this access flag is set in the supplied access flags.
      * @param accessFlags the access flags
@@ -84,7 +88,8 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
                 ABSTRACT,
                 SYNTHETIC,
                 ANNOTATION,
-                ENUM)
+                ENUM,
+                MODULE)
 
         /**
          * Inner class access flags
