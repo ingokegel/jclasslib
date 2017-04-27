@@ -110,6 +110,7 @@ fun checkClassFile(className: String, inputStreamProvider: InputStreamProvider):
     if (!success) {
         isDebug = true
         ClassFileReader.readFromInputStream(ByteArrayInputStream(after))
+        isDebug = false
     }
     return success
 }
