@@ -11,6 +11,7 @@ import net.miginfocom.swing.MigLayout
 import java.awt.Window
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
+import java.util.concurrent.ExecutionException
 import javax.swing.*
 
 class ProgressDialog(parent: Window, message: String, var task: () -> Unit = {}) : JDialog(parent) {
@@ -59,6 +60,12 @@ class ProgressDialog(parent: Window, message: String, var task: () -> Unit = {})
 
                     override fun done() {
                         isVisible = false
+                        try {
+                            get()
+                        } catch(e: ExecutionException) {
+                            e.cause?.printStackTrace()
+                            GUIHelper.showMessage(parent, "An error occurred: ${e.cause?.javaClass}: ${e.cause?.message}", JOptionPane.ERROR_MESSAGE)
+                        }
                     }
                 }.execute()
             }
