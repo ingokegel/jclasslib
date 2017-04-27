@@ -65,9 +65,9 @@ fun forEachClassNameInJrt(jreHome: File, block : (className :String) -> Unit) {
     }
 }
 
-private fun getModulesRoot(jreHome: File) = modulesRootsCache.getOrPut(jreHome) {
-    val classLoader = URLClassLoader(arrayOf(File(jreHome, "jrt-fs.jar").toURI().toURL()))
-    FileSystems.newFileSystem(URI("jrt:/"), null, classLoader).getPath("/modules")
+private fun getModulesRoot(jreHome: File): Path = modulesRootsCache.getOrPut(jreHome) {
+    val classLoader = URLClassLoader(arrayOf(File(jreHome, "lib/jrt-fs.jar").toURI().toURL()))
+    FileSystems.newFileSystem(URI("jrt:/"), emptyMap<String, String>(), classLoader).getPath("/modules")
 }
 
 
