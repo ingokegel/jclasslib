@@ -61,7 +61,7 @@ interface AttributeContainer {
                     }
                 }
             }
-            if (isDebug) debug("read $attributesCount attributes")
+            if (isDebug) debug("read $attributesCount attributes", input)
         }
     }
 
@@ -105,7 +105,7 @@ interface AttributeContainer {
             output.writeInt(it.getAttributeLength())
             it.write(output)
         }
-        if (isDebug) debug("wrote $attributesCount attributes")
+        if (isDebug) debug("wrote $attributesCount attributes", output)
     }
 }
 

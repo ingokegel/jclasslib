@@ -9,6 +9,7 @@ package org.gjt.jclasslib.io
 
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.isDebug
 
 import java.io.*
 
@@ -26,7 +27,7 @@ object ClassFileWriter {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     fun writeToFile(file: File, classFile: ClassFile) {
-        DataOutputStream(BufferedOutputStream(FileOutputStream(file))).use { classFile.write(it) }
+        DataOutputStream(BufferedOutputStream(FileOutputStream(file)).wrapForDebug()).use { classFile.write(it) }
     }
 
     /**
@@ -37,8 +38,10 @@ object ClassFileWriter {
     @JvmStatic
     fun writeToByteArray(classFile: ClassFile): ByteArray {
         val result = ByteArrayOutputStream()
-        DataOutputStream(result).use { classFile.write(it) }
+        DataOutputStream(result.wrapForDebug()).use { classFile.write(it) }
         return result.toByteArray()
     }
+
+    private fun OutputStream.wrapForDebug() = if (isDebug) CountedOutputStream(this) else this
 
 }

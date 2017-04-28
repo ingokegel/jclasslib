@@ -80,7 +80,7 @@ class JrtInputStreamProvider(private val fileName: String, private val jreHome :
 }
 
 private fun checkClassFile(fileName: String, inputStreamProvider: InputStreamProvider, testStatistics: TestStatistics) {
-    val className = fileName.removeSuffix(".class").replace("/", ".")
+    val className = fileName.toClassNameWithModuleCheck()
     try {
         if (!checkClassFile(className, inputStreamProvider)) {
             testStatistics.errors++
@@ -90,6 +90,19 @@ private fun checkClassFile(fileName: String, inputStreamProvider: InputStreamPro
         throw e
     }
     testStatistics.count++
+}
+
+private fun String.toClassNameWithModuleCheck(): String {
+    val matchResult = Regex("modules/(.*?)/(.*)").find(this)
+    return if (matchResult != null) {
+        matchResult.groupValues[1] + "/" + matchResult.groupValues[2].toClassName()
+    } else {
+        toClassName()
+    }
+}
+
+private fun String.toClassName(): String {
+    return removeSuffix(".class").replace("/", ".")
 }
 
 fun checkClassFile(className: String, url: URL): Boolean {
@@ -109,6 +122,14 @@ fun checkClassFile(className: String, inputStreamProvider: InputStreamProvider):
     val success = compare(className, before, after)
     if (!success) {
         isDebug = true
+        println()
+        println("*** before: ")
+        ClassFileReader.readFromInputStream(ByteArrayInputStream(before))
+        println()
+        println("*** write: ")
+        ClassFileWriter.writeToByteArray(classFile)
+        println()
+        println("*** after: ")
         ClassFileReader.readFromInputStream(ByteArrayInputStream(after))
         isDebug = false
     }
@@ -123,9 +144,8 @@ fun compare(className: String, before: ByteArray, after: ByteArray): Boolean {
     if (before.size != after.size) {
         System.err.println("ERROR in " + className)
         System.err.println("Different length " + before.size + " != " + after.size)
-        return false
     }
-    for (i in before.indices) {
+    for (i in 0..minOf(before.size, after.size) - 1) {
         if (before[i] != after[i]) {
             System.err.println("Different byte at index " + i)
             return false

@@ -296,30 +296,30 @@ class ClassFile : Structure(), AttributeContainer {
             throw InvalidByteCodeException("Invalid magic number ${magicNumber.hex} instead of ${MAGIC_NUMBER.hex}")
         }
 
-        if (isDebug) debug("read magic number")
+        if (isDebug) debug("read magic number", input)
     }
 
     private fun writeMagicNumber(out: DataOutput) {
         out.writeInt(MAGIC_NUMBER)
-        if (isDebug) debug("wrote magic number")
+        if (isDebug) debug("wrote magic number", out)
     }
 
     private fun readVersion(input: DataInput) {
         minorVersion = input.readUnsignedShort()
-        if (isDebug) debug("read minor version $minorVersion")
+        if (isDebug) debug("read minor version $minorVersion", input)
 
         majorVersion = input.readUnsignedShort()
-        if (isDebug) debug("read major version $majorVersion")
+        if (isDebug) debug("read major version $majorVersion", input)
 
         checkMajorVersion(majorVersion)
     }
 
     private fun writeVersion(out: DataOutput) {
         out.writeShort(minorVersion)
-        if (isDebug) debug("wrote minor version $minorVersion")
+        if (isDebug) debug("wrote minor version $minorVersion", out)
 
         out.writeShort(majorVersion)
-        if (isDebug) debug("wrote major version $majorVersion")
+        if (isDebug) debug("wrote major version $majorVersion", out)
 
         checkMajorVersion(majorVersion)
     }
@@ -327,7 +327,7 @@ class ClassFile : Structure(), AttributeContainer {
     private fun readConstantPool(input: DataInput) {
         constantPoolEntryToIndex.clear()
         val constantPoolCount = input.readUnsignedShort()
-        if (isDebug) debug("read constant pool count $constantPoolCount")
+        if (isDebug) debug("read constant pool count $constantPoolCount", input)
 
         // constantPool[0] is not used
         var placeholderIndex = 0
@@ -335,7 +335,7 @@ class ClassFile : Structure(), AttributeContainer {
             when (i) {
                 placeholderIndex -> ConstantPlaceholder
                 else -> {
-                    if (isDebug) debug("reading constant pool entry $i")
+                    if (isDebug) debug("reading constant pool entry $i", input)
                     val constantType = ConstantType.getFromTag(input.readByte().toInt())
                     constantType.read(this, input).apply {
                         constantPoolEntryToIndex.put(this, i)
@@ -353,11 +353,11 @@ class ClassFile : Structure(), AttributeContainer {
 
     private fun writeConstantPool(out: DataOutput) {
         out.writeShort(constantPool.size)
-        if (isDebug) debug("wrote constant pool count ${constantPool.size}")
+        if (isDebug) debug("wrote constant pool count ${constantPool.size}", out)
 
         constantPool.forEachIndexed { i, cpInfo ->
             if (cpInfo !is ConstantPlaceholder) {
-                if (isDebug) debug("writing constant pool entry $i")
+                if (isDebug) debug("writing constant pool entry $i", out)
                 cpInfo.write(out)
             }
         }
@@ -365,41 +365,41 @@ class ClassFile : Structure(), AttributeContainer {
 
     private fun readAccessFlags(input: DataInput) {
         accessFlags = input.readUnsignedShort()
-        if (isDebug) debug("read access flags $accessFlagsVerbose")
+        if (isDebug) debug("read access flags $accessFlagsVerbose", input)
     }
 
     private fun writeAccessFlags(output: DataOutput) {
         output.writeShort(accessFlags)
-        if (isDebug) debug("wrote access flags $accessFlagsVerbose")
+        if (isDebug) debug("wrote access flags $accessFlagsVerbose", output)
     }
 
     private fun readThisClass(input: DataInput) {
         thisClass = input.readUnsignedShort()
-        if (isDebug) debug("read this_class index $thisClass")
+        if (isDebug) debug("read this_class index $thisClass", input)
     }
 
     private fun writeThisClass(output: DataOutput) {
         output.writeShort(thisClass)
-        if (isDebug) debug("wrote this_class index $thisClass")
+        if (isDebug) debug("wrote this_class index $thisClass", output)
     }
 
     private fun readSuperClass(input: DataInput) {
         superClass = input.readUnsignedShort()
-        if (isDebug) debug("read super_class index $superClass")
+        if (isDebug) debug("read super_class index $superClass", input)
     }
 
     private fun writeSuperClass(output: DataOutput) {
         output.writeShort(superClass)
-        if (isDebug) debug("wrote super_class index $superClass")
+        if (isDebug) debug("wrote super_class index $superClass", output)
     }
 
     private fun readInterfaces(input: DataInput) {
         val interfacesCount = input.readUnsignedShort()
-        if (isDebug) debug("read interfaces count $interfacesCount")
+        if (isDebug) debug("read interfaces count $interfacesCount", input)
 
         interfaces = IntArray(interfacesCount) {
             val index = input.readUnsignedShort()
-            if (isDebug) debug("read interface index $index")
+            if (isDebug) debug("read interface index $index", input)
             index
         }
     }
@@ -407,17 +407,17 @@ class ClassFile : Structure(), AttributeContainer {
     private fun writeInterfaces(out: DataOutput) {
         val interfacesCount = interfaces.size
         out.writeShort(interfacesCount)
-        if (isDebug) debug("wrote interfaces count $interfacesCount")
+        if (isDebug) debug("wrote interfaces count $interfacesCount", out)
 
         interfaces.forEach {
             out.writeShort(it)
-            if (isDebug) debug("wrote interface index $it")
+            if (isDebug) debug("wrote interface index $it", out)
         }
     }
 
     private fun readFields(input: DataInput) {
         val fieldsCount = input.readUnsignedShort()
-        if (isDebug) debug("read fields count $fieldsCount")
+        if (isDebug) debug("read fields count $fieldsCount", input)
 
         fields = Array(fieldsCount) {
             FieldInfo(this).apply {
@@ -429,7 +429,7 @@ class ClassFile : Structure(), AttributeContainer {
     private fun writeFields(out: DataOutput) {
         val fieldsCount = fields.size
         out.writeShort(fieldsCount)
-        if (isDebug) debug("wrote fields count $fieldsCount")
+        if (isDebug) debug("wrote fields count $fieldsCount", out)
 
         fields.forEach { it.write(out) }
     }
@@ -437,7 +437,7 @@ class ClassFile : Structure(), AttributeContainer {
     private fun readMethods(input: DataInput) {
 
         val methodsCount = input.readUnsignedShort()
-        if (isDebug) debug("read methods count $methodsCount")
+        if (isDebug) debug("read methods count $methodsCount", input)
 
         methods = Array(methodsCount) {
             MethodInfo(this).apply {
@@ -449,7 +449,7 @@ class ClassFile : Structure(), AttributeContainer {
     private fun writeMethods(out: DataOutput) {
         val methodsCount = methods.size
         out.writeShort(methodsCount)
-        if (isDebug) debug("wrote methods count $methodsCount")
+        if (isDebug) debug("wrote methods count $methodsCount", out)
 
         methods.forEach { it.write(out) }
     }

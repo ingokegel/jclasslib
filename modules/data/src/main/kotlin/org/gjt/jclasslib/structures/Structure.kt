@@ -31,7 +31,7 @@ abstract class Structure {
      */
     fun read(input: DataInput) {
         readData(input)
-        if (isDebug) debug("read ${this::class.java.simpleName} $debugInfo")
+        if (isDebug) debug("read ${this::class.java.simpleName} $debugInfo", input)
     }
 
     /**
@@ -50,7 +50,7 @@ abstract class Structure {
      */
     fun write(output: DataOutput) {
         writeData(output)
-        if (isDebug) debug("wrote ${this::class.java.simpleName} $debugInfo")
+        if (isDebug) debug("wrote ${this::class.java.simpleName} $debugInfo", output)
     }
 
     /**

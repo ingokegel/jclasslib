@@ -9,6 +9,7 @@ package org.gjt.jclasslib.io
 
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.isDebug
 import java.io.*
 import java.util.jar.JarFile
 
@@ -35,7 +36,7 @@ object ClassFileReader {
         classPath
                 .map(::File)
                 .filter(File::exists)
-                .forEach {classPathEntry ->
+                .forEach { classPathEntry ->
                     if (classPathEntry.isDirectory) {
                         val testFile = File(classPathEntry, relativePath)
                         if (testFile.exists()) {
@@ -74,8 +75,10 @@ object ClassFileReader {
     @JvmStatic
     fun readFromInputStream(stream: InputStream): ClassFile {
         val classFile = ClassFile()
-        DataInputStream(BufferedInputStream(stream)).use { classFile.read(it) }
+        val bufferedInputStream = BufferedInputStream(stream)
+        DataInputStream(bufferedInputStream.wrapForDebug()).use { classFile.read(it) }
         return classFile
     }
 
+    private fun InputStream.wrapForDebug() = if (isDebug) CountedInputStream(this) else this
 }

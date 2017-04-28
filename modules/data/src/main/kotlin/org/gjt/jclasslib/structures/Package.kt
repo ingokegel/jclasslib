@@ -9,6 +9,12 @@
 
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.io.CountedInputStream
+import org.gjt.jclasslib.io.CountedOutputStream
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.FilterInputStream
+import java.io.FilterOutputStream
 import kotlin.reflect.KClass
 
 /**
@@ -29,8 +35,21 @@ internal fun warning(message: String) {
     println(message)
 }
 
-internal fun debug(message: String) {
+internal fun debug(message: String, input: DataInput) {
     print("[debug] ")
+    val countedInputStream = FilterInputStream::class.java.getDeclaredField("in").apply { isAccessible = true }.get(input) as? CountedInputStream
+    if (countedInputStream != null) {
+        print("+" + countedInputStream.bytesRead + " ")
+    }
+    println(message)
+}
+
+internal fun debug(message: String, output: DataOutput) {
+    print("[debug] ")
+    val countedOutputStream = FilterOutputStream::class.java.getDeclaredField("out").apply { isAccessible = true }.get(output) as? CountedOutputStream
+    if (countedOutputStream != null) {
+        print("+" + countedOutputStream.bytesWritten + " ")
+    }
     println(message)
 }
 
