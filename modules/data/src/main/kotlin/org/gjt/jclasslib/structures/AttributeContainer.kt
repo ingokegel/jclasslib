@@ -90,6 +90,7 @@ interface AttributeContainer {
         StackMapTableAttribute.ATTRIBUTE_NAME -> StackMapTableAttribute(classFile)
         MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute(classFile)
         ModuleAttribute.ATTRIBUTE_NAME -> ModuleAttribute(classFile)
+        ModulePackagesAttribute.ATTRIBUTE_NAME -> ModulePackagesAttribute(classFile)
         else -> UnknownAttribute(attributeLength, classFile)
     }
 
