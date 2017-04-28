@@ -25,6 +25,10 @@ class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : Attribu
     var info: ByteArray = ByteArray(byteArrayLength)
 
     override fun readData(input: DataInput) {
+        // Uncomment to print out the attribute name and size
+        //println(classFile.getConstantPoolUtf8Entry(attributeNameIndex).string)
+        //println(byteArrayLength)
+
         input.readFully(info)
     }
 
