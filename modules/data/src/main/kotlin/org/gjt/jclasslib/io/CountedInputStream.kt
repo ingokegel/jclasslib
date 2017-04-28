@@ -37,7 +37,7 @@ class CountedInputStream(input: InputStream) : FilterInputStream(input) {
 
     @Throws(IOException::class)
     override fun read(b: ByteArray, offset: Int, len: Int): Int {
-        val readCount = `in`.read(b, 0, b.size)
+        val readCount = `in`.read(b, offset, len)
         bytesRead += readCount
         return readCount
 
