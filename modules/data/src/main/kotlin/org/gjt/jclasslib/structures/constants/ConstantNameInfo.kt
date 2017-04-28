@@ -16,7 +16,6 @@ package org.gjt.jclasslib.structures.constants
 
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import java.io.DataInput
 import java.io.DataOutput
@@ -47,7 +46,7 @@ abstract class ConstantNameInfo(classFile: ClassFile) : AbstractConstant(classFi
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeByte(ConstantType.CLASS.tag)
+        output.writeByte(constantType.tag)
         output.writeShort(nameIndex)
     }
 
