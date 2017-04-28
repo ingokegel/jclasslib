@@ -73,36 +73,23 @@ class ModuleAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         moduleFlags = input.readUnsignedShort()
         moduleVersionIndex = input.readUnsignedShort()
 
-        val requiresCount = input.readUnsignedShort()
-        requiresEntries = Array(requiresCount) {
-            RequiresEntry().apply {
-                read(input)
-            }
-        }
-
-        val exportsCount = input.readUnsignedShort()
-        exportsEntries = Array(exportsCount) {
-            ExportsEntry().apply {
-                read(input)
-            }
-        }
-
-        val opensCount = input.readUnsignedShort()
-        opensEntries = Array(opensCount) {
-            ExportsEntry().apply {
-                read(input)
-            }
-        }
+        requiresEntries = input.readList(::RequiresEntry)
+        exportsEntries = input.readList(::ExportsEntry)
+        opensEntries = input.readList(::ExportsEntry)
 
         val usesCount = input.readUnsignedShort()
         usesIndices = IntArray(usesCount) {
             input.readUnsignedShort()
         }
 
-        val providesCount = input.readUnsignedShort()
-        providesEntries = Array(providesCount) {
-            ProvidesEntry().apply {
-                read(input)
+        providesEntries = input.readList(::ProvidesEntry)
+    }
+
+    private inline fun <reified T : SubStructure> DataInput.readList(entryProvider: () -> T) : Array<T>{
+        val count = readUnsignedShort()
+        return Array(count) {
+            entryProvider().apply {
+                read(this@readList)
             }
         }
     }
@@ -112,20 +99,19 @@ class ModuleAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(moduleFlags)
         output.writeShort(moduleVersionIndex)
 
-        output.writeByte(requiresEntries.size)
-        requiresEntries.forEach { it.write(output) }
-
-        output.writeByte(exportsEntries.size)
-        exportsEntries.forEach { it.write(output) }
-
-        output.writeByte(opensEntries.size)
-        opensEntries.forEach { it.write(output) }
+        output.writeList(requiresEntries)
+        output.writeList(exportsEntries)
+        output.writeList(opensEntries)
 
         output.writeShort(usesIndices.size)
         usesIndices.forEach { output.writeShort(it) }
 
-        output.writeShort(providesEntries.size)
-        providesEntries.forEach { it.write(output) }
+        output.writeList(providesEntries)
+    }
+
+    private fun DataOutput.writeList(entries: Array<out SubStructure>) {
+        writeShort(entries.size)
+        entries.forEach { it.write(this) }
     }
 
     override fun getAttributeLength(): Int =  16 +
