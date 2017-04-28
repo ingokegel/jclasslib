@@ -91,6 +91,7 @@ interface AttributeContainer {
         MethodParametersAttribute.ATTRIBUTE_NAME -> MethodParametersAttribute(classFile)
         ModuleAttribute.ATTRIBUTE_NAME -> ModuleAttribute(classFile)
         ModulePackagesAttribute.ATTRIBUTE_NAME -> ModulePackagesAttribute(classFile)
+        ModuleMainClassAttribute.ATTRIBUTE_NAME -> ModuleMainClassAttribute(classFile)
         else -> UnknownAttribute(attributeLength, classFile)
     }
 
