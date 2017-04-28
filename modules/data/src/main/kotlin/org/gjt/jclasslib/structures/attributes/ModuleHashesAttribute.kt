@@ -34,6 +34,9 @@ import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
+/**
+ * Describes a ModuleHashes attribute structure.
+ */
 class ModuleHashesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**

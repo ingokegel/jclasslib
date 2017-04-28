@@ -19,6 +19,9 @@ import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
+/**
+ * Describes a ModuleMainClass attribute structure.
+ */
 class ModuleMainClassAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**

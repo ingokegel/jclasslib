@@ -26,6 +26,9 @@ import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
+/**
+ * Describes a ModuleTarget attribute structure.
+ */
 class ModuleTargetAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**

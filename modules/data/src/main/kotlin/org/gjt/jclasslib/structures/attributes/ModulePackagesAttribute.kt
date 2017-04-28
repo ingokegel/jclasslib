@@ -12,6 +12,9 @@ import org.gjt.jclasslib.structures.ClassFile
 import java.io.DataInput
 import java.io.DataOutput
 
+/**
+ * Describes a ModulePackages attribute structure.
+ */
 class ModulePackagesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
