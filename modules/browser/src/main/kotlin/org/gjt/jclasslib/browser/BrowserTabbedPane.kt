@@ -51,7 +51,13 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
             }
 
     fun addTab(browserTab: BrowserTab) {
-        addTab(browserTab.browserComponent.title, browserTab)
+        val matchResult = MODULE_INFO_REGEX.matchEntire(browserTab.fileName)
+        val title = if (matchResult != null) {
+            matchResult.groupValues[1]
+        } else {
+            browserTab.browserComponent.title
+        }
+        addTab(title, browserTab)
         selectedComponent = browserTab
     }
 
@@ -105,6 +111,10 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
                 event.dropComplete(false)
             }
         }
+    }
+
+    companion object {
+        val MODULE_INFO_REGEX = Regex(".*/(.*/module-info).class")
     }
 }
 
