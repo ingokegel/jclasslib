@@ -23,8 +23,18 @@ private val CLASSFILE_SUFFIX = ".class"
  * @param fileName the file name to the class file in the JRT, including the module
  * @param jreHome the home directory of the JRE
  */
-fun getJrtInputStream(fileName: String, jreHome: File): InputStream = Files.newInputStream(getModulesRoot(jreHome).resolve(fileName))
+fun getJrtInputStream(fileName: String, jreHome: File): InputStream {
+    return Files.newInputStream(getModulesRoot(jreHome).resolve(fileName))
+}
 
+/**
+ * Find a module class in the JRT (Java 9+)
+ * @param className the module class name
+ * @param jreHome the home directory of the JRE
+ */
+fun findModuleInJrt(className: String, jreHome: File): Path? {
+    return getModulesRoot(jreHome).resolve(className + CLASSFILE_SUFFIX)
+}
 /**
  * Find a class in the JRT (Java 9+)
  * @param className the class name
@@ -61,7 +71,11 @@ fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
  */
 fun forEachClassNameInJrt(jreHome: File, block : (className :String) -> Unit) {
     forEachClassInJrt(jreHome) { path ->
-        block(path.subpath(2, path.nameCount).toString())
+        if (path.endsWith("module-info.class")) {
+            block(path.subpath(0, path.nameCount).toString())
+        } else {
+            block(path.subpath(2, path.nameCount).toString())
+        }
     }
 }
 
