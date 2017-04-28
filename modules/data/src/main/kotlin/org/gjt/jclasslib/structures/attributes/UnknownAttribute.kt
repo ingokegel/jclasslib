@@ -29,8 +29,6 @@ class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : Attribu
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeShort(attributeNameIndex)
-        output.writeInt(getAttributeLength())
         output.write(info)
     }
 
