@@ -16,12 +16,20 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URL
+import java.nio.file.Path
 import java.util.jar.JarFile
 
 class ClassFileConsistencyTest {
     @Test
     fun testCurrentJre() {
         scanJre(System.getProperty("java.home"))
+        //scanJre("C:\\Program Files\\Java\\jdk-9")
+    }
+
+    @Test
+    fun testCurrentJreModules() {
+        scanJreModules(System.getProperty("java.home"))
+        //scanJreModules("C:\\Program Files\\Java\\jdk-9", true)
     }
 
     @Test
@@ -41,6 +49,19 @@ class ClassFileConsistencyTest {
         println("${testStatistics.count} classes checked, ${testStatistics.errors} errors")
     }
 
+    fun scanJreModules(javaHome: String, logPaths: Boolean = false) {
+        val rtJar = File("$javaHome/lib/rt.jar")
+        if (rtJar.exists()) {
+            println("Not a modular JRE")
+            return
+        }
+        val testStatistics = TestStatistics()
+        scanJrt(File(javaHome), testStatistics, logPaths) { path ->
+            path.endsWith("module-info.class")
+        }
+        println("${testStatistics.count} modules checked, ${testStatistics.errors} errors")
+    }
+
     fun scanJar(file: File, testStatistics: TestStatistics) {
         val jar = JarFile(file)
         jar.entries().iterator().forEach { entry ->
@@ -51,10 +72,15 @@ class ClassFileConsistencyTest {
         }
     }
 
-    fun scanJrt(jreHome: File, testStatistics: TestStatistics) {
+    fun scanJrt(jreHome: File, testStatistics: TestStatistics, logPaths: Boolean = false, pathFilter: (Path) -> Boolean = {true}) {
         forEachClassInJrt(jreHome) { path ->
-            val fileName = path.toString()
-            checkClassFile(fileName, JrtInputStreamProvider(fileName, jreHome), testStatistics)
+            if (pathFilter(path)) {
+                if (logPaths) {
+                    println("Processing " + path)
+                }
+                val fileName = path.toString()
+                checkClassFile(fileName, JrtInputStreamProvider(fileName, jreHome), testStatistics)
+            }
         }
     }
 
