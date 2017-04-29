@@ -5,15 +5,15 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser.detail.attributes.code
+package org.gjt.jclasslib.browser.detail.attributes.document
 
 import javax.swing.text.*
 
-class ByteCodeEditorKit : StyledEditorKit() {
+class AttributeEditorKit : StyledEditorKit() {
 
-    override fun getViewFactory() = ByteCodeEditorViewFactory()
+    override fun getViewFactory() = AttributeEditorViewFactory()
 
-    class ByteCodeEditorViewFactory : ViewFactory {
+    class AttributeEditorViewFactory : ViewFactory {
         override fun create(element: Element) = when (element.name) {
             AbstractDocument.ContentElementName -> LabelView(element)
             AbstractDocument.ParagraphElementName -> LineView(element)
