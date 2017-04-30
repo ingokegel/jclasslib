@@ -8,6 +8,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.document
 
+import org.gjt.jclasslib.browser.BrowserHistory
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.DetailPane
@@ -70,6 +71,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     }
 
     abstract fun createDocument(styles: StyleContext, attribute: T, classFile: ClassFile): D
+    abstract fun offsetToPosition(offset: Int) : Int
 
     private fun withWaitCursor(function: () -> Unit) {
         val browserComponent = services.browserComponent
@@ -96,7 +98,30 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     protected fun updateHistory(offset: Int) {
         val treePath = services.browserComponent.treePane.tree.selectionPath
         val history = services.browserComponent.history
-        history.addHistoryEntry(treePath, offset)
+        history.addHistoryEntry(treePath, object: BrowserHistory.Resetter {
+            override fun reset() {
+                makeVisible()
+                scrollToOffset(offset)
+            }
+
+            override fun toString() = "offset $offset"
+        })
+    }
+
+    open protected fun makeVisible() {
+
+    }
+
+    fun scrollToOffset(offset: Int) {
+        val position = offsetToPosition(offset)
+        try {
+            val target = textPane.modelToView(position)
+            target.height = textPane.height
+            textPane.caretPosition = position
+            textPane.scrollRectToVisible(target)
+
+        } catch (ex: BadLocationException) {
+        }
     }
 
     private val lineHeight: Int

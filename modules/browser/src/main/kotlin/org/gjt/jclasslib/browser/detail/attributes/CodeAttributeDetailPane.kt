@@ -21,7 +21,7 @@ import javax.swing.tree.TreePath
 
 class CodeAttributeDetailPane(services: BrowserServices) : DetailPane<CodeAttribute>(CodeAttribute::class.java, services) {
 
-    val byteCodeDetailPane = ByteCodeDetailPane(services)
+    val byteCodeDetailPane = ByteCodeDetailPane(services, this)
     val exceptionTableDetailPane = ExceptionTableDetailPane(services)
     val miscDetailPane = MiscDetailPane(services)
 

@@ -11,7 +11,6 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.BatchDocument
 import org.gjt.jclasslib.util.getLinkColor
-import org.gjt.jclasslib.util.getValueColor
 import java.awt.BasicStroke
 import java.awt.Color
 import java.io.IOException
@@ -57,11 +56,15 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         }
     }
 
-    protected abstract fun addContent(): LineNumberCounts
+    protected abstract fun addContent(): LineNumberCounts?
 
     override fun appendBatchLineFeed(attributes: AttributeSet) {
         super.appendBatchLineFeed(attributes)
         lineStartPositions.add(length)
+    }
+
+    fun appendBatchLineFeed() {
+        appendBatchLineFeed(STYLE_NORMAL)
     }
 
     protected fun appendString(string: String, attributes: AttributeSet) {
@@ -72,13 +75,14 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         }
     }
 
-    private fun createLineNumberDocument(lineNumberCounts: LineNumberCounts) {
-        val numberOfLines = lineNumberCounts.size
-        lineNumberWidth = (numberOfLines - 1).toString().length
+    private fun createLineNumberDocument(lineNumberCounts: LineNumberCounts?) {
+        val numberOfLines = lineNumberCounts?.size ?: lineStartPositions.size
+        lineNumberWidth = numberOfLines.toString().length
         try {
-            for (i in 0..numberOfLines - 1) {
+            for (i in 1..numberOfLines) {
                 lineNumberDocument.appendBatchString(getPaddedValue(i, lineNumberWidth), STYLE_LINE_NUMBER)
-                for (j in 0..lineNumberCounts[i] - 1) {
+                val lineNumberCount = lineNumberCounts?.get(i - 1) ?: 1
+                for (j in 0..lineNumberCount - 1) {
                     lineNumberDocument.appendBatchLineFeed(STYLE_NORMAL)
                 }
             }
@@ -97,7 +101,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         append(value)
     }.toString()
 
-    protected fun addConstantPoolLink(constantPoolIndex: Int, sourceOffset: Int) {
+    protected fun addConstantPoolLink(constantPoolIndex: Int, sourceOffset: Int = length) {
 
         val currentLinkStyle = styles.addAttribute(STYLE_LINK, ATTRIBUTE_NAME_LINK,
                 ConstantPoolLink(constantPoolIndex, sourceOffset))
@@ -137,7 +141,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         val ATTRIBUTE_NAME_LINK = "attributeLink"
         val ATTRIBUTE_NAME_HOVER_HIGHLIGHT = "hoverHighlight"
 
-        private val DOTTED_STROKE = BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0.toFloat(), floatArrayOf(3.toFloat(), 4.toFloat()), 0.0f)
+        val DOTTED_STROKE = BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0.toFloat(), floatArrayOf(3.toFloat(), 4.toFloat()), 0.0f)
 
         val STYLE_NORMAL = style()
         val STYLE_SMALL = style {
@@ -147,17 +151,6 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
             foreground = getLinkColor()
             bold = true
             underline = true
-        }
-        val STYLE_OFFSET = style {
-            foreground = getValueColor()
-        }
-        val STYLE_INSTRUCTION = style {
-            bold = true
-            attribute(ATTRIBUTE_NAME_HOVER_HIGHLIGHT, DOTTED_STROKE)
-        }
-        val STYLE_IMMEDIATE_VALUE = style {
-            foreground = Color.MAGENTA
-            bold = true
         }
         val STYLE_LINE_NUMBER = style {
             foreground = Color(128, 128, 128)

@@ -32,12 +32,10 @@ class AttributeDetailPane(services: BrowserServices) : MultiDetailPane<Attribute
         addCard(BootstrapMethodsAttribute::class.java, BootstrapMethodsAttributeDetailPane(services))
         addCard(StackMapTableAttribute::class.java, StackMapTableAttributeDetailPane(services))
         addCard(MethodParametersAttribute::class.java, MethodParametersAttributeDetailPane(services))
+        addCard(ModuleAttribute::class.java, ModuleAttributeDetailPane(services))
     }
 
     override fun createGenericInfoPane() = GenericAttributeDetailPane(services)
-
-    val codeAttributeDetailPane: CodeAttributeDetailPane
-        get() = getDetailPane(CodeAttribute::class.java) as CodeAttributeDetailPane
 
 }
 

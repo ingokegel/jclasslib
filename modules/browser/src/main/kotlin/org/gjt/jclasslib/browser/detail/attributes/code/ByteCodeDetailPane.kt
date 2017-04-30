@@ -8,16 +8,16 @@
 package org.gjt.jclasslib.browser.detail.attributes.code
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.OffsetLink
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.SpecLink
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
 import org.gjt.jclasslib.browser.detail.attributes.document.DocumentDetailPane
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
-import javax.swing.text.BadLocationException
 import javax.swing.text.StyleContext
 
-class ByteCodeDetailPane(services: BrowserServices) : DocumentDetailPane<CodeAttribute, ByteCodeDocument>(CodeAttribute::class.java, ByteCodeDocument::class.java, services) {
+class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDetailPane: CodeAttributeDetailPane) : DocumentDetailPane<CodeAttribute, ByteCodeDocument>(CodeAttribute::class.java, ByteCodeDocument::class.java, services) {
 
     init {
         name = "Bytecode"
@@ -26,6 +26,8 @@ class ByteCodeDetailPane(services: BrowserServices) : DocumentDetailPane<CodeAtt
     override fun createDocument(styles: StyleContext, attribute: CodeAttribute, classFile: ClassFile): ByteCodeDocument {
         return ByteCodeDocument(styles, attribute, services.classFile)
     }
+
+    override fun offsetToPosition(offset: Int) = attributeDocument.getPosition(offset)
 
     override fun linkTriggered(link: AttributeDocument.Link) {
         super.linkTriggered(link)
@@ -40,16 +42,8 @@ class ByteCodeDetailPane(services: BrowserServices) : DocumentDetailPane<CodeAtt
         }
     }
 
-    fun scrollToOffset(offset: Int) {
-        val position = attributeDocument.getPosition(offset)
-        try {
-            val target = textPane.modelToView(position)
-            target.height = textPane.height
-            textPane.caretPosition = position
-            textPane.scrollRectToVisible(target)
-
-        } catch (ex: BadLocationException) {
-        }
+    override fun makeVisible() {
+        super.makeVisible()
+        codeAttributeDetailPane.selectByteCodeDetailPane()
     }
-
 }

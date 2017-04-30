@@ -36,23 +36,23 @@ class BrowserHistory(private val services: BrowserServices) {
         services.forwardAction.isEnabled = undoManager.canRedo()
     }
 
-    fun addHistoryEntry(path: TreePath, offset: Int? = null) {
+    fun addHistoryEntry(path: TreePath, resetter: Resetter? = null) {
         if (!applyingState) {
-            undoManager.addEdit(BrowserHistoryEntry(path, offset))
+            undoManager.addEdit(BrowserHistoryEntry(path, resetter))
             updateActions()
         }
     }
 
     private var applyingState = false
 
-    private inner class BrowserHistoryEntry(val treePath: TreePath, val offset: Int?) : AbstractUndoableEdit() {
+    private inner class BrowserHistoryEntry(val treePath: TreePath, val resetter: Resetter?) : AbstractUndoableEdit() {
 
         private var before: BrowserHistoryEntry? = null
 
         override fun canUndo(): Boolean {
             return before != null
         }
-        override fun toString() = treePath.toString() + " / offset " + (offset?.toString() ?: "null")
+        override fun toString() = treePath.toString() + " / " + (resetter?.toString() ?: "null")
 
         override fun addEdit(newEdit: UndoableEdit): Boolean {
             // this is the last entry
@@ -80,7 +80,7 @@ class BrowserHistory(private val services: BrowserServices) {
             return false
         }
 
-        private fun isEditMoreSpecificThan(otherEdit: BrowserHistoryEntry) = otherEdit.treePath == treePath && otherEdit.offset == null
+        private fun isEditMoreSpecificThan(otherEdit: BrowserHistoryEntry) = otherEdit.treePath == treePath && otherEdit.resetter == null
 
         override fun undo() {
             super.undo()
@@ -99,17 +99,16 @@ class BrowserHistory(private val services: BrowserServices) {
                     selectionPath = treePath
                     scrollPathToVisible(treePath)
                 }
-
-                if (offset != null) {
-                    services.browserComponent.detailPane.attributeDetailPane.codeAttributeDetailPane.apply {
-                        selectByteCodeDetailPane()
-                        byteCodeDetailPane.scrollToOffset(offset)
-                    }
-                }
+                resetter?.reset()
                 updateActions()
             } finally {
                 applyingState = false
             }
         }
     }
+
+    interface Resetter {
+        fun reset()
+    }
+
 }

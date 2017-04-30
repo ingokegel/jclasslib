@@ -14,6 +14,8 @@ import org.gjt.jclasslib.io.ByteCodeReader
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
+import org.gjt.jclasslib.util.getValueColor
+import java.awt.Color
 import java.util.*
 import javax.swing.text.StyleContext
 
@@ -201,4 +203,17 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
     data class SpecLink(val opcode: Opcode) : Link
     data class OffsetLink(val targetOffset: Int, override val sourceOffset: Int) : DocumentLink
 
+    companion object {
+        val STYLE_OFFSET = style {
+            foreground = getValueColor()
+        }
+        val STYLE_INSTRUCTION = style {
+            bold = true
+            attribute(ATTRIBUTE_NAME_HOVER_HIGHLIGHT, DOTTED_STROKE)
+        }
+        val STYLE_IMMEDIATE_VALUE = style {
+            foreground = Color.MAGENTA
+            bold = true
+        }
+    }
 }
