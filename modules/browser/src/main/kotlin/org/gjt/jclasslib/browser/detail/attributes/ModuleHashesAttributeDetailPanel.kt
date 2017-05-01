@@ -29,9 +29,9 @@ class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPa
                 add(object : StringColumn<HashEntry>("Verbose") {
                     override fun createValue(row: HashEntry) = getConstantPoolEntryName(row.moduleNameIndex)
                 })
-                add(object : StringColumn<HashEntry>("Hashes", 700) {
+                add(object : StringColumn<HashEntry>("Hash", 700) {
                     override fun createValue(row: HashEntry) =
-                            row.hashValues.map { it.toString(16).padStart(2, '0') }.joinToString(separator = " ")
+                            row.hashValues.map { it.toString(16).padStart(2, '0') }.joinToString(separator = "")
                 })
             }
         }
