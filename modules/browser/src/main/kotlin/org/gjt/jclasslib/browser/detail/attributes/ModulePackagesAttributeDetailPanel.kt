@@ -11,14 +11,10 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.ModulePackagesAttribute
 import java.util.*
-import javax.swing.JTable
 
 class ModulePackagesAttributeDetailPane(services: BrowserServices) : TableDetailPane<ModulePackagesAttribute>(ModulePackagesAttribute::class.java, services) {
 
     override fun createTableModel(attribute: ModulePackagesAttribute) = AttributeTableModel(attribute.indices)
-
-    override val autoResizeMode: Int
-        get() = JTable.AUTO_RESIZE_LAST_COLUMN
 
     inner class AttributeTableModel(rows: IntArray) : ColumnTableModel<Int>(rows.toTypedArray()) {
         override fun buildColumns(columns: ArrayList<Column<Int>>) {
@@ -27,7 +23,7 @@ class ModulePackagesAttributeDetailPane(services: BrowserServices) : TableDetail
                 add(object : ConstantPoolLinkColumn<Int>("Package", services) {
                     override fun getConstantPoolIndex(row: Int) = row
                 })
-                add(object : StringColumn<Int>("Verbose") {
+                add(object : StringColumn<Int>("Verbose", 400) {
                     override fun createValue(row: Int) = getConstantPoolEntryName(row)
                 })
             }

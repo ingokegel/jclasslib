@@ -15,7 +15,6 @@ import org.gjt.jclasslib.structures.attributes.ModuleHashesAttribute
 import java.awt.BorderLayout
 import java.util.*
 import javax.swing.JPanel
-import javax.swing.JTable
 import javax.swing.tree.TreePath
 
 class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPane<ModuleHashesAttribute>(ModuleHashesAttribute::class.java, services) {
@@ -34,9 +33,6 @@ class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPa
 
     override fun createTableModel(attribute: ModuleHashesAttribute) = AttributeTableModel(attribute.hashEntries)
 
-    override val autoResizeMode: Int
-        get() = JTable.AUTO_RESIZE_LAST_COLUMN
-
     inner class AttributeTableModel(rows: Array<HashEntry>) : ColumnTableModel<HashEntry>(rows) {
         override fun buildColumns(columns: ArrayList<Column<HashEntry>>) {
             super.buildColumns(columns)
@@ -47,7 +43,7 @@ class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPa
                 add(object : StringColumn<HashEntry>("Verbose") {
                     override fun createValue(row: HashEntry) = getConstantPoolEntryName(row.moduleNameIndex)
                 })
-                add(object : StringColumn<HashEntry>("Hashes") {
+                add(object : StringColumn<HashEntry>("Hashes", 700) {
                     override fun createValue(row: HashEntry) =
                             row.hashValues.map { it.toString(16).padStart(2, '0') }.joinToString(separator = " ")
                 })

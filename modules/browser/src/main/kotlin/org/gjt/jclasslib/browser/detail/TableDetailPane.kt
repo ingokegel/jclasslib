@@ -39,7 +39,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
 
         TableLinkListener(this)
         gridColor = UIManager.getColor("control")
-        this.autoResizeMode = autoResizeMode
+        this.autoResizeMode = this@TableDetailPane.autoResizeMode
 
         addMouseMotionListener(object : MouseMotionAdapter() {
             override fun mouseMoved(e: MouseEvent) {
