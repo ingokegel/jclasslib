@@ -57,7 +57,7 @@ internal val Int.hex: String
     get() = "0x${Integer.toHexString(this)}"
 
 internal fun Int.paddedHex(length: Int): String {
-    return "0x" + Integer.toHexString(this).padStart(length, '0')
+    return "0x" + this.toString(16).padStart(length, '0')
 }
 
 private val arraySingletons = hashMapOf<KClass<*>, Array<*>>()
