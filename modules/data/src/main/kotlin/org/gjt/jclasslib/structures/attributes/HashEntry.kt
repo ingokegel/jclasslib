@@ -29,7 +29,7 @@ class HashEntry : SubStructure() {
         moduleNameIndex = input.readUnsignedShort()
         val hashValuesCount = input.readUnsignedShort()
         hashValues = IntArray(hashValuesCount) {
-            input.readByte().toInt()
+            input.readUnsignedByte()
         }
     }
 
