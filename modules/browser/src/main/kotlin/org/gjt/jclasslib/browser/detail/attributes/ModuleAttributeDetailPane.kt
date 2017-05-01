@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
 import org.gjt.jclasslib.browser.detail.attributes.document.DocumentDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.document.LineNumberCounts
@@ -19,11 +20,19 @@ import javax.swing.text.StyleContext
 
 class ModuleAttributeDetailPane(services: BrowserServices) : DocumentDetailPane<ModuleAttribute, ModuleDocument>(ModuleAttribute::class.java, ModuleDocument::class.java, services) {
 
+    override fun createKeyValueDetailPane() = ModuleAttributeValueDetailPane()
+
     override fun createDocument(styles: StyleContext, attribute: ModuleAttribute, classFile: ClassFile): ModuleDocument {
         return ModuleDocument(styles, attribute, classFile)
     }
 
     override fun offsetToPosition(offset: Int): Int = offset
+
+    inner class ModuleAttributeValueDetailPane : KeyValueDetailPane<ModuleAttribute>(ModuleAttribute::class.java, services) {
+        override fun addLabels() {
+            addConstantPoolLink("Module version:", ModuleAttribute::moduleVersionIndex)
+        }
+    }
 }
 
 class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribute, classFile: ClassFile) : AttributeDocument(styles, classFile) {
@@ -33,6 +42,11 @@ class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribut
     }
 
     override fun addContent(): LineNumberCounts? {
+        appendString(attribute.moduleFlagsVerbose, STYLE_NORMAL)
+        appendString((if (length > 0) " " else "") + "module", STYLE_NORMAL)
+        addConstantPoolLink(attribute.moduleNameIndex)
+        appendString(" {", STYLE_NORMAL)
+
         attribute.requiresEntries.textBlock { requiresEntry ->
             addStatement("requires", requiresEntry.flagsVerbose, requiresEntry.index) {
                 if (requiresEntry.versionIndex > 0) {
@@ -54,6 +68,9 @@ class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribut
                 appendParameters(providesEntry.withIndices, "with")
             }
         }
+
+        appendString("}", STYLE_NORMAL)
+        appendBatchLineFeed()
         return null
     }
 
@@ -66,7 +83,7 @@ class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribut
     }
 
     private fun addStatement(keyword: String, flagsVerbose: String, index: Int, additional: (() -> Unit)? = null) {
-        appendString("$keyword $flagsVerbose".trim(), STYLE_NORMAL)
+        appendString("$TAB$keyword $flagsVerbose".trimEnd(), STYLE_NORMAL)
         addConstantPoolLink(index)
         additional?.invoke()
         appendBatchLineFeed()
@@ -79,7 +96,7 @@ class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribut
             }
             if (indices.size > 1) {
                 appendBatchLineFeed()
-                appendString("    ", STYLE_NORMAL)
+                appendString(TAB.repeat(2), STYLE_NORMAL)
             }
             addConstantPoolLink(index)
             if (i < indices.size - 1) {

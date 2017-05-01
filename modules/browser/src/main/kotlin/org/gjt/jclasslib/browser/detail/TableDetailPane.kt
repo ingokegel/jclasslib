@@ -14,7 +14,6 @@ import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.LinkMouseListener
-import java.awt.BorderLayout
 import java.awt.Point
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
@@ -27,7 +26,7 @@ import javax.swing.event.TableColumnModelListener
 import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 
-abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
+abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, services: BrowserServices) : DetailPaneWithKeyValues<T>(elementClass, services) {
 
     protected val table: JTable = JTable().apply {
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
@@ -114,13 +113,14 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
         get() = false
 
     override fun setupComponent() {
-        layout = BorderLayout()
+        super.setupComponent()
         add(JScrollPane(table).apply {
             viewport.background = UIManager.getColor("Table.background")
-        }, BorderLayout.CENTER)
+        }, "dock center")
     }
 
     override fun show(treePath: TreePath) {
+        super.show(treePath)
         val tableModel = getTableModel(treePath)
         table.apply {
             model = tableModel

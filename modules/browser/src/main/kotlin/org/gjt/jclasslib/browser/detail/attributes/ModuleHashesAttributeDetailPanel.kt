@@ -12,25 +12,11 @@ import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.HashEntry
 import org.gjt.jclasslib.structures.attributes.ModuleHashesAttribute
-import java.awt.BorderLayout
 import java.util.*
-import javax.swing.JPanel
-import javax.swing.tree.TreePath
 
 class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPane<ModuleHashesAttribute>(ModuleHashesAttribute::class.java, services) {
 
-    private val keyValueDetailPanel = ModuleHashesKeyValueDetailPane()
-
-    override fun setupComponent() {
-        super.setupComponent()
-        add(keyValueDetailPanel.displayComponent, BorderLayout.NORTH)
-    }
-
-    override fun show(treePath: TreePath) {
-        super.show(treePath)
-        keyValueDetailPanel.show(treePath)
-    }
-
+    override fun createKeyValueDetailPane() = ModuleHashesKeyValueDetailPane()
     override fun createTableModel(attribute: ModuleHashesAttribute) = AttributeTableModel(attribute.hashEntries)
 
     inner class AttributeTableModel(rows: Array<HashEntry>) : ColumnTableModel<HashEntry>(rows) {
@@ -52,12 +38,6 @@ class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPa
     }
 
     inner class ModuleHashesKeyValueDetailPane : KeyValueDetailPane<ModuleHashesAttribute>(ModuleHashesAttribute::class.java, services) {
-
-        override fun setupComponent() {
-            super.setupComponent()
-            add(JPanel())
-        }
-
         override fun addLabels() {
             addConstantPoolLink("Algorithm:", ModuleHashesAttribute::algorithmIndex)
         }

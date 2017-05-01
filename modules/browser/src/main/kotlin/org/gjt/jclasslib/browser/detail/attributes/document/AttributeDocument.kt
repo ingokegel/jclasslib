@@ -142,6 +142,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         val ATTRIBUTE_NAME_HOVER_HIGHLIGHT = "hoverHighlight"
 
         val DOTTED_STROKE = BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0.toFloat(), floatArrayOf(3.toFloat(), 4.toFloat()), 0.0f)
+        val TAB = "    "
 
         val STYLE_NORMAL = style()
         val STYLE_SMALL = style {

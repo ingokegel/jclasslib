@@ -13,8 +13,6 @@ import org.gjt.jclasslib.structures.attributes.ModuleResolutionAttribute
 
 class ModuleResolutionAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<ModuleResolutionAttribute>(ModuleResolutionAttribute::class.java, services) {
     override fun addLabels() {
-        addDetail("Resolution:") { element ->
-            element.resolution.toString()
-        }
+        addDetail("Resolution:") { attribute -> attribute.resolution.toString() }
     }
 }

@@ -36,7 +36,7 @@ class ExportsEntry : SubStructure() {
      * Verbose description of the access flags
      */
     val flagsVerbose: String
-        get() = formatAccessFlagsVerbose(AccessFlag.EXPORTS_ACCESS_FLAGS, flags)
+        get() = formatAccessFlagsVerbose(AccessFlag.EXPORTS_FLAGS, flags)
 
     override fun readData(input: DataInput) {
         index = input.readUnsignedShort()

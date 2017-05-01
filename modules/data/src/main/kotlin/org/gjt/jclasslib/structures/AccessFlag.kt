@@ -162,7 +162,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Access flags for Module attribute
          */
-        val MODULE_ACCESS_FLAGS = enumSet(
+        val MODULE_FLAGS = enumSet(
                 OPEN,
                 SYNTHETIC,
                 MANDATED
@@ -171,7 +171,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Access flags for requires entry in the Module attribute
          */
-        val REQUIRES_ACCESS_FLAGS = enumSet(
+        val REQUIRES_FLAGS = enumSet(
                 TRANSITIVE,
                 STATIC_PHASE,
                 SYNTHETIC,
@@ -180,7 +180,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         /**
          * Access flags for exports entry in the Module attribute
          */
-        val EXPORTS_ACCESS_FLAGS = enumSet(
+        val EXPORTS_FLAGS = enumSet(
                 SYNTHETIC,
                 MANDATED
         )

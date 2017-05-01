@@ -11,7 +11,7 @@ package org.gjt.jclasslib.browser.detail.attributes.document
 import org.gjt.jclasslib.browser.BrowserHistory
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
-import org.gjt.jclasslib.browser.DetailPane
+import org.gjt.jclasslib.browser.detail.DetailPaneWithKeyValues
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument.*
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
@@ -26,7 +26,7 @@ import javax.swing.text.*
 import javax.swing.text.AbstractDocument.AbstractElement
 import javax.swing.tree.TreePath
 
-abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(elementClass: Class<T>, private val documentClass: Class<D>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
+abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(elementClass: Class<T>, private val documentClass: Class<D>, services: BrowserServices) : DetailPaneWithKeyValues<T>(elementClass, services) {
 
     protected val textPane = AttributeTextPane()
 
@@ -41,11 +41,12 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     }
 
     override fun setupComponent() {
-        layout = BorderLayout()
-        add(scrollPane, BorderLayout.CENTER)
+        super.setupComponent()
+        add(scrollPane, "dock center")
     }
 
     override fun show(treePath: TreePath) {
+        super.show(treePath)
         val attribute = getElement(treePath)
         val detailDocument = attributeToDocument.getOrPut(attribute) {
             createDocument(styles, attribute, services.classFile)
