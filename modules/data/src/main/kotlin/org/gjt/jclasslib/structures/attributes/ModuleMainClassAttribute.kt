@@ -15,7 +15,8 @@ import java.io.DataOutput
 /**
  * Describes a ModuleMainClass attribute structure.
  */
-class ModuleMainClassAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
+class
+ModuleMainClassAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
      * Constant pool index of the CONSTANT_Class_info structure containing the module main class.

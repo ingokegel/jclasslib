@@ -34,6 +34,7 @@ class AttributeDetailPane(services: BrowserServices) : MultiDetailPane<Attribute
         addCard(MethodParametersAttribute::class.java, MethodParametersAttributeDetailPane(services))
         addCard(ModuleAttribute::class.java, ModuleAttributeDetailPane(services))
         addCard(ModuleMainClassAttribute::class.java, ModuleMainClassAttributeDetailPane(services))
+        addCard(ModulePackagesAttribute::class.java, ModulePackagesAttributeDetailPane(services))
     }
 
     override fun createGenericInfoPane() = GenericAttributeDetailPane(services)
