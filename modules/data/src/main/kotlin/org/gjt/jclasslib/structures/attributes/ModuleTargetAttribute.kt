@@ -18,22 +18,16 @@ import java.io.DataOutput
 class ModuleTargetAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
-     * Constant pool index of the CONSTANT_Utf8_info structure containing the OS name.
+     * Constant pool index of the CONSTANT_Utf8_info structure containing the platform name.
      */
-    var osNameIndex: Int = 0
-    /**
-     * Constant pool index of the CONSTANT_Utf8_info structure containing the OS architecture.
-     */
-    var osArchIndex: Int = 0
+    var platformIndex: Int = 0
 
     override fun readData(input: DataInput) {
-        osNameIndex = input.readUnsignedShort()
-        osArchIndex = input.readUnsignedShort()
+        platformIndex = input.readUnsignedShort()
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeShort(osNameIndex)
-        output.writeShort(osArchIndex)
+        output.writeShort(platformIndex)
     }
 
     override fun getAttributeLength(): Int =  4

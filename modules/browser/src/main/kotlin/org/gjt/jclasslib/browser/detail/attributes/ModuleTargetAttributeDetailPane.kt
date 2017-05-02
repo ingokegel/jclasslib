@@ -13,7 +13,6 @@ import org.gjt.jclasslib.structures.attributes.ModuleTargetAttribute
 
 class ModuleTargetAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<ModuleTargetAttribute>(ModuleTargetAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("OS name:", ModuleTargetAttribute::osNameIndex)
-        addConstantPoolLink("OS arch:", ModuleTargetAttribute::osArchIndex)
+        addConstantPoolLink("Platform:", ModuleTargetAttribute::platformIndex)
     }
 }
