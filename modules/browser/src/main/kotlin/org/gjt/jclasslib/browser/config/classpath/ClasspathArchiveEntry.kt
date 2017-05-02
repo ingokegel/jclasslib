@@ -15,31 +15,45 @@ import javax.swing.tree.DefaultTreeModel
 
 class ClasspathArchiveEntry(fileName : String) : ClasspathEntry(fileName) {
 
+    private val moduleName by lazy {
+        JarFile(file).use { jarFile ->
+            val moduleInfoEntry = jarFile.getJarEntry(MODULE_INFO_CLASS_FILE_NAME)
+            if (moduleInfoEntry != null) {
+                getModuleName(jarFile.getInputStream(moduleInfoEntry))
+            } else {
+                null
+            }
+        } ?: UNNAMED_MODULE
+    }
+
     override fun saveWorkspace(element: Element) {
         element.addElement(NODE_NAME) {
             setAttribute("path", file.path)
         }
     }
 
-    override fun findClass(className: String): FindResult? {
-        val fileName = className.replace('.', '/') + ".class"
-        try {
-            val jarFile = JarFile(file)
-            val entry = jarFile.getJarEntry(fileName)
-            if (entry != null) {
-                return FindResult(file.path + "!" + fileName)
+    override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
+        if (!modulePathSelection || getModuleName(className) == moduleName) {
+            val fileName = getClassPathClassName(className, modulePathSelection).replace('.', '/') + ".class"
+            try {
+                val jarFile = JarFile(file)
+                val entry = jarFile.getJarEntry(fileName)
+                if (entry != null) {
+                    return FindResult(file.path + "!" + fileName, moduleName)
+                }
+            } catch (e: IOException) {
             }
-        } catch (e: IOException) {
         }
         return null
     }
 
-    override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
+    override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
         try {
-            val jarFile = JarFile(file)
-            jarFile.entries().iterator().forEach {
-                if (!it.isDirectory && it.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX)) {
-                    addEntry(it.name, model, reset)
+            JarFile(file).use { jarFile ->
+                jarFile.entries().iterator().forEach {
+                    if (!it.isDirectory && it.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX)) {
+                        addEntry(it.name, moduleName, classPathModel, modulePathModel, reset)
+                    }
                 }
             }
         } catch (ex: IOException) {

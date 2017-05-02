@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.util.ClosableTabComponent
 import org.gjt.jclasslib.util.DnDTabbedPane
 import java.awt.Component
@@ -44,19 +45,18 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
         other.tabs().toList().forEach { addTab(it) }
     }
 
-    fun addTab(fileName: String, browserPath: BrowserPath? = null) =
-            BrowserTab(fileName, container.frame).apply {
+    fun addTab(fileName: String, moduleName: String, browserPath: BrowserPath? = null) =
+            BrowserTab(fileName, moduleName, container.frame).apply {
                 addTab(this)
                 setBrowserPath(browserPath)
             }
 
     fun addTab(browserTab: BrowserTab) {
-        val matchResult = MODULE_INFO_REGEX.matchEntire(browserTab.fileName)
-        val title = if (matchResult != null) {
-            matchResult.groupValues[1]
+        val title = if (browserTab.moduleName != ClasspathEntry.UNNAMED_MODULE) {
+            browserTab.moduleName + "/"
         } else {
-            browserTab.browserComponent.title
-        }
+            ""
+        } + browserTab.browserComponent.title
         addTab(title, browserTab)
         selectedComponent = browserTab
     }
@@ -111,10 +111,6 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
                 event.dropComplete(false)
             }
         }
-    }
-
-    companion object {
-        val MODULE_INFO_REGEX = Regex(".*/(.*/module-info).class")
     }
 }
 

@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser
 
 import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathJrtEntry
 import org.gjt.jclasslib.browser.config.classpath.FindResult
 import org.gjt.jclasslib.io.ClassFileReader
@@ -26,7 +27,7 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
-class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), BrowserServices {
+class BrowserTab(val fileName: String, val moduleName: String, frame : BrowserFrame) : JPanel(), BrowserServices {
 
     private val tabbedPane: BrowserTabbedPane
         get() = SwingUtilities.getAncestorOfClass(BrowserTabbedPane::class.java, this) as BrowserTabbedPane
@@ -62,7 +63,7 @@ class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), Browser
                 }
             } else {
                 try {
-                    tabbedPane.addTab(findResult.fileName, browserPath)
+                    tabbedPane.addTab(findResult.fileName, findResult.moduleName, browserPath)
                 } catch (e: IOException) {
                     GUIHelper.showMessage(parentFrame, e.message, JOptionPane.ERROR_MESSAGE)
                 }
@@ -72,7 +73,7 @@ class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), Browser
     }
 
     private tailrec fun findClass(className: String): FindResult? {
-        val findResult: FindResult? = parentFrame.config.findClass(className)
+        val findResult: FindResult? = parentFrame.config.findClass(className, false)
         if (findResult != null) {
             return findResult
         } else {
@@ -148,6 +149,7 @@ class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), Browser
     fun saveWorkspace(element: Element) {
         element.addElement(NODE_NAME) {
             setAttribute(ATTRIBUTE_FILE_NAME, fileName)
+            setAttribute(ATTRIBUTE_MODULE_NAME, moduleName)
             browserComponent.browserPath?.saveWorkspace(this)
         }
     }
@@ -155,9 +157,10 @@ class BrowserTab(val fileName: String, frame : BrowserFrame) : JPanel(), Browser
     companion object {
         val NODE_NAME = "tab"
         private val ATTRIBUTE_FILE_NAME = "fileName"
+        private val ATTRIBUTE_MODULE_NAME = "moduleName"
 
         fun create(element: Element, frame : BrowserFrame): BrowserTab {
-            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), frame)
+            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), element.getAttributeNode(ATTRIBUTE_MODULE_NAME)?.value ?: ClasspathEntry.UNNAMED_MODULE, frame)
         }
     }
 }

@@ -50,7 +50,7 @@ class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribut
         attribute.requiresEntries.textBlock { requiresEntry ->
             addStatement("requires", requiresEntry.flagsVerbose, requiresEntry.index) {
                 if (requiresEntry.versionIndex > 0) {
-                    appendString(" version ", STYLE_VERSION)
+                    appendString(" version", STYLE_VERSION)
                     addConstantPoolLink(requiresEntry.versionIndex)
                 }
             }

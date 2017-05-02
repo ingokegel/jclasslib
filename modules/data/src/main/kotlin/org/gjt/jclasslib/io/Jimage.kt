@@ -28,12 +28,12 @@ fun getJrtInputStream(fileName: String, jreHome: File): InputStream {
 }
 
 /**
- * Find a module class in the JRT (Java 9+)
- * @param className the module class name
+ * Find a class with a prepended module name in the JRT (Java 9+)
+ * @param moduleNameAndClassName the module name and the class name, separated by a slash
  * @param jreHome the home directory of the JRE
  */
-fun findModuleInJrt(className: String, jreHome: File): Path? {
-    return getModulesRoot(jreHome).resolve(className + CLASSFILE_SUFFIX)
+fun findClassWithModuleNameInJrt(moduleNameAndClassName: String, jreHome: File): Path? {
+    return getModulesRoot(jreHome).resolve(moduleNameAndClassName + CLASSFILE_SUFFIX)
 }
 /**
  * Find a class in the JRT (Java 9+)
@@ -69,13 +69,9 @@ fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
  * @param jreHome the home directory of the JRE
  * @param block the code that should be executed for each class name
  */
-fun forEachClassNameInJrt(jreHome: File, block : (className :String) -> Unit) {
+fun forEachClassNameInJrt(jreHome: File, block : (moduleName: String, className :String) -> Unit) {
     forEachClassInJrt(jreHome) { path ->
-        if (path.endsWith("module-info.class")) {
-            block(path.subpath(0, path.nameCount).toString())
-        } else {
-            block(path.subpath(2, path.nameCount).toString())
-        }
+        block(path.getName(1).toString(), path.subpath(2, path.nameCount).toString())
     }
 }
 

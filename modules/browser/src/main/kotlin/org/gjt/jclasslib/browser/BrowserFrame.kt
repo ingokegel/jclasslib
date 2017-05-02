@@ -14,6 +14,7 @@ import kotlinx.dom.writeXmlString
 import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
+import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.DefaultAction
@@ -61,15 +62,17 @@ class BrowserFrame : JFrame() {
 
     val browseClasspathAction = DefaultAction("Browse classpath", "Browse the current classpath to open a class file", "tree_small.png", "tree_large.png") {
         classpathBrowser.isVisible = true
-        classpathBrowser.selectedClassNames.forEach {selectedClassName ->
-            val findResult = config.findClass(selectedClassName)
-            if (findResult != null) {
-                repaintNow()
-                withWaitCursor {
-                    frameContent.openClassFile(findResult.fileName)
+        if (!classpathBrowser.isCanceled) {
+            classpathBrowser.selectedClassNames.forEach { selectedClassName ->
+                val findResult = config.findClass(selectedClassName, classpathBrowser.isModulePathSelection())
+                if (findResult != null) {
+                    repaintNow()
+                    withWaitCursor {
+                        frameContent.openClassFile(findResult.fileName, findResult.moduleName)
+                    }
+                } else {
+                    GUIHelper.showMessage(this, "Error loading " + selectedClassName, JOptionPane.ERROR_MESSAGE)
                 }
-            } else {
-                GUIHelper.showMessage(this, "Error loading " + selectedClassName, JOptionPane.ERROR_MESSAGE)
             }
         }
     }
@@ -247,8 +250,8 @@ class BrowserFrame : JFrame() {
 
     private val recentMenu: RecentMenu = RecentMenu(this)
     private val classpathSetupDialog: ClasspathSetupDialog by lazy { ClasspathSetupDialog(this) }
-    private val classpathBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, "Configured classpath:", true) }
-    private val jarBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, "Classes in selected JAR file:", false) }
+    private val classpathBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, "Choose From Configured Classpath", true) }
+    private val jarBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, "Choose From Classes In Selected JAR File", false) }
 
     fun openWorkspace(file: File) {
 
@@ -505,10 +508,13 @@ class BrowserFrame : JFrame() {
             classpathComponent = entry
             isVisible = true
         }
-        jarBrowser.selectedClassNames.forEach { selectedClassName ->
-            val fileName = file.path + "!" + selectedClassName + ".class"
-            frameContent.openClassFile(fileName)
-            config.addClasspathArchive(file.path)
+        if (!jarBrowser.isCanceled) {
+            jarBrowser.selectedClassNames.forEach { selectedClassName ->
+                val classPathClassName = ClasspathEntry.getClassPathClassName(selectedClassName, jarBrowser.isModulePathSelection())
+                val fileName = file.path + "!" + classPathClassName + ".class"
+                frameContent.openClassFile(fileName)
+                config.addClasspathArchive(file.path)
+            }
         }
     }
 

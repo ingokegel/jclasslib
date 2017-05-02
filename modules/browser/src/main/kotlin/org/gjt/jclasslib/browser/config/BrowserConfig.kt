@@ -66,24 +66,24 @@ class BrowserConfig : ClasspathComponent {
         mergedEntries.clear()
     }
 
-    override fun findClass(className: String): FindResult? {
+    override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
         classpath.forEach { entry ->
-            val findResult = entry.findClass(className)
+            val findResult = entry.findClass(className, modulePathSelection)
             if (findResult != null) {
                 return findResult
             }
         }
-        return createJreEntry()?.findClass(className)
+        return createJreEntry()?.findClass(className, modulePathSelection)
     }
 
-    override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
+    override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
         classpath.forEach { entry ->
             if (reset || !mergedEntries.contains(entry)) {
-                entry.mergeClassesIntoTree(model, reset)
+                entry.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
                 mergedEntries.add(entry)
             }
         }
-        createJreEntry()?.mergeClassesIntoTree(model, reset)
+        createJreEntry()?.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
     }
 
     private fun createJreEntry(): ClasspathEntry? {

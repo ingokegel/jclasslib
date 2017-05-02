@@ -10,9 +10,19 @@ package org.gjt.jclasslib.browser.config.classpath
 import kotlinx.dom.build.addElement
 import org.w3c.dom.Element
 import java.io.File
+import java.io.FileInputStream
 import javax.swing.tree.DefaultTreeModel
 
-class ClasspathDirectoryEntry(fileName : String) : ClasspathEntry(fileName) {
+class ClasspathDirectoryEntry(fileName: String) : ClasspathEntry(fileName) {
+
+    private val moduleName by lazy {
+        val moduleInfoFile = File(file, MODULE_INFO_CLASS_FILE_NAME)
+        if (moduleInfoFile.exists()) {
+            getModuleName(FileInputStream(moduleInfoFile))
+        } else {
+            null
+        } ?: UNNAMED_MODULE
+    }
 
     override fun saveWorkspace(element: Element) {
         element.addElement(NODE_NAME) {
@@ -20,17 +30,30 @@ class ClasspathDirectoryEntry(fileName : String) : ClasspathEntry(fileName) {
         }
     }
 
-    override fun findClass(className: String): FindResult? {
-        val classFile = File(file, className.replace('.', '/') + ".class")
-        if (classFile.exists() && classFile.canRead()) {
-            return FindResult(classFile.path)
+    override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
+        if (!modulePathSelection || getModuleName(className) == moduleName) {
+            val classFile = File(file, getClassPathClassName(className, modulePathSelection).replace('.', '/') + ".class")
+            if (classFile.exists() && classFile.canRead()) {
+                return FindResult(classFile.path, moduleName)
+            }
         }
         return null
     }
 
-    override fun mergeClassesIntoTree(model: DefaultTreeModel, reset: Boolean) {
-        val rootNode = model.root as ClassTreeNode
-        mergeDirectory(file, rootNode, model, reset)
+    override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
+        mergeClassesIntoClassPath(classPathModel, reset)
+        mergeClassesIntoModulePath(modulePathModel, reset)
+    }
+
+    private fun mergeClassesIntoClassPath(classPathModel: DefaultTreeModel, reset: Boolean) {
+        val rootNode = classPathModel.root as ClassTreeNode
+        mergeDirectory(file, rootNode, classPathModel, reset)
+    }
+
+    private fun mergeClassesIntoModulePath(modulePathModel: DefaultTreeModel, reset: Boolean) {
+        val rootNode = modulePathModel.root as ClassTreeNode
+        val moduleNode = addOrFindNode(moduleName, rootNode, true, modulePathModel, reset)
+        mergeDirectory(file, moduleNode, modulePathModel, reset)
     }
 
     private fun mergeDirectory(directory: File, parentNode: ClassTreeNode, model: DefaultTreeModel, reset: Boolean) {
@@ -46,11 +69,11 @@ class ClasspathDirectoryEntry(fileName : String) : ClasspathEntry(fileName) {
                         model.nodesWereRemoved(parentNode, intArrayOf(deletionIndex), arrayOf<Any>(directoryNode))
                     }
                 }
-            } else if (file.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX)) {
+            } else if (file.name.toLowerCase().endsWith(ClasspathEntry.CLASSFILE_SUFFIX) &&
+                    (!file.name.endsWith(MODULE_INFO_CLASS_FILE_NAME) || parentNode.parent != null)) {
                 addOrFindNode(file.name.stripClassSuffix(), parentNode, false, model, reset)
             }
         }
-
     }
 
     companion object {

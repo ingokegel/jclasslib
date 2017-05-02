@@ -17,7 +17,7 @@ import javax.swing.*
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-class ClasspathBrowser(private val frame: BrowserFrame, private val header: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame) {
+class ClasspathBrowser(private val frame: BrowserFrame, title: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame, title) {
 
     private val classPathChangeListener = object : ClasspathChangeListener {
         override fun classpathChanged(event: ClasspathChangeEvent) {
@@ -38,25 +38,38 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
             clear()
         }
 
-    private val tree: JTree = JTree(ClassTreeNode()).apply {
-        isRootVisible = false
-        showsRootHandles = true
-        putClientProperty("JTree.lineStyle", "Angled")
+    private val classPathTree: JTree = createTree("Class Path")
+    private val modulePathTree: JTree = createTree("Module Path")
+    private val trees = listOf(classPathTree, modulePathTree)
 
-        addTreeSelectionListener {
-            val selectionPath = selectionPath
-            okAction.isEnabled = if (selectionPath != null) {
-                !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
-            } else false
-
+    private val tabbedPane = JTabbedPane().apply {
+        for (tree in trees) {
+            addTab(tree.name, JScrollPane(tree))
         }
-        addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(event: MouseEvent) {
-                if (event.clickCount == 2 && isValidDoubleClickPath(event)) {
-                    okAction()
-                }
+    }
+
+    private fun createTree(treeName : String): JTree {
+        return JTree(ClassTreeNode()).apply {
+            name = treeName
+            isRootVisible = false
+            showsRootHandles = true
+            putClientProperty("JTree.lineStyle", "Angled")
+
+            addTreeSelectionListener {
+                val selectionPath = selectionPath
+                okAction.isEnabled = if (selectionPath != null) {
+                    !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
+                } else false
+
             }
-        })
+            addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(event: MouseEvent) {
+                    if (event.clickCount == 2 && isValidDoubleClickPath(event, this@apply)) {
+                        okAction()
+                    }
+                }
+            })
+        }
     }
 
     private val setupAction = DefaultAction("Setup classpath") {
@@ -74,8 +87,12 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
         isEnabled = false
     }
 
+    var isCanceled: Boolean = false
+        private set
+
     private val cancelAction = DefaultAction("Cancel") {
         isVisible = false
+        isCanceled = true
     }.apply {
         accelerator(KeyEvent.VK_ESCAPE, 0)
         applyAcceleratorTo(contentPane as JComponent)
@@ -94,7 +111,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
      */
     val selectedClassNames: Collection<String>
         get() {
-            val selectionPaths = tree.selectionPaths?.toList() ?: emptyList()
+            val selectionPaths = getSelectedTree().selectionPaths?.toList() ?: emptyList()
             return selectionPaths.map {selectionPath ->
                 val buffer = StringBuilder()
                 for (i in 1..selectionPath.pathCount - 1) {
@@ -111,8 +128,11 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
         setupComponent()
     }
 
+    fun isModulePathSelection(): Boolean = getSelectedTree() == modulePathTree
+
     override fun setVisible(visible: Boolean) {
         if (visible) {
+            isCanceled = false
             if (updateClassPathFromFrame) {
                 classpathComponent = frame.config
             }
@@ -121,16 +141,17 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
     }
 
     fun clear() {
-        //The tree will not be synchronized automatically on the next setVisible.
-        tree.model = DefaultTreeModel(ClassTreeNode())
+        //The trees will not be synchronized automatically on the next setVisible.
+        for (tree in trees) {
+            tree.model = DefaultTreeModel(ClassTreeNode())
+        }
     }
 
     private fun setupComponent() {
         (contentPane as JComponent).apply {
             layout = MigLayout("wrap", "[grow]", "[][grow]para[nogrid]")
 
-            add(JLabel(header))
-            add(JScrollPane(tree), "grow")
+            add(tabbedPane, "grow")
 
             if (updateClassPathFromFrame) {
                 add(setupAction.createTextButton(), "tag help2")
@@ -154,7 +175,6 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
 
         setSize(450, 450)
         isModal = true
-        title = "Choose a class"
         GUIHelper.centerOnParentWindow(this, owner)
         defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
     }
@@ -165,7 +185,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
         }
     }
 
-    private fun isValidDoubleClickPath(event: MouseEvent): Boolean {
+    private fun isValidDoubleClickPath(event: MouseEvent, tree: JTree): Boolean {
         val locationPath = tree.getPathForLocation(event.x, event.y)
         val selectionPath = tree.selectionPath
         if (selectionPath == null || locationPath == null || selectionPath != locationPath) {
@@ -175,16 +195,28 @@ class ClasspathBrowser(private val frame: BrowserFrame, private val header: Stri
     }
 
     private fun sync(reset: Boolean) {
-        val model = if (reset) DefaultTreeModel(ClassTreeNode()) else tree.model as DefaultTreeModel
+        val classPathModel = getModel(reset, classPathTree)
+        val modulePathModel = getModel(reset, modulePathTree)
         progressDialog.task = {
-            classpathComponent?.mergeClassesIntoTree(model, reset)
+            classpathComponent?.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
         }
         progressDialog.isVisible = true
         if (reset) {
-            tree.model = model
+            classPathTree.applyModel(classPathModel)
+            modulePathTree.applyModel(modulePathModel)
         }
-        tree.expandPath(TreePath(model.root))
         resetOnNextMerge = false
         needsMerge = false
+    }
+
+    private fun JTree.applyModel(model: DefaultTreeModel) {
+        this.model = model
+        expandPath(TreePath(model.root))
+    }
+
+    private fun getModel(reset: Boolean, tree: JTree) = if (reset) DefaultTreeModel(ClassTreeNode()) else tree.model as DefaultTreeModel
+
+    private fun getSelectedTree(): JTree {
+        return trees[tabbedPane.selectedIndex]
     }
 }
