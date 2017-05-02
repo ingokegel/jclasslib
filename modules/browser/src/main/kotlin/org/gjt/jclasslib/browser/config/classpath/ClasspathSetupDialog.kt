@@ -13,7 +13,6 @@ import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.MultiFileFilter
 import java.awt.BorderLayout
-import java.awt.TextField
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
@@ -32,7 +31,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
             checkEnabledStatus()
         }
     }
-    private val jreHomeTextField = TextField()
+    private val jreHomeTextField = JTextField()
 
     private val addAction = DefaultAction("Add classpath entry", "Add a classpath entry (INS)", "add.png") {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
