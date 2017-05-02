@@ -197,6 +197,9 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
     private fun sync(reset: Boolean) {
         val classPathModel = getModel(reset, classPathTree)
         val modulePathModel = getModel(reset, modulePathTree)
+        resetOnNextMerge = false
+        needsMerge = false
+
         progressDialog.task = {
             classpathComponent?.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
         }
@@ -205,8 +208,6 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
             classPathTree.applyModel(classPathModel)
             modulePathTree.applyModel(modulePathModel)
         }
-        resetOnNextMerge = false
-        needsMerge = false
     }
 
     private fun JTree.applyModel(model: DefaultTreeModel) {

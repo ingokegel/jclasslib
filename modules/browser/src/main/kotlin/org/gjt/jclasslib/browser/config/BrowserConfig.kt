@@ -15,11 +15,16 @@ import org.w3c.dom.Element
 import java.io.File
 import java.util.*
 import javax.swing.tree.DefaultTreeModel
+import kotlin.properties.Delegates
 
 class BrowserConfig : ClasspathComponent {
 
     val classpath: MutableList<ClasspathEntry> = ArrayList()
-    var jreHome: String = System.getProperty("java.home")
+    var jreHome: String by Delegates.observable(System.getProperty("java.home")) { _, old, new ->
+        if (old != new) {
+            fireClasspathChanged(true)
+        }
+    }
 
     private val mergedEntries = HashSet<ClasspathEntry>()
     private val changeListeners = HashSet<ClasspathChangeListener>()
@@ -112,7 +117,7 @@ class BrowserConfig : ClasspathComponent {
 
     fun readWorkspace(element: Element) {
         clear()
-        element.firstChildElement(NODE_NAME_CLASSPATH)?.let {classpathElement ->
+        element.firstChildElement(NODE_NAME_CLASSPATH)?.let { classpathElement ->
             jreHome = classpathElement.getAttribute(ATTRIBUTE_JRE_HOME).let { if (it.isEmpty() || !File(it).exists()) jreHome else it }
             classpathElement.childElements().forEach { entryElement ->
                 ClasspathEntry.create(entryElement)?.apply {
