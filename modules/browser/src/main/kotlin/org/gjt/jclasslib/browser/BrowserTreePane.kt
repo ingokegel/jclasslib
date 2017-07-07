@@ -253,8 +253,8 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
     private fun BrowserTreeNode.addArrayElementValueEntry(elementValue: ArrayElementValue) {
         val entries = elementValue.elementValueEntries
-        entries.forEachIndexed { i, elementValue ->
-            addSingleElementValueEntryNode(elementValue, i, entries.size)
+        entries.forEachIndexed { i, ev ->
+            addSingleElementValueEntryNode(ev, i, entries.size)
         }
     }
 

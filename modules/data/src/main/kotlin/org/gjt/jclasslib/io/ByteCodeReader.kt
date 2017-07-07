@@ -307,7 +307,6 @@ object ByteCodeReader {
 
                 instruction = MultianewarrayInstruction(opcode)
 
-            else -> throw IOException("unhandled opcode " + opcode)
         }
 
         instruction.read(bcis)

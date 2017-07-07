@@ -8,11 +8,9 @@
 package org.gjt.jclasslib.idea
 
 import com.intellij.byteCodeViewer.ByteCodeViewerManager
-import com.intellij.debugger.engine.DebugProcessEvents
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.ide.util.JavaAnonymousClassesHelper
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.module.Module
@@ -28,13 +26,11 @@ import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
-import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.ClassUtil
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
 import com.intellij.psi.util.PsiUtilCore
 import org.gjt.jclasslib.browser.config.BrowserPath
-import org.jetbrains.kotlin.idea.debugger.DebuggerClassNameProvider
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -153,19 +149,5 @@ private fun getClassNameJava(containingClass: PsiClass): String? {
         return getClassNameJava(containingClassOfAnonymous) + JavaAnonymousClassesHelper.getName(containingClass)
     } else {
         return ClassUtil.getJVMClassName(containingClass)
-    }
-}
-
-class KotlinClassNameProvider(project: Project) {
-    private val debuggerClassNameProvider = DebuggerClassNameProvider(DebugProcessEvents(project), listOf(GlobalSearchScope.allScope(project)))
-
-    fun getClassName(element: PsiElement): String? {
-        return debuggerClassNameProvider.classNamesForPosition(element, true).firstOrNull()?.replace('/', '.')
-    }
-
-    companion object {
-        fun getInstance(project: Project): KotlinClassNameProvider {
-            return ServiceManager.getService(project, KotlinClassNameProvider::class.java)
-        }
     }
 }

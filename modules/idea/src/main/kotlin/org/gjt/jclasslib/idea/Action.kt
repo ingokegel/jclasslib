@@ -48,8 +48,8 @@ class ShowBytecodeAction : AnAction() {
         } else {
             val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project)
             val injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile)
-            return injectedEditor?.let { injectedEditor ->
-                findElementInFile(PsiUtilBase.getPsiFileInEditor(injectedEditor, project), injectedEditor)
+            return injectedEditor?.let {
+                findElementInFile(PsiUtilBase.getPsiFileInEditor(it, project), it)
             } ?: findElementInFile(psiFile, editor)
         }
     }

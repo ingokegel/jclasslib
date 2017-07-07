@@ -57,7 +57,6 @@ class StackMapFrameEntry(private val classFile: ClassFile) : SubStructure() {
             StackFrameType.SAME_EXT -> readSameExt(input)
             StackFrameType.APPEND -> readAppend(input)
             StackFrameType.FULL -> readFull(input)
-            else -> throw IllegalStateException(frameType.toString())
         }
     }
 
@@ -115,7 +114,6 @@ class StackMapFrameEntry(private val classFile: ClassFile) : SubStructure() {
             StackFrameType.SAME_EXT -> writeSameExt(output)
             StackFrameType.APPEND -> writeAppend(output)
             StackFrameType.FULL -> writeFull(output)
-            else -> throw IllegalStateException(frameType.name)
         }
     }
 
