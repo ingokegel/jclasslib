@@ -1,6 +1,6 @@
 apply plugin: 'idea'
 
-version = '5.2-beta1'
+version = '5.2'
 ext.mediaDir = file('media')
 
 buildDir = file('build/gradle')
@@ -79,7 +79,7 @@ task clean {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.0.1'
     distributionType = Wrapper.DistributionType.ALL
 }
 
