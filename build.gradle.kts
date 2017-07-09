@@ -146,6 +146,10 @@ subprojects {
                 from(the<JavaPluginConvention>().sourceSets["main"].allSource)
             }
 
+            "publishToMavenLocal" {
+                dependsOn("publishModulePublicationToMavenLocal", "jar")
+            }
+
             gradle.projectsEvaluated {
                 publications {
                     "Module"(MavenPublication::class) {
