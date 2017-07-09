@@ -11,6 +11,8 @@ apply {
     plugin("maven-publish")
 }
 
+configurePublishing()
+
 val kotlinVersion = rootProject.extra["kotlinVersion"]
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")

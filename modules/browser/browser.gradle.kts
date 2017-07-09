@@ -11,6 +11,8 @@ apply {
     plugin("maven-publish")
 }
 
+configurePublishing()
+
 application {
     mainClassName = "org.gjt.jclasslib.browser.BrowserApplication"
 }

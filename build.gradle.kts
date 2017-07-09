@@ -1,9 +1,5 @@
-import com.jfrog.bintray.gradle.BintrayExtension
-import com.jfrog.bintray.gradle.BintrayUploadTask
-import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
-import kotlinx.dom.*
 
 plugins {
     idea
@@ -45,20 +41,12 @@ buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${extra["kotlinVersion"]}")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.15")
-
-        // for local dokka in lib-compile
-        //classpath ':dokka-fatjar'
-        //classpath ':dokka-gradle-plugin'
-        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3")
-        classpath("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
     }
 }
 
 val mavenUrls: List<URI> by extra
 
 subprojects {
-
-    val subProject = this
 
     buildDir = File(rootProject.buildDir, path.substring(1).replace(':', '/'))
 
@@ -97,68 +85,6 @@ subprojects {
         tasks.withType<KotlinCompile> {
             kotlinOptions {
                 languageVersion = "1.1"
-            }
-        }
-    }
-
-    // TODO modularize this again once GSK supports it
-    plugins.withType<MavenPublishPlugin> {
-        subProject.apply {
-            plugin("com.jfrog.bintray")
-        }
-
-        val bintrayUser: String? by extra
-        val bintrayApiKey: String? by extra
-
-        configure<BintrayExtension> {
-            if (bintrayUser != null && bintrayApiKey != null) {
-                user = bintrayUser
-                key = bintrayApiKey
-                pkg(closureOf<BintrayExtension.PackageConfig> {
-                    repo = "maven"
-                    name = "jclasslib"
-                    setLicenses("GPL-2.0")
-                })
-                dryRun = subProject.hasProperty("dryRun")
-                publish = true
-                override = subProject.hasProperty("override")
-            }
-            setPublications("Module")
-        }
-
-        val publications = the<PublishingExtension>().publications
-        tasks {
-            "bintrayUpload"(BintrayUploadTask::class) {
-                doFirst {
-                    if (bintrayUser == null || bintrayApiKey == null) {
-                        throw RuntimeException("Specify bintrayUser and bintrayApiKey in gradle.properties")
-                    }
-                }
-            }
-
-            val sourcesJar by creating(Jar::class) {
-                classifier = "sources"
-                from(the<JavaPluginConvention>().sourceSets["main"].allSource)
-            }
-
-            "publishToMavenLocal" {
-                dependsOn("publishModulePublicationToMavenLocal", "jar")
-            }
-
-            gradle.projectsEvaluated {
-                publications {
-                    "Module"(MavenPublication::class) {
-                        from(subProject.components["java"])
-                        artifactId = "jclasslib-${subProject.name}"
-                        artifact(sourcesJar)
-                        pom.withXml {
-                            val dependencies = asElement().firstChildElement("dependencies")
-                            dependencies?.childElements()
-                                    ?.filter { it.firstChildElement("groupId")?.textContent == "com.install4j" }
-                                    ?.forEach { dependencies.removeChild(it) }
-                        }
-                    }
-                }
             }
         }
     }
