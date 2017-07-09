@@ -27,8 +27,7 @@ dependencies {
 val publications = the<PublishingExtension>().publications
 
 tasks {
-    val jar: Jar by tasks
-    jar.apply {
+    val jar by getting(Jar::class) {
         archiveName = "jclasslib-browser.jar"
         manifest(closureOf<Manifest> {
             attributes(mapOf("Main-Class" to the<ApplicationPluginConvention>().mainClassName))

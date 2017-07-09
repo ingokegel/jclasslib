@@ -1,4 +1,3 @@
-import com.install4j.gradle.Install4jExtension
 import com.install4j.gradle.Install4jTask
 
 plugins {
@@ -11,7 +10,7 @@ val macCertPath by project
 val winKeystorePassword by project
 val macKeystorePassword by project
 
-configure<Install4jExtension> {
+install4j {
     if (install4jHomeDir != null) {
         installDir = file(install4jHomeDir)
     }

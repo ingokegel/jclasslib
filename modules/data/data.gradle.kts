@@ -1,6 +1,10 @@
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaTask
 
+plugins {
+    java
+}
+
 apply {
     plugin("kotlin")
     plugin("org.jetbrains.dokka")
@@ -15,8 +19,7 @@ dependencies {
 val publications = the<PublishingExtension>().publications
 
 tasks {
-    val jar: Jar by tasks
-    jar.apply {
+    val jar by getting(Jar::class) {
         archiveName = "jclasslib-library.jar"
     }
 
@@ -27,8 +30,7 @@ tasks {
         into(rootProject.extra["externalLibsDir"])
     }
 
-    val dokka: DokkaTask by tasks
-    dokka.apply {
+    val dokka by getting(DokkaTask::class) {
         sourceDirs = setOf(file("src/main/kotlin"))
         includes = listOf("packages.md")
     }

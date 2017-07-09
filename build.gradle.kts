@@ -1,7 +1,6 @@
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
 import org.gradle.jvm.tasks.Jar
-import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 import kotlinx.dom.*
@@ -11,8 +10,7 @@ plugins {
 }
 
 version = "5.2"
-
-setBuildDir(file("build/gradle"))
+buildDir = file("build/gradle")
 
 var mediaDir: File by extra
 mediaDir = file("media")
@@ -23,14 +21,12 @@ externalLibsDir = file("$buildDir/externalLibs")
 val kotlinVersion: String by extra
 
 buildscript {
-    val kotlinVersion = "1.1.3-2"
-    extra["kotlinVersion"] = kotlinVersion
+    val kotlinVersion by extra("1.1.3-2")
     val kotlinVersionParts = kotlinVersion.split('-')
     extra["kotlinVersionMain"] = kotlinVersionParts[0]
     extra["kotlinVersionHotfix"] = if (kotlinVersionParts.size > 1) "-${kotlinVersionParts[1]}" else  ""
 
-    val mavenUrls = listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository").map { java.net.URI(it) }
-    extra["mavenUrls"] = mavenUrls
+    val mavenUrls by extra(listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository").map { java.net.URI(it) })
 
     repositories {
         flatDir {
@@ -82,7 +78,7 @@ subprojects {
 
     plugins.withType<JavaPlugin> {
         dependencies {
-            testCompile("org.testng:testng:6.8.8")
+            add("testCompile", "org.testng:testng:6.8.8")
         }
 
         tasks.withType<JavaCompile>().forEach {compileJava ->
@@ -132,8 +128,7 @@ subprojects {
 
         val publications = the<PublishingExtension>().publications
         tasks {
-            val bintrayUpload: BintrayUploadTask by tasks
-            bintrayUpload.apply {
+            "bintrayUpload"(BintrayUploadTask::class) {
                 doFirst {
                     if (bintrayUser == null || bintrayApiKey == null) {
                         throw RuntimeException("Specify bintrayUser and bintrayApiKey in gradle.properties")
@@ -158,12 +153,9 @@ subprojects {
                         artifact(sourcesJar)
                         pom.withXml {
                             val dependencies = asElement().firstChildElement("dependencies")
-                            if (dependencies != null) {
-                                dependencies
-                                        .childElements()
-                                        .filter { it.firstChildElement("groupId")?.textContent == "com.install4j" }
-                                        .forEach { dependencies.removeChild(it) }
-                            }
+                            dependencies?.childElements()
+                                    ?.filter { it.firstChildElement("groupId")?.textContent == "com.install4j" }
+                                    ?.forEach { dependencies.removeChild(it) }
                         }
                     }
                 }
@@ -206,8 +198,7 @@ gradle.projectsEvaluated {
     }
 }
 
-val idea: IdeaModel by extensions
-idea.apply {
+idea {
     module {
         name = "root"
         excludeDirs = files("build", "dist", "media").files + excludeDirs
