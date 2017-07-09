@@ -1,6 +1,3 @@
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.Copy
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaTask
 

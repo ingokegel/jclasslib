@@ -1,11 +1,5 @@
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
-import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.api.tasks.testing.Test
-import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.jvm.tasks.Jar
 import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
