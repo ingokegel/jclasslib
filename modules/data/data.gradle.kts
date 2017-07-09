@@ -29,7 +29,7 @@ tasks {
 
     val dokka: DokkaTask by tasks
     dokka.apply {
-        processConfigurations = listOf("compile")
+        sourceDirs = setOf(file("src/main/kotlin"))
         includes = listOf("packages.md")
     }
 

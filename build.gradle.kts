@@ -3,6 +3,7 @@ import com.jfrog.bintray.gradle.BintrayUploadTask
 import org.gradle.jvm.tasks.Jar
 import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.net.URI
 import kotlinx.dom.*
 
 plugins {
@@ -28,19 +29,19 @@ buildscript {
     extra["kotlinVersionMain"] = kotlinVersionParts[0]
     extra["kotlinVersionHotfix"] = if (kotlinVersionParts.size > 1) "-${kotlinVersionParts[1]}" else  ""
 
-    val mavenUrls = listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository")
+    val mavenUrls = listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository").map { java.net.URI(it) }
     extra["mavenUrls"] = mavenUrls
 
     repositories {
         flatDir {
-            setDirs(listOf("lib-compile"))
+            dirs = setOf(file("lib-compile"))
         }
         maven {
-            setUrl("http://dl.bintray.com/jetbrains/intellij-plugin-service")
+            url = java.net.URI("http://dl.bintray.com/jetbrains/intellij-plugin-service")
         }
         for (mavenUrl in mavenUrls) {
             maven {
-                setUrl(mavenUrl)
+                url = mavenUrl
             }
         }
     }
@@ -57,24 +58,24 @@ buildscript {
     }
 }
 
-val mavenUrls: List<String> by extra
+val mavenUrls: List<URI> by extra
 
 subprojects {
 
     val subProject = this
 
-    setBuildDir(File(rootProject.buildDir, path.substring(1).replace(':', '/')))
+    buildDir = File(rootProject.buildDir, path.substring(1).replace(':', '/'))
 
     group = "org.gjt.jclasslib"
     version = rootProject.version
 
     repositories {
         flatDir {
-            setDirs(listOf(file("lib"), file("$rootDir/lib-compile")))
+            dirs = setOf(file("lib"), file("$rootDir/lib-compile"))
         }
         for (mavenUrl in mavenUrls) {
             maven {
-                setUrl(mavenUrl)
+                url = mavenUrl
             }
         }
     }
