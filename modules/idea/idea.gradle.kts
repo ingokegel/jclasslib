@@ -8,6 +8,7 @@ apply {
     plugin("kotlin")
 }
 
+val kotlinVersion = rootProject.extra["kotlinVersion"]
 val kotlinVersionMain = rootProject.extra["kotlinVersionMain"]
 val kotlinVersionHotfix = rootProject.extra["kotlinVersionHotfix"]
 dependencies {

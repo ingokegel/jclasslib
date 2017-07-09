@@ -24,6 +24,8 @@ dependencies {
     compile(project(":data"))
 }
 
+val publications = the<PublishingExtension>().publications
+
 tasks {
     val jar: Jar by tasks
     jar.apply {
@@ -42,6 +44,10 @@ tasks {
 
     "dist" {
         dependsOn(copyDist)
+    }
+
+    publications {
+        "Module"(MavenPublication::class)
     }
 }
 
