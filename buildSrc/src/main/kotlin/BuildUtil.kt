@@ -1,3 +1,5 @@
+@file:Suppress("UnusedImport")
+
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
 import org.gradle.api.Project
