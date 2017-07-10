@@ -149,7 +149,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
 
     private fun setupComponent() {
         (contentPane as JComponent).apply {
-            layout = MigLayout("wrap", "[grow]", "[][grow]para[nogrid]")
+            layout = MigLayout("wrap", "[grow]", "[grow]" + (if (updateClassPathFromFrame) "[]" else "") + "para[nogrid]")
 
             add(tabbedPane, "grow")
 
