@@ -2,6 +2,8 @@
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
+import kotlinx.dom.childElements
+import kotlinx.dom.firstChildElement
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.publish.PublishingExtension
