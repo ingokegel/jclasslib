@@ -8,11 +8,29 @@
 package org.gjt.jclasslib.browser
 
 import com.apple.eawt.Application
+import java.awt.Desktop
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Method
+import java.lang.reflect.Proxy
 
 object MacEventHandler {
     fun init() {
-        Application.getApplication().apply {
-            setAboutHandler { getActiveBrowserFrame()?.aboutAction?.invoke()}
+        try {
+            Application.getApplication().apply {
+                setAboutHandler { getActiveBrowserFrame()?.aboutAction?.invoke()}
+            }
+        } catch (e: NoClassDefFoundError) {
+            val desktop = Desktop.getDesktop()
+            val about = Class.forName("java.awt.desktop.AboutHandler")
+            val proxy : Any = Proxy.newProxyInstance(about.getClassLoader(), arrayOf(about), Java9MacAboutHandler)
+            desktop::class.java.getMethod("setAboutHandler", *arrayOf(about))?.invoke(desktop, proxy)
         }
+    }
+}
+
+
+object Java9MacAboutHandler : InvocationHandler {
+    override fun invoke(proxy: Any?, method: Method?, args: Array<Any?>?) {
+        getActiveBrowserFrame()?.aboutAction?.invoke()
     }
 }
