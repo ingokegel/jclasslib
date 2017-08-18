@@ -21,13 +21,12 @@ object MacEventHandler {
             }
         } catch (e: NoClassDefFoundError) {
             val desktop = Desktop.getDesktop()
-            val about = Class.forName("java.awt.desktop.AboutHandler")
-            val proxy : Any = Proxy.newProxyInstance(about.getClassLoader(), arrayOf(about), Java9MacAboutHandler)
-            desktop::class.java.getMethod("setAboutHandler", *arrayOf(about))?.invoke(desktop, proxy)
+            val aboutHandlerClass = Class.forName("java.awt.desktop.AboutHandler")
+            val proxy = Proxy.newProxyInstance(aboutHandlerClass.classLoader, arrayOf(aboutHandlerClass), Java9MacAboutHandler)
+            desktop::class.java.getMethod("setAboutHandler", aboutHandlerClass)?.invoke(desktop, proxy)
         }
     }
 }
-
 
 object Java9MacAboutHandler : InvocationHandler {
     override fun invoke(proxy: Any?, method: Method?, args: Array<Any?>?) {
