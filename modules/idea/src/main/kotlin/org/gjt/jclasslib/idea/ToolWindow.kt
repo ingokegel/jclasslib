@@ -228,7 +228,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
     }
 
     private fun findClass(parent: PsiClass?, names: Array<String>, index: Int): PsiClass? {
-        for (i in index..names.size - 1) {
+        for (i in index until names.size) {
             val psiClass = findClass(parent, names.slice(index..i).joinToString("$"))
             if (psiClass != null) {
                 if (i < names.size - 1) {

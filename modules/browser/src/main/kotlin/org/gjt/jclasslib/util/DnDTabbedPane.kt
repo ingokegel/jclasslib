@@ -118,7 +118,7 @@ open class DnDTabbedPane : JTabbedPane() {
             return 0
         }
 
-        for (i in 0..tabCount - 1) {
+        for (i in 0 until tabCount) {
             val r = getBoundsAt(i) ?: continue
             if (isTopOrBottom) {
                 r.setRect(r.x - r.width / 2, r.y, r.width, height)
@@ -197,18 +197,22 @@ open class DnDTabbedPane : JTabbedPane() {
             return
         }
 
-        if (targetIndex == tabCount) {
-            source.remove(sourceIndex)
-            addTab(str, cmp)
-            selectedIndex = tabCount - 1
-        } else if (sourceIndex > targetIndex) {
-            source.remove(sourceIndex)
-            insertTab(str, null, cmp, null, targetIndex)
-            selectedIndex = targetIndex
-        } else {
-            source.remove(sourceIndex)
-            insertTab(str, null, cmp, null, targetIndex - 1)
-            selectedIndex = targetIndex - 1
+        selectedIndex = when {
+            targetIndex == tabCount -> {
+                source.remove(sourceIndex)
+                addTab(str, cmp)
+                tabCount - 1
+            }
+            sourceIndex > targetIndex -> {
+                source.remove(sourceIndex)
+                insertTab(str, null, cmp, null, targetIndex)
+                targetIndex
+            }
+            else -> {
+                source.remove(sourceIndex)
+                insertTab(str, null, cmp, null, targetIndex - 1)
+                targetIndex - 1
+            }
         }
     }
 

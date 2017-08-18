@@ -106,7 +106,7 @@ class ClassFile : Structure(), AttributeContainer {
      * @param enlargedConstantPool the enlarged constant pool
      */
     fun enlargeConstantPool(enlargedConstantPool: Array<Constant>) {
-        for (i in constantPool.size..enlargedConstantPool.size - 1) {
+        for (i in constantPool.size until enlargedConstantPool.size) {
             constantPoolEntryToIndex.put(enlargedConstantPool[i], i)
         }
         this.constantPool = enlargedConstantPool
@@ -183,8 +183,8 @@ class ClassFile : Structure(), AttributeContainer {
         checkValidConstantPoolIndex(index)
 
         val cpInfo = constantPool[index]
-        if (entryClass.isAssignableFrom(cpInfo::class.java)) {
-            return entryClass.cast(cpInfo)
+        return if (entryClass.isAssignableFrom(cpInfo::class.java)) {
+            entryClass.cast(cpInfo)
         } else {
             throw InvalidByteCodeException("constant pool entry at $index of class ${cpInfo::class.java.name} is not assignable to ${entryClass.name}")
         }

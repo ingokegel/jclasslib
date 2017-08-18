@@ -31,7 +31,7 @@ class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPa
                 })
                 add(object : StringColumn<HashEntry>("Hash", 700) {
                     override fun createValue(row: HashEntry) =
-                            row.hashValues.map { it.toString(16).padStart(2, '0') }.joinToString(separator = "")
+                            row.hashValues.joinToString(separator = "") { it.toString(16).padStart(2, '0') }
                 })
             }
         }

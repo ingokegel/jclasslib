@@ -25,10 +25,10 @@ constructor(opcode: Opcode, wide: Boolean, immediateByte: Int = 0, var increment
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
-        if (isWide) {
-            incrementConst = input.readShort().toInt()
+        incrementConst = if (isWide) {
+            input.readShort().toInt()
         } else {
-            incrementConst = input.readByte().toInt()
+            input.readByte().toInt()
         }
     }
 

@@ -15,10 +15,10 @@ class ClosableTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLay
             }
             override fun getText(): String? {
                 val index = tabbedPane.indexOfTabComponent(this@ClosableTabComponent)
-                if (index != -1) {
-                    return tabbedPane.getTitleAt(index)
+                return if (index != -1) {
+                    tabbedPane.getTitleAt(index)
                 } else {
-                    return null
+                    null
                 }
             }
         })

@@ -139,7 +139,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
     }
 
     private fun updateRowHeights() {
-        for (row in 0..table.rowCount - 1) {
+        for (row in 0 until table.rowCount) {
             val rowHeight = (0..table.columnCount - 1).map { column ->
                 val c = table.prepareRenderer(table.getCellRenderer(row, column), row, column) as JComponent
                 c.size = c.preferredSize.apply {

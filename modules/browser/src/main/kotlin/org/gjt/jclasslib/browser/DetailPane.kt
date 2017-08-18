@@ -78,10 +78,10 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
     protected open fun isChildShown(node: BrowserTreeNode) = true
 
     protected fun getConstantPoolEntryName(constantPoolIndex: Int): String {
-        try {
-            return services.classFile.getConstantPoolEntryName(constantPoolIndex)
+        return try {
+            services.classFile.getConstantPoolEntryName(constantPoolIndex)
         } catch (ex: InvalidByteCodeException) {
-            return "invalid constant pool reference"
+            "invalid constant pool reference"
         }
     }
 

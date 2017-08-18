@@ -51,7 +51,7 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
         val childCount = parentNode.childCount
 
         val newNode = ClassTreeNode(newNodeName, packageNode)
-        for (i in 0..childCount - 1) {
+        for (i in 0 until childCount) {
             val childNode = parentNode.getChildAt(i) as ClassTreeNode
             val childNodeName = childNode.toString()
             if (childNode.childCount > 0 && !packageNode) {

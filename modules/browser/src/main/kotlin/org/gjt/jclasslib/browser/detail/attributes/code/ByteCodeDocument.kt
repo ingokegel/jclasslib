@@ -35,10 +35,9 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         val instructions = ByteCodeReader.readByteCode(attribute.code)
         verifyOffsets(instructions)
         calculateOffsetWidth(instructions)
-        val instructionLineCounts = instructions.map {
+        return instructions.map {
             addInstructionToDocument(it)
         }
-        return instructionLineCounts
     }
 
     private fun verifyOffsets(instructions: ArrayList<Instruction>) {

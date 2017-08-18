@@ -11,7 +11,6 @@ import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.io.forEachClassInJrt
 import org.gjt.jclasslib.structures.isDebug
-import org.testng.annotations.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -157,7 +156,7 @@ class ClassFileConsistencyTest {
             System.err.println("ERROR in " + className)
             System.err.println("Different length " + before.size + " != " + after.size)
         }
-        for (i in 0..minOf(before.size, after.size) - 1) {
+        for (i in 0 until minOf(before.size, after.size)) {
             if (before[i] != after[i]) {
                 System.err.println("Different byte at index " + i)
                 return false

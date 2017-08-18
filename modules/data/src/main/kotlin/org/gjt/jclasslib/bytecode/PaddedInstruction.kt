@@ -30,7 +30,7 @@ open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
         super.read(input)
 
         val bytesToRead = paddingBytes(input.bytesRead)
-        for (i in 0..bytesToRead - 1) {
+        for (i in 0 until bytesToRead) {
             input.readByte()
         }
     }

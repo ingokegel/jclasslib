@@ -31,10 +31,10 @@ enum class VerificationType(override val tag: Int) : ClassFileEnum {
      * Create an associated [VerificationTypeInfoEntry] instance.
      */
     fun createEntry(classFile: ClassFile): VerificationTypeInfoEntry {
-        when (this) {
-            OBJECT -> return ObjectVerificationTypeInfoEntry(classFile)
-            UNINITIALIZED -> return UninitializedVerificationTypeInfoEntry()
-            else -> return VerificationTypeInfoEntry(this)
+        return when (this) {
+            OBJECT -> ObjectVerificationTypeInfoEntry(classFile)
+            UNINITIALIZED -> UninitializedVerificationTypeInfoEntry()
+            else -> VerificationTypeInfoEntry(this)
         }
     }
 

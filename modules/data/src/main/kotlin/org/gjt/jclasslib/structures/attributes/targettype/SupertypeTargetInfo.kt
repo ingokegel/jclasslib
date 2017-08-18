@@ -34,10 +34,10 @@ class SupertypeTargetInfo : TargetInfo() {
 
     override val verbose: String
         get() {
-            if (supertypeIndex == 65535) {
-                return "Super class ($supertypeIndex)"
+            return if (supertypeIndex == 65535) {
+                "Super class ($supertypeIndex)"
             } else {
-                return "<a href=\"I$supertypeIndex\">interface index $supertypeIndex</a>"
+                "<a href=\"I$supertypeIndex\">interface index $supertypeIndex</a>"
             }
         }
 

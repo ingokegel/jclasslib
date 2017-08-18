@@ -24,7 +24,7 @@ class ShowBytecodeAction : AnAction() {
 
     override fun update(e: AnActionEvent) {
         e.presentation.apply {
-            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && getContainingClassName(this) != null } ?: false
+            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && getContainingClassName(this) != null } == true
             icon = ICON
         }
     }
@@ -41,16 +41,16 @@ class ShowBytecodeAction : AnAction() {
     }
 
     private fun getPsiElement(dataContext: DataContext, project: Project?, editor: Editor?): PsiElement? {
-        if (project == null) {
-            return null
-        } else if (editor == null) {
-            return dataContext.getData(CommonDataKeys.PSI_ELEMENT)
-        } else {
-            val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project)
-            val injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile)
-            return injectedEditor?.let {
-                findElementInFile(PsiUtilBase.getPsiFileInEditor(it, project), it)
-            } ?: findElementInFile(psiFile, editor)
+        return when {
+            project == null -> null
+            editor == null -> dataContext.getData(CommonDataKeys.PSI_ELEMENT)
+            else -> {
+                val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project)
+                val injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile)
+                injectedEditor?.let {
+                    findElementInFile(PsiUtilBase.getPsiFileInEditor(it, project), it)
+                } ?: findElementInFile(psiFile, editor)
+            }
         }
     }
 

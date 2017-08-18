@@ -92,12 +92,10 @@ class BrowserConfig : ClasspathComponent {
     }
 
     private fun createJreEntry(): ClasspathEntry? {
-        return if (File(jreHome, "lib/modules").exists()) {
-            ClasspathJrtEntry(jreHome)
-        } else if (File(jreHome, "lib/rt.jar").exists()) {
-            ClasspathArchiveEntry(File(jreHome, "lib/rt.jar").path)
-        } else {
-            return null
+        return when {
+            File(jreHome, "lib/modules").exists() -> ClasspathJrtEntry(jreHome)
+            File(jreHome, "lib/rt.jar").exists() -> ClasspathArchiveEntry(File(jreHome, "lib/rt.jar").path)
+            else -> return null
         }
     }
 

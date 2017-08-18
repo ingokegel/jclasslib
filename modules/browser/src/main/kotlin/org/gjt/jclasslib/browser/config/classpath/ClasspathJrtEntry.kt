@@ -15,10 +15,10 @@ import javax.swing.tree.DefaultTreeModel
 
 class ClasspathJrtEntry(jreHome: String) : ClasspathEntry(jreHome) {
     override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
-        if (modulePathSelection) {
-            return findClassWithModuleNameInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it", it.getName(1).toString()) }
+        return if (modulePathSelection) {
+            findClassWithModuleNameInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it", it.getName(1).toString()) }
         } else {
-            return findClassInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it") }
+            findClassInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it") }
         }
     }
 

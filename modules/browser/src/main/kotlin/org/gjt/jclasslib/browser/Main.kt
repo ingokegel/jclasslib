@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
 
 
 fun getBrowserFrames(): List<BrowserFrame> = Frame.getFrames()
-        .mapNotNull { if (it is BrowserFrame) it else null }
+        .filterIsInstance<BrowserFrame>()
         .filter { it.isVisible }
 
 fun getNextBrowserFrame(browserFrame: BrowserFrame) : BrowserFrame = getBrowserFrames().run {

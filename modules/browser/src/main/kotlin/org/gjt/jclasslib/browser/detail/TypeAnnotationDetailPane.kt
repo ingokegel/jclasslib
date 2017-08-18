@@ -122,10 +122,10 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
             throw RuntimeException("No parent node with element class $elementClass found")
         }
         val node = path.lastPathComponent as BrowserTreeNode
-        if (node.element?.let { it::class.java } == elementClass) {
-            return path
+        return if (node.element?.let { it::class.java } == elementClass) {
+            path
         } else {
-            return findParentNode(elementClass, path.parentPath)
+            findParentNode(elementClass, path.parentPath)
         }
     }
 

@@ -82,7 +82,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
             for (i in 1..numberOfLines) {
                 lineNumberDocument.appendBatchString(getPaddedValue(i, lineNumberWidth), STYLE_LINE_NUMBER)
                 val lineNumberCount = lineNumberCounts?.get(i - 1) ?: 1
-                for (j in 0..lineNumberCount - 1) {
+                for (j in 0 until lineNumberCount) {
                     lineNumberDocument.appendBatchLineFeed(STYLE_NORMAL)
                 }
             }

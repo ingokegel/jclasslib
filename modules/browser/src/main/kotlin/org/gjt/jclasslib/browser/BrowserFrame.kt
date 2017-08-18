@@ -49,12 +49,10 @@ class BrowserFrame : JFrame() {
                 classesChooserPath = classesFileChooser.currentDirectory.absolutePath
                 val file = classesFileChooser.selectedFile
                 val lowerCasePath = file.path.toLowerCase()
-                if (lowerCasePath.endsWith(".class")) {
-                    openClassFromFile(file)
-                } else if (lowerCasePath.endsWith(".jar")) {
-                    openClassFromJar(file)
-                } else {
-                    GUIHelper.showMessage(this, "Please select a class file or a JAR file", JOptionPane.WARNING_MESSAGE)
+                when {
+                    lowerCasePath.endsWith(".class") -> openClassFromFile(file)
+                    lowerCasePath.endsWith(".jar") -> openClassFromJar(file)
+                    else -> GUIHelper.showMessage(this, "Please select a class file or a JAR file", JOptionPane.WARNING_MESSAGE)
                 }
             }
         }

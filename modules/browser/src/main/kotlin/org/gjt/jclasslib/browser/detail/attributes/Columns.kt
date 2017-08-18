@@ -68,10 +68,10 @@ abstract class NamedConstantPoolLinkColumn<in T : Any>(name: String, services: B
     open protected fun getComment(constantPoolIndex: Int) = getConstantPoolEntryName(constantPoolIndex)
 
     private fun getConstantPoolEntryName(constantPoolIndex: Int): String {
-        try {
-            return services.classFile.getConstantPoolEntryName(constantPoolIndex)
+        return try {
+            services.classFile.getConstantPoolEntryName(constantPoolIndex)
         } catch (ex: InvalidByteCodeException) {
-            return "invalid constant pool reference"
+            "invalid constant pool reference"
         }
     }
 }
