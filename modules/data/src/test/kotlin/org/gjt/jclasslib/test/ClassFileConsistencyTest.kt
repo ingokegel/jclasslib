@@ -11,6 +11,7 @@ import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.io.forEachClassInJrt
 import org.gjt.jclasslib.structures.isDebug
+import org.testng.annotations.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
