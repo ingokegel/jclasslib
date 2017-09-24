@@ -40,7 +40,7 @@ class LookupSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
         defaultOffset = input.readInt()
         val numberOfPairs = input.readInt()
 
-        for (i in 0..numberOfPairs - 1) {
+        for (i in 0 until numberOfPairs) {
             val match = input.readInt()
             val offset = input.readInt()
 

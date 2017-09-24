@@ -160,7 +160,7 @@ class BrowserFrame : JFrame() {
     }
 
     val showHomepageAction = DefaultAction("jclasslib on the web", "Visit jclasslib on the web", "web_small.png", "web_large.png") {
-        GUIHelper.showURL(WEB_SITE_URL)
+        GUIHelper.showURL(webSiteUrl)
     }
 
     val showEjtAction = DefaultAction("ej-technologies on the web", "Visit ej-technologies on the web", "web_small.png") {
@@ -233,7 +233,7 @@ class BrowserFrame : JFrame() {
     private val workspaceFileChooser: JFileChooser by lazy {
         JFileChooser(workspaceChooserPath).apply {
             dialogTitle = "Choose workspace file"
-            fileFilter = MultiFileFilter(WORKSPACE_FILE_SUFFIX, "jclasslib workspace files")
+            fileFilter = MultiFileFilter(workspaceFileSuffix, "jclasslib workspace files")
         }
     }
 
@@ -300,7 +300,7 @@ class BrowserFrame : JFrame() {
         EventQueue.invokeLater {
             val file = File(path)
             if (file.exists()) {
-                if (path.toLowerCase().endsWith("." + WORKSPACE_FILE_SUFFIX)) {
+                if (path.toLowerCase().endsWith("." + workspaceFileSuffix)) {
                     openWorkspace(file)
                 } else if (path.toLowerCase().endsWith(".class")) {
                     try {
@@ -413,10 +413,10 @@ class BrowserFrame : JFrame() {
     private fun updateTitle() {
         val workspaceFile = this.workspaceFile
         if (workspaceFile == null) {
-            title = APPLICATION_TITLE
+            title = applicationTitle
             saveWorkspaceAsAction.isEnabled = false
         } else {
-            title = APPLICATION_TITLE + " [" + workspaceFile.name + "]"
+            title = applicationTitle + " [" + workspaceFile.name + "]"
         }
     }
 
@@ -470,13 +470,12 @@ class BrowserFrame : JFrame() {
         }
     }
 
-    private fun getWorkspaceFile(selectedFile: File): File {
-        if (!selectedFile.name.toLowerCase().endsWith("." + WORKSPACE_FILE_SUFFIX)) {
-            return File(selectedFile.path + "." + WORKSPACE_FILE_SUFFIX)
-        } else {
-            return selectedFile
-        }
-    }
+    private fun getWorkspaceFile(selectedFile: File): File =
+            if (!selectedFile.name.toLowerCase().endsWith("." + workspaceFileSuffix)) {
+                File(selectedFile.path + "." + workspaceFileSuffix)
+            } else {
+                selectedFile
+            }
 
     private fun saveWorkspaceToFile(file: File) {
         try {

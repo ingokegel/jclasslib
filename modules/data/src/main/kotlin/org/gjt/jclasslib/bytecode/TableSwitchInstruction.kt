@@ -48,7 +48,7 @@ class TableSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
         val numberOfOffsets = highByte - lowByte + 1
         jumpOffsets = IntArray(numberOfOffsets)
 
-        for (i in 0..numberOfOffsets - 1) {
+        for (i in 0 until numberOfOffsets) {
             jumpOffsets[i] = input.readInt()
         }
 

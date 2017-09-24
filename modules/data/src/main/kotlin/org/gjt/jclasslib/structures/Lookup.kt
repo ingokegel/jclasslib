@@ -15,11 +15,11 @@ package org.gjt.jclasslib.structures
  */
 abstract class Lookup<T>(val enumClass: Class<T>, val name: String) where T : Enum<T>, T : ClassFileEnum {
 
-    private val LOOKUP = arrayOfNulls<Any?>(enumClass.enumConstants.maxBy { it.tag }!!.tag + 1)
+    private val lookup = arrayOfNulls<Any?>(enumClass.enumConstants.maxBy { it.tag }!!.tag + 1)
 
     init {
         for (constant in enumClass.enumConstants) {
-            LOOKUP[constant.tag] = constant
+            lookup[constant.tag] = constant
         }
     }
 
@@ -29,8 +29,8 @@ abstract class Lookup<T>(val enumClass: Class<T>, val name: String) where T : En
      */
     @Throws(InvalidByteCodeException::class)
     fun getFromTag(tag: Int): T {
-        if (tag < LOOKUP.size && tag >= 0) {
-            val constant = LOOKUP[tag]
+        if (tag < lookup.size && tag >= 0) {
+            val constant = lookup[tag]
             if (constant != null) {
                 @Suppress("UNCHECKED_CAST")
                 return constant as T

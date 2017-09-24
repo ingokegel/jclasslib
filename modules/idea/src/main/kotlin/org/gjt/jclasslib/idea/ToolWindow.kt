@@ -31,7 +31,7 @@ import com.intellij.ui.content.Content
 import com.intellij.util.PlatformIcons
 import org.gjt.jclasslib.browser.BrowserComponent
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.WEB_SITE_URL
+import org.gjt.jclasslib.browser.webSiteUrl
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
@@ -39,7 +39,7 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.Action
 
-val TOOL_WINDOW_ID: String = "jclasslib"
+val toolWindowId: String = "jclasslib"
 
 fun showClassFile(virtualFile: VirtualFile, browserPath: BrowserPath?, project: Project) {
     val toolWindow = getToolWindow(project)
@@ -65,11 +65,11 @@ fun showClassFile(virtualFile: VirtualFile, browserPath: BrowserPath?, project: 
 
 private fun readClassFile(virtualFile: VirtualFile, project: Project): ClassFile? {
     virtualFile.refresh(false, false)
-    try {
-        return ClassFileReader.readFromInputStream(virtualFile.inputStream)
+    return try {
+        ClassFileReader.readFromInputStream(virtualFile.inputStream)
     } catch(e: Exception) {
         Messages.showWarningDialog(project, "Error reading class file: ${e.message}", "jclasslib bytecode viewer")
-        return null
+        null
     }
 }
 
@@ -81,8 +81,8 @@ private fun activateToolWindow(toolWindow: ToolWindow, content: Content, panel: 
 
 private fun getToolWindow(project: Project): ToolWindow {
     val toolWindowManager = ToolWindowManager.getInstance(project)
-    return toolWindowManager.getToolWindow(TOOL_WINDOW_ID) ?:
-            toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.RIGHT, project).apply {
+    return toolWindowManager.getToolWindow(toolWindowId) ?:
+            toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.RIGHT, project).apply {
                 icon = ShowBytecodeAction.ICON
                 ContentManagerWatcher(this, contentManager)
             }
@@ -158,7 +158,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
         }
 
         override fun actionPerformed(e: AnActionEvent) {
-            showURL(WEB_SITE_URL)
+            showURL(webSiteUrl)
         }
     }
 
@@ -244,16 +244,11 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
         return null
     }
 
-    private fun findClass(parent: PsiClass?, name: String): PsiClass? {
-        return if (parent == null) {
-            JavaPsiFacade.getInstance(project).findClass(name, GlobalSearchScope.allScope(project))
-        } else if (Character.isJavaIdentifierStart(name[0])) {
-            parent.findInnerClassByName(name, false)
-        } else if (name.matches("\\d+".toRegex())) {
-            findAnonymousClass(parent, Integer.parseInt(name) - 1)
-        } else {
-            null
-        }
+    private fun findClass(parent: PsiClass?, name: String): PsiClass? = when {
+        parent == null -> JavaPsiFacade.getInstance(project).findClass(name, GlobalSearchScope.allScope(project))
+        Character.isJavaIdentifierStart(name[0]) -> parent.findInnerClassByName(name, false)
+        name.matches("\\d+".toRegex()) -> findAnonymousClass(parent, Integer.parseInt(name) - 1)
+        else -> null
     }
 
     private fun findAnonymousClass(psiClass: PsiClass, index: Int): PsiClass? {

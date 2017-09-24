@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 
@@ -18,7 +20,7 @@ dokka {
     includes = ['packages.md']
 }
 
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+task dokkaJavadoc(type: DokkaTask) {
     outputFormat = 'javadoc'
     outputDirectory = "$buildDir/javadoc"
 }

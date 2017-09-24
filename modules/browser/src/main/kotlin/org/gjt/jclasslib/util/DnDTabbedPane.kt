@@ -148,7 +148,7 @@ open class DnDTabbedPane : JTabbedPane() {
     }
 
     private fun getNextVisibleTabBound(index: Int): Rectangle? {
-        for (i in index + 1..tabCount - 1) {
+        for (i in index + 1 until tabCount) {
             return getBoundsAt(i) ?: continue
         }
         return null
@@ -365,15 +365,15 @@ open class DnDTabbedPane : JTabbedPane() {
         }
 
         override fun drop(event: DropTargetDropEvent) {
-            if (isTabTransfer(event.transferable)) {
-                event.acceptDrop(event.dropAction)
-                convertTab(getTabTransferData(event), getTargetTabIndex(event.location))
-                event.dropComplete(true)
-                dropNotifier()
-            } else if (isDataFlavorSupported(event.transferable)) {
-                handleDrop(event)
-            } else {
-                event.dropComplete(false)
+            when {
+                isTabTransfer(event.transferable) -> {
+                    event.acceptDrop(event.dropAction)
+                    convertTab(getTabTransferData(event), getTargetTabIndex(event.location))
+                    event.dropComplete(true)
+                    dropNotifier()
+                }
+                isDataFlavorSupported(event.transferable) -> handleDrop(event)
+                else -> event.dropComplete(false)
             }
             glassPane.drawInsertionMarker = false
             repaintGlassPanes()

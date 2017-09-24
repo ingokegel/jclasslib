@@ -44,8 +44,8 @@ enum class TypeAnnotationTargetType(override val tag: Int, private val targetInf
      * Create an associated [TargetInfo] instance.
      */
     fun createTargetInfo(): TargetInfo {
-        try {
-            return targetInfoClass.newInstance()
+        return try {
+            targetInfoClass.newInstance()
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

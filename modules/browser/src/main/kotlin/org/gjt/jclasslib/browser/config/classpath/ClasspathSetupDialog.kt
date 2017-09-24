@@ -38,11 +38,10 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
             frame.classesChooserPath = fileChooser.currentDirectory.absolutePath
             val files = fileChooser.selectedFiles
             for (file in files) {
-                val entry: ClasspathEntry
-                if (file.isDirectory) {
-                    entry = ClasspathDirectoryEntry(file.path)
+                val entry = if (file.isDirectory) {
+                    ClasspathDirectoryEntry(file.path)
                 } else {
-                    entry = ClasspathArchiveEntry(file.path)
+                    ClasspathArchiveEntry(file.path)
 
                 }
                 if (!isInModel(entry)) {

@@ -38,7 +38,7 @@ import java.io.IOException
 // Use CompilerPathsEx.findClassFileInOutput after IDEA 2016.3 to locate class file, see:
 // https://github.com/JetBrains/intellij-community/commit/92ad8f3bd4c580cc81184b2a03842a
 
-val LOG: Logger = Logger.getInstance("#jclasslib")
+val log: Logger = Logger.getInstance("#jclasslib")
 
 fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Project) {
     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Locating class file ...") {
@@ -89,7 +89,7 @@ private fun getClassFileNoModule(psiElement: PsiElement, classVMName: String): V
                     return rootForFile.findFileByRelativePath("/" + classVMName.replace('.', '/') + ".class") ?: throw FileNotFoundException()
                 }
             } catch (e: IOException) {
-                LOG.error(e)
+                log.error(e)
             }
         }
     }
@@ -131,11 +131,11 @@ private fun getContainingClassNameJava(psiElement: PsiElement): String? {
 
 private fun getContainingClassJava(psiElement: PsiElement): PsiClass? {
     val byteCodeViewerPlugin = PluginManager.getPlugin(PluginId.getId("ByteCodeViewer"))
-    if (byteCodeViewerPlugin != null && byteCodeViewerPlugin.isEnabled) {
-        return ByteCodeViewerManager.getContainingClass(psiElement)
+    return if (byteCodeViewerPlugin != null && byteCodeViewerPlugin.isEnabled) {
+        ByteCodeViewerManager.getContainingClass(psiElement)
     } else {
         val containingClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass::class.java, false)
-        return if (containingClass is PsiTypeParameter) {
+        if (containingClass is PsiTypeParameter) {
             getContainingClassJava(containingClass)
         } else {
             containingClass
@@ -144,10 +144,10 @@ private fun getContainingClassJava(psiElement: PsiElement): PsiClass? {
 }
 
 private fun getClassNameJava(containingClass: PsiClass): String? {
-    if (containingClass is PsiAnonymousClass) {
+    return if (containingClass is PsiAnonymousClass) {
         val containingClassOfAnonymous = PsiTreeUtil.getParentOfType(containingClass, PsiClass::class.java) ?: return null
-        return getClassNameJava(containingClassOfAnonymous) + JavaAnonymousClassesHelper.getName(containingClass)
+        getClassNameJava(containingClassOfAnonymous) + JavaAnonymousClassesHelper.getName(containingClass)
     } else {
-        return ClassUtil.getJVMClassName(containingClass)
+        ClassUtil.getJVMClassName(containingClass)
     }
 }

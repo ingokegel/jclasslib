@@ -124,11 +124,11 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
         val index = if (name === HTML.Tag.HTML && view.viewCount > 1) 1 else 0
         val correctedBounds = view.getChildAllocation(index, bounds) ?: return -1
         val child = view.getView(index)
-        if (view is javax.swing.text.ParagraphView) {
+        return if (view is javax.swing.text.ParagraphView) {
             val rect: Rectangle = correctedBounds as? Rectangle ?: correctedBounds.bounds
-            return rect.y + (rect.height * child.getAlignment(View.Y_AXIS)).toInt()
+            rect.y + (rect.height * child.getAlignment(View.Y_AXIS)).toInt()
         } else {
-            return getBaseline(child, correctedBounds)
+            getBaseline(child, correctedBounds)
         }
     }
 

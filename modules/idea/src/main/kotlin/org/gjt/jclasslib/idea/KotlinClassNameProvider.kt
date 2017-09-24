@@ -51,14 +51,14 @@ class KotlinClassNameProvider {
     }
 
     fun getClassName(element: PsiElement): String? {
-        try {
+        return try {
             val relevantElement = runReadAction { getRelevantElement(element) }
             if (relevantElement != null) {
-                return cache.getOrPut(relevantElement) {
+                cache.getOrPut(relevantElement) {
                     getClassNameForRelevantElement(relevantElement)?.replace('/', '.')
                 }
             } else {
-                return null
+                null
             }
 
         } catch(t: Throwable) {

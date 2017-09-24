@@ -114,7 +114,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
             val selectionPaths = getSelectedTree().selectionPaths?.toList() ?: emptyList()
             return selectionPaths.map {selectionPath ->
                 val buffer = StringBuilder()
-                for (i in 1..selectionPath.pathCount - 1) {
+                for (i in 1 until selectionPath.pathCount) {
                     if (buffer.isNotEmpty()) {
                         buffer.append('/')
                     }

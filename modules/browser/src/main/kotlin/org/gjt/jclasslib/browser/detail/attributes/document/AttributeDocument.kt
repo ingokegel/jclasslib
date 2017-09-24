@@ -95,7 +95,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
     protected fun getPaddedValue(number: Int, width: Int) = StringBuilder().apply {
         val value = number.toString()
         val valueLength = value.length
-        for (i in valueLength..width - 1) {
+        for (i in valueLength until width) {
             append(' ')
         }
         append(value)

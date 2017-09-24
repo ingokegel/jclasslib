@@ -78,10 +78,10 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     private fun getMethodDisplayPath(methodsPath: TreePath, method: MethodInfo, treeNode: BrowserTreeNode): TreePath {
         val path = methodsPath.pathByAddingChild(treeNode)
         val codeNode = findCodeNode(treeNode, method)
-        if (codeNode != null) {
-            return path.pathByAddingChild(codeNode)
+        return if (codeNode != null) {
+            path.pathByAddingChild(codeNode)
         } else {
-            return path
+            path
         }
     }
 

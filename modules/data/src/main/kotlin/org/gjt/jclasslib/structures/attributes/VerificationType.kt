@@ -22,7 +22,7 @@ enum class VerificationType(override val tag: Int) : ClassFileEnum {
     FLOAT(2),
     DOUBLE(3),
     LONG(4),
-    ITEM_Null(5),
+    ITEM_NULL(5),
     NULL(6),
     OBJECT(7),
     UNINITIALIZED(8);

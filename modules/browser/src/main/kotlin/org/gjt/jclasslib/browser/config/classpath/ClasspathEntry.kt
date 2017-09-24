@@ -102,11 +102,11 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
     }
 
     fun addToClassPath(classpath: MutableList<ClasspathEntry>): Boolean {
-        if (!classpath.contains(this)) {
+        return if (!classpath.contains(this)) {
             classpath.add(this)
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 

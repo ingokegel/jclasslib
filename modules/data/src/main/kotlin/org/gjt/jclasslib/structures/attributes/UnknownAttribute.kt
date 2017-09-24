@@ -44,10 +44,10 @@ class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : Attribu
         get() = "of reported type ${getAttributeName()}"
 
     private fun getAttributeName(): String {
-        try {
-            return classFile.getConstantPoolUtf8Entry(attributeNameIndex).string
+        return try {
+            classFile.getConstantPoolUtf8Entry(attributeNameIndex).string
         } catch (ex: InvalidByteCodeException) {
-            return "(unknown)"
+            "(unknown)"
         }
     }
 }

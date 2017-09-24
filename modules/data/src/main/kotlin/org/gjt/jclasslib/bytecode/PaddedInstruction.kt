@@ -39,7 +39,7 @@ open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
         super.write(output)
 
         val bytesToWrite = paddingBytes(output.bytesWritten)
-        for (i in 0..bytesToWrite - 1) {
+        for (i in 0 until bytesToWrite) {
             output.writeByte(0)
         }
     }

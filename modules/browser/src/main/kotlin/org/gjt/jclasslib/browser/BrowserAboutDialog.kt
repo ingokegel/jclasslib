@@ -56,10 +56,10 @@ class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
     }
 
     private fun getVersion(): String {
-        try {
-            return Variables.getCompilerVariable("sys.version")
+        return try {
+            Variables.getCompilerVariable("sys.version")
         } catch (e: IOException) {
-            return "<unknown>"
+            "<unknown>"
         }
     }
 }

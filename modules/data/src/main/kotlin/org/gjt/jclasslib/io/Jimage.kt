@@ -16,7 +16,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 private val modulesRootsCache = mutableMapOf<File, Path>()
-private val CLASSFILE_SUFFIX = ".class"
+private val classFileSuffix = ".class"
 
 /**
  * Get an input stream to a class file in the JRE.
@@ -33,7 +33,7 @@ fun getJrtInputStream(fileName: String, jreHome: File): InputStream {
  * @param jreHome the home directory of the JRE
  */
 fun findClassWithModuleNameInJrt(moduleNameAndClassName: String, jreHome: File): Path? {
-    return getModulesRoot(jreHome).resolve(moduleNameAndClassName + CLASSFILE_SUFFIX)
+    return getModulesRoot(jreHome).resolve(moduleNameAndClassName + classFileSuffix)
 }
 /**
  * Find a class in the JRT (Java 9+)
@@ -41,7 +41,7 @@ fun findClassWithModuleNameInJrt(moduleNameAndClassName: String, jreHome: File):
  * @param jreHome the home directory of the JRE
  */
 fun findClassInJrt(className: String, jreHome: File): Path? {
-    val fileName = className.replace('.', '/') + CLASSFILE_SUFFIX
+    val fileName = className.replace('.', '/') + classFileSuffix
     Files.newDirectoryStream(getModulesRoot(jreHome)).forEach { module ->
         val path = module.resolve(fileName)
         if (Files.exists(path)) {
@@ -58,7 +58,7 @@ fun findClassInJrt(className: String, jreHome: File): Path? {
  */
 fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
     Files.walk(getModulesRoot(jreHome)).forEach { path ->
-        if (path.nameCount > 2 && !Files.isDirectory(path) && path.toString().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
+        if (path.nameCount > 2 && !Files.isDirectory(path) && path.toString().toLowerCase().endsWith(classFileSuffix)) {
             block(path)
         }
     }

@@ -74,17 +74,17 @@ class BrowserTab(val fileName: String, val moduleName: String, frame : BrowserFr
 
     private tailrec fun findClass(className: String): FindResult? {
         val findResult: FindResult? = parentFrame.config.findClass(className, false)
-        if (findResult != null) {
-            return findResult
+        return if (findResult != null) {
+            findResult
         } else {
             if (GUIHelper.showOptionDialog(parentFrame,
                     "The class $className could not be found.\nYou can check your classpath configuration and try again.",
                     arrayOf("Setup classpath", "Cancel"),
                     JOptionPane.WARNING_MESSAGE) != 0) {
-                return null
+                null
             } else {
                 parentFrame.setupClasspathAction()
-                return findClass(className)
+                findClass(className)
             }
         }
     }

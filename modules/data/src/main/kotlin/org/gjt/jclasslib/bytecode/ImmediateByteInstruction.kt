@@ -25,10 +25,10 @@ constructor(opcode: Opcode, var isWide: Boolean, var immediateByte: Int = 0) : I
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
-        if (isWide) {
-            immediateByte = input.readUnsignedShort()
+        immediateByte = if (isWide) {
+            input.readUnsignedShort()
         } else {
-            immediateByte = input.readUnsignedByte()
+            input.readUnsignedByte()
         }
     }
 

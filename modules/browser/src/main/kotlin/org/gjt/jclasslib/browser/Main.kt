@@ -20,14 +20,14 @@ import java.io.PrintStream
 import java.util.*
 import javax.swing.UIManager
 
-val APPLICATION_TITLE = "Bytecode viewer"
-val SYSTEM_PROPERTY_LAF_DEFAULT = "jclasslib.laf.default"
-val WORKSPACE_FILE_SUFFIX = "jcw"
-val WEB_SITE_URL = "http://www.ej-technologies.com/products/jclasslib/overview.html"
+val applicationTitle = "Bytecode viewer"
+val lafDefaultSystemProperty = "jclasslib.laf.default"
+val workspaceFileSuffix = "jcw"
+val webSiteUrl = "http://www.ej-technologies.com/products/jclasslib/overview.html"
 
 fun main(args: Array<String>) {
 
-    if (!java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_LAF_DEFAULT)) {
+    if (!java.lang.Boolean.getBoolean(lafDefaultSystemProperty)) {
         val lookAndFeelClass = UIManager.getSystemLookAndFeelClassName()
         try {
             UIManager.setLookAndFeel(lookAndFeelClass)
