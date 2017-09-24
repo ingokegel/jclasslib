@@ -17,10 +17,9 @@ externalLibsDir = file("$buildDir/externalLibs")
 val kotlinVersion: String by extra
 
 buildscript {
-    val kotlinVersion by extra("1.1.3-2")
+    val kotlinVersion by extra("1.1.50")
     val kotlinVersionParts = kotlinVersion.split('-')
     extra["kotlinVersionMain"] = kotlinVersionParts[0]
-    extra["kotlinVersionHotfix"] = if (kotlinVersionParts.size > 1) "-${kotlinVersionParts[1]}" else  ""
 
     val mavenUrls by extra(listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository").map { java.net.URI(it) })
 

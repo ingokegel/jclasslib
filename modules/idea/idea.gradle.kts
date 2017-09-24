@@ -10,7 +10,6 @@ apply {
 
 val kotlinVersion = rootProject.extra["kotlinVersion"]
 val kotlinVersionMain = rootProject.extra["kotlinVersionMain"]
-val kotlinVersionHotfix = rootProject.extra["kotlinVersionHotfix"]
 dependencies {
     compile(project(":browser"))
     // explicit Kotlin dependency to prevent the intellij plugin from adding the Kotlin libraries in the lib directory
@@ -18,9 +17,9 @@ dependencies {
 }
 
 intellij {
-    version = "IC-2016.2.5"
+    version = "IC-2016.3.7"
     pluginName = "jclasslib"
-    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersionMain-release-IJ2016.2${kotlinVersionHotfix}")
+    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersionMain-release-IJ2016.3-1")
     sandboxDirectory = "${rootProject.buildDir}/../idea_sandbox"
     updateSinceUntilBuild = false
 }

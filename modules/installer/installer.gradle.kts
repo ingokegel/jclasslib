@@ -11,8 +11,8 @@ val winKeystorePassword by project
 val macKeystorePassword by project
 
 install4j {
-    if (install4jHomeDir != null) {
-        installDir = file(install4jHomeDir)
+    install4jHomeDir?.let {
+        installDir = file(it)
     }
 }
 
