@@ -3,12 +3,9 @@ import org.gradle.api.tasks.Copy
 import org.gradle.jvm.tasks.Jar
 
 plugins {
+    kotlin("jvm")
     application
-}
-
-apply {
-    plugin("kotlin")
-    plugin("maven-publish")
+    `maven-publish`
 }
 
 configurePublishing()
@@ -26,7 +23,8 @@ dependencies {
     compile(project(":data"))
 }
 
-val publications = the<PublishingExtension>().publications
+val publications: PublicationContainer = the<PublishingExtension>().publications
+var externalLibsDir: File by rootProject.extra
 
 tasks {
     val jar by getting(Jar::class) {
@@ -40,7 +38,7 @@ tasks {
         dependsOn("jar")
         from(configurations.compile.files.filterNot { it.name.contains("install4j") })
         from(jar.archivePath)
-        into(rootProject.extra["externalLibsDir"])
+        into(externalLibsDir)
     }
 
     "dist" {

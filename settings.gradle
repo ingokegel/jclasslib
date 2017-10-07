@@ -1,3 +1,18 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url 'http://maven.ej-technologies.com/repository'
+        }
+        maven {
+            url 'https://jcenter.bintray.com/'
+        }
+        maven {
+            url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
+        }
+    }
+}
+
 file('modules').listFiles()
   .findAll {it.isDirectory() && !it.name.startsWith('.') && new File(it, it.name + '.gradle.kts').exists()}
   .each { File dir ->

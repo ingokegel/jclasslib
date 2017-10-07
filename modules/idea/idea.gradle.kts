@@ -1,25 +1,21 @@
 import org.jetbrains.intellij.tasks.PublishTask
 
 plugins {
-    id("org.jetbrains.intellij") version "0.2.13"
+    kotlin("jvm")
+    id("org.jetbrains.intellij") version "0.2.17"
 }
 
-apply {
-    plugin("kotlin")
-}
-
-val kotlinVersion = rootProject.extra["kotlinVersion"]
-val kotlinVersionMain = rootProject.extra["kotlinVersionMain"]
+val kotlinVersion = KotlinVersion.CURRENT.toString()
 dependencies {
     compile(project(":browser"))
     // explicit Kotlin dependency to prevent the intellij plugin from adding the Kotlin libraries in the lib directory
-    compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    compile(kotlin("stdlib"))
 }
 
 intellij {
     version = "IC-2016.3.7"
     pluginName = "jclasslib"
-    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersionMain-release-IJ2016.3-1")
+    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersion-release-IJ2016.3-1")
     sandboxDirectory = "${rootProject.buildDir}/../idea_sandbox"
     updateSinceUntilBuild = false
 }

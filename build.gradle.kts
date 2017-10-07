@@ -2,48 +2,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
 plugins {
+    kotlin("jvm") version "1.1.51" apply false
+    id("org.jetbrains.dokka") version "0.9.15" apply false
     idea
 }
 
 version = "5.2"
 buildDir = file("build/gradle")
 
-var mediaDir: File by extra
-mediaDir = file("media")
-
-var externalLibsDir: File by extra
-externalLibsDir = file("$buildDir/externalLibs")
-
-val kotlinVersion: String by extra
-
-buildscript {
-    val kotlinVersion by extra("1.1.50")
-    val kotlinVersionParts = kotlinVersion.split('-')
-    extra["kotlinVersionMain"] = kotlinVersionParts[0]
-
-    val mavenUrls by extra(listOf("http://jcenter.bintray.com", "http://maven.ej-technologies.com/repository").map { java.net.URI(it) })
-
-    repositories {
-        flatDir {
-            dirs = setOf(file("lib-compile"))
-        }
-        maven {
-            url = java.net.URI("http://dl.bintray.com/jetbrains/intellij-plugin-service")
-        }
-        for (mavenUrl in mavenUrls) {
-            maven {
-                url = mavenUrl
-            }
-        }
-    }
-
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${extra["kotlinVersion"]}")
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.15")
-    }
-}
-
-val mavenUrls: List<URI> by extra
+var mediaDir: File by extra(file("media"))
+var externalLibsDir: File by extra(file("$buildDir/externalLibs"))
 
 subprojects {
 
@@ -56,11 +24,8 @@ subprojects {
         flatDir {
             dirs = setOf(file("lib"), file("$rootDir/lib-compile"))
         }
-        for (mavenUrl in mavenUrls) {
-            maven {
-                url = mavenUrl
-            }
-        }
+        jcenter()
+        maven("http://maven.ej-technologies.com/repository")
     }
 
     plugins.withType<JavaPlugin> {

@@ -2,23 +2,19 @@ import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
-    java
-}
-
-apply {
-    plugin("kotlin")
-    plugin("org.jetbrains.dokka")
-    plugin("maven-publish")
+    kotlin("jvm")
+    id("org.jetbrains.dokka")
+    `maven-publish`
 }
 
 configurePublishing()
 
-val kotlinVersion = rootProject.extra["kotlinVersion"]
 dependencies {
-    compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    compile(kotlin("stdlib"))
 }
 
-val publications = the<PublishingExtension>().publications
+val publications: PublicationContainer = the<PublishingExtension>().publications
+var externalLibsDir: File by rootProject.extra
 
 tasks {
     val jar by getting(Jar::class) {
@@ -29,7 +25,7 @@ tasks {
         dependsOn("jar")
         from(configurations.compile)
         from(jar.archivePath)
-        into(rootProject.extra["externalLibsDir"])
+        into(externalLibsDir)
     }
 
     val dokka by getting(DokkaTask::class) {
