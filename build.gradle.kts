@@ -28,22 +28,18 @@ subprojects {
         maven("http://maven.ej-technologies.com/repository")
     }
 
-    plugins.withType<JavaPlugin> {
+    plugins.withId("kotlin") {
         dependencies {
             add("testCompile", "org.testng:testng:6.8.8")
         }
 
-        tasks.withType<JavaCompile>().forEach {compileJava ->
-            compileJava.apply {
-                sourceCompatibility = "1.8"
-                targetCompatibility = "1.8"
-            }
+        tasks.withType<JavaCompile> {
+            sourceCompatibility = "1.8"
+            targetCompatibility = "1.8"
         }
 
-        tasks.withType<Test>().forEach {test ->
-            test.apply {
-                useTestNG()
-            }
+        tasks.withType<Test> {
+            useTestNG()
         }
 
         tasks.withType<KotlinCompile> {
