@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import java.net.URI
 
 plugins {
@@ -29,6 +30,7 @@ subprojects {
     }
 
     plugins.withId("kotlin") {
+        extra["kotlinVersion"] = (this as KotlinPluginWrapper).kotlinPluginVersion
         dependencies {
             add("testCompile", "org.testng:testng:6.8.8")
         }

@@ -5,7 +5,8 @@ plugins {
     id("org.jetbrains.intellij") version "0.2.17"
 }
 
-val kotlinVersion = KotlinVersion.CURRENT.toString()
+val kotlinVersion: String by extra
+
 dependencies {
     compile(project(":browser"))
     // explicit Kotlin dependency to prevent the intellij plugin from adding the Kotlin libraries in the lib directory
