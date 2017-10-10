@@ -30,7 +30,6 @@ subprojects {
     }
 
     plugins.withId("kotlin") {
-        extra["kotlinVersion"] = (this as KotlinPluginWrapper).kotlinPluginVersion
         dependencies {
             add("testCompile", "org.testng:testng:6.8.8")
         }
