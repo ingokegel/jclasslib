@@ -1,6 +1,6 @@
 apply plugin: 'idea'
 
-version = '5.2'
+version = '5.2.1'
 ext.mediaDir = file('media')
 
 buildDir = file('build/gradle')
