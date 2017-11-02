@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="7.0" transformSequenceNumber="6">
+<install4j version="7.0.3" transformSequenceNumber="7">
   <directoryPresets config="." />
   <application name="jclasslib bytecode viewer" distributionSourceDir="" applicationId="8931-3388-4457-4383" mediaDir="../../../media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="http://www.ej-technologies.com" version="5.0" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" macVolumeId="75379f30e977c6d1" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
@@ -120,9 +120,6 @@
                 <boolean>false</boolean>
               </void>
               <void property="resizable">
-                <boolean>false</boolean>
-              </void>
-              <void property="watermark">
                 <boolean>false</boolean>
               </void>
             </object>
@@ -582,9 +579,6 @@ return console.askOkCancel(message, true);
               <void property="useCustomMacosExecutableName">
                 <boolean>true</boolean>
               </void>
-              <void property="watermark">
-                <boolean>false</boolean>
-              </void>
             </object>
           </java>
         </serializedBean>
@@ -780,7 +774,7 @@ return console.askYesNo(message, true);
               </java>
             </serializedBean>
             <beans>
-              <formComponent name="" id="2047307288" customizedId="" beanClass="com.install4j.runtime.beans.styles.ContentComponent" enabled="true" commentSet="false" comment="" insetTop="5" insetLeft="20" insetBottom="10" insetRight="20" resetInitOnPrevious="false" useExternalParametrization="false" externalParametrizationName="" externalParametrizationMode="all">
+              <formComponent name="" id="2047307288" customizedId="" beanClass="com.install4j.runtime.beans.styles.ContentComponent" enabled="true" commentSet="false" comment="" insetTop="10" insetLeft="20" insetBottom="10" insetRight="20" resetInitOnPrevious="false" useExternalParametrization="false" externalParametrizationName="" externalParametrizationMode="all">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.styles.ContentComponent" />
@@ -916,7 +910,7 @@ return console.askYesNo(message, true);
                 <visibilityScript />
                 <externalParametrizationPropertyNames />
               </formComponent>
-              <formComponent name="" id="2047307295" customizedId="" beanClass="com.install4j.runtime.beans.styles.ContentComponent" enabled="true" commentSet="false" comment="" insetTop="5" insetLeft="" insetBottom="0" insetRight="" resetInitOnPrevious="false" useExternalParametrization="false" externalParametrizationName="" externalParametrizationMode="all">
+              <formComponent name="" id="2047307295" customizedId="" beanClass="com.install4j.runtime.beans.styles.ContentComponent" enabled="true" commentSet="false" comment="" insetTop="10" insetLeft="" insetBottom="0" insetRight="" resetInitOnPrevious="false" useExternalParametrization="false" externalParametrizationName="" externalParametrizationMode="all">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.styles.ContentComponent" />
