@@ -90,9 +90,8 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane() {
         selectedTab?.browserComponent?.history?.updateActions()
     }
 
-    override fun isDataFlavorSupported(transferable: Transferable): Boolean {
-        return transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
-    }
+    override fun isDataFlavorSupported(transferable: Transferable): Boolean =
+            transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
     override fun handleDrop(event: DropTargetDropEvent) {
         event.acceptDrop(DnDConstants.ACTION_COPY)

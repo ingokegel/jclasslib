@@ -36,9 +36,7 @@ class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : Attribu
         output.write(info)
     }
 
-    override fun getAttributeLength(): Int {
-        return info.size
-    }
+    override fun getAttributeLength(): Int = info.size
 
     override val debugInfo: String
         get() = "of reported type ${getAttributeName()}"

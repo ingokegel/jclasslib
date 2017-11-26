@@ -51,13 +51,9 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
         isUnderlined = true
     }
 
-    fun getElement(treePath: TreePath): T {
-        return getElementOrNull(treePath)!!
-    }
+    fun getElement(treePath: TreePath): T = getElementOrNull(treePath)!!
 
-    fun getElementOrNull(treePath: TreePath): T? {
-        return elementClass.cast(treeNode(treePath).element)
-    }
+    fun getElementOrNull(treePath: TreePath): T? = elementClass.cast(treeNode(treePath).element)
 
     fun treeNode(treePath: TreePath) = treePath.lastPathComponent as BrowserTreeNode
 

@@ -123,9 +123,8 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         wrappers[targetPosition].transferTabsFrom(wrappers[sourcePosition])
     }
 
-    fun findTab(fileName: String): BrowserTab? {
-        return wrappers.flatMap { it.tabbedPane.tabs() }.firstOrNull { it.fileName == fileName }
-    }
+    fun findTab(fileName: String): BrowserTab? =
+            wrappers.flatMap { it.tabbedPane.tabs() }.firstOrNull { it.fileName == fileName }
 
     val totalTabCount: Int
         get() = wrappers.sumBy { it.tabbedPane.tabs().count() }

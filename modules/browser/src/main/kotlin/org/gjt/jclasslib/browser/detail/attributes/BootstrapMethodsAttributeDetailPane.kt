@@ -35,15 +35,11 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDeta
                     override fun getConstantPoolIndex(row: BootstrapMethodsEntry) = row.methodRefIndex
                 })
                 add(object : StringColumn<BootstrapMethodsEntry>("Arguments", 400) {
-                    override fun createValue(row: BootstrapMethodsEntry): String {
-                        return row.verbose.replace("\n", "<br>")
-                    }
-
+                    override fun createValue(row: BootstrapMethodsEntry): String = row.verbose.replace("\n", "<br>")
                     override fun createTableCellRenderer() = createTableCellEditor()
                     override fun createTableCellEditor() = MultiLineHtmlCellHandler { description ->
                         ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                     }
-
                     override fun isEditable(row: BootstrapMethodsEntry) = true
                 })
             }

@@ -22,9 +22,8 @@ class ModuleAttributeDetailPane(services: BrowserServices) : DocumentDetailPane<
 
     override fun createKeyValueDetailPane() = ModuleAttributeValueDetailPane()
 
-    override fun createDocument(styles: StyleContext, attribute: ModuleAttribute, classFile: ClassFile): ModuleDocument {
-        return ModuleDocument(styles, attribute, classFile)
-    }
+    override fun createDocument(styles: StyleContext, attribute: ModuleAttribute, classFile: ClassFile): ModuleDocument =
+            ModuleDocument(styles, attribute, classFile)
 
     override fun offsetToPosition(offset: Int): Int = offset
 

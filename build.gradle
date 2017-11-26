@@ -7,7 +7,7 @@ buildDir = file('build/gradle')
 ext.externalLibsDir = file("$buildDir/externalLibs")
 
 buildscript {scriptHandler ->
-    ext.kotlinVersion = '1.1.50'
+    ext.kotlinVersion = '1.1.61'
 
     repositories {
         flatDir {

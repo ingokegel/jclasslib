@@ -35,10 +35,7 @@ class StackMapTableAttributeDetailPane(services: BrowserServices) : TableDetailP
                 override fun createTableCellEditor() = MultiLineHtmlCellHandler { description ->
                     ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
                 }
-
-                override fun isEditable(row: StackMapFrameEntry): Boolean {
-                    return true
-                }
+                override fun isEditable(row: StackMapFrameEntry): Boolean = true
             })
         }
     }

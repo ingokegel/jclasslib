@@ -30,12 +30,10 @@ enum class VerificationType(override val tag: Int) : ClassFileEnum {
     /**
      * Create an associated [VerificationTypeInfoEntry] instance.
      */
-    fun createEntry(classFile: ClassFile): VerificationTypeInfoEntry {
-        return when (this) {
-            OBJECT -> ObjectVerificationTypeInfoEntry(classFile)
-            UNINITIALIZED -> UninitializedVerificationTypeInfoEntry()
-            else -> VerificationTypeInfoEntry(this)
-        }
+    fun createEntry(classFile: ClassFile): VerificationTypeInfoEntry = when (this) {
+        OBJECT -> ObjectVerificationTypeInfoEntry(classFile)
+        UNINITIALIZED -> UninitializedVerificationTypeInfoEntry()
+        else -> VerificationTypeInfoEntry(this)
     }
 
     companion object : Lookup<VerificationType>(VerificationType::class.java, "verification tag")

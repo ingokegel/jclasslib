@@ -37,9 +37,7 @@ class LineNumberTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
         lineNumberTable.forEach { it.write(output) }
     }
 
-    override fun getAttributeLength(): Int {
-        return 2 + lineNumberTable.sumBy { it.length }
-    }
+    override fun getAttributeLength(): Int = 2 + lineNumberTable.sumBy { it.length }
 
     override val debugInfo: String
         get() = "with ${lineNumberTable.size} entries"

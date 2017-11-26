@@ -62,9 +62,7 @@ object ClassFileReader {
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
-    fun readFromFile(file: File): ClassFile {
-        return readFromInputStream(FileInputStream(file))
-    }
+    fun readFromFile(file: File): ClassFile = readFromInputStream(FileInputStream(file))
 
     /**
      * Converts a class file to a ClassFile structure.

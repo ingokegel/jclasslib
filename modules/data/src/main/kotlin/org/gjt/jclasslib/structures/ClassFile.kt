@@ -95,9 +95,7 @@ class ClassFile : Structure(), AttributeContainer {
      *
      * @param constant the constant pool entry
      */
-    fun getConstantPoolIndex(constant: Constant): Int {
-        return constantPoolEntryToIndex[constant] ?: -1
-    }
+    fun getConstantPoolIndex(constant: Constant): Int = constantPoolEntryToIndex[constant] ?: -1
 
     /**
      * Set all constant pool entries where the new array
@@ -169,9 +167,8 @@ class ClassFile : Structure(), AttributeContainer {
      * @param index the index
      */
     @Throws(InvalidByteCodeException::class)
-    fun getConstantPoolUtf8Entry(index: Int): ConstantUtf8Info {
-        return getConstantPoolEntry(index, ConstantUtf8Info::class.java)
-    }
+    fun getConstantPoolUtf8Entry(index: Int): ConstantUtf8Info =
+            getConstantPoolEntry(index, ConstantUtf8Info::class.java)
 
     /**
      * Get the constant pool entry at the specified index and cast it to a specified class.

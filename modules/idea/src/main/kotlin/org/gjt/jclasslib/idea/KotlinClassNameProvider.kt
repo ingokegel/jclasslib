@@ -13,8 +13,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.codegen.binding.CodegenBinding
-import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider
-import org.jetbrains.kotlin.fileClasses.getFileClassInternalName
+import org.jetbrains.kotlin.fileClasses.JvmFileClassUtil
 import org.jetbrains.kotlin.idea.debugger.evaluate.KotlinDebuggerCaches
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.containingClassOrObject
@@ -27,9 +26,8 @@ class KotlinClassNameProvider {
     private val cache = WeakHashMap<PsiElement, String>()
 
     companion object {
-        fun getInstance(project: Project): KotlinClassNameProvider {
-            return ServiceManager.getService(project, KotlinClassNameProvider::class.java)
-        }
+        fun getInstance(project: Project): KotlinClassNameProvider =
+                ServiceManager.getService(project, KotlinClassNameProvider::class.java)
 
         private val CLASS_ELEMENT_TYPES = arrayOf<Class<out PsiElement>>(
                 KtFile::class.java,
@@ -73,7 +71,12 @@ class KotlinClassNameProvider {
 
         return when (element) {
             is KtFile -> {
-                runReadAction { NoResolveFileClassesProvider.getFileClassInternalName(element) }.toJdiName()
+                try {
+                    runReadAction { JvmFileClassUtil.getFileClassInternalName(element) }.toJdiName()
+                } catch (e: Throwable) {
+                    // Kotlin 1.1.50 and lower
+                    null
+                }
             }
             is KtClassOrObject -> {
                 runReadAction {
@@ -127,7 +130,6 @@ class KotlinClassNameProvider {
     private fun String.toJdiName() = replace('/', '.')
 }
 
-private fun <T> runReadAction(action: () -> T): T {
-    return ApplicationManager.getApplication().runReadAction<T>(action)
-}
+private fun <T> runReadAction(action: () -> T): T =
+        ApplicationManager.getApplication().runReadAction<T>(action)
 

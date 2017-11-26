@@ -27,7 +27,7 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
-class BrowserTab(val fileName: String, val moduleName: String, frame : BrowserFrame) : JPanel(), BrowserServices {
+class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFrame) : JPanel(), BrowserServices {
 
     private val tabbedPane: BrowserTabbedPane
         get() = SwingUtilities.getAncestorOfClass(BrowserTabbedPane::class.java, this) as BrowserTabbedPane
@@ -72,11 +72,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame : BrowserFr
         }
     }
 
-    private tailrec fun findClass(className: String): FindResult? {
-        val findResult: FindResult? = parentFrame.config.findClass(className, false)
-        return if (findResult != null) {
-            findResult
-        } else {
+    private tailrec fun findClass(className: String): FindResult? = parentFrame.config.findClass(className, false) ?:
             if (GUIHelper.showOptionDialog(parentFrame,
                     "The class $className could not be found.\nYou can check your classpath configuration and try again.",
                     arrayOf("Setup classpath", "Cancel"),
@@ -86,8 +82,6 @@ class BrowserTab(val fileName: String, val moduleName: String, frame : BrowserFr
                 parentFrame.setupClasspathAction()
                 findClass(className)
             }
-        }
-    }
 
     init {
         layout = BorderLayout()
@@ -115,7 +109,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame : BrowserFr
         browserComponent.browserPath = browserPath
     }
 
-    private fun readClassFile(frame : BrowserFrame): ClassFile {
+    private fun readClassFile(frame: BrowserFrame): ClassFile {
         try {
             return when {
                 fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
@@ -159,8 +153,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame : BrowserFr
         private val ATTRIBUTE_FILE_NAME = "fileName"
         private val ATTRIBUTE_MODULE_NAME = "moduleName"
 
-        fun create(element: Element, frame : BrowserFrame): BrowserTab {
-            return BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), element.getAttributeNode(ATTRIBUTE_MODULE_NAME)?.value ?: ClasspathEntry.UNNAMED_MODULE, frame)
-        }
+        fun create(element: Element, frame: BrowserFrame): BrowserTab =
+                BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), element.getAttributeNode(ATTRIBUTE_MODULE_NAME)?.value ?: ClasspathEntry.UNNAMED_MODULE, frame)
     }
 }

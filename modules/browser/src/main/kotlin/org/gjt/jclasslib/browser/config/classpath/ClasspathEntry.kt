@@ -32,9 +32,7 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
         return file == other.file
     }
 
-    override fun hashCode(): Int {
-        return file.hashCode()
-    }
+    override fun hashCode(): Int = file.hashCode()
 
     // classpath entries are immutable
     override fun addClasspathChangeListener(listener: ClasspathChangeListener) {
@@ -71,9 +69,7 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
         return newNode
     }
 
-    protected fun String.stripClassSuffix(): String {
-        return this.substring(0, this.length - CLASSFILE_SUFFIX.length)
-    }
+    protected fun String.stripClassSuffix(): String = this.substring(0, this.length - CLASSFILE_SUFFIX.length)
 
     protected fun addEntry(path: String, moduleName: String?, classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
         val pathComponents = path.stripClassSuffix().replace('\\', '/').split(Regex("/"))

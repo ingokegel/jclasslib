@@ -52,9 +52,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     val root: BrowserTreeNode
         get() = tree.model.root as BrowserTreeNode
 
-    fun getPathForCategory(category: NodeType): TreePath {
-        return categoryToPath[category]!!
-    }
+    fun getPathForCategory(category: NodeType): TreePath = categoryToPath[category]!!
 
     @Suppress("unused")
     fun showMethod(methodName: String, methodSignature: String) {

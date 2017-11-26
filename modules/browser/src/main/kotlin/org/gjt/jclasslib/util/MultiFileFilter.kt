@@ -29,8 +29,6 @@ class MultiFileFilter(private val extensions: List<String>, description: String)
         file.name.endsWith(extension)
     }
 
-    override fun getDescription(): String {
-        return description
-    }
+    override fun getDescription(): String = description
 }
 

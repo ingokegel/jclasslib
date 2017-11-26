@@ -32,9 +32,7 @@ class SourceDebugExtensionAttribute(private val attributeLength: Int, classFile:
         output.write(string.toByteArray())
     }
 
-    override fun getAttributeLength(): Int {
-        return string.toByteArray().size
-    }
+    override fun getAttributeLength(): Int = string.toByteArray().size
 
     override val debugInfo: String
         get() = "with ${string.length} characters"

@@ -23,18 +23,16 @@ private val classFileSuffix = ".class"
  * @param fileName the file name to the class file in the JRT, including the module
  * @param jreHome the home directory of the JRE
  */
-fun getJrtInputStream(fileName: String, jreHome: File): InputStream {
-    return Files.newInputStream(getModulesRoot(jreHome).resolve(fileName))
-}
+fun getJrtInputStream(fileName: String, jreHome: File): InputStream =
+        Files.newInputStream(getModulesRoot(jreHome).resolve(fileName))
 
 /**
  * Find a class with a prepended module name in the JRT (Java 9+)
  * @param moduleNameAndClassName the module name and the class name, separated by a slash
  * @param jreHome the home directory of the JRE
  */
-fun findClassWithModuleNameInJrt(moduleNameAndClassName: String, jreHome: File): Path? {
-    return getModulesRoot(jreHome).resolve(moduleNameAndClassName + classFileSuffix)
-}
+fun findClassWithModuleNameInJrt(moduleNameAndClassName: String, jreHome: File): Path? =
+        getModulesRoot(jreHome).resolve(moduleNameAndClassName + classFileSuffix)
 /**
  * Find a class in the JRT (Java 9+)
  * @param className the class name

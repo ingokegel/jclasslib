@@ -23,9 +23,8 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
         name = "Bytecode"
     }
 
-    override fun createDocument(styles: StyleContext, attribute: CodeAttribute, classFile: ClassFile): ByteCodeDocument {
-        return ByteCodeDocument(styles, attribute, services.classFile)
-    }
+    override fun createDocument(styles: StyleContext, attribute: CodeAttribute, classFile: ClassFile): ByteCodeDocument =
+            ByteCodeDocument(styles, attribute, services.classFile)
 
     override fun offsetToPosition(offset: Int) = attributeDocument.getPosition(offset)
 

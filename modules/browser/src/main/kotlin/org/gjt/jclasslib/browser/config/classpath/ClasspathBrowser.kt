@@ -217,7 +217,5 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
 
     private fun getModel(reset: Boolean, tree: JTree) = if (reset) DefaultTreeModel(ClassTreeNode()) else tree.model as DefaultTreeModel
 
-    private fun getSelectedTree(): JTree {
-        return trees[tabbedPane.selectedIndex]
-    }
+    private fun getSelectedTree(): JTree = trees[tabbedPane.selectedIndex]
 }

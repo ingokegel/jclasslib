@@ -49,9 +49,7 @@ class BrowserHistory(private val services: BrowserServices) {
 
         private var before: BrowserHistoryEntry? = null
 
-        override fun canUndo(): Boolean {
-            return before != null
-        }
+        override fun canUndo(): Boolean = before != null
         override fun toString() = treePath.toString() + " / " + (resetter?.toString() ?: "null")
 
         override fun addEdit(newEdit: UndoableEdit): Boolean {

@@ -36,21 +36,18 @@ class ShowBytecodeAction : AnAction() {
         openClassFile(psiElement, null, project)
     }
 
-    private fun getPsiElement(e: AnActionEvent): PsiElement? {
-        return getPsiElement(e.dataContext, e.project, e.getData(CommonDataKeys.EDITOR))
-    }
+    private fun getPsiElement(e: AnActionEvent): PsiElement? =
+            getPsiElement(e.dataContext, e.project, e.getData(CommonDataKeys.EDITOR))
 
-    private fun getPsiElement(dataContext: DataContext, project: Project?, editor: Editor?): PsiElement? {
-        return when {
-            project == null -> null
-            editor == null -> dataContext.getData(CommonDataKeys.PSI_ELEMENT)
-            else -> {
-                val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project)
-                val injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile)
-                injectedEditor?.let {
-                    findElementInFile(PsiUtilBase.getPsiFileInEditor(it, project), it)
-                } ?: findElementInFile(psiFile, editor)
-            }
+    private fun getPsiElement(dataContext: DataContext, project: Project?, editor: Editor?): PsiElement? = when {
+        project == null -> null
+        editor == null -> dataContext.getData(CommonDataKeys.PSI_ELEMENT)
+        else -> {
+            val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project)
+            val injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile)
+            injectedEditor?.let {
+                findElementInFile(PsiUtilBase.getPsiFileInEditor(it, project), it)
+            } ?: findElementInFile(psiFile, editor)
         }
     }
 

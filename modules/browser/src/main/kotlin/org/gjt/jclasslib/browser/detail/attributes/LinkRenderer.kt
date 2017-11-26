@@ -54,7 +54,5 @@ class LinkRenderer : TableCellRenderer {
         }
     }
 
-    fun isLinkLabelHit(point: Point): Boolean {
-        return linkLineRenderer.bounds.contains(point)
-    }
+    fun isLinkLabelHit(point: Point): Boolean = linkLineRenderer.bounds.contains(point)
 }

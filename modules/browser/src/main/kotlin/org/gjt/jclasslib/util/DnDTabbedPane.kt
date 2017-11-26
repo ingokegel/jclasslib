@@ -16,14 +16,13 @@ import java.awt.image.BufferedImage
 import java.util.*
 import javax.swing.*
 
+@Suppress("RedundantOverride")
 open class DnDTabbedPane : JTabbedPane() {
 
     private val glassPane : GhostGlassPane by lazy { createOrGetGlassPane(rootPane) }
 
     val tabAcceptor: TabAcceptor = object : TabAcceptor {
-        override fun isDropAcceptable(tabbedPane: DnDTabbedPane, index: Int): Boolean {
-            return true
-        }
+        override fun isDropAcceptable(tabbedPane: DnDTabbedPane, index: Int): Boolean = true
     }
 
     init {
@@ -143,9 +142,7 @@ open class DnDTabbedPane : JTabbedPane() {
         return if (r.contains(point)) tabCount else -1
     }
 
-    private fun getFirstVisibleTabBound(): Rectangle? {
-        return getNextVisibleTabBound(-1)
-    }
+    private fun getFirstVisibleTabBound(): Rectangle? = getNextVisibleTabBound(-1)
 
     private fun getNextVisibleTabBound(index: Int): Rectangle? {
         for (i in index + 1 until tabCount) {
@@ -161,15 +158,11 @@ open class DnDTabbedPane : JTabbedPane() {
         return null
     }
 
-    private fun getLastVisibleTabBound(): Rectangle? {
-        return getPreviousVisibleTabBound(tabCount)
-    }
+    private fun getLastVisibleTabBound(): Rectangle? = getPreviousVisibleTabBound(tabCount)
 
     // Nullable return value is important because tabs will be hidden for tab overflow
     // and the bounds of such tabs are null
-    override fun getBoundsAt(index: Int): Rectangle? {
-        return super.getBoundsAt(index)
-    }
+    override fun getBoundsAt(index: Int): Rectangle? = super.getBoundsAt(index)
 
     private fun convertTab(data: TabTransferData, targetIndex: Int) {
         val source = data.tabbedPane

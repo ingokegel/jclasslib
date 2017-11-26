@@ -69,9 +69,7 @@ abstract class Structure {
      * @param bytes the int value to print as a hex string
      * @return the hex string
      */
-    protected fun formatBytes(bytes: Int): String {
-        return bytes.paddedHex(8)
-    }
+    protected fun formatBytes(bytes: Int): String = bytes.paddedHex(8)
 
     /**
      * Utility method for derived structures. Format an access flag or an
@@ -79,9 +77,7 @@ abstract class Structure {
      * @param accessFlags the unsigned short value to print as a hex string
      * @return the hex string
      */
-    protected fun formatAccessFlags(accessFlags: Int): String {
-        return accessFlags.paddedHex(4)
-    }
+    protected fun formatAccessFlags(accessFlags: Int): String = accessFlags.paddedHex(4)
 
     /**
      * Utility method for derived structures. Format an access flag as

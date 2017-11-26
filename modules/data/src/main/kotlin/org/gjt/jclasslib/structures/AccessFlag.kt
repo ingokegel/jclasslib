@@ -79,9 +79,7 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
     /** Checks if this access flag is set in the supplied access flags.
      * @param accessFlags the access flags
      */
-    fun isSet(accessFlags: Int): Boolean {
-        return accessFlags and flag == flag
-    }
+    fun isSet(accessFlags: Int): Boolean = accessFlags and flag == flag
 
     override fun toString() = verbose
 

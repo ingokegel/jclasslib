@@ -31,9 +31,7 @@ class CountedInputStream(input: InputStream) : FilterInputStream(input) {
     }
 
     @Throws(IOException::class)
-    override fun read(b: ByteArray): Int {
-        return read(b, 0, b.size)
-    }
+    override fun read(b: ByteArray): Int = read(b, 0, b.size)
 
     @Throws(IOException::class)
     override fun read(b: ByteArray, offset: Int, len: Int): Int {
@@ -51,7 +49,5 @@ class CountedInputStream(input: InputStream) : FilterInputStream(input) {
     }
 
     // Marking invalidates bytesRead
-    override fun markSupported(): Boolean {
-        return false
-    }
+    override fun markSupported(): Boolean = false
 }
