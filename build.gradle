@@ -7,7 +7,7 @@ buildDir = file('build/gradle')
 ext.externalLibsDir = file("$buildDir/externalLibs")
 
 buildscript {scriptHandler ->
-    ext.kotlinVersion = '1.1.61'
+    ext.kotlinVersion = '1.2.0'
 
     repositories {
         flatDir {
@@ -65,7 +65,10 @@ allprojects {
     }
     
     plugins.withId("kotlin") {
-        tasks.getByName("compileKotlin").kotlinOptions.languageVersion = "1.1"
+        tasks.getByName("compileKotlin").kotlinOptions{
+            languageVersion = "1.2"
+            apiVersion = "1.2"
+        }
     }
 }
 
