@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.1.51" apply false
+    kotlin("jvm") version "1.2.0" apply false
     id("org.jetbrains.dokka") version "0.9.15" apply false
     idea
 }
