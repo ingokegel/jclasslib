@@ -145,7 +145,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     private fun ExtendedJLabel.setupMouseListener(mouseListener: MouseListener) {
         labelToMouseListener[this]?.let { removeMouseListener(it) }
         addMouseListener(mouseListener)
-        labelToMouseListener.put(this, mouseListener)
+        labelToMouseListener[this] = mouseListener
     }
 
     private fun ExtendedJLabel.applyComment(constantPoolIndex: Int) {

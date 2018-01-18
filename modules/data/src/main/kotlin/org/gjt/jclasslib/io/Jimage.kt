@@ -16,7 +16,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 private val modulesRootsCache = mutableMapOf<File, Path>()
-private val classFileSuffix = ".class"
+private const val classFileSuffix = ".class"
 
 /**
  * Get an input stream to a class file in the JRE.

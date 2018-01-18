@@ -106,10 +106,10 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
                 createTableModel(attribute)
             }
 
-    open protected val autoResizeMode: Int
+    protected open val autoResizeMode: Int
         get() = JTable.AUTO_RESIZE_OFF
 
-    open protected val isVariableRowHeight: Boolean
+    protected open val isVariableRowHeight: Boolean
         get() = false
 
     override fun setupComponent() {
@@ -151,7 +151,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
         }
     }
 
-    open protected val rowHeightFactor: Float
+    protected open val rowHeightFactor: Float
         get() = 1f
 
     fun selectIndex(index: Int) {

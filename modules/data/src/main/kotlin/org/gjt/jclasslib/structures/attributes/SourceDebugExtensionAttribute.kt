@@ -41,7 +41,7 @@ class SourceDebugExtensionAttribute(private val attributeLength: Int, classFile:
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "SourceDebugExtension"
+        const val ATTRIBUTE_NAME = "SourceDebugExtension"
     }
 
 }

@@ -122,9 +122,9 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
     }
 
     companion object {
-        val CLASSFILE_SUFFIX = ".class"
-        val UNNAMED_MODULE = "<unnamed module>"
-        val MODULE_INFO_CLASS_FILE_NAME = "module-info.class"
+        const val CLASSFILE_SUFFIX = ".class"
+        const val UNNAMED_MODULE = "<unnamed module>"
+        const val MODULE_INFO_CLASS_FILE_NAME = "module-info.class"
 
         fun create(element : Element) : ClasspathEntry? = when (element.nodeName) {
             ClasspathDirectoryEntry.NODE_NAME -> ClasspathDirectoryEntry.create(element)

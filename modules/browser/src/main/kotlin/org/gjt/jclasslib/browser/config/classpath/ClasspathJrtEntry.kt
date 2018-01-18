@@ -33,6 +33,6 @@ class ClasspathJrtEntry(jreHome: String) : ClasspathEntry(jreHome) {
     }
 
     companion object {
-        val JRT_PREFIX = "jrt:"
+        const val JRT_PREFIX = "jrt:"
     }
 }

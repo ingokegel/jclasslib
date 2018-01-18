@@ -57,7 +57,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
             recentNode.keys().forEach { key ->
                 val fileName = recentNode.get(key, null)
                 if (fileName != null) {
-                    numberToFile.put(Integer.parseInt(key), fileName)
+                    numberToFile[Integer.parseInt(key)] = fileName
                 }
             }
             recentWorkspaces.addAll(numberToFile.values)
@@ -119,7 +119,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
     }
 
     companion object {
-        private val RECENT_PROJECTS_MAX_SIZE = 10
-        private val SETTINGS_RECENT_WORKSPACES = "recentWorkspaces"
+        private const val RECENT_PROJECTS_MAX_SIZE = 10
+        private const val SETTINGS_RECENT_WORKSPACES = "recentWorkspaces"
     }
 }

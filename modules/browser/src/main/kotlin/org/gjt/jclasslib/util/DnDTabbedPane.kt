@@ -401,8 +401,8 @@ open class DnDTabbedPane : JTabbedPane() {
     }
 
     companion object {
-        private val LINE_WIDTH = 3
-        private val NAME = "TabTransferData"
+        private const val LINE_WIDTH = 3
+        private const val NAME = "TabTransferData"
         private val FLAVOR = DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME)
         private val INSERTION_MARKER_COLOR = Color(0, 100, 255)
         private val GHOST_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f)

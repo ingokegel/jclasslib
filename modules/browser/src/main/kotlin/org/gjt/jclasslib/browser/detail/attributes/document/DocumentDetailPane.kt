@@ -109,7 +109,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         })
     }
 
-    open protected fun makeVisible() {
+    protected open fun makeVisible() {
 
     }
 
@@ -236,7 +236,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         }
     }
 
-    protected inner open class AttributeTextPane : JTextPane() {
+    protected open inner class AttributeTextPane : JTextPane() {
         var preventDrag: Boolean = false
 
         init {
@@ -293,7 +293,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
 
     companion object {
         private val origin = Rectangle(0, 0, 0, 0)
-        private val LINE_NUMBERS_OFFSET = 9
+        private const val LINE_NUMBERS_OFFSET = 9
 
         private data class FontInfo(val family: String, val style: Int, val size: Int)
         private val styles = object : StyleContext() {

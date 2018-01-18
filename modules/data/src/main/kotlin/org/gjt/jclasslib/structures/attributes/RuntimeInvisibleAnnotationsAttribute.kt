@@ -17,6 +17,6 @@ class RuntimeInvisibleAnnotationsAttribute(classFile: ClassFile) : RuntimeAnnota
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "RuntimeInvisibleAnnotations"
+        const val ATTRIBUTE_NAME = "RuntimeInvisibleAnnotations"
     }
 }

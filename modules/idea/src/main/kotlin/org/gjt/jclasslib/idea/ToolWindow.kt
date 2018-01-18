@@ -39,7 +39,7 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.Action
 
-val toolWindowId: String = "jclasslib"
+const val toolWindowId: String = "jclasslib"
 
 fun showClassFile(virtualFile: VirtualFile, browserPath: BrowserPath?, project: Project) {
     val toolWindow = getToolWindow(project)

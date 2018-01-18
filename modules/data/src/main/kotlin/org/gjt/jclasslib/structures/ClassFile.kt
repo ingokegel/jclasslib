@@ -35,7 +35,7 @@ class ClassFile : Structure(), AttributeContainer {
         set(constantPool) {
             field = constantPool
             constantPool.forEachIndexed { i, cpInfo ->
-                constantPoolEntryToIndex.put(cpInfo, i)
+                constantPoolEntryToIndex[cpInfo] = i
             }
         }
 
@@ -105,7 +105,7 @@ class ClassFile : Structure(), AttributeContainer {
      */
     fun enlargeConstantPool(enlargedConstantPool: Array<Constant>) {
         for (i in constantPool.size until enlargedConstantPool.size) {
-            constantPoolEntryToIndex.put(enlargedConstantPool[i], i)
+            constantPoolEntryToIndex[enlargedConstantPool[i]] = i
         }
         this.constantPool = enlargedConstantPool
     }
@@ -117,7 +117,7 @@ class ClassFile : Structure(), AttributeContainer {
      * @param index the index
      */
     fun registerConstantPoolEntry(index: Int) {
-        constantPoolEntryToIndex.put(constantPool[index], index)
+        constantPoolEntryToIndex[constantPool[index]] = index
     }
 
     /**
@@ -335,7 +335,7 @@ class ClassFile : Structure(), AttributeContainer {
                     if (isDebug) debug("reading constant pool entry $i", input)
                     val constantType = ConstantType.getFromTag(input.readByte().toInt())
                     constantType.read(this, input).apply {
-                        constantPoolEntryToIndex.put(this, i)
+                        constantPoolEntryToIndex[this] = i
                         val extraEntryCount = constantType.extraEntryCount
                         if (extraEntryCount > 0) {
                             // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
@@ -353,7 +353,7 @@ class ClassFile : Structure(), AttributeContainer {
         if (isDebug) debug("wrote constant pool count ${constantPool.size}", out)
 
         constantPool.forEachIndexed { i, cpInfo ->
-            if (cpInfo !is ConstantPlaceholder) {
+            if (cpInfo != ConstantPlaceholder) {
                 if (isDebug) debug("writing constant pool entry $i", out)
                 cpInfo.write(out)
             }
@@ -458,6 +458,6 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     companion object {
-        private val MAGIC_NUMBER = 0xCAFEBABE.toInt()
+        private const val MAGIC_NUMBER = 0xCAFEBABE.toInt()
     }
 }

@@ -76,11 +76,11 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
 
     protected fun addCard(elementValueClass: Class<out T>, detailPane: DetailPane<*>) {
         specificInfoPane.add(detailPane.displayComponent, elementValueClass.name)
-        elementClassToDetailPane.put(elementValueClass, detailPane)
+        elementClassToDetailPane[elementValueClass] = detailPane
     }
 
     companion object {
-        private val NAME_UNKNOWN = "Unknown"
+        private const val NAME_UNKNOWN = "Unknown"
     }
 }
 

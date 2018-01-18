@@ -83,7 +83,7 @@ class ClosableTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLay
     companion object {
         private val BUTTON_SIZE = Dimension(17, 17)
         private val STROKE = BasicStroke(1.5.toFloat())
-        private val OFFSET = 5
+        private const val OFFSET = 5
         private val INACTIVE_DARK_COLOR = Color(100, 100, 100)
         private val INACTIVE_LIGHT_COLOR = Color(230, 230, 230)
     }

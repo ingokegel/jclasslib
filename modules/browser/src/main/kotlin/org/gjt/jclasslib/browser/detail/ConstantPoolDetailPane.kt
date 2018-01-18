@@ -23,7 +23,7 @@ class ConstantPoolDetailPane(services: BrowserServices) : DetailPane<Array<Const
     val filterPane = object : FilterPane<ConstantType, Constant>(this@ConstantPoolDetailPane) {
         override fun getAllFilterKeys() = ConstantType.values().toList()
         override fun isElementTextFiltered(element: Constant, filterText: String) = element is AbstractConstant && (isShowAll || element.verbose.contains(filterText))
-        override fun getFilterKeys(element: Constant) = if (element is ConstantPlaceholder) setOf() else setOf(element.constantType)
+        override fun getFilterKeys(element: Constant) = if (element == ConstantPlaceholder) setOf() else setOf(element.constantType)
     }
 
     override fun show(treePath: TreePath) {

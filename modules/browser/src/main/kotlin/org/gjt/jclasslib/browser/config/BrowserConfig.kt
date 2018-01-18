@@ -126,8 +126,8 @@ class BrowserConfig : ClasspathComponent {
     }
 
     companion object {
-        private val ATTRIBUTE_JRE_HOME = "jreHome"
-        private val NODE_NAME_CLASSPATH = "classpath"
+        private const val ATTRIBUTE_JRE_HOME = "jreHome"
+        private const val NODE_NAME_CLASSPATH = "classpath"
     }
 
 }

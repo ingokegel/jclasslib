@@ -82,7 +82,7 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
 
         }
 
-    open protected fun addComponents() {
+    protected open fun addComponents() {
         add(filterComponent(JLabel("Text filter:")), "split, $RADIO_BUTTON_INSET")
         add(filterComponent(filterTextField))
         add(filterComponent(JButton("Clear").apply {

@@ -61,8 +61,8 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathEntry(fileName) {
     }
 
     companion object {
-        val NODE_NAME = "archive"
-        private val ATTRIBUTE_PATH = "path"
+        const val NODE_NAME = "archive"
+        private const val ATTRIBUTE_PATH = "path"
 
         fun create(element: Element) = ClasspathArchiveEntry(element.getAttribute(ATTRIBUTE_PATH))
     }

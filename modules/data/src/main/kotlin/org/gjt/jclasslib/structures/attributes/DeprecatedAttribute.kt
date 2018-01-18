@@ -30,7 +30,7 @@ class DeprecatedAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     companion object {
         /** Name of the attribute as in the corresponding constant pool entry.  */
-        val ATTRIBUTE_NAME = "Deprecated"
+        const val ATTRIBUTE_NAME = "Deprecated"
     }
 
 }

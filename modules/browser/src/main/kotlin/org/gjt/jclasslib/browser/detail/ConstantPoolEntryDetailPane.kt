@@ -46,7 +46,7 @@ class ConstantPoolEntryDetailPane(services: BrowserServices) : DetailPane<Consta
 
     override fun show(treePath: TreePath) {
         val constant = getElement(treePath)
-        if (constant is ConstantPlaceholder) {
+        if (constant == ConstantPlaceholder) {
             showCard(NAME_UNKNOWN)
         } else {
             val constantType = constant.constantType
@@ -64,7 +64,7 @@ class ConstantPoolEntryDetailPane(services: BrowserServices) : DetailPane<Consta
 
     private fun addCard(detailPane: ConstantDetailPane<*>, constantType: ConstantType) {
         add(detailPane.displayComponent, constantType.name)
-        constantTypeToDetailPane.put(constantType, detailPane)
+        constantTypeToDetailPane[constantType] = detailPane
     }
 
     private fun showCard(name: String) {
@@ -72,7 +72,7 @@ class ConstantPoolEntryDetailPane(services: BrowserServices) : DetailPane<Consta
     }
 
     companion object {
-        private val NAME_UNKNOWN = "ConstantUnknown"
+        private const val NAME_UNKNOWN = "ConstantUnknown"
     }
 
 }

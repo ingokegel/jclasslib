@@ -20,10 +20,10 @@ import java.io.PrintStream
 import java.util.*
 import javax.swing.UIManager
 
-val applicationTitle = "Bytecode viewer"
-val lafDefaultSystemProperty = "jclasslib.laf.default"
-val workspaceFileSuffix = "jcw"
-val webSiteUrl = "http://www.ej-technologies.com/products/jclasslib/overview.html"
+const val applicationTitle = "Bytecode viewer"
+const val lafDefaultSystemProperty = "jclasslib.laf.default"
+const val workspaceFileSuffix = "jcw"
+const val webSiteUrl = "http://www.ej-technologies.com/products/jclasslib/overview.html"
 
 fun main(args: Array<String>) {
 

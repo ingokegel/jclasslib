@@ -103,7 +103,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     private inner class BrowserRootNode : BrowserTreeNode("Class file", NodeType.NO_CONTENT) {
         fun add(nodeType: NodeType, node: BrowserTreeNode) {
             add(node)
-            categoryToPath.put(nodeType, TreePath(arrayOf<Any>(this, node)))
+            categoryToPath[nodeType] = TreePath(arrayOf<Any>(this, node))
         }
     }
 
@@ -112,7 +112,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         return BrowserTreeNode("Constant Pool", NodeType.CONSTANT_POOL, constantPool).apply {
             constantPool.forEachIndexed { i, constant ->
                 if (i > 0) {
-                    add(if (constant is ConstantPlaceholder) {
+                    add(if (constant == ConstantPlaceholder) {
                         BrowserTreeNode(getFormattedIndex(i, constantPool.size) + "(large numeric continued)", NodeType.NO_CONTENT, constant)
                     } else {
                         try {

@@ -16,7 +16,7 @@ import javax.swing.*
 
 object GUIHelper {
 
-    val MESSAGE_TITLE = "jclasslib"
+    const val MESSAGE_TITLE = "jclasslib"
     val YES_NO_OPTIONS = arrayOf("Yes", "No")
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
 

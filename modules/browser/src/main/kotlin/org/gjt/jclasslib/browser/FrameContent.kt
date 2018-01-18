@@ -231,16 +231,16 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     }
 
     companion object {
-        val CARD_EMPTY = "empty"
-        val CARD_TABBED_PANE = "tabbedPane"
+        const val CARD_EMPTY = "empty"
+        const val CARD_TABBED_PANE = "tabbedPane"
         val PREFERRED_SIZE = Dimension(100, 100)
         val EMPTY_BACKGROUND = Color(210, 210, 210)
-        val TABBED_PANE_EMPTY_MESSAGE = "Drag class files to this area"
+        const val TABBED_PANE_EMPTY_MESSAGE = "Drag class files to this area"
 
-        private val NODE_NAME_TABS = "tabs"
-        private val ATTRIBUTE_SPLIT_MODE = "splitMode"
-        private val NODE_NAME_GROUP = "group"
-        private val ATTRIBUTE_POSITION = "position"
+        private const val NODE_NAME_TABS = "tabs"
+        private const val ATTRIBUTE_SPLIT_MODE = "splitMode"
+        private const val NODE_NAME_GROUP = "group"
+        private const val ATTRIBUTE_POSITION = "position"
     }
 }
 

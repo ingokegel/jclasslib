@@ -149,9 +149,9 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     }
 
     companion object {
-        val NODE_NAME = "tab"
-        private val ATTRIBUTE_FILE_NAME = "fileName"
-        private val ATTRIBUTE_MODULE_NAME = "moduleName"
+        const val NODE_NAME = "tab"
+        private const val ATTRIBUTE_FILE_NAME = "fileName"
+        private const val ATTRIBUTE_MODULE_NAME = "moduleName"
 
         fun create(element: Element, frame: BrowserFrame): BrowserTab =
                 BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), element.getAttributeNode(ATTRIBUTE_MODULE_NAME)?.value ?: ClasspathEntry.UNNAMED_MODULE, frame)

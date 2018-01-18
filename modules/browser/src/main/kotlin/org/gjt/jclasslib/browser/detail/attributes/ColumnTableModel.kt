@@ -16,7 +16,7 @@ abstract class ColumnTableModel<T : Any>(private val rows: Array<T>) : AbstractT
         buildColumns(this)
     }
 
-    open protected fun buildColumns(columns: ArrayList<Column<T>>) {
+    protected open fun buildColumns(columns: ArrayList<Column<T>>) {
         columns.add(object : NumberColumn<T>("Nr.") {
             override fun createValue(row: T) = rows.indexOf(row)
             override val maxWidth: Int

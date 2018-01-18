@@ -32,7 +32,7 @@ class BrowserPath {
     }
 
     companion object {
-        val NODE_NAME = "path"
+        const val NODE_NAME = "path"
 
         fun create(element: Element): BrowserPath? {
             return element.firstChildElement(NODE_NAME)?.let { pathElement ->
@@ -75,8 +75,8 @@ data class CategoryHolder(val category: NodeType = NodeType.NO_CONTENT) : PathCo
     override fun matches(node: BrowserTreeNode) = node.type == category
 
     companion object {
-        val NODE_NAME = "category"
-        private val ATTRIBUTE_NAME = "name"
+        const val NODE_NAME = "category"
+        private const val ATTRIBUTE_NAME = "name"
 
         fun create(element: Element): CategoryHolder? {
             val nodeType = NodeType.getByName(element.getAttribute(ATTRIBUTE_NAME))
@@ -95,8 +95,8 @@ data class IndexHolder(val index: Int = -1) : PathComponent {
     override fun matches(node: BrowserTreeNode) = node.index == index
 
     companion object {
-        val NODE_NAME = "element"
-        private val ATTRIBUTE_INDEX = "index"
+        const val NODE_NAME = "element"
+        private const val ATTRIBUTE_INDEX = "index"
 
         fun create(element: Element) = IndexHolder(element.getAttribute(ATTRIBUTE_INDEX).toInt())
     }
@@ -115,9 +115,9 @@ data class ReferenceHolder(val name: String = "", val type: String = "") : PathC
     }
 
     companion object {
-        val NODE_NAME = "reference"
-        private val ATTRIBUTE_NAME = "name"
-        private val ATTRIBUTE_TYPE = "type"
+        const val NODE_NAME = "reference"
+        private const val ATTRIBUTE_NAME = "name"
+        private const val ATTRIBUTE_TYPE = "type"
 
         fun create(element: Element) = ReferenceHolder(element.getAttribute(ATTRIBUTE_NAME), element.getAttribute(ATTRIBUTE_TYPE))
     }
@@ -133,8 +133,8 @@ data class AttributeHolder(val name: String) : PathComponent {
     override fun matches(node: BrowserTreeNode) = (node.element as AttributeInfo).name == name
 
     companion object {
-        val NODE_NAME = "attribute"
-        private val ATTRIBUTE_NAME = "name"
+        const val NODE_NAME = "attribute"
+        private const val ATTRIBUTE_NAME = "name"
 
         fun create(element: Element) = AttributeHolder(element.getAttribute(ATTRIBUTE_NAME))
     }

@@ -19,7 +19,7 @@ abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : Tab
     override val rowHeightFactor: Float
         get() = 2f
 
-    abstract protected val descriptorOrSignatureVerbose: String
+    protected abstract val descriptorOrSignatureVerbose: String
 
     protected inner class AttributeTableModel(rows: Array<LocalVariableEntry>) : ColumnTableModel<LocalVariableEntry>(rows) {
 

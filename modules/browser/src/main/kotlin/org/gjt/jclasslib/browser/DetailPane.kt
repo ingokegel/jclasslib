@@ -82,6 +82,6 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
     }
 
     companion object {
-        val CPINFO_LINK_TEXT = "cp_info #"
+        const val CPINFO_LINK_TEXT = "cp_info #"
     }
 }

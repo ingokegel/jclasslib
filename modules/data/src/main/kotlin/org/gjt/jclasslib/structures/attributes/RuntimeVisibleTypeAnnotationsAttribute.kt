@@ -18,7 +18,7 @@ class RuntimeVisibleTypeAnnotationsAttribute(classFile: ClassFile) : RuntimeType
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "RuntimeVisibleTypeAnnotations"
+        const val ATTRIBUTE_NAME = "RuntimeVisibleTypeAnnotations"
     }
 
 }

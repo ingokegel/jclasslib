@@ -65,7 +65,7 @@ abstract class NamedConstantPoolLinkColumn<in T : Any>(name: String, services: B
         return LinkWithComment(DetailPane.CPINFO_LINK_TEXT + constantPoolIndex, getComment(constantPoolIndex))
     }
 
-    open protected fun getComment(constantPoolIndex: Int) = getConstantPoolEntryName(constantPoolIndex)
+    protected open fun getComment(constantPoolIndex: Int) = getConstantPoolEntryName(constantPoolIndex)
 
     private fun getConstantPoolEntryName(constantPoolIndex: Int): String {
         return try {

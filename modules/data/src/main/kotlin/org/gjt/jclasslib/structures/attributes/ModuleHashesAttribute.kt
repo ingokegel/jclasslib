@@ -52,6 +52,6 @@ class ModuleHashesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "ModuleHashes"
+        const val ATTRIBUTE_NAME = "ModuleHashes"
     }
 }

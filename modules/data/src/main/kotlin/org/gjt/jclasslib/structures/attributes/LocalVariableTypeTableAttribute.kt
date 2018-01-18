@@ -17,6 +17,6 @@ class LocalVariableTypeTableAttribute(classFile: ClassFile) : LocalVariableAttri
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "LocalVariableTypeTable"
+        const val ATTRIBUTE_NAME = "LocalVariableTypeTable"
     }
 }

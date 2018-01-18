@@ -83,7 +83,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
     }
 
     private fun addOffsetReference(offset: Int) {
-        offsetToPosition.put(offset, length)
+        offsetToPosition[offset] = length
     }
 
     private fun addOpcodeSpecificInfo(instruction: Instruction): Int =

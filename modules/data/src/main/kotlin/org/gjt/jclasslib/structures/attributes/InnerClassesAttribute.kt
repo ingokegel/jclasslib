@@ -46,7 +46,7 @@ class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "InnerClasses"
+        const val ATTRIBUTE_NAME = "InnerClasses"
     }
 
 }

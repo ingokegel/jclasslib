@@ -77,8 +77,8 @@ class ClasspathDirectoryEntry(fileName: String) : ClasspathEntry(fileName) {
     }
 
     companion object {
-        val NODE_NAME = "directory"
-        private val ATTRIBUTE_PATH = "path"
+        const val NODE_NAME = "directory"
+        private const val ATTRIBUTE_PATH = "path"
 
         fun create(element: Element) = ClasspathDirectoryEntry(element.getAttribute(ATTRIBUTE_PATH))
     }

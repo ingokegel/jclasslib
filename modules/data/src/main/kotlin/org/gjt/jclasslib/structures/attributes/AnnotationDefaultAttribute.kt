@@ -53,6 +53,6 @@ class AnnotationDefaultAttribute private constructor(classFile: ClassFile) : Att
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "AnnotationDefault"
+        const val ATTRIBUTE_NAME = "AnnotationDefault"
     }
 }

@@ -18,7 +18,7 @@ class RuntimeVisibleParameterAnnotationsAttribute(classFile: ClassFile) : Runtim
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        val ATTRIBUTE_NAME = "RuntimeVisibleParameterAnnotations"
+        const val ATTRIBUTE_NAME = "RuntimeVisibleParameterAnnotations"
     }
 
 }
