@@ -15,9 +15,9 @@ dependencies {
 }
 
 intellij {
-    version = "IC-2016.3.7"
+    version = "IC-2017.1.5"
     pluginName = "jclasslib"
-    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersion-release-IJ2016.3-1")
+    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersion-release-IJ2017.1-1")
     sandboxDirectory = "${rootProject.buildDir}/../idea_sandbox"
     updateSinceUntilBuild = false
 }
