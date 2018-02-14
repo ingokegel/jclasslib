@@ -110,7 +110,7 @@ class ConstantMethodHandleInfoDetailPane(services: BrowserServices) : ConstantDe
     }
 }
 
-class ConstantInvokeDynamicInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantInvokeDynamicInfo>(ConstantInvokeDynamicInfo::class.java, services) {
+class ConstantDynamicDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantDynamic>(ConstantDynamic::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink("Name and type:") { constant -> constant.nameAndTypeIndex }
         addAttributeLink("Bootstrap method:", BootstrapMethodsAttribute::class.java, "BootstrapMethods #") { constant -> constant.bootstrapMethodAttributeIndex }

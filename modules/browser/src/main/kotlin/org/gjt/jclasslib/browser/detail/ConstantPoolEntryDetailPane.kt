@@ -37,11 +37,12 @@ class ConstantPoolEntryDetailPane(services: BrowserServices) : DetailPane<Consta
         addCard(ConstantReferenceDetailPane(services), ConstantType.FIELDREF)
         addCard(ConstantReferenceDetailPane(services), ConstantType.METHODREF)
         addCard(ConstantReferenceDetailPane(services), ConstantType.INTERFACE_METHODREF)
-        addCard(ConstantInvokeDynamicInfoDetailPane(services), ConstantType.INVOKE_DYNAMIC)
+        addCard(ConstantDynamicDetailPane(services), ConstantType.INVOKE_DYNAMIC)
         addCard(ConstantMethodHandleInfoDetailPane(services), ConstantType.METHOD_HANDLE)
         addCard(ConstantMethodTypeDetailPane(services), ConstantType.METHOD_TYPE)
         addCard(ConstantModuleInfoDetailPane(services), ConstantType.MODULE)
         addCard(ConstantPackageInfoDetailPane(services), ConstantType.PACKAGE)
+        addCard(ConstantDynamicDetailPane(services), ConstantType.DYNAMIC)
     }
 
     override fun show(treePath: TreePath) {

@@ -111,7 +111,14 @@ enum class ConstantType(override val tag: Int, val verbose: String, val size: In
      */
     PACKAGE(20, "CONSTANT_Package_info", 2) {
         override fun create(classFile: ClassFile, input: DataInput): Constant = ConstantPackageInfo(classFile)
+    },
+    /**
+     * See [ConstantDynamicInfo]
+     */
+    DYNAMIC(17, "CONSTANT_Dynamic_info", 4) {
+        override fun create(classFile: ClassFile, input: DataInput): Constant = ConstantDynamicInfo(classFile)
     };
+
 
     /**
      * Read the corresponding constant pool structure from the input stream.

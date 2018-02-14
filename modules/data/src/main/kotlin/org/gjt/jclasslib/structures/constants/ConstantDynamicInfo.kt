@@ -11,11 +11,11 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
 
 /**
- * Describes a CONSTANT_InvokeDynamic_info constant pool data structure.
+ * Describes a CONSTANT_Dynamic_info constant pool data structure.
  */
-class ConstantInvokeDynamicInfo(classFile: ClassFile) : ConstantDynamic(classFile) {
+class ConstantDynamicInfo(classFile: ClassFile) : ConstantDynamic(classFile) {
 
     override val constantType: ConstantType
-        get() = ConstantType.INVOKE_DYNAMIC
+        get() = ConstantType.DYNAMIC
 
 }
