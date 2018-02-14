@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="bytecode viewer" type="JetRunConfigurationType" factoryName="Kotlin">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-    <option name="MAIN_CLASS_NAME" value="org.gjt.jclasslib.browser.BrowserApplication" />
     <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PASS_PARENT_ENVS" value="true" />
+    <option name="MAIN_CLASS_NAME" value="org.gjt.jclasslib.browser.BrowserApplication" />
+    <option name="WORKING_DIRECTORY" value="" />
     <module name="browser_main" />
     <envs />
     <RunnerSettings RunnerId="JProfiler" />
