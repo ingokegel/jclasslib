@@ -7,19 +7,12 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import java.util.*
 import javax.swing.tree.DefaultTreeModel
 
 interface ClasspathComponent {
     fun findClass(className: String, modulePathSelection: Boolean): FindResult?
     fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean)
-    fun addClasspathChangeListener(listener: ClasspathChangeListener)
-    fun removeClasspathChangeListener(listener: ClasspathChangeListener)
-}
-
-interface ClasspathChangeListener : EventListener {
-    fun classpathChanged(event: ClasspathChangeEvent)
+    fun contains(component: ClasspathComponent): Boolean
 }
 
 data class FindResult(val fileName: String, val moduleName: String = ClasspathEntry.UNNAMED_MODULE)
-class ClasspathChangeEvent(source: Any, val isRemoval: Boolean) : EventObject(source)

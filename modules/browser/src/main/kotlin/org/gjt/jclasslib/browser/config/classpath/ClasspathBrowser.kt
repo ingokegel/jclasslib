@@ -19,23 +19,16 @@ import javax.swing.tree.TreePath
 
 class ClasspathBrowser(private val frame: BrowserFrame, title: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame, title) {
 
-    private val classPathChangeListener = object : ClasspathChangeListener {
-        override fun classpathChanged(event: ClasspathChangeEvent) {
-            needsMerge = true
-            if (event.isRemoval) {
-                resetOnNextMerge = true
-            }
-        }
-    }
-
     var classpathComponent: ClasspathComponent? = null
         set(classpathComponent) {
-            field?.removeClasspathChangeListener(classPathChangeListener)
-            field = classpathComponent
-            classpathComponent?.addClasspathChangeListener(classPathChangeListener)
-            resetOnNextMerge = true
-            needsMerge = true
-            clear()
+            if (field != classpathComponent) {
+                resetOnNextMerge = field.let { it == null || classpathComponent?.contains(it) == false }
+                needsMerge = true
+                field = classpathComponent
+                if (resetOnNextMerge) {
+                    clear()
+                }
+            }
         }
 
     private val classPathTree: JTree = createTree("Class Path")
@@ -74,6 +67,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
 
     private val setupAction = DefaultAction("Setup classpath") {
         frame.setupClasspathAction.actionPerformed(ActionEvent(this, 0, null))
+        classpathComponent = frame.config.toImmutableContainer()
         conditionalUpdate()
     }
 
@@ -134,7 +128,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
         if (visible) {
             isCanceled = false
             if (updateClassPathFromFrame) {
-                classpathComponent = frame.config
+                classpathComponent = frame.config.toImmutableContainer()
             }
         }
         super.setVisible(visible)

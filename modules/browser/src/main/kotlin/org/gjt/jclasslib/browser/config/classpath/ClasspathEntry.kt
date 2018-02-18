@@ -34,12 +34,7 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
 
     override fun hashCode(): Int = file.hashCode()
 
-    // classpath entries are immutable
-    override fun addClasspathChangeListener(listener: ClasspathChangeListener) {
-    }
-
-    override fun removeClasspathChangeListener(listener: ClasspathChangeListener) {
-    }
+    override fun contains(component: ClasspathComponent): Boolean = false
 
     protected fun addOrFindNode(newNodeName: String,
                                 parentNode: ClassTreeNode,

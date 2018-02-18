@@ -10,98 +10,47 @@ package org.gjt.jclasslib.browser.config
 import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
 import kotlinx.dom.firstChildElement
-import org.gjt.jclasslib.browser.config.classpath.*
+import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
+import org.gjt.jclasslib.browser.config.classpath.ClasspathDirectoryEntry
+import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.w3c.dom.Element
 import java.io.File
 import java.util.*
-import javax.swing.tree.DefaultTreeModel
-import kotlin.properties.Delegates
+import kotlin.collections.ArrayList
 
-class BrowserConfig : ClasspathComponent {
+class BrowserConfig : ClassPathContainer() {
 
-    val classpath: MutableList<ClasspathEntry> = ArrayList()
-    var jreHome: String by Delegates.observable(System.getProperty("java.home")) { _, old, new ->
-        if (old != new) {
-            fireClasspathChanged(true)
-        }
-    }
+    override val classpath: MutableList<ClasspathEntry> = ArrayList()
+    override var jreHome: String = System.getProperty("java.home")
 
     private val mergedEntries = HashSet<ClasspathEntry>()
-    private val changeListeners = HashSet<ClasspathChangeListener>()
 
-    override fun addClasspathChangeListener(listener: ClasspathChangeListener) {
-        changeListeners.add(listener)
-    }
-
-    override fun removeClasspathChangeListener(listener: ClasspathChangeListener) {
-        changeListeners.remove(listener)
-    }
+    fun toImmutableContainer() : ImmutableClassPathContainer = ImmutableClassPathContainer(ArrayList(classpath), jreHome)
 
     fun addClasspathDirectory(directoryName: String) {
         ClasspathDirectoryEntry(directoryName).apply {
-            if (addToClassPath(classpath)) {
-                fireClasspathChanged(false)
-            }
+            addToClassPath(classpath)
         }
     }
 
     fun addClasspathArchive(archiveName: String) {
         ClasspathArchiveEntry(archiveName).apply {
-            if (addToClassPath(classpath)) {
-                fireClasspathChanged(false)
-            }
+            addToClassPath(classpath)
         }
     }
 
     fun addClasspathEntry(entry: ClasspathEntry) {
-        if (entry.addToClassPath(classpath)) {
-            fireClasspathChanged(false)
-        }
+        entry.addToClassPath(classpath)
     }
 
     fun removeClasspathEntry(entry: ClasspathEntry) {
-        if (classpath.remove(entry)) {
-            fireClasspathChanged(true)
-        }
+        classpath.remove(entry)
     }
 
     fun clear() {
         jreHome = System.getProperty("java.home")
         classpath.clear()
         mergedEntries.clear()
-    }
-
-    override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
-        classpath.forEach { entry ->
-            val findResult = entry.findClass(className, modulePathSelection)
-            if (findResult != null) {
-                return findResult
-            }
-        }
-        return createJreEntry()?.findClass(className, modulePathSelection)
-    }
-
-    override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
-        classpath.forEach { entry ->
-            if (reset || !mergedEntries.contains(entry)) {
-                entry.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
-                mergedEntries.add(entry)
-            }
-        }
-        createJreEntry()?.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
-    }
-
-    private fun createJreEntry(): ClasspathEntry? {
-        return when {
-            File(jreHome, "lib/modules").exists() -> ClasspathJrtEntry(jreHome)
-            File(jreHome, "lib/rt.jar").exists() -> ClasspathArchiveEntry(File(jreHome, "lib/rt.jar").path)
-            else -> return null
-        }
-    }
-
-    private fun fireClasspathChanged(removal: Boolean) {
-        val event = ClasspathChangeEvent(this, removal)
-        changeListeners.forEach { listener -> listener.classpathChanged(event) }
     }
 
     fun saveWorkspace(element: Element) {
