@@ -111,6 +111,14 @@ class BrowserFrame : JFrame() {
         }
     }
 
+    val saveClassesAction = DefaultAction("Save all open classes", "Save all open classes to a selected directory") {
+        val fileChooser = saveClassesFileChooser
+        val result = fileChooser.showSaveDialog(this)
+        if (result == JFileChooser.APPROVE_OPTION) {
+            frameContent.saveClassesToDirectory(fileChooser.selectedFile)
+        }
+    }
+
     val saveWorkspaceAsAction = DefaultAction("Save workspace as", "Save current workspace to a different file") {
         saveWorkspace()
     }.apply {
@@ -237,6 +245,13 @@ class BrowserFrame : JFrame() {
         }
     }
 
+    private val saveClassesFileChooser: JFileChooser by lazy {
+        JFileChooser(workspaceChooserPath).apply {
+            dialogTitle = "Save open classes to directory"
+            fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        }
+    }
+
     private val classesFileChooser: JFileChooser by lazy {
         JFileChooser(classesChooserPath).apply {
             dialogTitle = "Choose class file or jar file"
@@ -327,6 +342,7 @@ class BrowserFrame : JFrame() {
                 addSeparator()
                 add(saveWorkspaceAction)
                 add(saveWorkspaceAsAction)
+                add(saveClassesAction)
                 addSeparator()
                 add(showHomepageAction)
                 add(showEjtAction)

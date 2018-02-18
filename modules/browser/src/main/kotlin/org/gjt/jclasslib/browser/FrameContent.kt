@@ -11,11 +11,13 @@ import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
 import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.util.GUIHelper
 import org.w3c.dom.Element
 import java.awt.BorderLayout
 import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Dimension
+import java.io.File
 import javax.swing.*
 
 class FrameContent(val frame: BrowserFrame) : JPanel() {
@@ -32,6 +34,13 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     init {
         layout = BorderLayout()
         split(SplitMode.NONE)
+    }
+
+    fun saveClassesToDirectory(directory: File) {
+        val count = wrappers.flatMap { it.tabbedPane.tabs() }
+                .map { it.saveClassToDirectory(directory) }.count { it }
+
+        GUIHelper.showMessage(frame, "$count classes were saved to $directory", JOptionPane.INFORMATION_MESSAGE)
     }
 
     fun focus(focusedTabbedPane: BrowserTabbedPane) {

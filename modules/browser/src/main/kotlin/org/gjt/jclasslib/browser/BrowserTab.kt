@@ -13,6 +13,7 @@ import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathJrtEntry
 import org.gjt.jclasslib.browser.config.classpath.FindResult
 import org.gjt.jclasslib.io.ClassFileReader
+import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.GUIHelper
@@ -69,6 +70,20 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
                 }
 
             }
+        }
+    }
+
+    fun saveClassToDirectory(directory: File) : Boolean {
+        val simpleClassName = classFile.simpleClassName
+        val packageDirectory = File(directory, classFile.thisClassName.removeSuffix(simpleClassName))
+        packageDirectory.mkdirs()
+        val file = File(packageDirectory, simpleClassName + ".class")
+        return try {
+            ClassFileWriter.writeToFile(file, classFile)
+            true
+        } catch (e: Exception) {
+            GUIHelper.showMessage(parentFrame, "Could not save file " + file.path + "\n\nError message; " + e.message, JOptionPane.ERROR_MESSAGE)
+            false
         }
     }
 
