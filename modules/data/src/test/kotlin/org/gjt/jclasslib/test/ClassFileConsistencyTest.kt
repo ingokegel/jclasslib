@@ -160,6 +160,7 @@ class ClassFileConsistencyTest {
         for (i in 0 until minOf(before.size, after.size)) {
             if (before[i] != after[i]) {
                 System.err.println("Different byte at index " + i)
+                System.err.println("" + before[i] +" != " + after[i])
                 return false
             }
         }

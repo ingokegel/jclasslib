@@ -30,7 +30,7 @@ class ModuleTargetAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(platformIndex)
     }
 
-    override fun getAttributeLength(): Int =  4
+    override fun getAttributeLength(): Int =  2
 
     override val debugInfo: String
         get() = ""
