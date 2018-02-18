@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.io
 
+import java.io.DataOutputStream
 import java.io.FilterOutputStream
 import java.io.IOException
 import java.io.OutputStream
@@ -15,7 +16,7 @@ import java.io.OutputStream
  * OutputStream which counts the number of bytes written.
  */
 @Suppress("NOT_DOCUMENTED")
-class CountedOutputStream(out: OutputStream) : FilterOutputStream(out) {
+class CountedOutputStream(outputStream: OutputStream) : FilterOutputStream(outputStream) {
 
     /**
      * Number of bytes written.
@@ -28,4 +29,10 @@ class CountedOutputStream(out: OutputStream) : FilterOutputStream(out) {
         out.write(b)
         bytesWritten++
     }
+}
+
+@Suppress("NOT_DOCUMENTED")
+class CountedDataOutputStream(outputStream: OutputStream) : DataOutputStream(CountedOutputStream(outputStream)) {
+    val bytesWritten : Int
+        get() = (out as CountedOutputStream).bytesWritten
 }

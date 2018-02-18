@@ -74,9 +74,9 @@ object ClassFileReader {
     fun readFromInputStream(stream: InputStream): ClassFile {
         val classFile = ClassFile()
         val bufferedInputStream = BufferedInputStream(stream)
-        DataInputStream(bufferedInputStream.wrapForDebug()).use { classFile.read(it) }
+        bufferedInputStream.wrapForDebug().use { classFile.read(it) }
         return classFile
     }
 
-    private fun InputStream.wrapForDebug() = if (isDebug) CountedInputStream(this) else this
+    private fun InputStream.wrapForDebug() = if (isDebug) CountedDataInputStream(this) else DataInputStream(this)
 }

@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.io
 
+import java.io.DataInputStream
 import java.io.FilterInputStream
 import java.io.IOException
 import java.io.InputStream
@@ -51,3 +52,10 @@ class CountedInputStream(input: InputStream) : FilterInputStream(input) {
     // Marking invalidates bytesRead
     override fun markSupported(): Boolean = false
 }
+
+@Suppress("NOT_DOCUMENTED")
+class CountedDataInputStream(inputStream: InputStream) : DataInputStream(CountedInputStream(inputStream)) {
+    val bytesRead : Int
+        get() = (`in` as CountedInputStream).bytesRead
+}
+

@@ -38,10 +38,10 @@ object ClassFileWriter {
     @JvmStatic
     fun writeToByteArray(classFile: ClassFile): ByteArray {
         val result = ByteArrayOutputStream()
-        DataOutputStream(result.wrapForDebug()).use { classFile.write(it) }
+        result.wrapForDebug().use { classFile.write(it) }
         return result.toByteArray()
     }
 
-    private fun OutputStream.wrapForDebug() = if (isDebug) CountedOutputStream(this) else this
+    private fun OutputStream.wrapForDebug() = if (isDebug) CountedDataOutputStream(this) else DataOutputStream(this)
 
 }
