@@ -28,6 +28,14 @@ open class Instruction(val opcode: Opcode) {
         get() = 1
 
     /**
+     * Get the padded size in bytes of this instruction. This will be the same as
+     * `size` except for instances of [PaddedInstruction].
+     * @param offset the offset at which this instruction is found.
+     * @return the padded size in bytes
+     */
+    open fun getPaddedSize(offset: Int): Int = size
+
+    /**
      * Read this instruction from the given ByteCodeInput.
      * Expects ByteCodeInput to be in JVM class file format and just
      * before a instruction of this kind.

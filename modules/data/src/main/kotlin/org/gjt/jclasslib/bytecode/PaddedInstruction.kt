@@ -22,7 +22,7 @@ open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
      * @param offset the offset at which this instruction is found.
      * @return the padded size in bytes
      */
-    fun getPaddedSize(offset: Int): Int = size + paddingBytes(offset + 1)
+    override fun getPaddedSize(offset: Int): Int = size + paddingBytes(offset + 1)
 
     override fun read(input: ByteCodeInput) {
         super.read(input)

@@ -41,25 +41,10 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
     }
 
     private fun verifyOffsets(instructions: ArrayList<Instruction>) {
-        instructions.forEachIndexed { i, instruction ->
-            if (instruction is AbstractBranchInstruction) {
-                var branchOffset = instruction.branchOffset
-                var targetDistance = 0
-                if (branchOffset > 0) {
-                    branchOffset -= instruction.size
-                    while (branchOffset > 0 && i + targetDistance + 1 < instructions.size) {
-                        ++targetDistance
-                        branchOffset -= instructions[i + targetDistance].size
-                    }
-                } else {
-                    while (branchOffset < 0 && i + targetDistance > 0) {
-                        --targetDistance
-                        branchOffset += instructions[i + targetDistance].size
-                    }
-                }
-                if (branchOffset != 0) {
-                    invalidBranches.add(instruction)
-                }
+        instructions.filterIsInstance<AbstractBranchInstruction>().forEach { instruction ->
+            val targetOffset = instruction.branchOffset + instruction.offset
+            if (instructions.none { it.offset == targetOffset }) {
+                invalidBranches.add(instruction)
             }
         }
     }
