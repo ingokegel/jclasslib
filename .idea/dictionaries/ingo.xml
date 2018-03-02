@@ -46,9 +46,11 @@
       <w>dsub</w>
       <w>elementvalue</w>
       <w>elementvaluepair</w>
+      <w>elementvalues</w>
       <w>fadd</w>
       <w>faload</w>
       <w>fastore</w>
+      <w>fatjar</w>
       <w>fcmpg</w>
       <w>fcmpl</w>
       <w>fcmpop</w>
@@ -109,6 +111,7 @@
       <w>iushr</w>
       <w>ixor</w>
       <w>jcenter</w>
+      <w>jfrog</w>
       <w>jvms</w>
       <w>kotlinx</w>
       <w>ladd</w>

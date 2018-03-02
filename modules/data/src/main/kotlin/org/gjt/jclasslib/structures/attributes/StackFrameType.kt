@@ -49,7 +49,7 @@ enum class StackFrameType(private val boundary: Int) {
             } else if (tag == FULL.boundary) {
                 return FULL
             } else {
-                throw InvalidByteCodeException("Unsupported StackMapFrame tag: " + tag)
+                throw InvalidByteCodeException("Unsupported StackMapFrame tag: $tag")
             }
         }
     }

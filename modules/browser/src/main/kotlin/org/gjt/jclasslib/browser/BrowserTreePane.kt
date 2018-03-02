@@ -128,7 +128,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
     private fun buildInterfacesNode() = BrowserTreeNode("Interfaces", NodeType.INTERFACES).apply {
         services.classFile.interfaces.forEachIndexed { i, interfaceIndex ->
-            add(BrowserTreeNode("Interface " + i, NodeType.INTERFACE, interfaceIndex))
+            add(BrowserTreeNode("Interface $i", NodeType.INTERFACE, interfaceIndex))
         }
     }
 

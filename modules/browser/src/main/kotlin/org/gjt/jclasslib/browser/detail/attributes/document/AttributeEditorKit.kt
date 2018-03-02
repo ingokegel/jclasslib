@@ -31,7 +31,7 @@ class AttributeEditorKit : StyledEditorKit() {
         override fun getResizeWeight(axis: Int) = when (axis) {
             View.X_AXIS -> 1
             View.Y_AXIS -> 0
-            else -> throw IllegalArgumentException("Invalid axis: " + axis)
+            else -> throw IllegalArgumentException("Invalid axis: $axis")
         }
 
         override fun getAlignment(axis: Int) = if (axis == View.X_AXIS) {

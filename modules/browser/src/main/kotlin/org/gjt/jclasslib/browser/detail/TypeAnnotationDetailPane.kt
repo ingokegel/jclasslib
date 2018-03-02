@@ -47,7 +47,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
             'E' -> handleExceptionsLink(index)
             'L' -> handleLocalVarLink(index)
             'I' -> handleInterfaceLink(index)
-            else -> throw IllegalArgumentException("Invalid link type " + type)
+            else -> throw IllegalArgumentException("Invalid link type $type")
         }
     }
 
@@ -84,7 +84,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
         val interfacesPath = services.browserComponent.treePane.getPathForCategory(NodeType.INTERFACE)
         val interfacesNode = interfacesPath.lastPathComponent as BrowserTreeNode
         if (index >= interfacesNode.childCount) {
-            throw IllegalArgumentException("Invalid interface index " + index)
+            throw IllegalArgumentException("Invalid interface index $index")
         }
         val path = interfacesPath.pathByAddingChild(interfacesNode.getChildAt(index))
         selectPath(path)

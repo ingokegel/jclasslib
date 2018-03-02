@@ -107,7 +107,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
                 ConstantPoolLink(constantPoolIndex, sourceOffset))
 
         appendString(" ", STYLE_NORMAL)
-        appendString("#" + constantPoolIndex, currentLinkStyle)
+        appendString("#$constantPoolIndex", currentLinkStyle)
         try {
             val name = classFile.getConstantPoolEntryName(constantPoolIndex)
             if (name.isNotEmpty()) {

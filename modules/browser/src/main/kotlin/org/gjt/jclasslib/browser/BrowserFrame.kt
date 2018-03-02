@@ -69,7 +69,7 @@ class BrowserFrame : JFrame() {
                         frameContent.openClassFile(findResult.fileName, findResult.moduleName)
                     }
                 } else {
-                    GUIHelper.showMessage(this, "Error loading " + selectedClassName, JOptionPane.ERROR_MESSAGE)
+                    GUIHelper.showMessage(this, "Error loading $selectedClassName", JOptionPane.ERROR_MESSAGE)
                 }
             }
         }
@@ -315,7 +315,7 @@ class BrowserFrame : JFrame() {
         EventQueue.invokeLater {
             val file = File(path)
             if (file.exists()) {
-                if (path.toLowerCase().endsWith("." + workspaceFileSuffix)) {
+                if (path.toLowerCase().endsWith(".$workspaceFileSuffix")) {
                     openWorkspace(file)
                 } else if (path.toLowerCase().endsWith(".class")) {
                     try {
@@ -487,7 +487,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun getWorkspaceFile(selectedFile: File): File =
-            if (!selectedFile.name.toLowerCase().endsWith("." + workspaceFileSuffix)) {
+            if (!selectedFile.name.toLowerCase().endsWith(".$workspaceFileSuffix")) {
                 File(selectedFile.path + "." + workspaceFileSuffix)
             } else {
                 selectedFile
@@ -627,18 +627,18 @@ class BrowserFrame : JFrame() {
 
     companion object {
 
-        private val SETTINGS_WORKSPACE_CHOOSER_PATH = "workspaceChooserPath"
-        private val SETTINGS_CLASSES_CHOOSER_PATH = "classesChooserPath"
-        private val SETTINGS_JRE_CHOOSER_PATH = "jreChooserPath"
-        private val DEFAULT_WINDOW_WIDTH = 800
-        private val DEFAULT_WINDOW_HEIGHT = 600
-        private val NEW_FRAME_OFFSET = 22
+        private const val SETTINGS_WORKSPACE_CHOOSER_PATH = "workspaceChooserPath"
+        private const val SETTINGS_CLASSES_CHOOSER_PATH = "classesChooserPath"
+        private const val SETTINGS_JRE_CHOOSER_PATH = "jreChooserPath"
+        private const val DEFAULT_WINDOW_WIDTH = 800
+        private const val DEFAULT_WINDOW_HEIGHT = 600
+        private const val NEW_FRAME_OFFSET = 22
 
-        private val SETTINGS_WINDOW_WIDTH = "windowWidth"
-        private val SETTINGS_WINDOW_HEIGHT = "windowHeight"
-        private val SETTINGS_WINDOW_X = "windowX"
-        private val SETTINGS_WINDOW_Y = "windowY"
-        private val SETTINGS_WINDOW_MAXIMIZED = "windowMaximized"
+        private const val SETTINGS_WINDOW_WIDTH = "windowWidth"
+        private const val SETTINGS_WINDOW_HEIGHT = "windowHeight"
+        private const val SETTINGS_WINDOW_X = "windowX"
+        private const val SETTINGS_WINDOW_Y = "windowY"
+        private const val SETTINGS_WINDOW_MAXIMIZED = "windowMaximized"
 
         private val icons = hashMapOf<String, ImageIcon>()
         val ICON_IMAGES = listOf(16, 32, 128, 256).map { getIcon("jclasslib_$it.png").image }
@@ -646,7 +646,7 @@ class BrowserFrame : JFrame() {
 
         fun getIcon(fileName: String): ImageIcon =
                 icons.getOrPut(fileName) {
-                    ImageIcon(BrowserFrame::class.java.getResource("images/" + fileName))
+                    ImageIcon(BrowserFrame::class.java.getResource("images/$fileName"))
                 }
 
     }

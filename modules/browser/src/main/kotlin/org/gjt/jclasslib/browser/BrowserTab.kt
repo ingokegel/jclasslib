@@ -77,7 +77,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         val simpleClassName = classFile.simpleClassName
         val packageDirectory = File(directory, classFile.thisClassName.removeSuffix(simpleClassName))
         packageDirectory.mkdirs()
-        val file = File(packageDirectory, simpleClassName + ".class")
+        val file = File(packageDirectory, "$simpleClassName.class")
         return try {
             ClassFileWriter.writeToFile(file, classFile)
             true
@@ -148,7 +148,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
             throw IOException("The file $fileName was not found")
         } catch (ex: IOException) {
             ex.printStackTrace()
-            throw IOException("An error occurred while reading " + fileName)
+            throw IOException("An error occurred while reading $fileName")
         } catch (ex: Exception) {
             ex.printStackTrace()
             throw IOException("The file $fileName does not seem to contain a class file")

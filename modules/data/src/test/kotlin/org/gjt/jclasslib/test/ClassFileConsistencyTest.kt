@@ -76,7 +76,7 @@ class ClassFileConsistencyTest {
         forEachClassInJrt(jreHome) { path ->
             if (pathFilter(path)) {
                 if (logPaths) {
-                    println("Processing " + path)
+                    println("Processing $path")
                 }
                 val fileName = path.toString()
                 checkClassFile(fileName, JrtInputStreamProvider(fileName, jreHome), testStatistics)
@@ -149,17 +149,17 @@ class ClassFileConsistencyTest {
     }
 
     fun error(className: String) {
-        System.err.println("ERROR when processing " + className)
+        System.err.println("ERROR when processing $className")
     }
 
     fun compare(className: String, before: ByteArray, after: ByteArray): Boolean {
         if (before.size != after.size) {
-            System.err.println("ERROR in " + className)
+            System.err.println("ERROR in $className")
             System.err.println("Different length " + before.size + " != " + after.size)
         }
         for (i in 0 until minOf(before.size, after.size)) {
             if (before[i] != after[i]) {
-                System.err.println("Different byte at index " + i)
+                System.err.println("Different byte at index $i")
                 System.err.println("" + before[i] +" != " + after[i])
                 return false
             }

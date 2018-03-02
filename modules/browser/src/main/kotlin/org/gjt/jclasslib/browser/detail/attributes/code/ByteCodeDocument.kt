@@ -98,7 +98,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         } else if (opcode === Opcode.BIPUSH) {
             appendString(" " + immediateByte.toByte(), STYLE_IMMEDIATE_VALUE)
         } else {
-            appendString(" " + immediateByte, STYLE_IMMEDIATE_VALUE)
+            appendString(" $immediateByte", STYLE_IMMEDIATE_VALUE)
             if (instruction is IncrementInstruction) {
                 appendString(" by", STYLE_NORMAL)
                 appendString(" " + instruction.incrementConst, STYLE_IMMEDIATE_VALUE)
@@ -112,7 +112,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         val sourceOffset = instruction.offset
         val immediateShort = instruction.immediateShort
         if (opcode === Opcode.SIPUSH) {
-            appendString(" " + immediateShort, STYLE_IMMEDIATE_VALUE)
+            appendString(" $immediateShort", STYLE_IMMEDIATE_VALUE)
         } else {
             addConstantPoolLink(immediateShort, sourceOffset)
             if (instruction is InvokeInterfaceInstruction) {
@@ -160,7 +160,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         val matchOffsetPairs = instruction.matchOffsetPairs
         val matchOffsetPairsCount = matchOffsetPairs.size
 
-        appendString(" " + matchOffsetPairsCount, STYLE_IMMEDIATE_VALUE)
+        appendString(" $matchOffsetPairsCount", STYLE_IMMEDIATE_VALUE)
         appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)
 
         matchOffsetPairs.forEach { matchOffsetPair ->
