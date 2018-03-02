@@ -16,7 +16,7 @@ install4j {
     }
 }
 
-val mediaDir : File by rootProject.extra
+val mediaDir: File by rootProject.extra
 
 task("clean") {
     doLast {

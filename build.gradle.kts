@@ -8,7 +8,7 @@ plugins {
     idea
 }
 
-version = "5.3-beta1"
+version = "5.3-beta2"
 buildDir = file("build/gradle")
 
 var mediaDir: File by extra(file("media"))
@@ -45,7 +45,9 @@ subprojects {
 
         tasks.withType<KotlinCompile> {
             kotlinOptions {
-                languageVersion = "1.1"
+                languageVersion = "1.2"
+                apiVersion = "1.2"
+                jvmTarget = "1.8"
             }
         }
     }
