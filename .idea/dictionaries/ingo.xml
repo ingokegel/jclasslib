@@ -14,6 +14,7 @@
       <w>arraylength</w>
       <w>astore</w>
       <w>athrow</w>
+      <w>backticks</w>
       <w>baload</w>
       <w>bastore</w>
       <w>bcis</w>
@@ -64,6 +65,7 @@
       <w>getfield</w>
       <w>getstatic</w>
       <w>gridy</w>
+      <w>hotfix</w>
       <w>iadd</w>
       <w>iaload</w>
       <w>iand</w>
@@ -108,6 +110,7 @@
       <w>ixor</w>
       <w>jcenter</w>
       <w>jvms</w>
+      <w>kotlinx</w>
       <w>ladd</w>
       <w>laload</w>
       <w>lastore</w>
@@ -129,6 +132,7 @@
       <w>lxor</w>
       <w>methodref</w>
       <w>methodreturn</w>
+      <w>miglayout</w>
       <w>monitorenter</w>
       <w>monitorexit</w>
       <w>multianewarray</w>
