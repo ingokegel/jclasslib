@@ -1,3 +1,5 @@
+@file:Suppress("RemoveRedundantBackticks")
+
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaTask
 

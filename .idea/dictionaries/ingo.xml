@@ -14,6 +14,7 @@
       <w>arraylength</w>
       <w>astore</w>
       <w>athrow</w>
+      <w>backticks</w>
       <w>baload</w>
       <w>bastore</w>
       <w>bcis</w>

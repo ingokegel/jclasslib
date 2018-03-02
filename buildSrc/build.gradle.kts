@@ -1,3 +1,5 @@
+@file:Suppress("RemoveRedundantBackticks")
+
 plugins {
     `kotlin-dsl`
 }

@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.2.20" apply false
-    id("org.jetbrains.dokka") version "0.9.15" apply false
+    kotlin("jvm") version "1.2.30" apply false
+    id("org.jetbrains.dokka") version "0.9.16" apply false
     idea
 }
 
-version = "5.2"
+version = "5.3-beta1"
 buildDir = file("build/gradle")
 
 var mediaDir: File by extra(file("media"))
