@@ -1,4 +1,4 @@
-@file:Suppress("RemoveRedundantBackticks")
+@file:Suppress("RemoveRedundantBackticks")  //TODO remove with Kotlin 1.2.40
 
 plugins {
     `kotlin-dsl`

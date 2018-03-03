@@ -1,4 +1,4 @@
-@file:Suppress("RemoveRedundantBackticks")
+@file:Suppress("RemoveRedundantBackticks")  //TODO remove with Kotlin 1.2.40
 
 import org.gradle.api.java.archives.Manifest
 import org.gradle.api.tasks.Copy
@@ -31,9 +31,9 @@ var externalLibsDir: File by rootProject.extra
 tasks {
     val jar by getting(Jar::class) {
         archiveName = "jclasslib-browser.jar"
-        manifest(closureOf<Manifest> {
+        manifest {
             attributes(mapOf("Main-Class" to the<ApplicationPluginConvention>().mainClassName))
-        })
+        }
     }
 
     val copyDist by creating(Copy::class) {
