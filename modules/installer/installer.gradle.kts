@@ -32,8 +32,8 @@ task<Install4jTask>("media") {
     projectFile = file("resources/jclasslib.install4j")
     release = version as String
     disableSigning = !project.hasProperty("winCertPath") || !project.hasProperty("macCertPath")
-    winKeystorePassword = this@Installer_gradle.winKeystorePassword?.toString() ?: ""
-    macKeystorePassword = this@Installer_gradle.macKeystorePassword?.toString() ?: ""
+    winKeystorePassword = this@Installer_gradle.winKeystorePassword ?: ""
+    macKeystorePassword = this@Installer_gradle.macKeystorePassword ?: ""
 
     variables = mapOf(
             "winCertPath" to (winCertPath ?: ""),
