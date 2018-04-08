@@ -32,7 +32,7 @@ tasks {
     val jar by getting(Jar::class) {
         archiveName = "jclasslib-browser.jar"
         manifest {
-            attributes(mapOf("Main-Class" to the<ApplicationPluginConvention>().mainClassName))
+            attributes(mapOf("Main-Class" to project.the<ApplicationPluginConvention>().mainClassName))
         }
     }
 

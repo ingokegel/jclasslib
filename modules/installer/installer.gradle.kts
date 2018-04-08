@@ -4,11 +4,11 @@ plugins {
     id("com.install4j.gradle") version "6.1.4"
 }
 
-val install4jHomeDir by project
-val winCertPath by project
-val macCertPath by project
-val winKeystorePassword by project
-val macKeystorePassword by project
+val install4jHomeDir: String? by project
+val winCertPath: String? by project
+val macCertPath: String? by project
+val winKeystorePassword: String? by project
+val macKeystorePassword: String? by project
 
 install4j {
     install4jHomeDir?.let {

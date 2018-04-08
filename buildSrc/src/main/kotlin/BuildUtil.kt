@@ -45,7 +45,7 @@ fun Project.configurePublishing() {
 
         val sourcesJar by creating(Jar::class) {
             classifier = "sources"
-            from(the<JavaPluginConvention>().sourceSets["main"].allSource)
+            from(project.the<JavaPluginConvention>().sourceSets["main"].allSource)
         }
 
         "publishToMavenLocal" {

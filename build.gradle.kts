@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.2.30" apply false
+    kotlin("jvm") version "1.2.31" apply false
     id("org.jetbrains.dokka") version "0.9.16" apply false
     idea
 }
@@ -64,7 +64,7 @@ val test by tasks.creating {}
 
 tasks {
     "wrapper"(Wrapper::class) {
-        gradleVersion = "4.0.1"
+        gradleVersion = "4.7-rc-1"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
