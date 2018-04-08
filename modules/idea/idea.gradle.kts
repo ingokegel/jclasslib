@@ -1,12 +1,11 @@
 import org.jetbrains.intellij.tasks.PublishTask
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 
 plugins {
     kotlin("jvm")
     id("org.jetbrains.intellij") version "0.2.17"
 }
 
-val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
+val kotlinVersion: String by project
 
 dependencies {
     compile(project(":browser"))

@@ -1,9 +1,19 @@
+val kotlinVersion: String by settings
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
         maven("http://maven.ej-technologies.com/repository")
         maven("https://jcenter.bintray.com/")
         maven("http://dl.bintray.com/jetbrains/intellij-plugin-service")
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == "org.jetbrains.kotlin") {
+                useVersion(kotlinVersion)
+            }
+        }
     }
 }
 
