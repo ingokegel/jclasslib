@@ -87,6 +87,7 @@ class ClassFile : Structure(), AttributeContainer {
             51 -> "1.7"
             52 -> "1.8"
             53 -> "1.9"
+            54 -> "1.10"
             else -> "unknown value $majorVersion"
         }
 
@@ -452,8 +453,8 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     private fun checkMajorVersion(majorVersion: Int) {
-        if (majorVersion < 45 || majorVersion > 53) {
-            warning("major version should be between 45 and 53 for JDK <= 1.9, was $majorVersion")
+        if (majorVersion < 45 || majorVersion > 54) {
+            warning("major version should be between 45 and 54 for JDK <= 1.10, was $majorVersion")
         }
     }
 
