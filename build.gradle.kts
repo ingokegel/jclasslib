@@ -8,7 +8,7 @@ plugins {
     idea
 }
 
-version = "5.3-beta2"
+version = "5.3-beta3"
 buildDir = file("build/gradle")
 
 var mediaDir: File by extra(file("media"))
