@@ -52,6 +52,7 @@ tasks {
 
     publications {
         "Module"(MavenPublication::class) {
+            artifactId = "jclasslib-data"
             artifact(mapOf("source" to javadocJar, "classifier" to "javadoc"))
         }
     }

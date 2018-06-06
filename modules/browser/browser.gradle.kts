@@ -48,7 +48,9 @@ tasks {
     }
 
     publications {
-        "Module"(MavenPublication::class)
+        "Module"(MavenPublication::class) {
+            artifactId = "jclasslib-browser"
+        }
     }
 }
 

@@ -56,7 +56,6 @@ fun Project.configurePublishing() {
             publications {
                 "Module"(MavenPublication::class) {
                     from(project.components["java"])
-                    artifactId = "jclasslib-${project.name}"
                     artifact(sourcesJar)
                     pom.withXml {
                         val dependencies = asElement().firstChildElement("dependencies")
