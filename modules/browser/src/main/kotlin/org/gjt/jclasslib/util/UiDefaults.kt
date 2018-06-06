@@ -12,6 +12,8 @@ import javax.swing.Icon
 
 enum class TreeIcon {CLOSED, OPEN, LEAF}
 
+var treeRowHeight : Int = 0
+
 var treeIcons: Map<TreeIcon, Icon> = emptyMap()
 
 enum class ColorKey {LINK, ACTIVE_LINK, VALUE}

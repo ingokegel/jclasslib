@@ -17,6 +17,7 @@ import org.gjt.jclasslib.structures.elementvalues.ElementValue
 import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
 import org.gjt.jclasslib.util.TreeIcon
 import org.gjt.jclasslib.util.treeIcons
+import org.gjt.jclasslib.util.treeRowHeight
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.util.*
@@ -38,6 +39,9 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
             treeIcons[TreeIcon.CLOSED]?.apply { closedIcon = this }
             treeIcons[TreeIcon.OPEN]?.apply { openIcon = this }
             treeIcons[TreeIcon.LEAF]?.apply { leafIcon = this }
+        }
+        if (treeRowHeight > 0) {
+            rowHeight = treeRowHeight
         }
     }
 
