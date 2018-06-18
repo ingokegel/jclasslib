@@ -1,5 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 import java.net.URI
 
 plugins {
@@ -43,7 +42,7 @@ subprojects {
             useTestNG()
         }
 
-        tasks.withType<KotlinCompile> {
+        tasks.withType<KotlinJvmCompile> {
             kotlinOptions {
                 languageVersion = "1.2"
                 apiVersion = "1.2"
