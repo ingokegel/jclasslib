@@ -62,7 +62,7 @@ val dist by tasks.creating {}
 val test by tasks.creating {}
 
 tasks {
-    "wrapper"(Wrapper::class) {
+    getByName<Wrapper>("wrapper") {
         gradleVersion = "4.8"
         distributionType = Wrapper.DistributionType.ALL
     }

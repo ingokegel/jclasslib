@@ -1,5 +1,7 @@
 val kotlinVersion: String by settings
 
+enableFeaturePreview("STABLE_PUBLISHING")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
