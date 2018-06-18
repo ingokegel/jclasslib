@@ -1,5 +1,3 @@
-@file:Suppress("RemoveRedundantBackticks")  //TODO remove with Kotlin 1.2.40
-
 import org.gradle.api.java.archives.Manifest
 import org.gradle.api.tasks.Copy
 import org.gradle.jvm.tasks.Jar
