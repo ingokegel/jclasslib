@@ -16,7 +16,7 @@ application {
 
 dependencies {
     compileOnly(":apple")
-    compile("com.install4j:install4j-runtime:7.0.4")
+    compile("com.install4j:install4j-runtime:7.0.6")
     compile("org.jetbrains:annotations:13.0")
     compile("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
     compile("com.miglayout:miglayout-swing:5.0")
