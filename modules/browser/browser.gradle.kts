@@ -44,11 +44,5 @@ tasks {
     "dist" {
         dependsOn(copyDist)
     }
-
-    publications {
-        "Module"(MavenPublication::class) {
-            artifactId = "jclasslib-browser"
-        }
-    }
 }
 
