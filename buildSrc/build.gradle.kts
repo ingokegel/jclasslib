@@ -1,5 +1,3 @@
-@file:Suppress("RemoveRedundantBackticks")  //TODO remove with Kotlin 1.2.40
-
 plugins {
     `kotlin-dsl`
 }
@@ -12,6 +10,6 @@ dependencies {
     // for local dokka in lib-compile
     //classpath ':dokka-fatjar'
     //classpath ':dokka-gradle-plugin'
-    "compile"("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3")
+    "compile"("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.1")
     "compile"("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
 }
