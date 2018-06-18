@@ -4,7 +4,7 @@ import java.net.URI
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "0.9.16" apply false
+    id("org.jetbrains.dokka") version "0.9.17" apply false
     idea
 }
 
