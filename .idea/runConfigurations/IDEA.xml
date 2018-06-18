@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="IDEA" type="GradleRunConfiguration" factoryName="Gradle">
-    <log_file path="$PROJECT_DIR$/build/idea_sandbox/system/log/idea.log" checked="true" skipped="true" show_all="false" alias="IDEA" />
+    <log_file alias="IDEA" path="$PROJECT_DIR$/build/idea_sandbox/system/log/idea.log" />
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/modules/idea" />
@@ -11,7 +11,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="runIdea" />
+          <option value="runIde" />
         </list>
       </option>
       <option name="vmOptions" value="" />

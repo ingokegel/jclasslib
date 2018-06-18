@@ -2,7 +2,7 @@ import org.jetbrains.intellij.tasks.PublishTask
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij") version "0.2.17"
+    id("org.jetbrains.intellij") version "0.3.4"
 }
 
 val kotlinVersion: String by project
@@ -14,9 +14,9 @@ dependencies {
 }
 
 intellij {
-    version = "IC-2017.1.5"
+    version = "IC-2017.3.4"
     pluginName = "jclasslib"
-    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersion-release-IJ2017.1-1")
+    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersion-release-IJ2017.3-1")
     sandboxDirectory = "${rootProject.buildDir}/../idea_sandbox"
     updateSinceUntilBuild = false
 }

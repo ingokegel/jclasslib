@@ -64,7 +64,7 @@ val test by tasks.creating {}
 
 tasks {
     "wrapper"(Wrapper::class) {
-        gradleVersion = "4.7-rc-1"
+        gradleVersion = "4.8"
         distributionType = Wrapper.DistributionType.ALL
     }
 }
