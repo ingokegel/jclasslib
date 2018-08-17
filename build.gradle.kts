@@ -52,36 +52,19 @@ subprojects {
     }
 }
 
-val clean by tasks.creating {
-    doLast {
-        delete(externalLibsDir)
-    }
-}
-
-val dist by tasks.creating {}
-val test by tasks.creating {}
-
 tasks {
     getByName<Wrapper>("wrapper") {
         gradleVersion = "4.10-rc-2"
         distributionType = Wrapper.DistributionType.ALL
     }
-}
+    
+    register("dist") {
+        dependsOn(":data:dist", ":browser:dist")
+    }
 
-gradle.projectsEvaluated {
-    getTasksByName("clean", true).forEach { task ->
-        if (task != clean) {
-            clean.dependsOn(task)
-        }
-    }
-    getTasksByName("dist", true).forEach { task ->
-        if (task != dist) {
-            dist.dependsOn(task)
-        }
-    }
-    getTasksByName("test", true).forEach { task ->
-        if (task != test) {
-            test.dependsOn(task)
+    register("clean") {
+        doLast {
+            delete(externalLibsDir)
         }
     }
 }
