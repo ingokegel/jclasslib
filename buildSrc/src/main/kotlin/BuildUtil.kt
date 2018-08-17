@@ -35,7 +35,7 @@ fun Project.configurePublishing() {
         }
 
         publications {
-            "Module"(MavenPublication::class) {
+            create("Module", MavenPublication::class) {
                 from(project.components["java"])
                 artifactId = "jclasslib-${project.name}"
                 artifact(sourcesJar)

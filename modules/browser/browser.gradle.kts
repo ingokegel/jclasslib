@@ -41,7 +41,7 @@ tasks {
         into(externalLibsDir)
     }
 
-    "dist" {
+    register("dist") {
         dependsOn(copyDist)
     }
 }

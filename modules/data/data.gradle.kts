@@ -54,7 +54,7 @@ tasks {
         }
     }
 
-    "dist" {
+    register("dist") {
         dependsOn(doc, copyDist)
     }
 }
