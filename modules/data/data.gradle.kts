@@ -13,7 +13,6 @@ dependencies {
     compile(kotlin("stdlib"))
 }
 
-val publications: PublicationContainer = the<PublishingExtension>().publications
 var externalLibsDir: File by rootProject.extra
 
 tasks {
@@ -48,9 +47,11 @@ tasks {
         from(dokkaJavadoc.outputDirectory)
     }
 
-    publications {
-        "Module"(MavenPublication::class) {
-            artifact(mapOf("source" to javadocJar, "classifier" to "javadoc"))
+    publishing {
+        publications {
+            named<MavenPublication>("Module") {
+                artifact(mapOf("source" to javadocJar, "classifier" to "javadoc"))
+            }
         }
     }
 
