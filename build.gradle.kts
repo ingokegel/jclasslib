@@ -54,7 +54,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "4.10-rc-2"
+        gradleVersion = "4.10.1"
         distributionType = Wrapper.DistributionType.ALL
     }
     
