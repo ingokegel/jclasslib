@@ -185,7 +185,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
 
     private fun getRoot() : VirtualFile {
         var root = virtualFile
-        (0..classFile.thisClassName.count { it == '/' }).forEach {
+        repeat(classFile.thisClassName.count { it == '/' } + 1) {
             root = root.parent
         }
         return root
