@@ -40,6 +40,7 @@
       <w>dload</w>
       <w>dmul</w>
       <w>dneg</w>
+      <w>dokka</w>
       <w>drem</w>
       <w>dreturn</w>
       <w>dstore</w>

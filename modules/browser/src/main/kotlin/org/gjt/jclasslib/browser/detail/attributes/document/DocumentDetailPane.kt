@@ -78,9 +78,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         val browserComponent = services.browserComponent
         browserComponent.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
         try {
-            SwingUtilities.invokeLater({
-                function.invoke()
-            })
+            SwingUtilities.invokeLater(function)
         } finally {
             browserComponent.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
         }

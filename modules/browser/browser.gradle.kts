@@ -1,5 +1,3 @@
-@file:Suppress("RemoveRedundantBackticks")  //TODO remove with Kotlin 1.2.40
-
 import org.gradle.api.java.archives.Manifest
 import org.gradle.api.tasks.Copy
 import org.gradle.jvm.tasks.Jar
@@ -18,7 +16,7 @@ application {
 
 dependencies {
     compileOnly(":apple")
-    compile("com.install4j:install4j-runtime:7.0.4")
+    compile("com.install4j:install4j-runtime:7.0.6")
     compile("org.jetbrains:annotations:13.0")
     compile("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
     compile("com.miglayout:miglayout-swing:5.0")
@@ -43,12 +41,8 @@ tasks {
         into(externalLibsDir)
     }
 
-    "dist" {
+    register("dist") {
         dependsOn(copyDist)
-    }
-
-    publications {
-        "Module"(MavenPublication::class)
     }
 }
 

@@ -1,14 +1,13 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 import java.net.URI
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "0.9.16" apply false
+    id("org.jetbrains.dokka") version "0.9.17" apply false
     idea
 }
 
-version = "5.3-beta2"
+version = "5.3"
 buildDir = file("build/gradle")
 
 var mediaDir: File by extra(file("media"))
@@ -43,7 +42,7 @@ subprojects {
             useTestNG()
         }
 
-        tasks.withType<KotlinCompile> {
+        tasks.withType<KotlinJvmCompile> {
             kotlinOptions {
                 languageVersion = "1.2"
                 apiVersion = "1.2"
@@ -53,36 +52,19 @@ subprojects {
     }
 }
 
-val clean by tasks.creating {
-    doLast {
-        delete(externalLibsDir)
-    }
-}
-
-val dist by tasks.creating {}
-val test by tasks.creating {}
-
 tasks {
-    "wrapper"(Wrapper::class) {
-        gradleVersion = "4.7-rc-1"
+    getByName<Wrapper>("wrapper") {
+        gradleVersion = "4.10.1"
         distributionType = Wrapper.DistributionType.ALL
     }
-}
+    
+    register("dist") {
+        dependsOn(":data:dist", ":browser:dist")
+    }
 
-gradle.projectsEvaluated {
-    getTasksByName("clean", true).forEach { task ->
-        if (task != clean) {
-            clean.dependsOn(task)
-        }
-    }
-    getTasksByName("dist", true).forEach { task ->
-        if (task != dist) {
-            dist.dependsOn(task)
-        }
-    }
-    getTasksByName("test", true).forEach { task ->
-        if (task != test) {
-            test.dependsOn(task)
+    register("clean") {
+        doLast {
+            delete(externalLibsDir)
         }
     }
 }
