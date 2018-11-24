@@ -26,7 +26,8 @@ object ByteCodeReader {
      */
     @Throws(IOException::class)
     @JvmStatic
-    @JvmOverloads fun readByteCode(code: ByteArray, prependInstructions: Array<Instruction>? = null): ArrayList<Instruction> {
+    @JvmOverloads
+    fun readByteCode(code: ByteArray, prependInstructions: Array<Instruction>? = null): ArrayList<Instruction> {
 
         val bcis = ByteCodeInputStream(ByteArrayInputStream(code))
 
@@ -46,13 +47,8 @@ object ByteCodeReader {
     }
 
     @Throws(IOException::class)
-    private fun readNextInstruction(bcis: ByteCodeInputStream, wide: Boolean): Instruction {
-        val instruction: Instruction
-
-        val bytecode = bcis.readUnsignedByte()
-        val opcode = Opcode.getFromTag(bytecode)
-
-        when (opcode) {
+    private fun readNextInstruction(bcis: ByteCodeInputStream, wide: Boolean): Instruction =
+        when (val opcode = Opcode.getFromTag(bcis.readUnsignedByte())) {
 
             Opcode.WIDE,
             Opcode.NOP,
@@ -206,7 +202,7 @@ object ByteCodeReader {
             Opcode.IMPDEP1,
             Opcode.IMPDEP2 ->
 
-                instruction = Instruction(opcode)
+                Instruction(opcode)
 
             Opcode.BIPUSH,
             Opcode.LDC,
@@ -234,7 +230,7 @@ object ByteCodeReader {
             Opcode.RET,
             Opcode.NEWARRAY ->
 
-                instruction = ImmediateByteInstruction(opcode, wide)
+                ImmediateByteInstruction(opcode, wide)
 
             Opcode.LDC_W,
             Opcode.LDC2_W,
@@ -251,10 +247,9 @@ object ByteCodeReader {
             Opcode.INSTANCEOF,
                 // the only immediate short instruction that does
                 // not have an immediate constant pool reference
-            Opcode.SIPUSH
-            ->
+            Opcode.SIPUSH ->
 
-                instruction = ImmediateShortInstruction(opcode)
+                ImmediateShortInstruction(opcode)
 
             Opcode.IFEQ,
             Opcode.IFNE,
@@ -275,42 +270,37 @@ object ByteCodeReader {
             Opcode.IFNULL,
             Opcode.IFNONNULL ->
 
-                instruction = BranchInstruction(opcode)
+                BranchInstruction(opcode)
 
             Opcode.GOTO_W,
             Opcode.JSR_W ->
 
-                instruction = WideBranchInstruction(opcode)
+                WideBranchInstruction(opcode)
 
-        // subject to wide
+            // subject to wide
             Opcode.IINC ->
 
-                instruction = IncrementInstruction(opcode, wide)
+                IncrementInstruction(opcode, wide)
 
             Opcode.TABLESWITCH ->
 
-                instruction = TableSwitchInstruction(opcode)
+                TableSwitchInstruction(opcode)
 
             Opcode.LOOKUPSWITCH ->
 
-                instruction = LookupSwitchInstruction(opcode)
+                LookupSwitchInstruction(opcode)
 
             Opcode.INVOKEINTERFACE ->
 
-                instruction = InvokeInterfaceInstruction(opcode)
+                InvokeInterfaceInstruction(opcode)
 
             Opcode.INVOKEDYNAMIC ->
 
-                instruction = InvokeDynamicInstruction(opcode)
+                InvokeDynamicInstruction(opcode)
 
             Opcode.MULTIANEWARRAY ->
 
-                instruction = MultianewarrayInstruction(opcode)
+                MultianewarrayInstruction(opcode)
 
-        }
-
-        instruction.read(bcis)
-        return instruction
-    }
-
+        }.also { it.read(bcis) }
 }
