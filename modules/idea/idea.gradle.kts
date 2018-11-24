@@ -2,15 +2,13 @@ import org.jetbrains.intellij.tasks.PublishTask
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij") version "0.3.4"
+    id("org.jetbrains.intellij") version "0.3.12"
 }
 
 val kotlinVersion: String by project
 
 dependencies {
     compile(project(":browser"))
-    // explicit Kotlin dependency to prevent the intellij plugin from adding the Kotlin libraries in the lib directory
-    compile(kotlin("stdlib"))
 }
 
 intellij {

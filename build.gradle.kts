@@ -10,8 +10,7 @@ plugins {
 version = "5.3"
 buildDir = file("build/gradle")
 
-var mediaDir: File by extra(file("media"))
-var externalLibsDir: File by extra(file("$buildDir/externalLibs"))
+val kotlinVersion: String by project
 
 subprojects {
 
@@ -28,24 +27,25 @@ subprojects {
         maven("http://maven.ej-technologies.com/repository")
     }
 
-    plugins.withId("kotlin") {
+    pluginManager.withPlugin("kotlin") {
         dependencies {
+            add("compile", kotlin("stdlib", version = kotlinVersion))
             add("testCompile", "org.testng:testng:6.8.8")
         }
 
-        tasks.withType<JavaCompile> {
+        tasks.withType<JavaCompile>().configureEach {
             sourceCompatibility = "1.8"
             targetCompatibility = "1.8"
         }
 
-        tasks.withType<Test> {
+        tasks.withType<Test>().configureEach {
             useTestNG()
         }
 
-        tasks.withType<KotlinJvmCompile> {
+        tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
-                languageVersion = "1.2"
-                apiVersion = "1.2"
+                languageVersion = "1.3"
+                apiVersion = "1.3"
                 jvmTarget = "1.8"
             }
         }
@@ -54,18 +54,17 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "4.10.1"
+        gradleVersion = "5.0-rc-5"
         distributionType = Wrapper.DistributionType.ALL
     }
-    
+
     register("dist") {
         dependsOn(":data:dist", ":browser:dist")
     }
 
-    register("clean") {
-        doLast {
-            delete(externalLibsDir)
-        }
+    register<Delete>("clean") {
+        dependsOn(":installer:clean", ":data:clean", ":browser:clean")
+        delete(externalLibsDir)
     }
 }
 

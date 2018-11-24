@@ -1,5 +1,3 @@
-@file:Suppress("UnusedImport")
-
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 import org.gradle.api.Project
@@ -8,6 +6,9 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.*
+import java.io.File
+
+val Project.externalLibsDir: File get() = file("${rootProject.buildDir}/externalLibs")
 
 fun Project.configurePublishing() {
     pluginManager.apply("com.jfrog.bintray")
@@ -24,7 +25,7 @@ fun Project.configurePublishing() {
             }
         }
 
-        val sourcesJar by creating(Jar::class) {
+        val sourcesJar by registering(Jar::class) {
             classifier = "sources"
             from(project.the<JavaPluginConvention>().sourceSets["main"].allSource)
         }
@@ -38,7 +39,7 @@ fun Project.configurePublishing() {
                 create<MavenPublication>("Module") {
                     from(project.components["java"])
                     artifactId = "jclasslib-${project.name}"
-                    artifact(sourcesJar)
+                    artifact(sourcesJar.get())
                     pom {
                         licenses {
                             license {
