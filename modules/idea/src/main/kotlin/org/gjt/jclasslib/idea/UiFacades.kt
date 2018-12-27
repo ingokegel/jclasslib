@@ -25,8 +25,8 @@ fun initUiFacades() {
     tabPaneFactory = ::JBTabsFacade
 
     treeIcons = mapOf(
-            TreeIcon.CLOSED to AllIcons.Nodes.TreeClosed,
-            TreeIcon.OPEN to AllIcons.Nodes.TreeOpen,
+            TreeIcon.CLOSED to AllIcons.Nodes.Folder,
+            TreeIcon.OPEN to AllIcons.Nodes.Folder,
             TreeIcon.LEAF to AllIcons.FileTypes.Any_type
     )
 
@@ -35,6 +35,8 @@ fun initUiFacades() {
         addColorMapping(ColorKey.LINK, ConsoleHighlighter.GREEN)
         addColorMapping(ColorKey.ACTIVE_LINK, ConsoleHighlighter.GREEN_BRIGHT)
     }
+
+    tableRowHeight = 18
 }
 
 private fun MutableMap<ColorKey, Color>.addColorMapping(colorKey: ColorKey, attributesKey: TextAttributesKey) {

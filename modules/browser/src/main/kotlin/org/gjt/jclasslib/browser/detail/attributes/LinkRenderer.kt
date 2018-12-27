@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.DetailPane
+import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.util.ExtendedTableCellRenderer
 import org.gjt.jclasslib.util.getLinkColor
 import java.awt.Color
@@ -49,7 +50,7 @@ class LinkRenderer : TableCellRenderer {
 
         return panel.apply {
             background = linkLineRenderer.background
-            border = linkLineRenderer.border
+            border = TableDetailPane.noFocusBorder
             linkLineRenderer.border = null
         }
     }

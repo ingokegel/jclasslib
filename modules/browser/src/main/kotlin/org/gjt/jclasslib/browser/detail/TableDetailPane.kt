@@ -14,15 +14,20 @@ import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.LinkMouseListener
+import org.gjt.jclasslib.util.tableRowHeight
+import java.awt.Component
 import java.awt.Point
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
 import java.util.*
 import javax.swing.*
+import javax.swing.border.Border
+import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.TableColumnModelEvent
 import javax.swing.event.TableColumnModelListener
+import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
 import javax.swing.tree.TreePath
 
@@ -32,9 +37,8 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
         selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         val rowHeightFactor = rowHeightFactor
-        if (rowHeightFactor != 1f) {
-            rowHeight = (rowHeight * rowHeightFactor).toInt()
-        }
+        val baseRowHeight = tableRowHeight.takeIf { it  > 0 } ?: rowHeight
+        rowHeight = (baseRowHeight * rowHeightFactor).toInt()
 
         TableLinkListener(this)
         gridColor = UIManager.getColor("control")
@@ -125,17 +129,13 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
         table.apply {
             model = tableModel
             createTableColumnModel(this)
-            alignTop(Number::class.java)
-            alignTop(String::class.java)
             setDefaultRenderer(Link::class.java, LinkRenderer())
+            setDefaultRenderer(Number::class.java, NoFocusTableCellRenderer())
+            setDefaultRenderer(String::class.java, NoFocusTableCellRenderer())
         }
         if (isVariableRowHeight) {
             updateRowHeights()
         }
-    }
-
-    private fun JTable.alignTop(columnClass: Class<*>) {
-        (getDefaultRenderer(columnClass) as JLabel).verticalAlignment = JLabel.TOP
     }
 
     private fun updateRowHeights() {
@@ -161,6 +161,17 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
         table.selectionModel.setSelectionInterval(index, index)
     }
 
+    private class NoFocusTableCellRenderer : DefaultTableCellRenderer() {
+        init {
+            verticalAlignment = JLabel.TOP
+        }
+        override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+            border = noFocusBorder
+            return this
+        }
+    }
+
     private inner class TableLinkListener(component: JComponent) : LinkMouseListener(component) {
         override fun isLink(point: Point): Boolean {
             val column = table.columnAtPoint(point)
@@ -182,6 +193,10 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
             val translatedPoint = Point(point.x - cellRect.x, point.y - cellRect.y)
             return renderer.isLinkLabelHit(translatedPoint)
         }
+    }
+
+    companion object {
+        val noFocusBorder: Border = EmptyBorder(1, 1, 1, 1)
     }
 }
 

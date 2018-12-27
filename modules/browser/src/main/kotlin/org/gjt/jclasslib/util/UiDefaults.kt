@@ -13,6 +13,7 @@ import javax.swing.Icon
 enum class TreeIcon {CLOSED, OPEN, LEAF}
 
 var treeRowHeight : Int = 0
+var tableRowHeight : Int = 0
 
 var treeIcons: Map<TreeIcon, Icon> = emptyMap()
 
