@@ -15,7 +15,7 @@ dependencies {
 
 tasks {
     val jar by existing(Jar::class) {
-        archiveName = "jclasslib-library.jar"
+        archiveFileName.set("jclasslib-library.jar")
     }
 
     val copyDist by registering(Copy::class) {
@@ -41,7 +41,7 @@ tasks {
 
     val javadocJar by registering(Jar::class) {
         dependsOn(dokkaJavadoc)
-        classifier = "javadoc"
+        archiveClassifier.set("javadoc")
         from(dokkaJavadoc)
     }
 

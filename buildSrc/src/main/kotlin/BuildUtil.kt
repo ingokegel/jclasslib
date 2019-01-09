@@ -26,7 +26,7 @@ fun Project.configurePublishing() {
         }
 
         val sourcesJar by registering(Jar::class) {
-            classifier = "sources"
+            archiveClassifier.set("sources")
             from(project.the<JavaPluginConvention>().sourceSets["main"].allSource)
         }
 

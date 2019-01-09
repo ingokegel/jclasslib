@@ -25,7 +25,7 @@ dependencies {
 
 tasks {
     val jar by existing(Jar::class) {
-        archiveName = "jclasslib-browser.jar"
+        archiveFileName.set("jclasslib-browser.jar")
         manifest {
             attributes("Main-Class" to application.mainClassName)
         }

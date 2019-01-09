@@ -69,6 +69,7 @@
       <w>getstatic</w>
       <w>gridy</w>
       <w>hotfix</w>
+      <w>httpcomponents</w>
       <w>iadd</w>
       <w>iaload</w>
       <w>iand</w>
