@@ -10,6 +10,7 @@ package org.gjt.jclasslib.io
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.isDebug
+import org.gjt.jclasslib.structures.debug
 import java.io.*
 import java.util.jar.JarFile
 
@@ -25,11 +26,12 @@ object ClassFileReader {
      * @param classPath the class path from which to read the ClassFile structure
      * @param packageName the name of the package in which the class resides
      * @param className the simple name of the class
+     * @param suppressEOF whether an unexpected end-of-file while reading the class file should be ignored
      * @return the new ClassFile structure or null if it cannot be found
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
-    fun readFromClassPath(classPath: Array<String>, packageName: String, className: String): ClassFile? {
+    fun readFromClassPath(classPath: Array<String>, packageName: String, className: String, suppressEOF: Boolean = false): ClassFile? {
 
         val relativePath = packageName.replace('.', File.separatorChar) + (if (packageName.isEmpty()) "" else File.separator) + className + ".class"
         val jarRelativePath = relativePath.replace(File.separatorChar, '/')
@@ -58,23 +60,35 @@ object ClassFileReader {
     /**
      * Converts a class file to a ClassFile structure.
      * @param file the file from which to read the ClassFile structure
+     * @param suppressEOF whether an unexpected end-of-file while reading the class file should be ignored
      * @return the new ClassFile structure
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
-    fun readFromFile(file: File): ClassFile = readFromInputStream(FileInputStream(file))
+    fun readFromFile(file: File, suppressEOF: Boolean = false): ClassFile = readFromInputStream(FileInputStream(file), suppressEOF)
 
     /**
      * Converts a class file to a ClassFile structure.
      * @param stream the input stream from which to read the ClassFile structure
+     * @param suppressEOF whether an unexpected end-of-file while reading the class file should be ignored
      * @return the new ClassFile structure
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
-    fun readFromInputStream(stream: InputStream): ClassFile {
+    fun readFromInputStream(stream: InputStream, suppressEOF: Boolean = false): ClassFile {
         val classFile = ClassFile()
         val bufferedInputStream = BufferedInputStream(stream)
-        bufferedInputStream.wrapForDebug().use { classFile.read(it) }
+        bufferedInputStream.wrapForDebug().use {
+            if (suppressEOF) {
+                try {
+                    classFile.read(it)
+                } catch (e: EOFException) {
+                    if (isDebug) debug("A suppressed end-of-file occurred while reading the class file: ${e.message}", it)
+                }
+            } else {
+                classFile.read(it)
+            }
+        }
         return classFile
     }
 

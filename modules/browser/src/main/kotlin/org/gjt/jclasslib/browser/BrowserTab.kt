@@ -22,6 +22,7 @@ import java.awt.BorderLayout
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.io.EOFException
 import java.util.jar.JarFile
 import javax.swing.Action
 import javax.swing.JOptionPane
@@ -124,28 +125,37 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         browserComponent.browserPath = browserPath
     }
 
-    private fun readClassFile(frame: BrowserFrame): ClassFile {
+    private fun readClassFile(frame: BrowserFrame, suppressEOF: Boolean = false): ClassFile {
         try {
             return when {
                 fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
-                    ClassFileReader.readFromInputStream(getJrtInputStream(fileName.removePrefix(ClasspathJrtEntry.JRT_PREFIX), File(frame.config.jreHome)))
+                    ClassFileReader.readFromInputStream(getJrtInputStream(fileName.removePrefix(ClasspathJrtEntry.JRT_PREFIX), File(frame.config.jreHome)), suppressEOF)
                 }
                 fileName.contains('!') -> {
                     val (jarFileName, classFileName) = fileName.split("!", limit = 2)
                     val jarFile = JarFile(jarFileName)
                     val jarEntry = jarFile.getJarEntry(classFileName)
                     if (jarEntry != null) {
-                        ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry))
+                        ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF)
                     } else {
                         throw IOException("The jar entry $classFileName was not found")
                     }
                 }
                 else -> {
-                    ClassFileReader.readFromFile(File(fileName))
+                    ClassFileReader.readFromFile(File(fileName), suppressEOF)
                 }
             }
         } catch (ex: FileNotFoundException) {
             throw IOException("The file $fileName was not found")
+        } catch (ex: EOFException) {
+            if (GUIHelper.showOptionDialog(this,
+                "An unexpected end-of-file occurred while reading $fileName. Should the file be read anyway?",
+                GUIHelper.YES_NO_OPTIONS,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                return readClassFile(frame, suppressEOF = true);
+            } else {
+                throw IOException("An (expected) EOF occurred while reading $fileName")
+            }
         } catch (ex: IOException) {
             ex.printStackTrace()
             throw IOException("An error occurred while reading $fileName")
