@@ -9,8 +9,8 @@ package org.gjt.jclasslib.io
 
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import org.gjt.jclasslib.structures.isDebug
 import org.gjt.jclasslib.structures.debug
+import org.gjt.jclasslib.structures.isDebug
 import java.io.*
 import java.util.jar.JarFile
 
@@ -31,6 +31,7 @@ object ClassFileReader {
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
+    @JvmOverloads
     fun readFromClassPath(classPath: Array<String>, packageName: String, className: String, suppressEOF: Boolean = false): ClassFile? {
 
         val relativePath = packageName.replace('.', File.separatorChar) + (if (packageName.isEmpty()) "" else File.separator) + className + ".class"
@@ -42,13 +43,13 @@ object ClassFileReader {
                     if (classPathEntry.isDirectory) {
                         val testFile = File(classPathEntry, relativePath)
                         if (testFile.exists()) {
-                            return readFromFile(testFile)
+                            return readFromFile(testFile, suppressEOF)
                         }
                     } else if (classPathEntry.isFile) {
                         JarFile(classPathEntry).use { jarFile ->
                             val jarEntry = jarFile.getJarEntry(jarRelativePath)
                             if (jarEntry != null) {
-                                return readFromInputStream(jarFile.getInputStream(jarEntry))
+                                return readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF)
                             }
                         }
                     }
@@ -65,6 +66,7 @@ object ClassFileReader {
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
+    @JvmOverloads
     fun readFromFile(file: File, suppressEOF: Boolean = false): ClassFile = readFromInputStream(FileInputStream(file), suppressEOF)
 
     /**
@@ -75,6 +77,7 @@ object ClassFileReader {
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
+    @JvmOverloads
     fun readFromInputStream(stream: InputStream, suppressEOF: Boolean = false): ClassFile {
         val classFile = ClassFile()
         val bufferedInputStream = BufferedInputStream(stream)
