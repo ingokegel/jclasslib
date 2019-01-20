@@ -152,7 +152,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
                 "An unexpected end-of-file occurred while reading $fileName. Should the file be read anyway?",
                 GUIHelper.YES_NO_OPTIONS,
                 JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                return readClassFile(frame, suppressEOF = true);
+                return readClassFile(frame, suppressEOF = true)
             } else {
                 throw IOException("An (expected) EOF occurred while reading $fileName")
             }
