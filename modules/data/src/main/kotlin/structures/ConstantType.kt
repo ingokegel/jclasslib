@@ -152,6 +152,7 @@ enum class ConstantType(override val tag: Int, val verbose: String, val size: In
      */
     override fun toString(): String = verbose
 
+    @Suppress("NOT_DOCUMENTED")
     companion object : Lookup<ConstantType>(ConstantType::class.java, "constant pool type")
 
 }

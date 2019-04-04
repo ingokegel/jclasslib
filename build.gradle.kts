@@ -1,9 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
-import java.net.URI
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "0.9.17" apply false
+    id("org.jetbrains.dokka") version "0.9.18" apply false
     idea
 }
 

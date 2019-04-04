@@ -26,7 +26,6 @@ tasks {
     }
 
     val dokka by existing(DokkaTask::class) {
-        sourceDirs = setOf(file("src/main/kotlin"))
         includes = listOf("packages.md")
     }
 
