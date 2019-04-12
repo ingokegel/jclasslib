@@ -88,22 +88,22 @@ open class DnDTabbedPane : JTabbedPane() {
 
     private fun buildGhostLocation(location: Point) = Point(location).apply {
         when (getTabPlacement()) {
-            JTabbedPane.TOP -> {
+            TOP -> {
                 y = 1
                 x -= glassPane.ghostWidth / 2
             }
 
-            JTabbedPane.BOTTOM -> {
+            BOTTOM -> {
                 y = height - 1 - glassPane.ghostHeight
                 x -= glassPane.ghostWidth / 2
             }
 
-            JTabbedPane.LEFT -> {
+            LEFT -> {
                 x = 1
                 y -= glassPane.ghostHeight / 2
             }
 
-            JTabbedPane.RIGHT -> {
+            RIGHT -> {
                 x = width - 1 - glassPane.ghostWidth
                 y -= glassPane.ghostHeight / 2
             }
@@ -111,7 +111,7 @@ open class DnDTabbedPane : JTabbedPane() {
     }
 
     private fun getTargetTabIndex(point: Point): Int {
-        val isTopOrBottom = getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM
+        val isTopOrBottom = getTabPlacement() == TOP || getTabPlacement() == BOTTOM
 
         if (tabCount == 0) {
             return 0
@@ -346,7 +346,7 @@ open class DnDTabbedPane : JTabbedPane() {
         override fun dragOver(event: DropTargetDragEvent) {
             if (isTabTransfer(event.transferable)) {
                 val data = getTabTransferData(event.transferable)
-                glassPane.drawInsertionMarker = if (getTabPlacement() == JTabbedPane.TOP || getTabPlacement() == JTabbedPane.BOTTOM) {
+                glassPane.drawInsertionMarker = if (getTabPlacement() == TOP || getTabPlacement() == BOTTOM) {
                     initTargetLeftRightLine(getTargetTabIndex(event.location), data)
                 } else {
                     initTargetTopBottomLine(getTargetTabIndex(event.location), data)

@@ -144,7 +144,7 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
         return hasParagraph(view.getView(index))
     }
 
-    override fun getBaselineResizeBehavior() = Component.BaselineResizeBehavior.CONSTANT_ASCENT
+    override fun getBaselineResizeBehavior() = BaselineResizeBehavior.CONSTANT_ASCENT
 
     companion object {
         private val NO_MARGIN = Insets(0, 0, 0, 0)

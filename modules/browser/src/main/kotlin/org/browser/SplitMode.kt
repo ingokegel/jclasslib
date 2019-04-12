@@ -16,6 +16,6 @@ enum class SplitMode(val actionName: String, val actionDescription: String, val 
     BOTH("4-way split", "Split the window area into 4 parts each with a tabbed pane", KeyEvent.VK_B);
 
     companion object {
-        fun getByName(name : String?) = values().firstOrNull { it.name == name } ?: SplitMode.NONE
+        fun getByName(name : String?) = values().firstOrNull { it.name == name } ?: NONE
     }
 }

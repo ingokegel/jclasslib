@@ -15,7 +15,7 @@ import javax.swing.TransferHandler
 
 class BrowserNodeTransferHandler(private val services: BrowserServices) : TransferHandler() {
 
-    override fun getSourceActions(c: JComponent): Int = TransferHandler.COPY
+    override fun getSourceActions(c: JComponent): Int = COPY
 
     override fun createTransferable(c: JComponent): Transferable? {
         if (c !is JTree || c.selectionPath == null) {

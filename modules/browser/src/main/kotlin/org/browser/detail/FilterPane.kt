@@ -50,7 +50,7 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
             }
 
             private fun modified() {
-                if (!text.isEmpty()) {
+                if (text.isNotEmpty()) {
                     textFilterEntered()
                 }
                 updateFilter()

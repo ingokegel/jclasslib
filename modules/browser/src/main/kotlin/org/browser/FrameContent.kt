@@ -164,10 +164,10 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     operator fun List<TabbedPaneWrapper>.get(position: Position) = this[position.ordinal]
 
     enum class Position(val noneOpenMessage: String? = null) {
-        NW("Open a class file"), NE(), SE(), SW();
+        NW("Open a class file"), NE, SE, SW;
 
         companion object {
-            fun getByName(name: String?) = Position.values().firstOrNull { it.name == name } ?: Position.NW
+            fun getByName(name: String?) = values().firstOrNull { it.name == name } ?: NW
         }
     }
 

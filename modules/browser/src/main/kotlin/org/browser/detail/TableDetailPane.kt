@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
 import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
@@ -178,7 +177,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
             val row = table.rowAtPoint(point)
             return row >= 0 && column >= 0 &&
                     table.getColumnClass(column) == Link::class.java &&
-                    table.model.getValueAt(row, column).toString() != DetailPane.CPINFO_LINK_TEXT + "0" &&
+                    table.model.getValueAt(row, column).toString() != CPINFO_LINK_TEXT + "0" &&
                     isLinkLabelHit(point, row, column)
         }
 

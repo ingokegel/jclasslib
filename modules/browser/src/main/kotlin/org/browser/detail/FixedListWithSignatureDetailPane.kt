@@ -18,7 +18,7 @@ import javax.swing.JButton
 abstract class FixedListWithSignatureDetailPane<T : Any>(
         elementClass: Class<T>,
         services: BrowserServices,
-        protected val signatureMode: FixedListWithSignatureDetailPane.SignatureMode
+        protected val signatureMode: SignatureMode
 ) : KeyValueDetailPane<T>(elementClass, services) {
 
     private val btnCopyToClipboard: JButton = JButton(signatureButtonText).apply {

@@ -22,8 +22,8 @@ private class DefaultSplitter(splitDirection: SplitDirection, first: JComponent,
     init {
         isContinuousLayout = true
         orientation = when (splitDirection) {
-            SplitDirection.HORIZONTAL -> JSplitPane.HORIZONTAL_SPLIT
-            SplitDirection.VERTICAL -> JSplitPane.VERTICAL_SPLIT
+            SplitDirection.HORIZONTAL -> HORIZONTAL_SPLIT
+            SplitDirection.VERTICAL -> VERTICAL_SPLIT
         }
         setLeftComponent(first)
         setRightComponent(second)

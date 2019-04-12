@@ -15,7 +15,7 @@ import org.gjt.jclasslib.util.TitledSeparator
 import javax.swing.JTree
 import javax.swing.tree.TreePath
 
-class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: FixedListWithSignatureDetailPane.SignatureMode) :
+class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: SignatureMode) :
         FixedListWithSignatureDetailPane<Array<out ClassMember>>(Array<out ClassMember>::class.java, services, signatureMode) {
 
     val filterPane = object : FilterPane<AccessFlag, ClassMember>(this@ClassMemberContainerDetailPane) {

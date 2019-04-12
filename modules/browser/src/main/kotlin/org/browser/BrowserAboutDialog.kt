@@ -52,7 +52,7 @@ class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
         isResizable = false
         title = "About the jclasslib bytecode viewer"
         GUIHelper.centerOnParentWindow(this, owner)
-        defaultCloseOperation = JDialog.DISPOSE_ON_CLOSE
+        defaultCloseOperation = DISPOSE_ON_CLOSE
     }
 
     private fun getVersion(): String {

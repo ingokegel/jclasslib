@@ -30,10 +30,10 @@ enum class ElementValueType(val charTag: Char, val verbose: String) : ClassFileE
         get() = charTag.toInt()
 
     fun createEntry(): ElementValue = when (this) {
-        ElementValueType.ENUM -> EnumElementValue()
-        ElementValueType.CLASS -> ClassElementValue()
-        ElementValueType.ANNOTATION -> AnnotationElementValue()
-        ElementValueType.ARRAY -> ArrayElementValue()
+        ENUM -> EnumElementValue()
+        CLASS -> ClassElementValue()
+        ANNOTATION -> AnnotationElementValue()
+        ARRAY -> ArrayElementValue()
         else -> ConstElementValue(this)
     }
 

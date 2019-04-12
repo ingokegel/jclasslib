@@ -25,7 +25,7 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     override fun readData(input: DataInput) {
         val elementValueEntriesLength = input.readUnsignedShort()
         elementValueEntries = Array(elementValueEntriesLength) {
-            ElementValue.create(input)
+            create(input)
         }
     }
 

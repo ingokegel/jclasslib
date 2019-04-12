@@ -387,7 +387,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun setupFrame() {
-        defaultCloseOperation = JFrame.DO_NOTHING_ON_CLOSE
+        defaultCloseOperation = DO_NOTHING_ON_CLOSE
 
         val contentPane = contentPane as JComponent
         contentPane.layout = BorderLayout(5, 5)
@@ -396,15 +396,15 @@ class BrowserFrame : JFrame() {
         iconImages = ICON_IMAGES
 
         contentPane.transferHandler = object : TransferHandler() {
-            override fun canImport(support: TransferHandler.TransferSupport): Boolean {
+            override fun canImport(support: TransferSupport): Boolean {
                 val supported = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
                 if (supported) {
-                    support.dropAction = TransferHandler.COPY
+                    support.dropAction = COPY
                 }
                 return supported
             }
 
-            override fun importData(support: TransferHandler.TransferSupport): Boolean {
+            override fun importData(support: TransferSupport): Boolean {
                 val transferable = support.transferable
                 val flavors = transferable.transferDataFlavors
                 for (flavor in flavors) {
