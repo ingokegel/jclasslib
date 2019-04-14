@@ -1,7 +1,3 @@
-import org.gradle.api.java.archives.Manifest
-import org.gradle.api.tasks.Copy
-import org.gradle.jvm.tasks.Jar
-
 plugins {
     kotlin("jvm")
     application

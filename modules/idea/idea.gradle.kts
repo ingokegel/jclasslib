@@ -1,6 +1,3 @@
-import org.jetbrains.intellij.tasks.PublishTask
-import org.jetbrains.intellij.tasks.RunIdeTask
-
 plugins {
     kotlin("jvm")
     id("org.jetbrains.intellij") version "0.4.1"
