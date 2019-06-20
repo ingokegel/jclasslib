@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij") version "0.4.1"
+    id("org.jetbrains.intellij") version "0.4.9"
 }
 
 val kotlinVersion: String by project
