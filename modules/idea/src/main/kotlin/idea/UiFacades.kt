@@ -18,7 +18,6 @@ import org.gjt.jclasslib.util.*
 import java.awt.Color
 import javax.swing.JComponent
 import javax.swing.SwingConstants
-import com.intellij.openapi.editor.colors.ColorKey as IJColorKey
 
 fun initUiFacades() {
     splitterFactory = ::JBSplitterFacade

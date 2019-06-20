@@ -36,6 +36,8 @@ import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.xml.transform.OutputKeys
+import kotlin.math.max
+import kotlin.math.min
 
 class BrowserFrame : JFrame() {
 
@@ -595,8 +597,8 @@ class BrowserFrame : JFrame() {
         // sanitize frame bounds
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val screenBounds = Rectangle(screenSize)
-        frameBounds.translate(-minOf(0, frameBounds.x), -Math.min(0, frameBounds.y))
-        frameBounds.translate(-maxOf(0, frameBounds.x + frameBounds.width - screenSize.width), -Math.max(0, frameBounds.y + frameBounds.height - screenSize.height))
+        frameBounds.translate(-minOf(0, frameBounds.x), -min(0, frameBounds.y))
+        frameBounds.translate(-maxOf(0, frameBounds.x + frameBounds.width - screenSize.width), -max(0, frameBounds.y + frameBounds.height - screenSize.height))
 
         bounds = screenBounds.intersection(frameBounds)
 

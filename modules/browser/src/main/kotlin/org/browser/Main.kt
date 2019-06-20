@@ -19,6 +19,7 @@ import java.io.File
 import java.io.PrintStream
 import java.util.*
 import javax.swing.UIManager
+import kotlin.system.exitProcess
 
 const val applicationTitle = "Bytecode viewer"
 const val lafDefaultSystemProperty = "jclasslib.laf.default"
@@ -71,9 +72,8 @@ fun getPreviousBrowserFrame(browserFrame: BrowserFrame) : BrowserFrame = getBrow
 fun getActiveBrowserFrame(): BrowserFrame? = getBrowserFrames().firstOrNull { it.isActive }
 
 fun exit() {
-    System.exit(0)
+    exitProcess(0)
 }
-
 
 private fun registerStartupListener() {
     StartupNotification.registerStartupListener { argLine ->

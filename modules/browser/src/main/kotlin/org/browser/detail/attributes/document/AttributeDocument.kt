@@ -39,7 +39,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
             val documentModification = DocumentModification()
             documentModification.block()
             documentModification.modifiedRanges.forEach { range ->
-                fireChangedUpdate(DefaultDocumentEvent(range.start, range.last - range.first, DocumentEvent.EventType.CHANGE))
+                fireChangedUpdate(DefaultDocumentEvent(range.first, range.last - range.first, DocumentEvent.EventType.CHANGE))
             }
         } finally {
             writeUnlock()

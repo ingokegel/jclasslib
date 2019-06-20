@@ -18,12 +18,12 @@ import javax.swing.event.DocumentListener
 
 abstract class FilterPane<out T, in S : Structure>(private val detailPane: DetailPane<*>) : JPanel() {
 
-    private val filterCheckboxes = getAllFilterKeys().associate {
-        it to JCheckBox(it.toString()).apply {
-            addActionListener {
-                updateFilter()
-            }
+    private val filterCheckboxes = getAllFilterKeys().associateWith {
+        JCheckBox(it.toString()).apply {
+        addActionListener {
+            updateFilter()
         }
+    }
     }
 
     protected abstract fun getAllFilterKeys(): Collection<T>
@@ -64,8 +64,8 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
         layout = MigLayout("insets 0, wrap", "[grow]")
 
         add(TitledSeparator("Filter"), "growx")
-        add(buttonGroup.radioButtons[FilterMode.ALL])
-        add(buttonGroup.radioButtons[FilterMode.SELECTED], "wrap unrel")
+        add(buttonGroup.getButton(FilterMode.ALL))
+        add(buttonGroup.getButton(FilterMode.SELECTED), "wrap unrel")
         addComponents()
     }
 

@@ -12,13 +12,15 @@ import javax.swing.JRadioButton
 
 class EnumButtonGroup<E : Enum<E>>(values: Array<E>, actionListener: (E) -> Unit = {}) : ButtonGroup() {
 
-    val radioButtons = values.associate {
-        it to JRadioButton(it.toString()).apply {
+    val radioButtons = values.toList().associateWith {
+        JRadioButton(it.toString()).apply {
             addActionListener {
                 actionListener(selectedValue)
             }
         }
     }
+
+    fun getButton(value: E): JRadioButton = radioButtons[value] ?: error("value $value not found in radio button group")
 
     var selectedValue: E
         get() {

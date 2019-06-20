@@ -187,7 +187,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
 
         private fun isLinkLabelHit(point: Point, row: Int, column: Int): Boolean {
             val renderer = table.getCellRenderer(row, column) as LinkRenderer
-            renderer.getTableCellRendererComponent(table, table.model.getValueAt(row, column), false, false, row, column)
+            renderer.getTableCellRendererComponent(table, table.model.getValueAt(row, column), isSelected = false, hasFocus = false, row = row, column = column)
             val cellRect = table.getCellRect(row, column, false)
             val translatedPoint = Point(point.x - cellRect.x, point.y - cellRect.y)
             return renderer.isLinkLabelHit(translatedPoint)
