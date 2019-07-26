@@ -1,3 +1,4 @@
+import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 plugins {
@@ -49,6 +50,16 @@ subprojects {
             }
         }
     }
+
+    apply(plugin = "idea")
+    configure<IdeaModel> {
+        module {
+            inheritOutputDirs = true
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
+    }
+
 }
 
 tasks {
