@@ -19,7 +19,7 @@ pluginManagement {
     }
 }
 
-file("modules").listFiles()
+file("modules").listFiles()!!
         .filter { it.isDirectory && !it.name.startsWith('.') && File(it, it.name + ".gradle.kts").exists() }
         .forEach { dir ->
             include(dir.name)
