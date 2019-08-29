@@ -1,17 +1,16 @@
+import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
-import java.net.URI
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "0.9.17" apply false
+    id("org.jetbrains.dokka") version "0.9.18" apply false
     idea
 }
 
-version = "5.3"
+version = "5.3.2"
 buildDir = file("build/gradle")
 
-var mediaDir: File by extra(file("media"))
-var externalLibsDir: File by extra(file("$buildDir/externalLibs"))
+val kotlinVersion: String by project
 
 subprojects {
 
@@ -28,44 +27,54 @@ subprojects {
         maven("http://maven.ej-technologies.com/repository")
     }
 
-    plugins.withId("kotlin") {
+    pluginManager.withPlugin("kotlin") {
         dependencies {
+            add("compile", kotlin("stdlib", version = kotlinVersion))
             add("testCompile", "org.testng:testng:6.8.8")
         }
 
-        tasks.withType<JavaCompile> {
+        tasks.withType<JavaCompile>().configureEach {
             sourceCompatibility = "1.8"
             targetCompatibility = "1.8"
         }
 
-        tasks.withType<Test> {
+        tasks.withType<Test>().configureEach {
             useTestNG()
         }
 
-        tasks.withType<KotlinJvmCompile> {
+        tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
-                languageVersion = "1.2"
-                apiVersion = "1.2"
+                languageVersion = "1.3"
+                apiVersion = "1.3"
                 jvmTarget = "1.8"
             }
         }
     }
+
+    apply(plugin = "idea")
+    configure<IdeaModel> {
+        module {
+            inheritOutputDirs = true
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
+    }
+
 }
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "4.10.1"
+        gradleVersion = "5.4.1"
         distributionType = Wrapper.DistributionType.ALL
     }
-    
+
     register("dist") {
         dependsOn(":data:dist", ":browser:dist")
     }
 
-    register("clean") {
-        doLast {
-            delete(externalLibsDir)
-        }
+    register<Delete>("clean") {
+        dependsOn(":installer:clean", ":data:clean", ":browser:clean")
+        delete(externalLibsDir)
     }
 }
 

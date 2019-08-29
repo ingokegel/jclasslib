@@ -1,4 +1,3 @@
-import org.gradle.jvm.tasks.Jar
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
@@ -13,44 +12,44 @@ dependencies {
     compile(kotlin("stdlib"))
 }
 
-val publications: PublicationContainer = the<PublishingExtension>().publications
-var externalLibsDir: File by rootProject.extra
-
 tasks {
-    val jar by getting(Jar::class) {
-        archiveName = "jclasslib-library.jar"
+    val jar by existing(Jar::class) {
+        archiveFileName.set("jclasslib-library.jar")
     }
 
-    val copyDist by creating(Copy::class) {
-        dependsOn("jar")
+    val copyDist by registering(Copy::class) {
+        dependsOn(jar)
         from(configurations.compile)
-        from(jar.archivePath)
+        from(jar)
         into(externalLibsDir)
     }
 
-    val dokka by getting(DokkaTask::class) {
-        sourceDirs = setOf(file("src/main/kotlin"))
+    val dokka by existing(DokkaTask::class) {
         includes = listOf("packages.md")
     }
 
-    val dokkaJavadoc by creating(DokkaTask::class) {
+    val dokkaJavadoc by registering(DokkaTask::class) {
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/javadoc"
     }
 
-    val doc by creating {
+    val doc by registering {
         dependsOn(dokka, dokkaJavadoc)
     }
 
-    val javadocJar by creating(Jar::class) {
+    val javadocJar by registering(Jar::class) {
         dependsOn(dokkaJavadoc)
-        classifier = "javadoc"
-        from(dokkaJavadoc.outputDirectory)
+        archiveClassifier.set("javadoc")
+        from(dokkaJavadoc)
     }
 
-    publications {
-        "Module"(MavenPublication::class) {
-            artifact(mapOf("source" to javadocJar, "classifier" to "javadoc"))
+    publishing {
+        publications {
+            named<MavenPublication>("Module") {
+                artifact(javadocJar.get()) {
+                    classifier = "javadoc"
+                }
+            }
         }
     }
 

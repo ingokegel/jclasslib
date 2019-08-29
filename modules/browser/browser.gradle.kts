@@ -1,7 +1,3 @@
-import org.gradle.api.java.archives.Manifest
-import org.gradle.api.tasks.Copy
-import org.gradle.jvm.tasks.Jar
-
 plugins {
     kotlin("jvm")
     application
@@ -23,21 +19,18 @@ dependencies {
     compile(project(":data"))
 }
 
-val publications: PublicationContainer = the<PublishingExtension>().publications
-var externalLibsDir: File by rootProject.extra
-
 tasks {
-    val jar by getting(Jar::class) {
-        archiveName = "jclasslib-browser.jar"
+    val jar by existing(Jar::class) {
+        archiveFileName.set("jclasslib-browser.jar")
         manifest {
-            attributes(mapOf("Main-Class" to project.the<ApplicationPluginConvention>().mainClassName))
+            attributes("Main-Class" to application.mainClassName)
         }
     }
 
-    val copyDist by creating(Copy::class) {
+    val copyDist by registering(Copy::class) {
         dependsOn("jar")
-        from(configurations.compile.files.filterNot { it.name.contains("install4j") })
-        from(jar.archivePath)
+        from(configurations.compile.map { it.files.filterNot { it.name.contains("install4j") } })
+        from(jar)
         into(externalLibsDir)
     }
 

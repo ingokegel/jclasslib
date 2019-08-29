@@ -1,7 +1,7 @@
 import com.install4j.gradle.Install4jTask
 
 plugins {
-    id("com.install4j.gradle") version "7.0.6"
+    id("com.install4j.gradle") version "8.0.1"
 }
 
 val install4jHomeDir: String? by project
@@ -16,33 +16,31 @@ install4j {
     }
 }
 
-val mediaDir: File by rootProject.extra
-
-task("clean") {
-    doLast {
-        delete(mediaDir)
+tasks {
+    register<Delete>("clean") {
+        delete(rootProject.file("media"))
     }
-}
 
-task<Install4jTask>("media") {
-    dependsOn(":dist", ":clean")
-    group = "Build"
-    description = "Build all media files"
+    register<Install4jTask>("media") {
+        dependsOn(":dist", ":clean")
+        group = "Build"
+        description = "Build all media files"
 
-    projectFile = file("resources/jclasslib.install4j")
-    release = version as String
-    disableSigning = !project.hasProperty("winCertPath") || !project.hasProperty("macCertPath")
-    winKeystorePassword = this@Installer_gradle.winKeystorePassword ?: ""
-    macKeystorePassword = this@Installer_gradle.macKeystorePassword ?: ""
+        projectFile = file("resources/jclasslib.install4j")
+        release = version as String
+        disableSigning = !project.hasProperty("winCertPath") || !project.hasProperty("macCertPath")
+        winKeystorePassword = this@Installer_gradle.winKeystorePassword ?: ""
+        macKeystorePassword = this@Installer_gradle.macKeystorePassword ?: ""
 
-    variables = mapOf(
-            "winCertPath" to (winCertPath ?: ""),
-            "macCertPath" to (macCertPath ?: "")
-    )
+        variables = mapOf(
+                "winCertPath" to (winCertPath ?: ""),
+                "macCertPath" to (macCertPath ?: "")
+        )
 
-    doFirst {
-        if (install4jHomeDir == null) {
-            throw RuntimeException("Specify install4jHomeDir in gradle.properties and set it to an install4j installation directory")
+        doFirst {
+            if (install4jHomeDir == null) {
+                throw RuntimeException("Specify install4jHomeDir in gradle.properties and set it to an install4j installation directory")
+            }
         }
     }
 }

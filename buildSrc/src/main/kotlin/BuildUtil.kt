@@ -1,5 +1,3 @@
-@file:Suppress("UnusedImport")
-
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 import org.gradle.api.Project
@@ -8,6 +6,9 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.*
+import java.io.File
+
+val Project.externalLibsDir: File get() = file("${rootProject.buildDir}/externalLibs")
 
 fun Project.configurePublishing() {
     pluginManager.apply("com.jfrog.bintray")
@@ -15,7 +16,6 @@ fun Project.configurePublishing() {
     val bintrayUser: String? by extra
     val bintrayApiKey: String? by extra
 
-    val publications = the<PublishingExtension>().publications
     tasks {
         "bintrayUpload"(BintrayUploadTask::class) {
             doFirst {
@@ -25,8 +25,8 @@ fun Project.configurePublishing() {
             }
         }
 
-        val sourcesJar by creating(Jar::class) {
-            classifier = "sources"
+        val sourcesJar by registering(Jar::class) {
+            archiveClassifier.set("sources")
             from(project.the<JavaPluginConvention>().sourceSets["main"].allSource)
         }
 
@@ -34,24 +34,26 @@ fun Project.configurePublishing() {
             dependsOn("publishModulePublicationToMavenLocal", "jar")
         }
 
-        publications {
-            create("Module", MavenPublication::class) {
-                from(project.components["java"])
-                artifactId = "jclasslib-${project.name}"
-                artifact(sourcesJar)
-                pom {
-                    licenses {
-                        license {
-                            name.set("GPL Version 2.0")
-                            url.set("https://www.gnu.org/licenses/gpl-2.0.html")
+        configure<PublishingExtension> {
+            publications {
+                create<MavenPublication>("Module") {
+                    from(project.components["java"])
+                    artifactId = "jclasslib-${project.name}"
+                    artifact(sourcesJar.get())
+                    pom {
+                        licenses {
+                            license {
+                                name.set("GPL Version 2.0")
+                                url.set("https://www.gnu.org/licenses/gpl-2.0.html")
+                            }
                         }
-                    }
-                    developers {
-                        developer {
-                            name.set("Ingo Kegel")
-                            url.set("https://github.com/ingokegel/jclasslib")
-                            organization.set("ej-technologies GmbH")
-                            organizationUrl.set("https://www.ej-technologies.com")
+                        developers {
+                            developer {
+                                name.set("Ingo Kegel")
+                                url.set("https://github.com/ingokegel/jclasslib")
+                                organization.set("ej-technologies GmbH")
+                                organizationUrl.set("https://www.ej-technologies.com")
+                            }
                         }
                     }
                 }

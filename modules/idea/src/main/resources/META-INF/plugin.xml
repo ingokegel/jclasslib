@@ -3,7 +3,7 @@
 <idea-plugin url="https://github.com/ingokegel/jclasslib">
     <id>jclasslib</id>
     <name>jclasslib Bytecode viewer</name>
-    <description>Bytecode viewer for Java class files</description>
+    <description>jclasslib is a bytecode viewer for Java class files</description>
     <version>5.0</version>
     <vendor url="https://github.com/ingokegel/jclasslib">Ingo Kegel</vendor>
     <idea-version since-build="162"/>
