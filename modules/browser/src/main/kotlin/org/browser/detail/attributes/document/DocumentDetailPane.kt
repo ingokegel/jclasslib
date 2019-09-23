@@ -26,6 +26,7 @@ import javax.swing.text.*
 import javax.swing.text.AbstractDocument.AbstractElement
 import javax.swing.tree.TreePath
 
+@Suppress("DEPRECATION") // Remove after requiring at least Java 9
 abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(elementClass: Class<T>, private val documentClass: Class<D>, services: BrowserServices) : DetailPaneWithKeyValues<T>(elementClass, services) {
 
     protected val textPane = AttributeTextPane()

@@ -203,7 +203,7 @@ class BrowserFrame : JFrame() {
         splitMode to DefaultAction(splitMode.actionName, splitMode.actionDescription) {
             frameContent.split(splitMode)
         }.apply {
-            accelerator(splitMode.accelerator, DefaultAction.MENU_MODIFIER or KeyEvent.SHIFT_MASK)
+            accelerator(splitMode.accelerator, DefaultAction.MENU_MODIFIER or KeyEvent.SHIFT_DOWN_MASK)
         }
     }
 

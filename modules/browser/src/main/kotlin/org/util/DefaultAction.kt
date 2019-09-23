@@ -76,7 +76,7 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
     }
 
     companion object {
-        val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMask
+        val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMask // replace with menuShortcutKeyMaskEx after JDK 11+ is required
         private val IMAGE_BUTTON_SIZE = Dimension(26, 26)
         private val TOOL_BAR_BUTTON_SIZE = Dimension(35, 35)
     }
