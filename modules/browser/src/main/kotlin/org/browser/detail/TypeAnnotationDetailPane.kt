@@ -83,9 +83,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
     private fun handleInterfaceLink(index: Int) {
         val interfacesPath = services.browserComponent.treePane.getPathForCategory(NodeType.INTERFACE)
         val interfacesNode = interfacesPath.lastPathComponent as BrowserTreeNode
-        if (index >= interfacesNode.childCount) {
-            throw IllegalArgumentException("Invalid interface index $index")
-        }
+        require(index < interfacesNode.childCount) { "Invalid interface index $index" }
         val path = interfacesPath.pathByAddingChild(interfacesNode.getChildAt(index))
         selectPath(path)
     }

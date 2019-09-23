@@ -154,9 +154,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
         get() = 1f
 
     fun selectIndex(index: Int) {
-        if (index !in (0..table.rowCount)) {
-            throw IllegalArgumentException("Invalid index: $index")
-        }
+        require(index in (0..table.rowCount)) { "Invalid index: $index" }
         table.selectionModel.setSelectionInterval(index, index)
     }
 
