@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin url="https://github.com/ingokegel/jclasslib">
     <id>jclasslib</id>
     <name>jclasslib Bytecode viewer</name>
@@ -9,17 +8,13 @@
     <idea-version since-build="162"/>
 
     <depends>com.intellij.modules.java</depends>
-    <depends optional="true">ByteCodeViewer</depends>
-    <depends optional="true">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="withByteCodeViewer.xml">ByteCodeViewer</depends>
+    <depends optional="true" config-file="withKotlin.xml">org.jetbrains.kotlin</depends>
 
     <actions>
         <action id="ShowByteCodeJclasslib" class="org.gjt.jclasslib.idea.ShowBytecodeAction"
-                text="Show Bytecode With jclasslib">
+                text="Show Bytecode With Jclasslib">
             <add-to-group group-id="QuickActions" anchor="after" relative-to-action="QuickJavaDoc"/>
         </action>
     </actions>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="org.gjt.jclasslib.idea.KotlinClassNameProvider"/>
-    </extensions>
 </idea-plugin>
