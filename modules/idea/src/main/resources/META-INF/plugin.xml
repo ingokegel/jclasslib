@@ -5,11 +5,10 @@
     <description>jclasslib is a bytecode viewer for Java class files</description>
     <version>5.0</version>
     <vendor url="https://github.com/ingokegel/jclasslib">Ingo Kegel</vendor>
-    <idea-version since-build="162"/>
+    <idea-version since-build="183"/>
 
     <depends>com.intellij.modules.java</depends>
     <depends optional="true" config-file="withByteCodeViewer.xml">ByteCodeViewer</depends>
-    <depends optional="true" config-file="withKotlin.xml">org.jetbrains.kotlin</depends>
 
     <actions>
         <action id="ShowByteCodeJclasslib" class="org.gjt.jclasslib.idea.ShowBytecodeAction"

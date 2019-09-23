@@ -13,10 +13,16 @@ import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.impl.ContentManagerWatcher
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.fileTypes.FileTypeRegistry
+import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.CompilerModuleExtension
+import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
@@ -31,29 +37,34 @@ import com.intellij.ui.content.Content
 import com.intellij.util.PlatformIcons
 import org.gjt.jclasslib.browser.BrowserComponent
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.webSiteUrl
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.webSiteUrl
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
 import java.awt.event.ActionEvent
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.IOException
 import javax.swing.AbstractAction
 import javax.swing.Action
 
 const val toolWindowId: String = "jclasslib"
 
-fun showClassFile(virtualFile: VirtualFile, browserPath: BrowserPath?, project: Project) {
+fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?, project: Project) {
     val toolWindow = getToolWindow(project)
-    val existingEntry = toolWindow.contentManager.contents.associateBy { it.component as BytecodeToolWindowPanel }.entries.firstOrNull { it.key.virtualFile == virtualFile }
+    val existingEntry = toolWindow.contentManager.contents
+        .associateBy { it.component as BytecodeToolWindowPanel }
+        .entries.firstOrNull { it.key.locatedClassFile == locatedClassFile }
     if (existingEntry != null) {
         val (panel, content) = existingEntry
         activateToolWindow(toolWindow, content, panel, browserPath)
     } else {
-        val classFile = readClassFile(virtualFile, project)
+        val classFile = readClassFile(locatedClassFile, project)
         if (classFile != null) {
-            val panel = BytecodeToolWindowPanel(classFile, virtualFile, project)
+            val panel = BytecodeToolWindowPanel(classFile, locatedClassFile, project)
             panel.browserComponent.browserPath = browserPath
             val content = toolWindow.contentManager.run {
-                val content = factory.createContent(panel, virtualFile.name, false)
+                val content = factory.createContent(panel, locatedClassFile.virtualFile.name, false)
                 panel.content = content
                 addContent(content)
                 content
@@ -63,13 +74,55 @@ fun showClassFile(virtualFile: VirtualFile, browserPath: BrowserPath?, project: 
     }
 }
 
-private fun readClassFile(virtualFile: VirtualFile, project: Project): ClassFile? {
-    virtualFile.refresh(false, false)
+private fun readClassFile(locatedClassFile: LocatedClassFile, project: Project): ClassFile? {
+    locatedClassFile.virtualFile.refresh(false, false)
     return try {
-        ClassFileReader.readFromInputStream(virtualFile.inputStream)
+        val classFileBytes = loadClassFileBytes(locatedClassFile, project)
+        ClassFileReader.readFromInputStream(ByteArrayInputStream(classFileBytes))
     } catch(e: Exception) {
         Messages.showWarningDialog(project, "Error reading class file: ${e.message}", "jclasslib bytecode viewer")
         null
+    }
+}
+
+fun loadClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): ByteArray =
+    if (FileTypeRegistry.getInstance().isFileOfType(locatedClassFile.virtualFile, StdFileTypes.CLASS)) {
+        loadCompiledClassFileBytes(locatedClassFile, project)
+    } else {
+        loadSourceClassFileBytes(locatedClassFile, project)
+    }
+
+private fun loadCompiledClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): ByteArray {
+    val index = ProjectFileIndex.SERVICE.getInstance(project)
+    val file = locatedClassFile.virtualFile
+    val classFileName = StringUtil.getShortName(locatedClassFile.jvmClassName) + ".class"
+    return if (index.isInLibraryClasses(file)) {
+        val classFile = file.parent.findChild(classFileName)
+        classFile?.contentsToByteArray(false) ?: throw IOException("Class file not found")
+    } else {
+        val classFile = File(file.parent.path, classFileName)
+        if (classFile.isFile) {
+            FileUtil.loadFileBytes(classFile)
+        } else {
+            throw IOException("Class file not found")
+        }
+    }
+}
+
+private fun loadSourceClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): ByteArray {
+    val index = ProjectFileIndex.SERVICE.getInstance(project)
+    val file = locatedClassFile.virtualFile
+    val module = index.getModuleForFile(file) ?: throw IOException("Module not found")
+    val extension = CompilerModuleExtension.getInstance(module) ?: throw IOException("Extension not found")
+    val inTests = index.isInTestSourceContent(file)
+    val classPathRoot = (if (inTests) extension.compilerOutputPathForTests else extension.compilerOutputPath)
+        ?: throw IOException("Class root not found")
+    val relativePath = locatedClassFile.jvmClassName.replace('.', '/') + ".class"
+    val classFile = File(classPathRoot.path, relativePath)
+    return if (classFile.exists()) {
+        FileUtil.loadFileBytes(classFile)
+    } else {
+        throw IOException("Class file not found")
     }
 }
 
@@ -88,7 +141,7 @@ private fun getToolWindow(project: Project): ToolWindow {
             }
 }
 
-class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile: VirtualFile, val project: Project) : SimpleToolWindowPanel(true, true), BrowserServices {
+class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClassFile: LocatedClassFile, val project: Project) : SimpleToolWindowPanel(true, true), BrowserServices {
 
     lateinit var content: Content
 
@@ -141,7 +194,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
         }
 
         override fun actionPerformed(e: AnActionEvent) {
-            val newClassFile = readClassFile(virtualFile, project)
+            val newClassFile = readClassFile(locatedClassFile, project)
             if (newClassFile != null) {
                 classFile = newClassFile
                 browserComponent.rebuild()
@@ -170,9 +223,10 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
     override val forwardAction: Action = ActionDelegate(forwardActionDelegate)
 
     override fun openClassFile(className: String, browserPath: BrowserPath?) {
-        val virtualClassFile = getRoot().findFileByRelativePath(className.replace('.', '/') + ".class")
+        val jvmClassName = className.replace('.', '/')
+        val virtualClassFile = getRoot().findFileByRelativePath("$jvmClassName.class")
         if (virtualClassFile != null) {
-            showClassFile(virtualClassFile, browserPath, project)
+            showClassFile(LocatedClassFile(jvmClassName, virtualClassFile), browserPath, project)
         } else {
             val psiClass = findClass(className)
             if (psiClass != null) {
@@ -184,7 +238,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val virtualFile
     }
 
     private fun getRoot() : VirtualFile {
-        var root = virtualFile
+        var root = locatedClassFile.virtualFile
         repeat(classFile.thisClassName.count { it == '/' } + 1) {
             root = root.parent
         }
