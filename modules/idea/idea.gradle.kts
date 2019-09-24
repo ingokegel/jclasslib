@@ -18,6 +18,16 @@ intellij {
 }
 
 tasks {
+    patchPluginXml {
+        changeNotes("""
+            <ul>
+                <li>Improved method for finding class files, decompiled classes and Scala classes can now be shown</li>
+                <li>Support NestHost and NestMembers attributes new in Java 11+</li>
+            </ul>
+        """.trimIndent())
+        version(project.version)
+    }
+
     publishPlugin {
         setUsername(project.findProperty("intellij.publish.username") ?: "")
         setPassword(project.findProperty("intellij.publish.password") ?: "")
