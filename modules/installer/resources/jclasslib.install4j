@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.1" transformSequenceNumber="8">
+<install4j version="8.0.2" transformSequenceNumber="8">
   <directoryPresets config="." />
   <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" pack200Compression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="http://www.ej-technologies.com" version="5.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="1.8">
     <variables>
@@ -7,7 +7,7 @@
       <variable name="macCertPath" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:macCertPath}" windowsEnabled="true" windowsPkcs12File="${compiler:winCertPath}" />
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk12/jdk-12.0.2+10" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk13/jdk-13+33" />
   </application>
   <files>
     <mountPoints>
@@ -22,7 +22,7 @@
   </files>
   <launchers>
     <launcher name="jclasslib bytecode viewer" id="404488187">
-      <executable name="jclasslib" iconSet="true" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true" dpiAware="false">
+      <executable name="jclasslib" iconSet="true" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true">
         <versionInfo include="true" fileDescription="jclasslib bytecode viewer" legalCopyright="ej-technologies" internalName="jclasslib" />
       </executable>
       <splashScreen>
