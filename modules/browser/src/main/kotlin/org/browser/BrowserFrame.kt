@@ -169,18 +169,12 @@ class BrowserFrame : JFrame() {
         accelerator(KeyEvent.VK_R)
     }
 
-    val showHomepageAction = DefaultAction("jclasslib on the web", "Visit jclasslib on the web", "web_small.png", "web_large.png") {
+    val showHomepageAction = DefaultAction("jclasslib web site", "Visit jclasslib on the web", "web_small.png", "web_large.png") {
         GUIHelper.showURL(webSiteUrl)
     }
 
     val showEjtAction = DefaultAction("ej-technologies on the web", "Visit ej-technologies on the web", "web_small.png") {
         GUIHelper.showURL("http://www.ej-technologies.com")
-    }
-
-    val showHelpAction = DefaultAction("Show help", "Show the jclasslib documentation", "help.png") {
-        GUIHelper.showURL(File("doc/help.html").canonicalFile.toURI().toURL().toExternalForm())
-    }.apply {
-        accelerator(KeyEvent.VK_F1, 0)
     }
 
     val aboutAction = DefaultAction("About the jclasslib bytecode viewer", "Show the jclasslib documentation") {
@@ -369,7 +363,7 @@ class BrowserFrame : JFrame() {
             add(windowMenu)
 
             add(JMenu("Help").apply {
-                add(showHelpAction)
+                add(showHomepageAction)
                 add(aboutAction)
             })
         }
@@ -449,8 +443,6 @@ class BrowserFrame : JFrame() {
         add(forwardAction.createToolBarButton())
         addSeparator()
         add(reloadAction.createToolBarButton())
-        addSeparator()
-        add(showHomepageAction.createToolBarButton())
 
         isFloatable = false
     }
