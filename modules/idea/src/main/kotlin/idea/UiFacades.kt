@@ -36,6 +36,10 @@ fun initUiFacades() {
     }
 
     tableRowHeight = 18
+
+    val editorColorsScheme = EditorColorsManager.getInstance().schemeForCurrentUITheme
+    documentFontFamily = editorColorsScheme.editorFontName
+    documentFontSize = editorColorsScheme.editorFontSize
 }
 
 private fun MutableMap<ColorKey, Color>.addColorMapping(colorKey: ColorKey, attributesKey: TextAttributesKey) {

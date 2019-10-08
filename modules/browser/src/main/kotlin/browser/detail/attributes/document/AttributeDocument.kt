@@ -10,6 +10,8 @@ package org.gjt.jclasslib.browser.detail.attributes.document
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.BatchDocument
+import org.gjt.jclasslib.util.documentFontFamily
+import org.gjt.jclasslib.util.documentFontSize
 import org.gjt.jclasslib.util.getLinkColor
 import java.awt.BasicStroke
 import java.awt.Color
@@ -161,13 +163,23 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         fun style(init: StyleBuilder.() -> Unit = {}): AttributeSet {
             val styleBuilder = StyleBuilder()
             // The next line explicitly sets the font size on the attribute set, this is needed for HiDPI displays
-            styleBuilder.fontSize += 0
+
+            styleBuilder.fontSize = documentFontSize
+            documentFontFamily?.let {
+                styleBuilder.fontFamily = it
+            }
             styleBuilder.init()
             return styleBuilder.attributeSet
         }
 
         class StyleBuilder {
             val attributeSet = SimpleAttributeSet()
+
+            var fontFamily: String
+                get() = StyleConstants.getFontFamily(attributeSet)
+                set(fontFamily) {
+                    StyleConstants.setFontFamily(attributeSet, fontFamily)
+                }
 
             var fontSize: Int
                 get() = StyleConstants.getFontSize(attributeSet)

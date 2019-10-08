@@ -14,6 +14,8 @@ enum class TreeIcon {CLOSED, OPEN, LEAF}
 
 var treeRowHeight : Int = 0
 var tableRowHeight : Int = 0
+var documentFontFamily : String? = null
+var documentFontSize : Int = 12
 
 var treeIcons: Map<TreeIcon, Icon> = emptyMap()
 
