@@ -9,6 +9,7 @@ package org.gjt.jclasslib.idea
 
 import com.intellij.execution.process.ConsoleHighlighter
 import com.intellij.icons.AllIcons
+import com.intellij.ide.ui.UISettings
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
@@ -18,6 +19,7 @@ import org.gjt.jclasslib.util.*
 import java.awt.Color
 import javax.swing.JComponent
 import javax.swing.SwingConstants
+import kotlin.math.roundToInt
 
 fun initUiFacades() {
     splitterFactory = ::JBSplitterFacade
@@ -35,7 +37,8 @@ fun initUiFacades() {
         addColorMapping(ColorKey.ACTIVE_LINK, ConsoleHighlighter.GREEN_BRIGHT)
     }
 
-    tableRowHeight = 18
+    val uiSettings = UISettings.instance
+    tableRowHeight = ((if (uiSettings.overrideLafFonts) uiSettings.fontSize else 12) * 1.5).roundToInt()
 
     val editorColorsScheme = EditorColorsManager.getInstance().schemeForCurrentUITheme
     documentFontFamily = editorColorsScheme.editorFontName
