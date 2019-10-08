@@ -19,10 +19,10 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.GUIHelper
 import org.w3c.dom.Element
 import java.awt.BorderLayout
+import java.io.EOFException
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.EOFException
 import java.util.jar.JarFile
 import javax.swing.Action
 import javax.swing.JOptionPane
