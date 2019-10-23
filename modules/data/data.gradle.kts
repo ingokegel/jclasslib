@@ -25,7 +25,9 @@ tasks {
     }
 
     val dokka by existing(DokkaTask::class) {
-        includes = listOf("packages.md")
+        configuration {
+            includes = listOf("packages.md")
+        }
     }
 
     val dokkaJavadoc by registering(DokkaTask::class) {
