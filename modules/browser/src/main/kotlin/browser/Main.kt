@@ -26,15 +26,15 @@ import java.util.prefs.Preferences
 import javax.swing.SwingUtilities
 import kotlin.system.exitProcess
 
-const val applicationTitle = "Bytecode viewer"
-const val lafDefaultSystemProperty = "jclasslib.laf.default"
-const val workspaceFileSuffix = "jcw"
-const val webSiteUrl = "http://www.ej-technologies.com/products/jclasslib/overview.html"
+const val APPLICATION_TITLE = "Bytecode viewer"
+const val LAF_DEFAULT_SYSTEM_PROPERTY = "jclasslib.laf.default"
+const val WORKSPACE_FILE_SUFFIX = "jcw"
+const val WEBSITE_URL = "http://www.ej-technologies.com/products/jclasslib/overview.html"
 const val SETTINGS_DARK_MODE = "darkMode"
 
 fun main(args: Array<String>) {
 
-    if (!java.lang.Boolean.getBoolean(lafDefaultSystemProperty)) {
+    if (!java.lang.Boolean.getBoolean(LAF_DEFAULT_SYSTEM_PROPERTY)) {
         darkMode = getPreferencesNode().getBoolean(SETTINGS_DARK_MODE, false)
         updateFlatLaf()
     }

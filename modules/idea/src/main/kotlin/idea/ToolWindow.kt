@@ -37,8 +37,8 @@ import com.intellij.ui.content.Content
 import com.intellij.util.PlatformIcons
 import org.gjt.jclasslib.browser.BrowserComponent
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.WEBSITE_URL
 import org.gjt.jclasslib.browser.config.BrowserPath
-import org.gjt.jclasslib.browser.webSiteUrl
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
 import java.awt.event.ActionEvent
@@ -48,7 +48,7 @@ import java.io.IOException
 import javax.swing.AbstractAction
 import javax.swing.Action
 
-const val toolWindowId: String = "jclasslib"
+const val TOOL_WINDOW_ID: String = "jclasslib"
 
 fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?, project: Project) {
     val toolWindow = getToolWindow(project)
@@ -134,8 +134,8 @@ private fun activateToolWindow(toolWindow: ToolWindow, content: Content, panel: 
 
 private fun getToolWindow(project: Project): ToolWindow {
     val toolWindowManager = ToolWindowManager.getInstance(project)
-    return toolWindowManager.getToolWindow(toolWindowId) ?:
-            toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.RIGHT, project).apply {
+    return toolWindowManager.getToolWindow(TOOL_WINDOW_ID) ?:
+            toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.RIGHT, project).apply {
                 icon = ShowBytecodeAction.ICON
                 ContentManagerWatcher(this, contentManager)
             }
@@ -211,7 +211,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         }
 
         override fun actionPerformed(e: AnActionEvent) {
-            showURL(webSiteUrl)
+            showURL(WEBSITE_URL)
         }
     }
 
