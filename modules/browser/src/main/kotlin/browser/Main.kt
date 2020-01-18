@@ -10,30 +10,33 @@
 package org.gjt.jclasslib.browser
 
 import com.exe4j.runtime.util.LazyFileOutputStream
+import com.formdev.flatlaf.FlatDarkLaf
+import com.formdev.flatlaf.FlatLightLaf
 import com.install4j.api.Util
 import com.install4j.api.launcher.StartupNotification
+import org.gjt.jclasslib.util.darkMode
 import java.awt.EventQueue
 import java.awt.Frame
+import java.awt.Window
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.PrintStream
 import java.util.*
-import javax.swing.UIManager
+import java.util.prefs.Preferences
+import javax.swing.SwingUtilities
 import kotlin.system.exitProcess
 
 const val applicationTitle = "Bytecode viewer"
 const val lafDefaultSystemProperty = "jclasslib.laf.default"
 const val workspaceFileSuffix = "jcw"
 const val webSiteUrl = "http://www.ej-technologies.com/products/jclasslib/overview.html"
+const val SETTINGS_DARK_MODE = "darkMode"
 
 fun main(args: Array<String>) {
 
     if (!java.lang.Boolean.getBoolean(lafDefaultSystemProperty)) {
-        val lookAndFeelClass = UIManager.getSystemLookAndFeelClassName()
-        try {
-            UIManager.setLookAndFeel(lookAndFeelClass)
-        } catch (ex: Exception) {
-        }
+        darkMode = getPreferencesNode().getBoolean(SETTINGS_DARK_MODE, false)
+        updateFlatLaf()
     }
 
     if (isLoadedFromJar()) {
@@ -56,6 +59,23 @@ fun main(args: Array<String>) {
     }
 }
 
+fun updateFlatLaf() {
+    if (darkMode) {
+        FlatDarkLaf.install()
+    } else {
+        FlatLightLaf.install()
+    }
+}
+
+fun darkModeChanged() {
+    getPreferencesNode().putBoolean(SETTINGS_DARK_MODE, darkMode)
+    updateFlatLaf()
+    for (window in Window.getWindows()) {
+        SwingUtilities.updateComponentTreeUI(window)
+    }
+}
+
+fun getPreferencesNode(): Preferences = Preferences.userNodeForPackage(BrowserFrame::class.java)
 
 fun getBrowserFrames(): List<BrowserFrame> = Frame.getFrames()
         .filterIsInstance<BrowserFrame>()

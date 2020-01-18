@@ -20,6 +20,7 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.MultiFileFilter
+import org.gjt.jclasslib.util.darkMode
 import org.w3c.dom.Document
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
@@ -177,6 +178,13 @@ class BrowserFrame : JFrame() {
         GUIHelper.showURL("http://www.ej-technologies.com")
     }
 
+    val darkModeAction = DefaultAction("Dark mode", "Toggle dark mode for the UI") {
+        darkMode = it.getValue(Action.SELECTED_KEY) as Boolean
+        darkModeChanged()
+    }.apply {
+        putValue(Action.SELECTED_KEY, darkMode)
+    }
+
     val aboutAction = DefaultAction("About the jclasslib bytecode viewer", "Show the jclasslib documentation") {
         BrowserAboutDialog(this).isVisible = true
     }
@@ -324,7 +332,6 @@ class BrowserFrame : JFrame() {
         }
     }
 
-
     private fun setupMenu() {
         jMenuBar = JMenuBar().apply {
 
@@ -342,6 +349,8 @@ class BrowserFrame : JFrame() {
                 addSeparator()
                 add(showHomepageAction)
                 add(showEjtAction)
+                addSeparator()
+                add(JCheckBoxMenuItem(darkModeAction))
                 addSeparator()
                 add(closeAction)
                 add(quitAction)
@@ -455,7 +464,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun loadSettings() {
-        Preferences.userNodeForPackage(this::class.java).apply {
+        getPreferencesNode().apply {
             workspaceChooserPath = get(SETTINGS_WORKSPACE_CHOOSER_PATH, workspaceChooserPath)
             classesChooserPath = get(SETTINGS_CLASSES_CHOOSER_PATH, classesChooserPath)
             jreChooserPath = get(SETTINGS_JRE_CHOOSER_PATH, jreChooserPath)
@@ -548,6 +557,7 @@ class BrowserFrame : JFrame() {
                 checkWindowActions()
             }
         })
+        GUIHelper.addLookAndFeelChangeListener(this::updateUI)
     }
 
     private fun checkWindowActions() {
@@ -557,9 +567,8 @@ class BrowserFrame : JFrame() {
     }
 
     private fun saveWindowSettings() {
-        val preferences = Preferences.userNodeForPackage(this::class.java)
-        preferences.putBoolean(SETTINGS_WINDOW_MAXIMIZED, isMaximized)
-        preferences.apply {
+        getPreferencesNode().apply {
+            putBoolean(SETTINGS_WINDOW_MAXIMIZED, isMaximized)
             if (!isMaximized) {
                 val frameBounds = bounds
                 putInt(SETTINGS_WINDOW_WIDTH, frameBounds.width)
@@ -608,6 +617,12 @@ class BrowserFrame : JFrame() {
                 DEFAULT_WINDOW_WIDTH,
                 DEFAULT_WINDOW_HEIGHT
         )
+    }
+
+    private fun updateUI() {
+        workspaceFileChooser.updateUI()
+        saveClassesFileChooser.updateUI()
+        classesFileChooser.updateUI()
     }
 
     init {

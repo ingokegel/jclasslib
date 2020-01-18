@@ -156,7 +156,6 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
             underline = true
         }
         val STYLE_LINE_NUMBER = style {
-            foreground = Color(128, 128, 128)
             fontSize -= 2
         }
 

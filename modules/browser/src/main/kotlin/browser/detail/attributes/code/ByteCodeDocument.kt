@@ -15,6 +15,7 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.getValueColor
+import util.LightOrDarkColor
 import java.awt.Color
 import java.util.*
 import javax.swing.text.StyleContext
@@ -196,7 +197,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
             attribute(ATTRIBUTE_NAME_HOVER_HIGHLIGHT, DOTTED_STROKE)
         }
         val STYLE_IMMEDIATE_VALUE = style {
-            foreground = Color.MAGENTA
+            foreground = LightOrDarkColor(Color(255, 0, 255), Color(180, 80, 180))
             bold = true
         }
     }

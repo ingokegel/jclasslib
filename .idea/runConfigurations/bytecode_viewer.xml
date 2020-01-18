@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="bytecode viewer" type="JetRunConfigurationType" factoryName="Kotlin">
+  <configuration default="false" name="bytecode viewer" type="JetRunConfigurationType" factoryName="Kotlin" singleton="false">
     <module name="jclasslib.browser.main" />
     <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false" />
     <option name="PROGRAM_PARAMETERS" value="" />

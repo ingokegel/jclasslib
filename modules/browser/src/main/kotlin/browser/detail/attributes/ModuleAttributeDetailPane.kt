@@ -15,6 +15,7 @@ import org.gjt.jclasslib.browser.detail.attributes.document.LineNumberCounts
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.attributes.ExportsEntry
 import org.gjt.jclasslib.structures.attributes.ModuleAttribute
+import util.LightOrDarkColor
 import java.awt.Color
 import javax.swing.text.StyleContext
 
@@ -113,7 +114,7 @@ class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribut
 
     companion object {
         val STYLE_VERSION = style {
-            foreground = Color.MAGENTA
+            foreground = LightOrDarkColor(Color(255, 0, 255), Color(180, 80, 180))
             bold = true
         }
     }

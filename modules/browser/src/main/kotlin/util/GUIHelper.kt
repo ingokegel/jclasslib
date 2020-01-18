@@ -16,6 +16,7 @@ import javax.swing.*
 
 object GUIHelper {
 
+    const val LOOK_AND_FEEL_PROPERTY = "lookAndFeel"
     const val MESSAGE_TITLE = "jclasslib"
     val YES_NO_OPTIONS = arrayOf("Yes", "No")
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
@@ -67,6 +68,14 @@ object GUIHelper {
             Util.showUrl(URL(urlSpec))
         } catch (e: MalformedURLException) {
             e.printStackTrace()
+        }
+    }
+
+    fun addLookAndFeelChangeListener(block: () -> Unit) {
+        UIManager.addPropertyChangeListener { event ->
+            if (event.propertyName == LOOK_AND_FEEL_PROPERTY) {
+                block()
+            }
         }
     }
 }

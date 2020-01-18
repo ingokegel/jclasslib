@@ -17,6 +17,7 @@ dependencies {
     compile("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
     compile("com.miglayout:miglayout-swing:5.0")
     compile(project(":data"))
+    compile("com.formdev:flatlaf:0.25.1")
 }
 
 tasks {

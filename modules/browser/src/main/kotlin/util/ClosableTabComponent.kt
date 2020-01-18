@@ -23,18 +23,6 @@ class ClosableTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLay
             }
         })
         add(CloseButton())
-        val originalForeground = foreground
-        if (GUIHelper.isMacOs()) {
-            tabbedPane.addChangeListener {
-                val selectedIndex = tabbedPane.selectedIndex
-                if (selectedIndex >= 0) {
-                    val selected = tabbedPane.getTabComponentAt(selectedIndex) == this
-                    components.forEach {
-                        it.foreground = if (selected) Color.WHITE else originalForeground
-                    }
-                }
-            }
-        }
     }
 
     private inner class CloseButton : JButton() {

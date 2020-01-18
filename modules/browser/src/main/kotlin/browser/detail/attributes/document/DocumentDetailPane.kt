@@ -31,8 +31,10 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
 
     protected val textPane = AttributeTextPane()
 
-    private val opcodeCounterTextPane: JTextPane = OpcodeCounterTextPane().apply {
+    private val opcodeCounterTextPane = OpcodeCounterTextPane().apply {
         isEnabled = false
+        // text attribute colors are ignored for disabled text panes
+        disabledTextColor = Color(128, 128, 128)
         // the following line should but does not work (see OpcodeCounterTextPane)
         autoscrolls = false
     }
@@ -55,13 +57,12 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
 
         if (textPane.document !== detailDocument) {
             val characterWidth: Int = getFontMetrics(styles.getFont(AttributeDocument.STYLE_LINE_NUMBER)).charWidth('0')
-            val opcodeCounterSize = Dimension(characterWidth * detailDocument.lineNumberWidth + LINE_NUMBERS_OFFSET, 0)
+            val opcodeCounterWidth = characterWidth * detailDocument.lineNumberWidth + LINE_NUMBERS_OFFSET
 
             withWaitCursor {
                 opcodeCounterTextPane.apply {
                     document = detailDocument.lineNumberDocument
-                    minimumSize = opcodeCounterSize
-                    preferredSize = opcodeCounterSize
+                    preferredWidth = opcodeCounterWidth
                 }
                 textPane.apply {
                     document = detailDocument
@@ -96,7 +97,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     }
 
     protected fun updateHistory(offset: Int) {
-        val treePath = services.browserComponent.treePane.tree.selectionPath
+        val treePath = services.browserComponent.treePane.tree.selectionPath ?: return
         val history = services.browserComponent.history
         history.addHistoryEntry(treePath, object: BrowserHistory.Resetter {
             override fun reset() {
@@ -231,7 +232,14 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     // set by BasicTextUI. Since OpcodeCounterTextPane should not be
     // scrollable by dragging, mouse motion events are ignored
     private inner class OpcodeCounterTextPane : AttributeTextPane() {
+
+        var preferredWidth : Int = 0
+
         override fun processMouseMotionEvent(e: MouseEvent) {
+        }
+
+        override fun getPreferredSize(): Dimension {
+            return super.getPreferredSize().apply { width = preferredWidth }
         }
     }
 

@@ -13,6 +13,7 @@ import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.util.GUIHelper
 import org.w3c.dom.Element
+import util.LightOrDarkColor
 import java.awt.BorderLayout
 import java.awt.CardLayout
 import java.awt.Color
@@ -243,7 +244,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         const val CARD_EMPTY = "empty"
         const val CARD_TABBED_PANE = "tabbedPane"
         val PREFERRED_SIZE = Dimension(100, 100)
-        val EMPTY_BACKGROUND = Color(210, 210, 210)
+        val EMPTY_BACKGROUND = LightOrDarkColor(Color(210, 210, 210), Color(80, 80, 80))
         const val TABBED_PANE_EMPTY_MESSAGE = "Drag class files to this area"
 
         private const val NODE_NAME_TABS = "tabs"

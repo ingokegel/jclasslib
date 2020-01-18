@@ -16,7 +16,7 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.KeyStroke
 
-class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: () -> Unit) : AbstractAction(name) {
+class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: (action: DefaultAction) -> Unit) : AbstractAction(name) {
     init {
         val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName) else GUIHelper.ICON_EMPTY
         putValue(SMALL_ICON, smallIcon)
@@ -31,7 +31,7 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
     override fun actionPerformed(ev: ActionEvent) = invoke()
 
     operator fun invoke() {
-        action.invoke()
+        action.invoke(this)
     }
 
     fun accelerator(keyCode: Int, modifiers: Int = MENU_MODIFIER) {
