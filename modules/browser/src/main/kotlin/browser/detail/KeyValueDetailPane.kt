@@ -64,8 +64,8 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         element?.let { element -> showHandlers.forEach { it.invoke(element) } }
     }
 
-    override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode) {
-        super.updateFilter(tree, treeNode)
+    override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode, expand: Boolean) {
+        super.updateFilter(tree, treeNode, expand)
         runShowHandlers(TreePath(treeNode.path))
     }
 

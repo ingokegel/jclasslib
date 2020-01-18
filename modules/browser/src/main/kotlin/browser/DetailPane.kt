@@ -57,18 +57,23 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
 
     fun treeNode(treePath: TreePath) = treePath.lastPathComponent as BrowserTreeNode
 
-    fun updateFilter() {
+    fun updateFilter(expand: Boolean = true) {
         val tree = services.browserComponent.treePane.tree
-        val treeNode = tree.selectionPath.lastPathComponent as BrowserTreeNode
-        updateFilter(tree, treeNode)
+        val treeNode = tree.selectionPath?.lastPathComponent as? BrowserTreeNode
+        if (treeNode != null) {
+            updateFilter(tree, treeNode, expand)
+        }
     }
 
-    protected open fun updateFilter(tree: JTree, treeNode: BrowserTreeNode) {
+    protected open fun updateFilter(tree: JTree, treeNode: BrowserTreeNode, expand: Boolean) {
+        val selectionPath = tree.selectionPath ?: return
         treeNode.filterChildren { node ->
             isChildShown(node)
         }
         (tree.model as DefaultTreeModel).nodeStructureChanged(treeNode)
-        tree.expandPath(tree.selectionPath)
+        if (expand) {
+            tree.expandPath(selectionPath)
+        }
     }
 
     protected open fun isChildShown(node: BrowserTreeNode) = true

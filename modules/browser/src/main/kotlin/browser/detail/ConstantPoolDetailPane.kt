@@ -27,11 +27,11 @@ class ConstantPoolDetailPane(services: BrowserServices) : DetailPane<Array<Const
     }
 
     override fun show(treePath: TreePath) {
-        updateFilter()
+        updateFilter(expand = false)
     }
 
-    override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode) {
-        super.updateFilter(tree, treeNode)
+    override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode, expand: Boolean) {
+        super.updateFilter(tree, treeNode, expand)
         filterPane.updateFilterCheckboxes(getElement(TreePath(treeNode.path)).toList())
     }
 
