@@ -28,5 +28,5 @@ dependencies {
     // for local dokka in lib-compile
     //classpath ':dokka-fatjar'
     //classpath ':dokka-gradle-plugin'
-    compile("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4")
+    implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4")
 }

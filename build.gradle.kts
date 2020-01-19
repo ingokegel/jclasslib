@@ -24,13 +24,13 @@ subprojects {
             dirs = setOf(file("lib"), file("$rootDir/lib-compile"))
         }
         jcenter()
-        maven("http://maven.ej-technologies.com/repository")
+        maven("https://maven.ej-technologies.com/repository")
     }
 
     pluginManager.withPlugin("kotlin") {
         dependencies {
-            add("compile", kotlin("stdlib", version = kotlinVersion))
-            add("testCompile", "org.testng:testng:6.8.8")
+            add("implementation", kotlin("stdlib", version = kotlinVersion))
+            add("testImplementation", "org.testng:testng:6.8.8")
         }
 
         tasks.withType<JavaCompile>().configureEach {
@@ -64,7 +64,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "5.4.1"
+        gradleVersion = "6.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 

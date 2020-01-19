@@ -1,12 +1,12 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij") version "0.4.9"
+    id("org.jetbrains.intellij") version "0.4.15"
 }
 
 val kotlinVersion: String by project
 
 dependencies {
-    compile(project(":browser"))
+    implementation(project(":browser"))
 }
 
 intellij {

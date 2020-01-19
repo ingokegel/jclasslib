@@ -1,11 +1,12 @@
-val kotlinVersion: String by settings
 
 pluginManagement {
+    val kotlinVersion: String by settings
+
     repositories {
         gradlePluginPortal()
-        maven("http://maven.ej-technologies.com/repository")
+        maven("https://maven.ej-technologies.com/repository")
         maven("https://jcenter.bintray.com/")
-        maven("http://dl.bintray.com/jetbrains/intellij-plugin-service")
+        maven("https://dl.bintray.com/jetbrains/intellij-plugin-service")
     }
 
     resolutionStrategy {

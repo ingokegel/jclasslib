@@ -1,8 +1,8 @@
 import com.install4j.gradle.Install4jTask
 
 plugins {
-    id("com.install4j.gradle") version "8.0.2"
-}
+    id("com.install4j.gradle") version "8.0.4"
+    }
 
 val install4jHomeDir: String? by project
 val winCertPath: String? by project

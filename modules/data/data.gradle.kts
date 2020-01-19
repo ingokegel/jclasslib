@@ -9,7 +9,7 @@ plugins {
 configurePublishing()
 
 dependencies {
-    compile(kotlin("stdlib"))
+    api(kotlin("stdlib"))
 }
 
 tasks {
@@ -19,7 +19,7 @@ tasks {
 
     val copyDist by registering(Copy::class) {
         dependsOn(jar)
-        from(configurations.compile)
+        from(configurations.compileClasspath)
         from(jar)
         into(externalLibsDir)
     }

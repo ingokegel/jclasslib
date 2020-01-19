@@ -12,12 +12,12 @@ application {
 
 dependencies {
     compileOnly(":apple")
-    compile("com.install4j:install4j-runtime:7.0.6")
-    compile("org.jetbrains:annotations:13.0")
-    compile("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
-    compile("com.miglayout:miglayout-swing:5.0")
-    compile(project(":data"))
-    compile("com.formdev:flatlaf:0.25.1")
+    implementation("com.install4j:install4j-runtime:7.0.6")
+    implementation("org.jetbrains:annotations:13.0")
+    implementation("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
+    implementation("com.miglayout:miglayout-swing:5.0")
+    implementation(project(":data"))
+    implementation("com.formdev:flatlaf:0.25.1")
 }
 
 tasks {
@@ -30,7 +30,7 @@ tasks {
 
     val copyDist by registering(Copy::class) {
         dependsOn("jar")
-        from(configurations.compile.map { it.files.filterNot { it.name.contains("install4j") } })
+        from(configurations.compileClasspath.map { it.files.filterNot { it.name.contains("install4j") } })
         from(jar)
         into(externalLibsDir)
     }
