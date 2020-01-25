@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.idea
 
+import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -16,15 +17,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiClassOwner
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import com.intellij.psi.util.PsiUtilBase
 
 class ShowBytecodeAction : AnAction() {
 
     override fun update(e: AnActionEvent) {
         e.presentation.apply {
-            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && isContainedInClass(this)} == true
+            isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && isContainedInClass(this) } == true
             icon = ICON
         }
     }
@@ -44,14 +43,13 @@ class ShowBytecodeAction : AnAction() {
         editor == null -> dataContext.getData(CommonDataKeys.PSI_ELEMENT)
         else -> {
             val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project)
-            val injectedEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, psiFile)
-            injectedEditor?.let {
-                findElementInFile(PsiUtilBase.getPsiFileInEditor(it, project), it)
-            } ?: findElementInFile(psiFile, editor)
+            psiFile?.let {
+                val offset = editor.caretModel.offset
+                InjectedLanguageManager.getInstance(project).findInjectedElementAt(psiFile, offset)
+                        ?: psiFile.findElementAt(offset)
+            }
         }
     }
-
-    private fun findElementInFile(psiFile: PsiFile?, editor: Editor): PsiElement? = psiFile?.findElementAt(editor.caretModel.offset)
 
     companion object {
         val ICON = IconLoader.getIcon("/icons/jclasslib.png") // 13x13
