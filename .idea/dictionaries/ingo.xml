@@ -60,9 +60,11 @@
       <w>fconst</w>
       <w>fdiv</w>
       <w>fieldref</w>
+      <w>flatlaf</w>
       <w>fload</w>
       <w>fmul</w>
       <w>fneg</w>
+      <w>formdev</w>
       <w>frem</w>
       <w>freturn</w>
       <w>fstore</w>
