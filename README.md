@@ -4,7 +4,12 @@
 
 jclasslib bytecode viewer is a tool that visualizes all aspects of compiled Java class files and the contained bytecode. In addition, it contains a library that enables developers to read and write Java class files and bytecode.
 
-![Main window](web/screenshots/main.png)
+![Main window](web/screenshots/main_light.png)
+
+Dark mode can be enabled persistently by selecting "File->Dark mode" in the main menu. 
+
+![Dark mode](web/screenshots/main_dark.png)
+
 
 ## IntelliJ IDEA plugin
 
