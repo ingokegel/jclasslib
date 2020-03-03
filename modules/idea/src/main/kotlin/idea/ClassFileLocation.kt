@@ -52,7 +52,7 @@ fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Pr
         var locationResult: LocationResult? = null
 
         override fun run(indicator: ProgressIndicator) {
-            locationResult = ApplicationManager.getApplication().runReadAction(Computable<LocationResult> {
+            locationResult = ApplicationManager.getApplication().runReadAction(Computable {
                 try {
                     locateClassFile(psiElement)
                 } catch (e: Exception) {

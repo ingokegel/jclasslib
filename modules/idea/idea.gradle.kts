@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij") version "0.4.15"
+    id("org.jetbrains.intellij") version "0.4.16"
 }
 
 val kotlinVersion: String by project
@@ -10,9 +10,9 @@ dependencies {
 }
 
 intellij {
-    version = "IC-2018.3.2"
+    version = "IC-2019.2.4"
     pluginName = "jclasslib"
-    setPlugins("ByteCodeViewer", "org.jetbrains.kotlin:$kotlinVersion-release-IJ2018.3-1")
+    setPlugins("ByteCodeViewer", "java", "org.jetbrains.kotlin:$kotlinVersion-release-IJ2019.2-1")
     sandboxDirectory = "${rootProject.buildDir}/../idea_sandbox"
     updateSinceUntilBuild = false
 }

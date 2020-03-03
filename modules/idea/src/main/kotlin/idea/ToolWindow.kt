@@ -147,7 +147,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
 
     private val closeAction: AnAction = object : CloseTabToolbarAction() {
         override fun actionPerformed(e: AnActionEvent) {
-            content.manager.removeContent(content, true)
+            content.manager?.removeContent(content, true)
         }
     }
 
@@ -263,7 +263,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         val actionToolbar = ActionManager.getInstance().createActionToolbar("bytecodeToolBar", actionGroup, true).apply {
             setTargetComponent(this@BytecodeToolWindowPanel)
         }
-        setToolbar(actionToolbar.component)
+        toolbar = actionToolbar.component
         setContent(browserComponent)
     }
 
