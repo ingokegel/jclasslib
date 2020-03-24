@@ -91,6 +91,8 @@ class ClassFile : Structure(), AttributeContainer {
             55 -> "11"
             56 -> "12"
             57 -> "13"
+            58 -> "14"
+            59 -> "15"
             else -> "unknown value $majorVersion"
         }
 
