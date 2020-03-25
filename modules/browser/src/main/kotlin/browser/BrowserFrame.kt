@@ -33,11 +33,13 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.awt.image.BufferedImage
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileWriter
 import java.io.IOException
 import java.util.prefs.Preferences
+import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -647,12 +649,34 @@ class BrowserFrame : JFrame() {
 
         private val icons = hashMapOf<String, ImageIcon>()
         val ICON_IMAGES = listOf(16, 32, 128, 256).map { getIcon("jclasslib_$it.png").image }
+        val multiResolutionImageConstructor = try {
+            Class.forName("java.awt.image.BaseMultiResolutionImage")?.getConstructor(Array<Image>::class.java)
+        } catch (t : Throwable) {
+            null
+        }
 
-
-        fun getIcon(fileName: String): ImageIcon =
-                icons.getOrPut(fileName) {
-                    ImageIcon(BrowserFrame::class.java.getResource("images/$fileName"))
+        fun getIcon(fileName: String): ImageIcon {
+            return icons.getOrPut(fileName) {
+                val lowResImage = readImage(fileName)
+                val highResImage = readImage(fileName.replace(".png", "@2x.png"))
+                val images = listOfNotNull(lowResImage, highResImage).toTypedArray()
+                if (!fileName.contains("jclasslib_")) {
+                    require(images.size == 2)
                 }
+                val combinedImage = multiResolutionImageConstructor?.let {
+                    try {
+                        it.newInstance(images) as Image
+                    } catch (t: Throwable) {
+                        null
+                    }
+                } ?: images.first()
+                ImageIcon(combinedImage)
+            }
+        }
 
+        private fun readImage(fileName: String): BufferedImage? {
+            val resource = BrowserFrame::class.java.getResource("images/$fileName")
+            return resource?.let { ImageIO.read(resource) }
+        }
     }
 }
