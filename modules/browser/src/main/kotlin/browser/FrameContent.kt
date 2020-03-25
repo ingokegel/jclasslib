@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import com.install4j.runtime.alert.AlertType
 import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
 import kotlinx.dom.firstChildElement
@@ -41,7 +42,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         val count = wrappers.flatMap { it.tabbedPane.tabs() }
                 .map { it.saveClassToDirectory(directory) }.count { it }
 
-        GUIHelper.showMessage(frame, "$count classes were saved to $directory", JOptionPane.INFORMATION_MESSAGE)
+        GUIHelper.showMessage(frame, "$count classes were saved to $directory", AlertType.INFORMATION)
     }
 
     fun focus(focusedTabbedPane: BrowserTabbedPane) {

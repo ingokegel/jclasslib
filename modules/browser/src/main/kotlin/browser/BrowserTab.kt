@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import com.install4j.runtime.alert.AlertType
 import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
@@ -25,7 +26,6 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.jar.JarFile
 import javax.swing.Action
-import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
@@ -67,7 +67,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
                 try {
                     tabbedPane.addTab(findResult.fileName, findResult.moduleName, browserPath)
                 } catch (e: IOException) {
-                    GUIHelper.showMessage(parentFrame, e.message, JOptionPane.ERROR_MESSAGE)
+                    GUIHelper.showMessage(parentFrame, e)
                 }
 
             }
@@ -83,16 +83,17 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
             ClassFileWriter.writeToFile(file, classFile)
             true
         } catch (e: Exception) {
-            GUIHelper.showMessage(parentFrame, "Could not save file " + file.path + "\n\nError message; " + e.message, JOptionPane.ERROR_MESSAGE)
+            GUIHelper.showMessage(parentFrame, "Could not save file " + file.path, "Error message; " + e.message, AlertType.ERROR)
             false
         }
     }
 
     private tailrec fun findClass(className: String): FindResult? = parentFrame.config.findClass(className, false) ?:
             if (GUIHelper.showOptionDialog(parentFrame,
-                    "The class $className could not be found.\nYou can check your classpath configuration and try again.",
+                    "Class not found",
+                    "The class $className could not be found.\n\nYou can check your classpath configuration and try again.",
                     arrayOf("Setup classpath", "Cancel"),
-                    JOptionPane.WARNING_MESSAGE) != 0) {
+                    AlertType.WARNING) != 0) {
                 null
             } else {
                 parentFrame.setupClasspathAction()
@@ -148,10 +149,14 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         } catch (ex: FileNotFoundException) {
             throw IOException("The file $fileName was not found")
         } catch (ex: EOFException) {
-            if (GUIHelper.showOptionDialog(this,
-                "An unexpected end-of-file occurred while reading $fileName. Should the file be read anyway?",
-                GUIHelper.YES_NO_OPTIONS,
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            if (GUIHelper.showOptionDialog(
+                    this,
+                    "Unexpected EOF",
+                    "An unexpected end-of-file occurred while reading $fileName. Should the file be read anyway?",
+                    GUIHelper.YES_NO_OPTIONS,
+                    AlertType.QUESTION
+                ) == 0
+            ) {
                 return readClassFile(frame, suppressEOF = true)
             } else {
                 throw IOException("An (expected) EOF occurred while reading $fileName")

@@ -17,6 +17,9 @@ import javax.swing.JComponent
 import javax.swing.KeyStroke
 
 class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: (action: DefaultAction) -> Unit) : AbstractAction(name) {
+    var lastButton: JComponent? = null
+        private set
+
     init {
         val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName) else GUIHelper.ICON_EMPTY
         putValue(SMALL_ICON, smallIcon)
@@ -42,7 +45,7 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
         isEnabled = false
     }
 
-    fun createImageButton() = JButton(this).apply {
+    fun createImageButton() = createButton().apply {
         text = null
         fixedSize(IMAGE_BUTTON_SIZE)
         if (GUIHelper.isMacOs()) {
@@ -50,7 +53,7 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
         }
     }
 
-    fun createToolBarButton() = JButton(this).apply {
+    fun createToolBarButton() = createButton().apply {
         text = null
         fixedSize(TOOL_BAR_BUTTON_SIZE)
         isFocusable = false
@@ -65,8 +68,12 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
         maximumSize = size
     }
 
-    fun createTextButton() = JButton(this).apply {
+    fun createTextButton() = createButton().apply {
         icon = null
+    }
+
+    private fun createButton() = JButton(this).also {
+        lastButton = it
     }
 
     fun applyAcceleratorTo(component: JComponent) {
@@ -80,7 +87,6 @@ class DefaultAction(name: String, shortDescription: String? = null, smallIconFil
         private val IMAGE_BUTTON_SIZE = Dimension(26, 26)
         private val TOOL_BAR_BUTTON_SIZE = Dimension(35, 35)
     }
-
 
 }
 

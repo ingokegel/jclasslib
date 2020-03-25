@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.util
 
+import com.install4j.runtime.alert.AlertType
 import net.miginfocom.swing.MigLayout
 import java.awt.Window
 import java.awt.event.ComponentAdapter
@@ -64,7 +65,7 @@ class ProgressDialog(parent: Window, message: String, var task: () -> Unit = {})
                             get()
                         } catch(e: ExecutionException) {
                             e.cause?.printStackTrace()
-                            GUIHelper.showMessage(parent, "An error occurred: ${e.cause?.javaClass}: ${e.cause?.message}", JOptionPane.ERROR_MESSAGE)
+                            GUIHelper.showMessage(parent, "An error occurred", "${e.cause?.javaClass}: ${e.cause?.message}", AlertType.ERROR)
                         }
                     }
                 }.execute()

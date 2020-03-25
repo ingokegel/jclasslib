@@ -7,11 +7,14 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import com.install4j.runtime.filechooser.DirectoryChooser
+import com.install4j.runtime.filechooser.FileChooser
+import com.install4j.runtime.filechooser.MultiFileFilter
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
-import org.gjt.jclasslib.util.MultiFileFilter
+import org.gjt.jclasslib.util.GUIHelper.applyPath
 import java.awt.BorderLayout
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -33,27 +36,41 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
     }
     private val jreHomeTextField = JTextField()
 
-    private val addAction = DefaultAction("Add classpath entry", "Add a classpath entry (INS)", "add.png") {
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            frame.classesChooserPath = fileChooser.currentDirectory.absolutePath
-            val files = fileChooser.selectedFiles
-            for (file in files) {
-                val entry = if (file.isDirectory) {
-                    ClasspathDirectoryEntry(file.path)
-                } else {
-                    ClasspathArchiveEntry(file.path)
-
-                }
-                if (!isInModel(entry)) {
-                    listModel.addElement(entry)
-                    selectIndex(listModel.size - 1)
+    private val popupMenu = JPopupMenu().apply {
+        add(DefaultAction("Add JAR file") {
+            if (fileChooser.select()) {
+                val files = fileChooser.selectedFiles
+                for (file in files) {
+                    addClasspathEntry(ClasspathArchiveEntry(file.path))
+                    frame.classesChooserPath = file.parent
                 }
             }
+        })
+        add(DefaultAction("Add directory") {
+            if (directoryChooser.select()) {
+                val file = directoryChooser.selectedDirectory
+                addClasspathEntry(ClasspathDirectoryEntry(file.path))
+                frame.classesChooserPath = file.parent
+            }
+        })
+    }
+
+    private fun addClasspathEntry(entry: ClasspathEntry) {
+        if (!isInModel(entry)) {
+            listModel.addElement(entry)
+            selectIndex(listModel.size - 1)
+        }
+    }
+
+    private val addButton: JButton = DefaultAction("Add classpath entry", "Add a classpath entry (INS)", "add.png") {
+        it.lastButton?.let {
+            val bounds = it.bounds
+            popupMenu.show(it.parent, bounds.x, bounds.y + bounds.height)
         }
     }.apply {
         accelerator(KeyEvent.VK_INSERT, 0)
         applyAcceleratorTo(lstElements)
-    }
+    }.createImageButton()
 
     private val removeAction = DefaultAction("Remove classpath entry", "Remove a classpath entry (DEL)", "remove.png") {
         val selectedIndex = lstElements.selectedIndex
@@ -121,20 +138,27 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         applyAcceleratorTo(contentPane as JComponent)
     }
 
-    private val fileChooser: JFileChooser by lazy {
-        JFileChooser(frame.classesChooserPath).apply {
-            dialogTitle = "Choose directory or jar file"
-            fileFilter = MultiFileFilter("jar", "jar files and directories")
-            fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
-            isMultiSelectionEnabled = true
-        }
+    private val fileChooser: FileChooser by lazy {
+        FileChooser.create()
+            .parent(this)
+            .title("Choose JAR files")
+            .applyPath(frame.classesChooserPath)
+            .addFileFilter(MultiFileFilter("jar", "jar files and directories"))
+            .multiple(true)
     }
 
-    private val jreFileChooser: JFileChooser by lazy {
-        JFileChooser(frame.classesChooserPath).apply {
-            dialogTitle = "Choose the JRE home directory"
-            fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-        }
+    private val directoryChooser: DirectoryChooser by lazy {
+        DirectoryChooser.create()
+            .parent(this)
+            .title("Choose a directory")
+            .applyPath(frame.classesChooserPath)
+    }
+
+    private val jreFileChooser: DirectoryChooser by lazy {
+        DirectoryChooser.create()
+            .parent(this)
+            .title("Choose the JRE home directory")
+            .applyPath(frame.classesChooserPath)
     }
 
     init {
@@ -166,7 +190,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
                 addActionListener {
                     fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
 
-                    if (jreFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                    if (jreFileChooser.select()) {
                         jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
                     }
 
@@ -203,7 +227,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
     }
 
     private fun createModificationButtonBox() = Box.createVerticalBox().apply {
-        add(addAction.createImageButton())
+        add(addButton)
         add(removeAction.createImageButton())
         add(Box.createVerticalGlue())
         add(upAction.createImageButton())

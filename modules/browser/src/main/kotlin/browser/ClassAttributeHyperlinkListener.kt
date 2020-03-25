@@ -7,12 +7,12 @@
 
 package org.gjt.jclasslib.browser
 
+import com.install4j.runtime.alert.AlertType
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.JOptionPane
 
 class ClassAttributeHyperlinkListener(private val services: BrowserServices, private val index: Int, private val attributeInfoClass: Class<out AttributeInfo>) : MouseAdapter() {
 
@@ -21,7 +21,7 @@ class ClassAttributeHyperlinkListener(private val services: BrowserServices, pri
         val attributesNode = attributesPath.lastPathComponent as BrowserTreeNode
         val targetNode = findChildNode(attributesNode, attributeInfoClass)
         if (targetNode == null) {
-            GUIHelper.showMessage(services.browserComponent, "No attribute of class " + attributeInfoClass.name + " found", JOptionPane.ERROR_MESSAGE)
+            GUIHelper.showMessage(services.browserComponent, "No attribute of class " + attributeInfoClass.name + " found", AlertType.ERROR)
             return
         }
         val targetPath = attributesPath.pathByAddingChild(targetNode)

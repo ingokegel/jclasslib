@@ -8,46 +8,50 @@
 package org.gjt.jclasslib.util
 
 import com.install4j.api.Util
+import com.install4j.runtime.alert.Alert
+import com.install4j.runtime.alert.AlertType
+import com.install4j.runtime.filechooser.AbstractFileSystemChooser
 import java.awt.Component
 import java.awt.Window
+import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
-import javax.swing.*
+import javax.swing.Icon
+import javax.swing.JLabel
+import javax.swing.JScrollPane
 
 object GUIHelper {
 
-    const val LOOK_AND_FEEL_PROPERTY = "lookAndFeel"
     const val MESSAGE_TITLE = "jclasslib"
     val YES_NO_OPTIONS = arrayOf("Yes", "No")
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
 
     fun isMacOs() = System.getProperty("os.name").toLowerCase().startsWith("mac")
 
-    fun showOptionDialog(parent: Component, message: String, options: Array<String>, messageType: Int): Int {
-        return JOptionPane.showOptionDialog(parent,
-                message,
-                MESSAGE_TITLE,
-                JOptionPane.YES_NO_OPTION,
-                messageType,
-                null,
-                options,
-                options[0])
+    fun showOptionDialog(parent: Component, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType): Int {
+        val alert = Alert.create<String>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
+                .addButtons(options)
+                .defaultButton(options[0])
+                .cancelButton(options[options.size - 1])
+                .alertType(alertType)
+
+        val alertResult = alert.show()
+        return alertResult.selectedIndex
     }
 
-    fun showMessage(parent: Component?, message: String?, messageType: Int) {
-        JOptionPane.showMessageDialog(adjustParent(parent),
-                message,
-                MESSAGE_TITLE,
-                messageType,
-                null)
+    fun showMessage(parent: Component?, throwable: Throwable) {
+        showMessage(parent, "An error has occurred", throwable.message, AlertType.ERROR)
     }
 
-    private fun adjustParent(parent: Component?): Component? =
-            if (parent != null && parent !is Window) {
-                SwingUtilities.getAncestorOfClass(Window::class.java, parent)
-            } else {
-                parent
-            }
+    fun showMessage(parent: Component?, mainMessage: String, alertType: AlertType) {
+        showMessage(parent, mainMessage, null, alertType)
+    }
+
+    fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType) {
+        Alert.create<Any>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
+            .alertType(alertType)
+            .show()
+    }
 
     fun centerOnParentWindow(window: Window, parentWindow: Window) {
         val x = parentWindow.x + (parentWindow.width - window.width) / 2
@@ -71,11 +75,9 @@ object GUIHelper {
         }
     }
 
-    fun addLookAndFeelChangeListener(block: () -> Unit) {
-        UIManager.addPropertyChangeListener { event ->
-            if (event.propertyName == LOOK_AND_FEEL_PROPERTY) {
-                block()
-            }
-        }
+    fun <T : AbstractFileSystemChooser<*>> T.applyPath(currentDirectory: String) : T {
+        currentDirectory(currentDirectory.let { if (it.isNotEmpty()) File(it) else null })
+        return this
     }
+
 }
