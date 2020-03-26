@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.4" transformSequenceNumber="8">
+<install4j version="8.0.5" transformSequenceNumber="8">
   <directoryPresets config="." />
   <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" pack200Compression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="http://www.ej-technologies.com" version="5.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="1.8">
     <variables>
@@ -21,7 +21,7 @@
     </entries>
   </files>
   <launchers>
-    <launcher name="jclasslib bytecode viewer" id="404488187">
+    <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns">
       <executable name="jclasslib" iconSet="true" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true">
         <versionInfo include="true" fileDescription="jclasslib bytecode viewer" legalCopyright="ej-technologies" internalName="jclasslib" />
       </executable>

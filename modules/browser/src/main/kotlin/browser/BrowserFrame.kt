@@ -649,7 +649,7 @@ class BrowserFrame : JFrame() {
         private const val SETTINGS_WINDOW_MAXIMIZED = "windowMaximized"
 
         private val icons = hashMapOf<String, ImageIcon>()
-        val ICON_IMAGES = listOf(16, 32, 128, 256).map { getIcon("jclasslib_$it.png").image }
+        val ICON_IMAGES = listOf(16, 32, 48, 64, 128, 256).map { getIcon("jclasslib_$it.png").image }
         val multiResolutionImageConstructor = try {
             Class.forName("java.awt.image.BaseMultiResolutionImage")?.getConstructor(Array<Image>::class.java)
         } catch (t : Throwable) {
@@ -658,26 +658,26 @@ class BrowserFrame : JFrame() {
 
         fun getIcon(fileName: String): ImageIcon {
             return icons.getOrPut(fileName) {
-                val lowResImage = readImage(fileName)
-                val highResImage = readImage(fileName.replace(".png", "@2x.png"))
-                val images = listOfNotNull(lowResImage, highResImage).toTypedArray()
-                if (!fileName.contains("jclasslib_")) {
+                if (fileName.contains("jclasslib_")) {
+                    ImageIcon(getImageUrl(fileName))
+                } else {
+                    val lowResImage = readImage(fileName)
+                    val highResImage = readImage(fileName.replace(".png", "@2x.png"))
+                    val images = listOfNotNull(lowResImage, highResImage).toTypedArray()
                     require(images.size == 2)
+                    val combinedImage = multiResolutionImageConstructor?.let {
+                        try {
+                            it.newInstance(images) as Image
+                        } catch (t: Throwable) {
+                            null
+                        }
+                    } ?: images.first()
+                    ImageIcon(combinedImage)
                 }
-                val combinedImage = multiResolutionImageConstructor?.let {
-                    try {
-                        it.newInstance(images) as Image
-                    } catch (t: Throwable) {
-                        null
-                    }
-                } ?: images.first()
-                ImageIcon(combinedImage)
             }
         }
 
-        private fun readImage(fileName: String): BufferedImage? {
-            val resource = BrowserFrame::class.java.getResource("images/$fileName")
-            return resource?.let { ImageIO.read(resource) }
-        }
+        private fun readImage(fileName: String): BufferedImage? = getImageUrl(fileName)?.let { ImageIO.read(it) }
+        private fun getImageUrl(fileName: String) = BrowserFrame::class.java.getResource("images/$fileName")
     }
 }

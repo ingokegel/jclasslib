@@ -49,6 +49,7 @@ object GUIHelper {
 
     fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType) {
         Alert.create<Any>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
+            .mainMessageRedundant(true)
             .alertType(alertType)
             .show()
     }
