@@ -24,6 +24,7 @@ import java.io.PrintStream
 import java.util.*
 import java.util.prefs.Preferences
 import javax.swing.SwingUtilities
+import javax.swing.UIManager
 import kotlin.system.exitProcess
 
 const val APPLICATION_TITLE = "Bytecode viewer"
@@ -60,10 +61,18 @@ fun main(args: Array<String>) {
 }
 
 fun updateFlatLaf() {
+    val defaultOptionPaneIcons = listOf("error", "information", "question", "warning")
+            .map { "OptionPane.${it}Icon" }
+            .associateWith { UIManager.getIcon(it) }
     if (darkMode) {
         FlatDarkLaf.install()
     } else {
         FlatLightLaf.install()
+    }
+    if (Util.isMacOS()) {
+        for ((key, icon) in defaultOptionPaneIcons) {
+            UIManager.put(key, icon)
+        }
     }
 }
 
