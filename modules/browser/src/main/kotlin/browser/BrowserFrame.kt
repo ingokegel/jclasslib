@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import com.install4j.api.Util
 import com.install4j.runtime.alert.AlertType
 import com.install4j.runtime.filechooser.DirectoryChooser
 import com.install4j.runtime.filechooser.FileAccessMode
@@ -481,7 +482,7 @@ class BrowserFrame : JFrame() {
         workspaceFileChooser.fileAccessMode(FileAccessMode.SAVE)
         if (workspaceFileChooser.select()) {
             val selectedFile = getWorkspaceFile(workspaceFileChooser.selectedFile)
-            if (!selectedFile.exists() || GUIHelper.showOptionDialog(this,
+            if (!selectedFile.exists() || Util.isMacOS() || GUIHelper.showOptionDialog(this,
                     "File exists",
                     "The file " + selectedFile.path + "\nexists. Do you want to overwrite this file?",
                     GUIHelper.YES_NO_OPTIONS,
