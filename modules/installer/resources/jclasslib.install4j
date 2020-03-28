@@ -48,8 +48,6 @@
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" launchInNewProcess="false">
         <serializedBean>
-          <property name="allowConsole" type="boolean" value="false" />
-          <property name="allowUnattended" type="boolean" value="false" />
           <property name="frameSizeClientArea" type="boolean" value="false" />
           <property name="resizable" type="boolean" value="false" />
         </serializedBean>
@@ -530,7 +528,5 @@ return console.askYesNo(message, true);
     </macosArchive>
     <linuxDeb name="Linux Deb Archive" id="2047307322" bzip="true" />
   </mediaSets>
-  <buildIds buildAll="false">
-    <mediaSet refId="2047307321" />
-  </buildIds>
+  <buildIds buildAll="false" />
 </install4j>
