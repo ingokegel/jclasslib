@@ -7,10 +7,12 @@
 
 package org.gjt.jclasslib.util
 
+import browser.BrowserBundle.getString
 import com.install4j.api.Util
 import com.install4j.runtime.alert.Alert
 import com.install4j.runtime.alert.AlertType
 import com.install4j.runtime.filechooser.AbstractFileSystemChooser
+import org.jetbrains.annotations.Nls
 import java.awt.Component
 import java.awt.Window
 import java.io.File
@@ -23,12 +25,12 @@ import javax.swing.JScrollPane
 object GUIHelper {
 
     const val MESSAGE_TITLE = "jclasslib"
-    val YES_NO_OPTIONS = arrayOf("Yes", "No")
+    val YES_NO_OPTIONS by lazy { arrayOf(getString("button.yes"), getString("button.no")) }
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
 
     fun isMacOs() = System.getProperty("os.name").toLowerCase().startsWith("mac")
 
-    fun showOptionDialog(parent: Component, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType): Int {
+    fun showOptionDialog(parent: Component, @Nls mainMessage: String, @Nls contentMessage: String?, @Nls options: Array<String>, alertType: AlertType): Int {
         val alert = Alert.create<String>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
                 .addButtons(options)
                 .defaultButton(options[0])
@@ -40,14 +42,14 @@ object GUIHelper {
     }
 
     fun showMessage(parent: Component?, throwable: Throwable) {
-        showMessage(parent, "An error has occurred", throwable.message, AlertType.ERROR)
+        showMessage(parent, getString("message.error.occurred"), throwable.message, AlertType.ERROR)
     }
 
-    fun showMessage(parent: Component?, mainMessage: String, alertType: AlertType) {
+    fun showMessage(parent: Component?, @Nls mainMessage: String, alertType: AlertType) {
         showMessage(parent, mainMessage, null, alertType)
     }
 
-    fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType) {
+    fun showMessage(parent: Component?, @Nls mainMessage: String, @Nls contentMessage: String?, alertType: AlertType) {
         Alert.create<Any>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
             .mainMessageRedundant(true)
             .alertType(alertType)

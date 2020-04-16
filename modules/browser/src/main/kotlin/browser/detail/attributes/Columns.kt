@@ -11,11 +11,12 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.jetbrains.annotations.Nls
 import java.util.*
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-abstract class Column<in T : Any>(val name: String, val width: Int, val columnClass: Class<*>) {
+abstract class Column<in T : Any>(@Nls val name: String, val width: Int, val columnClass: Class<*>) {
     open val maxWidth: Int
         get() = Int.MAX_VALUE
     open val minWidth: Int
@@ -32,7 +33,7 @@ abstract class Column<in T : Any>(val name: String, val width: Int, val columnCl
     open fun isEditable(row: T) = false
 }
 
-abstract class CachingColumn<in T : Any, out R : Any>(name: String, width: Int, columnClass: Class<R>) : Column<T>(name, width, columnClass) {
+abstract class CachingColumn<in T : Any, out R : Any>(@Nls name: String, width: Int, columnClass: Class<R>) : Column<T>(name, width, columnClass) {
     private val cache = HashMap<T, R>()
 
     override fun getValue(row: T): Any = cache.getOrPut(row) {
@@ -42,11 +43,11 @@ abstract class CachingColumn<in T : Any, out R : Any>(name: String, width: Int, 
     protected abstract fun createValue(row: T): R
 }
 
-abstract class NumberColumn<in T : Any>(name: String, width: Int = 60) : CachingColumn<T, Number>(name, width, Number::class.java)
-abstract class StringColumn<in T : Any>(name: String, width: Int = 250) : CachingColumn<T, String>(name, width, String::class.java)
-abstract class LinkColumn<in T : Any>(name: String, width: Int = 90) : CachingColumn<T, Link>(name, width, Link::class.java)
+abstract class NumberColumn<in T : Any>(@Nls name: String, width: Int = 60) : CachingColumn<T, Number>(name, width, Number::class.java)
+abstract class StringColumn<in T : Any>(@Nls name: String, width: Int = 250) : CachingColumn<T, String>(name, width, String::class.java)
+abstract class LinkColumn<in T : Any>(@Nls name: String, width: Int = 90) : CachingColumn<T, Link>(name, width, Link::class.java)
 
-abstract class ConstantPoolLinkColumn<in T : Any>(name: String, protected val services: BrowserServices, width: Int = 90) : LinkColumn<T>(name, width) {
+abstract class ConstantPoolLinkColumn<in T : Any>(@Nls name: String, protected val services: BrowserServices, width: Int = 90) : LinkColumn<T>(name, width) {
     override fun createValue(row: T): Link {
         val constantPoolIndex = getConstantPoolIndex(row)
         return Link(DetailPane.CPINFO_LINK_TEXT + constantPoolIndex)
@@ -59,7 +60,7 @@ abstract class ConstantPoolLinkColumn<in T : Any>(name: String, protected val se
     protected abstract fun getConstantPoolIndex(row: T): Int
 }
 
-abstract class NamedConstantPoolLinkColumn<in T : Any>(name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn<T>(name, services, width) {
+abstract class NamedConstantPoolLinkColumn<in T : Any>(@Nls name: String, services: BrowserServices, width: Int = 90) : ConstantPoolLinkColumn<T>(name, services, width) {
     final override fun createValue(row: T): Link {
         val constantPoolIndex = getConstantPoolIndex(row)
         return LinkWithComment(DetailPane.CPINFO_LINK_TEXT + constantPoolIndex, getComment(constantPoolIndex))

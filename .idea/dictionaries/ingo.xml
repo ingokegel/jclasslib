@@ -156,6 +156,7 @@
       <w>monitorexit</w>
       <w>multianewarray</w>
       <w>newarray</w>
+      <w>nexists</w>
       <w>nogrid</w>
       <w>opcodes</w>
       <w>putfield</w>

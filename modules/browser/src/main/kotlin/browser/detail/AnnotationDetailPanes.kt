@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.AnnotationData
 import org.gjt.jclasslib.structures.attributes.AnnotationDefaultAttribute
@@ -15,14 +16,14 @@ import org.gjt.jclasslib.structures.elementvalues.*
 
 class RuntimeAnnotationsAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<AnnotationHolder>(AnnotationHolder::class.java, services) {
     override fun addLabels() {
-        addDetail("Number of annotations:") { annotationHolder -> annotationHolder.numberOfAnnotations.toString() }
+        addDetail(getString("key.annotations.count")) { annotationHolder -> annotationHolder.numberOfAnnotations.toString() }
     }
 }
 
 class AnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<AnnotationData>(AnnotationData::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type:", AnnotationData::typeIndex)
-        addDetail("Number of entries:") { annotationData -> annotationData.elementValuePairEntries.size.toString() }
+        addConstantPoolLink(getString("key.type"), AnnotationData::typeIndex)
+        addDetail(getString("key.entries.count")) { annotationData -> annotationData.elementValuePairEntries.size.toString() }
     }
 
     override fun hasInsets() = true
@@ -30,14 +31,14 @@ class AnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<Annot
 
 class AnnotationDefaultAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<AnnotationDefaultAttribute>(AnnotationDefaultAttribute::class.java, services) {
     override fun addLabels() {
-        addDetail("Value tag:") { annotationDefaultAttribute -> annotationDefaultAttribute.defaultValue.let { "${it.entryName} <${it.elementValueType.verbose}>" } }
+        addDetail(getString("key.value.tag")) { annotationDefaultAttribute -> annotationDefaultAttribute.defaultValue.let { "${it.entryName} <${it.elementValueType.verbose}>" } }
     }
 }
 
 class ElementValuePairDetailPane(services: BrowserServices) : KeyValueDetailPane<ElementValuePair>(ElementValuePair::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Element name:", ElementValuePair::elementNameIndex)
-        addDetail("Value tag:") { elementValuePair -> "${elementValuePair.elementValue.elementValueType.charTag} <${elementValuePair.elementValue.elementValueType.verbose}>" }
+        addConstantPoolLink(getString("key.element.name"), ElementValuePair::elementNameIndex)
+        addDetail(getString("key.value.tag")) { elementValuePair -> "${elementValuePair.elementValue.elementValueType.charTag} <${elementValuePair.elementValue.elementValueType.verbose}>" }
     }
 
     override fun hasInsets() = true
@@ -45,8 +46,8 @@ class ElementValuePairDetailPane(services: BrowserServices) : KeyValueDetailPane
 
 class ArrayElementValueDetailPane(services: BrowserServices) : KeyValueDetailPane<ArrayElementValue>(ArrayElementValue::class.java, services) {
     override fun addLabels() {
-        addDetail("Tag:") { arrayElementValue -> arrayElementValue.elementValueType.let { "${it.charTag} <${it.verbose}>" } }
-        addDetail("Number of values:") { arrayElementValue -> arrayElementValue.elementValueEntries.size.toString() }
+        addDetail(getString("key.tag")) { arrayElementValue -> arrayElementValue.elementValueType.let { "${it.charTag} <${it.verbose}>" } }
+        addDetail(getString("key.values.count")) { arrayElementValue -> arrayElementValue.elementValueEntries.size.toString() }
     }
 
     override fun hasInsets() = true
@@ -54,26 +55,26 @@ class ArrayElementValueDetailPane(services: BrowserServices) : KeyValueDetailPan
 
 class GenericElementValueDetailPane(services: BrowserServices) : KeyValueDetailPane<ElementValue>(ElementValue::class.java, services) {
     override fun addLabels() {
-        addDetail("Tag:") { elementValue -> "${elementValue.elementValueType.charTag} <${elementValue.elementValueType.verbose}>" }
+        addDetail(getString("key.tag")) { elementValue -> "${elementValue.elementValueType.charTag} <${elementValue.elementValueType.verbose}>" }
     }
 }
 
 class EnumElementValueEntryDetailPane(services: BrowserServices) : KeyValueDetailPane<EnumElementValue>(EnumElementValue::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type name:", EnumElementValue::typeNameIndex)
-        addConstantPoolLink("Const name:", EnumElementValue::constNameIndex)
+        addConstantPoolLink(getString("key.type.name"), EnumElementValue::typeNameIndex)
+        addConstantPoolLink(getString("key.const.name"), EnumElementValue::constNameIndex)
     }
 }
 
 class ClassElementValueEntryDetailPane(services: BrowserServices) : KeyValueDetailPane<ClassElementValue>(ClassElementValue::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class info:", ClassElementValue::classInfoIndex)
+        addConstantPoolLink(getString("key.class.info"), ClassElementValue::classInfoIndex)
     }
 }
 
 class ConstElementValueEntryDetailPane(services: BrowserServices) : KeyValueDetailPane<ConstElementValue>(ConstElementValue::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type name:", ConstElementValue::constValueIndex)
+        addConstantPoolLink(getString("key.type.name"), ConstElementValue::constValueIndex)
     }
 }
 

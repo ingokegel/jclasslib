@@ -7,11 +7,13 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
+import org.jetbrains.annotations.Nls
 
 abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, services: BrowserServices) : KeyValueDetailPane<T>(constantClass, services) {
     protected fun addClassElementOpener() {
@@ -23,9 +25,10 @@ abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, service
 
 abstract class ConstantNameInfoDetailPane<T : ConstantNameInfo>(constantClass: Class<T>, services: BrowserServices) : ConstantDetailPane<T>(constantClass, services) {
     override fun addLabels() {
-        addConstantPoolLink(getTargetName() + " name:", ConstantNameInfo::nameIndex)
+        addConstantPoolLink(getTargetName(), ConstantNameInfo::nameIndex)
     }
 
+    @Nls
     protected abstract fun getTargetName(): String
 }
 
@@ -35,93 +38,93 @@ class ConstantClassInfoDetailPane(services: BrowserServices) : ConstantNameInfoD
         addClassElementOpener()
     }
 
-    override fun getTargetName() = "Class"
+    override fun getTargetName() = getString("key.class.name")
 }
 
 class ConstantModuleInfoDetailPane(services: BrowserServices) : ConstantNameInfoDetailPane<ConstantModuleInfo>(ConstantModuleInfo::class.java, services) {
-    override fun getTargetName() = "Module"
+    override fun getTargetName() = getString("key.module.name")
 }
 
 class ConstantPackageInfoDetailPane(services: BrowserServices) : ConstantNameInfoDetailPane<ConstantPackageInfo>(ConstantPackageInfo::class.java, services) {
-    override fun getTargetName() = "Package"
+    override fun getTargetName() = getString("key.package.name")
 }
 
 class ConstantReferenceDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantReference>(ConstantReference::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class name:", ConstantReference::classIndex)
-        addConstantPoolLink("Name and type:", ConstantReference::nameAndTypeIndex)
+        addConstantPoolLink(getString("key.class.name"), ConstantReference::classIndex)
+        addConstantPoolLink(getString("key.name.and.type"), ConstantReference::nameAndTypeIndex)
         addClassElementOpener()
     }
 }
 
 class ConstantStringInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantStringInfo>(ConstantStringInfo::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("String:", ConstantStringInfo::stringIndex)
+        addConstantPoolLink(getString("key.string"), ConstantStringInfo::stringIndex)
     }
 }
 
 class ConstantIntegerInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantIntegerInfo>(ConstantIntegerInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Bytes:", ConstantIntegerInfo::formattedBytes)
-        addDetail("Integer:") { constant -> constant.int.toString() }
+        addDetail(getString("key.bytes"), ConstantIntegerInfo::formattedBytes)
+        addDetail(getString("key.integer")) { constant -> constant.int.toString() }
     }
 }
 
 class ConstantFloatInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantFloatInfo>(ConstantFloatInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Bytes:", ConstantFloatInfo::formattedBytes)
-        addDetail("Float:") { constant -> constant.float.toString() }
+        addDetail(getString("key.bytes"), ConstantFloatInfo::formattedBytes)
+        addDetail(getString("key.float")) { constant -> constant.float.toString() }
     }
 }
 
 class ConstantLongInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantLongInfo>(ConstantLongInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("High bytes:", ConstantLongInfo::formattedHighBytes)
-        addDetail("Low bytes:", ConstantLongInfo::formattedLowBytes)
-        addDetail("Long") { constant -> constant.long.toString() }
+        addDetail(getString("key.high.bytes"), ConstantLongInfo::formattedHighBytes)
+        addDetail(getString("key.low.bytes"), ConstantLongInfo::formattedLowBytes)
+        addDetail(getString("key.long")) { constant -> constant.long.toString() }
     }
 }
 
 class ConstantDoubleInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantDoubleInfo>(ConstantDoubleInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("High bytes:", ConstantDoubleInfo::formattedHighBytes)
-        addDetail("Low bytes:", ConstantDoubleInfo::formattedLowBytes)
-        addDetail("Double") { constant -> constant.double.toString() }
+        addDetail(getString("key.high.bytes"), ConstantDoubleInfo::formattedHighBytes)
+        addDetail(getString("key.low.bytes"), ConstantDoubleInfo::formattedLowBytes)
+        addDetail(getString("key.double")) { constant -> constant.double.toString() }
     }
 }
 
 class ConstantNameAndTypeInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantNameAndTypeInfo>(ConstantNameAndTypeInfo::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Name:") { constant -> constant.nameIndex }
-        addConstantPoolLink("Descriptor:") { constant -> constant.descriptorIndex }
+        addConstantPoolLink(getString("key.name")) { constant -> constant.nameIndex }
+        addConstantPoolLink(getString("key.descriptor")) { constant -> constant.descriptorIndex }
     }
 }
 
 class ConstantMethodTypeDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantMethodTypeInfo>(ConstantMethodTypeInfo::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Type:", ConstantMethodTypeInfo::descriptorIndex)
+        addConstantPoolLink(getString("key.type"), ConstantMethodTypeInfo::descriptorIndex)
     }
 }
 
 class ConstantMethodHandleInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantMethodHandleInfo>(ConstantMethodHandleInfo::class.java, services) {
     override fun addLabels() {
-        addDetail("Reference kind:") { constant -> constant.type.verbose }
-        addConstantPoolLink("Reference index :") { constant -> constant.referenceIndex }
+        addDetail(getString("key.reference.kind")) { constant -> constant.type.verbose }
+        addConstantPoolLink(getString("key.reference.index")) { constant -> constant.referenceIndex }
     }
 }
 
 class ConstantDynamicDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantDynamic>(ConstantDynamic::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Name and type:") { constant -> constant.nameAndTypeIndex }
-        addAttributeLink("Bootstrap method:", BootstrapMethodsAttribute::class.java, "BootstrapMethods #") { constant -> constant.bootstrapMethodAttributeIndex }
+        addConstantPoolLink(getString("key.name.and.type")) { constant -> constant.nameAndTypeIndex }
+        addAttributeLink(getString("key.bootstrap.method"), BootstrapMethodsAttribute::class.java, "BootstrapMethods #") { constant -> constant.bootstrapMethodAttributeIndex }
     }
 }
 
 class ConstantUtf8InfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantUtf8Info>(ConstantUtf8Info::class.java, services) {
     override fun addLabels() {
-        addDetail("Length of byte array:") { constant -> constant.bytes.size.toString() }
-        addDetail("Length of string:") { constant -> constant.string.length.toString() }
-        addDetail("String") { constant ->
+        addDetail(getString("key.byte.array.length")) { constant -> constant.bytes.size.toString() }
+        addDetail(getString("key.string.length")) { constant -> constant.string.length.toString() }
+        addDetail(getString("key.string")) { constant ->
             try {
                 constant.verbose
             } catch (e: InvalidByteCodeException) {

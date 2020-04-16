@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import java.util.*
 import javax.swing.table.AbstractTableModel
 
@@ -17,7 +18,7 @@ abstract class ColumnTableModel<T : Any>(private val rows: Array<T>) : AbstractT
     }
 
     protected open fun buildColumns(columns: ArrayList<Column<T>>) {
-        columns.add(object : NumberColumn<T>("Nr.") {
+        columns.add(object : NumberColumn<T>(getString("column.number")) {
             override fun createValue(row: T) = rows.indexOf(row)
             override val maxWidth: Int
                 get() = width

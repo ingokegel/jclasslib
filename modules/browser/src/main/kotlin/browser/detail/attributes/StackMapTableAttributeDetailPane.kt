@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.detail.TableDetailPane
@@ -29,7 +30,7 @@ class StackMapTableAttributeDetailPane(services: BrowserServices) : TableDetailP
     inner class AttributeTableModel(rows: Array<StackMapFrameEntry>) : ColumnTableModel<StackMapFrameEntry>(rows) {
         override fun buildColumns(columns: ArrayList<Column<StackMapFrameEntry>>) {
             super.buildColumns(columns)
-            columns.add(object : StringColumn<StackMapFrameEntry>("Stack Map Frame", 600) {
+            columns.add(object : StringColumn<StackMapFrameEntry>(getString("column.stack.map.frame"), 600) {
                 override fun createValue(row: StackMapFrameEntry): String = row.verbose
                 override fun createTableCellRenderer() = createTableCellEditor()
                 override fun createTableCellEditor() = MultiLineHtmlCellHandler { description ->

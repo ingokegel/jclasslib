@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.browser.detail.TableDetailPane
@@ -23,13 +24,13 @@ class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPa
         override fun buildColumns(columns: ArrayList<Column<HashEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : ConstantPoolLinkColumn<HashEntry>("Module", services) {
+                add(object : ConstantPoolLinkColumn<HashEntry>(getString("column.module"), services) {
                     override fun getConstantPoolIndex(row: HashEntry) = row.moduleNameIndex
                 })
-                add(object : StringColumn<HashEntry>("Verbose") {
+                add(object : StringColumn<HashEntry>(getString("column.verbose")) {
                     override fun createValue(row: HashEntry) = getConstantPoolEntryName(row.moduleNameIndex)
                 })
-                add(object : StringColumn<HashEntry>("Hash", 700) {
+                add(object : StringColumn<HashEntry>(getString("column.hash"), 700) {
                     override fun createValue(row: HashEntry) =
                             row.hashValues.joinToString(separator = "") { it.toString(16).padStart(2, '0') }
                 })
@@ -39,7 +40,7 @@ class ModuleHashesAttributeDetailPane(services: BrowserServices) : TableDetailPa
 
     inner class ModuleHashesKeyValueDetailPane : KeyValueDetailPane<ModuleHashesAttribute>(ModuleHashesAttribute::class.java, services) {
         override fun addLabels() {
-            addConstantPoolLink("Algorithm:", ModuleHashesAttribute::algorithmIndex)
+            addConstantPoolLink(getString("key.algorithm"), ModuleHashesAttribute::algorithmIndex)
         }
     }
 }

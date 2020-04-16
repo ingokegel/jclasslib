@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import browser.BrowserBundle.getString
 import com.install4j.runtime.alert.AlertType
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
@@ -21,7 +22,7 @@ class ClassAttributeHyperlinkListener(private val services: BrowserServices, pri
         val attributesNode = attributesPath.lastPathComponent as BrowserTreeNode
         val targetNode = findChildNode(attributesNode, attributeInfoClass)
         if (targetNode == null) {
-            GUIHelper.showMessage(services.browserComponent, "No attribute of class " + attributeInfoClass.name + " found", AlertType.ERROR)
+            GUIHelper.showMessage(services.browserComponent, getString("message.attribute.of.class.not.found", attributeInfoClass.name), AlertType.ERROR)
             return
         }
         val targetPath = attributesPath.pathByAddingChild(targetNode)

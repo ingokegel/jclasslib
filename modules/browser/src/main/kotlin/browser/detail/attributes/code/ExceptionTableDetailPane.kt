@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.Column
@@ -20,7 +21,7 @@ import java.util.*
 class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane<CodeAttribute>(CodeAttribute::class.java, services) {
 
     init {
-        name = "Exception table"
+        name = getString("code.tab.exception.table")
     }
 
     override fun createTableModel(attribute: CodeAttribute) = AttributeTableModel(attribute.exceptionTable)
@@ -33,16 +34,16 @@ class ExceptionTableDetailPane(services: BrowserServices) : TableDetailPane<Code
         override fun buildColumns(columns: ArrayList<Column<ExceptionTableEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NumberColumn<ExceptionTableEntry>("Start PC") {
+                add(object : NumberColumn<ExceptionTableEntry>(getString("column.start.pc")) {
                     override fun createValue(row: ExceptionTableEntry) = row.startPc
                 })
-                add(object : NumberColumn<ExceptionTableEntry>("End PC") {
+                add(object : NumberColumn<ExceptionTableEntry>(getString("column.end.pc")) {
                     override fun createValue(row: ExceptionTableEntry) = row.endPc
                 })
-                add(object : NumberColumn<ExceptionTableEntry>("Handler PC", 70) {
+                add(object : NumberColumn<ExceptionTableEntry>(getString("column.handler.pc"), 70) {
                     override fun createValue(row: ExceptionTableEntry) = row.handlerPc
                 })
-                add(object : NamedConstantPoolLinkColumn<ExceptionTableEntry>("Catch Type", services, 250) {
+                add(object : NamedConstantPoolLinkColumn<ExceptionTableEntry>(getString("column.catch.type"), services, 250) {
                     override fun getConstantPoolIndex(row: ExceptionTableEntry) = row.catchType
                     override fun getComment(constantPoolIndex: Int) = if (constantPoolIndex == 0) {
                         "any"

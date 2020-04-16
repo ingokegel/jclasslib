@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.LineNumberTableAttribute
@@ -21,10 +22,10 @@ class LineNumberTableAttributeDetailPane(services: BrowserServices) : TableDetai
         override fun buildColumns(columns: ArrayList<Column<LineNumberTableEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NumberColumn<LineNumberTableEntry>("Start PC") {
+                add(object : NumberColumn<LineNumberTableEntry>(getString("column.start.pc")) {
                     override fun createValue(row: LineNumberTableEntry): Number = row.startPc
                 })
-                add(object : NumberColumn<LineNumberTableEntry>("Line Number", 100) {
+                add(object : NumberColumn<LineNumberTableEntry>(getString("column.line.number"), 100) {
                     override fun createValue(row: LineNumberTableEntry): Number = row.lineNumber
                 })
             }

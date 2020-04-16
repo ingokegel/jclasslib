@@ -8,12 +8,13 @@
 package org.gjt.jclasslib.util
 
 import net.miginfocom.swing.MigLayout
+import org.jetbrains.annotations.Nls
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JSeparator
 import javax.swing.UIManager
 
-class TitledSeparator(title: String) : JPanel() {
+class TitledSeparator(@Nls title: String) : JPanel() {
     init {
         layout = MigLayout("insets 0 0 unrel 0", "[][grow, fill]", "[align ${if (GUIHelper.isMacOs()) "bottom" else "center" }]")
         add(JLabel(title).apply {

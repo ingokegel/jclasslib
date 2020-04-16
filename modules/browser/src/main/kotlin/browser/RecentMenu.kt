@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.EventQueue
 import java.awt.event.ActionListener
@@ -25,7 +26,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
     private val recentWorkspaces = LinkedList<String>()
 
     init {
-        text = "Reopen workspace"
+        text = getString("menu.recent.workspaces")
         icon = GUIHelper.ICON_EMPTY
     }
 
@@ -106,13 +107,13 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
                 })
             }
             addSeparator()
-            add(JMenuItem("Clear list").apply {
+            add(JMenuItem(getString("action.clear.list")).apply {
                 addActionListener {
                     recentWorkspaces.clear()
                 }
             })
         } else {
-            add(JMenuItem("(Empty)").apply {
+            add(JMenuItem(getString("menu.empty.placeholder")).apply {
                 isEnabled = false
             })
         }

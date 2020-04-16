@@ -7,12 +7,13 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.NestHostAttribute
 
 class NestHostAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<NestHostAttribute>(NestHostAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class Name:", NestHostAttribute::classInfoIndex)
+        addConstantPoolLink(getString("key.class.name"), NestHostAttribute::classInfoIndex)
     }
 }

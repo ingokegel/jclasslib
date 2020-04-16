@@ -7,11 +7,13 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.util.EnumButtonGroup
 import org.gjt.jclasslib.util.TitledSeparator
+import org.jetbrains.annotations.Nls
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -63,7 +65,7 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
     init {
         layout = MigLayout("insets 0, wrap", "[grow]")
 
-        add(TitledSeparator("Filter"), "growx")
+        add(TitledSeparator(getString("filter.title")), "growx")
         add(buttonGroup.getButton(FilterMode.ALL))
         add(buttonGroup.getButton(FilterMode.SELECTED), "wrap unrel")
         addComponents()
@@ -83,9 +85,9 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
         }
 
     protected open fun addComponents() {
-        add(filterComponent(JLabel("Text filter:")), "split, $RADIO_BUTTON_INSET")
+        add(filterComponent(JLabel(getString("filter.text.label"))), "split, $RADIO_BUTTON_INSET")
         add(filterComponent(filterTextField))
-        add(filterComponent(JButton("Clear").apply {
+        add(filterComponent(JButton(getString("action.filter.clear")).apply {
             addActionListener {
                 filterTextField.text = ""
                 updateFilter()
@@ -94,7 +96,7 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
         filterCheckboxes.values.forEachIndexed { i, checkBox ->
             add(filterComponent(checkBox), if (i % 2 == 0) "split, sgx col1, gapright para, $RADIO_BUTTON_INSET" else "sgx col2, wrap")
         }
-        add(filterComponent(JButton("Toggle all").apply {
+        add(filterComponent(JButton(getString("action.filter.toggle.all")).apply {
             addActionListener {
                 toggleCheckboxes(!filterCheckboxes.values.all { it.isSelected })
             }
@@ -142,9 +144,9 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
         updateFilter()
     }
 
-    enum class FilterMode(val verbose: String) {
-        ALL("Show all"),
-        SELECTED("Show selected");
+    enum class FilterMode(@Nls val verbose: String) {
+        ALL(getString("filter.mode.all")),
+        SELECTED(getString("filter.mode.selected"));
 
         override fun toString() = verbose
     }

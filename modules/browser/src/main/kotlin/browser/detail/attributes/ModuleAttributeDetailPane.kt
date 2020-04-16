@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
@@ -30,7 +31,7 @@ class ModuleAttributeDetailPane(services: BrowserServices) : DocumentDetailPane<
 
     inner class ModuleAttributeValueDetailPane : KeyValueDetailPane<ModuleAttribute>(ModuleAttribute::class.java, services) {
         override fun addLabels() {
-            addConstantPoolLink("Module version:", ModuleAttribute::moduleVersionIndex)
+            addConstantPoolLink(getString("key.module.version"), ModuleAttribute::moduleVersionIndex)
         }
     }
 }

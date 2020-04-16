@@ -6,13 +6,14 @@
 */
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.SourceDebugExtensionAttribute
 
 class SourceDebugExtensionAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SourceDebugExtensionAttribute>(SourceDebugExtensionAttribute::class.java, services) {
     override fun addLabels() {
-        addMultiLinePlainDetail("Text:") {
+        addMultiLinePlainDetail(getString("key.text")) {
             it.string
         }
     }

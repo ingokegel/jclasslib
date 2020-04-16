@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.NodeType
 import org.gjt.jclasslib.browser.config.BrowserPath
@@ -15,6 +16,7 @@ import org.gjt.jclasslib.browser.config.ReferenceHolder
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.*
+import org.jetbrains.annotations.Nls
 import java.awt.BorderLayout
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -23,7 +25,7 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
 
     private var constant: Constant? = null
 
-    private val btnShow: JButton = JButton("Show").apply {
+    private val btnShow: JButton = JButton(getString("action.show")).apply {
         addActionListener {
             try {
                 val classInfo = getClassInfo()
@@ -99,23 +101,24 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
         }
     }
 
+    @Nls
     private fun getButtonText(): String? = constant?.let { constant ->
         when (constant) {
             is ConstantClassInfo -> {
                 if (constant.name == detailPane.services.classFile.thisClassName) {
                     null
                 } else {
-                    "Show class"
+                    getString("action.show.class")
                 }
             }
             is ConstantFieldrefInfo -> {
-                "Show field"
+                getString("action.show.field")
             }
             is ConstantMethodrefInfo -> {
-                "Show method"
+                getString("action.show.method")
             }
             is ConstantInterfaceMethodrefInfo -> {
-                "Show interface method"
+                getString("action.show.interface.method")
             }
             else -> {
                 null

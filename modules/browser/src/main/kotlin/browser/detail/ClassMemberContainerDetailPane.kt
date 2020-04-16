@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.structures.AccessFlag
@@ -47,13 +48,12 @@ class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: S
 
     override fun addLabels() {
         add(filterPane, "spanx, growx")
-
-        add(TitledSeparator("Displayed Members"), "newline para, spanx, growx")
-        addDetail("Member count:") { classMembers -> classMembers.count { filterPane.isElementShown(it) }.toString() }
+        add(TitledSeparator(getString("detail.displayed.members.title")), "newline para, spanx, growx")
+        addDetail(getString("key.members.count")) { classMembers -> classMembers.count { filterPane.isElementShown(it) }.toString() }
         super.addLabels()
     }
 
     override val signatureButtonText: String
-        get() = "Copy signatures to clipboard"
+        get() = getString("action.copy.all.signatures")
 }
 

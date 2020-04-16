@@ -7,13 +7,14 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.SourceFileAttribute
 
 class SourceFileAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SourceFileAttribute>(SourceFileAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Source file name index:", SourceFileAttribute::sourceFileIndex)
+        addConstantPoolLink(getString("key.source.file.name.index"), SourceFileAttribute::sourceFileIndex)
     }
 }
 

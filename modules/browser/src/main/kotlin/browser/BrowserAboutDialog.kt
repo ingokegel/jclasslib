@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import browser.BrowserBundle.getString
 import com.install4j.api.launcher.Variables
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.util.DefaultAction
@@ -21,7 +22,7 @@ import javax.swing.JLabel
 
 class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
 
-    private val okAction = DefaultAction("OK") {
+    private val okAction = DefaultAction(getString("action.ok")) {
         isVisible = false
         dispose()
     }
@@ -34,13 +35,13 @@ class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
         (contentPane as JComponent).apply {
             layout = MigLayout("wrap", "50[align center]50")
 
-            add(JLabel("jclasslib bytecode viewer").apply {
+            add(JLabel(getString("about.jclasslib.name")).apply {
                 font = font.deriveFont(Font.BOLD)
             })
-            add(JLabel("Version " + getVersion()))
-            add(JLabel("Copyright ej-technologies GmbH, 2001-" + Calendar.getInstance().get(Calendar.YEAR)))
-            add(JLabel("Licensed under the General Public License"))
-            add(JLabel("Icons by iconexperience.com"))
+            add(JLabel(getString("about.version", getVersion())))
+            add(JLabel(getString("about.copyright", "ej-technologies GmbH", "2001-" + Calendar.getInstance().get(Calendar.YEAR))))
+            add(JLabel(getString("about.license")))
+            add(JLabel(getString("about.icons", "iconexperience.com")))
 
             contentPane.add(okAction.createTextButton().apply {
                 this@BrowserAboutDialog.getRootPane().defaultButton = this
@@ -50,7 +51,7 @@ class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
         pack()
         isModal = true
         isResizable = false
-        title = "About the jclasslib bytecode viewer"
+        title = getString("about.title")
         GUIHelper.centerOnParentWindow(this, owner)
         defaultCloseOperation = DISPOSE_ON_CLOSE
     }

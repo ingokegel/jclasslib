@@ -7,15 +7,17 @@
 
 package org.gjt.jclasslib.util
 
+import browser.BrowserBundle.getString
 import com.install4j.runtime.alert.AlertType
 import net.miginfocom.swing.MigLayout
+import org.jetbrains.annotations.Nls
 import java.awt.Window
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.util.concurrent.ExecutionException
 import javax.swing.*
 
-class ProgressDialog(parent: Window, message: String, var task: () -> Unit = {}) : JDialog(parent) {
+class ProgressDialog(parent: Window, @Nls message: String, var task: () -> Unit = {}) : JDialog(parent) {
 
     private val progressBar: JProgressBar = JProgressBar().apply {
         preferredSize = preferredSize.apply {
@@ -63,9 +65,9 @@ class ProgressDialog(parent: Window, message: String, var task: () -> Unit = {})
                         isVisible = false
                         try {
                             get()
-                        } catch(e: ExecutionException) {
+                        } catch (e: ExecutionException) {
                             e.cause?.printStackTrace()
-                            GUIHelper.showMessage(parent, "An error occurred", "${e.cause?.javaClass}: ${e.cause?.message}", AlertType.ERROR)
+                            GUIHelper.showMessage(parent, getString("message.error.occurred"), "${e.cause?.javaClass}: ${e.cause?.message}", AlertType.ERROR)
                         }
                     }
                 }.execute()

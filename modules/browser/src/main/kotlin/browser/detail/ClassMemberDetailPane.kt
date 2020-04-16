@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.ClassMember
 
@@ -21,13 +22,13 @@ class ClassMemberDetailPane(services: BrowserServices, signatureMode: SignatureM
         }.toString()
 
     override fun addLabels() {
-        addConstantPoolLink("Name:", ClassMember::nameIndex)
-        addConstantPoolLink("Descriptor:", ClassMember::descriptorIndex)
-        addDetail("Access flags:") { classMember -> "${classMember.formattedAccessFlags} [${classMember.accessFlagsVerbose}]" }
+        addConstantPoolLink(getString("key.name"), ClassMember::nameIndex)
+        addConstantPoolLink(getString("key.descriptor"), ClassMember::descriptorIndex)
+        addDetail(getString("key.access.flags")) { classMember -> "${classMember.formattedAccessFlags} [${classMember.accessFlagsVerbose}]" }
         super.addLabels()
     }
 
     override val signatureButtonText: String
-        get() = "Copy signature to clipboard"
+        get() = getString("action.copy.signature")
 }
 

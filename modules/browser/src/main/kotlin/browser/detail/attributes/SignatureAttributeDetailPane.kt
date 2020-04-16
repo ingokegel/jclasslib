@@ -6,12 +6,13 @@
 */
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.SignatureAttribute
 
 class SignatureAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SignatureAttribute>(SignatureAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Signature index:", SignatureAttribute::signatureIndex)
+        addConstantPoolLink(getString("key.signature.index"), SignatureAttribute::signatureIndex)
     }
 }

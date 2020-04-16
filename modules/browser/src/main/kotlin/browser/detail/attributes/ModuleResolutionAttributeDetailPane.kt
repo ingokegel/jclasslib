@@ -7,12 +7,13 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.ModuleResolutionAttribute
 
 class ModuleResolutionAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<ModuleResolutionAttribute>(ModuleResolutionAttribute::class.java, services) {
     override fun addLabels() {
-        addDetail("Resolution:") { attribute -> attribute.resolution.toString() }
+        addDetail(getString("key.resolution")) { attribute -> attribute.resolution.toString() }
     }
 }

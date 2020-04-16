@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.ModulePackagesAttribute
@@ -20,10 +21,10 @@ class ModulePackagesAttributeDetailPane(services: BrowserServices) : TableDetail
         override fun buildColumns(columns: ArrayList<Column<Int>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : ConstantPoolLinkColumn<Int>("Package", services) {
+                add(object : ConstantPoolLinkColumn<Int>(getString("column.package"), services) {
                     override fun getConstantPoolIndex(row: Int) = row
                 })
-                add(object : StringColumn<Int>("Verbose", 400) {
+                add(object : StringColumn<Int>(getString("column.verbose"), 400) {
                     override fun createValue(row: Int) = getConstantPoolEntryName(row)
                 })
             }

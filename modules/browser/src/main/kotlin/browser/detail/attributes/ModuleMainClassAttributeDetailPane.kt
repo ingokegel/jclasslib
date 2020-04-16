@@ -7,12 +7,13 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.ModuleMainClassAttribute
 
 class ModuleMainClassAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<ModuleMainClassAttribute>(ModuleMainClassAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Main class:", ModuleMainClassAttribute::mainClassIndex)
+        addConstantPoolLink(getString("key.main.class"), ModuleMainClassAttribute::mainClassIndex)
     }
 }

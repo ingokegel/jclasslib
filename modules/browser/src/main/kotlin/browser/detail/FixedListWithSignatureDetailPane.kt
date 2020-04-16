@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.ClassMember
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.jetbrains.annotations.Nls
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import javax.swing.JButton
@@ -26,6 +27,7 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
     }
 
     protected abstract val signatureVerbose: String
+    @get:Nls
     protected abstract val signatureButtonText: String
 
     override val clipboardText: String?

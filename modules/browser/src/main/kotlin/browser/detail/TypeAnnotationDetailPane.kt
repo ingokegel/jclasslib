@@ -6,6 +6,7 @@
 */
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.browser.NodeType
@@ -20,15 +21,15 @@ import javax.swing.tree.TreePath
 
 class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<TypeAnnotation>(TypeAnnotation::class.java, services) {
     override fun addLabels() {
-        addDetail("Target Type:") { typeAnnotation -> typeAnnotation.targetType.toString() }
+        addDetail(getString("key.target.type")) { typeAnnotation -> typeAnnotation.targetType.toString() }
 
-        addMultiLineHtmlDetail("Target Info:") { typeAnnotation ->
+        addMultiLineHtmlDetail(getString("key.target.info")) { typeAnnotation ->
             typeAnnotation.targetInfo.verbose.replace("\n", "<br>")
         }.linkHandler { description ->
             handleLink(description)
         }
 
-        addMultiLineHtmlDetail("Type path:") { typeAnnotation ->
+        addMultiLineHtmlDetail(getString("key.type.path")) { typeAnnotation ->
             StringBuilder().apply {
                 for (typePathEntry in typeAnnotation.typePathEntries) {
                     append(typePathEntry.typePathKind)

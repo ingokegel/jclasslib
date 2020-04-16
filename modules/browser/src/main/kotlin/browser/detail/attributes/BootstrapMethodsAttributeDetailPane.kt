@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.detail.TableDetailPane
@@ -31,10 +32,10 @@ class BootstrapMethodsAttributeDetailPane(services: BrowserServices) : TableDeta
         override fun buildColumns(columns: ArrayList<Column<BootstrapMethodsEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NamedConstantPoolLinkColumn<BootstrapMethodsEntry>("Bootstrap Method", services, 300) {
+                add(object : NamedConstantPoolLinkColumn<BootstrapMethodsEntry>(getString("column.bootstrap.method"), services, 300) {
                     override fun getConstantPoolIndex(row: BootstrapMethodsEntry) = row.methodRefIndex
                 })
-                add(object : StringColumn<BootstrapMethodsEntry>("Arguments", 400) {
+                add(object : StringColumn<BootstrapMethodsEntry>(getString("column.arguments"), 400) {
                     override fun createValue(row: BootstrapMethodsEntry): String = row.verbose.replace("\n", "<br>")
                     override fun createTableCellRenderer() = createTableCellEditor()
                     override fun createTableCellEditor() = MultiLineHtmlCellHandler { description ->

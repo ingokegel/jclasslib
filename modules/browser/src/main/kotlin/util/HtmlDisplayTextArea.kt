@@ -80,7 +80,7 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
         get() = htmlDocument?.styleSheet
 
     override fun setText(text: String) {
-        super.setText(if (text.startsWith("<html>")) "<html>$text" else text)
+        super.setText(if (text.startsWith(TAG_HTML)) "$TAG_HTML$text" else text)
     }
 
     override fun getPreferredSize(): Dimension {
@@ -147,6 +147,7 @@ open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDispla
     override fun getBaselineResizeBehavior() = BaselineResizeBehavior.CONSTANT_ASCENT
 
     companion object {
+        private const val TAG_HTML = "<html>"
         private val NO_MARGIN = Insets(0, 0, 0, 0)
     }
 

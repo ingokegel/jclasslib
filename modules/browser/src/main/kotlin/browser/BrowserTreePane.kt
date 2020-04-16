@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.*
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.*
@@ -18,6 +19,7 @@ import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
 import org.gjt.jclasslib.util.TreeIcon
 import org.gjt.jclasslib.util.treeIcons
 import org.gjt.jclasslib.util.treeRowHeight
+import org.jetbrains.annotations.Nls
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.util.*
@@ -96,7 +98,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     }
 
     private fun buildTreeModel() = DefaultTreeModel(BrowserRootNode().apply {
-        add(NodeType.GENERAL, BrowserTreeNode("General Information", NodeType.GENERAL, services.classFile))
+        add(NodeType.GENERAL, BrowserTreeNode(getString("tree.general.information"), NodeType.GENERAL, services.classFile))
         add(NodeType.CONSTANT_POOL_ENTRY, buildConstantPoolNode())
         add(NodeType.INTERFACE, buildInterfacesNode())
         add(NodeType.FIELD, buildFieldsNode())
@@ -104,7 +106,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         add(NodeType.ATTRIBUTE, buildAttributesNode())
     })
 
-    private inner class BrowserRootNode : BrowserTreeNode("Class file", NodeType.NO_CONTENT) {
+    private inner class BrowserRootNode : BrowserTreeNode(getString("tree.class.file"), NodeType.NO_CONTENT) {
         fun add(nodeType: NodeType, node: BrowserTreeNode) {
             add(node)
             categoryToPath[nodeType] = TreePath(arrayOf<Any>(this, node))
@@ -113,11 +115,11 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
     private fun buildConstantPoolNode(): BrowserTreeNode {
         val constantPool = services.classFile.constantPool
-        return BrowserTreeNode("Constant Pool", NodeType.CONSTANT_POOL, constantPool).apply {
+        return BrowserTreeNode(getString("tree.constant.pool"), NodeType.CONSTANT_POOL, constantPool).apply {
             constantPool.forEachIndexed { i, constant ->
                 if (i > 0) {
                     add(if (constant == ConstantPlaceholder) {
-                        BrowserTreeNode(getFormattedIndex(i, constantPool.size) + "(large numeric continued)", NodeType.NO_CONTENT, constant)
+                        BrowserTreeNode(getFormattedIndex(i, constantPool.size) + getString("tree.large.numeric.suffix"), NodeType.NO_CONTENT, constant)
                     } else {
                         try {
                             BrowserTreeNode(getFormattedIndex(i, constantPool.size) + constant.constantType.verbose, NodeType.CONSTANT_POOL_ENTRY, constant)
@@ -130,19 +132,19 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
-    private fun buildInterfacesNode() = BrowserTreeNode("Interfaces", NodeType.INTERFACES).apply {
+    private fun buildInterfacesNode() = BrowserTreeNode(getString("tree.interfaces"), NodeType.INTERFACES).apply {
         services.classFile.interfaces.forEachIndexed { i, interfaceIndex ->
-            add(BrowserTreeNode("Interface $i", NodeType.INTERFACE, interfaceIndex))
+            add(BrowserTreeNode(getString("tree.interface", i), NodeType.INTERFACE, interfaceIndex))
         }
     }
 
     private fun buildFieldsNode(): BrowserTreeNode =
-            buildClassMembersNode("Fields", NodeType.FIELDS, NodeType.FIELD, services.classFile.fields)
+            buildClassMembersNode(getString("tree.fields"), NodeType.FIELDS, NodeType.FIELD, services.classFile.fields)
 
     private fun buildMethodsNode(): BrowserTreeNode =
-            buildClassMembersNode("Methods", NodeType.METHODS, NodeType.METHOD, services.classFile.methods)
+            buildClassMembersNode(getString("tree.methods"), NodeType.METHODS, NodeType.METHOD, services.classFile.methods)
 
-    private fun buildClassMembersNode(text: String, containerType: NodeType, childType: NodeType, classMembers: Array<out ClassMember>) =
+    private fun buildClassMembersNode(@Nls text: String, containerType: NodeType, childType: NodeType, classMembers: Array<out ClassMember>) =
             BrowserTreeNode(text, containerType, classMembers).apply {
                 val classMembersCount = classMembers.size
                 classMembers.forEachIndexed { i, classMember ->
@@ -157,10 +159,11 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
                 }
             }
 
-    private fun buildAttributesNode() = BrowserTreeNode("Attributes", NodeType.ATTRIBUTES).apply {
+    private fun buildAttributesNode() = BrowserTreeNode(getString("tree.attributes"), NodeType.ATTRIBUTES).apply {
         addAttributeNodes(services.classFile)
     }
 
+    @Suppress("HardCodedStringLiteral")
     private fun buildNullNode() = BrowserTreeNode("[error] null", NodeType.NO_CONTENT)
 
     private fun BrowserTreeNode.addAttributeNodes(structure: AttributeContainer) {

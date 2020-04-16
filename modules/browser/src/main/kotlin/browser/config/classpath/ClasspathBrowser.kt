@@ -7,17 +7,19 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import browser.BrowserBundle.getString
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.ProgressDialog
+import org.jetbrains.annotations.Nls
 import java.awt.event.*
 import javax.swing.*
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-class ClasspathBrowser(private val frame: BrowserFrame, title: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame, title) {
+class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame, title) {
 
     var classpathComponent: ClasspathComponent? = null
         set(classpathComponent) {
@@ -31,8 +33,8 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
             }
         }
 
-    private val classPathTree: JTree = createTree("Class Path")
-    private val modulePathTree: JTree = createTree("Module Path")
+    private val classPathTree: JTree = createTree(getString("classpath.tab.class.path"))
+    private val modulePathTree: JTree = createTree(getString("classpath.tab.module.path"))
     private val trees = listOf(classPathTree, modulePathTree)
 
     private val tabbedPane = JTabbedPane().apply {
@@ -41,7 +43,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
         }
     }
 
-    private fun createTree(treeName : String): JTree {
+    private fun createTree(@Nls treeName : String): JTree {
         return JTree(ClassTreeNode()).apply {
             name = treeName
             isRootVisible = false
@@ -65,17 +67,17 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
         }
     }
 
-    private val setupAction = DefaultAction("Setup classpath") {
+    private val setupAction = DefaultAction(getString("action.setup.class.path")) {
         frame.setupClasspathAction.actionPerformed(ActionEvent(this, 0, null))
         classpathComponent = frame.config.toImmutableContainer()
         conditionalUpdate()
     }
 
-    private val syncAction = DefaultAction("Synchronize") {
+    private val syncAction = DefaultAction(getString("action.synchronize")) {
         sync(true)
     }
 
-    private val okAction = DefaultAction("OK") {
+    private val okAction = DefaultAction(getString("action.ok")) {
         isVisible = false
     }.apply {
         isEnabled = false
@@ -84,7 +86,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
     var isCanceled: Boolean = false
         private set
 
-    private val cancelAction = DefaultAction("Cancel") {
+    private val cancelAction = DefaultAction(getString("action.cancel")) {
         isVisible = false
         isCanceled = true
     }.apply {
@@ -93,7 +95,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, title: String, private v
     }
 
     private val progressDialog: ProgressDialog by lazy {
-        ProgressDialog(this, "Scanning classpath ...")
+        ProgressDialog(this, getString("message.scanning.classes"))
     }
 
     private var resetOnNextMerge: Boolean = false

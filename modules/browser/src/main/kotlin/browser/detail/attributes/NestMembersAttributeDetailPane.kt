@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.NestMembersAttribute
@@ -25,7 +26,7 @@ class NestMembersAttributeDetailPane(services: BrowserServices) : TableDetailPan
         override fun buildColumns(columns: ArrayList<Column<NestMembersEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NamedConstantPoolLinkColumn<NestMembersEntry>("Class Name", services, 200) {
+                add(object : NamedConstantPoolLinkColumn<NestMembersEntry>(getString("column.class.name"), services, 200) {
                     override fun getConstantPoolIndex(row: NestMembersEntry) = row.classInfoIndex
                 })
             }

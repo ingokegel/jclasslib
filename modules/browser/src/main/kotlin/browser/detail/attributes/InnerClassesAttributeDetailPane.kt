@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.InnerClassesAttribute
@@ -25,16 +26,16 @@ class InnerClassesAttributeDetailPane(services: BrowserServices) : TableDetailPa
         override fun buildColumns(columns: ArrayList<Column<InnerClassesEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>("Inner Class", services, 160) {
+                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>(getString("column.inner.class"), services, 160) {
                     override fun getConstantPoolIndex(row: InnerClassesEntry) = row.innerClassInfoIndex
                 })
-                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>("Outer Class", services, 160) {
+                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>(getString("column.outer.class"), services, 160) {
                     override fun getConstantPoolIndex(row: InnerClassesEntry) = row.outerClassInfoIndex
                 })
-                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>("Inner Name", services, 110) {
+                add(object : NamedConstantPoolLinkColumn<InnerClassesEntry>(getString("column.inner.name"), services, 110) {
                     override fun getConstantPoolIndex(row: InnerClassesEntry) = row.innerNameIndex
                 })
-                add(object : StringColumn<InnerClassesEntry>("Access Flags", 200) {
+                add(object : StringColumn<InnerClassesEntry>(getString("column.access.flags"), 200) {
                     override fun createValue(row: InnerClassesEntry) =
                             "${row.innerClassFormattedAccessFlags} [${row.innerClassAccessFlagsVerbose}]"
                 })

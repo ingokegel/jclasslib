@@ -7,13 +7,14 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.ConstantValueAttribute
 
 class ConstantValueAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<ConstantValueAttribute>(ConstantValueAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Constant value index:", ConstantValueAttribute::constantValueIndex)
+        addConstantPoolLink(getString("key.constant.value.index"), ConstantValueAttribute::constantValueIndex)
     }
 }
 

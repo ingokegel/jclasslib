@@ -6,6 +6,7 @@
 */
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.DetailPane
@@ -35,9 +36,9 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
         addCards()
 
         layout = MigLayout("wrap", "[grow]", "[][shrinkprio 50]para[][grow]")
-        add(TitledSeparator("Generic info"), "growx")
+        add(TitledSeparator(getString("detail.generic.info.title")), "growx")
         add(genericInfoPane.displayComponent, "growx")
-        add(TitledSeparator("Specific info"), "growx")
+        add(TitledSeparator(getString("detail.specific.info.title")), "growx")
         add(specificInfoPane, "grow")
     }
 

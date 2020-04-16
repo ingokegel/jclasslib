@@ -7,10 +7,11 @@
 
 package org.gjt.jclasslib.browser
 
+import org.jetbrains.annotations.Nls
 import java.util.*
 import javax.swing.tree.DefaultMutableTreeNode
 
-open class BrowserTreeNode(text: String, val type: NodeType, val element: Any? = null) : DefaultMutableTreeNode(text), Iterable<BrowserTreeNode> {
+open class BrowserTreeNode(@Nls text: String, val type: NodeType, val element: Any? = null) : DefaultMutableTreeNode(text), Iterable<BrowserTreeNode> {
     val index: Int
         get() = getParent().getIndex(this)
 

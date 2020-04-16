@@ -12,6 +12,7 @@ import org.gjt.jclasslib.browser.*
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.util.*
+import org.jetbrains.annotations.Nls
 import java.awt.Cursor
 import java.awt.Point
 import java.awt.event.MouseListener
@@ -74,7 +75,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected val showHandlers = ArrayList<(element: T) -> Unit>()
     protected var element: T? = null
 
-    protected fun addConstantPoolLink(key: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
+    protected fun addConstantPoolLink(@Nls key: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
         val keyValue = DefaultKeyValue<T>(key, linkLabel(), highlightLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -89,7 +90,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addAttributeLink(key: String, attributeClass: Class<BootstrapMethodsAttribute>, prefix: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
+    protected fun addAttributeLink(@Nls key: String, attributeClass: Class<BootstrapMethodsAttribute>, prefix: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
         val keyValue = DefaultKeyValue<T>(key, linkLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -103,7 +104,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addDetail(key: String, textResolver: (element: T) -> String): DefaultKeyValue<T> {
+    protected fun addDetail(@Nls key: String, textResolver: (element: T) -> String): DefaultKeyValue<T> {
         val keyValue = DefaultKeyValue<T>(key, highlightLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -112,7 +113,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addMultiLineHtmlDetail(key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
+    protected fun addMultiLineHtmlDetail(@Nls key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
         val keyValue = HtmlKeyValue<T>(key, highlightTextArea())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -122,7 +123,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addMultiLinePlainDetail(key: String, textResolver: (element: T) -> String): MultiLineKeyValue<T> {
+    protected fun addMultiLinePlainDetail(@Nls key: String, textResolver: (element: T) -> String): MultiLineKeyValue<T> {
         val keyValue = MultiLineKeyValue<T>(key, multiLineLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
@@ -153,7 +154,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         text = "<" + getConstantPoolEntryName(constantPoolIndex) + ">"
     }
 
-    abstract class KeyValue<T : Any, out L>(key: String, val valueLabel: L, val commentLabel: L? = null) where L : JComponent, L : TextDisplay {
+    abstract class KeyValue<T : Any, out L>(@Nls key: String, val valueLabel: L, val commentLabel: L? = null) where L : JComponent, L : TextDisplay {
 
         val keyLabel = ExtendedJLabel(key)
         private var visibilityPredicate: ((T) -> Boolean)? = null
@@ -172,11 +173,11 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         }
     }
 
-    class DefaultKeyValue<T : Any>(key: String, valueLabel: ExtendedJLabel, commentLabel: ExtendedJLabel? = null) : KeyValue<T, ExtendedJLabel>(key, valueLabel, commentLabel)
+    class DefaultKeyValue<T : Any>(@Nls key: String, valueLabel: ExtendedJLabel, commentLabel: ExtendedJLabel? = null) : KeyValue<T, ExtendedJLabel>(key, valueLabel, commentLabel)
 
-    class MultiLineKeyValue<T : Any>(key: String, multiLineLabel: MultiLineLabel) : KeyValue<T, MultiLineLabel>(key, multiLineLabel, null)
+    class MultiLineKeyValue<T : Any>(@Nls key: String, multiLineLabel: MultiLineLabel) : KeyValue<T, MultiLineLabel>(key, multiLineLabel, null)
 
-    class HtmlKeyValue<T : Any>(key: String, valueLabel: HtmlDisplayTextArea, commentLabel: HtmlDisplayTextArea? = null) : KeyValue<T, HtmlDisplayTextArea>(key, valueLabel, commentLabel) {
+    class HtmlKeyValue<T : Any>(@Nls key: String, valueLabel: HtmlDisplayTextArea, commentLabel: HtmlDisplayTextArea? = null) : KeyValue<T, HtmlDisplayTextArea>(key, valueLabel, commentLabel) {
         fun linkHandler(handler: (String) -> Unit) {
             valueLabel.addHyperlinkListener { e ->
                 if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {

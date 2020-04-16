@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="browser" pattern="src[jclasslib.browser*]:*..*" />
+</component>

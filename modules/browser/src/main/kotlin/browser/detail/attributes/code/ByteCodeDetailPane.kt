@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.OffsetLink
@@ -20,7 +21,7 @@ import javax.swing.text.StyleContext
 class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDetailPane: CodeAttributeDetailPane) : DocumentDetailPane<CodeAttribute, ByteCodeDocument>(CodeAttribute::class.java, ByteCodeDocument::class.java, services) {
 
     init {
-        name = "Bytecode"
+        name = getString("code.tab.bytecode")
     }
 
     override fun createDocument(styles: StyleContext, attribute: CodeAttribute, classFile: ClassFile): ByteCodeDocument =

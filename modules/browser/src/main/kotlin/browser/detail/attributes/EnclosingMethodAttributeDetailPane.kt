@@ -6,13 +6,14 @@
 */
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.attributes.EnclosingMethodAttribute
 
 class EnclosingMethodAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<EnclosingMethodAttribute>(EnclosingMethodAttribute::class.java, services) {
     override fun addLabels() {
-        addConstantPoolLink("Class index:", EnclosingMethodAttribute::classInfoIndex)
-        addConstantPoolLink("Method index:", EnclosingMethodAttribute::methodInfoIndex)
+        addConstantPoolLink(getString("key.class.index"), EnclosingMethodAttribute::classInfoIndex)
+        addConstantPoolLink(getString("key.method.index"), EnclosingMethodAttribute::methodInfoIndex)
     }
 }

@@ -7,12 +7,14 @@
 
 package org.gjt.jclasslib.browser
 
+import browser.BrowserBundle.getString
 import com.install4j.runtime.alert.AlertType
 import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
 import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.util.GUIHelper
+import org.jetbrains.annotations.Nls
 import org.w3c.dom.Element
 import util.LightOrDarkColor
 import java.awt.BorderLayout
@@ -42,7 +44,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         val count = wrappers.flatMap { it.tabbedPane.tabs() }
                 .map { it.saveClassToDirectory(directory) }.count { it }
 
-        GUIHelper.showMessage(frame, "$count classes were saved to $directory", AlertType.INFORMATION)
+        GUIHelper.showMessage(frame, getString("message.classes.saved.info", count, directory), AlertType.INFORMATION)
     }
 
     fun focus(focusedTabbedPane: BrowserTabbedPane) {
@@ -165,8 +167,8 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
 
     operator fun List<TabbedPaneWrapper>.get(position: Position) = this[position.ordinal]
 
-    enum class Position(val noneOpenMessage: String? = null) {
-        NW("Open a class file"), NE, SE, SW;
+    enum class Position(@Nls val noneOpenMessage: String? = null) {
+        NW(getString("window.open.class.file.label")), NE, SE, SW;
 
         companion object {
             fun getByName(name: String?) = values().firstOrNull { it.name == name } ?: NW
@@ -246,7 +248,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         const val CARD_TABBED_PANE = "tabbedPane"
         val PREFERRED_SIZE = Dimension(100, 100)
         val EMPTY_BACKGROUND = LightOrDarkColor(Color(210, 210, 210), Color(80, 80, 80))
-        const val TABBED_PANE_EMPTY_MESSAGE = "Drag class files to this area"
+        val TABBED_PANE_EMPTY_MESSAGE by lazy { getString("window.drag.class.file.label") }
 
         private const val NODE_NAME_TABS = "tabs"
         private const val ATTRIBUTE_SPLIT_MODE = "splitMode"

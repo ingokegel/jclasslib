@@ -6,6 +6,7 @@
 */
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.LocalVariableAttribute
@@ -26,16 +27,16 @@ abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : Tab
         override fun buildColumns(columns: ArrayList<Column<LocalVariableEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NumberColumn<LocalVariableEntry>("Start PC") {
+                add(object : NumberColumn<LocalVariableEntry>(getString("column.start.pc")) {
                     override fun createValue(row: LocalVariableEntry) = row.startPc
                 })
-                add(object : NumberColumn<LocalVariableEntry>("Length") {
+                add(object : NumberColumn<LocalVariableEntry>(getString("column.length")) {
                     override fun createValue(row: LocalVariableEntry) = row.targetLength
                 })
-                add(object : NumberColumn<LocalVariableEntry>("Index") {
+                add(object : NumberColumn<LocalVariableEntry>(getString("column.index")) {
                     override fun createValue(row: LocalVariableEntry) = row.index
                 })
-                add(object : NamedConstantPoolLinkColumn<LocalVariableEntry>("Name", services, 200) {
+                add(object : NamedConstantPoolLinkColumn<LocalVariableEntry>(getString("column.name"), services, 200) {
                     override fun getConstantPoolIndex(row: LocalVariableEntry) = row.nameIndex
                 })
                 add(object : NamedConstantPoolLinkColumn<LocalVariableEntry>(descriptorOrSignatureVerbose, services, 200) {

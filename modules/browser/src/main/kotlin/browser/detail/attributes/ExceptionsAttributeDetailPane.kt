@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.ExceptionsAttribute
@@ -20,10 +21,10 @@ class ExceptionsAttributeDetailPane(services: BrowserServices) : TableDetailPane
         override fun buildColumns(columns: ArrayList<Column<Int>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : ConstantPoolLinkColumn<Int>("Exception", services) {
+                add(object : ConstantPoolLinkColumn<Int>(getString("column.exception"), services) {
                     override fun getConstantPoolIndex(row: Int) = row
                 })
-                add(object : StringColumn<Int>("Verbose") {
+                add(object : StringColumn<Int>(getString("column.verbose")) {
                     override fun createValue(row: Int) = getConstantPoolEntryName(row)
                 })
             }

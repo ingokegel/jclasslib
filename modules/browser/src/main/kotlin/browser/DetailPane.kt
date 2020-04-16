@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.*
+import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTree
@@ -30,6 +31,11 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
 
     protected open val wrapper: JComponent
         get() = this
+
+    @Suppress("RedundantOverride") // Needed to add Nls annotation
+    override fun setName(@Nls name: String?) {
+        super.setName(name)
+    }
 
     protected fun normalLabel(text: String = "") = ExtendedJLabel(text)
 

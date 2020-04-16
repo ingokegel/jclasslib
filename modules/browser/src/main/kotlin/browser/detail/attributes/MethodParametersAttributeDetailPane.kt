@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.MethodParametersAttribute
@@ -25,10 +26,10 @@ class MethodParametersAttributeDetailPane(services: BrowserServices) : TableDeta
         override fun buildColumns(columns: ArrayList<Column<MethodParametersEntry>>) {
             super.buildColumns(columns)
             columns.apply {
-                add(object : NamedConstantPoolLinkColumn<MethodParametersEntry>("Parameter Name", services, 200) {
+                add(object : NamedConstantPoolLinkColumn<MethodParametersEntry>(getString("column.parameter.name"), services, 200) {
                     override fun getConstantPoolIndex(row: MethodParametersEntry) = row.nameIndex
                 })
-                add(object : StringColumn<MethodParametersEntry>("Access Flags", 200) {
+                add(object : StringColumn<MethodParametersEntry>(getString("column.access.flags"), 200) {
                     override fun createValue(row: MethodParametersEntry) = row.accessFlagsVerbose
                 })
             }

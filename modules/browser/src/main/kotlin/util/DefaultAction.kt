@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.util
 
 import org.gjt.jclasslib.browser.BrowserFrame
+import org.jetbrains.annotations.Nls
 import java.awt.Dimension
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
@@ -16,7 +17,7 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.KeyStroke
 
-class DefaultAction(name: String, shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: (action: DefaultAction) -> Unit) : AbstractAction(name) {
+class DefaultAction(@Nls name: String, @Nls shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: (action: DefaultAction) -> Unit) : AbstractAction(name) {
     var lastButton: JComponent? = null
         private set
 

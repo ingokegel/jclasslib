@@ -27,7 +27,6 @@ import javax.swing.SwingUtilities
 import javax.swing.UIManager
 import kotlin.system.exitProcess
 
-const val APPLICATION_TITLE = "Bytecode viewer"
 const val LAF_DEFAULT_SYSTEM_PROPERTY = "jclasslib.laf.default"
 const val WORKSPACE_FILE_SUFFIX = "jcw"
 const val WEBSITE_URL = "http://www.ej-technologies.com/products/jclasslib/overview.html"

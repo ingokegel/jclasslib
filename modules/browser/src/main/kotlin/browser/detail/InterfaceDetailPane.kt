@@ -7,11 +7,12 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 
 class InterfaceDetailPane(services: BrowserServices) : KeyValueDetailPane<Int>(Int::class.javaObjectType, services) {
     override fun addLabels() {
-        addConstantPoolLink("Interface:") { index -> index }
+        addConstantPoolLink(getString("key.interface")) { index -> index }
     }
 
     override fun hasInsets() = true
