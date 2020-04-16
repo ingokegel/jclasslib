@@ -7,6 +7,7 @@
 
 package browser
 
+import browser.BrowserBundle.getString
 import org.jetbrains.annotations.PropertyKey
 import java.text.MessageFormat
 import java.util.*
@@ -29,3 +30,13 @@ object BrowserBundle {
 
 }
 
+enum class SupportedLocale(val localeCode: String, val displayName: String) {
+    AUTO_DETECT("", getString("menu.language.auto.detect")),
+    ENGLISH("en", "English"),
+    GERMAN("de", "Deutsch");
+
+    companion object {
+        fun findByLocaleCode(localeCode: String) : SupportedLocale =
+            values().find { it.localeCode == localeCode } ?: AUTO_DETECT
+    }
+}

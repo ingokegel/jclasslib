@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import browser.BrowserBundle.getString
+import browser.SupportedLocale
 import com.install4j.api.Util
 import com.install4j.runtime.alert.AlertType
 import com.install4j.runtime.filechooser.DirectoryChooser
@@ -358,6 +359,24 @@ class BrowserFrame : JFrame() {
                 add(showEjtAction)
                 addSeparator()
                 add(JCheckBoxMenuItem(darkModeAction))
+                add(JMenu(getString("menu.switch.language")).apply {
+                    icon = getIcon("language.png")
+                    val selectedSupportedLocale = SupportedLocale.findByLocaleCode(getPreferencesNode().get(SETTINGS_LOCALE, ""))
+                    for (supportedLocale in SupportedLocale.values()) {
+                        add(JCheckBoxMenuItem(DefaultAction(supportedLocale.displayName) {
+                            getPreferencesNode().put(SETTINGS_LOCALE, supportedLocale.localeCode)
+                            GUIHelper.showMessage(this@BrowserFrame,
+                                getString("message.language.changed.title"),
+                                getString("message.language.changed"),
+                                AlertType.INFORMATION
+                            )
+                        }.apply {
+                            if (supportedLocale == selectedSupportedLocale) {
+                                putValue(Action.SELECTED_KEY, true)
+                            }
+                        }))
+                    }
+                })
                 addSeparator()
                 add(closeAction)
                 add(quitAction)

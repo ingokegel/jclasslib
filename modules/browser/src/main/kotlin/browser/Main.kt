@@ -31,8 +31,21 @@ const val LAF_DEFAULT_SYSTEM_PROPERTY = "jclasslib.laf.default"
 const val WORKSPACE_FILE_SUFFIX = "jcw"
 const val WEBSITE_URL = "http://www.ej-technologies.com/products/jclasslib/overview.html"
 const val SETTINGS_DARK_MODE = "darkMode"
+const val SETTINGS_LOCALE = "locale"
 
 fun main(args: Array<String>) {
+
+    getPreferencesNode().get(SETTINGS_LOCALE, "").takeIf { it.isNotBlank() }?.let { localeCode ->
+        val localeParts = localeCode.split("_")
+        Locale.setDefault(
+            when (localeParts.size) {
+                1 -> Locale(localeCode)
+                2 -> Locale(localeParts[0], localeParts[1])
+                3 -> Locale(localeParts[0], localeParts[1], localeParts[2])
+                else -> throw IllegalStateException("$localeCode has more than 3 components")
+            }
+        )
+    }
 
     if (!java.lang.Boolean.getBoolean(LAF_DEFAULT_SYSTEM_PROPERTY)) {
         darkMode = getPreferencesNode().getBoolean(SETTINGS_DARK_MODE, false)

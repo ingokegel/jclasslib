@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="bytecode viewer" type="JetRunConfigurationType" singleton="false">
     <module name="jclasslib.browser.main" />
-    <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false -Duser.language=en" />
+    <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
