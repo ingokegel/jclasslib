@@ -362,8 +362,9 @@ class BrowserFrame : JFrame() {
                 add(JMenu(getString("menu.switch.language")).apply {
                     icon = getIcon("language.png")
                     val selectedSupportedLocale = SupportedLocale.findByLocaleCode(getPreferencesNode().get(SETTINGS_LOCALE, ""))
+                    val buttonGroup = ButtonGroup()
                     for (supportedLocale in SupportedLocale.values()) {
-                        add(JCheckBoxMenuItem(DefaultAction(supportedLocale.displayName) {
+                        add(JRadioButtonMenuItem(DefaultAction(supportedLocale.displayName) {
                             getPreferencesNode().put(SETTINGS_LOCALE, supportedLocale.localeCode)
                             GUIHelper.showMessage(this@BrowserFrame,
                                 getString("message.language.changed.title"),
@@ -374,7 +375,7 @@ class BrowserFrame : JFrame() {
                             if (supportedLocale == selectedSupportedLocale) {
                                 putValue(Action.SELECTED_KEY, true)
                             }
-                        }))
+                        }).also { buttonGroup.add(it) })
                     }
                 })
                 addSeparator()
