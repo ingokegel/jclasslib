@@ -13,6 +13,7 @@ import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
 import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.util.GUIHelper
 import org.jetbrains.annotations.Nls
 import org.w3c.dom.Element
@@ -142,7 +143,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     val totalTabCount: Int
         get() = wrappers.sumBy { it.tabbedPane.tabs().count() }
 
-    fun openClassFile(fileName: String, moduleName: String = "", browserPath: BrowserPath? = null): BrowserTab =
+    fun openClassFile(fileName: String, moduleName: String = ClasspathEntry.UNNAMED_MODULE, browserPath: BrowserPath? = null): BrowserTab =
             focusedTabbedPane.addTab(fileName, moduleName, browserPath)
 
     fun saveWorkspace(element: Element) {
