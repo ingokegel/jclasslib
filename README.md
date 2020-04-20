@@ -5,6 +5,9 @@
 I'm looking for localizers, especially to Chinese. If you're interested, please 
 [see this issue](https://github.com/ingokegel/jclasslib/issues/36).
 
+## Download
+
+Installers can be downloaded from the [releases section](https://github.com/ingokegel/jclasslib/releases).
 
 ## Purpose
 
@@ -32,8 +35,3 @@ at the same time.
 ## License
 
 jclasslib bytecode viewer is released under the [GPL, Version 2.0](https://www.gnu.org/licenses/gpl-2.0.html).
-
-
-## Download
-
-Installers can be downloaded from the [releases section](https://github.com/ingokegel/jclasslib/releases).
