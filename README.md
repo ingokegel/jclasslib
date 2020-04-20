@@ -1,5 +1,11 @@
 # jclasslib bytecode viewer
 
+## Help wanted for localizations!
+
+I'm looking for localizers, especially to Chinese. If you're interested, please 
+[see this issue](https://github.com/ingokegel/jclasslib/issues/36).
+
+
 ## Purpose
 
 jclasslib bytecode viewer is a tool that visualizes all aspects of compiled Java class files and the contained bytecode. In addition, it contains a library that enables developers to read and write Java class files and bytecode.
