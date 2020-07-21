@@ -33,7 +33,8 @@ object BrowserBundle {
 enum class SupportedLocale(val localeCode: String, val displayName: String) {
     AUTO_DETECT("", getString("menu.language.auto.detect")),
     ENGLISH("en", "English"),
-    GERMAN("de", "Deutsch");
+    GERMAN("de", "Deutsch"),
+    SIMPLIFIED_CHINESE("zh_CN", "简体中文");
 
     companion object {
         fun findByLocaleCode(localeCode: String) : SupportedLocale =

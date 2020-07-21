@@ -49,10 +49,10 @@ abstract class LocalVariableAttributeDetailPane(services: BrowserServices) : Tab
 
 class LocalVariableTableAttributeDetailPane(services: BrowserServices) : LocalVariableAttributeDetailPane(services) {
     override val descriptorOrSignatureVerbose: String
-        get() = "Descriptor"
+        get() = getString("column.descriptor")
 }
 
 class LocalVariableTypeTableAttributeDetailPane(services: BrowserServices) : LocalVariableAttributeDetailPane(services) {
     override val descriptorOrSignatureVerbose: String
-        get() = "Signature"
+        get() = getString("column.signature")
 }
