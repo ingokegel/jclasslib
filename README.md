@@ -1,10 +1,5 @@
 # jclasslib bytecode viewer
 
-## Help wanted for localizations!
-
-I'm looking for localizers, especially to Chinese. If you're interested, please 
-[see this issue](https://github.com/ingokegel/jclasslib/issues/36).
-
 ## Download
 
 Installers can be downloaded from the [releases section](https://github.com/ingokegel/jclasslib/releases).
