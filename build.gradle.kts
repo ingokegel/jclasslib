@@ -7,7 +7,7 @@ plugins {
     idea
 }
 
-version = "5.5.2"
+version = "5.6"
 buildDir = file("build/gradle")
 
 val kotlinVersion: String by project
