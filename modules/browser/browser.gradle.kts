@@ -13,11 +13,11 @@ application {
 dependencies {
     api(project(":data"))
     compileOnly(":apple")
-    implementation("com.install4j:install4j-runtime:8.0.5")
-    implementation("org.jetbrains:annotations:13.0")
+    implementation("com.install4j:install4j-runtime:8.0.7")
+    implementation("org.jetbrains:annotations:19.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
     implementation("com.miglayout:miglayout-swing:5.2")
-    implementation("com.formdev:flatlaf:0.34")
+    implementation("com.formdev:flatlaf:0.38")
 }
 
 tasks {
