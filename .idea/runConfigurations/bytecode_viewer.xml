@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="bytecode viewer" type="JetRunConfigurationType" singleton="false">
     <module name="jclasslib.browser.main" />
-    <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false" />
+    <option name="VM_PARAMETERS" value="@modules/installer/resources/base.options -Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="PASS_PARENT_ENVS" value="true" />
     <option name="MAIN_CLASS_NAME" value="org.gjt.jclasslib.browser.BrowserApplication" />
-    <option name="WORKING_DIRECTORY" value="" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <RunnerSettings RunnerId="JProfiler" />
     <method v="2">
       <option name="Make" enabled="true" />

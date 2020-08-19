@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.7" transformSequenceNumber="8">
+<install4j version="8.0.8" transformSequenceNumber="8">
   <directoryPresets config="." />
   <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="http://www.ej-technologies.com" version="5.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="1.8">
     <languages skipLanguageSelection="true">
@@ -21,6 +21,7 @@
       <mountPoint id="1504655503" />
     </mountPoints>
     <entries>
+      <fileEntry mountPoint="683316172" file="./base.options" />
       <dirEntry mountPoint="2047307201" file="../../../build/gradle/externalLibs" subDirectory="externalLibs" />
       <fileEntry mountPoint="1504655503" file="../../../license" />
     </entries>
@@ -39,6 +40,9 @@
         <classPath>
           <scanDirectory location="lib" />
         </classPath>
+        <vmOptions>
+          <options version="9-" line="&quot;@${launcher:sys.launcherDirectory}${compiler:sys.mediaFileSeparator}base.options&quot; " />
+        </vmOptions>
       </java>
       <vmOptionsFile mode="none" />
       <iconImageFiles>
