@@ -10,7 +10,6 @@ package org.gjt.jclasslib.io
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.isDebug
-
 import java.io.*
 
 /**

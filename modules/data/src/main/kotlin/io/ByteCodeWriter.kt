@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.io
 
 import org.gjt.jclasslib.bytecode.Instruction
-
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 

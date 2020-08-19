@@ -135,7 +135,7 @@ private fun activateToolWindow(toolWindow: ToolWindow, content: Content, panel: 
 private fun getToolWindow(project: Project): ToolWindow {
     val toolWindowManager = ToolWindowManager.getInstance(project)
     return toolWindowManager.getToolWindow(TOOL_WINDOW_ID) ?:
-            toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.RIGHT, project).apply {
+            toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.RIGHT) { }.apply {
                 icon = ShowBytecodeAction.ICON
                 ContentManagerWatcher(this, contentManager)
             }

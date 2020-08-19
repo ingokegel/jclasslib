@@ -23,7 +23,7 @@ object MacEventHandler {
             val desktop = Desktop.getDesktop()
             val aboutHandlerClass = Class.forName("java.awt.desktop.AboutHandler")
             val proxy = Proxy.newProxyInstance(aboutHandlerClass.classLoader, arrayOf(aboutHandlerClass), Java9MacAboutHandler)
-            desktop::class.java.getMethod("setAboutHandler", aboutHandlerClass)?.invoke(desktop, proxy)
+            desktop::class.java.getMethod("setAboutHandler", aboutHandlerClass).invoke(desktop, proxy)
         }
     }
 }

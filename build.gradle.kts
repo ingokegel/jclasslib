@@ -29,7 +29,6 @@ subprojects {
 
     pluginManager.withPlugin("kotlin") {
         dependencies {
-            add("implementation", kotlin("stdlib", version = kotlinVersion))
             add("testImplementation", "org.testng:testng:6.8.8")
         }
 
@@ -44,8 +43,8 @@ subprojects {
 
         tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
-                languageVersion = "1.3"
-                apiVersion = "1.3"
+                languageVersion = "1.4"
+                apiVersion = "1.4"
                 jvmTarget = "1.8"
             }
         }

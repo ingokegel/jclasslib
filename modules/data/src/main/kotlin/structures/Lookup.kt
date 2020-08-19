@@ -15,7 +15,7 @@ package org.gjt.jclasslib.structures
  */
 abstract class Lookup<T>(val enumClass: Class<T>, val name: String) where T : Enum<T>, T : ClassFileEnum {
 
-    private val lookup = arrayOfNulls<Any?>(enumClass.enumConstants.maxBy { it.tag }!!.tag + 1)
+    private val lookup = arrayOfNulls<Any?>(enumClass.enumConstants.maxByOrNull { it.tag }!!.tag + 1)
 
     init {
         for (constant in enumClass.enumConstants) {
