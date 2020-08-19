@@ -1,4 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.GradleDokkaSourceSet
 
 plugins {
     kotlin("jvm")
@@ -24,19 +25,19 @@ tasks {
         into(externalLibsDir)
     }
 
-    val dokka by existing(DokkaTask::class) {
-        configuration {
+    dokkaHtml {
+        applyDokkaConfig {
             includes = listOf("packages.md")
         }
     }
 
-    val dokkaJavadoc by registering(DokkaTask::class) {
-        outputFormat = "javadoc"
+    dokkaJavadoc {
         outputDirectory = "$buildDir/javadoc"
+        applyDokkaConfig()
     }
 
     val doc by registering {
-        dependsOn(dokka, dokkaJavadoc)
+        dependsOn(dokkaHtml, dokkaJavadoc)
     }
 
     val javadocJar by registering(Jar::class) {
@@ -57,5 +58,14 @@ tasks {
 
     register("dist") {
         dependsOn(doc, copyDist)
+    }
+}
+
+fun DokkaTask.applyDokkaConfig(additionalConfig: GradleDokkaSourceSet.() -> Unit =  {}) {
+    dokkaSourceSets {
+        configureEach {
+            moduleDisplayName = "jclasslib data"
+            additionalConfig()
+        }
     }
 }
