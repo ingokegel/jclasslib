@@ -128,7 +128,7 @@ class ConstantUtf8InfoDetailPane(services: BrowserServices) : ConstantDetailPane
             try {
                 constant.verbose
             } catch (e: InvalidByteCodeException) {
-                "invalid constant pool entry"
+                getString("message.invalid.constant.pool.entry")
             }
         }
     }

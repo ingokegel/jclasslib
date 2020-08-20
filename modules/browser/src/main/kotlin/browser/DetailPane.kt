@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.HtmlDisplayTextArea
 import org.gjt.jclasslib.util.MultiLineLabel
@@ -78,7 +79,7 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
         return try {
             services.classFile.getConstantPoolEntryName(constantPoolIndex)
         } catch (ex: InvalidByteCodeException) {
-            "invalid constant pool reference"
+            getString("message.invalid.constant.pool.reference")
         }
     }
 

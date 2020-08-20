@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
+import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.constantPoolLink
@@ -72,7 +73,7 @@ abstract class NamedConstantPoolLinkColumn<in T : Any>(@Nls name: String, servic
         return try {
             services.classFile.getConstantPoolEntryName(constantPoolIndex)
         } catch (ex: InvalidByteCodeException) {
-            "invalid constant pool reference"
+            getString("message.invalid.constant.pool.reference")
         }
     }
 }
