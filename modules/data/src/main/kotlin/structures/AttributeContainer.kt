@@ -97,6 +97,7 @@ interface AttributeContainer {
         ModuleResolutionAttribute.ATTRIBUTE_NAME -> ModuleResolutionAttribute(classFile)
         NestHostAttribute.ATTRIBUTE_NAME -> NestHostAttribute(classFile)
         NestMembersAttribute.ATTRIBUTE_NAME -> NestMembersAttribute(classFile)
+        RecordAttribute.ATTRIBUTE_NAME -> RecordAttribute(classFile)
         else -> UnknownAttribute(attributeLength, classFile)
     }
 
