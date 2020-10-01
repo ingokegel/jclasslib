@@ -40,6 +40,7 @@ class AttributeDetailPane(services: BrowserServices) : MultiDetailPane<Attribute
         addCard(ModuleHashesAttribute::class.java, ModuleHashesAttributeDetailPane(services))
         addCard(NestHostAttribute::class.java, NestHostAttributeDetailPane(services))
         addCard(NestMembersAttribute::class.java, NestMembersAttributeDetailPane(services))
+        addCard(RecordAttribute::class.java, RecordAttributeDetailPane(services))
     }
 
     override fun createGenericInfoPane() = GenericAttributeDetailPane(services)
