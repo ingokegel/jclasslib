@@ -98,6 +98,7 @@ interface AttributeContainer {
         NestHostAttribute.ATTRIBUTE_NAME -> NestHostAttribute(classFile)
         NestMembersAttribute.ATTRIBUTE_NAME -> NestMembersAttribute(classFile)
         RecordAttribute.ATTRIBUTE_NAME -> RecordAttribute(classFile)
+        PermittedSubclassesAttribute.ATTRIBUTE_NAME -> PermittedSubclassesAttribute(classFile)
         else -> UnknownAttribute(attributeLength, classFile)
     }
 

@@ -14,31 +14,29 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes a Record attribute structure.
+ * Describes a PermittedSubclasses attribute structure.
  */
-class RecordAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
+class PermittedSubclassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
-     * List of class entries in the RecordAttribute structure
+     * List of classes in the PermittedSubclassesAttribute structure
      */
-    var entries: Array<RecordEntry> = emptyArraySingleton()
+    var entries: Array<Int> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
 
         val numberOfEntries = input.readUnsignedShort()
         entries = Array(numberOfEntries) {
-            RecordEntry(classFile, emptyArray<AttributeInfo>()).apply {
-                read(input)
-            }
+            input.readUnsignedShort()
         }
     }
 
     override fun writeData(output: DataOutput) {
         output.writeByte(entries.size)
-        entries.forEach { it.write(output) }
+        entries.forEach { output.writeByte(it) }
     }
 
-    override fun getAttributeLength(): Int = 2 + entries.sumBy { it.length }
+    override fun getAttributeLength(): Int = 2 + 2 * entries.size
 
     override val debugInfo: String
         get() = "with ${entries.size} entries"
@@ -47,7 +45,7 @@ class RecordAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         /**
          * Name of the attribute as in the corresponding constant pool entry.
          */
-        const val ATTRIBUTE_NAME = "Record"
+        const val ATTRIBUTE_NAME = "PermittedSubclasses"
 
     }
 }
