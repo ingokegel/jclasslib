@@ -12,7 +12,6 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.RecordAttribute
 import org.gjt.jclasslib.structures.attributes.RecordEntry
-import java.util.*
 
 class RecordAttributeDetailPane(services: BrowserServices) : TableDetailPane<RecordAttribute>(RecordAttribute::class.java, services) {
 
@@ -35,7 +34,7 @@ class RecordAttributeDetailPane(services: BrowserServices) : TableDetailPane<Rec
                 //The record entries can hold additional attributes
                 add(object : StringColumn<RecordEntry>(getString("tree.attributes"), 200) {
                     override fun createValue(row: RecordEntry)  = "${row.attributes.size}: " +
-                            row.attributes.joinToString { it -> "${it.name}" }
+                            row.attributes.joinToString { it.name }
                 })
             }
         }
