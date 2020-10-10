@@ -17,7 +17,7 @@ dependencies {
     implementation("org.jetbrains:annotations:19.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
     implementation("com.miglayout:miglayout-swing:5.2")
-    implementation("com.formdev:flatlaf:0.40")
+    implementation("com.formdev:flatlaf:0.43")
 }
 
 tasks {
