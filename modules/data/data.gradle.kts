@@ -1,5 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.GradleDokkaSourceSet
+import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
 
 plugins {
     kotlin("jvm")
@@ -27,12 +27,12 @@ tasks {
 
     dokkaHtml {
         applyDokkaConfig {
-            includes = listOf("packages.md")
+            includes.from("packages.md")
         }
     }
 
     dokkaJavadoc {
-        outputDirectory = "$buildDir/javadoc"
+        outputDirectory.set(buildDir.resolve("javadoc"))
         applyDokkaConfig()
     }
 
@@ -61,10 +61,10 @@ tasks {
     }
 }
 
-fun DokkaTask.applyDokkaConfig(additionalConfig: GradleDokkaSourceSet.() -> Unit =  {}) {
+fun DokkaTask.applyDokkaConfig(additionalConfig: GradleDokkaSourceSetBuilder.() -> Unit =  {}) {
     dokkaSourceSets {
         configureEach {
-            moduleDisplayName = "jclasslib data"
+            moduleName.set("jclasslib data")
             additionalConfig()
         }
     }
