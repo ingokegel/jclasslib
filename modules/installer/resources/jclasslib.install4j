@@ -13,7 +13,7 @@
       <variable name="macCertPath" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:macCertPath}" windowsEnabled="true" windowsPkcs12File="${compiler:winCertPath}" />
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk14/jdk-14.0.2+12" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk15/jdk-15+36" />
   </application>
   <files>
     <mountPoints>
