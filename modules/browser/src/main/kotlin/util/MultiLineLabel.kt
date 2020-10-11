@@ -7,6 +7,38 @@
 
 package org.gjt.jclasslib.util
 
-import com.install4j.runtime.util.DisplayTextArea
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
+import javax.swing.JTextArea
+import javax.swing.UIManager
 
-class MultiLineLabel : DisplayTextArea(), TextDisplay
+class MultiLineLabel : JTextArea(), TextDisplay {
+    init {
+        isEditable = false
+        border = null
+        foreground = UIManager.getColor("Label.foreground")
+        font = UIManager.getFont("Label.font")
+
+        addFocusListener(object : FocusAdapter() {
+            override fun focusGained(e: FocusEvent) {
+                selectAll()
+            }
+        })
+    }
+
+    var autoTooltip = false
+        set(autoTooltip) {
+            field = autoTooltip
+            if (autoTooltip) {
+                toolTipText = text
+            }
+        }
+
+    override fun setText(text: String) {
+        super.setText(text)
+        if (autoTooltip) {
+            toolTipText = text
+        }
+    }
+
+}

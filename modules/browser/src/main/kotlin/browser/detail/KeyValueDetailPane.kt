@@ -13,10 +13,10 @@ import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.util.*
 import org.jetbrains.annotations.Nls
-import java.awt.Cursor
 import java.awt.Point
-import java.awt.event.MouseListener
+import java.awt.event.ActionEvent
 import java.util.*
+import javax.swing.AbstractAction
 import javax.swing.JComponent
 import javax.swing.JScrollPane
 import javax.swing.JTree
@@ -30,20 +30,20 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         border = null
     }
 
-    private val labelToMouseListener = HashMap<ExtendedJLabel, MouseListener>()
-
     public override val wrapper: JComponent
         get() = scrollPane
 
     private fun addKeyValue(keyValue: KeyValue<T, *>) {
         add(keyValue.keyLabel as JComponent)
         val valueLabel = keyValue.valueLabel
-        val commentLabel = keyValue.commentLabel
-        add(valueLabel, if (commentLabel == null) "growx, spanx 2" else "")
-        if (commentLabel != null) {
-            add(commentLabel, "growx")
-            if (commentLabel is ExtendedJLabel) {
-                commentLabel.autoTooltip = true
+        val hyperlinkButton = keyValue.hyperlinkButton
+        if (hyperlinkButton != null) {
+            add(hyperlinkButton, if (valueLabel.isEnabled) "" else "spanx")
+        }
+        if (valueLabel.isEnabled) {
+            add(valueLabel, "spanx")
+            if (hyperlinkButton != null && valueLabel is MultiLineLabel) {
+                valueLabel.autoTooltip = true
             }
         }
     }
@@ -75,46 +75,45 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected val showHandlers = ArrayList<(element: T) -> Unit>()
     protected var element: T? = null
 
-    protected fun addConstantPoolLink(@Nls key: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
-        val keyValue = DefaultKeyValue<T>(key, linkLabel(), highlightLabel())
+    protected fun addConstantPoolLink(@Nls key: String, indexResolver: (element: T) -> Int): HyperlinkKeyValue<T> {
+        val keyValue = HyperlinkKeyValue<T>(key, multiLineLabel(), HyperlinkButton())
         addKeyValue(keyValue)
         showHandlers.add { element ->
             val constantPoolIndex = indexResolver(element)
-            keyValue.valueLabel.apply {
-                text = CPINFO_LINK_TEXT + constantPoolIndex
-                setupMouseListener(ConstantPoolHyperlinkListener(services, constantPoolIndex))
-                cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+            keyValue.hyperlinkButton?.action = object : AbstractAction() {
+                init {
+                    putValue(NAME, CPINFO_LINK_TEXT + constantPoolIndex)
+                }
+
+                override fun actionPerformed(e: ActionEvent?) {
+                    constantPoolLink(services, constantPoolIndex)
+                }
             }
-            keyValue.commentLabel?.applyComment(constantPoolIndex)
+            keyValue.valueLabel.applyComment(constantPoolIndex)
         }
         return keyValue
     }
 
-    protected fun addAttributeLink(@Nls key: String, attributeClass: Class<BootstrapMethodsAttribute>, prefix: String, indexResolver: (element: T) -> Int): DefaultKeyValue<T> {
-        val keyValue = DefaultKeyValue<T>(key, linkLabel())
+    protected fun addAttributeLink(@Nls key: String, attributeClass: Class<BootstrapMethodsAttribute>, prefix: String, indexResolver: (element: T) -> Int): HyperlinkKeyValue<T> {
+        val keyValue = HyperlinkKeyValue<T>(key, multiLineLabel().apply { isEnabled = false }, HyperlinkButton())
         addKeyValue(keyValue)
         showHandlers.add { element ->
             val index = indexResolver(element)
-            keyValue.valueLabel.apply {
-                text = prefix + index
-                setupMouseListener(ClassAttributeHyperlinkListener(services, index, attributeClass))
-                cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+            keyValue.hyperlinkButton?.action = object : AbstractAction() {
+                init {
+                    putValue(NAME, prefix + index)
+                }
+
+                override fun actionPerformed(e: ActionEvent?) {
+                    classAttributeLink(services, index, attributeClass)
+                }
             }
         }
         return keyValue
     }
 
-    protected fun addDetail(@Nls key: String, textResolver: (element: T) -> String): DefaultKeyValue<T> {
-        val keyValue = DefaultKeyValue<T>(key, highlightLabel())
-        addKeyValue(keyValue)
-        showHandlers.add { element ->
-            keyValue.valueLabel.text = textResolver(element)
-        }
-        return keyValue
-    }
-
-    protected fun addMultiLineHtmlDetail(@Nls key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
-        val keyValue = HtmlKeyValue<T>(key, highlightTextArea())
+    protected fun addDetail(@Nls key: String, textResolver: (element: T) -> String): MultiLineKeyValue<T> {
+        val keyValue = MultiLineKeyValue<T>(key, multiLineLabel())
         addKeyValue(keyValue)
         showHandlers.add { element ->
             keyValue.valueLabel.text = textResolver(element)
@@ -123,8 +122,8 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         return keyValue
     }
 
-    protected fun addMultiLinePlainDetail(@Nls key: String, textResolver: (element: T) -> String): MultiLineKeyValue<T> {
-        val keyValue = MultiLineKeyValue<T>(key, multiLineLabel())
+    protected fun addMultiLineHtmlDetail(@Nls key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
+        val keyValue = HtmlKeyValue<T>(key, highlightTextArea())
         addKeyValue(keyValue)
         showHandlers.add { element ->
             keyValue.valueLabel.text = textResolver(element)
@@ -143,18 +142,12 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         }
     }
 
-    private fun ExtendedJLabel.setupMouseListener(mouseListener: MouseListener) {
-        labelToMouseListener[this]?.let { removeMouseListener(it) }
-        addMouseListener(mouseListener)
-        labelToMouseListener[this] = mouseListener
-    }
-
-    private fun ExtendedJLabel.applyComment(constantPoolIndex: Int) {
+    private fun MultiLineLabel.applyComment(constantPoolIndex: Int) {
         toolTipText = text
         text = "<" + getConstantPoolEntryName(constantPoolIndex) + ">"
     }
 
-    abstract class KeyValue<T : Any, out L>(@Nls key: String, val valueLabel: L, val commentLabel: L? = null) where L : JComponent, L : TextDisplay {
+    abstract class KeyValue<T : Any, out L>(@Nls key: String, val valueLabel: L, val hyperlinkButton: HyperlinkButton? = null) where L : JComponent, L : TextDisplay {
 
         val keyLabel = ExtendedJLabel(key)
         private var visibilityPredicate: ((T) -> Boolean)? = null
@@ -168,16 +161,16 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
                 val show = it(element)
                 keyLabel.isVisible = show
                 valueLabel.isVisible = show
-                commentLabel?.isVisible = show
+                hyperlinkButton?.isVisible = show
             }
         }
     }
 
-    class DefaultKeyValue<T : Any>(@Nls key: String, valueLabel: ExtendedJLabel, commentLabel: ExtendedJLabel? = null) : KeyValue<T, ExtendedJLabel>(key, valueLabel, commentLabel)
+    class HyperlinkKeyValue<T : Any>(@Nls key: String, valueLabel: MultiLineLabel, hyperlinkButton: HyperlinkButton) : KeyValue<T, MultiLineLabel>(key, valueLabel, hyperlinkButton)
 
     class MultiLineKeyValue<T : Any>(@Nls key: String, multiLineLabel: MultiLineLabel) : KeyValue<T, MultiLineLabel>(key, multiLineLabel, null)
 
-    class HtmlKeyValue<T : Any>(@Nls key: String, valueLabel: HtmlDisplayTextArea, commentLabel: HtmlDisplayTextArea? = null) : KeyValue<T, HtmlDisplayTextArea>(key, valueLabel, commentLabel) {
+    class HtmlKeyValue<T : Any>(@Nls key: String, valueLabel: HtmlDisplayTextArea) : KeyValue<T, HtmlDisplayTextArea>(key, valueLabel, null) {
         fun linkHandler(handler: (String) -> Unit) {
             valueLabel.addHyperlinkListener { e ->
                 if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {

@@ -13,7 +13,7 @@ import org.gjt.jclasslib.structures.attributes.SourceDebugExtensionAttribute
 
 class SourceDebugExtensionAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<SourceDebugExtensionAttribute>(SourceDebugExtensionAttribute::class.java, services) {
     override fun addLabels() {
-        addMultiLinePlainDetail(getString("key.text")) {
+        addDetail(getString("key.text")) {
             it.string
         }
     }

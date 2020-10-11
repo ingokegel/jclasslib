@@ -24,26 +24,12 @@ open class ExtendedJLabel(text: String) : JLabel(text), Scrollable, TextDisplay 
             cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
             repaint()
         }
-    var autoTooltip = false
-        set(autoTooltip) {
-            field = autoTooltip
-            if (autoTooltip) {
-                toolTipText = text
-            }
-        }
 
     override fun getPreferredScrollableViewportSize(): Dimension = size
     override fun getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = width / 10
     override fun getScrollableTracksViewportWidth(): Boolean = false
     override fun getScrollableTracksViewportHeight(): Boolean = false
     override fun getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = 10
-
-    override fun setText(text: String) {
-        super.setText(text)
-        if (autoTooltip) {
-            toolTipText = text
-        }
-    }
 
     override fun paint(g: Graphics) {
         super.paint(g)

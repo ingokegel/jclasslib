@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail.attributes.document
 
 import org.gjt.jclasslib.browser.BrowserHistory
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
+import org.gjt.jclasslib.browser.constantPoolLink
 import org.gjt.jclasslib.browser.detail.DetailPaneWithKeyValues
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument.*
 import org.gjt.jclasslib.structures.AttributeInfo
@@ -92,7 +92,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
             updateHistory(sourceOffset)
         }
         when (link) {
-            is ConstantPoolLink -> ConstantPoolHyperlinkListener.link(services, link.constantPoolIndex)
+            is ConstantPoolLink -> constantPoolLink(services, link.constantPoolIndex)
         }
     }
 

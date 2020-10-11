@@ -8,8 +8,8 @@
 package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
 import org.gjt.jclasslib.browser.DetailPane
+import org.gjt.jclasslib.browser.constantPoolLink
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.jetbrains.annotations.Nls
 import java.util.*
@@ -54,7 +54,7 @@ abstract class ConstantPoolLinkColumn<in T : Any>(@Nls name: String, protected v
     }
 
     final override fun link(row: T) {
-        ConstantPoolHyperlinkListener.link(services, getConstantPoolIndex(row))
+        constantPoolLink(services, getConstantPoolIndex(row))
     }
 
     protected abstract fun getConstantPoolIndex(row: T): Int

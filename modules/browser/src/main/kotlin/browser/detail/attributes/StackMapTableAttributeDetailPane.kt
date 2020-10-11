@@ -9,7 +9,7 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.ConstantPoolHyperlinkListener
+import org.gjt.jclasslib.browser.constantPoolLink
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.StackMapFrameEntry
 import org.gjt.jclasslib.structures.attributes.StackMapTableAttribute
@@ -34,7 +34,7 @@ class StackMapTableAttributeDetailPane(services: BrowserServices) : TableDetailP
                 override fun createValue(row: StackMapFrameEntry): String = row.verbose
                 override fun createTableCellRenderer() = createTableCellEditor()
                 override fun createTableCellEditor() = MultiLineHtmlCellHandler { description ->
-                    ConstantPoolHyperlinkListener.link(services, Integer.parseInt(description))
+                    constantPoolLink(services, Integer.parseInt(description))
                 }
                 override fun isEditable(row: StackMapFrameEntry): Boolean = true
             })
