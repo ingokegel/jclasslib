@@ -20,12 +20,16 @@ import javax.swing.AbstractAction
 import javax.swing.JComponent
 import javax.swing.JScrollPane
 import javax.swing.JTree
+import javax.swing.border.Border
 import javax.swing.event.HyperlinkEvent
 import javax.swing.tree.TreePath
 
 abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
 
-    private val scrollPane = JScrollPane(this).apply {
+    private val scrollPane = object : JScrollPane(this) {
+        override fun setBorder(border: Border?) {
+        }
+    }.apply {
         GUIHelper.setDefaultScrollBarUnits(this)
         border = null
     }
