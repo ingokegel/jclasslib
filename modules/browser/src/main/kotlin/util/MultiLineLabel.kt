@@ -18,6 +18,7 @@ class MultiLineLabel : JTextArea(), TextDisplay {
         border = null
         foreground = UIManager.getColor("Label.foreground")
         font = UIManager.getFont("Label.font")
+        isOpaque = false
 
         addFocusListener(object : FocusAdapter() {
             override fun focusGained(e: FocusEvent) {
