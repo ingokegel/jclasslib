@@ -22,7 +22,7 @@ class DefaultAction(@Nls name: String, @Nls shortDescription: String? = null, sm
         private set
 
     init {
-        val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName) else GUIHelper.ICON_EMPTY
+        val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName) else null
         putValue(SMALL_ICON, smallIcon)
         if (largeIconFileName != null) {
             putValue(LARGE_ICON_KEY, BrowserFrame.getIcon(largeIconFileName))
