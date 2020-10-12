@@ -21,8 +21,9 @@ tasks {
     patchPluginXml {
         changeNotes("""
             <ul>
-                <li>Improved method for finding class files, decompiled classes and Scala classes can now be shown</li>
-                <li>Support NestHost and NestMembers attributes new in Java 11+</li>
+                <li>Value labels and hyperlinks in detail panes can be focused and text in value labels can be selected</li>
+                <li>Support the Record class file attribute new in Java 14</li>
+                <li>Support the PermittedSubclasses class file attribute new in Java 15</li>
             </ul>
         """.trimIndent())
         version(project.version)
