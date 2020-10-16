@@ -7,7 +7,6 @@
 
 package util
 
-import com.formdev.flatlaf.FlatLaf
 import java.awt.Color
 import java.awt.PaintContext
 import java.awt.Rectangle
@@ -21,12 +20,8 @@ import javax.swing.UIManager
 class LightOrDarkColor(lightColor: Color, private val darkColor: Color) : Color(lightColor.rgb) {
 
     private fun isDark() : Boolean {
-        val lookAndFeel = UIManager.getLookAndFeel()
-        return if (lookAndFeel is FlatLaf) {
-            lookAndFeel.isDark
-        } else {
-            false
-        }
+        val id = UIManager.getLookAndFeel().id
+        return id.contains("dark", ignoreCase = true) || id.contains("darcula", ignoreCase = true)
     }
 
     override fun getRed(): Int {
