@@ -7,7 +7,7 @@ plugins {
 configurePublishing()
 
 application {
-    mainClassName = "org.gjt.jclasslib.browser.BrowserApplication"
+    mainClass.set("org.gjt.jclasslib.browser.BrowserApplication")
 }
 
 dependencies {
@@ -24,7 +24,7 @@ tasks {
     val jar by existing(Jar::class) {
         archiveFileName.set("jclasslib-browser.jar")
         manifest {
-            attributes("Main-Class" to application.mainClassName)
+            attributes("Main-Class" to application.mainClass.get())
         }
     }
 
