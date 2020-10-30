@@ -28,24 +28,33 @@ subprojects {
     }
 
     pluginManager.withPlugin("kotlin") {
-        dependencies {
-            add("testImplementation", "org.testng:testng:6.8.8")
+        configure<JavaPluginExtension> {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(8))
+            }
         }
 
-        tasks.withType<JavaCompile>().configureEach {
-            sourceCompatibility = "1.8"
-            targetCompatibility = "1.8"
+        dependencies {
+            add("testImplementation", "org.testng:testng:6.8.8")
         }
 
         tasks.withType<Test>().configureEach {
             useTestNG()
         }
 
+        val javaHome = the<JavaToolchainService>()
+                .launcherFor(the<JavaPluginExtension>().toolchain)
+                .get()
+                .metadata
+                .installationPath
+                .toString()
+
         tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
                 languageVersion = "1.4"
                 apiVersion = "1.4"
                 jvmTarget = "1.8"
+                jdkHome = javaHome
             }
         }
     }
