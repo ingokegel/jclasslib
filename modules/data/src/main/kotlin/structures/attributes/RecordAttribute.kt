@@ -27,7 +27,7 @@ class RecordAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
         val numberOfEntries = input.readUnsignedShort()
         entries = Array(numberOfEntries) {
-            RecordEntry(classFile, emptyArray<AttributeInfo>()).apply {
+            RecordEntry(classFile, emptyArray()).apply {
                 read(input)
             }
         }

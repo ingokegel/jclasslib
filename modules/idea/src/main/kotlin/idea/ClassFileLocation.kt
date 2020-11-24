@@ -8,7 +8,7 @@
 package org.gjt.jclasslib.idea
 
 import com.intellij.byteCodeViewer.ByteCodeViewerManager
-import com.intellij.ide.plugins.PluginManager
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.ide.util.JavaAnonymousClassesHelper
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.extensions.PluginId
@@ -98,7 +98,7 @@ private tailrec fun getFileClass(c: PsiClass): PsiClass =
     }
 
 private fun getContainingClass(psiElement: PsiElement): PsiClass? {
-    val byteCodeViewerPlugin = PluginManager.getPlugin(PluginId.getId("ByteCodeViewer"))
+    val byteCodeViewerPlugin = PluginManagerCore.getPlugin(PluginId.getId("ByteCodeViewer"))
     return if (byteCodeViewerPlugin != null && byteCodeViewerPlugin.isEnabled) {
         ByteCodeViewerManager.getContainingClass(psiElement)
     } else {

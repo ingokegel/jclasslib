@@ -10,14 +10,13 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.structures.AttributeContainer
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.emptyArraySingleton
 import java.io.DataInput
 import java.io.DataOutput
 
 /**
  * Describes an entry in a Record attribute structure.
  */
-class RecordEntry(protected val classFile: ClassFile, override var attributes: Array<AttributeInfo>) : SubStructure(), AttributeContainer {
+class RecordEntry(private val classFile: ClassFile, override var attributes: Array<AttributeInfo>) : SubStructure(), AttributeContainer {
 
     /**
      * The name index.

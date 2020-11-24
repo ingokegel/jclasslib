@@ -10,9 +10,9 @@ package org.gjt.jclasslib.idea
 import com.intellij.execution.process.ConsoleHighlighter
 import com.intellij.icons.AllIcons
 import com.intellij.ide.ui.UISettings
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.JBTabsPaneImpl
 import org.gjt.jclasslib.util.*
@@ -26,9 +26,9 @@ fun initUiFacades() {
     tabPaneFactory = ::JBTabsFacade
 
     treeIcons = mapOf(
-            TreeIcon.CLOSED to AllIcons.Nodes.Folder,
-            TreeIcon.OPEN to AllIcons.Nodes.Folder,
-            TreeIcon.LEAF to AllIcons.FileTypes.Any_type
+        TreeIcon.CLOSED to AllIcons.Nodes.Folder,
+        TreeIcon.OPEN to AllIcons.Nodes.Folder,
+        TreeIcon.LEAF to AllIcons.FileTypes.Any_type
     )
 
     colors = mutableMapOf<ColorKey, Color>().apply {
@@ -52,7 +52,9 @@ private fun MutableMap<ColorKey, Color>.addColorMapping(colorKey: ColorKey, attr
     }
 }
 
-private class JBSplitterFacade(splitDirection: SplitDirection, first: JComponent, second: JComponent) : JBSplitter(splitDirection == SplitDirection.VERTICAL), SplitterFacade {
+private class JBSplitterFacade(splitDirection: SplitDirection, first: JComponent, second: JComponent) : JBSplitter(
+    splitDirection == SplitDirection.VERTICAL
+), SplitterFacade {
     init {
         firstComponent = first
         secondComponent = second
@@ -63,7 +65,7 @@ private class JBSplitterFacade(splitDirection: SplitDirection, first: JComponent
         get() = this
 }
 
-private class JBTabsFacade : JBTabsPaneImpl(null, SwingConstants.TOP, Disposable { }), TabbedPaneFacade {
+private class JBTabsFacade : JBTabsPaneImpl(null, SwingConstants.TOP, Disposer.newDisposable()), TabbedPaneFacade {
     override fun addTabAtEnd(name: String, component: JComponent) {
         insertTab(name, null, component, null, -1)
     }

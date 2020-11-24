@@ -6,7 +6,7 @@
     <description>jclasslib is a bytecode viewer for Java class files</description>
     <version>5.0</version>
     <vendor url="https://github.com/ingokegel/jclasslib">Ingo Kegel</vendor>
-    <idea-version since-build="192"/>
+    <idea-version since-build="201.6668.113"/>
 
     <depends>com.intellij.java</depends>
     <depends optional="true" config-file="withByteCodeViewer.xml">ByteCodeViewer</depends>
@@ -17,4 +17,9 @@
             <add-to-group group-id="QuickActions" anchor="after" relative-to-action="QuickJavaDoc"/>
         </action>
     </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="jclasslib" anchor="right" canCloseContents="true" icon="/icons/jclasslib.png"
+                    factoryClass="org.gjt.jclasslib.idea.ByteCodeToolWindowFactory"/>
+    </extensions>
 </idea-plugin>

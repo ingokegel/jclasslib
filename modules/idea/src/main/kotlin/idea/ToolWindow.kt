@@ -25,7 +25,7 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindow
-import com.intellij.openapi.wm.ToolWindowAnchor
+import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiAnonymousClass
@@ -133,12 +133,13 @@ private fun activateToolWindow(toolWindow: ToolWindow, content: Content, panel: 
 }
 
 private fun getToolWindow(project: Project): ToolWindow {
-    val toolWindowManager = ToolWindowManager.getInstance(project)
-    return toolWindowManager.getToolWindow(TOOL_WINDOW_ID) ?:
-            toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.RIGHT) { }.apply {
-                icon = ShowBytecodeAction.ICON
-                ContentManagerWatcher(this, contentManager)
-            }
+    return requireNotNull(ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID))
+}
+
+class ByteCodeToolWindowFactory : ToolWindowFactory {
+    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        ContentManagerWatcher.watchContentManager(toolWindow, toolWindow.contentManager)
+    }
 }
 
 class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClassFile: LocatedClassFile, val project: Project) : SimpleToolWindowPanel(true, true), BrowserServices {
