@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "1.4.10" apply false
+    id("org.jetbrains.dokka") version "1.4.20" apply false
     idea
 }
 
