@@ -13,7 +13,7 @@ application {
 dependencies {
     api(project(":data"))
     compileOnly(":apple")
-    implementation("com.install4j:install4j-runtime:8.0.8")
+    implementation("com.install4j:install4j-runtime:9.0")
     implementation("org.jetbrains:annotations:19.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx.dom:0.0.10")
     implementation("com.miglayout:miglayout-swing:5.2")
