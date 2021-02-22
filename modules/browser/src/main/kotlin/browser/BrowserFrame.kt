@@ -28,7 +28,6 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.GUIHelper.applyPath
-import org.gjt.jclasslib.util.darkMode
 import org.w3c.dom.Document
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
@@ -183,13 +182,6 @@ class BrowserFrame : JFrame() {
 
     val showEjtAction = DefaultAction(getString("action.ej.technologies.web.site"), getString("action.ej.technologies.web.site.description"), "web_small.png") {
         GUIHelper.showURL("http://www.ej-technologies.com")
-    }
-
-    val darkModeAction = DefaultAction(getString("action.dark.mode"), getString("action.dark.mode.description")) {
-        darkMode = it.getValue(Action.SELECTED_KEY) as Boolean
-        darkModeChanged()
-    }.apply {
-        putValue(Action.SELECTED_KEY, darkMode)
     }
 
     val aboutAction = DefaultAction(getString("action.about"), getString("action.about.description")) {
@@ -358,7 +350,32 @@ class BrowserFrame : JFrame() {
                 add(showHomepageAction)
                 add(showEjtAction)
                 addSeparator()
-                add(JCheckBoxMenuItem(darkModeAction))
+                add(JMenu(getString("menu.dark.mode")).apply {
+                    val buttonGroup = ButtonGroup()
+                    val actions = mutableMapOf<DarkModeOption, DefaultAction>()
+                    for (option in DarkModeOption.values()) {
+                        add(JRadioButtonMenuItem(DefaultAction(option.displayName) {
+                            darkModeOption = option
+                            darkModeChanged()
+                        }.apply {
+                            actions[option] = this
+                            if (option == darkModeOption) {
+                                putValue(Action.SELECTED_KEY, true)
+                            }
+                        }).also { buttonGroup.add(it) })
+                    }
+                    popupMenu.addPopupMenuListener(object : PopupMenuListener {
+                        override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+                            actions[darkModeOption]?.putValue(Action.SELECTED_KEY, true)
+                        }
+
+                        override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
+                        }
+
+                        override fun popupMenuCanceled(e: PopupMenuEvent) {
+                        }
+                    })
+                })
                 add(JMenu(getString("menu.switch.language")).apply {
                     icon = getIcon("language.png")
                     val selectedSupportedLocale = SupportedLocale.findByLocaleCode(getPreferencesNode().get(SETTINGS_LOCALE, ""))

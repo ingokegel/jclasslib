@@ -14,9 +14,11 @@ import com.formdev.flatlaf.FlatDarkLaf
 import com.formdev.flatlaf.FlatLightLaf
 import com.install4j.api.Util
 import com.install4j.api.launcher.StartupNotification
+import com.install4j.runtime.installer.platform.macos.MacosUiHelper
 import org.gjt.jclasslib.util.darkMode
 import java.awt.EventQueue
 import java.awt.Frame
+import java.awt.Toolkit
 import java.awt.Window
 import java.io.BufferedOutputStream
 import java.io.File
@@ -30,8 +32,10 @@ import kotlin.system.exitProcess
 const val LAF_DEFAULT_SYSTEM_PROPERTY = "jclasslib.laf.default"
 const val WORKSPACE_FILE_SUFFIX = "jcw"
 const val WEBSITE_URL = "http://www.ej-technologies.com/products/jclasslib/overview.html"
-const val SETTINGS_DARK_MODE = "darkMode"
+const val SETTINGS_DARK_MODE_OPTION = "darkModeOption"
 const val SETTINGS_LOCALE = "locale"
+
+var darkModeOption = DarkModeOption.AUTO
 
 fun main(args: Array<String>) {
 
@@ -48,7 +52,15 @@ fun main(args: Array<String>) {
     }
 
     if (!java.lang.Boolean.getBoolean(LAF_DEFAULT_SYSTEM_PROPERTY)) {
-        darkMode = getPreferencesNode().getBoolean(SETTINGS_DARK_MODE, false)
+        darkModeOption = DarkModeOption.valueOf(getPreferencesNode().get(SETTINGS_DARK_MODE_OPTION, DarkModeOption.AUTO.name))
+        darkMode = darkModeOption.isDarkMode()
+        if (Util.isMacOS()) {
+            MacosUiHelper.addThemeChangedListener { syncDarkMode() }
+        } else if (Util.isAtLeastWindows10()) {
+            // Only for JetBrains JRE, since 11.0.8+10-b1098.1
+            //https://youtrack.jetbrains.com/issue/JBR-2667
+            Toolkit.getDefaultToolkit().addPropertyChangeListener("win.lightTheme.on") { syncDarkMode() }
+        }
         updateFlatLaf()
     }
 
@@ -89,10 +101,21 @@ fun updateFlatLaf() {
 }
 
 fun darkModeChanged() {
-    getPreferencesNode().putBoolean(SETTINGS_DARK_MODE, darkMode)
+    darkMode = darkModeOption.isDarkMode()
+    if (Util.isMacOS()) {
+        MacosUiHelper.setDarkMode(darkMode)
+    }
+    getPreferencesNode().put(SETTINGS_DARK_MODE_OPTION, darkModeOption.name)
     updateFlatLaf()
     for (window in Window.getWindows()) {
         SwingUtilities.updateComponentTreeUI(window)
+
+        // With the Jetbrains JRE, the window border is not repainted completely and
+        // resizing forces a repaint
+        window.setSize(window.width + 1, window.height + 1)
+        EventQueue.invokeLater {
+            window.setSize(window.width - 1, window.height - 1)
+        }
     }
 }
 
@@ -114,6 +137,12 @@ fun getActiveBrowserFrame(): BrowserFrame? = getBrowserFrames().firstOrNull { it
 
 fun exit() {
     exitProcess(0)
+}
+
+private fun syncDarkMode() {
+    EventQueue.invokeLater {
+        darkModeChanged()
+    }
 }
 
 private fun registerStartupListener() {
