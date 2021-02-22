@@ -142,23 +142,23 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
     private val fileChooser: FileChooser by lazy {
         FileChooser.create()
             .parent(this)
-            .title("Choose JAR files")
+            .title(getString("chooser.jar.files.title"))
             .applyPath(frame.classesChooserPath)
-            .addFileFilter(MultiFileFilter("jar", "jar files and directories"))
+            .addFileFilter(MultiFileFilter("jar", getString("chooser.jar.files.and.directories.filter.name")))
             .multiple(true)
     }
 
     private val directoryChooser: DirectoryChooser by lazy {
         DirectoryChooser.create()
             .parent(this)
-            .title("Choose a directory")
+            .title(getString("chooser.directory.title"))
             .applyPath(frame.classesChooserPath)
     }
 
     private val jreFileChooser: DirectoryChooser by lazy {
         DirectoryChooser.create()
             .parent(this)
-            .title("Choose the JRE home directory")
+            .title(getString("chooser.jre.home.title"))
             .applyPath(frame.classesChooserPath)
     }
 
