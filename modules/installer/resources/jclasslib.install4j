@@ -547,7 +547,7 @@ return console.askYesNo(message, true);
   </installerGui>
   <mediaSets>
     <windows name="Windows 64-bit" id="2047307151" mediaFileName="${compiler:sys.shortName}_win64_${compiler:sys.version}" installDir="jclasslib" />
-    <macosArchive name="Mac OS X Single Bundle Archive" id="2047307321" launcherId="404488187">
+    <macosArchive name="Mac OS X Single Bundle Archive" id="2047307321" architecture="universal" launcherId="404488187">
       <topLevelFiles>
         <file name=".DS_Store" file="./DS_Store" />
         <file name=".background/dmg_background_archive.png" file="./dmg_background_archive.png" />
