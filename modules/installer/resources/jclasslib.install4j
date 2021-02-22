@@ -13,7 +13,7 @@
       <variable name="macCertPath" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:macCertPath}" windowsEnabled="true" windowsPkcs12File="${compiler:winCertPath}" />
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="15/jdk-15+36" />
+    <jreBundles jdkProviderId="JBR" release="11/11.0.9.1-b1145.77" />
   </application>
   <files preserveSymlinks="false">
     <mountPoints>
@@ -547,15 +547,6 @@ return console.askYesNo(message, true);
   </installerGui>
   <mediaSets>
     <windows name="Windows 64-bit" id="2047307151" mediaFileName="${compiler:sys.shortName}_win64_${compiler:sys.version}" installDir="jclasslib" />
-    <windows name="Windows 32-bit" id="1636329964" mediaFileName="${compiler:sys.shortName}_win32_${compiler:sys.version}" installDir="jclasslib" overridePrincipalLanguage="true" jreBitType="32">
-      <jreBundle jreBundleSource="none" />
-    </windows>
-    <linuxRPM name="Linux RPM" id="2047307087" installDir="/opt/jclasslib" overridePrincipalLanguage="true">
-      <jreBundle jreBundleSource="none" />
-    </linuxRPM>
-    <unixArchive name="Generic Unix" id="850942491" installDir="jclasslib" overridePrincipalLanguage="true">
-      <jreBundle jreBundleSource="none" />
-    </unixArchive>
     <macosArchive name="Mac OS X Single Bundle Archive" id="2047307321" launcherId="404488187">
       <topLevelFiles>
         <file name=".DS_Store" file="./DS_Store" />
@@ -563,9 +554,10 @@ return console.askYesNo(message, true);
         <symlink name="&quot; &quot;" target="/Applications" />
       </topLevelFiles>
     </macosArchive>
-    <linuxDeb name="Linux Deb Archive" id="2047307322" bzip="true">
+    <unixArchive name="Linux x64" id="2047307325" mediaFileName="${compiler:sys.shortName}_linux_x64_${compiler:sys.version}" installDir="jclasslib" overridePrincipalLanguage="true" />
+    <unixArchive name="Generic Unix" id="850942491" installDir="jclasslib" overridePrincipalLanguage="true">
       <jreBundle jreBundleSource="none" />
-    </linuxDeb>
+    </unixArchive>
   </mediaSets>
   <buildIds buildAll="false" />
 </install4j>
