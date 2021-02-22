@@ -6,12 +6,14 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.*
+import org.gradle.plugins.signing.SigningExtension
 import java.io.File
 
 val Project.externalLibsDir: File get() = file("${rootProject.buildDir}/externalLibs")
 
 fun Project.configurePublishing() {
     pluginManager.apply("com.jfrog.bintray")
+    pluginManager.apply("signing")
     val project = this
     val bintrayUser: String? by extra
     val bintrayApiKey: String? by extra
@@ -41,6 +43,15 @@ fun Project.configurePublishing() {
                     artifactId = "jclasslib-${project.name}"
                     artifact(sourcesJar.get())
                     pom {
+                        name.set("jclasslib bytecode viewer")
+                        description.set("jclasslib bytecode viewer is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.")
+                        url.set("https://github.com/ingokegel/jclasslib")
+
+                        scm {
+                            connection.set("https://github.com/ingokegel/jclasslib")
+                            developerConnection.set("https://github.com/ingokegel/jclasslib")
+                            url.set("https://github.com/ingokegel/jclasslib")
+                        }
                         licenses {
                             license {
                                 name.set("GPL Version 2.0")
@@ -57,6 +68,9 @@ fun Project.configurePublishing() {
                         }
                     }
                 }
+            }
+            configure<SigningExtension> {
+                sign(publications["Module"])
             }
         }
     }
