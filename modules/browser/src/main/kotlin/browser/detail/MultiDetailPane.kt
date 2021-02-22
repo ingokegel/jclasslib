@@ -6,8 +6,8 @@
 */
 package org.gjt.jclasslib.browser.detail
 
-import browser.BrowserBundle.getString
 import net.miginfocom.swing.MigLayout
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.Structure

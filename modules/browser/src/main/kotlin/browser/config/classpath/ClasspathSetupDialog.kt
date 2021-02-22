@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import browser.BrowserBundle.getString
 import com.install4j.runtime.filechooser.DirectoryChooser
 import com.install4j.runtime.filechooser.FileChooser
 import com.install4j.runtime.filechooser.MultiFileFilter
 import net.miginfocom.swing.MigLayout
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper

@@ -7,8 +7,6 @@
 
 package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
-import browser.SupportedLocale
 import com.install4j.api.Util
 import com.install4j.runtime.alert.AlertType
 import com.install4j.runtime.filechooser.DirectoryChooser
@@ -19,6 +17,7 @@ import kotlinx.dom.build.addElement
 import kotlinx.dom.createDocument
 import kotlinx.dom.parseXml
 import kotlinx.dom.writeXmlString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser

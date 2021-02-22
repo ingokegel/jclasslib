@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.EventQueue
 import java.awt.event.ActionListener

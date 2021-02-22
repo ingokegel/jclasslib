@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.NodeType
 import org.gjt.jclasslib.browser.config.BrowserPath

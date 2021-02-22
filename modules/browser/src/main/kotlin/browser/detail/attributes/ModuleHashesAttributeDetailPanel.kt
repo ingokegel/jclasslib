@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.browser.detail.TableDetailPane

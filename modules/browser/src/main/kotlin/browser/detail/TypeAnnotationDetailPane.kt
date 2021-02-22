@@ -6,7 +6,7 @@
 */
 package org.gjt.jclasslib.browser.detail
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.browser.NodeType

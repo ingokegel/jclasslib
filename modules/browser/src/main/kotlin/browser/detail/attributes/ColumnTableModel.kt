@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import java.util.*
 import javax.swing.table.AbstractTableModel
 

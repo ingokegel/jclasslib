@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
-import browser.BrowserBundle.getString
 import net.miginfocom.swing.MigLayout
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper

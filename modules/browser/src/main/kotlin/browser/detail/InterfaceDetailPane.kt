@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 
 class InterfaceDetailPane(services: BrowserServices) : KeyValueDetailPane<Int>(Int::class.javaObjectType, services) {

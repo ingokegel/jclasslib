@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
 import com.install4j.runtime.alert.AlertType
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.GUIHelper

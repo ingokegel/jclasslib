@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.*
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.*

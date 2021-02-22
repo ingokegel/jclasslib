@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
 import com.install4j.api.UiUtil
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 
 enum class DarkModeOption(val displayName: String) {
     AUTO(getString("menu.dark.mode.auto")) {

@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.OffsetLink

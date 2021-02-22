@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.util
 
-import browser.BrowserBundle.getString
 import com.install4j.api.Util
 import com.install4j.runtime.alert.Alert
 import com.install4j.runtime.alert.AlertType
 import com.install4j.runtime.filechooser.AbstractFileSystemChooser
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.jetbrains.annotations.Nls
 import java.awt.Component
 import java.awt.Window

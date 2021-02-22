@@ -5,9 +5,9 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package browser
+package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.jetbrains.annotations.PropertyKey
 import java.text.MessageFormat
 import java.util.*

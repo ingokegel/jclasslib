@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.util
 
-import browser.BrowserBundle.getString
 import com.install4j.runtime.alert.AlertType
 import net.miginfocom.swing.MigLayout
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.jetbrains.annotations.Nls
 import java.awt.Window
 import java.awt.event.ComponentAdapter

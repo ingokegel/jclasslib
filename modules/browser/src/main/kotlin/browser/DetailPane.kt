@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.HtmlDisplayTextArea
 import org.gjt.jclasslib.util.MultiLineLabel

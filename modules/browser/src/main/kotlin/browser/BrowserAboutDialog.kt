@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.browser
 
-import browser.BrowserBundle.getString
 import com.install4j.api.launcher.Variables
 import net.miginfocom.swing.MigLayout
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.Font
