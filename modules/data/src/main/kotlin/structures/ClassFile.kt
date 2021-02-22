@@ -93,6 +93,8 @@ class ClassFile : Structure(), AttributeContainer {
             57 -> "13"
             58 -> "14"
             59 -> "15"
+            60 -> "16"
+            61 -> "17"
             // Note: also update checkMajorVersion
             else -> "unknown value $majorVersion"
         }
@@ -460,8 +462,8 @@ class ClassFile : Structure(), AttributeContainer {
 
     private fun checkMajorVersion(majorVersion: Int) {
         // Note: also update majorVersionVerbose
-        if (majorVersion < 45 || majorVersion > 59) {
-            warning("major version should be between 45 and 59 for JDK <= 15, was $majorVersion")
+        if (majorVersion < 45 || majorVersion > 61) {
+            warning("major version should be between 45 and 59 for JDK <= 17, was $majorVersion")
         }
     }
 
