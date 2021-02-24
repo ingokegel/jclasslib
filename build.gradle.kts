@@ -16,15 +16,19 @@ subprojects {
 
     buildDir = File(rootProject.buildDir, path.substring(1).replace(':', '/'))
 
-    group = "org.gjt.jclasslib"
+    group = "org.jclasslib"
     version = rootProject.version
 
     repositories {
         flatDir {
             dirs = setOf(file("lib"), file("$rootDir/lib-compile"))
         }
-        jcenter()
-        maven("https://maven.ej-technologies.com/repository")
+        maven("https://maven.ej-technologies.com/repository") {
+            content {
+                includeGroup("com.install4j")
+            }
+        }
+        mavenCentral()
     }
 
     pluginManager.withPlugin("kotlin") {

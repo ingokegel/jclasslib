@@ -1,10 +1,8 @@
-import com.jfrog.bintray.gradle.BintrayExtension
-import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.jvm.tasks.Jar
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.gradle.plugins.signing.SigningExtension
 import java.io.File
@@ -12,36 +10,46 @@ import java.io.File
 val Project.externalLibsDir: File get() = file("${rootProject.buildDir}/externalLibs")
 
 fun Project.configurePublishing() {
-    pluginManager.apply("com.jfrog.bintray")
     pluginManager.apply("signing")
     val project = this
-    val bintrayUser: String? by extra
-    val bintrayApiKey: String? by extra
+    val ossrhUser: String? by extra
+    val ossrhPassword: String? by extra
 
     tasks {
-        "bintrayUpload"(BintrayUploadTask::class) {
-            doFirst {
-                if (bintrayUser == null || bintrayApiKey == null) {
-                    throw RuntimeException("Specify bintrayUser and bintrayApiKey in gradle.properties")
-                }
-            }
-        }
-
         val sourcesJar by registering(Jar::class) {
             archiveClassifier.set("sources")
             from(project.the<JavaPluginConvention>().sourceSets["main"].allSource)
+        }
+
+        val javadocJar by registering(Jar::class) {
+            archiveClassifier.set("javadoc")
         }
 
         "publishToMavenLocal" {
             dependsOn("publishModulePublicationToMavenLocal", "jar")
         }
 
+        create("publishToCentral") {
+            dependsOn("publishModulePublicationToOssrhRepository")
+        }
+
         configure<PublishingExtension> {
+            repositories {
+                maven("https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    name = "ossrh"
+                    credentials {
+                        username = ossrhUser
+                        password = ossrhPassword
+                    }
+                }
+            }
+
             publications {
                 create<MavenPublication>("Module") {
                     from(project.components["java"])
                     artifactId = "jclasslib-${project.name}"
                     artifact(sourcesJar.get())
+                    artifact(javadocJar.get())
                     pom {
                         name.set("jclasslib bytecode viewer")
                         description.set("jclasslib bytecode viewer is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.")
@@ -73,21 +81,5 @@ fun Project.configurePublishing() {
                 sign(publications["Module"])
             }
         }
-    }
-
-    configure<BintrayExtension> {
-        if (bintrayUser != null && bintrayApiKey != null) {
-            user = bintrayUser
-            key = bintrayApiKey
-            pkg(closureOf<BintrayExtension.PackageConfig> {
-                repo = "maven"
-                name = "jclasslib"
-                setLicenses("GPL-2.0")
-            })
-            dryRun = project.hasProperty("dryRun")
-            publish = true
-            override = project.hasProperty("override")
-        }
-        setPublications("Module")
     }
 }

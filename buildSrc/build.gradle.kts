@@ -7,7 +7,7 @@ kotlinDslPluginOptions {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 configurations {
@@ -28,5 +28,4 @@ dependencies {
     // for local dokka in lib-compile
     //classpath ':dokka-fatjar'
     //classpath ':dokka-gradle-plugin'
-    implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4")
 }

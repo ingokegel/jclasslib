@@ -40,20 +40,9 @@ tasks {
         dependsOn(dokkaHtml, dokkaJavadoc)
     }
 
-    val javadocJar by registering(Jar::class) {
+    "javadocJar"(Jar::class) {
         dependsOn(dokkaJavadoc)
-        archiveClassifier.set("javadoc")
         from(dokkaJavadoc)
-    }
-
-    publishing {
-        publications {
-            named<MavenPublication>("Module") {
-                artifact(javadocJar.get()) {
-                    classifier = "javadoc"
-                }
-            }
-        }
     }
 
     register("dist") {

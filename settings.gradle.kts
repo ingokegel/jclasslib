@@ -4,9 +4,12 @@ pluginManagement {
 
     repositories {
         gradlePluginPortal()
-        maven("https://maven.ej-technologies.com/repository")
-        maven("https://jcenter.bintray.com/")
-        maven("https://dl.bintray.com/jetbrains/intellij-plugin-service")
+        maven("https://maven.ej-technologies.com/repository") {
+            content {
+                includeGroup("com.install4")
+            }
+        }
+        mavenCentral()
     }
 
     resolutionStrategy {
