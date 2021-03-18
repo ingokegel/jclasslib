@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "1.4.20" apply false
+    id("org.jetbrains.dokka") version "1.4.30" apply false
     idea
 }
 
@@ -26,6 +26,16 @@ subprojects {
         maven("https://maven.ej-technologies.com/repository") {
             content {
                 includeGroup("com.install4j")
+            }
+        }
+        maven("https://jitpack.io") {
+            content {
+                includeGroup("com.github.ingokegel")
+            }
+        }
+        maven("https://dl.bintray.com/kotlin/kotlinx") {
+            content {
+                includeGroup("org.jetbrains.kotlinx")
             }
         }
         mavenCentral()
