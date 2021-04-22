@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "1.4.30" apply false
+    id("org.jetbrains.dokka") version "1.4.32" apply false
     idea
 }
 
@@ -33,7 +33,7 @@ subprojects {
                 includeGroup("com.github.ingokegel")
             }
         }
-        maven("https://dl.bintray.com/kotlin/kotlinx") {
+        maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") {
             content {
                 includeGroup("org.jetbrains.kotlinx")
             }
