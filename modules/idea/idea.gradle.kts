@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij") version "0.5.0"
+    id("org.jetbrains.intellij") version "1.0"
 }
 
 val kotlinVersion: String by project
@@ -10,28 +10,27 @@ dependencies {
 }
 
 intellij {
-    version = "IC-2020.2.4"
-    pluginName = "jclasslib"
-    setPlugins("ByteCodeViewer", "java", "org.jetbrains.kotlin:202-$kotlinVersion-release-IJ8194.7")
-    sandboxDirectory = "${rootProject.buildDir}/../idea_sandbox"
-    updateSinceUntilBuild = false
+    version.set("IC-2020.2.4")
+    pluginName.set("jclasslib")
+    plugins.set(listOf("ByteCodeViewer", "java", "org.jetbrains.kotlin:202-$kotlinVersion-release-894-IJ8194.7"))
+    sandboxDir.set("${rootProject.buildDir}/../idea_sandbox")
+    updateSinceUntilBuild.set(false)
 }
 
 tasks {
     patchPluginXml {
-        changeNotes("""
+        changeNotes.set("""
             <ul>
                 <li>Value labels and hyperlinks in detail panes can be focused and text in value labels can be selected</li>
                 <li>Support the Record class file attribute new in Java 14</li>
                 <li>Support the PermittedSubclasses class file attribute new in Java 15</li>
             </ul>
         """.trimIndent())
-        version(project.version)
+        version.set(project.version.toString())
     }
 
     publishPlugin {
-        setUsername(project.findProperty("intellij.publish.username") ?: "")
-        setPassword(project.findProperty("intellij.publish.password") ?: "")
+        token.set(project.findProperty("intellij.publish.token")?.toString())
     }
 
     runIde {
