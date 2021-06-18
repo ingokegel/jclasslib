@@ -1,5 +1,5 @@
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.bundling.Jar
@@ -18,7 +18,7 @@ fun Project.configurePublishing() {
     tasks {
         val sourcesJar by registering(Jar::class) {
             archiveClassifier.set("sources")
-            from(project.the<JavaPluginConvention>().sourceSets["main"].allSource)
+            from(project.the<JavaPluginExtension>().sourceSets["main"].allSource)
         }
 
         val javadocJar by registering(Jar::class) {
