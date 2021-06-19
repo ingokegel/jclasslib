@@ -219,7 +219,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     }
 
     private fun BrowserTreeNode.addParameterAnnotationNode(parameterAnnotations: ParameterAnnotations, index: Int, parameterAnnotationsCount: Int) {
-        val name = getFormattedIndex(index, parameterAnnotationsCount) + "Parameter annotation"
+        val name = getFormattedIndex(index, parameterAnnotationsCount) + getString("tree.parameter.annotation")
         add(BrowserTreeNode(name, NodeType.NO_CONTENT, parameterAnnotations).apply {
             val annotations = parameterAnnotations.runtimeAnnotations
             annotations.forEachIndexed { i, annotation ->
@@ -229,7 +229,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     }
 
     private fun BrowserTreeNode.addSingleAnnotationNode(annotation: Annotation, index: Int, attributesCount: Int) {
-        val name = getFormattedIndex(index, attributesCount) + "Annotation"
+        val name = getFormattedIndex(index, attributesCount) + getString("tree.annotation")
         add(BrowserTreeNode(name, NodeType.ANNOTATION, annotation).apply {
             addElementValuePairEntry(annotation)
         })
