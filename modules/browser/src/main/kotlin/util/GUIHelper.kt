@@ -28,7 +28,7 @@ object GUIHelper {
     val YES_NO_OPTIONS by lazy { arrayOf(getString("button.yes"), getString("button.no")) }
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
 
-    fun isMacOs() = System.getProperty("os.name").toLowerCase().startsWith("mac")
+    fun isMacOs() = System.getProperty("os.name").lowercase().startsWith("mac")
 
     fun showOptionDialog(parent: Component, @Nls mainMessage: String, @Nls contentMessage: String?, @Nls options: Array<String>, alertType: AlertType): Int {
         val alert = Alert.create<String>(parent, MESSAGE_TITLE, mainMessage, contentMessage)

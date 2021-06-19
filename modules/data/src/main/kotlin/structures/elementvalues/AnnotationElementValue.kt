@@ -46,7 +46,7 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
     }
 
     override val length: Int
-        get() = super.length + 4 + elementValuePairEntries.sumBy { it.length }
+        get() = super.length + 4 + elementValuePairEntries.sumOf { it.length }
 
     override val debugInfo: String
         get() = "with ${elementValuePairEntries.size} value pair elements"

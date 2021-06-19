@@ -31,7 +31,7 @@ class Annotation : SubStructure(), AnnotationData {
      * Length of the structure in bytes.
      */
     override val length: Int
-        get() = 4 + elementValuePairEntries.sumBy { it.length }
+        get() = 4 + elementValuePairEntries.sumOf { it.length }
 
     override fun writeData(output: DataOutput) {
         output.writeShort(typeIndex)

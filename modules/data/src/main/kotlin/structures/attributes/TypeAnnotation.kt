@@ -80,6 +80,6 @@ class TypeAnnotation private constructor() : SubStructure() {
      * The length of the structure in bytes.
      */
     override val length: Int
-        get() = 2 + targetInfo.length + typePathEntries.sumBy { it.length } + annotation.length
+        get() = 2 + targetInfo.length + typePathEntries.sumOf { it.length } + annotation.length
 
 }

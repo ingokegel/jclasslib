@@ -33,7 +33,7 @@ interface AttributeContainer {
      * Get the length of all attributes as a number of bytes.
      */
     val totalAttributesLength: Int
-        get() = attributes.sumBy { it.getAttributeLength() }
+        get() = attributes.sumOf { it.getAttributeLength() }
 
 
     /**

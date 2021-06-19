@@ -56,7 +56,7 @@ fun findClassInJrt(className: String, jreHome: File): Path? {
  */
 fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
     Files.walk(getModulesRoot(jreHome)).forEach { path ->
-        if (path.nameCount > 2 && !Files.isDirectory(path) && path.toString().toLowerCase().endsWith(classFileSuffix)) {
+        if (path.nameCount > 2 && !Files.isDirectory(path) && path.toString().lowercase().endsWith(classFileSuffix)) {
             block(path)
         }
     }

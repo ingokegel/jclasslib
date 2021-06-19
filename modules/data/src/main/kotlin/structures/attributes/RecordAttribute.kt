@@ -38,7 +38,7 @@ class RecordAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         entries.forEach { it.write(output) }
     }
 
-    override fun getAttributeLength(): Int = 2 + entries.sumBy { it.length }
+    override fun getAttributeLength(): Int = 2 + entries.sumOf { it.length }
 
     override val debugInfo: String
         get() = "with ${entries.size} entries"

@@ -38,7 +38,7 @@ class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile)
         entries.forEach { it.write(output) }
     }
 
-    override fun getAttributeLength(): Int = 1 + entries.sumBy { it.length }
+    override fun getAttributeLength(): Int = 1 + entries.sumOf { it.length }
 
     override val debugInfo: String
         get() = "with ${entries.size} entries"

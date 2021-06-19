@@ -141,7 +141,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
             wrappers.flatMap { it.tabbedPane.tabs() }.firstOrNull { it.fileName == fileName }
 
     val totalTabCount: Int
-        get() = wrappers.sumBy { it.tabbedPane.tabs().count() }
+        get() = wrappers.sumOf { it.tabbedPane.tabs().count() }
 
     fun openClassFile(fileName: String, moduleName: String = ClasspathEntry.UNNAMED_MODULE, browserPath: BrowserPath? = null): BrowserTab =
             focusedTabbedPane.addTab(fileName, moduleName, browserPath)

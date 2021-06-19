@@ -43,7 +43,7 @@ class ModuleHashesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         hashEntries.forEach { it.write(output) }
     }
 
-    override fun getAttributeLength(): Int =  4 + hashEntries.sumBy { it.length }
+    override fun getAttributeLength(): Int =  4 + hashEntries.sumOf { it.length }
 
     override val debugInfo: String
         get() = "with ${hashEntries.size} hash entries"

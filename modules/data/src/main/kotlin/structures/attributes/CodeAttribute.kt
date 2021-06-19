@@ -79,7 +79,7 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
     }
 
     override fun getAttributeLength(): Int = 12 + code.size +
-            exceptionTable.sumBy { it.length } +
+            exceptionTable.sumOf { it.length } +
             6 * attributes.size +
             totalAttributesLength
 

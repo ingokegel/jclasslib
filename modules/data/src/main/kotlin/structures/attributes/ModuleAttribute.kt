@@ -115,11 +115,11 @@ class ModuleAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     }
 
     override fun getAttributeLength(): Int =  16 +
-            requiresEntries.sumBy { it.length } +
-            exportsEntries.sumBy { it.length } +
-            opensEntries.sumBy { it.length } +
+            requiresEntries.sumOf { it.length } +
+            exportsEntries.sumOf { it.length } +
+            opensEntries.sumOf { it.length } +
             2 * usesIndices.size +
-            providesEntries.sumBy { it.length }
+            providesEntries.sumOf { it.length }
 
     override val debugInfo: String
         get() = "with ${requiresEntries.size} requires entries,  " +

@@ -51,7 +51,7 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathEntry(fileName) {
         try {
             JarFile(file).use { jarFile ->
                 jarFile.entries().iterator().forEach {
-                    if (!it.isDirectory && it.name.toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
+                    if (!it.isDirectory && it.name.lowercase().endsWith(CLASSFILE_SUFFIX)) {
                         addEntry(it.name, moduleName, classPathModel, modulePathModel, reset)
                     }
                 }

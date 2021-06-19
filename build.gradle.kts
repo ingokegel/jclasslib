@@ -65,8 +65,8 @@ subprojects {
 
         tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
-                languageVersion = "1.4"
-                apiVersion = "1.4"
+                languageVersion = "1.5"
+                apiVersion = "1.5"
                 jvmTarget = "1.8"
                 jdkHome = javaHome
             }
@@ -86,7 +86,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "7.0"
+        gradleVersion = "7.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 

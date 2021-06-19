@@ -27,7 +27,7 @@ enum class ElementValueType(val charTag: Char, val verbose: String) : ClassFileE
     ANNOTATION('@', "Annotation");
 
     override val tag: Int
-        get() = charTag.toInt()
+        get() = charTag.code
 
     fun createEntry(): ElementValue = when (this) {
         ENUM -> EnumElementValue()

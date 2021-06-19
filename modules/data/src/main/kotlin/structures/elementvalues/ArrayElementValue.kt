@@ -20,7 +20,7 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     var elementValueEntries: Array<ElementValue> = emptyArraySingleton()
 
     override val length: Int
-        get() = super.length + 2 + elementValueEntries.sumBy { it.length }
+        get() = super.length + 2 + elementValueEntries.sumOf { it.length }
 
     override fun readData(input: DataInput) {
         val elementValueEntriesLength = input.readUnsignedShort()

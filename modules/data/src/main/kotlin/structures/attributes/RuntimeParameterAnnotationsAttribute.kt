@@ -37,6 +37,6 @@ abstract class RuntimeParameterAnnotationsAttribute(classFile: ClassFile) : Attr
     override val debugInfo: String
         get() = "with ${parameterAnnotations.size} entries"
 
-    override fun getAttributeLength(): Int = 1 + parameterAnnotations.sumBy { it.length }
+    override fun getAttributeLength(): Int = 1 + parameterAnnotations.sumOf { it.length }
 
 }

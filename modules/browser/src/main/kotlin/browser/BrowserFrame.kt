@@ -58,7 +58,7 @@ class BrowserFrame : JFrame() {
             withWaitCursor {
                 val file = classesFileChooser.selectedFile
                 classesChooserPath = file.parent
-                val lowerCasePath = file.path.toLowerCase()
+                val lowerCasePath = file.path.lowercase()
                 when {
                     lowerCasePath.endsWith(".class") -> openClassFromFile(file)
                     lowerCasePath.endsWith(".jar") -> openClassFromJar(file)
@@ -318,9 +318,9 @@ class BrowserFrame : JFrame() {
         EventQueue.invokeLater {
             val file = File(path)
             if (file.exists()) {
-                if (path.toLowerCase().endsWith(".$WORKSPACE_FILE_SUFFIX")) {
+                if (path.lowercase().endsWith(".$WORKSPACE_FILE_SUFFIX")) {
                     openWorkspace(file)
-                } else if (path.toLowerCase().endsWith(".class")) {
+                } else if (path.lowercase().endsWith(".class")) {
                     try {
                         openClassFromFile(file)
                     } catch (e: IOException) {
@@ -534,7 +534,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun getWorkspaceFile(selectedFile: File): File =
-            if (!selectedFile.name.toLowerCase().endsWith(".$WORKSPACE_FILE_SUFFIX")) {
+            if (!selectedFile.name.lowercase().endsWith(".$WORKSPACE_FILE_SUFFIX")) {
                 File(selectedFile.path + "." + WORKSPACE_FILE_SUFFIX)
             } else {
                 selectedFile

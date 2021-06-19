@@ -92,7 +92,7 @@ abstract class Structure {
         val handledFlags = matchingFlags.fold(0) { value, accessFlag -> value or accessFlag.flag }
 
         return matchingFlags.
-                mapNotNull { if (it.verbose.isEmpty()) null else it.verbose }.
+                mapNotNull { it.verbose.ifEmpty { null } }.
                 joinToString(separator = " ", postfix = if (accessFlags != handledFlags) "?" else "")
     }
 

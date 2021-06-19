@@ -39,6 +39,6 @@ abstract class LocalVariableAttribute(classFile: ClassFile) : AttributeInfo(clas
     override val debugInfo: String
         get() = "with ${localVariableEntries.size} entries"
 
-    override fun getAttributeLength(): Int = 2 + localVariableEntries.sumBy { it.length }
+    override fun getAttributeLength(): Int = 2 + localVariableEntries.sumOf { it.length }
 
 }

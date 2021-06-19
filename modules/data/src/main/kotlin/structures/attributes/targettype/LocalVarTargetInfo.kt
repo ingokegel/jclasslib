@@ -34,7 +34,7 @@ class LocalVarTargetInfo : TargetInfo() {
     }
 
     override val length: Int
-        get() = 2 + localVarTargets.sumBy { it.length }
+        get() = 2 + localVarTargets.sumOf { it.length }
 
     override val verbose: String
         get() {

@@ -37,7 +37,7 @@ class BootstrapMethodsAttribute(classFile: ClassFile) : AttributeInfo(classFile)
         methods.forEach { it.write(output) }
     }
 
-    override fun getAttributeLength(): Int = 2 + methods.sumBy { it.length }
+    override fun getAttributeLength(): Int = 2 + methods.sumOf { it.length }
 
     override val debugInfo: String
         get() = "with ${methods.size} references"

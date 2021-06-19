@@ -38,7 +38,7 @@ abstract class RuntimeTypeAnnotationsAttribute(classFile: ClassFile) : Attribute
     override val debugInfo: String
         get() = "with ${runtimeAnnotations.size} entries"
 
-    override fun getAttributeLength(): Int = 2 + runtimeAnnotations.sumBy { it.length }
+    override fun getAttributeLength(): Int = 2 + runtimeAnnotations.sumOf { it.length }
 
     override val numberOfAnnotations: Int
         get() = runtimeAnnotations.size

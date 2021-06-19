@@ -213,6 +213,6 @@ class StackMapFrameEntry(private val classFile: ClassFile) : SubStructure() {
             StackFrameType.FULL -> 7 + localItems.totalLength() + stackItems.totalLength()
         }
 
-    private fun Array<VerificationTypeInfoEntry>.totalLength(): Int = this.sumBy { it.length }
+    private fun Array<VerificationTypeInfoEntry>.totalLength(): Int = this.sumOf { it.length }
 
 }

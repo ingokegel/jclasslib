@@ -37,7 +37,7 @@ class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         classes.forEach { it.write(output) }
     }
 
-    override fun getAttributeLength(): Int = 2 + classes.sumBy { it.length }
+    override fun getAttributeLength(): Int = 2 + classes.sumOf { it.length }
 
     override val debugInfo: String
         get() = "with ${classes.size} classes"

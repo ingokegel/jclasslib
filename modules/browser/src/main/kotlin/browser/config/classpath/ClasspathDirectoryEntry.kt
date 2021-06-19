@@ -69,7 +69,7 @@ class ClasspathDirectoryEntry(fileName: String) : ClasspathEntry(fileName) {
                         model.nodesWereRemoved(parentNode, intArrayOf(deletionIndex), arrayOf<Any>(directoryNode))
                     }
                 }
-            } else if (file.name.toLowerCase().endsWith(CLASSFILE_SUFFIX) &&
+            } else if (file.name.lowercase().endsWith(CLASSFILE_SUFFIX) &&
                     (!file.name.endsWith(MODULE_INFO_CLASS_FILE_NAME) || parentNode.parent != null)) {
                 addOrFindNode(file.name.stripClassSuffix(), parentNode, false, model, reset)
             }
