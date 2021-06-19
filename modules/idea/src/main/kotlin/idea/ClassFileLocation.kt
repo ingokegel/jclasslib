@@ -70,7 +70,7 @@ fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Pr
                     Messages.showWarningDialog(
                         project,
                         locationResult?.errorMessage ?: "internal error",
-                        "jclasslib bytecode viewer"
+                        "Jclasslib Bytecode Viewer"
                     )
                 }
             }

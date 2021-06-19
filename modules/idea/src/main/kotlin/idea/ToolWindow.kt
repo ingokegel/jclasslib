@@ -11,10 +11,10 @@ import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
+import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.ide.impl.ContentManagerWatcher
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileTypes.FileTypeRegistry
-import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.CompilerModuleExtension
@@ -80,13 +80,13 @@ private fun readClassFile(locatedClassFile: LocatedClassFile, project: Project):
         val classFileBytes = loadClassFileBytes(locatedClassFile, project)
         ClassFileReader.readFromInputStream(ByteArrayInputStream(classFileBytes))
     } catch(e: Exception) {
-        Messages.showWarningDialog(project, "Error reading class file: ${e.message}", "jclasslib bytecode viewer")
+        Messages.showWarningDialog(project, "Error reading class file: ${e.message}", "Jclasslib Bytecode Viewer")
         null
     }
 }
 
 fun loadClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): ByteArray =
-    if (FileTypeRegistry.getInstance().isFileOfType(locatedClassFile.virtualFile, StdFileTypes.CLASS)) {
+    if (FileTypeRegistry.getInstance().isFileOfType(locatedClassFile.virtualFile, JavaClassFileType.INSTANCE)) {
         loadCompiledClassFileBytes(locatedClassFile, project)
     } else {
         loadSourceClassFileBytes(locatedClassFile, project)
@@ -207,7 +207,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         init {
             templatePresentation.apply {
                 icon = PlatformIcons.WEB_ICON
-                text = "Show web site"
+                text = "Show Web Site"
             }
         }
 
@@ -233,7 +233,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
             if (psiClass != null) {
                 openClassFile(psiClass, browserPath, project)
             } else {
-                Messages.showWarningDialog(project, "Class $className could not be found", "jclasslib bytecode viewer")
+                Messages.showWarningDialog(project, "Class $className could not be found", "Jclasslib Bytecode Viewer")
             }
         }
     }
