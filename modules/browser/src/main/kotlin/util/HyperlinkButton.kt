@@ -33,6 +33,7 @@ class HyperlinkButton : JButton() {
         return "LinkButtonUI"
     }
 
+    @Suppress("ACCIDENTAL_OVERRIDE")
     private class BasicLinkButtonUI : BasicButtonUI() {
 
         override fun installDefaults(button: AbstractButton) {
@@ -79,11 +80,9 @@ class HyperlinkButton : JButton() {
             private val STROKE_DASHED = BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL, 10f, floatArrayOf(2f, 2f), 0f)
             private val BORDER: Border = EmptyBorder(0, 3, 0, 3)
 
-            @Suppress("ACCIDENTAL_OVERRIDE", "UNUSED_PARAMETER")
+            @Suppress("UNUSED_PARAMETER")
             @JvmStatic
-            fun createUI(component: JComponent?): ComponentUI {
-                return BasicLinkButtonUI()
-            }
+            fun createUI(component: JComponent?): ComponentUI = BasicLinkButtonUI()
         }
     }
 
