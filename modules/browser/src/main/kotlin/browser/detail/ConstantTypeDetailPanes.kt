@@ -13,7 +13,10 @@ import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
+import org.gjt.jclasslib.util.GUIHelper.getParentWindow
 import org.jetbrains.annotations.Nls
+import javax.swing.JButton
+import javax.swing.JOptionPane
 
 abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, services: BrowserServices) : KeyValueDetailPane<T>(constantClass, services) {
     protected fun addClassElementOpener() {
@@ -129,6 +132,27 @@ class ConstantUtf8InfoDetailPane(services: BrowserServices) : ConstantDetailPane
                 constant.verbose
             } catch (e: InvalidByteCodeException) {
                 getString("message.invalid.constant.pool.entry")
+            }
+        }
+        add(StringEditor(this), "newline, spanx")
+    }
+}
+
+class StringEditor(detailPane: ConstantUtf8InfoDetailPane): JButton(getString("action.edit")) {
+
+    private var constant: ConstantUtf8Info? = null
+    init {
+        detailPane.addShowHandler {
+            constant = it
+        }
+        addActionListener {
+            constant?.let { constant ->
+                val value = constant.string
+                val newValue = JOptionPane.showInputDialog(getParentWindow(), getString("key.edit.string.value"), getString("input.edit.string.title"), JOptionPane.QUESTION_MESSAGE, null, null, value) as String
+                if (value != newValue) {
+                    constant.string = newValue
+                    detailPane.modified()
+                }
             }
         }
     }

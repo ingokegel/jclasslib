@@ -15,7 +15,6 @@ import org.gjt.jclasslib.util.*
 import org.jetbrains.annotations.Nls
 import java.awt.Point
 import java.awt.event.ActionEvent
-import java.util.*
 import javax.swing.AbstractAction
 import javax.swing.JComponent
 import javax.swing.JScrollPane
@@ -66,7 +65,15 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
 
     private fun runShowHandlers(treePath: TreePath) {
         element = getElement(treePath)
+        refresh()
+    }
+
+    protected fun refresh() {
         element?.let { element -> showHandlers.forEach { it.invoke(element) } }
+    }
+
+    fun modified() {
+        refresh()
     }
 
     override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode, expand: Boolean) {
@@ -76,13 +83,17 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
 
     protected abstract fun addLabels()
 
-    protected val showHandlers = ArrayList<(element: T) -> Unit>()
+    private val showHandlers = ArrayList<(element: T) -> Unit>()
     protected var element: T? = null
+
+    fun addShowHandler(showHandler: (element: T) -> Unit) {
+        showHandlers.add(showHandler)
+    }
 
     protected fun addConstantPoolLink(@Nls key: String, indexResolver: (element: T) -> Int): HyperlinkKeyValue<T> {
         val keyValue = HyperlinkKeyValue<T>(key, multiLineLabel(), HyperlinkButton())
         addKeyValue(keyValue)
-        showHandlers.add { element ->
+        addShowHandler { element ->
             val constantPoolIndex = indexResolver(element)
             keyValue.hyperlinkButton?.action = object : AbstractAction() {
                 init {
@@ -101,7 +112,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected fun addAttributeLink(@Nls key: String, attributeClass: Class<BootstrapMethodsAttribute>, prefix: String, indexResolver: (element: T) -> Int): HyperlinkKeyValue<T> {
         val keyValue = HyperlinkKeyValue<T>(key, multiLineLabel().apply { isEnabled = false }, HyperlinkButton())
         addKeyValue(keyValue)
-        showHandlers.add { element ->
+        addShowHandler { element ->
             val index = indexResolver(element)
             keyValue.hyperlinkButton?.action = object : AbstractAction() {
                 init {
@@ -119,7 +130,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected fun addDetail(@Nls key: String, textResolver: (element: T) -> String): MultiLineKeyValue<T> {
         val keyValue = MultiLineKeyValue<T>(key, multiLineLabel())
         addKeyValue(keyValue)
-        showHandlers.add { element ->
+        addShowHandler { element ->
             keyValue.valueLabel.text = textResolver(element)
             keyValue.show(element)
         }
@@ -129,7 +140,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected fun addMultiLineHtmlDetail(@Nls key: String, textResolver: (element: T) -> String): HtmlKeyValue<T> {
         val keyValue = HtmlKeyValue<T>(key, highlightTextArea())
         addKeyValue(keyValue)
-        showHandlers.add { element ->
+        addShowHandler { element ->
             keyValue.valueLabel.text = textResolver(element)
             keyValue.show(element)
         }
@@ -140,7 +151,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         if (services.canOpenClassFiles()) {
             val classElementOpener = ClassElementOpener(this)
             add(classElementOpener, "newline unrel, spanx")
-            showHandlers.add { element ->
+            addShowHandler { element ->
                 classElementOpener.setConstant(constantResolver(element))
             }
         }

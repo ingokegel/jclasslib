@@ -18,9 +18,7 @@ import java.awt.Window
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
-import javax.swing.Icon
-import javax.swing.JLabel
-import javax.swing.JScrollPane
+import javax.swing.*
 
 object GUIHelper {
 
@@ -82,5 +80,7 @@ object GUIHelper {
         currentDirectory(currentDirectory.let { if (it.isNotEmpty()) File(it) else null })
         return this
     }
+
+    fun JComponent.getParentWindow(): Window? = SwingUtilities.getWindowAncestor(this)
 
 }
