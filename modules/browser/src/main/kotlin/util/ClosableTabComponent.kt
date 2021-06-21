@@ -39,8 +39,9 @@ class ClosableTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLay
             setUI(BasicButtonUI())
             addActionListener {
                 val index = tabbedPane.indexOfTabComponent(this@ClosableTabComponent)
-                if (index != -1) {
+                if (index != -1 && tabbedPane is RemovalChecker && tabbedPane.canRemove(index)) {
                     tabbedPane.remove(index)
+                    tabbedPane.removed(index)
                 }
             }
         }
@@ -76,4 +77,8 @@ class ClosableTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLay
         private val INACTIVE_LIGHT_COLOR = Color(230, 230, 230)
     }
 
+    interface RemovalChecker {
+        fun canRemove(index: Int): Boolean
+        fun removed(index: Int)
+    }
 }

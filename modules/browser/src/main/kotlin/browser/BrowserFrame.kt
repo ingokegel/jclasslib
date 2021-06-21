@@ -96,18 +96,25 @@ class BrowserFrame : JFrame() {
         accelerator(KeyEvent.VK_N)
     }
 
+    val saveModifiedClassesAction = DefaultAction(getString("action.save.modified.classes"), getString("action.save.modified.classes.description"), "save_small.png", "save_large.png") {
+        frameContent.saveModified()
+    }.apply {
+        isEnabled = false
+    }
+
     val newWorkspaceAction = DefaultAction(getString("action.new.workspace"), getString("action.new.workspace.description")) {
-        frameContent.closeAllTabs()
-        workspaceFile = null
-        config.clear()
-        updateTitle()
+        if (frameContent.closeAllTabs()) {
+            workspaceFile = null
+            config.clear()
+            updateTitle()
+        }
     }
 
     val openWorkspaceAction = DefaultAction(getString("action.open.workspace"), getString("action.open.workspace.description"), "open_ws_small.png", "open_ws_large.png") {
         workspaceFileChooser.fileAccessMode(FileAccessMode.OPEN)
-        if (workspaceFileChooser.select()) {
+        if (frameContent.canClose() && workspaceFileChooser.select()) {
             val selectedFile = workspaceFileChooser.selectedFile
-            openWorkspace(selectedFile)
+            openWorkspace(selectedFile, forceClose = true)
             workspaceChooserPath = selectedFile.parent
         }
     }
@@ -134,19 +141,26 @@ class BrowserFrame : JFrame() {
     }
 
     val quitAction = DefaultAction(getString("action.quit")) {
-        saveWindowSettings()
-        exit()
+        if (prepareClose()) {
+            exit()
+        }
     }
 
     val closeAction = DefaultAction(getString("action.close.window")) {
-        saveWindowSettings()
-        isVisible = false
-        dispose()
-        if (getBrowserFrames().isEmpty()) {
-            exit()
+        if (prepareClose()) {
+            isVisible = false
+            dispose()
+            if (getBrowserFrames().isEmpty()) {
+                exit()
+            }
         }
     }.apply {
         accelerator(KeyEvent.VK_W)
+    }
+
+    private fun prepareClose(): Boolean {
+        saveWindowSettings()
+        return frameContent.closeAllTabs()
     }
 
     val backwardAction = DefaultAction(getString("action.backward"), getString("action.backward.description"), "browser_backward_small.png", "browser_backward_large.png") {
@@ -180,7 +194,7 @@ class BrowserFrame : JFrame() {
     }
 
     val showEjtAction = DefaultAction(getString("action.ej.technologies.web.site"), getString("action.ej.technologies.web.site.description"), "web_small.png") {
-        GUIHelper.showURL("http://www.ej-technologies.com")
+        GUIHelper.showURL("https://www.ej-technologies.com")
     }
 
     val aboutAction = DefaultAction(getString("action.about"), getString("action.about.description")) {
@@ -255,6 +269,13 @@ class BrowserFrame : JFrame() {
             .applyPath(workspaceChooserPath)
     }
 
+    val saveModifiedClassesFileChooser: DirectoryChooser by lazy {
+        DirectoryChooser.create()
+            .parent(this)
+            .title(getString("chooser.save.modified.classes.title"))
+            .applyPath(workspaceChooserPath)
+    }
+
     private val classesFileChooser: FileChooser by lazy {
         FileChooser.create()
             .title(getString("chooser.classes.title"))
@@ -269,24 +290,23 @@ class BrowserFrame : JFrame() {
     private val classpathBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, getString("chooser.from.classpath.title"), true) }
     private val jarBrowser: ClasspathBrowser by lazy { ClasspathBrowser(this, getString("chooser.from.jar.title"), false) }
 
-    fun openWorkspace(file: File) {
+    fun openWorkspace(file: File, forceClose: Boolean = false) {
+        if (frameContent.closeAllTabs(forceClose)) {
+            object : SwingWorker<Document, Unit>() {
+                override fun doInBackground(): Document = parseXml(file)
 
-        frameContent.closeAllTabs()
-
-        object : SwingWorker<Document, Unit>() {
-            override fun doInBackground(): Document = parseXml(file)
-
-            override fun done() {
-                get().documentElement.apply {
-                    config.readWorkspace(this)
-                    frameContent.readWorkspace(this)
+                override fun done() {
+                    get().documentElement.apply {
+                        config.readWorkspace(this)
+                        frameContent.readWorkspace(this)
+                    }
+                    recentMenu.addRecentWorkspace(file)
+                    workspaceFile = file
+                    updateTitle()
+                    saveWorkspaceAsAction.isEnabled = true
                 }
-                recentMenu.addRecentWorkspace(file)
-                workspaceFile = file
-                updateTitle()
-                saveWorkspaceAsAction.isEnabled = true
-            }
-        }.execute()
+            }.execute()
+        }
     }
 
     fun openClassFromFile(file: File): BrowserTab {
@@ -342,6 +362,7 @@ class BrowserFrame : JFrame() {
                 add(openWorkspaceAction)
                 recentMenu.addTo(this)
                 addSeparator()
+                add(saveModifiedClassesAction)
                 add(saveWorkspaceAction)
                 add(saveWorkspaceAsAction)
                 add(saveClassesAction)
@@ -488,6 +509,7 @@ class BrowserFrame : JFrame() {
     private fun buildToolbar(): JToolBar = JToolBar().apply {
         add(openClassFileAction.createToolBarButton())
         add(browseClasspathAction.createToolBarButton())
+        add(saveModifiedClassesAction.createToolBarButton())
         addSeparator()
         add(openWorkspaceAction.createToolBarButton())
         add(saveWorkspaceAction.createToolBarButton())
@@ -543,6 +565,7 @@ class BrowserFrame : JFrame() {
     private fun saveWorkspaceToFile(file: File) {
         try {
             FileWriter(file).use { writer ->
+                @Suppress("HttpUrlsUsage")
                 createDocument().addElement("workspace") {
                     config.saveWorkspace(this)
                     frameContent.saveWorkspace(this)

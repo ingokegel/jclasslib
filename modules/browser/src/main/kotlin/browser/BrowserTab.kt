@@ -12,20 +12,14 @@ import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
-import org.gjt.jclasslib.browser.config.classpath.ClasspathJrtEntry
 import org.gjt.jclasslib.browser.config.classpath.FindResult
-import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.ClassFileWriter
-import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.GUIHelper
 import org.w3c.dom.Element
 import java.awt.BorderLayout
-import java.io.EOFException
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.jar.JarFile
 import javax.swing.Action
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
@@ -41,8 +35,9 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     private val parentFrame: BrowserFrame
         get() = frameContent.frame
 
-    override var classFile: ClassFile = readClassFile(frame)
+    override var classFile: ClassFile = readClassFile(fileName, frame)
     override val browserComponent: BrowserComponent = BrowserComponent(this)
+    override var isModified: Boolean = false
 
     override fun activate() {
         tabbedPane.focus()
@@ -107,7 +102,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     }
 
     fun reload() {
-        classFile = readClassFile(parentFrame)
+        classFile = readClassFile(fileName, parentFrame)
         browserComponent.rebuild()
     }
 
@@ -118,57 +113,28 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     }
 
     override fun canOpenClassFiles(): Boolean = true
+    override fun canSaveClassFiles(): Boolean = true
 
     override fun showURL(urlSpec: String) {
         GUIHelper.showURL(urlSpec)
     }
 
-    fun setBrowserPath(browserPath: BrowserPath?) {
-        browserComponent.browserPath = browserPath
+    override fun modified() {
+        isModified = true
+        tabbedPane.updateSelectedTitle()
+        frameContent.updateSaveAction()
     }
 
-    private fun readClassFile(frame: BrowserFrame, suppressEOF: Boolean = false): ClassFile {
-        try {
-            return when {
-                fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
-                    ClassFileReader.readFromInputStream(getJrtInputStream(fileName.removePrefix(ClasspathJrtEntry.JRT_PREFIX), File(frame.config.jreHome)), suppressEOF)
-                }
-                fileName.contains('!') -> {
-                    val (jarFileName, classFileName) = fileName.split("!", limit = 2)
-                    val jarFile = JarFile(jarFileName)
-                    val jarEntry = jarFile.getJarEntry(classFileName)
-                    if (jarEntry != null) {
-                        ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF)
-                    } else {
-                        throw IOException("The jar entry $classFileName was not found")
-                    }
-                }
-                else -> {
-                    ClassFileReader.readFromFile(File(fileName), suppressEOF)
-                }
-            }
-        } catch (ex: FileNotFoundException) {
-            throw IOException("The file $fileName was not found")
-        } catch (ex: EOFException) {
-            if (GUIHelper.showOptionDialog(
-                    this,
-                    getString("message.eof.title"),
-                    getString("message.eof", fileName),
-                    GUIHelper.YES_NO_OPTIONS,
-                    AlertType.QUESTION
-                ) == 0
-            ) {
-                return readClassFile(frame, suppressEOF = true)
+    fun getTabTitle(): String =
+            (if (isModified) "* " else "") +
+            if (moduleName != ClasspathEntry.UNNAMED_MODULE) {
+                "$moduleName/"
             } else {
-                throw IOException("An (expected) EOF occurred while reading $fileName")
-            }
-        } catch (ex: IOException) {
-            ex.printStackTrace()
-            throw IOException("An error occurred while reading $fileName")
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            throw IOException("The file $fileName does not seem to contain a class file")
-        }
+                ""
+            } + browserComponent.title
+
+    fun setBrowserPath(browserPath: BrowserPath?) {
+        browserComponent.browserPath = browserPath
     }
 
     fun saveWorkspace(element: Element) {
@@ -176,6 +142,15 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
             setAttribute(ATTRIBUTE_FILE_NAME, fileName)
             setAttribute(ATTRIBUTE_MODULE_NAME, moduleName)
             browserComponent.browserPath?.saveWorkspace(this)
+        }
+    }
+
+    fun saveModified() {
+        if (isModified) {
+            if (writeClassFile(classFile, fileName, parentFrame)) {
+                isModified = false
+                tabbedPane.updateTitleOf(this)
+            }
         }
     }
 

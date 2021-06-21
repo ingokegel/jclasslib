@@ -13,10 +13,7 @@ import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
-import org.gjt.jclasslib.util.GUIHelper.getParentWindow
 import org.jetbrains.annotations.Nls
-import javax.swing.JButton
-import javax.swing.JOptionPane
 
 abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, services: BrowserServices) : KeyValueDetailPane<T>(constantClass, services) {
     protected fun addClassElementOpener() {
@@ -24,6 +21,12 @@ abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, service
     }
 
     override fun hasInsets() = true
+
+    protected fun addEditor(editorFactory: ConstantEditorFactory<T>) {
+        if (services.canSaveClassFiles()) {
+            add(editorFactory.createEditor(this), "newline, spanx")
+        }
+    }
 }
 
 abstract class ConstantNameInfoDetailPane<T : ConstantNameInfo>(constantClass: Class<T>, services: BrowserServices) : ConstantDetailPane<T>(constantClass, services) {
@@ -70,6 +73,7 @@ class ConstantIntegerInfoDetailPane(services: BrowserServices) : ConstantDetailP
     override fun addLabels() {
         addDetail(getString("key.bytes"), ConstantIntegerInfo::formattedBytes)
         addDetail(getString("key.integer")) { constant -> constant.int.toString() }
+        addEditor(ConstantIntegerEditor.Factory)
     }
 }
 
@@ -77,6 +81,7 @@ class ConstantFloatInfoDetailPane(services: BrowserServices) : ConstantDetailPan
     override fun addLabels() {
         addDetail(getString("key.bytes"), ConstantFloatInfo::formattedBytes)
         addDetail(getString("key.float")) { constant -> constant.float.toString() }
+        addEditor(ConstantFloatEditor.Factory)
     }
 }
 
@@ -85,6 +90,7 @@ class ConstantLongInfoDetailPane(services: BrowserServices) : ConstantDetailPane
         addDetail(getString("key.high.bytes"), ConstantLongInfo::formattedHighBytes)
         addDetail(getString("key.low.bytes"), ConstantLongInfo::formattedLowBytes)
         addDetail(getString("key.long")) { constant -> constant.long.toString() }
+        addEditor(ConstantLongEditor.Factory)
     }
 }
 
@@ -93,6 +99,7 @@ class ConstantDoubleInfoDetailPane(services: BrowserServices) : ConstantDetailPa
         addDetail(getString("key.high.bytes"), ConstantDoubleInfo::formattedHighBytes)
         addDetail(getString("key.low.bytes"), ConstantDoubleInfo::formattedLowBytes)
         addDetail(getString("key.double")) { constant -> constant.double.toString() }
+        addEditor(ConstantDoubleEditor.Factory)
     }
 }
 
@@ -134,26 +141,6 @@ class ConstantUtf8InfoDetailPane(services: BrowserServices) : ConstantDetailPane
                 getString("message.invalid.constant.pool.entry")
             }
         }
-        add(StringEditor(this), "newline, spanx")
-    }
-}
-
-class StringEditor(detailPane: ConstantUtf8InfoDetailPane): JButton(getString("action.edit")) {
-
-    private var constant: ConstantUtf8Info? = null
-    init {
-        detailPane.addShowHandler {
-            constant = it
-        }
-        addActionListener {
-            constant?.let { constant ->
-                val value = constant.string
-                val newValue = JOptionPane.showInputDialog(getParentWindow(), getString("key.edit.string.value"), getString("input.edit.string.title"), JOptionPane.QUESTION_MESSAGE, null, null, value) as String
-                if (value != newValue) {
-                    constant.string = newValue
-                    detailPane.modified()
-                }
-            }
-        }
+        addEditor(ConstantStringEditor.Factory)
     }
 }

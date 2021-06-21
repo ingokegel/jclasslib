@@ -1,0 +1,7 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <JetCodeStyleSettings>
+      <option name="CONTINUATION_INDENT_FOR_EXPRESSION_BODIES" value="false" />
+    </JetCodeStyleSettings>
+  </code_scheme>
+</component>

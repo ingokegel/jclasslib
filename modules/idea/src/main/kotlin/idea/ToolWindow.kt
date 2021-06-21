@@ -247,9 +247,13 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
     }
 
     override fun canOpenClassFiles(): Boolean = true
+    override fun canSaveClassFiles(): Boolean = false
 
     override fun showURL(urlSpec: String) {
         BrowserUtil.browse(urlSpec)
+    }
+
+    override fun modified() {
     }
 
     init {
@@ -267,6 +271,9 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         toolbar = actionToolbar.component
         setContent(browserComponent)
     }
+
+    override val isModified: Boolean
+        get() = false
 
     private inner class ActionDelegate(private val anAction: AnAction) : AbstractAction() {
         override fun actionPerformed(e: ActionEvent?) {

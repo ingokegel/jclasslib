@@ -24,6 +24,7 @@ object GUIHelper {
 
     const val MESSAGE_TITLE = "jclasslib"
     val YES_NO_OPTIONS by lazy { arrayOf(getString("button.yes"), getString("button.no")) }
+    val DISCARD_CANCEL_OPTIONS by lazy { arrayOf(getString("button.discard"), getString("button.cancel")) }
     val ICON_EMPTY: Icon = EmptyIcon(16, 16)
 
     fun isMacOs() = System.getProperty("os.name").lowercase().startsWith("mac")

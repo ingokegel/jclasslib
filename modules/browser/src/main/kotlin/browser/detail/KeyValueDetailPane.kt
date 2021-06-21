@@ -73,6 +73,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     }
 
     fun modified() {
+        services.modified()
         refresh()
     }
 

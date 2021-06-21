@@ -52,9 +52,30 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         this.focusedTabbedPane = focusedTabbedPane
     }
 
-    fun closeAllTabs() {
-        wrappers.forEach { it.tabbedPane.removeAll() }
-        split(SplitMode.NONE)
+    fun closeAllTabs(force: Boolean = false): Boolean =
+            if (force || canClose()) {
+                wrappers.forEach { it.tabbedPane.removeAll() }
+                split(SplitMode.NONE)
+                updateSaveAction()
+                true
+            } else {
+                false
+            }
+
+    fun canClose() = wrappers.all { it.tabbedPane.canClose() }
+    fun hasModified() = wrappers.any { it.tabbedPane.hasModified() }
+
+    fun updateSaveAction() {
+        frame.saveModifiedClassesAction.isEnabled = hasModified()
+    }
+
+    fun saveModified() {
+        for (wrapper in wrappers) {
+            for (browserTab in wrapper.tabbedPane.tabs()) {
+                browserTab.saveModified()
+            }
+        }
+        updateSaveAction()
     }
 
     fun split(splitMode: SplitMode) {
@@ -179,7 +200,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     inner class TabbedPaneWrapper(val position: Position) : JPanel() {
         val tabbedPane = BrowserTabbedPane(this@FrameContent).apply {
             addChangeListener {
-                showCard(if (tabCount == 0 ) CARD_EMPTY else CARD_TABBED_PANE)
+                showCard(if (tabCount == 0) CARD_EMPTY else CARD_TABBED_PANE)
                 wrappers.forEach { it.updateMessageLabel() }
                 frame.reloadAction.isEnabled = totalTabCount > 0
             }
@@ -196,7 +217,8 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         }
 
         private fun updateMessageLabel() {
-            messageLabel.text = if (totalTabCount > 0) TABBED_PANE_EMPTY_MESSAGE else position.noneOpenMessage ?: TABBED_PANE_EMPTY_MESSAGE
+            messageLabel.text = if (totalTabCount > 0) TABBED_PANE_EMPTY_MESSAGE else position.noneOpenMessage
+                    ?: TABBED_PANE_EMPTY_MESSAGE
         }
 
         private fun showCard(cardName: String) {

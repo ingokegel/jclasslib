@@ -11,6 +11,7 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.isDebug
 import java.io.*
+import java.nio.file.Path
 
 /**
  * Converts class file structure ClassFile as defined in
@@ -27,6 +28,17 @@ object ClassFileWriter {
     @JvmStatic
     fun writeToFile(file: File, classFile: ClassFile) {
         DataOutputStream(BufferedOutputStream(FileOutputStream(file)).wrapForDebug()).use { classFile.write(it) }
+    }
+
+    /**
+     * Converts a ClassFile structure to a class file.
+     * @param path the file to which to write the ClassFile structure
+     * @param classFile the ClassFile structure to be written
+     */
+    @Throws(InvalidByteCodeException::class, IOException::class)
+    @JvmStatic
+    fun writeToFile(path: Path, classFile: ClassFile) {
+        writeToFile(path.toFile(), classFile)
     }
 
     /**
