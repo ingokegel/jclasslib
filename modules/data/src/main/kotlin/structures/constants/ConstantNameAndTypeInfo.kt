@@ -41,14 +41,28 @@ class ConstantNameAndTypeInfo(classFile: ClassFile) : AbstractConstant(classFile
      */
     val name: String
         @Throws(InvalidByteCodeException::class)
-        get() = classFile.getConstantPoolEntryName(nameIndex)
+        get() = nameInfo.string
+
+    /**
+     * Returns the ConstantUtf8Info constant pool entry that contains the name
+     */
+    val nameInfo: ConstantUtf8Info
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(nameIndex, ConstantUtf8Info::class.java)
 
     /**
      * The descriptor string.
      */
     val descriptor: String
         @Throws(InvalidByteCodeException::class)
-        get() = classFile.getConstantPoolEntryName(descriptorIndex)
+        get() = descriptorInfo.string
+
+    /**
+     * Returns the ConstantUtf8Info constant pool entry that contains the descriptor
+     */
+    val descriptorInfo: ConstantUtf8Info
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(descriptorIndex, ConstantUtf8Info::class.java)
 
     override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()

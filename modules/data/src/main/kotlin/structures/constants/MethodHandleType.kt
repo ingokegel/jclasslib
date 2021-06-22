@@ -26,6 +26,8 @@ enum class MethodHandleType(override val tag: Int, val verbose: String) : ClassF
     NEW_INVOKE_SPECIAL(8, "REF_newInvokeSpecial"),
     INVOKE_INTERFACE(9, "REF_invokeInterface");
 
+    override fun toString() = verbose
+
     companion object : Lookup<MethodHandleType>(MethodHandleType::class.java, "method handle entry")
 
 }

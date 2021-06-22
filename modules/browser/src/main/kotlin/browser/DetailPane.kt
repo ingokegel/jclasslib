@@ -83,6 +83,14 @@ abstract class DetailPane<out T : Any>(private val elementClass: Class<T>, val s
         }
     }
 
+    fun modified() {
+        services.modified()
+        refresh()
+    }
+
+    protected open fun refresh() {
+    }
+
     companion object {
         const val CPINFO_LINK_TEXT = "cp_info #"
     }

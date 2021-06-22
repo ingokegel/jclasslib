@@ -55,7 +55,14 @@ class ConstantMethodHandleInfo private constructor(classFile: ClassFile) : Abstr
      */
     val name: String
         @Throws(InvalidByteCodeException::class)
-        get() = constantType.verbose + " " + classFile.getConstantPoolEntryName(referenceIndex)
+        get() = constantType.verbose + " " + referenceConstant.verbose
+
+    /**
+     * Returns the ConstantReference constant pool entry that contains the reference
+     */
+    val referenceConstant: ConstantReference
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(referenceIndex, ConstantReference::class.java)
 
     override fun readData(input: DataInput) {
         type = MethodHandleType.getFromTag(input.readByte().toInt())

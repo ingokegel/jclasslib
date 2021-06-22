@@ -25,12 +25,19 @@ class ConstantStringInfo(classFile: ClassFile) : AbstractConstant(classFile) {
      */
     var stringIndex: Int = 0
 
+    /**
+     * Returns the ConstantUtf8Info constant pool entry that contains the actual string.
+     */
+    val utf8Constant: ConstantUtf8Info
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(stringIndex, ConstantUtf8Info::class.java)
+
     override val constantType: ConstantType
         get() = ConstantType.STRING
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
-        get() = classFile.getConstantPoolEntryName(stringIndex)
+        get() = utf8Constant.string
 
     override fun readData(input: DataInput) {
         stringIndex = input.readUnsignedShort()

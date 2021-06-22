@@ -30,6 +30,13 @@ abstract class ConstantNameInfo(classFile: ClassFile) : AbstractConstant(classFi
      */
     var nameIndex: Int = 0
 
+    /**
+     * Returns the ConstantUtf8Info constant pool entry that contains the actual string.
+     */
+    val nameConstant: ConstantUtf8Info
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(nameIndex)
+
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
         get() = name
@@ -39,7 +46,7 @@ abstract class ConstantNameInfo(classFile: ClassFile) : AbstractConstant(classFi
      */
     val name: String
         @Throws(InvalidByteCodeException::class)
-        get() = classFile.getConstantPoolUtf8Entry(nameIndex).string
+        get() = nameConstant.string
 
     override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()

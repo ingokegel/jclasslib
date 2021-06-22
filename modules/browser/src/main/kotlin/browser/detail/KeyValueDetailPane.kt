@@ -68,13 +68,9 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         refresh()
     }
 
-    protected fun refresh() {
+    override fun refresh() {
+        super.refresh()
         element?.let { element -> showHandlers.forEach { it.invoke(element) } }
-    }
-
-    fun modified() {
-        services.modified()
-        refresh()
     }
 
     override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode, expand: Boolean) {

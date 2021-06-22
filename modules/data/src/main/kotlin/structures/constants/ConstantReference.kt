@@ -32,7 +32,7 @@ abstract class ConstantReference(classFile: ClassFile) : AbstractConstant(classF
 
     override val verbose: String
         @Throws(InvalidByteCodeException::class)
-        get() = classFile.getConstantPoolEntryName(classIndex) + "." + classFile.getConstantPoolEntryName(nameAndTypeInfo.nameIndex)
+        get() = classInfo.verbose + "." + nameAndTypeInfo.verbose
 
     /**
      * Class info for this reference.

@@ -36,7 +36,11 @@ class ConstantMethodTypeInfo(classFile: ClassFile) : AbstractConstant(classFile)
      */
     val name: String
         @Throws(InvalidByteCodeException::class)
-        get() = classFile.getConstantPoolUtf8Entry(descriptorIndex).string
+        get() = typeConstant.string
+
+    val typeConstant: ConstantUtf8Info
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(descriptorIndex)
 
     override fun readData(input: DataInput) {
         descriptorIndex = input.readUnsignedShort()
