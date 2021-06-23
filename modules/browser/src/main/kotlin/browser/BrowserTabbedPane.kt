@@ -103,16 +103,16 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane(), Closable
         }
     }
 
-    override fun canRemove(index: Int): Boolean {
-        val browserTab = getBrowserTabAt(index)
-        return !browserTab.isModified || GUIHelper.showOptionDialog(
+    override fun canRemove(index: Int): Boolean = canRemove(getBrowserTabAt(index))
+
+    fun canRemove(browserTab: BrowserTab): Boolean =
+        !browserTab.isModified || GUIHelper.showOptionDialog(
                 this,
                 getString("message.class.file.modified.title"),
                 getString("message.class.file.modified"),
                 GUIHelper.DISCARD_CANCEL_OPTIONS,
                 AlertType.QUESTION
         ) == 0
-    }
 
     private fun getBrowserTabAt(index: Int) = getComponentAt(index) as BrowserTab
 

@@ -8,6 +8,9 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.detail.*
+import org.gjt.jclasslib.browser.detail.attributes.AttributeDetailPane
+import org.gjt.jclasslib.browser.detail.constants.ConstantPoolDetailPane
+import org.gjt.jclasslib.browser.detail.constants.ConstantPoolEntryDetailPane
 
 enum class NodeType {
     NO_CONTENT {

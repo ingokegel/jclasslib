@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.structures.constants.ConstantClassInfo
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
 import java.io.DataInput
 import java.io.DataOutput
-import java.util.*
 
 /**
  * The class file structure in which all other structures are hooked up.
@@ -51,10 +51,20 @@ class ClassFile : Structure(), AttributeContainer {
      */
     var thisClass: Int = 0
 
+    /***
+     * Returns the constant that holds the name of this class.
+      */
+    val thisClassConstant: ConstantClassInfo get() = getConstantPoolEntry(thisClass, ConstantClassInfo::class.java)
+
     /**
      * Constant pool index of the super class of this class.
      */
     var superClass: Int = 0
+
+    /***
+     * Returns the constant that holds the name of the super class.
+     */
+    val superClassConstant: ConstantClassInfo get() = getConstantPoolEntry(superClass, ConstantClassInfo::class.java)
 
     /**
      * Constant pool entries of all interfaces.

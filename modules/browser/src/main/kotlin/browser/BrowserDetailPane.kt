@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.detail.AttributeDetailPane
-import org.gjt.jclasslib.browser.detail.ConstantPoolDetailPane
 import org.gjt.jclasslib.browser.detail.EmptyDetailPane
+import org.gjt.jclasslib.browser.detail.attributes.AttributeDetailPane
+import org.gjt.jclasslib.browser.detail.constants.ConstantPoolDetailPane
 import java.awt.CardLayout
 import java.awt.Dimension
-import java.util.*
 import javax.swing.JPanel
 import javax.swing.tree.TreePath
 

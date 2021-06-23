@@ -11,15 +11,20 @@ import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
-import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.ProgressDialog
+import org.gjt.jclasslib.util.StandardDialog
 import org.jetbrains.annotations.Nls
-import java.awt.event.*
-import javax.swing.*
+import java.awt.event.ActionEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import javax.swing.JComponent
+import javax.swing.JScrollPane
+import javax.swing.JTabbedPane
+import javax.swing.JTree
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, private val updateClassPathFromFrame: Boolean) : JDialog(frame, title) {
+class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, private val updateClassPathFromFrame: Boolean) : StandardDialog(frame, title) {
 
     var classpathComponent: ClasspathComponent? = null
         set(classpathComponent) {
@@ -43,7 +48,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
         }
     }
 
-    private fun createTree(@Nls treeName : String): JTree {
+    private fun createTree(@Nls treeName: String): JTree {
         return JTree(ClassTreeNode()).apply {
             name = treeName
             isRootVisible = false
@@ -77,23 +82,6 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
         sync(true)
     }
 
-    private val okAction = DefaultAction(getString("action.ok")) {
-        isVisible = false
-    }.apply {
-        isEnabled = false
-    }
-
-    var isCanceled: Boolean = false
-        private set
-
-    private val cancelAction = DefaultAction(getString("action.cancel")) {
-        isVisible = false
-        isCanceled = true
-    }.apply {
-        accelerator(KeyEvent.VK_ESCAPE, 0)
-        applyAcceleratorTo(contentPane as JComponent)
-    }
-
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(this, getString("message.scanning.classes"))
     }
@@ -108,7 +96,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
     val selectedClassNames: Collection<String>
         get() {
             val selectionPaths = getSelectedTree().selectionPaths?.toList() ?: emptyList()
-            return selectionPaths.map {selectionPath ->
+            return selectionPaths.map { selectionPath ->
                 val buffer = StringBuilder()
                 for (i in 1 until selectionPath.pathCount) {
                     if (buffer.isNotEmpty()) {
@@ -122,13 +110,13 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
 
     init {
         setupComponent()
+        okAction.isEnabled = false
     }
 
     fun isModulePathSelection(): Boolean = getSelectedTree() == modulePathTree
 
     override fun setVisible(visible: Boolean) {
         if (visible) {
-            isCanceled = false
             if (updateClassPathFromFrame) {
                 classpathComponent = frame.config.toImmutableContainer()
             }
@@ -143,39 +131,20 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
         }
     }
 
-    private fun setupComponent() {
-        (contentPane as JComponent).apply {
-            layout = MigLayout("wrap", "[grow]", "[grow]" + (if (updateClassPathFromFrame) "[]" else "") + "para[nogrid]")
+    override fun addContent(jComponent: JComponent) {
+        layout = MigLayout("wrap", "[grow]")
 
-            add(tabbedPane, "grow")
+        add(tabbedPane, "grow, pushy")
 
-            if (updateClassPathFromFrame) {
-                add(setupAction.createTextButton(), "tag help2")
-            }
-            add(syncAction.createTextButton(), "tag help2")
-            add(okAction.createTextButton().apply {
-                this@ClasspathBrowser.getRootPane().defaultButton = this
-            }, "tag ok")
-            add(cancelAction.createTextButton(), "tag cancel")
-
-            addWindowListener(object : WindowAdapter() {
-                override fun windowClosing(event: WindowEvent?) {
-                    cancelAction()
-                }
-
-                override fun windowActivated(e: WindowEvent?) {
-                    conditionalUpdate()
-                }
-            })
+        if (updateClassPathFromFrame) {
+            add(setupAction.createTextButton(), "tag help2")
         }
+        add(syncAction.createTextButton(), "split, tag help2")
 
         setSize(450, 450)
-        isModal = true
-        GUIHelper.centerOnParentWindow(this, owner)
-        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
     }
 
-    private fun conditionalUpdate() {
+    override fun conditionalUpdate() {
         if (needsMerge) {
             sync(resetOnNextMerge)
         }

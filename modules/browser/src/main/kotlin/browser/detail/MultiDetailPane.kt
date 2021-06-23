@@ -13,7 +13,6 @@ import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.util.TitledSeparator
 import java.awt.CardLayout
-import java.util.*
 import javax.swing.JPanel
 import javax.swing.tree.TreePath
 
@@ -48,10 +47,10 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
         if (element == null) {
             showEmptyCard()
         } else {
-            val detailPane = elementClassToDetailPane[element::class.java]
+            val (detailPane, detailClass) = getDetailPaneWithClass(element::class.java)
             if (detailPane != null) {
                 currentDetailPane = detailPane
-                showCard(element::class.java.name)
+                showCard(detailClass.name)
                 detailPane.show(treePath)
             } else {
                 showEmptyCard()
@@ -66,7 +65,24 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
     }
 
     fun getDetailPane(elementValueClass: Class<out T>): DetailPane<*>? =
-            elementClassToDetailPane[elementValueClass]
+        getDetailPaneWithClass(elementValueClass).first
+
+    private tailrec fun getDetailPaneWithClass(elementValueClass: Class<out T>): Pair<DetailPane<*>?, Class<out T>> {
+        val detailPane = elementClassToDetailPane[elementValueClass]
+        return if (detailPane != null) {
+            detailPane to elementValueClass
+        } else {
+            val superclass = castToElementClass(elementValueClass.superclass)
+            if (superclass == null) {
+                null to elementValueClass
+            } else {
+                getDetailPaneWithClass(superclass)
+            }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun castToElementClass(c: Class<*>): Class<out T>? = if (elementClass.isAssignableFrom(c)) c as Class<out T> else null
 
     override val clipboardText: String?
         get() = currentDetailPane?.clipboardText

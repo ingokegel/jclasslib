@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser
 
 import org.jetbrains.annotations.Nls
-import java.util.*
 import javax.swing.tree.DefaultMutableTreeNode
 
 open class BrowserTreeNode(@Nls text: String, val type: NodeType, val element: Any? = null) : DefaultMutableTreeNode(text), Iterable<BrowserTreeNode> {
@@ -29,4 +28,12 @@ open class BrowserTreeNode(@Nls text: String, val type: NodeType, val element: A
             add(it)
         }
     }
+}
+
+class RefreshableBrowserTreeNode(type: NodeType, element: Any? = null, private val textProvider: () -> String)
+    : BrowserTreeNode(textProvider(), type, element) {
+
+        fun refresh() {
+            userObject = textProvider()
+        }
 }

@@ -5,16 +5,16 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser.detail
+package org.gjt.jclasslib.browser.detail.constants
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
 import org.jetbrains.annotations.Nls
-import kotlin.reflect.KClass
 
 abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, services: BrowserServices) : KeyValueDetailPane<T>(constantClass, services) {
     protected fun addClassElementOpener() {
@@ -22,19 +22,13 @@ abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, service
     }
 
     override fun hasInsets() = true
-
-    protected fun addEditor(editorClass: KClass<out ConstantEditor<T>>) {
-        if (services.canSaveClassFiles()) {
-            add(editorClass.java.getConstructor().newInstance().createButton(this), "newline, spanx")
-        }
-    }
 }
 
 abstract class ConstantNameInfoDetailPane<T : ConstantNameInfo>(constantClass: Class<T>, services: BrowserServices) : ConstantDetailPane<T>(constantClass, services) {
     @Suppress("UNCHECKED_CAST")
     override fun addLabels() {
         addConstantPoolLink(getTargetName(), ConstantNameInfo::nameIndex)
-        (this as ConstantNameInfoDetailPane<ConstantNameInfo>).addEditor(ConstantNameEditor::class)
+        (this as ConstantNameInfoDetailPane<ConstantNameInfo>).addEditor { ConstantNameEditor() }
     }
 
     @Nls
@@ -62,7 +56,7 @@ class ConstantReferenceDetailPane(services: BrowserServices) : ConstantDetailPan
     override fun addLabels() {
         addConstantPoolLink(getString("key.class.name"), ConstantReference::classIndex)
         addConstantPoolLink(getString("key.name.and.type"), ConstantReference::nameAndTypeIndex)
-        addEditor(ConstantReferenceEditor::class)
+        addEditor { ConstantReferenceEditor() }
         addClassElementOpener()
     }
 }
@@ -70,7 +64,7 @@ class ConstantReferenceDetailPane(services: BrowserServices) : ConstantDetailPan
 class ConstantStringInfoDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantStringInfo>(ConstantStringInfo::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink(getString("key.string"), ConstantStringInfo::stringIndex)
-        addEditor(ConstantStringEditor::class)
+        addEditor { ConstantStringEditor() }
     }
 }
 
@@ -78,7 +72,7 @@ class ConstantIntegerInfoDetailPane(services: BrowserServices) : ConstantDetailP
     override fun addLabels() {
         addDetail(getString("key.bytes"), ConstantIntegerInfo::formattedBytes)
         addDetail(getString("key.integer")) { constant -> constant.int.toString() }
-        addEditor(ConstantIntegerEditor::class)
+        addEditor { ConstantIntegerEditor() }
     }
 }
 
@@ -86,7 +80,7 @@ class ConstantFloatInfoDetailPane(services: BrowserServices) : ConstantDetailPan
     override fun addLabels() {
         addDetail(getString("key.bytes"), ConstantFloatInfo::formattedBytes)
         addDetail(getString("key.float")) { constant -> constant.float.toString() }
-        addEditor(ConstantFloatEditor::class)
+        addEditor { ConstantFloatEditor() }
     }
 }
 
@@ -95,7 +89,7 @@ class ConstantLongInfoDetailPane(services: BrowserServices) : ConstantDetailPane
         addDetail(getString("key.high.bytes"), ConstantLongInfo::formattedHighBytes)
         addDetail(getString("key.low.bytes"), ConstantLongInfo::formattedLowBytes)
         addDetail(getString("key.long")) { constant -> constant.long.toString() }
-        addEditor(ConstantLongEditor::class)
+        addEditor { ConstantLongEditor() }
     }
 }
 
@@ -104,7 +98,7 @@ class ConstantDoubleInfoDetailPane(services: BrowserServices) : ConstantDetailPa
         addDetail(getString("key.high.bytes"), ConstantDoubleInfo::formattedHighBytes)
         addDetail(getString("key.low.bytes"), ConstantDoubleInfo::formattedLowBytes)
         addDetail(getString("key.double")) { constant -> constant.double.toString() }
-        addEditor(ConstantDoubleEditor::class)
+        addEditor { ConstantDoubleEditor() }
     }
 }
 
@@ -112,14 +106,14 @@ class ConstantNameAndTypeInfoDetailPane(services: BrowserServices) : ConstantDet
     override fun addLabels() {
         addConstantPoolLink(getString("key.name")) { constant -> constant.nameIndex }
         addConstantPoolLink(getString("key.descriptor")) { constant -> constant.descriptorIndex }
-        addEditor(ConstantNameAndTypeEditor::class)
+        addEditor { ConstantNameAndTypeEditor() }
     }
 }
 
 class ConstantMethodTypeDetailPane(services: BrowserServices) : ConstantDetailPane<ConstantMethodTypeInfo>(ConstantMethodTypeInfo::class.java, services) {
     override fun addLabels() {
         addConstantPoolLink(getString("key.type"), ConstantMethodTypeInfo::descriptorIndex)
-        addEditor(ConstantMethodTypeEditor::class)
+        addEditor { ConstantMethodTypeEditor() }
     }
 }
 
@@ -127,7 +121,7 @@ class ConstantMethodHandleInfoDetailPane(services: BrowserServices) : ConstantDe
     override fun addLabels() {
         addDetail(getString("key.reference.kind")) { constant -> constant.type.verbose }
         addConstantPoolLink(getString("key.reference.index")) { constant -> constant.referenceIndex }
-        addEditor(ConstantMethodHandleEditor::class)
+        addEditor { ConstantMethodHandleEditor() }
     }
 }
 
@@ -135,7 +129,7 @@ class ConstantDynamicDetailPane(services: BrowserServices) : ConstantDetailPane<
     override fun addLabels() {
         addConstantPoolLink(getString("key.name.and.type")) { constant -> constant.nameAndTypeIndex }
         addAttributeLink(getString("key.bootstrap.method"), BootstrapMethodsAttribute::class.java, "BootstrapMethods #") { constant -> constant.bootstrapMethodAttributeIndex }
-        addEditor(ConstantDynamicEditor::class)
+        addEditor { ConstantDynamicEditor() }
     }
 }
 
@@ -150,6 +144,6 @@ class ConstantUtf8InfoDetailPane(services: BrowserServices) : ConstantDetailPane
                 getString("message.invalid.constant.pool.entry")
             }
         }
-        addEditor(ConstantUtf8Editor::class)
+        addEditor { ConstantUtf8Editor() }
     }
 }

@@ -5,10 +5,12 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail
+package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.attributes.*
+import org.gjt.jclasslib.browser.detail.AnnotationDefaultAttributeDetailPane
+import org.gjt.jclasslib.browser.detail.MultiDetailPane
+import org.gjt.jclasslib.browser.detail.RuntimeAnnotationsAttributeDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.attributes.*
 

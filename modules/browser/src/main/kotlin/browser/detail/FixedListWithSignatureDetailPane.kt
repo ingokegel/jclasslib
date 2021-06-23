@@ -58,7 +58,7 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
                 }
             }
 
-            override fun getAccessFlags() = AccessFlag.FIELD_ACCESS_FLAGS
+            override fun getAccessFlags(): Set<AccessFlag> = AccessFlag.FIELD_ACCESS_FLAGS
         },
         METHOD {
             override fun appendSignature(classMember: ClassMember, buffer: StringBuilder) {
@@ -69,10 +69,10 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
                 }
             }
 
-            override fun getAccessFlags() = AccessFlag.METHOD_ACCESS_FLAGS
+            override fun getAccessFlags(): Set<AccessFlag> = AccessFlag.METHOD_ACCESS_FLAGS
         };
 
         abstract fun appendSignature(classMember: ClassMember, buffer: StringBuilder)
-        abstract fun getAccessFlags() : Collection<AccessFlag>
+        abstract fun getAccessFlags(): Set<AccessFlag>
     }
 }

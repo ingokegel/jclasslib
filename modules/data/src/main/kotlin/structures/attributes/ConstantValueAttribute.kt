@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -21,6 +22,12 @@ class ConstantValueAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
      * Constant pool index of the constant value.
      */
     var constantValueIndex: Int = 0
+
+    /**
+     * Returns the reference constant with the actual value.
+     */
+    val constant: Constant
+        get() = classFile.getConstantPoolEntry(constantValueIndex, Constant::class.java)
 
     override fun readData(input: DataInput) {
         constantValueIndex = input.readUnsignedShort()

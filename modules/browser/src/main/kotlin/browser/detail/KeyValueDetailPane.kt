@@ -71,6 +71,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     override fun refresh() {
         super.refresh()
         element?.let { element -> showHandlers.forEach { it.invoke(element) } }
+        services.browserComponent.treePane.refreshSelectedNode()
     }
 
     override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode, expand: Boolean) {
@@ -85,6 +86,12 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
 
     fun addShowHandler(showHandler: (element: T) -> Unit) {
         showHandlers.add(showHandler)
+    }
+
+    protected fun addEditor(editorProvider: () -> DataEditor<T>) {
+        if (services.canSaveClassFiles()) {
+            add(editorProvider().createButton(this), "newline, spanx")
+        }
     }
 
     protected fun addConstantPoolLink(@Nls key: String, indexResolver: (element: T) -> Int): HyperlinkKeyValue<T> {

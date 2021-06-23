@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -27,9 +28,21 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
     var nameIndex: Int = 0
 
     /**
+     * Returns the constant that contains the name of this class member.
+     */
+    val nameConstant: ConstantUtf8Info
+        get() = classFile.getConstantPoolEntry(nameIndex, ConstantUtf8Info::class.java)
+
+    /**
      * The constant pool index of the descriptor of this class member.
      */
     var descriptorIndex: Int = 0
+
+    /**
+     * Returns the constant that contains the descriptor of this class member.
+     */
+    val descriptorConstant: ConstantUtf8Info
+        get() = classFile.getConstantPoolEntry(descriptorIndex, ConstantUtf8Info::class.java)
 
     override var attributes: Array<AttributeInfo> = emptyArraySingleton()
 

@@ -58,6 +58,8 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     val root: BrowserTreeNode
         get() = tree.model.root as BrowserTreeNode
 
+    private val treeModel: DefaultTreeModel get() = tree.model as DefaultTreeModel
+
     fun getPathForCategory(category: NodeType): TreePath = categoryToPath[category]!!
 
     @Suppress("unused")
@@ -94,6 +96,13 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         tree.apply {
             clearSelection()
             model = buildTreeModel()
+        }
+    }
+
+    fun refreshSelectedNode() {
+        (tree.selectionPath?.lastPathComponent as? RefreshableBrowserTreeNode)?.let { node ->
+            node.refresh()
+            treeModel.nodeChanged(node)
         }
     }
 
@@ -139,25 +148,26 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
     }
 
     private fun buildFieldsNode(): BrowserTreeNode =
-            buildClassMembersNode(getString("tree.fields"), NodeType.FIELDS, NodeType.FIELD, services.classFile.fields)
+        buildClassMembersNode(getString("tree.fields"), NodeType.FIELDS, NodeType.FIELD, services.classFile.fields)
 
     private fun buildMethodsNode(): BrowserTreeNode =
-            buildClassMembersNode(getString("tree.methods"), NodeType.METHODS, NodeType.METHOD, services.classFile.methods)
+        buildClassMembersNode(getString("tree.methods"), NodeType.METHODS, NodeType.METHOD, services.classFile.methods)
 
     private fun buildClassMembersNode(@Nls text: String, containerType: NodeType, childType: NodeType, classMembers: Array<out ClassMember>) =
-            BrowserTreeNode(text, containerType, classMembers).apply {
-                val classMembersCount = classMembers.size
-                classMembers.forEachIndexed { i, classMember ->
-                    try {
-                        val name = getFormattedIndex(i, classMembersCount) + classMember.name
-                        add(BrowserTreeNode(name, childType, classMember).apply {
-                            addAttributeNodes(classMember)
-                        })
-                    } catch (ex: InvalidByteCodeException) {
-                        add(buildNullNode())
-                    }
+        BrowserTreeNode(text, containerType, classMembers).apply {
+            val classMembersCount = classMembers.size
+            classMembers.forEachIndexed { i, classMember ->
+                try {
+                    add(RefreshableBrowserTreeNode(childType, classMember) {
+                        getFormattedIndex(i, classMembersCount) + classMember.name
+                    }.apply {
+                        addAttributeNodes(classMember)
+                    })
+                } catch (ex: InvalidByteCodeException) {
+                    add(buildNullNode())
                 }
             }
+        }
 
     private fun buildAttributesNode() = BrowserTreeNode(getString("tree.attributes"), NodeType.ATTRIBUTES).apply {
         addAttributeNodes(services.classFile)

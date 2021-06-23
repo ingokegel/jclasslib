@@ -9,6 +9,9 @@ package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.constants.DelegateBuilder
+import org.gjt.jclasslib.browser.detail.constants.DelegatesEditor
+import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.ClassFile
 
 class GeneralDetailPane(services: BrowserServices) : KeyValueDetailPane<ClassFile>(ClassFile::class.java, services) {
@@ -23,8 +26,23 @@ class GeneralDetailPane(services: BrowserServices) : KeyValueDetailPane<ClassFil
         addDetail(getString("key.fields.count")) { classFile -> classFile.fields.size.toString() }
         addDetail(getString("key.methods.count")) { classFile -> classFile.methods.size.toString() }
         addDetail(getString("key.attributes.count")) { classFile -> classFile.attributes.size.toString() }
+        addEditor { GeneralDetailEditor() }
     }
 
     override fun hasInsets() = true
+
+    class GeneralDetailEditor: DelegatesEditor<ClassFile>() {
+        override fun DelegateBuilder<ClassFile>.buildDelegateSpecs() {
+            addIntSpec(getString("menu.minor.version"), ClassFile::minorVersion)
+            addIntSpec(getString("menu.major.version"), ClassFile::majorVersion)
+            addAccessFlagsSpec(getString("menu.access.flags"), AccessFlag.CLASS_ACCESS_FLAGS, ClassFile::accessFlags)
+            addDelegateSpec(getString("menu.this.class")) {
+                it.thisClassConstant
+            }
+            addDelegateSpec(getString("menu.super.class")) {
+                it.superClassConstant
+            }
+        }
+    }
 }
 

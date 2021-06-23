@@ -10,6 +10,7 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.browser.NodeType
+import org.gjt.jclasslib.browser.detail.attributes.AttributeDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.Structure

@@ -102,8 +102,11 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     }
 
     fun reload() {
-        classFile = readClassFile(fileName, parentFrame)
-        browserComponent.rebuild()
+        if (tabbedPane.canRemove(this)) {
+            resetModified()
+            classFile = readClassFile(fileName, parentFrame)
+            browserComponent.rebuild()
+        }
     }
 
     private fun select() {
@@ -148,10 +151,14 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     fun saveModified() {
         if (isModified) {
             if (writeClassFile(classFile, fileName, parentFrame)) {
-                isModified = false
-                tabbedPane.updateTitleOf(this)
+                resetModified()
             }
         }
+    }
+
+    private fun resetModified() {
+        isModified = false
+        tabbedPane.updateTitleOf(this)
     }
 
     companion object {

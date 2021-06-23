@@ -14,9 +14,10 @@ import java.util.*
  * the java access modifiers.
  * @property flag the flag
  * @property verbose Verbose form of the flag suitable for printing a list of access flags
+ * @property sinceJava the first Java version that supports this access flag
  */
 @Suppress("NOT_DOCUMENTED")
-enum class AccessFlag(val flag: Int, val verbose: String) {
+enum class AccessFlag(val flag: Int, val verbose: String, val sinceJava: String? = null) {
     PUBLIC(0x0001, "public"),
     PRIVATE(0x0002, "private"),
     PROTECTED(0x0004, "protected"),
@@ -29,52 +30,20 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
     SUPER(0x0020, ""),
     VOLATILE(0x0040, "volatile"),
     TRANSIENT(0x0080, "transient"),
-
     NATIVE(0x0100, "native"),
     INTERFACE(0x0200, "interface"),
     ABSTRACT(0x0400, "abstract"),
     STRICT(0x0800, "strict"),
-
-    /**
-     * new in Java 1.4
-     */
-    SYNTHETIC(0x1000, "synthetic"),
-    /**
-     * new in Java 1.5
-     */
-    ANNOTATION(0x2000, "annotation"),
-    /**
-     * new in Java 1.5
-     */
-    ENUM(0x4000, "enum"),
-    /**
-     * new in Java 1.5
-     */
-    BRIDGE(0x0040, "bridge"),
-    /**
-     * new in Java 1.5
-     */
-    VARARGS(0x0080, "varargs"),
-    /**
-     * new in Java 8
-     */
-    MANDATED(0x8000, "mandated"),
-    /**
-     * new in Java 9
-     */
-    MODULE(0x8000, "module"),
-    /**
-     * new in Java 9
-     */
-    OPEN(0x0020, "open"),
-    /**
-     * new in Java 9
-     */
-    TRANSITIVE(0x0020, "transitive"),
-    /**
-     * new in Java 9
-     */
-    STATIC_PHASE(0x0040, "static");
+    SYNTHETIC(0x1000, "synthetic", "1.4"),
+    ANNOTATION(0x2000, "annotation", "1.5"),
+    ENUM(0x4000, "enum", "1.5"),
+    BRIDGE(0x0040, "bridge", "1.5"),
+    VARARGS(0x0080, "varargs", "1.5"),
+    MANDATED(0x8000, "mandated", "8"),
+    MODULE(0x8000, "module", "9"),
+    OPEN(0x0020, "open", "9"),
+    TRANSITIVE(0x0020, "transitive", "9"),
+    STATIC_PHASE(0x0040, "static", "9");
 
     /** Checks if this access flag is set in the supplied access flags.
      * @param accessFlags the access flags
@@ -84,9 +53,8 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
     override fun toString() = verbose
 
     companion object {
-
-        //TODO pass enum set with acceptable values
-        fun decompose(accessFlags: Int): List<AccessFlag> = values().filter { it.isSet(accessFlags) }
+        fun decompose(accessFlags: Int, validAccessFlags: Set<AccessFlag>): List<AccessFlag> = validAccessFlags.filter { it.isSet(accessFlags) }
+        fun composeFrom(accessFlags: Iterable<AccessFlag>): Int = accessFlags.fold(0) { acc, accessFlag -> acc or accessFlag.flag }
 
         /**
          * Class access flags
@@ -186,4 +154,5 @@ enum class AccessFlag(val flag: Int, val verbose: String) {
         private fun enumSet(accessFlag: AccessFlag, vararg accessFlags: AccessFlag) : EnumSet<AccessFlag> =
                 EnumSet.of(accessFlag, *accessFlags)
     }
+
 }

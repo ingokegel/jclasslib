@@ -22,7 +22,7 @@ class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: S
     val filterPane = object : FilterPane<AccessFlag, ClassMember>(this@ClassMemberContainerDetailPane) {
         override fun getAllFilterKeys() = signatureMode.getAccessFlags()
         override fun isElementTextFiltered(element: ClassMember, filterText: String) = isShowAll || element.name.contains(filterText)
-        override fun getFilterKeys(element: ClassMember) = AccessFlag.decompose(element.accessFlags)
+        override fun getFilterKeys(element: ClassMember) = AccessFlag.decompose(element.accessFlags, getAllFilterKeys())
     }
 
     override fun show(treePath: TreePath) {

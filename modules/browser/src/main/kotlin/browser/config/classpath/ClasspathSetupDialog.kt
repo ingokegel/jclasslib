@@ -14,18 +14,15 @@ import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
-import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.GUIHelper.applyPath
+import org.gjt.jclasslib.util.StandardDialog
 import java.awt.BorderLayout
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
 import java.io.File
-import java.util.*
 import javax.swing.*
 
-class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
+class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(frame, getString("window.setup.classpath")) {
 
     private val listModel: DefaultListModel<ClasspathEntry> = DefaultListModel()
     private val lstElements: JList<ClasspathEntry> = JList(listModel).apply {
@@ -111,34 +108,6 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         applyAcceleratorTo(lstElements)
     }
 
-    private val okAction = DefaultAction(getString("action.ok")) {
-        val newEntries = ArrayList<ClasspathEntry>()
-        newEntries.addAll(listModel.elements().asSequence())
-        val config = frame.config
-        val oldEntries = ArrayList(config.classpath)
-
-        oldEntries
-                .filterNot { newEntries.contains(it) }
-                .forEach { config.removeClasspathEntry(it) }
-        newEntries
-                .filterNot { oldEntries.contains(it) }
-                .forEach { config.addClasspathEntry(it) }
-
-        config.classpath.apply {
-            clear()
-            addAll(newEntries)
-        }
-        config.jreHome = jreHomeTextField.text.trim()
-        isVisible = false
-    }
-
-    private val cancelAction = DefaultAction(getString("action.cancel")) {
-        isVisible = false
-    }.apply {
-        accelerator(KeyEvent.VK_ESCAPE, 0)
-        applyAcceleratorTo(contentPane as JComponent)
-    }
-
     private val fileChooser: FileChooser by lazy {
         FileChooser.create()
             .parent(this)
@@ -166,6 +135,27 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         setupComponent()
     }
 
+    override fun doOk() {
+        val newEntries = ArrayList<ClasspathEntry>()
+        newEntries.addAll(listModel.elements().asSequence())
+        val config = frame.config
+        val oldEntries = ArrayList(config.classpath)
+
+        oldEntries
+                .filterNot { newEntries.contains(it) }
+                .forEach { config.removeClasspathEntry(it) }
+        newEntries
+                .filterNot { oldEntries.contains(it) }
+                .forEach { config.addClasspathEntry(it) }
+
+        config.classpath.apply {
+            clear()
+            addAll(newEntries)
+        }
+        config.jreHome = jreHomeTextField.text.trim()
+        super.doOk()
+    }
+
     override fun setVisible(visible: Boolean) {
         if (visible) {
             updateData()
@@ -181,41 +171,23 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : JDialog(frame) {
         jreHomeTextField.text = frame.config.jreHome
     }
 
-    private fun setupComponent() {
-        (contentPane as JComponent).apply {
-            layout = MigLayout("wrap", "[grow]")
-            add(createListPanel(), "pushy, grow")
-            add(JLabel(getString("classpath.jre.home")), "split")
-            add(jreHomeTextField, "grow")
-            add(JButton(getString("action.choose")).apply {
-                addActionListener {
-                    fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
+    override fun addContent(jComponent: JComponent) {
+        layout = MigLayout("wrap", "[grow]")
+        add(createListPanel(), "pushy, grow")
+        add(JLabel(getString("classpath.jre.home")), "split")
+        add(jreHomeTextField, "grow")
+        add(JButton(getString("action.choose")).apply {
+            addActionListener {
+                fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
 
-                    if (jreFileChooser.select()) {
-                        jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
-                    }
-
+                if (jreFileChooser.select()) {
+                    jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
                 }
-            }, "wrap para")
-            add(okAction.createTextButton().apply {
-                this@ClasspathSetupDialog.getRootPane().defaultButton = this
 
-            }, "split, tag ok")
-            add(cancelAction.createTextButton(), "tag cancel")
-        }
+            }
+        }, "wrap para")
 
         setSize(600, 400)
-        isModal = true
-        title = getString("window.setup.classpath")
-        GUIHelper.centerOnParentWindow(this, owner)
-        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
-
-        addWindowListener(object : WindowAdapter() {
-            override fun windowClosing(event: WindowEvent?) {
-                cancelAction()
-            }
-        })
-
         checkEnabledStatus()
     }
 

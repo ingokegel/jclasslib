@@ -5,7 +5,7 @@
     version 2 of the license, or (at your option) any later version.
 */
 
-package org.gjt.jclasslib.browser.detail
+package org.gjt.jclasslib.browser.detail.constants
 
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.DetailPane
