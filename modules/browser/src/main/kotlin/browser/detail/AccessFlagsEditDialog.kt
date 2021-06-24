@@ -24,7 +24,7 @@ class AccessFlagsEditDialog(selectedValue: Int, validAccessFlags: Set<AccessFlag
     private val checkBoxes: Map<AccessFlag, JCheckBox> = mutableMapOf<AccessFlag, JCheckBox>().apply {
         for (accessFlag in validAccessFlags) {
             @Suppress("HardCodedStringLiteral")
-            val extraText = " (0x" + "%04x".format(accessFlag.flag) + (accessFlag.sinceJava?.let { ", since $it" } ?: "") + ")"
+            val extraText = " (0x" + "%04x".format(accessFlag.flag) + (accessFlag.sinceJava?.let { ", " + getString("since.0", it) } ?: "") + ")"
             put(accessFlag, JCheckBox(accessFlag.getAccessFlagText() + extraText))
         }
     }

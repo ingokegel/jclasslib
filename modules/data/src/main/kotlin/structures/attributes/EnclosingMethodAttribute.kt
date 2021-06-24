@@ -8,6 +8,9 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.constants.ConstantClassInfo
+import org.gjt.jclasslib.structures.constants.ConstantNameAndTypeInfo
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -24,11 +27,25 @@ class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
     var classInfoIndex: Int = 0
 
     /**
+     * Returns the constant that is referenced by the [classInfoIndex] index.
+     */
+    val classInfoConstant: ConstantClassInfo
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(classInfoIndex, ConstantClassInfo::class.java)
+
+    /**
      * Constant pool index of the CONSTANT_NameAndType_info
      * structure representing the name and type of a method in the class
      * referenced by the class info index above.
      */
     var methodInfoIndex: Int = 0
+
+    /**
+     * Returns the constant that is referenced by the [methodInfoIndex] index.
+     */
+    val methodInfoConstant: ConstantNameAndTypeInfo
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolEntry(methodInfoIndex, ConstantNameAndTypeInfo::class.java)
 
     override fun readData(input: DataInput) {
         classInfoIndex = input.readUnsignedShort()

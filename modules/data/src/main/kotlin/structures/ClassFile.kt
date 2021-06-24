@@ -302,7 +302,7 @@ class ClassFile : Structure(), AttributeContainer {
 
     private fun checkValidConstantPoolIndex(index: Int) {
         if (index < 1 || index >= constantPool.size) {
-            throw InvalidByteCodeException("Constant pool index $index is out of bounds [0, ${constantPool.size - 1}]")
+            throw InvalidByteCodeException("Constant pool index $index is out of bounds [1, ${constantPool.size - 1}]")
         }
     }
 

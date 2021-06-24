@@ -9,6 +9,8 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -21,6 +23,13 @@ class ModuleMainClassAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
      * Constant pool index of the CONSTANT_Class_info structure containing the module main class.
      */
     var mainClassIndex: Int = 0
+
+    /**
+     * Returns the constant that is referenced by the [mainClassIndex] index.
+     */
+    val mainClassConstant: ConstantUtf8Info
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(mainClassIndex)
 
     override fun readData(input: DataInput) {
         mainClassIndex = input.readUnsignedShort()

@@ -12,10 +12,7 @@ import org.gjt.jclasslib.structures.*
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.*
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
-import org.gjt.jclasslib.structures.elementvalues.AnnotationElementValue
-import org.gjt.jclasslib.structures.elementvalues.ArrayElementValue
-import org.gjt.jclasslib.structures.elementvalues.ElementValue
-import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
+import org.gjt.jclasslib.structures.elementvalues.*
 import org.gjt.jclasslib.util.TreeIcon
 import org.gjt.jclasslib.util.treeIcons
 import org.gjt.jclasslib.util.treeRowHeight
@@ -275,7 +272,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
     private fun BrowserTreeNode.addSingleElementValuePairEntryNode(elementValuePair: ElementValuePair, index: Int, attributesCount: Int) {
         val name = getFormattedIndex(index, attributesCount) + elementValuePair.entryName
-        add(BrowserTreeNode(name, NodeType.ELEMENTVALUEPAIR, elementValuePair).apply {
+        add(BrowserTreeNode(name, NodeType.ELEMENT_VALUE_PAIR, elementValuePair).apply {
             addSingleElementValueEntryNode(elementValuePair.elementValue, 0, 1)
         })
     }
@@ -284,8 +281,11 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         val prefix = if (attributesCount > 1) getFormattedIndex(index, attributesCount) else ""
         val nodeType = when (elementValue) {
             is AnnotationElementValue -> NodeType.ANNOTATION
-            is ArrayElementValue -> NodeType.ARRAYELEMENTVALUE
-            else -> NodeType.ELEMENTVALUE
+            is ArrayElementValue -> NodeType.ARRAY_ELEMENT_VALUE
+            is ConstElementValue -> NodeType.CONST_ELEMENT_VALUE
+            is ClassElementValue -> NodeType.CLASS_ELEMENT_VALUE
+            is EnumElementValue -> NodeType.ENUM_ELEMENTVALUE
+            else -> NodeType.GENERIC_ELEMENT_VALUE
         }
         add(BrowserTreeNode(prefix + elementValue.entryName, nodeType, elementValue).apply {
             if (elementValue is AnnotationElementValue) {

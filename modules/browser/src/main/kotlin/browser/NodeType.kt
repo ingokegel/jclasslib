@@ -56,13 +56,22 @@ enum class NodeType {
     TYPE_ANNOTATION {
         override fun createDetailPanel(services: BrowserServices) = TypeAnnotationDetailPane(services)
     },
-    ELEMENTVALUEPAIR {
+    ELEMENT_VALUE_PAIR {
         override fun createDetailPanel(services: BrowserServices) = ElementValuePairDetailPane(services)
     },
-    ELEMENTVALUE {
-        override fun createDetailPanel(services: BrowserServices) = ElementValueDetailPane(services)
+    GENERIC_ELEMENT_VALUE {
+        override fun createDetailPanel(services: BrowserServices) = GenericElementValueDetailPane(services)
     },
-    ARRAYELEMENTVALUE {
+    CONST_ELEMENT_VALUE {
+        override fun createDetailPanel(services: BrowserServices) = ConstElementValueEntryDetailPane(services)
+    },
+    CLASS_ELEMENT_VALUE {
+        override fun createDetailPanel(services: BrowserServices) = ClassElementValueEntryDetailPane(services)
+    },
+    ENUM_ELEMENTVALUE {
+        override fun createDetailPanel(services: BrowserServices) = EnumElementValueEntryDetailPane(services)
+    },
+    ARRAY_ELEMENT_VALUE {
         override fun createDetailPanel(services: BrowserServices) = ArrayElementValueDetailPane(services)
     },
     ATTRIBUTES {

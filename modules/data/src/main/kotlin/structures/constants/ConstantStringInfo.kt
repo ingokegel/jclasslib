@@ -30,7 +30,7 @@ class ConstantStringInfo(classFile: ClassFile) : AbstractConstant(classFile) {
      */
     val utf8Constant: ConstantUtf8Info
         @Throws(InvalidByteCodeException::class)
-        get() = classFile.getConstantPoolEntry(stringIndex, ConstantUtf8Info::class.java)
+        get() = classFile.getConstantPoolUtf8Entry(stringIndex)
 
     override val constantType: ConstantType
         get() = ConstantType.STRING

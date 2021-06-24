@@ -14,7 +14,7 @@ import java.io.DataOutput
  * Describes an ElementValue attribute structure.
  * @property elementValueType The type of the element value.
  */
-abstract class ElementValue(val elementValueType: ElementValueType) : SubStructure() {
+abstract class ElementValue(var elementValueType: ElementValueType) : SubStructure() {
 
     /**
      * Name of the entry.

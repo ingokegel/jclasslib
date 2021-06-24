@@ -29,6 +29,8 @@ enum class ElementValueType(val charTag: Char, val verbose: String) : ClassFileE
     override val tag: Int
         get() = charTag.code
 
+    override fun toString() = verbose
+
     fun createEntry(): ElementValue = when (this) {
         ENUM -> EnumElementValue()
         CLASS -> ClassElementValue()

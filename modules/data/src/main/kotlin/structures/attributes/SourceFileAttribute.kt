@@ -9,6 +9,8 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -21,6 +23,14 @@ class SourceFileAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
      * Constant pool index of the name of the source file.
      */
     var sourceFileIndex: Int = 0
+
+    /**
+     * Returns the constant that is referenced by the [sourceFileIndex] index.
+     */
+    val sourceFileConstant: ConstantUtf8Info
+        @Throws(InvalidByteCodeException::class)
+        get() = classFile.getConstantPoolUtf8Entry(sourceFileIndex)
+
 
     override fun readData(input: DataInput) {
         sourceFileIndex = input.readUnsignedShort()

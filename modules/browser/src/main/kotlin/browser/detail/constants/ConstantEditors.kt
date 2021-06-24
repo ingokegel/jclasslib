@@ -105,13 +105,13 @@ class ConstantMethodTypeEditor : ConstantDelegateEditor<ConstantMethodTypeInfo>(
 class ConstantReferenceEditor : DelegatesEditor<ConstantReference>() {
     override fun DelegateBuilder<ConstantReference>.buildDelegateSpecs() {
         addDelegateSpec(getString("menu.class.name")) {
-            it.classInfo
+            it.classConstant
         }
         addDelegateSpec(getString("menu.name")) {
-            it.nameAndTypeInfo.nameInfo
+            it.nameAndTypeConstant.nameConstant
         }
         addDelegateSpec(getString("menu.type")) {
-            it.nameAndTypeInfo.descriptorInfo
+            it.nameAndTypeConstant.descriptorConstant
         }
     }
 }
@@ -119,10 +119,10 @@ class ConstantReferenceEditor : DelegatesEditor<ConstantReference>() {
 class ConstantNameAndTypeEditor : DelegatesEditor<ConstantNameAndTypeInfo>() {
     override fun DelegateBuilder<ConstantNameAndTypeInfo>.buildDelegateSpecs() {
         addDelegateSpec(getString("menu.name")) {
-            it.nameInfo
+            it.nameConstant
         }
         addDelegateSpec(getString("menu.descriptor")) {
-            it.descriptorInfo
+            it.descriptorConstant
         }
     }
 }
@@ -132,17 +132,16 @@ class ConstantMethodHandleEditor : DelegatesEditor<ConstantMethodHandleInfo>() {
         addEnumSpec(
                 getString("menu.reference.kind"),
                 MethodHandleType::class.java,
-                { type },
-                { type -> this.type = type }
+                ConstantMethodHandleInfo::type
         )
         addDelegateSpec(getString("menu.class.name")) {
-            it.referenceConstant.classInfo
+            it.referenceConstant.classConstant
         }
         addDelegateSpec(getString("menu.method.name")) {
-            it.referenceConstant.nameAndTypeInfo.nameInfo
+            it.referenceConstant.nameAndTypeConstant.nameConstant
         }
         addDelegateSpec(getString("menu.type")) {
-            it.referenceConstant.nameAndTypeInfo.descriptorInfo
+            it.referenceConstant.nameAndTypeConstant.descriptorConstant
         }
     }
 }
@@ -150,10 +149,10 @@ class ConstantMethodHandleEditor : DelegatesEditor<ConstantMethodHandleInfo>() {
 class ConstantDynamicEditor : DelegatesEditor<ConstantDynamic>() {
     override fun DelegateBuilder<ConstantDynamic>.buildDelegateSpecs() {
         addDelegateSpec(getString("menu.name")) {
-            it.nameAndTypeInfo.nameInfo
+            it.nameAndTypeInfo.nameConstant
         }
         addDelegateSpec(getString("menu.type")) {
-            it.nameAndTypeInfo.descriptorInfo
+            it.nameAndTypeInfo.descriptorConstant
         }
     }
 }

@@ -64,7 +64,7 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
     private fun getClassInfo(): ConstantClassInfo? = constant?.let { constant ->
         when (constant) {
             is ConstantClassInfo -> constant
-            is ConstantReference -> constant.classInfo
+            is ConstantReference -> constant.classConstant
             else -> null
         }
     }
@@ -77,7 +77,7 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
                     if (category != null) {
                         BrowserPath().apply {
                             addPathComponent(CategoryHolder(category))
-                            val nameAndType = constant.nameAndTypeInfo
+                            val nameAndType = constant.nameAndTypeConstant
                             addPathComponent(ReferenceHolder(nameAndType.name, nameAndType.descriptor))
                         }
                     } else {

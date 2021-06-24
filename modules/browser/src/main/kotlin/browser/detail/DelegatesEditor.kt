@@ -121,6 +121,9 @@ class ConstantDelegateSpec<T : Any>(val delegateName: String?, val delegateProvi
 interface DelegateBuilder<T: Any> {
     fun addDelegateSpec(@Nls name: String? = null, delegateProvider: (T) -> Constant)
 
+    fun <E : Enum<E>> addEnumSpec(@Nls name: String, enumClass: Class<E>, property: KMutableProperty1<T, E>) {
+        addEnumSpec(name, enumClass, { property.get(this) }, { property.set(this, it) })
+    }
     fun <E : Enum<E>> addEnumSpec(@Nls name: String, enumClass: Class<E>, getter: T.() -> E, setter: T.(E) -> Unit)
 
     fun addIntSpec(@Nls name: String, getter: T.() -> Int, setter: T.(Int) -> Unit)

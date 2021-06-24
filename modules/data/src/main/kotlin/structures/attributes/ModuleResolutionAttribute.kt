@@ -18,16 +18,16 @@ import java.io.DataOutput
 class ModuleResolutionAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
-     * Module resolution flag.
+     * Module resolution type.
      */
-    var resolution: Int = 0
+    lateinit var resolution: ModuleResolutionType
 
     override fun readData(input: DataInput) {
-        resolution = input.readUnsignedShort()
+        resolution = ModuleResolutionType.getFromTag(input.readUnsignedShort())
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeShort(resolution)
+        output.writeShort(resolution.tag)
     }
 
     override fun getAttributeLength(): Int =  2
