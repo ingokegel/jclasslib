@@ -31,7 +31,7 @@ import kotlin.system.exitProcess
 
 const val LAF_DEFAULT_SYSTEM_PROPERTY = "jclasslib.laf.default"
 const val WORKSPACE_FILE_SUFFIX = "jcw"
-const val WEBSITE_URL = "http://www.ej-technologies.com/products/jclasslib/overview.html"
+const val WEBSITE_URL = "https://www.ej-technologies.com/products/jclasslib/overview.html"
 const val SETTINGS_DARK_MODE_OPTION = "darkModeOption"
 const val SETTINGS_LOCALE = "locale"
 
