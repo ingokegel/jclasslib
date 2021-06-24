@@ -37,6 +37,6 @@ fun readClassFile(url: URL): ClassFile {
 }
 
 fun readClassFile(resourcePath: String): ClassFile {
-    return readClassFile(InputStreamProvider::class.java.getResource(resourcePath))
+    return readClassFile(requireNotNull(InputStreamProvider::class.java.getResource(resourcePath)))
 }
 

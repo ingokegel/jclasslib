@@ -159,7 +159,7 @@ private fun registerStartupListener() {
 }
 
 private fun isLoadedFromJar(): Boolean =
-        BrowserFrame::class.java.let { it.getResource(it.simpleName + ".class").toString().startsWith("jar:") }
+        BrowserFrame::class.java.let { it.getResource(it.simpleName + ".class")?.toString()?.startsWith("jar:") == true }
 
 private fun splitupCommandLine(command: String): List<String> {
     val cmdList = ArrayList<String>()

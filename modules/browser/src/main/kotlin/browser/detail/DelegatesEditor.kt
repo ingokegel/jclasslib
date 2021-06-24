@@ -56,6 +56,7 @@ abstract class DelegatesEditor<T : Any> : DataEditor<T>() {
             is IntSpec<T> -> changeValue(data, delegateSpec, detailPane) { value ->
                 askForIntValue(value, delegateSpec.name, detailPane)
             }
+            else -> error(delegateSpec.javaClass.name) // Kotlin compiler does not understand that the above cases are exhaustive
         }
     }
 

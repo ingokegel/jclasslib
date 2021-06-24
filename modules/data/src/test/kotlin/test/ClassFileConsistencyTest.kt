@@ -113,7 +113,7 @@ class ClassFileConsistencyTest {
     }
 
     fun checkClassFile(resourcePath: String): Boolean {
-        return checkClassFile(InputStreamProvider::class.java.getResource(resourcePath))
+        return checkClassFile(requireNotNull(InputStreamProvider::class.java.getResource(resourcePath)))
     }
 
     fun checkClassFile(url: URL): Boolean {
