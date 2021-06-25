@@ -17,7 +17,6 @@ import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.getValueColor
 import util.LightOrDarkColor
 import java.awt.Color
-import java.util.*
 import javax.swing.text.StyleContext
 
 class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribute, classFile: ClassFile) : AttributeDocument(styles, classFile) {
@@ -142,12 +141,12 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         val jumpOffsets = instruction.jumpOffsets
 
         appendString(" $lowByte to $highByte", STYLE_IMMEDIATE_VALUE)
+        appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)
 
         for (i in 0..highByte - lowByte) {
             appendString("\u0009" + (i + lowByte) + ": ", STYLE_IMMEDIATE_VALUE)
             addOffsetLink(jumpOffsets[i], instructionOffset)
             appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)
-
         }
         appendString("\u0009default: ", STYLE_IMMEDIATE_VALUE)
         addOffsetLink(instruction.defaultOffset, instructionOffset)
