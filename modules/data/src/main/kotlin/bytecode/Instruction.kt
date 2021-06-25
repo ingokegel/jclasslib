@@ -60,3 +60,10 @@ abstract class Instruction(val opcode: Opcode) {
  * Instruction without any further immediate arguments
  */
 class SimpleInstruction(opcode: Opcode): Instruction(opcode)
+
+/**
+ * Interface implemented by instructions that can be wide
+ */
+interface HasWide {
+    var isWide: Boolean
+}

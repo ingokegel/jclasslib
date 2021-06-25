@@ -25,6 +25,8 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
     private val invalidBranches = HashSet<Instruction>()
     private var offsetWidth: Int = 0
 
+    var lastInstructions: MutableList<Instruction>? = null
+
     init {
         setupDocument()
     }
@@ -33,6 +35,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
 
     override fun addContent(): LineNumberCounts {
         val instructions = ByteCodeReader.readByteCode(attribute.code)
+        lastInstructions = instructions
         verifyOffsets(instructions)
         calculateOffsetWidth(instructions)
         return instructions.map {
@@ -59,7 +62,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         appendString(getPaddedValue(offset, offsetWidth), STYLE_OFFSET)
         appendString(" ", STYLE_NORMAL)
 
-        val linkStyle = styles.addAttribute(STYLE_INSTRUCTION, ATTRIBUTE_NAME_LINK, SpecLink(instruction.opcode))
+        val linkStyle = styles.addAttribute(STYLE_INSTRUCTION, ATTRIBUTE_NAME_LINK, InstructionLink(instruction))
         appendString(instruction.opcode.verbose, linkStyle)
 
         val additionalLines = addOpcodeSpecificInfo(instruction)
@@ -184,7 +187,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         appendString(" (" + (if (branchOffset > 0) "+" else "") + branchOffset.toString() + ")", STYLE_IMMEDIATE_VALUE)
     }
 
-    data class SpecLink(val opcode: Opcode) : Link
+    data class InstructionLink(val instruction: Instruction) : Link
     data class OffsetLink(val targetOffset: Int, override val sourceOffset: Int) : DocumentLink
 
     companion object {

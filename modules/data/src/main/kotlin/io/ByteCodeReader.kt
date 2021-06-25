@@ -47,7 +47,16 @@ object ByteCodeReader {
 
     @Throws(IOException::class)
     private fun readNextInstruction(bcis: ByteCodeInputStream, wide: Boolean): Instruction =
-        when (val opcode = Opcode.getFromTag(bcis.readUnsignedByte())) {
+        createInstruction(Opcode.getFromTag(bcis.readUnsignedByte()), wide).also { it.read(bcis) }
+
+    /**
+     * Create an instruction for the specified opcode
+     * @param opcode the opcode
+     * @param wide if the instruction is a wide instruction
+     */
+    @JvmOverloads
+    fun createInstruction(opcode: Opcode, wide: Boolean = false) =
+        when (opcode) {
 
             Opcode.WIDE,
             Opcode.NOP,
@@ -301,5 +310,5 @@ object ByteCodeReader {
 
                 MultianewarrayInstruction()
 
-        }.also { it.read(bcis) }
+        }
 }

@@ -15,7 +15,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput
  * @property isWide Indicates whether the instruction is subject to a wide instruction or not.
  * @property immediateByte Immediate unsigned byte of this instruction.
  */
-abstract class ImmediateByteInstruction(opcode: Opcode, var isWide: Boolean, var immediateByte: Int) : Instruction(opcode) {
+abstract class ImmediateByteInstruction(opcode: Opcode, override var isWide: Boolean, var immediateByte: Int) : Instruction(opcode), HasWide {
 
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)

@@ -30,6 +30,12 @@ import javax.swing.tree.TreePath
 abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(elementClass: Class<T>, private val documentClass: Class<D>, services: BrowserServices) : DetailPaneWithKeyValues<T>(elementClass, services) {
 
     protected val textPane = AttributeTextPane()
+    protected var lastAttribute: T? = null
+
+    private var activeElement : AbstractElement? = null
+    private var oldAttributes: AttributeSet? = null
+    private var activeHighlight: Any? = null
+    private var highlightLocked = false
 
     private val opcodeCounterTextPane = OpcodeCounterTextPane().apply {
         isEnabled = false
@@ -51,6 +57,11 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     override fun show(treePath: TreePath) {
         super.show(treePath)
         val attribute = getElement(treePath)
+        show(attribute, 0)
+    }
+    
+    private fun show(attribute: T, viewCaretPosition: Int) {
+        lastAttribute = attribute
         val detailDocument = attributeToDocument.getOrPut(attribute) {
             createDocument(styles, attribute, services.classFile)
         }
@@ -66,10 +77,17 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
                 }
                 textPane.apply {
                     document = detailDocument
-                    caretPosition = 0
-                    scrollRectToVisible(origin)
+                    caretPosition = viewCaretPosition
                 }
             }
+        }
+    }
+
+    override fun refresh() {
+        super.refresh()
+        lastAttribute?.let { attribute ->
+            attributeToDocument.remove(attribute)
+            show(attribute, textPane.caretPosition)
         }
     }
 
@@ -86,13 +104,16 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         }
     }
 
-    protected open fun linkTriggered(link: Link) {
+    protected open fun linkTriggered(link: Link, event: MouseEvent) {
         if (link is DocumentLink) {
             val sourceOffset = link.sourceOffset
             updateHistory(sourceOffset)
         }
         when (link) {
-            is ConstantPoolLink -> constantPoolLink(services, link.constantPoolIndex)
+            is ConstantPoolLink -> {
+                removeActiveHighlight()
+                constantPoolLink(services, link.constantPoolIndex)
+            }
         }
     }
 
@@ -132,10 +153,25 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         get() = documentClass.cast(textPane.document)
 
 
+    protected fun removeActiveHighlight() {
+        if (!highlightLocked) {
+            activeHighlight?.let { highlight ->
+                textPane.highlighter.removeHighlight(highlight)
+                activeHighlight = null
+            }
+        }
+    }
+
+    protected fun lockHighlight() {
+        highlightLocked = true
+    }
+
+    protected fun unlockHighlight() {
+        highlightLocked = false
+        removeActiveHighlight()
+    }
+
     private inner class DocumentLinkListener(private val textPane: JTextPane) : MouseAdapter(), MouseMotionListener {
-        private var activeElement : AbstractElement? = null
-        private var oldAttributes: AttributeSet? = null
-        private var activeHighlight: Any? = null
 
         init {
             textPane.addMouseListener(this)
@@ -169,10 +205,10 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         }
 
         override fun mouseClicked(event: MouseEvent) {
-            val link = getTextElement(event).link
+            val textElement = getTextElement(event)
+            val link = textElement.link
             if (link != null) {
-                removeActiveHighlight()
-                linkTriggered(link)
+                linkTriggered(link, event)
             }
         }
 
@@ -215,15 +251,10 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
             get() = this.link is DocumentLink
 
         private fun AbstractElement.mouseEnter() {
-            this.hoverHighlight?.let { stroke ->
-                activeHighlight = textPane.highlighter.addHighlight(this.startOffset, this.endOffset, LinkHighlightPainter(stroke))
-            }
-        }
-
-        private fun removeActiveHighlight() {
-            activeHighlight?.let { highlight ->
-                textPane.highlighter.removeHighlight(highlight)
-                activeHighlight = null
+            if (!highlightLocked) {
+                this.hoverHighlight?.let { stroke ->
+                    activeHighlight = textPane.highlighter.addHighlight(this.startOffset, this.endOffset, LinkHighlightPainter(stroke))
+                }
             }
         }
     }

@@ -7,15 +7,25 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
+import com.install4j.runtime.installer.frontend.GUIHelper
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
+import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.InstructionLink
 import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.OffsetLink
-import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.SpecLink
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
 import org.gjt.jclasslib.browser.detail.attributes.document.DocumentDetailPane
+import org.gjt.jclasslib.bytecode.*
+import org.gjt.jclasslib.io.ByteCodeReader
+import org.gjt.jclasslib.io.ByteCodeWriter
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
+import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import java.awt.event.MouseEvent
+import javax.swing.JOptionPane
+import javax.swing.JPopupMenu
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
 import javax.swing.text.StyleContext
 
 class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDetailPane: CodeAttributeDetailPane) : DocumentDetailPane<CodeAttribute, ByteCodeDocument>(CodeAttribute::class.java, ByteCodeDocument::class.java, services) {
@@ -29,15 +39,72 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
 
     override fun offsetToPosition(offset: Int) = attributeDocument.getPosition(offset)
 
-    override fun linkTriggered(link: AttributeDocument.Link) {
-        super.linkTriggered(link)
+    override fun linkTriggered(link: AttributeDocument.Link, event: MouseEvent) {
+        super.linkTriggered(link, event)
         when (link) {
             is OffsetLink -> {
+                removeActiveHighlight()
                 scrollToOffset(link.targetOffset)
                 updateHistory(link.targetOffset)
             }
-            is SpecLink -> {
-                services.showURL(link.opcode.docUrl)
+            is InstructionLink -> {
+                lockHighlight()
+                JPopupMenu().apply {
+                    add(getString("action.show.jvm.spec")).apply {
+                        addActionListener {
+                            services.showURL(link.instruction.opcode.docUrl)
+                        }
+                    }
+                    add(getString("action.replace.opcode")).apply {
+                        addActionListener {
+                            replaceOpcode(link.instruction)
+                        }
+                    }
+                    addPopupMenuListener(object : PopupMenuListener {
+                        override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+                        }
+
+                        override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
+                            unlockHighlight()
+                        }
+
+                        override fun popupMenuCanceled(e: PopupMenuEvent) {
+                        }
+                    })
+                }.show(textPane, event.x, event.y)
+            }
+        }
+    }
+
+    private fun replaceOpcode(instruction: Instruction) {
+        val replacementOpcodes = getReplacementOpcodes(instruction)
+        if (replacementOpcodes.isEmpty()) {
+            GUIHelper.showMessage(this, "There are no compatible opcodes for the selected instruction", null, JOptionPane.WARNING_MESSAGE)
+        } else {
+            val opcode = instruction.opcode
+            val newOpcode = JOptionPane.showInputDialog(
+                    getParentWindow(),
+                    getString("choose.compatible.opcode"),
+                    getString("replace.opcode.title"),
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    replacementOpcodes.toTypedArray(),
+                    opcode
+            ) as Opcode?
+            if (newOpcode != null && newOpcode != opcode) {
+                val newInstruction = ByteCodeReader.createInstruction(newOpcode, (instruction as? HasWide)?.isWide ?: false)
+                newInstruction.copyFrom(instruction)
+                val offset = instruction.offset
+                attributeDocument.lastInstructions?.let { instructions ->
+                    val index = instructions.indexOfFirst { it.offset == offset }
+                    check(index > -1)
+                    check(instructions.getOrNull(index) == instruction)
+                    instructions[index] = newInstruction
+                    lastAttribute?.let {
+                        it.code = ByteCodeWriter.writeByteCode(instructions)
+                    }
+                }
+                modified()
             }
         }
     }
@@ -45,5 +112,15 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
     override fun makeVisible() {
         super.makeVisible()
         codeAttributeDetailPane.selectByteCodeDetailPane()
+    }
+}
+
+private fun Instruction.copyFrom(instruction: Instruction) {
+    when (this) {
+        is SimpleInstruction -> {}
+        is SimpleImmediateByteInstruction -> immediateByte = (instruction as ImmediateByteInstruction).immediateByte
+        is ImmediateShortInstruction -> immediateShort = (instruction as ImmediateShortInstruction).immediateShort
+        is AbstractBranchInstruction -> branchOffset = (instruction as AbstractBranchInstruction).branchOffset
+        else -> error("Not implemented")
     }
 }
