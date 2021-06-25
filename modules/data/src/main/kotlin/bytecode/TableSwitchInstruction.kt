@@ -13,7 +13,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 /**
  * Describes the tableswitch instruction.
  */
-class TableSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
+class TableSwitchInstruction : PaddedInstruction(Opcode.TABLESWITCH) {
 
     /**
      * Default offset of the branch of this instruction.

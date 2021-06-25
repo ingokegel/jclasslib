@@ -16,7 +16,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput
  */
 class InvokeInterfaceInstruction
 @JvmOverloads
-constructor(opcode: Opcode, immediateShort: Int = 0, var count: Int = 0) : ImmediateShortInstruction(opcode, immediateShort) {
+constructor(immediateShort: Int = 0, var count: Int = 0) : ImmediateShortInstruction(Opcode.INVOKEINTERFACE, immediateShort) {
 
     override val size: Int
         get() = super.size + 2

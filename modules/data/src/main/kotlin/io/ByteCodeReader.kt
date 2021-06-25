@@ -10,7 +10,6 @@ package org.gjt.jclasslib.io
 import org.gjt.jclasslib.bytecode.*
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.util.*
 
 /**
  * Converts code to a list of instructions as defined in the package
@@ -202,7 +201,7 @@ object ByteCodeReader {
             Opcode.IMPDEP1,
             Opcode.IMPDEP2 ->
 
-                Instruction(opcode)
+                SimpleInstruction(opcode)
 
             Opcode.BIPUSH,
             Opcode.LDC,
@@ -230,7 +229,7 @@ object ByteCodeReader {
             Opcode.RET,
             Opcode.NEWARRAY ->
 
-                ImmediateByteInstruction(opcode, wide)
+                SimpleImmediateByteInstruction(opcode, wide)
 
             Opcode.LDC_W,
             Opcode.LDC2_W,
@@ -249,7 +248,7 @@ object ByteCodeReader {
                 // not have an immediate constant pool reference
             Opcode.SIPUSH ->
 
-                ImmediateShortInstruction(opcode)
+                SimpleImmediateShortInstruction(opcode)
 
             Opcode.IFEQ,
             Opcode.IFNE,
@@ -280,27 +279,27 @@ object ByteCodeReader {
             // subject to wide
             Opcode.IINC ->
 
-                IncrementInstruction(opcode, wide)
+                IncrementInstruction(wide)
 
             Opcode.TABLESWITCH ->
 
-                TableSwitchInstruction(opcode)
+                TableSwitchInstruction()
 
             Opcode.LOOKUPSWITCH ->
 
-                LookupSwitchInstruction(opcode)
+                LookupSwitchInstruction()
 
             Opcode.INVOKEINTERFACE ->
 
-                InvokeInterfaceInstruction(opcode)
+                InvokeInterfaceInstruction()
 
             Opcode.INVOKEDYNAMIC ->
 
-                InvokeDynamicInstruction(opcode)
+                InvokeDynamicInstruction()
 
             Opcode.MULTIANEWARRAY ->
 
-                MultianewarrayInstruction(opcode)
+                MultianewarrayInstruction()
 
         }.also { it.read(bcis) }
 }

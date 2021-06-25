@@ -14,7 +14,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput
  * Base class for all opcode instruction wrappers.
  * @property opcode Opcode of this instruction.
  */
-open class Instruction(val opcode: Opcode) {
+abstract class Instruction(val opcode: Opcode) {
 
     /**
      * Offset of this instruction in its parent Code attribute.
@@ -55,3 +55,8 @@ open class Instruction(val opcode: Opcode) {
     }
 
 }
+
+/**
+ * Instruction without any further immediate arguments
+ */
+class SimpleInstruction(opcode: Opcode): Instruction(opcode)

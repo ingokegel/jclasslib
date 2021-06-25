@@ -13,7 +13,9 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 /**
  * Describes the multianewarray instruction.
  */
-class MultianewarrayInstruction(opcode: Opcode) : ImmediateShortInstruction(opcode) {
+class MultianewarrayInstruction
+@JvmOverloads
+constructor(immediateShort: Int = 0) : ImmediateShortInstruction(Opcode.MULTIANEWARRAY, immediateShort) {
 
     /**
      * Number of dimensions for the new array.

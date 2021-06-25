@@ -9,12 +9,11 @@ package org.gjt.jclasslib.bytecode
 
 import org.gjt.jclasslib.io.ByteCodeInput
 import org.gjt.jclasslib.io.ByteCodeOutput
-import java.util.*
 
 /**
  * Describes the lookupswitch instruction.
  */
-class LookupSwitchInstruction(opcode: Opcode) : PaddedInstruction(opcode) {
+class LookupSwitchInstruction : PaddedInstruction(Opcode.LOOKUPSWITCH) {
 
     /**
      * Default offset of the branch of this instruction.

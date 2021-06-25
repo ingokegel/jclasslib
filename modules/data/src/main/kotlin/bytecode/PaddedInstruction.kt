@@ -15,7 +15,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput
  * to the start of the enclosing code of the parent Code
  * attribute before reading immediate arguments.
  */
-open class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
+abstract class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
 
     /**
      * Get the padded size in bytes of this instruction.

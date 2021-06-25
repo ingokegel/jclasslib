@@ -16,8 +16,8 @@ import org.gjt.jclasslib.io.ByteCodeOutput
  */
 class IncrementInstruction
 @JvmOverloads
-constructor(opcode: Opcode, wide: Boolean, immediateByte: Int = 0, var incrementConst: Int = 0) :
-        ImmediateByteInstruction(opcode, wide, immediateByte) {
+constructor(wide: Boolean, immediateByte: Int = 0, var incrementConst: Int = 0) :
+        ImmediateByteInstruction(Opcode.IINC, wide, immediateByte) {
 
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)
