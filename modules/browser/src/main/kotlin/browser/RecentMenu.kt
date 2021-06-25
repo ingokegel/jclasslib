@@ -55,7 +55,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
         val numberToFile = TreeMap<Int, String>()
         val recentNode = preferences.node(SETTINGS_RECENT_WORKSPACES)
         try {
-            recentNode.keys().forEach { key ->
+            for (key in recentNode.keys()) {
                 val fileName = recentNode.get(key, null)
                 if (fileName != null) {
                     numberToFile[Integer.parseInt(key)] = fileName
@@ -75,8 +75,9 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
         } catch (e: BackingStoreException) {
         }
 
-        var count = 0
-        recentWorkspaces.forEach { fileName -> recentNode.put(count++.toString(), fileName) }
+        for ((count, fileName) in recentWorkspaces.withIndex()) {
+            recentNode.put(count.toString(), fileName)
+        }
     }
 
     fun addTo(parentMenu: JMenu) {

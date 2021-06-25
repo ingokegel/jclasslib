@@ -9,7 +9,6 @@ package org.gjt.jclasslib.browser.config
 
 import org.gjt.jclasslib.browser.config.classpath.*
 import java.io.File
-import java.util.*
 import javax.swing.tree.DefaultTreeModel
 
 abstract class ClassPathContainer : ClasspathComponent {
@@ -20,7 +19,7 @@ abstract class ClassPathContainer : ClasspathComponent {
     private val mergedEntries = HashSet<ClasspathEntry>()
 
     override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
-        classpath.forEach { entry ->
+        for (entry in classpath) {
             val findResult = entry.findClass(className, modulePathSelection)
             if (findResult != null) {
                 return findResult
@@ -30,7 +29,7 @@ abstract class ClassPathContainer : ClasspathComponent {
     }
 
     override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
-        classpath.forEach { entry ->
+        for (entry in classpath) {
             if (reset || !mergedEntries.contains(entry)) {
                 entry.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
                 mergedEntries.add(entry)

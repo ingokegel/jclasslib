@@ -64,7 +64,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         val methodsPath = categoryToPath[NodeType.METHOD] ?: return
         val methodsNode = methodsPath.lastPathComponent as TreeNode
 
-        methodsNode.children().iterator().forEach { treeNode ->
+        for (treeNode in methodsNode.children().iterator()) {
             treeNode as BrowserTreeNode
             val method = treeNode.element as MethodInfo
             if (method.name == methodName && method.descriptor.startsWith(methodSignature)) {

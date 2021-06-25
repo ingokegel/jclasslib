@@ -71,7 +71,7 @@ class BrowserFrame : JFrame() {
     val browseClasspathAction = DefaultAction(getString("action.browse.class.path"), getString("action.browse.class.path.description"), "tree_small.png", "tree_large.png") {
         classpathBrowser.isVisible = true
         if (!classpathBrowser.isCanceled) {
-            classpathBrowser.selectedClassNames.forEach { selectedClassName ->
+            for (selectedClassName in classpathBrowser.selectedClassNames) {
                 val findResult = config.findClass(selectedClassName, classpathBrowser.isModulePathSelection())
                 if (findResult != null) {
                     repaintNow()
@@ -592,7 +592,7 @@ class BrowserFrame : JFrame() {
             isVisible = true
         }
         if (!jarBrowser.isCanceled) {
-            jarBrowser.selectedClassNames.forEach { selectedClassName ->
+            for (selectedClassName in jarBrowser.selectedClassNames) {
                 val classPathClassName = ClasspathEntry.getClassPathClassName(selectedClassName, jarBrowser.isModulePathSelection())
                 val fileName = file.path + "!" + classPathClassName + ".class"
                 frameContent.openClassFile(fileName)

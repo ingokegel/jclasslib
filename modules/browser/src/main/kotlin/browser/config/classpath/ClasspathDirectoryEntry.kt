@@ -58,7 +58,7 @@ class ClasspathDirectoryEntry(fileName: String) : ClasspathEntry(fileName) {
 
     private fun mergeDirectory(directory: File, parentNode: ClassTreeNode, model: DefaultTreeModel, reset: Boolean) {
         val files = directory.listFiles() ?: return
-        files.forEach { file ->
+        for (file in files) {
             if (file.isDirectory) {
                 val directoryNode = addOrFindNode(file.name, parentNode, true, model, reset)
                 mergeDirectory(file, directoryNode, model, reset)

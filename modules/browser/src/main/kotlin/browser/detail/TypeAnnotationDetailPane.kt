@@ -108,7 +108,7 @@ class TypeAnnotationDetailPane(services: BrowserServices) : KeyValueDetailPane<T
 
     private fun findAttributeChildNode(path: TreePath, attributeClass: Class<out AttributeInfo>): TreePath {
         val node = path.lastPathComponent as BrowserTreeNode
-        node.children().iterator().forEach { child ->
+        for (child in node.children().iterator()) {
             val attributeNode = child as BrowserTreeNode
             if (attributeNode.element?.let { it::class.java } == attributeClass) {
                 return path.pathByAddingChild(attributeNode)

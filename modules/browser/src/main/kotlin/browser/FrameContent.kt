@@ -170,7 +170,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     fun saveWorkspace(element: Element) {
         element.addElement(NODE_NAME_TABS) {
             setAttribute(ATTRIBUTE_SPLIT_MODE, splitMode.name)
-            wrappers.filter { it.isShowing }.forEach { wrapper ->
+            for (wrapper in wrappers.filter { it.isShowing }) {
                 wrapper.saveWorkspace(this)
             }
         }
@@ -180,7 +180,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
     fun readWorkspace(element: Element) {
         element.firstChildElement(NODE_NAME_TABS)?.let { tabsElement ->
             split(SplitMode.getByName(tabsElement.getAttribute(ATTRIBUTE_SPLIT_MODE)))
-            tabsElement.childElements(NODE_NAME_GROUP).forEach { groupElement ->
+            for (groupElement in tabsElement.childElements(NODE_NAME_GROUP)) {
                 val position = Position.getByName(groupElement.getAttribute(ATTRIBUTE_POSITION))
                 wrappers[position].readWorkspace(groupElement)
             }
@@ -250,14 +250,14 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         fun saveWorkspace(element: Element) {
             element.addElement(NODE_NAME_GROUP) {
                 setAttribute(ATTRIBUTE_POSITION, position.name)
-                tabbedPane.tabs().forEach { tab ->
+                for (tab in tabbedPane.tabs()) {
                     tab.saveWorkspace(this)
                 }
             }
         }
 
         fun readWorkspace(element: Element) {
-            element.childElements(BrowserTab.NODE_NAME).forEach { tabElement ->
+            for (tabElement in element.childElements(BrowserTab.NODE_NAME)) {
                 BrowserTab.create(tabElement, frame).apply {
                     tabbedPane.addTab(this)
                     setBrowserPath(BrowserPath.create(tabElement))

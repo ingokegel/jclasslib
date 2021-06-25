@@ -41,7 +41,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
     }
 
     private fun verifyOffsets(instructions: ArrayList<Instruction>) {
-        instructions.filterIsInstance<AbstractBranchInstruction>().forEach { instruction ->
+        for (instruction in instructions.filterIsInstance<AbstractBranchInstruction>()) {
             val targetOffset = instruction.branchOffset + instruction.offset
             if (instructions.none { it.offset == targetOffset }) {
                 invalidBranches.add(instruction)
@@ -163,7 +163,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         appendString(" $matchOffsetPairsCount", STYLE_IMMEDIATE_VALUE)
         appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)
 
-        matchOffsetPairs.forEach { matchOffsetPair ->
+        for (matchOffsetPair in matchOffsetPairs) {
             appendString("\u0009" + matchOffsetPair.match + ": ", STYLE_IMMEDIATE_VALUE)
             addOffsetLink(matchOffsetPair.offset, instructionOffset)
             appendBatchLineFeed(STYLE_IMMEDIATE_VALUE)

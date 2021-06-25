@@ -15,8 +15,6 @@ import org.gjt.jclasslib.browser.config.classpath.ClasspathDirectoryEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.w3c.dom.Element
 import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
 
 class BrowserConfig : ClassPathContainer() {
 
@@ -66,7 +64,7 @@ class BrowserConfig : ClassPathContainer() {
         clear()
         element.firstChildElement(NODE_NAME_CLASSPATH)?.let { classpathElement ->
             jreHome = classpathElement.getAttribute(ATTRIBUTE_JRE_HOME).let { if (it.isEmpty() || !File(it).exists()) jreHome else it }
-            classpathElement.childElements().forEach { entryElement ->
+            for (entryElement in classpathElement.childElements()) {
                 ClasspathEntry.create(entryElement)?.apply {
                     classpath.add(this)
                 }

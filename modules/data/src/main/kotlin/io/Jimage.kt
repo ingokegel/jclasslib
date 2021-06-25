@@ -40,7 +40,7 @@ fun findClassWithModuleNameInJrt(moduleNameAndClassName: String, jreHome: File):
  */
 fun findClassInJrt(className: String, jreHome: File): Path? {
     val fileName = className.replace('.', '/') + classFileSuffix
-    Files.newDirectoryStream(getModulesRoot(jreHome)).forEach { module ->
+    for (module in Files.newDirectoryStream(getModulesRoot(jreHome))) {
         val path = module.resolve(fileName)
         if (Files.exists(path)) {
             return path

@@ -64,7 +64,7 @@ class ClassFileConsistencyTest {
 
     fun scanJar(file: File, testStatistics: TestStatistics) {
         val jar = JarFile(file)
-        jar.entries().iterator().forEach { entry ->
+        for (entry in jar.entries().iterator()) {
             val fileName = entry.name
             if (fileName.endsWith(".class")) {
                 checkClassFile(fileName, JarInputStreamProvider(jar, entry), testStatistics)

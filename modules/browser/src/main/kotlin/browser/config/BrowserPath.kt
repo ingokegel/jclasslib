@@ -37,7 +37,7 @@ class BrowserPath {
         fun create(element: Element): BrowserPath? {
             return element.firstChildElement(NODE_NAME)?.let { pathElement ->
                 BrowserPath().apply {
-                    pathElement.childElements().forEach { pathComponentElement ->
+                    for (pathComponentElement in pathElement.childElements()) {
                         PathComponent.create(pathComponentElement)?.let { pathComponent ->
                             this.pathComponents.add(pathComponent)
                         }

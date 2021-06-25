@@ -142,7 +142,7 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane(), Closable
                 container.frame.openClassFromJar(files[0])
                 event.dropComplete(true)
             } else if (files.all { it.extension == "class" }) {
-                files.forEach { file ->
+                for (file in files) {
                     container.frame.openClassFromFile(file)
                 }
                 event.dropComplete(true)

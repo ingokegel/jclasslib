@@ -16,7 +16,6 @@ import org.gjt.jclasslib.util.getLinkColor
 import java.awt.BasicStroke
 import java.awt.Color
 import java.io.IOException
-import java.util.*
 import javax.swing.event.DocumentEvent
 import javax.swing.text.*
 
@@ -40,7 +39,7 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         try {
             val documentModification = DocumentModification()
             documentModification.block()
-            documentModification.modifiedRanges.forEach { range ->
+            for (range in documentModification.modifiedRanges) {
                 fireChangedUpdate(DefaultDocumentEvent(range.first, range.last - range.first, DocumentEvent.EventType.CHANGE))
             }
         } finally {
