@@ -16,6 +16,17 @@ fun getReplacementOpcodes(instruction: Instruction): List<Opcode> = when (instru
     is BranchInstruction -> branchInstructions
     is WideBranchInstruction -> wideBranchInstructions
     else -> emptyList()
+}.minus(instruction.opcode)
+
+fun getStackCompatibleReplacementOpcodes(instruction: Instruction): List<Opcode> {
+    val stackChanges = getStackChanges(instruction.opcode)
+    return if (stackChanges != null) {
+        getReplacementOpcodes(instruction).filter { opcode ->
+            getStackChanges(opcode)?.isReplacementCompatibleWith(stackChanges) == true
+        }
+    } else {
+        emptyList()
+    }
 }
 
 private val simpleInstructions = listOf(
