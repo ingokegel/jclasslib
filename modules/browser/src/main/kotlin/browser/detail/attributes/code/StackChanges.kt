@@ -37,7 +37,7 @@ enum class StackValueType(val verbose: String) {
     VALUE("Value"),
     VALUE_C1("Value C1"),
     VALUE_C2("Value C2"),
-    INTEGER("Index"),
+    INTEGER("Integer"),
     LONG("Long"),
     FLOAT("Float"),
     DOUBLE("Double"),

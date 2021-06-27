@@ -136,6 +136,9 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
         private int c;
 
         void xyz() {
+            int z = 0;
+            z++;
+            Object[][][] objects = new Object[0][2][3];
             handleTest(Main::testMethod);
             handleTest((p) -> {
                 System.out.println("test 1 " + c++);

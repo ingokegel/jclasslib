@@ -50,14 +50,24 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
             is InstructionLink -> {
                 lockHighlight()
                 JPopupMenu().apply {
+                    val instruction = link.instruction
                     add(getString("action.show.jvm.spec")).apply {
                         addActionListener {
-                            services.showURL(link.instruction.opcode.docUrl)
+                            services.showURL(instruction.opcode.docUrl)
                         }
                     }
                     add(getString("action.replace.opcode")).apply {
                         addActionListener {
-                            replaceOpcode(link.instruction)
+                            replaceOpcode(instruction)
+                        }
+                    }
+                    for (action in getImmediateEditActions(instruction)) {
+                        add(action.name).apply {
+                            addActionListener {
+                                if (action.executeRaw(instruction, getParentWindow())) {
+                                    modifyInstructions()
+                                }
+                            }
                         }
                     }
                     addPopupMenuListener(object : PopupMenuListener {
@@ -95,17 +105,23 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
                 val newInstruction = ByteCodeReader.createInstruction(newOpcode, (instruction as? HasWide)?.isWide ?: false)
                 newInstruction.copyFrom(instruction)
                 val offset = instruction.offset
-                attributeDocument.lastInstructions?.let { instructions ->
+                modifyInstructions { instructions ->
                     val index = instructions.indexOfFirst { it.offset == offset }
                     check(index > -1)
                     check(instructions.getOrNull(index) == instruction)
                     instructions[index] = newInstruction
-                    lastAttribute?.let {
-                        it.code = ByteCodeWriter.writeByteCode(instructions)
-                    }
                 }
-                modified()
             }
+        }
+    }
+
+    private fun modifyInstructions(modifier: (MutableList<Instruction>) -> Unit = {}) {
+        attributeDocument.lastInstructions?.let { instructions ->
+            modifier(instructions)
+            lastAttribute?.let {
+                it.code = ByteCodeWriter.writeByteCode(instructions)
+            }
+            modified()
         }
     }
 
