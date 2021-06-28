@@ -136,8 +136,6 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
         private int c;
 
         void xyz() {
-            int z = 0;
-            z++;
             Object[][][] objects = new Object[0][2][3];
             handleTest(Main::testMethod);
             handleTest((p) -> {
@@ -151,6 +149,53 @@ public class Main<@Test T extends @Test Object> extends @Test Object implements 
                 System.out.println("test 2 " + c++);
             });
 
+        }
+
+        void iinc() {
+            int z = 0;
+            z++;
+        }
+
+        void tableSwitch() {
+            int z = 0;
+            switch (z) {
+                case 1:
+                    z += 1;
+                    break;
+                case 2:
+                    z += 2;
+                    break;
+                case 3:
+                    z += 3;
+                    break;
+                case 4:
+                    z += 4;
+                    break;
+                case 5:
+                    z += 5;
+                    break;
+            }
+        }
+
+        void lookupSwitch() {
+            int z = 0;
+            switch (z) {
+                case 1:
+                    z += 1;
+                    break;
+                case 56:
+                    z += 2;
+                    break;
+                case 111:
+                    z += 3;
+                    break;
+                case 1056:
+                    z += 4;
+                    break;
+                case 36666:
+                    z += 5;
+                    break;
+            }
         }
 
         static void main() {

@@ -37,6 +37,15 @@ fun getImmediateEditActions(instruction: Instruction): List<ImmediateEditAction<
                 ImmediateShortEditAction(getString("action.edit.index")),
                 InvokeInterfaceCountEditAction()
         )
+        is TableSwitchInstruction -> instruction.jumpOffsets.mapIndexed { index, _ ->
+            TableSwitchJumpOffsetEditAction(index)
+        } + listOf(TableSwitchDefaultJumpOffsetEditAction())
+        is LookupSwitchInstruction -> instruction.matchOffsetPairs.flatMapIndexed { index, matchOffsetPair ->
+            listOf(
+                    LookupSwitchMatchEditAction(index, matchOffsetPair.match),
+                    LookupSwitchJumpOffsetEditAction(index, matchOffsetPair.match)
+            )
+        } + listOf(LookupSwitchDefaultJumpOffsetEditAction())
         else -> emptyList()
     }
 
@@ -45,6 +54,10 @@ abstract class ImmediateEditAction<I : Instruction>(@Nls val name: String) {
     abstract fun execute(instruction: I, parentWindow: Window?): Boolean
     fun executeRaw(instruction: Instruction, parentWindow: Window?): Boolean =
         execute(instructionClass.cast(instruction), parentWindow)
+
+    @get:Nls
+    open val group: String?
+        get() = null
 }
 
 abstract class ValueEditAction<I : Instruction, T>(@Nls name: String) : ImmediateEditAction<I>(name) {
@@ -167,5 +180,61 @@ class InvokeInterfaceCountEditAction : ByteEditAction<InvokeInterfaceInstruction
 
     override fun setValue(value: UByte, instruction: InvokeInterfaceInstruction) {
         instruction.count = value.toInt()
+    }
+}
+
+class TableSwitchJumpOffsetEditAction(val index: Int) : IntegerEditAction<TableSwitchInstruction>(getString("action.jump.offset.0", index)) {
+    override val instructionClass get() = TableSwitchInstruction::class.java
+
+    override fun getValue(instruction: TableSwitchInstruction): UInt = instruction.jumpOffsets[index].toUInt()
+
+    override fun setValue(value: UInt, instruction: TableSwitchInstruction) {
+        instruction.jumpOffsets[index] = value.toInt()
+    }
+
+    override val group get() = getString("action.edit.jump.offsets")
+}
+
+class TableSwitchDefaultJumpOffsetEditAction() : IntegerEditAction<TableSwitchInstruction>(getString("action.edit.default.jump.offset")) {
+    override val instructionClass get() = TableSwitchInstruction::class.java
+
+    override fun getValue(instruction: TableSwitchInstruction): UInt = instruction.defaultOffset.toUInt()
+
+    override fun setValue(value: UInt, instruction: TableSwitchInstruction) {
+        instruction.defaultOffset = value.toInt()
+    }
+}
+
+class LookupSwitchMatchEditAction(val index: Int, match: Int) : IntegerEditAction<LookupSwitchInstruction>(getString("action.match.0", match)) {
+    override val instructionClass get() = LookupSwitchInstruction::class.java
+
+    override fun getValue(instruction: LookupSwitchInstruction): UInt = instruction.matchOffsetPairs[index].match.toUInt()
+
+    override fun setValue(value: UInt, instruction: LookupSwitchInstruction) {
+        instruction.matchOffsetPairs[index].match = value.toInt()
+    }
+
+    override val group get() = getString("action.edit.matches")
+}
+
+class LookupSwitchJumpOffsetEditAction(val index: Int, match: Int) : IntegerEditAction<LookupSwitchInstruction>(getString("action.jump.offset.for.match.0", match)) {
+    override val instructionClass get() = LookupSwitchInstruction::class.java
+
+    override fun getValue(instruction: LookupSwitchInstruction): UInt = instruction.matchOffsetPairs[index].offset.toUInt()
+
+    override fun setValue(value: UInt, instruction: LookupSwitchInstruction) {
+        instruction.matchOffsetPairs[index].offset = value.toInt()
+    }
+
+    override val group get() = getString("action.edit.jump.offsets")
+}
+
+class LookupSwitchDefaultJumpOffsetEditAction() : IntegerEditAction<LookupSwitchInstruction>(getString("action.edit.default.jump.offset")) {
+    override val instructionClass get() = LookupSwitchInstruction::class.java
+
+    override fun getValue(instruction: LookupSwitchInstruction): UInt = instruction.defaultOffset.toUInt()
+
+    override fun setValue(value: UInt, instruction: LookupSwitchInstruction) {
+        instruction.defaultOffset = value.toInt()
     }
 }

@@ -22,6 +22,7 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.GUIHelper.getParentWindow
 import java.awt.event.MouseEvent
+import javax.swing.JMenu
 import javax.swing.JOptionPane
 import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
@@ -61,10 +62,20 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
                             replaceOpcode(instruction)
                         }
                     }
+                    val groupMenuItems = mutableMapOf<String, JMenu>()
                     for (action in getImmediateEditActions(instruction)) {
-                        add(action.name).apply {
+                        val actionGroup = action.group
+                        val actionName = action.name
+                        val menuItem = if (actionGroup == null) {
+                            add(actionName)
+                        } else {
+                            groupMenuItems.getOrPut(actionGroup) {
+                                JMenu(actionGroup).also { add(it) }
+                            }.add(actionName)
+                        }
+                        menuItem.apply {
                             addActionListener {
-                                if (action.executeRaw(instruction, getParentWindow())) {
+                                if (action.executeRaw(instruction, this@ByteCodeDetailPane.getParentWindow())) {
                                     modifyInstructions()
                                 }
                             }
@@ -121,6 +132,7 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
             lastAttribute?.let {
                 it.code = ByteCodeWriter.writeByteCode(instructions)
             }
+            removeActiveHighlight()
             modified()
         }
     }
