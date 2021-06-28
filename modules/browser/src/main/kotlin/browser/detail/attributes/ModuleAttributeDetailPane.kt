@@ -9,29 +9,71 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.DetailPane
+import org.gjt.jclasslib.browser.detail.ActionBuilder
+import org.gjt.jclasslib.browser.detail.DataEditor
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
 import org.gjt.jclasslib.browser.detail.attributes.document.DocumentDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.document.LineNumberCounts
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.ConstantPoolUtil
 import org.gjt.jclasslib.structures.attributes.ExportsEntry
 import org.gjt.jclasslib.structures.attributes.ModuleAttribute
+import org.gjt.jclasslib.util.GUIHelper.getParentWindow
 import util.LightOrDarkColor
 import java.awt.Color
+import javax.swing.JOptionPane
 import javax.swing.text.StyleContext
+import kotlin.reflect.KMutableProperty0
 
 class ModuleAttributeDetailPane(services: BrowserServices) : DocumentDetailPane<ModuleAttribute, ModuleDocument>(ModuleAttribute::class.java, ModuleDocument::class.java, services) {
 
     override fun createKeyValueDetailPane() = ModuleAttributeValueDetailPane()
 
     override fun createDocument(styles: StyleContext, attribute: ModuleAttribute, classFile: ClassFile): ModuleDocument =
-            ModuleDocument(styles, attribute, classFile)
+        ModuleDocument(styles, attribute, classFile)
 
     override fun offsetToPosition(offset: Int): Int = offset
 
     inner class ModuleAttributeValueDetailPane : KeyValueDetailPane<ModuleAttribute>(ModuleAttribute::class.java, services) {
         override fun addLabels() {
             addConstantPoolLink(getString("key.module.version"), ModuleAttribute::moduleVersionIndex)
+            addEditor {
+                ModuleAttributeEditor()
+            }
+        }
+
+        override fun refresh() {
+            super.refresh()
+            this@ModuleAttributeDetailPane.refresh()
+        }
+    }
+
+    class ModuleAttributeEditor : DataEditor<ModuleAttribute>() {
+        override fun ActionBuilder.buildActions(detailPane: DetailPane<*>) {
+            addAction(getString("action.add.export")) { _, actionName ->
+                data?.let { addExportsEntry(actionName, detailPane, it::exportsEntries) }
+            }
+            addAction(getString("action.add.opens")) { _, actionName ->
+                data?.let { addExportsEntry(actionName, detailPane, it::opensEntries) }
+            }
+        }
+
+        private fun addExportsEntry(actionName: String, detailPane: DetailPane<*>, property: KMutableProperty0<Array<ExportsEntry>>) {
+            JOptionPane.showInputDialog(
+                    detailPane.getParentWindow(),
+                    getString("enter.package.name"),
+                    actionName,
+                    JOptionPane.QUESTION_MESSAGE
+            )?.replace('.', '/')?.let { packageName ->
+                val classFile = detailPane.services.classFile
+                property.set(property.get() + ExportsEntry().apply {
+                    index = ConstantPoolUtil.addConstantPackageInfo(classFile, packageName)
+                })
+                detailPane.modified()
+                detailPane.services.browserComponent.treePane.refresh()
+            }
         }
     }
 }

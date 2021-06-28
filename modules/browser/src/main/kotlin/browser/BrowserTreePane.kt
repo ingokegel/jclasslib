@@ -44,9 +44,11 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
+    private val scrollPane = JScrollPane(tree)
+
     init {
         layout = BorderLayout()
-        add(JScrollPane(tree).apply {
+        add(scrollPane.apply {
             minimumSize = Dimension(100, 150)
             preferredSize = Dimension(250, 150)
         }, BorderLayout.CENTER)
@@ -103,6 +105,23 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
+    fun refresh() {
+        enlargeConstantPool()
+    }
+
+    private fun enlargeConstantPool() {
+        val constantPoolNode = requireNotNull(categoryToPath[NodeType.CONSTANT_POOL_ENTRY]).lastPathComponent as BrowserTreeNode
+        val classFile = services.classFile
+        val constantPool = classFile.constantPool
+        val constantPoolCount = constantPool.size - 2
+        val addedIndices = constantPoolNode.childCount..constantPoolCount
+        for (i in addedIndices) {
+            val constantPoolIndex = i + 1
+            constantPoolNode.addConstantPoolEntryNode(constantPoolIndex, classFile.getConstantPoolEntry(constantPoolIndex, Constant::class.java), constantPool)
+        }
+        treeModel.nodesWereInserted(constantPoolNode, addedIndices.toList().toIntArray())
+    }
+
     private fun buildTreeModel() = DefaultTreeModel(BrowserRootNode().apply {
         add(NodeType.GENERAL, BrowserTreeNode(getString("tree.general.information"), NodeType.GENERAL, services.classFile))
         add(NodeType.CONSTANT_POOL_ENTRY, buildConstantPoolNode())
@@ -123,18 +142,22 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         val constantPool = services.classFile.constantPool
         return BrowserTreeNode(getString("tree.constant.pool"), NodeType.CONSTANT_POOL, constantPool).apply {
             constantPool.forEachIndexed { i, constant ->
-                if (i > 0) {
-                    add(if (constant == ConstantPlaceholder) {
-                        BrowserTreeNode(getFormattedIndex(i, constantPool.size) + getString("tree.large.numeric.suffix"), NodeType.NO_CONTENT, constant)
-                    } else {
-                        try {
-                            BrowserTreeNode(getFormattedIndex(i, constantPool.size) + constant.constantType.verbose, NodeType.CONSTANT_POOL_ENTRY, constant)
-                        } catch (ex: InvalidByteCodeException) {
-                            buildNullNode()
-                        }
-                    })
-                }
+                addConstantPoolEntryNode(i, constant, constantPool)
             }
+        }
+    }
+
+    private fun BrowserTreeNode.addConstantPoolEntryNode(i: Int, constant: Constant, constantPool: Array<Constant>) {
+        if (i > 0) {
+            add(if (constant == ConstantPlaceholder) {
+                BrowserTreeNode(getFormattedIndex(i, constantPool.size) + getString("tree.large.numeric.suffix"), NodeType.NO_CONTENT, constant)
+            } else {
+                try {
+                    BrowserTreeNode(getFormattedIndex(i, constantPool.size) + constant.constantType.verbose, NodeType.CONSTANT_POOL_ENTRY, constant)
+                } catch (ex: InvalidByteCodeException) {
+                    buildNullNode()
+                }
+            })
         }
     }
 

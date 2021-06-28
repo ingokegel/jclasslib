@@ -17,13 +17,12 @@ import org.gjt.jclasslib.structures.constants.*
 object ConstantPoolUtil {
 
     /**
-     * Add a ConstantMethodRef constant pool entry to the constant pool
-     * of a ClassFile.
+     * Add a [ConstantMethodrefInfo] constant pool entry to the constant pool
+     * of a [ClassFile].
      * @param classFile the class file whose constant pool is to be edited
      * @param className the name of the referenced class
      * @param methodName the name of the referenced method
      * @param methodSignature the signature of the referenced method
-     * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantMethodRef
      */
     fun addConstantMethodrefInfo(classFile: ClassFile, className: String, methodName: String, methodSignature: String): Int {
@@ -39,13 +38,12 @@ object ConstantPoolUtil {
     }
 
     /**
-     * Add a ConstantFieldRef constant pool entry to the constant pool
-     * of a ClassFile.
+     * Add a [ConstantFieldrefInfo] constant pool entry to the constant pool
+     * of a [ClassFile].
      * @param classFile the class file whose constant pool is to be edited
      * @param className the name of the referenced class
      * @param fieldName the name of the referenced field
      * @param fieldType the type of the referenced field
-     * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantMethodRef
      */
     fun addConstantFieldrefInfo(classFile: ClassFile, className: String, fieldName: String, fieldType: String): Int {
@@ -60,12 +58,11 @@ object ConstantPoolUtil {
     }
 
     /**
-     * Add a ConstantNameAndTypeInfo constant pool entry to the
-     * constant pool of a ClassFile.
+     * Add a [ConstantNameAndTypeInfo] constant pool entry to the
+     * constant pool of a [ClassFile].
      * @param classFile the class file whose constant pool is to be edited
      * @param name the name
      * @param descriptor the descriptor
-     * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantNameAndTypeInfo
      */
     fun addConstantNameAndTypeInfo(classFile: ClassFile, name: String, descriptor: String): Int {
@@ -81,11 +78,10 @@ object ConstantPoolUtil {
     }
 
     /**
-     * Add a ConstantClassInfo constant pool entry to the
-     * constant pool of a ClassFile.
+     * Add a [ConstantClassInfo] constant pool entry to the
+     * constant pool of a [ClassFile].
      * @param classFile the class file whose constant pool is to be edited
      * @param className the name of the referenced class
-     * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantClassInfo
      */
     fun addConstantClassInfo(classFile: ClassFile, className: String): Int {
@@ -98,11 +94,26 @@ object ConstantPoolUtil {
     }
 
     /**
+     * Add a [ConstantPackageInfo] constant pool entry to the
+     * constant pool of a [ClassFile].
+     * @param classFile the class file whose constant pool is to be edited
+     * @param packageName the name of the package
+     * @return the constant pool index of the added ConstantClassInfo
+     */
+    fun addConstantPackageInfo(classFile: ClassFile, packageName: String): Int {
+        val nameIndex = addConstantUTF8Info(classFile, packageName)
+
+        val classInfo = ConstantPackageInfo(classFile).apply {
+            this.nameIndex = nameIndex
+        }
+        return addConstantPoolEntry(classFile, classInfo)
+    }
+
+    /**
      * Add a ConstantUTF8Info constant pool entry to the
-     * constant pool of a ClassFile.
+     * constant pool of a [ClassFile].
      * @param classFile the class file whose constant pool is to be edited
      * @param string the string
-     * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added ConstantUTF8Info
      */
     fun addConstantUTF8Info(classFile: ClassFile, string: String): Int {
@@ -114,10 +125,9 @@ object ConstantPoolUtil {
 
     /**
      * Add a constant pool entry to the
-     * constant pool of a ClassFile.
+     * constant pool of a [ClassFile].
      * @param classFile the class file whose constant pool is to be edited
      * @param newEntry the new constant pool entry
-     * constant pool is to be enlarged. Set to 0 if unsure.
      * @return the constant pool index of the added constant pool entry
      */
     fun addConstantPoolEntry(classFile: ClassFile, newEntry: Constant): Int {

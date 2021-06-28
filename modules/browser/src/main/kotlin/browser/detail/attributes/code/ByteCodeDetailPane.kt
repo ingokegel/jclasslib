@@ -62,25 +62,7 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
                             replaceOpcode(instruction)
                         }
                     }
-                    val groupMenuItems = mutableMapOf<String, JMenu>()
-                    for (action in getImmediateEditActions(instruction)) {
-                        val actionGroup = action.group
-                        val actionName = action.name
-                        val menuItem = if (actionGroup == null) {
-                            add(actionName)
-                        } else {
-                            groupMenuItems.getOrPut(actionGroup) {
-                                JMenu(actionGroup).also { add(it) }
-                            }.add(actionName)
-                        }
-                        menuItem.apply {
-                            addActionListener {
-                                if (action.executeRaw(instruction, this@ByteCodeDetailPane.getParentWindow())) {
-                                    modifyInstructions()
-                                }
-                            }
-                        }
-                    }
+                    addImmediateEditActions(instruction)
                     addPopupMenuListener(object : PopupMenuListener {
                         override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
                         }
@@ -93,6 +75,28 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
                         }
                     })
                 }.show(textPane, event.x, event.y)
+            }
+        }
+    }
+
+    private fun JPopupMenu.addImmediateEditActions(instruction: Instruction) {
+        val groupMenuItems = mutableMapOf<String, JMenu>()
+        for (action in getImmediateEditActions(instruction)) {
+            val actionGroup = action.group
+            val actionName = action.name
+            val menuItem = if (actionGroup == null) {
+                add(actionName)
+            } else {
+                groupMenuItems.getOrPut(actionGroup) {
+                    JMenu(actionGroup).also { add(it) }
+                }.add(actionName)
+            }
+            menuItem.apply {
+                addActionListener {
+                    if (action.executeRaw(instruction, this@ByteCodeDetailPane.getParentWindow())) {
+                        modifyInstructions()
+                    }
+                }
             }
         }
     }

@@ -17,7 +17,7 @@ import java.io.DataOutput
 class ExportsEntry : SubStructure() {
 
     /**
-     * The index of the CONSTANT_Module_info structure that is exported or opened.
+     * The index of the CONSTANT_Package_info structure that is exported or opened.
      */
     var index: Int = 0
 

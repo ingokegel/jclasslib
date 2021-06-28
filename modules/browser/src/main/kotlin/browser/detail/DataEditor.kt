@@ -13,7 +13,7 @@ import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.util.GUIHelper.getParentWindow
 import org.gjt.jclasslib.util.MenuButton
 import org.jetbrains.annotations.Nls
-import java.awt.event.ActionListener
+import java.awt.event.ActionEvent
 import javax.swing.*
 
 abstract class DataEditor<T : Any> {
@@ -68,14 +68,23 @@ abstract class DataEditor<T : Any> {
 }
 
 interface ActionBuilder {
-    fun addAction(name: String, actionListener: ActionListener)
+    fun addAction(@Nls name: String, block: () -> Unit) = addAction(name) {_, _ ->
+        block()
+    }
+    fun addAction(@Nls name: String, actionListener: ExtendedActionListener)
+}
+
+fun interface ExtendedActionListener {
+    fun actionPerformed(event: ActionEvent, actionName: String)
 }
 
 class ActionBuilderImpl : ActionBuilder {
     val popupMenu = JPopupMenu()
-    override fun addAction(@Nls name: String, actionListener: ActionListener) {
+    override fun addAction(@Nls name: String, actionListener: ExtendedActionListener) {
         popupMenu.add(JMenuItem(name).apply {
-            addActionListener(actionListener)
+            addActionListener {
+                actionListener.actionPerformed(it, name)
+            }
         })
     }
 }
