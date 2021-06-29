@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.browser
 
-import com.install4j.runtime.alert.AlertType
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.ClosableTabComponent
 import org.gjt.jclasslib.util.DnDTabbedPane
 import org.gjt.jclasslib.util.GUIHelper
@@ -103,16 +103,7 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane(), Closable
         }
     }
 
-    override fun canRemove(index: Int): Boolean = canRemove(getBrowserTabAt(index))
-
-    fun canRemove(browserTab: BrowserTab): Boolean =
-        !browserTab.isModified || GUIHelper.showOptionDialog(
-                this,
-                getString("message.class.file.modified.title"),
-                getString("message.class.file.modified"),
-                GUIHelper.DISCARD_CANCEL_OPTIONS,
-                AlertType.QUESTION
-        ) == 0
+    override fun canRemove(index: Int): Boolean = getBrowserTabAt(index).browserComponent.canRemove()
 
     private fun getBrowserTabAt(index: Int) = getComponentAt(index) as BrowserTab
 
@@ -128,7 +119,7 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane(), Closable
             AlertType.QUESTION
     ) == 0
 
-    fun hasModified() = tabs().any { it.isModified }
+    fun hasModified() = tabs().any { it.browserComponent.isModified }
 
     override fun isDataFlavorSupported(transferable: Transferable): Boolean =
             transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)

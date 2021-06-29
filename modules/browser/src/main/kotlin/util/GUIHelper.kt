@@ -8,8 +8,6 @@
 package org.gjt.jclasslib.util
 
 import com.install4j.api.Util
-import com.install4j.runtime.alert.Alert
-import com.install4j.runtime.alert.AlertType
 import com.install4j.runtime.filechooser.AbstractFileSystemChooser
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.jetbrains.annotations.Nls
@@ -29,16 +27,8 @@ object GUIHelper {
 
     fun isMacOs() = System.getProperty("os.name").lowercase().startsWith("mac")
 
-    fun showOptionDialog(parent: Component, @Nls mainMessage: String, @Nls contentMessage: String?, @Nls options: Array<String>, alertType: AlertType): Int {
-        val alert = Alert.create<String>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
-                .addButtons(options)
-                .defaultButton(options[0])
-                .cancelButton(options[options.size - 1])
-                .alertType(alertType)
-
-        val alertResult = alert.show()
-        return alertResult.selectedIndex
-    }
+    fun showOptionDialog(parent: Component?, @Nls mainMessage: String, @Nls contentMessage: String?, @Nls options: Array<String>, alertType: AlertType): Int =
+        alertFacade.showOptionDialog(parent, mainMessage, contentMessage, options, alertType)
 
     fun showMessage(parent: Component?, throwable: Throwable) {
         showMessage(parent, getString("message.error.occurred"), throwable.message, AlertType.ERROR)
@@ -49,10 +39,7 @@ object GUIHelper {
     }
 
     fun showMessage(parent: Component?, @Nls mainMessage: String, @Nls contentMessage: String?, alertType: AlertType) {
-        Alert.create<Any>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
-            .mainMessageRedundant(true)
-            .alertType(alertType)
-            .show()
+        alertFacade.showMessage(parent, mainMessage, contentMessage, alertType)
     }
 
     fun centerOnParentWindow(window: Window, parentWindow: Window) {

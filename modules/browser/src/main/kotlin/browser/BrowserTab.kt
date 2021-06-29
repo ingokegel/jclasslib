@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.browser
 
-import com.install4j.runtime.alert.AlertType
 import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
@@ -15,6 +14,7 @@ import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.browser.config.classpath.FindResult
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
 import org.w3c.dom.Element
 import java.awt.BorderLayout
@@ -37,7 +37,6 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
 
     override var classFile: ClassFile = readClassFile(fileName, frame)
     override val browserComponent: BrowserComponent = BrowserComponent(this)
-    override var isModified: Boolean = false
 
     override fun activate() {
         tabbedPane.focus()
@@ -70,7 +69,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         }
     }
 
-    fun saveClassToDirectory(directory: File) : Boolean {
+    fun saveClassToDirectory(directory: File): Boolean {
         val simpleClassName = classFile.simpleClassName
         val packageDirectory = File(directory, classFile.thisClassName.removeSuffix(simpleClassName))
         packageDirectory.mkdirs()
@@ -79,17 +78,18 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
             ClassFileWriter.writeToFile(file, classFile)
             true
         } catch (e: Exception) {
-            GUIHelper.showMessage(parentFrame, getString("message.class.save.error", file.path), getString("message.error.message", e.message ?: ""), AlertType.ERROR)
+            GUIHelper.showMessage(parentFrame, getString("message.class.save.error", file.path), getString("message.error.message", e.message
+                    ?: ""), AlertType.ERROR)
             false
         }
     }
 
-    private tailrec fun findClass(className: String): FindResult? = parentFrame.config.findClass(className, false) ?:
-            if (GUIHelper.showOptionDialog(parentFrame,
-                    getString("message.class.not.found.title"),
-                    getString("message.class.not.found", className),
-                    arrayOf(getString("action.setup.class.path"), getString("action.cancel")),
-                    AlertType.WARNING) != 0) {
+    private tailrec fun findClass(className: String): FindResult? = parentFrame.config.findClass(className, false)
+            ?: if (GUIHelper.showOptionDialog(parentFrame,
+                            getString("message.class.not.found.title"),
+                            getString("message.class.not.found", className),
+                            arrayOf(getString("action.setup.class.path"), getString("action.cancel")),
+                            AlertType.WARNING) != 0) {
                 null
             } else {
                 parentFrame.setupClasspathAction()
@@ -102,7 +102,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     }
 
     fun reload() {
-        if (tabbedPane.canRemove(this)) {
+        if (browserComponent.canRemove()) {
             resetModified()
             classFile = readClassFile(fileName, parentFrame)
             browserComponent.rebuild()
@@ -123,18 +123,17 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     }
 
     override fun modified() {
-        isModified = true
         tabbedPane.updateSelectedTitle()
         frameContent.updateSaveAction()
     }
 
     fun getTabTitle(): String =
-            (if (isModified) "* " else "") +
-            if (moduleName != ClasspathEntry.UNNAMED_MODULE) {
-                "$moduleName/"
-            } else {
-                ""
-            } + browserComponent.title
+        (if (browserComponent.isModified) "* " else "") +
+                if (moduleName != ClasspathEntry.UNNAMED_MODULE) {
+                    "$moduleName/"
+                } else {
+                    ""
+                } + browserComponent.title
 
     fun setBrowserPath(browserPath: BrowserPath?) {
         browserComponent.browserPath = browserPath
@@ -149,15 +148,27 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     }
 
     fun saveModified() {
-        if (isModified) {
-            if (writeClassFile(classFile, fileName, parentFrame)) {
-                resetModified()
+        if (browserComponent.isModified) {
+            try {
+                val directoryChooser: () -> File? = {
+                    val fileChooser = parentFrame.saveModifiedClassesFileChooser
+                    if (fileChooser.select()) {
+                        fileChooser.selectedDirectory
+                    } else {
+                        null
+                    }
+                }
+                if (writeClassFile(classFile, fileName, parentFrame, directoryChooser)) {
+                    resetModified()
+                }
+            } catch (e: IOException) {
+                GUIHelper.showMessage(parentFrame, e)
             }
         }
     }
 
     private fun resetModified() {
-        isModified = false
+        browserComponent.isModified = false
         tabbedPane.updateTitleOf(this)
     }
 
@@ -167,6 +178,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         private const val ATTRIBUTE_MODULE_NAME = "moduleName"
 
         fun create(element: Element, frame: BrowserFrame): BrowserTab =
-                BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), element.getAttributeNode(ATTRIBUTE_MODULE_NAME)?.value ?: ClasspathEntry.UNNAMED_MODULE, frame)
+            BrowserTab(element.getAttribute(ATTRIBUTE_FILE_NAME), element.getAttributeNode(ATTRIBUTE_MODULE_NAME)?.value
+                    ?: ClasspathEntry.UNNAMED_MODULE, frame)
     }
 }

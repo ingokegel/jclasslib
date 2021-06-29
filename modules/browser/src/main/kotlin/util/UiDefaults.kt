@@ -9,7 +9,16 @@ package org.gjt.jclasslib.util
 
 import util.LightOrDarkColor
 import java.awt.Color
+import java.awt.Component
 import javax.swing.Icon
+import javax.swing.JScrollPane
+import javax.swing.JTree
+import javax.swing.tree.DefaultTreeCellRenderer
+import javax.swing.tree.TreeModel
+
+var treeFactory: (model: TreeModel) -> JTree = ::JTree
+var treeCellRendererFactory: () -> DefaultTreeCellRenderer = ::DefaultTreeCellRenderer
+var scrollPaneFactory: (component: Component) -> JScrollPane = ::JScrollPane
 
 enum class TreeIcon {CLOSED, OPEN, LEAF}
 

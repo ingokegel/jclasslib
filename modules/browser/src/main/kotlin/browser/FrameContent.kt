@@ -7,13 +7,13 @@
 
 package org.gjt.jclasslib.browser
 
-import com.install4j.runtime.alert.AlertType
 import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
 import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
+import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
 import org.jetbrains.annotations.Nls
 import org.w3c.dom.Element

@@ -19,6 +19,7 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.CompilerModuleExtension
 import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.openapi.util.io.FileUtil
@@ -39,8 +40,11 @@ import org.gjt.jclasslib.browser.BrowserComponent
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.WEBSITE_URL
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.writeClassFile
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.GUIHelper.getParentWindow
 import java.awt.event.ActionEvent
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -53,8 +57,8 @@ const val TOOL_WINDOW_ID: String = "jclasslib"
 fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?, project: Project) {
     val toolWindow = getToolWindow(project)
     val existingEntry = toolWindow.contentManager.contents
-        .associateBy { it.component as BytecodeToolWindowPanel }
-        .entries.firstOrNull { it.key.locatedClassFile == locatedClassFile }
+            .associateBy { it.component as BytecodeToolWindowPanel }
+            .entries.firstOrNull { it.key.locatedClassFile == locatedClassFile }
     if (existingEntry != null) {
         val (panel, content) = existingEntry
         activateToolWindow(toolWindow, content, panel, browserPath)
@@ -79,8 +83,8 @@ private fun readClassFile(locatedClassFile: LocatedClassFile, project: Project):
     return try {
         val classFileBytes = loadClassFileBytes(locatedClassFile, project)
         ClassFileReader.readFromInputStream(ByteArrayInputStream(classFileBytes))
-    } catch(e: Exception) {
-        Messages.showWarningDialog(project, "Error reading class file: ${e.message}", "Jclasslib Bytecode Viewer")
+    } catch (e: Exception) {
+        Messages.showWarningDialog(project, "Error reading class file: ${e.message}", GUIHelper.MESSAGE_TITLE)
         null
     }
 }
@@ -98,10 +102,13 @@ private fun loadCompiledClassFileBytes(locatedClassFile: LocatedClassFile, proje
     val classFileName = StringUtil.getShortName(locatedClassFile.jvmClassName) + ".class"
     return if (index.isInLibraryClasses(file)) {
         val classFile = file.parent.findChild(classFileName)
-        classFile?.contentsToByteArray(false) ?: throw IOException("Class file not found")
+        classFile?.contentsToByteArray(false).also {
+            locatedClassFile.writableUrl = classFile?.url
+        } ?: throw IOException("Class file not found")
     } else {
         val classFile = File(file.parent.path, classFileName)
         if (classFile.isFile) {
+            locatedClassFile.writableUrl = classFile.toURI().path
             FileUtil.loadFileBytes(classFile)
         } else {
             throw IOException("Class file not found")
@@ -116,10 +123,11 @@ private fun loadSourceClassFileBytes(locatedClassFile: LocatedClassFile, project
     val extension = CompilerModuleExtension.getInstance(module) ?: throw IOException("Extension not found")
     val inTests = index.isInTestSourceContent(file)
     val classPathRoot = (if (inTests) extension.compilerOutputPathForTests else extension.compilerOutputPath)
-        ?: throw IOException("Class root not found")
+            ?: throw IOException("Class root not found")
     val relativePath = locatedClassFile.jvmClassName.replace('.', '/') + ".class"
     val classFile = File(classPathRoot.path, relativePath)
     return if (classFile.exists()) {
+        locatedClassFile.writableUrl = classFile.toURI().path
         FileUtil.loadFileBytes(classFile)
     } else {
         throw IOException("Class file not found")
@@ -141,6 +149,9 @@ class ByteCodeToolWindowFactory : ToolWindowFactory {
         ContentManagerWatcher.watchContentManager(toolWindow, toolWindow.contentManager)
     }
 }
+
+private var preventSavingConfirmation: Boolean = false
+private const val modificationPrefix = "* "
 
 class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClassFile: LocatedClassFile, val project: Project) : SimpleToolWindowPanel(true, true), BrowserServices {
 
@@ -195,11 +206,31 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         }
 
         override fun actionPerformed(e: AnActionEvent) {
-            val newClassFile = readClassFile(locatedClassFile, project)
-            if (newClassFile != null) {
-                classFile = newClassFile
-                browserComponent.rebuild()
+            if (browserComponent.canRemove()) {
+                val newClassFile = readClassFile(locatedClassFile, project)
+                if (newClassFile != null) {
+                    classFile = newClassFile
+                    browserComponent.rebuild()
+                }
+                resetModified()
             }
+        }
+    }
+
+    private val saveAction: AnAction = object : DumbAwareAction() {
+        init {
+            templatePresentation.apply {
+                icon = AllIcons.Actions.Menu_saveall
+                text = "Save Modified Class File"
+            }
+        }
+
+        override fun actionPerformed(e: AnActionEvent) {
+            saveModified()
+        }
+
+        override fun update(e: AnActionEvent) {
+            e.presentation.isEnabled = browserComponent.isModified
         }
     }
 
@@ -233,12 +264,12 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
             if (psiClass != null) {
                 openClassFile(psiClass, browserPath, project)
             } else {
-                Messages.showWarningDialog(project, "Class $className could not be found", "Jclasslib Bytecode Viewer")
+                Messages.showWarningDialog(project, "Class $className could not be found", GUIHelper.MESSAGE_TITLE)
             }
         }
     }
 
-    private fun getRoot() : VirtualFile {
+    private fun getRoot(): VirtualFile {
         var root = locatedClassFile.virtualFile
         repeat(classFile.thisClassName.count { it == '/' } + 1) {
             root = root.parent
@@ -247,13 +278,14 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
     }
 
     override fun canOpenClassFiles(): Boolean = true
-    override fun canSaveClassFiles(): Boolean = false
+    override fun canSaveClassFiles(): Boolean = locatedClassFile.writableUrl != null
 
     override fun showURL(urlSpec: String) {
         BrowserUtil.browse(urlSpec)
     }
 
     override fun modified() {
+        content.displayName = modificationPrefix + content.displayName
     }
 
     init {
@@ -262,6 +294,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
             add(backwardActionDelegate)
             add(forwardActionDelegate)
             add(reloadAction)
+            add(saveAction)
             addSeparator()
             add(webAction)
         }
@@ -271,9 +304,6 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         toolbar = actionToolbar.component
         setContent(browserComponent)
     }
-
-    override val isModified: Boolean
-        get() = false
 
     private inner class ActionDelegate(private val anAction: AnAction) : AbstractAction() {
         override fun actionPerformed(e: ActionEvent?) {
@@ -320,6 +350,33 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
 
     private fun PsiClass.getAnonymousClasses(): Array<out PsiElement> = PsiTreeUtil.collectElements(this) { e ->
         e is PsiAnonymousClass && PsiTreeUtil.getParentOfType(e, PsiClass::class.java) == this
+    }
+
+    private fun saveModified() {
+        if (preventSavingConfirmation ||
+                Messages.showOkCancelDialog(project,
+                        "Do you really want to save your modifications back to the original class file?",
+                        GUIHelper.MESSAGE_TITLE,
+                        Messages.getOkButton(),
+                        Messages.getCancelButton(),
+                        Messages.getQuestionIcon(),
+                        object : DialogWrapper.DoNotAskOption.Adapter() {
+                            override fun rememberChoice(isSelected: Boolean, exitCode: Int) {
+                                if (exitCode == Messages.OK && isSelected) {
+                                    preventSavingConfirmation = true
+                                }
+                            }
+                        }
+                ) == Messages.OK
+        ) {
+            writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow()) { null } //TODO file chooser
+            resetModified()
+        }
+    }
+
+    private fun resetModified() {
+        browserComponent.isModified = false
+        content.displayName = content.displayName.removePrefix(modificationPrefix)
     }
 
     companion object {

@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
-import com.install4j.runtime.alert.AlertType
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.bytecode.*
+import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
 import org.jetbrains.annotations.Nls
 import java.awt.Window

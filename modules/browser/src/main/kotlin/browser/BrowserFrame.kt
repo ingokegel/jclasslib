@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser
 
 import com.install4j.api.Util
-import com.install4j.runtime.alert.AlertType
 import com.install4j.runtime.filechooser.DirectoryChooser
 import com.install4j.runtime.filechooser.FileAccessMode
 import com.install4j.runtime.filechooser.FileChooser
@@ -24,6 +23,7 @@ import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog
 import org.gjt.jclasslib.structures.InvalidByteCodeException
+import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.GUIHelper.applyPath

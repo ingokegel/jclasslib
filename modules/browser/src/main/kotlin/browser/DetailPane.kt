@@ -84,6 +84,7 @@ abstract class DetailPane<out T : Any>(protected val elementClass: Class<out T>,
     }
 
     fun modified() {
+        services.browserComponent.isModified = true
         services.modified()
         refresh()
     }

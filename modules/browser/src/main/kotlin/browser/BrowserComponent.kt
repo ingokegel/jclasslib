@@ -9,9 +9,7 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.*
 import org.gjt.jclasslib.structures.*
-import org.gjt.jclasslib.util.SplitDirection
-import org.gjt.jclasslib.util.SplitterFacade
-import org.gjt.jclasslib.util.splitterFactory
+import org.gjt.jclasslib.util.*
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.event.TreeSelectionEvent
@@ -22,6 +20,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     val history: BrowserHistory = BrowserHistory(services)
     val detailPane: BrowserDetailPane = BrowserDetailPane(services)
     val treePane: BrowserTreePane = BrowserTreePane(services)
+    var isModified: Boolean = false
 
     private val splitPane: SplitterFacade = splitterFactory(SplitDirection.HORIZONTAL, treePane, detailPane)
 
@@ -125,6 +124,15 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
             tree.selectionPath = TreePath(arrayOf<Any>(rootNode, rootNode.firstChild))
         }
     }
+
+    fun canRemove(): Boolean =
+        !isModified || GUIHelper.showOptionDialog(
+                this,
+                BrowserBundle.getString("message.class.file.modified.title"),
+                BrowserBundle.getString("message.class.file.modified"),
+                GUIHelper.DISCARD_CANCEL_OPTIONS,
+                AlertType.QUESTION
+        ) == 0
 
     override fun valueChanged(selectionEvent: TreeSelectionEvent) {
         services.activate()

@@ -13,6 +13,7 @@ import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.LinkMouseListener
+import org.gjt.jclasslib.util.scrollPaneFactory
 import org.gjt.jclasslib.util.tableRowHeight
 import java.awt.Component
 import java.awt.Point
@@ -117,7 +118,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
 
     override fun setupComponent() {
         super.setupComponent()
-        add(JScrollPane(table).apply {
+        add(scrollPaneFactory(table).apply {
             viewport.background = UIManager.getColor("Table.background")
         }, "dock center")
     }

@@ -7,14 +7,15 @@
 
 package org.gjt.jclasslib.browser
 
-import com.install4j.runtime.alert.AlertType
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.classpath.ClasspathJrtEntry
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
+import java.awt.Window
 import java.io.EOFException
 import java.io.File
 import java.io.FileNotFoundException
@@ -72,50 +73,50 @@ fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = 
     }
 }
 
-fun writeClassFile(classFile: ClassFile, fileName: String, frame: BrowserFrame): Boolean =
-    try {
-        when {
-            fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
-                if (GUIHelper.showOptionDialog(
-                                frame,
-                                getString("message.jrt.read.only.title"),
-                                getString("message.jrt.read.only", fileName),
-                                GUIHelper.YES_NO_OPTIONS,
-                                AlertType.QUESTION
-                        ) == 0
-                ) {
-                    val fileChooser = frame.saveModifiedClassesFileChooser
-                    if (fileChooser.select()) {
-                        val alternativePath = File(fileChooser.selectedDirectory, classFile.simpleClassName + ".class").path
-                        writeClassFile(classFile, alternativePath, frame)
-                    } else {
-                        false
-                    }
+fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?, directoryChooser: () -> File?): Boolean =
+    when {
+        fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
+            if (GUIHelper.showOptionDialog(
+                            parentWindow,
+                            getString("message.jrt.read.only.title"),
+                            getString("message.jrt.read.only", fileName),
+                            GUIHelper.YES_NO_OPTIONS,
+                            AlertType.QUESTION
+                    ) == 0
+            ) {
+                val directory = directoryChooser()
+                if (directory != null) {
+                    val alternativePath = File(directory, classFile.simpleClassName + ".class").path
+                    writeClassFile(classFile, alternativePath, parentWindow, directoryChooser)
                 } else {
                     false
                 }
-            }
-            fileName.contains('!') -> {
-                val tempOutputFile = createTempFile("jclasslib")
-                try {
-                    ClassFileWriter.writeToFile(tempOutputFile, classFile)
-                    val (jarFileName, classFileName) = splitJarFileName(fileName)
-                    FileSystems.newFileSystem(Path(jarFileName), null).use { fs ->
-                        tempOutputFile.copyTo(fs.getPath(classFileName), overwrite = true)
-                    }
-                } finally {
-                    tempOutputFile.deleteIfExists()
-                }
-                true
-            }
-            else -> {
-                ClassFileWriter.writeToFile(File(fileName), classFile)
-                true
+            } else {
+                false
             }
         }
-    } catch (e: IOException) {
-        GUIHelper.showMessage(frame, e)
-        false
+        fileName.startsWith(jarPrefix) -> {
+            writeClassFile(classFile, fileName.substringAfter(jarPrefix), parentWindow, directoryChooser)
+        }
+        fileName.contains('!') -> {
+            val tempOutputFile = createTempFile("jclasslib")
+            try {
+                ClassFileWriter.writeToFile(tempOutputFile, classFile)
+                val (jarFileName, classFileName) = splitJarFileName(fileName)
+                FileSystems.newFileSystem(Path(jarFileName), null).use { fs ->
+                    tempOutputFile.copyTo(fs.getPath(classFileName), overwrite = true)
+                }
+            } finally {
+                tempOutputFile.deleteIfExists()
+            }
+            true
+        }
+        else -> {
+            ClassFileWriter.writeToFile(File(fileName), classFile)
+            true
+        }
     }
 
 private fun splitJarFileName(fileName: String): Pair<String, String> = fileName.split("!", limit = 2).zipWithNext().first()
+
+private const val jarPrefix = "jar://"

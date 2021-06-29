@@ -16,6 +16,7 @@ import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper.applyPath
 import org.gjt.jclasslib.util.StandardDialog
+import org.gjt.jclasslib.util.scrollPaneFactory
 import java.awt.BorderLayout
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -193,7 +194,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
 
     private fun createListPanel() = JPanel().apply {
         layout = BorderLayout()
-        add(JScrollPane(lstElements).apply {
+        add(scrollPaneFactory(lstElements).apply {
             border = BorderFactory.createEtchedBorder()
         }, BorderLayout.CENTER)
         add(createModificationButtonBox(), BorderLayout.EAST)

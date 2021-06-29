@@ -13,7 +13,6 @@ import javax.swing.Action
 
 interface BrowserServices {
     val classFile: ClassFile
-    val isModified: Boolean
     fun activate()
     val browserComponent: BrowserComponent
     val backwardAction: Action

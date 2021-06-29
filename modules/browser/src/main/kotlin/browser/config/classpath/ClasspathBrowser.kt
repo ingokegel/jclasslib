@@ -13,12 +13,12 @@ import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.ProgressDialog
 import org.gjt.jclasslib.util.StandardDialog
+import org.gjt.jclasslib.util.scrollPaneFactory
 import org.jetbrains.annotations.Nls
 import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JComponent
-import javax.swing.JScrollPane
 import javax.swing.JTabbedPane
 import javax.swing.JTree
 import javax.swing.tree.DefaultTreeModel
@@ -44,7 +44,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
 
     private val tabbedPane = JTabbedPane().apply {
         for (tree in trees) {
-            addTab(tree.name, JScrollPane(tree))
+            addTab(tree.name, scrollPaneFactory(tree))
         }
     }
 

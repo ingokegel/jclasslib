@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.browser.detail.constants
 
-import com.install4j.runtime.alert.AlertType
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.detail.ActionBuilder
@@ -15,6 +14,7 @@ import org.gjt.jclasslib.browser.detail.DataEditor
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.constants.*
+import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
 import org.jetbrains.annotations.Nls
 import kotlin.reflect.KMutableProperty1

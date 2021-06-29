@@ -16,6 +16,7 @@ import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument.*
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.getActiveLinkColor
+import org.gjt.jclasslib.util.scrollPaneFactory
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -45,7 +46,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         autoscrolls = false
     }
 
-    private val scrollPane: JScrollPane = JScrollPane(textPane).apply {
+    private val scrollPane: JScrollPane = scrollPaneFactory(textPane).apply {
         setRowHeaderView(opcodeCounterTextPane)
     }
 

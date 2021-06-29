@@ -36,7 +36,7 @@ private class LocationResult private constructor(val locatedClassFile: LocatedCl
     }
 }
 
-data class LocatedClassFile(val jvmClassName: String, val virtualFile: VirtualFile)
+data class LocatedClassFile(val jvmClassName: String, val virtualFile: VirtualFile, var writableUrl: String? = null)
 
 fun isContainedInClass(psiElement: PsiElement) : Boolean {
     val containingClass = getContainingClass(psiElement)

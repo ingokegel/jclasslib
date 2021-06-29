@@ -12,18 +12,67 @@ import com.intellij.icons.AllIcons
 import com.intellij.ide.ui.UISettings
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.JBTabsPaneImpl
+import com.intellij.ui.components.JBScrollPane
+import com.intellij.ui.treeStructure.Tree
 import org.gjt.jclasslib.util.*
 import java.awt.Color
-import javax.swing.JComponent
-import javax.swing.SwingConstants
+import java.awt.Component
+import javax.swing.*
+import javax.swing.tree.DefaultTreeCellRenderer
 import kotlin.math.roundToInt
 
 fun initUiFacades() {
     splitterFactory = ::JBSplitterFacade
     tabPaneFactory = ::JBTabsFacade
+    treeFactory = ::Tree
+    treeCellRendererFactory = {
+        val rendererFillBackground = UIManager.getBoolean("Tree.rendererFillBackground")
+        try {
+            UIManager.put("Tree.rendererFillBackground", false)
+            DefaultTreeCellRenderer()
+        } finally {
+            UIManager.put("Tree.rendererFillBackground", rendererFillBackground)
+        }
+    }
+    scrollPaneFactory = ::JBScrollPane
+
+    alertFacade = object : AlertFacade {
+        override fun showOptionDialog(parent: Component?, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType): Int {
+            return Messages.showDialog(getProject(parent), combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, options, 0, alertType.getIcon())
+        }
+
+        override fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType) {
+            Messages.showDialog(getProject(parent), combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, arrayOf(Messages.getOkButton()), 0, alertType.getIcon())
+        }
+
+        private fun getProject(parent: Component?) : Project? = getToolWindow(parent)?.project
+
+        private fun getToolWindow(parent: Component?) =
+            if (parent is BytecodeToolWindowPanel) {
+                parent
+            } else {
+                (SwingUtilities.getAncestorOfClass(BytecodeToolWindowPanel::class.java, parent) as BytecodeToolWindowPanel?)
+            }
+
+        private fun combineMessage(mainMessage: String, contentMessage: String?): String =
+            if (contentMessage != null) {
+                mainMessage + "\n\n" + contentMessage
+            } else {
+                mainMessage
+            }
+
+        private fun AlertType.getIcon(): Icon = when (this) {
+            AlertType.INFORMATION -> Messages.getInformationIcon()
+            AlertType.WARNING -> Messages.getWarningIcon()
+            AlertType.ERROR -> Messages.getErrorIcon()
+            AlertType.QUESTION -> Messages.getQuestionIcon()
+        }
+    }
 
     treeIcons = mapOf(
         TreeIcon.CLOSED to AllIcons.Nodes.Folder,

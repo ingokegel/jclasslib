@@ -13,28 +13,28 @@ import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.*
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import org.gjt.jclasslib.structures.elementvalues.*
-import org.gjt.jclasslib.util.TreeIcon
-import org.gjt.jclasslib.util.treeIcons
-import org.gjt.jclasslib.util.treeRowHeight
+import org.gjt.jclasslib.util.*
 import org.jetbrains.annotations.Nls
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.util.*
 import javax.swing.JPanel
-import javax.swing.JScrollPane
 import javax.swing.JTree
-import javax.swing.tree.*
+import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.TreeNode
+import javax.swing.tree.TreePath
+import javax.swing.tree.TreeSelectionModel
 
 class BrowserTreePane(private val services: BrowserServices) : JPanel() {
 
     private val categoryToPath = EnumMap<NodeType, TreePath>(NodeType::class.java)
 
-    val tree: JTree = JTree(buildTreeModel()).apply {
+    val tree: JTree = treeFactory(buildTreeModel()).apply {
         selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
         isRootVisible = false
         showsRootHandles = true
         transferHandler = BrowserNodeTransferHandler(services)
-        cellRenderer = DefaultTreeCellRenderer().apply {
+        cellRenderer = treeCellRendererFactory().apply {
             treeIcons[TreeIcon.CLOSED]?.apply { closedIcon = this }
             treeIcons[TreeIcon.OPEN]?.apply { openIcon = this }
             treeIcons[TreeIcon.LEAF]?.apply { leafIcon = this }
@@ -44,7 +44,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
-    private val scrollPane = JScrollPane(tree)
+    private val scrollPane = scrollPaneFactory(tree)
 
     init {
         layout = BorderLayout()
