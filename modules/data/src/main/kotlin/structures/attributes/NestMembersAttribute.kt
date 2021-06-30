@@ -24,7 +24,6 @@ class NestMembersAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     var entries: Array<NestMembersEntry> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
-
         val numberOfEntries = input.readUnsignedShort()
         entries = Array(numberOfEntries) {
             NestMembersEntry().apply {
@@ -34,7 +33,7 @@ class NestMembersAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeByte(entries.size)
+        output.writeShort(entries.size)
         entries.forEach { it.write(output) }
     }
 
