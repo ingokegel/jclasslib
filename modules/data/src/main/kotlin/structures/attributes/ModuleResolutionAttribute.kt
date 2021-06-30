@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.paddedHex
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -18,16 +19,29 @@ import java.io.DataOutput
 class ModuleResolutionAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
-     * Module resolution type.
+     * Module resolution flag.
      */
-    lateinit var resolution: ModuleResolutionType
+    var resolution: Int = 0
+
+    /**
+     * The module resolution as a hex string.
+     */
+    val formattedResolution: String
+        get() = resolution.paddedHex(4)
+
+    /**
+     * The verbose description of the module resolution.
+     */
+    val resolutionVerbose: String
+        get() = formatFlagsVerbose(ModuleResolutionType.values().toSet(), resolution, separator = ", ")
+
 
     override fun readData(input: DataInput) {
-        resolution = ModuleResolutionType.getFromTag(input.readUnsignedShort())
+        resolution = input.readUnsignedShort()
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeShort(resolution.tag)
+        output.writeShort(resolution)
     }
 
     override fun getAttributeLength(): Int =  2

@@ -7,16 +7,16 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.ClassFileEnum
-import org.gjt.jclasslib.structures.Lookup
+import org.gjt.jclasslib.structures.ClassFileFlag
+import org.gjt.jclasslib.structures.FlagLookup
 
 /**
  * Enum for the possible values of the [ModuleResolutionAttribute] attribute.
- * @property tag Immediate byte value.
+ * @property flag Immediate byte value.
  * @property verbose Verbose representation.
  */
 @Suppress("NOT_DOCUMENTED")
-enum class ModuleResolutionType(override val tag: Int, val verbose: String) : ClassFileEnum {
+enum class ModuleResolutionType(override val flag: Int, override val verbose: String) : ClassFileFlag {
     DO_NOT_RESOLVE_BY_DEFAULT(1, "Resolve by default"),
     WARN_DEPRECATED(2, "Warn deprecated"),
     RESOLUTION_WARN_DEPRECATED_FOR_REMOVAL(4, "Warn deprecated for Removal"),
@@ -24,5 +24,5 @@ enum class ModuleResolutionType(override val tag: Int, val verbose: String) : Cl
 
     override fun toString() = verbose
 
-    companion object : Lookup<ModuleResolutionType>(ModuleResolutionType::class.java, "module resolution type")
+    companion object : FlagLookup<ModuleResolutionType>()
 }

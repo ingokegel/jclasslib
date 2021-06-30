@@ -43,13 +43,13 @@ class InnerClassesEntry : SubStructure() {
      * Access flags of the inner class as a hex string.
      */
     val innerClassFormattedAccessFlags: String
-        get() = formatAccessFlags(innerClassAccessFlags)
+        get() = formatFlags(innerClassAccessFlags)
 
     /**
      * Verbose description of the access flags of the inner class.
      */
     val innerClassAccessFlagsVerbose: String
-        get() = formatAccessFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS, innerClassAccessFlags)
+        get() = formatFlagsVerbose(AccessFlag.INNER_CLASS_ACCESS_FLAGS, innerClassAccessFlags)
 
     override fun readData(input: DataInput) {
         innerClassInfoIndex = input.readUnsignedShort()
@@ -68,7 +68,7 @@ class InnerClassesEntry : SubStructure() {
     override val debugInfo: String
         get() = "with innerClassInfoIndex $innerClassInfoIndex, " +
                 "outerClassInfoIndex $outerClassInfoIndex, innerNameIndex $innerNameIndex, " +
-                "accessFlags ${formatAccessFlags(innerClassAccessFlags)}"
+                "accessFlags ${formatFlags(innerClassAccessFlags)}"
 
     override val length: Int
         get() = 8

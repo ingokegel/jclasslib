@@ -30,7 +30,7 @@ class MethodParametersEntry : SubStructure() {
      * Verbose description of the access flags
      */
     val accessFlagsVerbose: String
-        get() = formatAccessFlagsVerbose(AccessFlag.METHOD_PARAMETERS_ACCESS_FLAGS, accessFlags)
+        get() = formatFlagsVerbose(AccessFlag.METHOD_PARAMETERS_ACCESS_FLAGS, accessFlags)
 
     override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()

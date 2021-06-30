@@ -12,7 +12,6 @@ package org.gjt.jclasslib.structures
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.util.*
 
 /**
  * Base class for all structures defined in the class file format.
@@ -72,28 +71,26 @@ abstract class Structure {
     protected fun formatBytes(bytes: Int): String = bytes.paddedHex(8)
 
     /**
-     * Utility method for derived structures. Format an access flag or an
+     * Utility method for derived structures. Format a class file flag or an
      * unsigned short value as a hex string.
-     * @param accessFlags the unsigned short value to print as a hex string
+     * @param flags the unsigned short value to print as a hex string
      * @return the hex string
      */
-    protected fun formatAccessFlags(accessFlags: Int): String = accessFlags.paddedHex(4)
+    protected fun formatFlags(flags: Int): String = flags.paddedHex(4)
 
     /**
-     * Utility method for derived structures. Format an access flag as
-     * a space separated list of verbose java access modifiers.
-     * @param availableAccessFlags array with the access flags available for the derived structure
-     * @param accessFlags the unsigned short value to print in verbose form
-     * @return the access flags verbose description
+     * Utility method for derived structures. Format a class file flag as
+     * a space separated list of verbose modifiers.
+     * @param availableFlags array with the flags available for the derived structure
+     * @param flags the unsigned short value to print in verbose form
+     * @return the verbose description
      */
-    protected fun formatAccessFlagsVerbose(availableAccessFlags: EnumSet<AccessFlag>, accessFlags: Int): String {
-
-        val matchingFlags = availableAccessFlags.filter { (accessFlags and it.flag) != 0 }
+    protected fun formatFlagsVerbose(availableFlags: Set<ClassFileFlag>, flags: Int, separator: String = " "): String {
+        val matchingFlags = availableFlags.filter { (flags and it.flag) != 0 }
         val handledFlags = matchingFlags.fold(0) { value, accessFlag -> value or accessFlag.flag }
-
         return matchingFlags.
                 mapNotNull { it.verbose.ifEmpty { null } }.
-                joinToString(separator = " ", postfix = if (accessFlags != handledFlags) "?" else "")
+                joinToString(separator = separator, postfix = if (flags != handledFlags) "?" else "")
     }
 
 }

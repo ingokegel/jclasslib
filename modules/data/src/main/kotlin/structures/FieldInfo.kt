@@ -13,6 +13,6 @@ package org.gjt.jclasslib.structures
 class FieldInfo(classFile: ClassFile) : ClassMember(classFile) {
 
     override fun formatAccessFlagsVerbose(accessFlags: Int): String =
-            formatAccessFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)
+            formatFlagsVerbose(AccessFlag.FIELD_ACCESS_FLAGS, accessFlags)
 
 }

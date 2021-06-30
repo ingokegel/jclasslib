@@ -64,7 +64,7 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
      * Access flags of this class as a hex string.
      */
     val formattedAccessFlags: String
-        get() = formatAccessFlags(accessFlags)
+        get() = formatFlags(accessFlags)
 
     /**
      * Verbose description of the access flags of this class.

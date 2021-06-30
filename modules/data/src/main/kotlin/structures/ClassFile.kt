@@ -173,13 +173,13 @@ class ClassFile : Structure(), AttributeContainer {
      * The access flags of this class as a hex string.
      */
     val formattedAccessFlags: String
-        get() = formatAccessFlags(accessFlags)
+        get() = formatFlags(accessFlags)
 
     /**
      * The verbose description of the access flags of this class.
      */
     val accessFlagsVerbose: String
-        get() = formatAccessFlagsVerbose(AccessFlag.CLASS_ACCESS_FLAGS, accessFlags)
+        get() = formatFlagsVerbose(AccessFlag.CLASS_ACCESS_FLAGS, accessFlags)
 
     /**
      * The ConstantUtf8Info constant pool entry at the specified index.

@@ -13,6 +13,6 @@ package org.gjt.jclasslib.structures
 class MethodInfo(classFile: ClassFile) : ClassMember(classFile) {
 
     override fun formatAccessFlagsVerbose(accessFlags: Int): String =
-            formatAccessFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)
+            formatFlagsVerbose(AccessFlag.METHOD_ACCESS_FLAGS, accessFlags)
 
 }

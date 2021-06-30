@@ -17,7 +17,7 @@ import java.util.*
  * @property sinceJava the first Java version that supports this access flag
  */
 @Suppress("NOT_DOCUMENTED")
-enum class AccessFlag(val flag: Int, val verbose: String, val sinceJava: String? = null) {
+enum class AccessFlag(override val flag: Int, override val verbose: String, val sinceJava: String? = null): ClassFileFlag {
     PUBLIC(0x0001, "public"),
     PRIVATE(0x0002, "private"),
     PROTECTED(0x0004, "protected"),
@@ -52,10 +52,7 @@ enum class AccessFlag(val flag: Int, val verbose: String, val sinceJava: String?
 
     override fun toString() = verbose
 
-    companion object {
-        fun decompose(accessFlags: Int, validAccessFlags: Set<AccessFlag>): List<AccessFlag> = validAccessFlags.filter { it.isSet(accessFlags) }
-        fun composeFrom(accessFlags: Iterable<AccessFlag>): Int = accessFlags.fold(0) { acc, accessFlag -> acc or accessFlag.flag }
-
+    companion object: FlagLookup<AccessFlag>() {
         /**
          * Class access flags
          */

@@ -34,7 +34,7 @@ class ModuleAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
      * Verbose description of the module access flags.
      */
     val moduleFlagsVerbose: String
-        get() = formatAccessFlagsVerbose(AccessFlag.MODULE_FLAGS, moduleFlags)
+        get() = formatFlagsVerbose(AccessFlag.MODULE_FLAGS, moduleFlags)
 
     /**
      * Constant pool index of the CONSTANT_Utf8_info structure containing the module version.

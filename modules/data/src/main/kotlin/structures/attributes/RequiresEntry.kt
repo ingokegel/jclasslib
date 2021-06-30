@@ -36,7 +36,7 @@ class RequiresEntry : SubStructure() {
      * Verbose description of the access flags
      */
     val flagsVerbose: String
-        get() = formatAccessFlagsVerbose(AccessFlag.REQUIRES_FLAGS, flags)
+        get() = formatFlagsVerbose(AccessFlag.REQUIRES_FLAGS, flags)
 
     override fun readData(input: DataInput) {
         index = input.readUnsignedShort()

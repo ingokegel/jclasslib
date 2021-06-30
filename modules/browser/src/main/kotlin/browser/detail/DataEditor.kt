@@ -9,10 +9,10 @@ package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
-import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.util.GUIHelper.getParentWindow
 import org.gjt.jclasslib.util.MenuButton
 import org.jetbrains.annotations.Nls
+import java.awt.Window
 import java.awt.event.ActionEvent
 import javax.swing.*
 
@@ -52,13 +52,13 @@ abstract class DataEditor<T : Any> {
                 selectedValue
         )?.toString()?.toIntOrNull()
 
-    protected fun askForAccessFlags(selectedValue: Int, validAccessFlags: Set<AccessFlag>, parent: JComponent, delegateName: String? = null): Int? {
-        val accessFlagsEditDialog = AccessFlagsEditDialog(selectedValue, validAccessFlags, parent.getParentWindow(), delegateName).apply {
+    protected fun askForFlags(selectedValue: Int, validAccessFlags: Set<*>, dialogCreator: (Int, Set<*>, Window?, String?) -> FlagsEditDialog<*>, parent: JComponent, delegateName: String? = null): Int? {
+        val flagsEditDialog = dialogCreator(selectedValue, validAccessFlags, parent.getParentWindow(), delegateName).apply {
             isVisible = true
             dispose()
         }
-        return if (!accessFlagsEditDialog.isCanceled) {
-            accessFlagsEditDialog.getAccessFlags()
+        return if (!flagsEditDialog.isCanceled) {
+            flagsEditDialog.getFlags()
         } else {
             null
         }

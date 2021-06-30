@@ -9,14 +9,17 @@ package org.gjt.jclasslib.browser.detail.constants
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
+import org.gjt.jclasslib.browser.detail.AccessFlagsEditDialog
 import org.gjt.jclasslib.browser.detail.ActionBuilder
 import org.gjt.jclasslib.browser.detail.DataEditor
+import org.gjt.jclasslib.browser.detail.FlagsEditDialog
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.constants.*
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
 import org.jetbrains.annotations.Nls
+import java.awt.Window
 import kotlin.reflect.KMutableProperty1
 
 abstract class DelegatesEditor<T : Any> : DataEditor<T>() {
@@ -50,8 +53,8 @@ abstract class DelegatesEditor<T : Any> : DataEditor<T>() {
                     detailPane.modified()
                 }
             }
-            is AccessFlagsSpec<T> -> changeValue(data, delegateSpec, detailPane) { value ->
-                askForAccessFlags(value, delegateSpec.validAccessFlags, detailPane, delegateSpec.name)
+            is FlagsSpec<T, *> -> changeValue(data, delegateSpec, detailPane) { value ->
+                askForFlags(value, delegateSpec.validFlags, getRawDialogCreator(delegateSpec), detailPane, delegateSpec.name)
             }
             is IntSpec<T> -> changeValue(data, delegateSpec, detailPane) { value ->
                 askForIntValue(value, delegateSpec.name, detailPane)
@@ -59,6 +62,10 @@ abstract class DelegatesEditor<T : Any> : DataEditor<T>() {
             else -> error(delegateSpec.javaClass.name) // Kotlin compiler does not understand that the above cases are exhaustive
         }
     }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getRawDialogCreator(delegateSpec: FlagsSpec<T, *>) =
+        delegateSpec.dialogCreator as (Int, Set<*>, Window?, String?) -> FlagsEditDialog<*>
 
     private fun <V> changeValue(data: T, delegateSpec: OptionPaneDelegateSpec<T, V>, detailPane: DetailPane<*>, valueEditor: (V) -> V?) {
         val value = delegateSpec.getter(data)
@@ -110,9 +117,10 @@ open class IntSpec<T: Any>(
         setter: T.(Int) -> Unit
 ) : OptionPaneDelegateSpec<T, Int>(name, getter, setter)
 
-class AccessFlagsSpec<T : Any>(
+class FlagsSpec<T : Any, A>(
         name: String,
-        val validAccessFlags: Set<AccessFlag>,
+        val validFlags: Set<A>,
+        val dialogCreator: (Int, Set<A>, Window?, String?) -> FlagsEditDialog<A>,
         getter: T.() -> Int,
         setter: T.(Int) -> Unit
 ): IntSpec<T>(name, getter, setter)
@@ -132,9 +140,13 @@ interface DelegateBuilder<T: Any> {
         addIntSpec(name, {property.get(this)}, { property.set(this, it)})
     }
 
-    fun addAccessFlagsSpec(@Nls name: String, validAccessFlags: Set<AccessFlag>, getter: T.() -> Int, setter: T.(Int) -> Unit)
-    fun addAccessFlagsSpec(@Nls name: String, validAccessFlags: Set<AccessFlag>, property: KMutableProperty1<T, Int>) {
-        addAccessFlagsSpec(name, validAccessFlags, {property.get(this)}, { property.set(this, it)})
+    fun <A> addFlagsSpec(@Nls name: String, validFlags: Set<A>, dialogCreator: (Int, Set<A>, Window?, String?) -> FlagsEditDialog<A>, getter: T.() -> Int, setter: T.(Int) -> Unit)
+    fun <A> addFlagsSpec(@Nls name: String, validFlags: Set<A>, dialogCreator: (Int, Set<A>, Window?, String?) -> FlagsEditDialog<A>, property: KMutableProperty1<T, Int>) {
+        addFlagsSpec(name, validFlags, dialogCreator, {property.get(this)}, { property.set(this, it)})
+    }
+
+    fun addAccessFlagsSpec(@Nls name: String, validFlags: Set<AccessFlag>, property: KMutableProperty1<T, Int>) {
+        addFlagsSpec(name, validFlags, ::AccessFlagsEditDialog, property)
     }
 }
 
@@ -152,8 +164,8 @@ class DelegateBuilderImpl<T : Any> : DelegateBuilder<T> {
         delegateSpecs.add(IntSpec(name, getter, setter))
     }
 
-    override fun addAccessFlagsSpec(name: String, validAccessFlags: Set<AccessFlag>, getter: T.() -> Int, setter: T.(Int) -> Unit) {
-        delegateSpecs.add(AccessFlagsSpec(name, validAccessFlags, getter, setter))
+    override fun <A> addFlagsSpec(name: String, validFlags: Set<A>, dialogCreator: (Int, Set<A>, Window?, String?) -> FlagsEditDialog<A>, getter: T.() -> Int, setter: T.(Int) -> Unit) {
+        delegateSpecs.add(FlagsSpec(name, validFlags, dialogCreator, getter, setter))
     }
 
     val result: List<DelegateSpec<T>> get() = delegateSpecs
