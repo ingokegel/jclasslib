@@ -14,8 +14,9 @@ import java.util.*
 
 object BrowserBundle {
     const val BUNDLE_NAME = "org.gjt.jclasslib.browser.messages.Browser"
+    private val overriddenLocale = System.getProperty("jclasslib.locale")
 
-    private val bundle by lazy { ResourceBundle.getBundle(BUNDLE_NAME) }
+    private val bundle by lazy { ResourceBundle.getBundle(BUNDLE_NAME, if (overriddenLocale == null) Locale.getDefault() else Locale(overriddenLocale)) }
 
     fun getString(@PropertyKey(resourceBundle = BUNDLE_NAME) key: String, vararg params: Any): String {
         return applyFormat(bundle.getString(key), *params)
