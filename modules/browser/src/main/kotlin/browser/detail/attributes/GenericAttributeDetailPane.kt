@@ -17,5 +17,7 @@ class GenericAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane
         addConstantPoolLink(getString("key.attribute.name.index"), AttributeInfo::attributeNameIndex)
         addDetail(getString("key.attributes.length")) { attribute -> attribute.getAttributeLength().toString() }
     }
+
+    override val isFixedHeight get() = true
 }
 

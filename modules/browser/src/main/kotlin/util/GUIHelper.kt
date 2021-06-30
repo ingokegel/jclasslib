@@ -16,7 +16,9 @@ import java.awt.Window
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
-import javax.swing.*
+import javax.swing.Icon
+import javax.swing.JComponent
+import javax.swing.SwingUtilities
 
 object GUIHelper {
 
@@ -46,14 +48,6 @@ object GUIHelper {
         val x = parentWindow.x + (parentWindow.width - window.width) / 2
         val y = parentWindow.y + (parentWindow.height - window.height) / 2
         window.setLocation(x, y)
-    }
-
-    fun setDefaultScrollBarUnits(scrollPane: JScrollPane) {
-        val unit = JLabel().font.size * 2
-        scrollPane.apply {
-            horizontalScrollBar.unitIncrement = unit
-            verticalScrollBar.unitIncrement = unit
-        }
     }
 
     fun showURL(urlSpec: String) {

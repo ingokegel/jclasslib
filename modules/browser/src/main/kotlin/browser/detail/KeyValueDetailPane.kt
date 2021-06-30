@@ -13,28 +13,45 @@ import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.util.*
 import org.jetbrains.annotations.Nls
+import java.awt.Dimension
 import java.awt.Point
+import java.awt.Rectangle
 import java.awt.event.ActionEvent
-import javax.swing.AbstractAction
-import javax.swing.JComponent
-import javax.swing.JScrollPane
-import javax.swing.JTree
-import javax.swing.border.Border
+import javax.swing.*
 import javax.swing.event.HyperlinkEvent
 import javax.swing.tree.TreePath
 
-abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services) {
+abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: BrowserServices) : DetailPane<T>(elementClass, services), Scrollable {
 
-    private val scrollPane = object : JScrollPane(this) {
-        override fun setBorder(border: Border?) {
+    private val scrollPane = borderlessScrollPaneFactory(this).apply {
+        if (isFixedHeight) {
+            verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_NEVER
         }
-    }.apply {
-        GUIHelper.setDefaultScrollBarUnits(this)
-        border = null
     }
 
-    public override val wrapper: JComponent
-        get() = scrollPane
+    public override val wrapper: JComponent get() = scrollPane
+
+    protected open val isFixedHeight: Boolean get() = false
+
+    override fun getPreferredScrollableViewportSize(): Dimension {
+        return preferredSize
+    }
+
+    override fun getScrollableUnitIncrement(visibleRect: Rectangle?, orientation: Int, direction: Int): Int {
+        return UNIT_SCROLL_INCREMENT
+    }
+
+    override fun getScrollableBlockIncrement(visibleRect: Rectangle?, orientation: Int, direction: Int): Int {
+        return BLOCK_SCROLL_INCREMENT
+    }
+
+    override fun getScrollableTracksViewportWidth(): Boolean {
+        return false
+    }
+
+    override fun getScrollableTracksViewportHeight(): Boolean {
+        return isFixedHeight
+    }
 
     private fun addKeyValue(keyValue: KeyValue<T, *>) {
         add(keyValue.keyLabel as JComponent)
@@ -198,5 +215,10 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
                 }
             }
         }
+    }
+
+    companion object {
+        const val UNIT_SCROLL_INCREMENT = 25
+        const val BLOCK_SCROLL_INCREMENT = 100
     }
 }

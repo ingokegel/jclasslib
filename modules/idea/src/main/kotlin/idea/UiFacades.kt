@@ -23,6 +23,7 @@ import org.gjt.jclasslib.util.*
 import java.awt.Color
 import java.awt.Component
 import javax.swing.*
+import javax.swing.border.Border
 import javax.swing.tree.DefaultTreeCellRenderer
 import kotlin.math.roundToInt
 
@@ -40,6 +41,7 @@ fun initUiFacades() {
         }
     }
     scrollPaneFactory = ::JBScrollPane
+    borderlessScrollPaneFactory = ::BorderlessJBScrollPane
 
     alertFacade = object : AlertFacade {
         override fun showOptionDialog(parent: Component?, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType): Int {
@@ -92,6 +94,14 @@ fun initUiFacades() {
     val editorColorsScheme = EditorColorsManager.getInstance().schemeForCurrentUITheme
     documentFontFamily = editorColorsScheme.editorFontName
     documentFontSize = editorColorsScheme.editorFontSize
+}
+
+class BorderlessJBScrollPane(component: Component): JBScrollPane(component) {
+    init {
+        border = null
+    }
+    override fun setBorder(border: Border?) {
+    }
 }
 
 private fun MutableMap<ColorKey, Color>.addColorMapping(colorKey: ColorKey, attributesKey: TextAttributesKey) {
