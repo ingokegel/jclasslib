@@ -14,6 +14,8 @@ import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.ide.impl.ContentManagerWatcher
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -369,7 +371,14 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
                         }
                 ) == Messages.OK
         ) {
-            writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow()) { null } //TODO file chooser
+            writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow()) {
+                FileChooser.chooseFile(FileChooserDescriptor(false, true, false, false, false, false).apply {
+                    title = "Select Directory"
+                    description = "Select the output directory for the modified class files"
+                }, project, null)?.let {
+                    File(it.path)
+                }
+            }
             resetModified()
         }
     }
