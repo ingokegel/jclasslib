@@ -44,7 +44,7 @@ subprojects {
     pluginManager.withPlugin("kotlin") {
         configure<JavaPluginExtension> {
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of(8))
+                languageVersion.set(JavaLanguageVersion.of(11))
             }
         }
 
@@ -67,7 +67,7 @@ subprojects {
             kotlinOptions {
                 languageVersion = "1.5"
                 apiVersion = "1.5"
-                jvmTarget = "1.8"
+                jvmTarget = "11"
                 jdkHome = javaHome
             }
         }
