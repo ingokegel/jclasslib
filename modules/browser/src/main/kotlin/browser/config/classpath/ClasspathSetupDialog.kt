@@ -111,25 +111,25 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
 
     private val fileChooser: FileChooser by lazy {
         FileChooser.create()
-            .parent(this)
-            .title(getString("chooser.jar.files.title"))
-            .applyPath(frame.classesChooserPath)
-            .addFileFilter(MultiFileFilter("jar", getString("chooser.jar.files.and.directories.filter.name")))
-            .multiple(true)
+                .parent(this)
+                .title(getString("chooser.jar.files.title"))
+                .applyPath(frame.classesChooserPath)
+                .addFileFilter(MultiFileFilter("jar", getString("chooser.jar.files.and.directories.filter.name")))
+                .multiple(true)
     }
 
     private val directoryChooser: DirectoryChooser by lazy {
         DirectoryChooser.create()
-            .parent(this)
-            .title(getString("chooser.directory.title"))
-            .applyPath(frame.classesChooserPath)
+                .parent(this)
+                .title(getString("chooser.directory.title"))
+                .applyPath(frame.classesChooserPath)
     }
 
     private val jreFileChooser: DirectoryChooser by lazy {
         DirectoryChooser.create()
-            .parent(this)
-            .title(getString("chooser.jre.home.title"))
-            .applyPath(frame.classesChooserPath)
+                .parent(this)
+                .title(getString("chooser.jre.home.title"))
+                .applyPath(frame.classesChooserPath)
     }
 
     init {
@@ -172,21 +172,23 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
         jreHomeTextField.text = frame.config.jreHome
     }
 
-    override fun addContent(jComponent: JComponent) {
-        layout = MigLayout("wrap", "[grow]")
-        add(createListPanel(), "pushy, grow")
-        add(JLabel(getString("classpath.jre.home")), "split")
-        add(jreHomeTextField, "grow")
-        add(JButton(getString("action.choose")).apply {
-            addActionListener {
-                fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
+    override fun addContent(component: JComponent) {
+        with(component) {
+            layout = MigLayout("wrap", "[grow]")
+            add(createListPanel(), "pushy, grow")
+            add(JLabel(getString("classpath.jre.home")), "split")
+            add(jreHomeTextField, "grow")
+            add(JButton(getString("action.choose")).apply {
+                addActionListener {
+                    fun maybeNestedJre(file: File) = File(file, "jre").let { if (it.exists()) it else file }
 
-                if (jreFileChooser.select()) {
-                    jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
+                    if (jreFileChooser.select()) {
+                        jreHomeTextField.text = maybeNestedJre(jreFileChooser.selectedFile).path
+                    }
+
                 }
-
-            }
-        }, "wrap para")
+            }, "wrap para")
+        }
 
         setSize(600, 400)
         checkEnabledStatus()

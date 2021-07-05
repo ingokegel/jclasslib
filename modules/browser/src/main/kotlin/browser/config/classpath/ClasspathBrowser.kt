@@ -131,16 +131,17 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
         }
     }
 
-    override fun addContent(jComponent: JComponent) {
-        layout = MigLayout("wrap", "[grow]")
+    override fun addContent(component: JComponent) {
+        with(component) {
+            layout = MigLayout("wrap", "[grow]")
 
-        add(tabbedPane, "grow, pushy")
+            add(tabbedPane, "grow, pushy")
 
-        if (updateClassPathFromFrame) {
-            add(setupAction.createTextButton(), "tag help2")
+            if (updateClassPathFromFrame) {
+                add(setupAction.createTextButton(), "tag help2")
+            }
+            add(syncAction.createTextButton(), "split, tag help2")
         }
-        add(syncAction.createTextButton(), "split, tag help2")
-
         setSize(450, 450)
     }
 

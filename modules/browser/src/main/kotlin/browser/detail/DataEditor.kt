@@ -52,17 +52,11 @@ abstract class DataEditor<T : Any> {
                 selectedValue
         )?.toString()?.toIntOrNull()
 
-    protected fun askForFlags(selectedValue: Int, validAccessFlags: Set<*>, dialogCreator: (Int, Set<*>, Window?, String?) -> FlagsEditDialog<*>, parent: JComponent, delegateName: String? = null): Int? {
-        val flagsEditDialog = dialogCreator(selectedValue, validAccessFlags, parent.getParentWindow(), delegateName).apply {
-            isVisible = true
-            dispose()
-        }
-        return if (!flagsEditDialog.isCanceled) {
-            flagsEditDialog.getFlags()
-        } else {
-            null
-        }
-    }
+    protected fun askForFlags(
+            selectedValue: Int,
+            validAccessFlags: Set<*>,
+            dialogCreator: (Int, Set<*>, Window?, String?) -> FlagsEditDialog<*>, parent: JComponent, delegateName: String? = null
+    ): Int? = dialogCreator(selectedValue, validAccessFlags, parent.getParentWindow(), delegateName).select()
 
     protected fun getEditTitle() = getString("action.edit")
 }

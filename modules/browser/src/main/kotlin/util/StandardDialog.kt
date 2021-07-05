@@ -43,6 +43,7 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
 
     override fun setVisible(visible: Boolean) {
         if (visible) {
+            GUIHelper.centerOnParentWindow(this, owner)
             isCanceled = false
         }
         super.setVisible(visible)
@@ -71,7 +72,6 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
             pack()
         }
         isModal = true
-        GUIHelper.centerOnParentWindow(this, owner)
         defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
     }
 
@@ -79,8 +79,18 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
         return false
     }
 
-    protected abstract fun addContent(jComponent: JComponent)
+    protected abstract fun addContent(component: JComponent)
 
     protected open fun conditionalUpdate() {
     }
+}
+
+abstract class SelectionDialog<T>(parentWindow: Window?, title: String) : StandardDialog(parentWindow, title) {
+    fun select(): T? {
+        isVisible = true
+        dispose()
+        return if (!isCanceled) selectedItem else null
+    }
+
+    protected abstract val selectedItem: T?
 }

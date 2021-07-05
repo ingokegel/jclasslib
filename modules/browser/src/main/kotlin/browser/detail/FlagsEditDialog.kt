@@ -10,13 +10,13 @@ package org.gjt.jclasslib.browser.detail
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.AccessFlag
-import org.gjt.jclasslib.util.StandardDialog
+import org.gjt.jclasslib.util.SelectionDialog
 import java.awt.Window
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 import javax.swing.JLabel
 
-abstract class FlagsEditDialog<A>(selectedValue: Int, validFlags: Set<A>, parentWindow: Window?, delegateName: String?) : StandardDialog(
+abstract class FlagsEditDialog<A>(selectedValue: Int, validFlags: Set<A>, parentWindow: Window?, delegateName: String?) : SelectionDialog<Int>(
         parentWindow,
         getString("action.edit") + if (delegateName == null) "" else " [$delegateName]"
 ) {
@@ -31,7 +31,8 @@ abstract class FlagsEditDialog<A>(selectedValue: Int, validFlags: Set<A>, parent
     abstract fun composeFrom(keys: Set<A>): Int
     abstract fun decompose(selectedValue: Int, validFlags: Set<A>): List<A>
 
-    fun getFlags(): Int = composeFrom(checkBoxes.filter { it.value.isSelected }.keys)
+    override val selectedItem: Int
+        get() = composeFrom(checkBoxes.filter { it.value.isSelected }.keys)
 
     init {
         setupComponent()
@@ -41,11 +42,13 @@ abstract class FlagsEditDialog<A>(selectedValue: Int, validFlags: Set<A>, parent
         }
     }
 
-    override fun addContent(jComponent: JComponent) {
-        layout = MigLayout("wrap", "[grow]")
-        add(JLabel(getString("valid.flags")), "wrap unrel")
-        for (checkBox in checkBoxes.values) {
-            add(checkBox)
+    override fun addContent(component: JComponent) {
+        with(component) {
+            layout = MigLayout("wrap", "[grow]")
+            add(JLabel(getString("valid.flags")), "wrap unrel")
+            for (checkBox in checkBoxes.values) {
+                add(checkBox)
+            }
         }
     }
 
