@@ -17,15 +17,22 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.KeyStroke
 
-class DefaultAction(@Nls name: String, @Nls shortDescription: String? = null, smallIconFileName: String? = null, largeIconFileName: String? = null, private val action: (action: DefaultAction) -> Unit) : AbstractAction(name) {
+class DefaultAction(
+        @Nls name: String,
+        @Nls shortDescription: String? = null,
+        smallIconFileName: String? = null,
+        largeIconFileName: String? = if (smallIconFileName?.endsWith(".svg") == true) smallIconFileName else null,
+        private val action: (action: DefaultAction) -> Unit
+) : AbstractAction(name) {
+
     var lastButton: JComponent? = null
         private set
 
     init {
-        val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName) else null
+        val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName, SMALL_ICON_SIZE) else null
         putValue(SMALL_ICON, smallIcon)
         if (largeIconFileName != null) {
-            putValue(LARGE_ICON_KEY, BrowserFrame.getIcon(largeIconFileName))
+            putValue(LARGE_ICON_KEY, BrowserFrame.getIcon(largeIconFileName, LARGE_ICON_SIZE))
         }
         if (shortDescription != null) {
             putValue(SHORT_DESCRIPTION, shortDescription)
@@ -84,9 +91,11 @@ class DefaultAction(@Nls name: String, @Nls shortDescription: String? = null, sm
     }
 
     companion object {
-        val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMask // replace with menuShortcutKeyMaskEx after JDK 11+ is required
+        val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMaskEx
         private val IMAGE_BUTTON_SIZE = Dimension(26, 26)
         private val TOOL_BAR_BUTTON_SIZE = Dimension(35, 35)
+        private val SMALL_ICON_SIZE = Dimension(16, 16)
+        private val LARGE_ICON_SIZE = Dimension(24, 24)
     }
 
 }

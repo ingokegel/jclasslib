@@ -14,12 +14,11 @@ dependencies {
 }
 
 tasks {
-    val jar by existing(Jar::class) {
+    jar {
         archiveFileName.set("jclasslib-library.jar")
     }
 
     val copyDist by registering(Copy::class) {
-        dependsOn(jar)
         from(configurations.compileClasspath)
         from(jar)
         into(externalLibsDir)
