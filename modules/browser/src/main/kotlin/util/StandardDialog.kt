@@ -85,7 +85,7 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
     }
 }
 
-abstract class SelectionDialog<T>(parentWindow: Window?, title: String) : StandardDialog(parentWindow, title) {
+abstract class SelectionDialog<T>(parentWindow: Window?, @Nls title: String) : StandardDialog(parentWindow, title) {
     fun select(): T? {
         isVisible = true
         dispose()

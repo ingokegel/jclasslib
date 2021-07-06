@@ -13,7 +13,7 @@ import java.io.IOException
 import java.util.jar.JarFile
 import javax.swing.tree.DefaultTreeModel
 
-class ClasspathArchiveEntry(fileName : String) : ClasspathEntry(fileName) {
+class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
 
     private val moduleName by lazy {
         JarFile(file).use { jarFile ->

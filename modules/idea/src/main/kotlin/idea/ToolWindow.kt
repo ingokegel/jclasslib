@@ -371,7 +371,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
                         }
                 ) == Messages.OK
         ) {
-            writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow()) {
+            writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow(), null) {
                 FileChooser.chooseFile(FileChooserDescriptor(false, true, false, false, false, false).apply {
                     title = "Select Directory"
                     description = "Select the output directory for the modified class files"

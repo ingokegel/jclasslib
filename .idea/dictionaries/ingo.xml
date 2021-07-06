@@ -167,6 +167,7 @@
       <w>putstatic</w>
       <w>redistributors</w>
       <w>resetter</w>
+      <w>retransform</w>
       <w>saload</w>
       <w>sastore</w>
       <w>scroller</w>

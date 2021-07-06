@@ -13,7 +13,7 @@ import java.io.File
 import java.io.FileInputStream
 import javax.swing.tree.DefaultTreeModel
 
-class ClasspathDirectoryEntry(fileName: String) : ClasspathEntry(fileName) {
+class ClasspathDirectoryEntry(fileName: String) : ClasspathFileEntry(fileName) {
 
     private val moduleName by lazy {
         val moduleInfoFile = File(file, MODULE_INFO_CLASS_FILE_NAME)

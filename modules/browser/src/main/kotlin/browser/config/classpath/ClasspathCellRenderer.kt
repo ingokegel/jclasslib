@@ -15,7 +15,7 @@ import javax.swing.UIManager
 @Suppress("HardCodedStringLiteral")
 class ClasspathCellRenderer : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(list: JList<*>, value: Any?, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
-        val entry = value as ClasspathEntry?
+        val entry = value as ClasspathFileEntry?
         super.getListCellRendererComponent(list, entry?.file?.path, index, isSelected, cellHasFocus)
 
         icon = UIManager.getIcon(if (entry is ClasspathDirectoryEntry) {

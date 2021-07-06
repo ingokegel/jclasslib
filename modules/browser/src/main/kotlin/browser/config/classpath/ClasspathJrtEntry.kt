@@ -13,7 +13,7 @@ import org.gjt.jclasslib.io.forEachClassNameInJrt
 import org.w3c.dom.Element
 import javax.swing.tree.DefaultTreeModel
 
-class ClasspathJrtEntry(jreHome: String) : ClasspathEntry(jreHome) {
+class ClasspathJrtEntry(jreHome: String) : ClasspathFileEntry(jreHome) {
     override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
         return if (modulePathSelection) {
             findClassWithModuleNameInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it", it.getName(1).toString()) }

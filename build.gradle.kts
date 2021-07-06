@@ -91,7 +91,7 @@ tasks {
     }
 
     register("dist") {
-        dependsOn(":data:dist", ":browser:dist")
+        dependsOn(":data:dist", ":browser:dist", ":agent:dist")
     }
 
     register<Delete>("clean") {

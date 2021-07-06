@@ -4,10 +4,11 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="org.gjt.jclasslib.browser.BrowserApplication" />
     <module name="jclasslib.browser.main" />
-    <option name="VM_PARAMETERS" value="--illegal-access=warn @modules/installer/resources/base.options -Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false" />
+    <option name="VM_PARAMETERS" value="--illegal-access=warn @modules/installer/resources/base.options -Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false -Djdk.attach.allowAttachSelf=true" />
     <RunnerSettings RunnerId="JProfiler" />
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="dist" externalProjectPath="$PROJECT_DIR$/modules/agent" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>

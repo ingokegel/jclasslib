@@ -16,6 +16,7 @@ import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.alertFacade
 import org.w3c.dom.Element
 import java.awt.BorderLayout
 import java.io.File
@@ -84,17 +85,24 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         }
     }
 
-    private tailrec fun findClass(className: String): FindResult? = parentFrame.config.findClass(className, false)
-            ?: if (GUIHelper.showOptionDialog(parentFrame,
-                            getString("message.class.not.found.title"),
-                            getString("message.class.not.found", className),
-                            arrayOf(getString("action.setup.class.path"), getString("action.cancel")),
-                            AlertType.WARNING) != 0) {
-                null
-            } else {
+    private tailrec fun findClass(className: String): FindResult? = parentFrame.classpathComponent.findClass(className, false)
+            ?: if (isRetryFindClass(className)) {
                 parentFrame.setupClasspathAction()
                 findClass(className)
+            } else {
+                null
             }
+
+    private fun isRetryFindClass(className: String) = if (parentFrame.vmConnection != null) {
+        alertFacade.showMessage(parentFrame, getString("message.class.not.loaded", className), null,  AlertType.WARNING)
+        false
+    } else {
+        alertFacade.showOptionDialog(parentFrame,
+                getString("message.class.not.found.title"),
+                getString("message.class.not.found", className),
+                arrayOf(getString("action.setup.class.path"), getString("action.cancel")),
+                AlertType.WARNING) == 0
+    }
 
     init {
         layout = BorderLayout()
@@ -158,7 +166,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
                         null
                     }
                 }
-                if (writeClassFile(classFile, fileName, parentFrame, directoryChooser)) {
+                if (writeClassFile(classFile, fileName, parentFrame, parentFrame.vmConnection, directoryChooser)) {
                     resetModified()
                 }
             } catch (e: IOException) {

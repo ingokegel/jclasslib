@@ -15,11 +15,9 @@ import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.alertFacade
 import java.awt.Window
-import java.io.EOFException
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.io.*
 import java.nio.file.FileSystems
 import java.util.jar.JarFile
 import kotlin.io.path.Path
@@ -29,7 +27,16 @@ import kotlin.io.path.deleteIfExists
 
 fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = false): ClassFile {
     try {
+        val vmConnection = frame.vmConnection
         return when {
+            vmConnection != null -> {
+                val bytes = vmConnection.communicator.getClassFile(fileName)
+                if (bytes != null) {
+                    ClassFileReader.readFromInputStream(ByteArrayInputStream(bytes))
+                } else {
+                    throw IOException("The class $fileName was not found")
+                }
+            }
             fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
                 ClassFileReader.readFromInputStream(getJrtInputStream(fileName.removePrefix(ClasspathJrtEntry.JRT_PREFIX), File(frame.config.jreHome)), suppressEOF)
             }
@@ -51,7 +58,7 @@ fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = 
     } catch (ex: FileNotFoundException) {
         throw IOException("The file $fileName was not found")
     } catch (ex: EOFException) {
-        if (GUIHelper.showOptionDialog(
+        if (alertFacade.showOptionDialog(
                         frame,
                         getString("message.eof.title"),
                         getString("message.eof", fileName),
@@ -73,10 +80,17 @@ fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = 
     }
 }
 
-fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?, directoryChooser: () -> File?): Boolean =
-    when {
+fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?, vmConnection: VmConnection?, directoryChooser: () -> File?): Boolean {
+    return when {
+        vmConnection != null -> {
+            val result = vmConnection.communicator.replaceClassFile(fileName, ClassFileWriter.writeToByteArray(classFile))
+            if (!result.isSuccess) {
+                alertFacade.showMessage(parentWindow, getString("message.could.not.redefine.class.file"), getString("error.message.was.0", result.errorMessage), AlertType.ERROR)
+            }
+            result.isSuccess
+        }
         fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
-            if (GUIHelper.showOptionDialog(
+            if (alertFacade.showOptionDialog(
                             parentWindow,
                             getString("message.jrt.read.only.title"),
                             getString("message.jrt.read.only", fileName),
@@ -87,7 +101,7 @@ fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?
                 val directory = directoryChooser()
                 if (directory != null) {
                     val alternativePath = File(directory, classFile.simpleClassName + ".class").path
-                    writeClassFile(classFile, alternativePath, parentWindow, directoryChooser)
+                    writeClassFile(classFile, alternativePath, parentWindow, vmConnection, directoryChooser)
                 } else {
                     false
                 }
@@ -96,7 +110,7 @@ fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?
             }
         }
         fileName.startsWith(jarPrefix) -> {
-            writeClassFile(classFile, fileName.substringAfter(jarPrefix), parentWindow, directoryChooser)
+            writeClassFile(classFile, fileName.substringAfter(jarPrefix), parentWindow, vmConnection, directoryChooser)
         }
         fileName.contains('!') -> {
             val tempOutputFile = createTempFile("jclasslib")
@@ -116,6 +130,7 @@ fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?
             true
         }
     }
+}
 
 private fun splitJarFileName(fileName: String): Pair<String, String> = fileName.split("!", limit = 2).zipWithNext().first()
 

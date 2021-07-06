@@ -118,8 +118,9 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
     override fun setVisible(visible: Boolean) {
         if (visible) {
             if (updateClassPathFromFrame) {
-                classpathComponent = frame.config.toImmutableContainer()
+                classpathComponent = frame.classpathComponent
             }
+            setupAction.isEnabled = frame.vmConnection != null
         }
         super.setVisible(visible)
     }

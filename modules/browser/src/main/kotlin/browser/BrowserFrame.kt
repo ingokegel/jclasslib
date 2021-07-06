@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import com.formdev.flatlaf.extras.FlatSVGIcon
 import com.install4j.api.Util
 import com.install4j.runtime.filechooser.DirectoryChooser
 import com.install4j.runtime.filechooser.FileAccessMode
@@ -18,10 +19,7 @@ import kotlinx.dom.parseXml
 import kotlinx.dom.writeXmlString
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserConfig
-import org.gjt.jclasslib.browser.config.classpath.ClasspathArchiveEntry
-import org.gjt.jclasslib.browser.config.classpath.ClasspathBrowser
-import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
-import org.gjt.jclasslib.browser.config.classpath.ClasspathSetupDialog
+import org.gjt.jclasslib.browser.config.classpath.*
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.DefaultAction
@@ -50,7 +48,12 @@ import kotlin.math.min
 
 class BrowserFrame : JFrame() {
 
+    var vmConnection: VmConnection? = null
+        private set
+
     val config: BrowserConfig = BrowserConfig()
+    val classpathComponent: ClasspathComponent
+        get() = vmConnection?.let { ClasspathVmEntry(it) } ?: config.toImmutableContainer()
 
     val openClassFileAction = DefaultAction(getString("action.open.class.file"), getString("action.open.class.file"), "open_small.png", "open_large.png") {
         if (classesFileChooser.select()) {
@@ -68,11 +71,24 @@ class BrowserFrame : JFrame() {
         }
     }
 
+    val attachVmAction = DefaultAction(getString("action.attach.to.jvm"), getString("action.attach.to.jvm.description"), "attach.svg") {
+        attachToVm(this)?.let {
+            applyVmConnection(it)
+            browseClasspathAction()
+        }
+    }
+
+    val detachVmAction = DefaultAction(getString("action.detach.from.jvm"), getString("action.detach.from.jvm.description"), "detach.svg") {
+        applyVmConnection(null)
+    }.apply {
+        isEnabled = false
+    }
+
     val browseClasspathAction = DefaultAction(getString("action.browse.class.path"), getString("action.browse.class.path.description"), "tree_small.png", "tree_large.png") {
         classpathBrowser.isVisible = true
         if (!classpathBrowser.isCanceled) {
             for (selectedClassName in classpathBrowser.selectedClassNames) {
-                val findResult = config.findClass(selectedClassName, classpathBrowser.isModulePathSelection())
+                val findResult = classpathComponent.findClass(selectedClassName, classpathBrowser.isModulePathSelection())
                 if (findResult != null) {
                     repaintNow()
                     withWaitCursor {
@@ -159,6 +175,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun prepareClose(): Boolean {
+        vmConnection?.close()
         saveWindowSettings()
         return frameContent.closeAllTabs()
     }
@@ -357,6 +374,9 @@ class BrowserFrame : JFrame() {
             add(JMenu(getString("menu.file")).apply {
                 add(openClassFileAction)
                 addSeparator()
+                add(attachVmAction)
+                add(detachVmAction)
+                addSeparator()
                 add(newWindowAction)
                 add(newWorkspaceAction)
                 add(openWorkspaceAction)
@@ -508,6 +528,9 @@ class BrowserFrame : JFrame() {
 
     private fun buildToolbar(): JToolBar = JToolBar().apply {
         add(openClassFileAction.createToolBarButton())
+        add(attachVmAction.createToolBarButton())
+        add(detachVmAction.createToolBarButton())
+        addSeparator()
         add(browseClasspathAction.createToolBarButton())
         add(saveModifiedClassesAction.createToolBarButton())
         addSeparator()
@@ -685,6 +708,18 @@ class BrowserFrame : JFrame() {
         )
     }
 
+    private fun applyVmConnection(newVmConnection: VmConnection?) {
+        frameContent.closeAllTabs(force = true)
+        vmConnection?.close()
+        vmConnection = newVmConnection
+        val isVmConnection = newVmConnection != null
+        detachVmAction.isEnabled = isVmConnection
+        setupClasspathAction.isEnabled = !isVmConnection
+        saveWorkspaceAction.isEnabled = !isVmConnection
+        openWorkspaceAction.isEnabled = !isVmConnection
+        openClassFileAction.isEnabled = !isVmConnection
+    }
+
     init {
         loadSettings()
         setupMenu()
@@ -709,7 +744,8 @@ class BrowserFrame : JFrame() {
         private const val SETTINGS_WINDOW_Y = "windowY"
         private const val SETTINGS_WINDOW_MAXIMIZED = "windowMaximized"
 
-        private val icons = hashMapOf<String, ImageIcon>()
+        data class IconNameAndDimension(val name: String, val dimension: Dimension?)
+        private val icons = hashMapOf<IconNameAndDimension, ImageIcon>()
         val ICON_IMAGES = listOf(16, 32, 48, 64, 128, 256).map { getIcon("jclasslib_$it.png").image }
         val multiResolutionImageConstructor = try {
             Class.forName("java.awt.image.BaseMultiResolutionImage")?.getConstructor(Array<Image>::class.java)
@@ -717,28 +753,41 @@ class BrowserFrame : JFrame() {
             null
         }
 
-        fun getIcon(fileName: String): ImageIcon {
-            return icons.getOrPut(fileName) {
-                if (fileName.contains("jclasslib_")) {
-                    ImageIcon(getImageUrl(fileName))
-                } else {
-                    val lowResImage = readImage(fileName)
-                    val highResImage = readImage(fileName.replace(".png", "@2x.png"))
-                    val images = listOfNotNull(lowResImage, highResImage).toTypedArray()
-                    require(images.size == 2)
-                    val combinedImage = multiResolutionImageConstructor?.let {
-                        try {
-                            it.newInstance(images) as Image
-                        } catch (t: Throwable) {
-                            null
+        fun getIcon(fileName: String, dimension: Dimension? = null): ImageIcon {
+            return icons.getOrPut(IconNameAndDimension(fileName, dimension)) {
+                when {
+                    fileName.contains("jclasslib_") -> {
+                        ImageIcon(getImageUrl(fileName))
+                    }
+                    fileName.endsWith(".svg") -> {
+                        val imageResourcePath = getImageResourcePath(fileName)
+                        if (dimension != null) {
+                            FlatSVGIcon(imageResourcePath, dimension.width, dimension.height)
+                        } else {
+                            FlatSVGIcon(imageResourcePath)
                         }
-                    } ?: images.first()
-                    ImageIcon(combinedImage)
+                    }
+                    else -> {
+                        val lowResImage = readImage(fileName)
+                        val highResImage = readImage(fileName.replace(".png", "@2x.png"))
+                        val images = listOfNotNull(lowResImage, highResImage).toTypedArray()
+                        require(images.size == 2)
+                        val combinedImage = multiResolutionImageConstructor?.let {
+                            try {
+                                it.newInstance(images) as Image
+                            } catch (t: Throwable) {
+                                null
+                            }
+                        } ?: images.first()
+                        ImageIcon(combinedImage)
+                    }
                 }
             }
         }
 
         private fun readImage(fileName: String): BufferedImage? = getImageUrl(fileName)?.let { ImageIO.read(it) }
-        private fun getImageUrl(fileName: String) = BrowserFrame::class.java.getResource("images/$fileName")
+        private fun getImageUrl(fileName: String) = BrowserFrame::class.java.getResource(getRelativeImageResourceName(fileName))
+        private fun getImageResourcePath(fileName: String) = BrowserFrame::class.java.`package`.name.replace('.', '/') + "/" + getRelativeImageResourceName(fileName)
+        private fun getRelativeImageResourceName(fileName: String) = "images/$fileName"
     }
 }

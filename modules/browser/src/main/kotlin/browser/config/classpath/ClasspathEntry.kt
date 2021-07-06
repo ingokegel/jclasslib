@@ -10,29 +10,12 @@ package org.gjt.jclasslib.browser.config.classpath
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.attributes.ModuleAttribute
 import org.w3c.dom.Element
-import java.io.File
 import java.io.InputStream
 import javax.swing.tree.DefaultTreeModel
 
-abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
-
-    val file : File = File(fileName).canonicalFile
+abstract class ClasspathEntry : ClasspathComponent {
 
     abstract fun saveWorkspace(element: Element)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (other == null || other::class.java != this::class.java) {
-            return false
-        }
-        other as ClasspathEntry
-
-        return file == other.file
-    }
-
-    override fun hashCode(): Int = file.hashCode()
 
     override fun contains(component: ClasspathComponent): Boolean = false
 
@@ -64,10 +47,10 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
         return newNode
     }
 
-    protected fun String.stripClassSuffix(): String = this.substring(0, this.length - CLASSFILE_SUFFIX.length)
+    protected fun String.stripClassSuffix(): String = this.removeSuffix(CLASSFILE_SUFFIX)
 
     protected fun addEntry(path: String, moduleName: String?, classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
-        val pathComponents = path.stripClassSuffix().replace('\\', '/').split(Regex("/"))
+        val pathComponents = path.stripClassSuffix().replace('\\', '/').split(Regex("/")).map { it.replace(SEPARATOR_PLACEHOLDER, '/') }
         if (!path.endsWith(MODULE_INFO_CLASS_FILE_NAME)) {
             addEntry(classPathModel, pathComponents, reset)
         }
@@ -120,6 +103,7 @@ abstract class ClasspathEntry(fileName : String) : ClasspathComponent {
         const val CLASSFILE_SUFFIX = ".class"
         const val UNNAMED_MODULE = "<unnamed module>"
         const val MODULE_INFO_CLASS_FILE_NAME = "module-info.class"
+        const val SEPARATOR_PLACEHOLDER = '\u0001'
 
         fun create(element : Element) : ClasspathEntry? = when (element.nodeName) {
             ClasspathDirectoryEntry.NODE_NAME -> ClasspathDirectoryEntry.create(element)
