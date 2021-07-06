@@ -12,13 +12,13 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/modules/agent" />
             <option value="$PROJECT_DIR$/modules/browser" />
             <option value="$PROJECT_DIR$/modules/data" />
             <option value="$PROJECT_DIR$/modules/idea" />
             <option value="$PROJECT_DIR$/modules/installer" />
           </set>
         </option>
-        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -1,15 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="bytecode viewer macOS" type="JetRunConfigurationType" factoryName="Kotlin" singleton="false">
-    <module name="jclasslib.browser.main" />
-    <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false -Xdock:icon=$ProjectFileDir$/modules/installer/resources/jclasslib.icns" />
-    <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+  <configuration default="false" name="bytecode viewer macOS" type="JetRunConfigurationType" singleton="false">
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
-    <option name="PASS_PARENT_ENVS" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="org.gjt.jclasslib.browser.BrowserApplication" />
-    <option name="WORKING_DIRECTORY" value="" />
+    <module name="jclasslib.browser.main" />
+    <option name="VM_PARAMETERS" value="-Dapple.laf.useScreenMenuBar=true -Djclasslib.io.debug=false -Xdock:icon=$ProjectFileDir$/modules/installer/resources/jclasslib.icns -Djclasslib.io.debug=false -Djdk.attach.allowAttachSelf=true" />
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="dist" externalProjectPath="$PROJECT_DIR$/modules/agent" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>
