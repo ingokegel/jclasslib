@@ -13,12 +13,11 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import java.awt.Font
+import java.awt.event.KeyEvent
 import java.io.IOException
 import java.util.*
-import javax.swing.JComponent
-import javax.swing.JDialog
-import javax.swing.JFrame
-import javax.swing.JLabel
+import javax.swing.*
+
 
 class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
 
@@ -47,6 +46,12 @@ class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
                 this@BrowserAboutDialog.getRootPane().defaultButton = this
             }, "newline para")
         }
+
+        getRootPane().registerKeyboardAction(
+                { isVisible = false },
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW
+        )
 
         pack()
         isModal = true
