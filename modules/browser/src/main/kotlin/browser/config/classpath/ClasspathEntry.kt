@@ -50,7 +50,7 @@ abstract class ClasspathEntry : ClasspathComponent {
     protected fun String.stripClassSuffix(): String = this.removeSuffix(CLASSFILE_SUFFIX)
 
     protected fun addEntry(path: String, moduleName: String?, classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
-        val pathComponents = path.stripClassSuffix().replace('\\', '/').split(Regex("/")).map { it.replace(SEPARATOR_PLACEHOLDER, '/') }
+        val pathComponents = path.stripClassSuffix().replace('\\', '/').split(Regex("/"))
         if (!path.endsWith(MODULE_INFO_CLASS_FILE_NAME)) {
             addEntry(classPathModel, pathComponents, reset)
         }
@@ -103,7 +103,6 @@ abstract class ClasspathEntry : ClasspathComponent {
         const val CLASSFILE_SUFFIX = ".class"
         const val UNNAMED_MODULE = "<unnamed module>"
         const val MODULE_INFO_CLASS_FILE_NAME = "module-info.class"
-        const val SEPARATOR_PLACEHOLDER = '\u0001'
 
         fun create(element : Element) : ClasspathEntry? = when (element.nodeName) {
             ClasspathDirectoryEntry.NODE_NAME -> ClasspathDirectoryEntry.create(element)

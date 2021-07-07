@@ -11,7 +11,7 @@ import org.gjt.jclasslib.browser.VmConnection
 import org.w3c.dom.Element
 import javax.swing.tree.DefaultTreeModel
 
-class ClasspathVmEntry(private val vmConnection: VmConnection): ClasspathEntry() {
+class ClasspathVmEntry(private val vmConnection: VmConnection) : ClasspathEntry() {
     override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
         val classNameWithoutModule = if (modulePathSelection) className.substringAfter("/") else className
         val displayClassName = classNameWithoutModule.replace('/', '.')
@@ -24,9 +24,12 @@ class ClasspathVmEntry(private val vmConnection: VmConnection): ClasspathEntry()
     }
 
     override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
-        vmConnection.communicator.classes.forEach {
-            addEntry(it.className.replace('/', SEPARATOR_PLACEHOLDER).replace('.', '/'), it.moduleName, classPathModel, modulePathModel, reset)
-        }
+        vmConnection.communicator.classes
+                // classes with a / in their name are hidden classes
+                .filterNot { it.className.contains('/') }
+                .forEach {
+                    addEntry(it.className.replace('.', '/'), it.moduleName, classPathModel, modulePathModel, reset)
+                }
     }
 
     override fun saveWorkspace(element: Element) {
