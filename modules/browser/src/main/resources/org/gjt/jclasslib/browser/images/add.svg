@@ -1,0 +1,12 @@
+<svg x="0" y="0" width="512" height="512" version="1.1"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 512 512">
+    <title>add icon</title>
+    <desc>add icon from the IconExperience.com G-Collection. Copyright by INCORS GmbH (www.incors.com).</desc>
+    <g>
+        <path d="M256,16c132.55,0 240,107.45 240,240c0,132.55 -107.45,240 -240,240c-132.55,0 -240,-107.45 -240,-240c0,-132.55 107.45,-240 240,-240z" fill="#68ba1c"/>
+        <path d="M425.7,86.3c43.45,43.45 70.3,103.45 70.3,169.7c0,132.55 -107.45,240 -240,240c-66.25,0 -126.25,-26.85 -169.7,-70.3z" fill="#53a616"/>
+        <polygon points="112,224 224,224 224,112 288,112 288,224 400,224 400,288 288,288 288,400 224,400 224,288 112,288" fill="#ffffff"/>
+        <polygon points="288,224 400,224 400,288 288,288 288,400 224,400 224,288" fill="#ebedef"/>
+    </g>
+</svg>

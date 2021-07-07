@@ -17,7 +17,7 @@ class ClasspathVmEntry(private val vmConnection: VmConnection): ClasspathEntry()
         val displayClassName = classNameWithoutModule.replace('/', '.')
         val classDescriptor = vmConnection.communicator.classes.find { it.className == displayClassName }
         return if (classDescriptor != null) {
-            FindResult(classNameWithoutModule, classDescriptor.moduleName)
+            FindResult(classNameWithoutModule, classDescriptor.moduleName ?: UNNAMED_MODULE)
         } else {
             null
         }

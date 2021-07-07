@@ -32,13 +32,11 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.awt.image.BufferedImage
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileWriter
 import java.io.IOException
 import java.util.prefs.Preferences
-import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -55,7 +53,7 @@ class BrowserFrame : JFrame() {
     val classpathComponent: ClasspathComponent
         get() = vmConnection?.let { ClasspathVmEntry(it) } ?: config.toImmutableContainer()
 
-    val openClassFileAction = DefaultAction(getString("action.open.class.file"), getString("action.open.class.file"), "open_small.png", "open_large.png") {
+    val openClassFileAction = DefaultAction(getString("action.open.class.file"), getString("action.open.class.file"), "open.svg") {
         if (classesFileChooser.select()) {
             repaintNow()
             withWaitCursor {
@@ -84,7 +82,7 @@ class BrowserFrame : JFrame() {
         isEnabled = false
     }
 
-    val browseClasspathAction = DefaultAction(getString("action.browse.class.path"), getString("action.browse.class.path.description"), "tree_small.png", "tree_large.png") {
+    val browseClasspathAction = DefaultAction(getString("action.browse.class.path"), getString("action.browse.class.path.description"), "tree.svg") {
         classpathBrowser.isVisible = true
         if (!classpathBrowser.isCanceled) {
             for (selectedClassName in classpathBrowser.selectedClassNames) {
@@ -112,7 +110,7 @@ class BrowserFrame : JFrame() {
         accelerator(KeyEvent.VK_N)
     }
 
-    val saveModifiedClassesAction = DefaultAction(getString("action.save.modified.classes"), getString("action.save.modified.classes.description"), "save_small.png", "save_large.png") {
+    val saveModifiedClassesAction = DefaultAction(getString("action.save.modified.classes"), getString("action.save.modified.classes.description"), "save.svg") {
         frameContent.saveModified()
     }.apply {
         isEnabled = false
@@ -126,7 +124,7 @@ class BrowserFrame : JFrame() {
         }
     }
 
-    val openWorkspaceAction = DefaultAction(getString("action.open.workspace"), getString("action.open.workspace.description"), "open_ws_small.png", "open_ws_large.png") {
+    val openWorkspaceAction = DefaultAction(getString("action.open.workspace"), getString("action.open.workspace.description"), "open_ws.svg") {
         workspaceFileChooser.fileAccessMode(FileAccessMode.OPEN)
         if (frameContent.canClose() && workspaceFileChooser.select()) {
             val selectedFile = workspaceFileChooser.selectedFile
@@ -135,7 +133,7 @@ class BrowserFrame : JFrame() {
         }
     }
 
-    val saveWorkspaceAction = DefaultAction(getString("action.save.workspace"), getString("action.save.workspace.description"), "save_ws_small.png", "save_ws_large.png") {
+    val saveWorkspaceAction = DefaultAction(getString("action.save.workspace"), getString("action.save.workspace.description"), "save_ws.svg") {
         val workspaceFile = this.workspaceFile
         if (workspaceFile != null) {
             saveWorkspaceToFile(workspaceFile)
@@ -180,21 +178,21 @@ class BrowserFrame : JFrame() {
         return frameContent.closeAllTabs()
     }
 
-    val backwardAction = DefaultAction(getString("action.backward"), getString("action.backward.description"), "browser_backward_small.png", "browser_backward_large.png") {
+    val backwardAction = DefaultAction(getString("action.backward"), getString("action.backward.description"), "browser_backward.svg") {
         frameContent.selectedTab?.browserComponent?.history?.historyBackward()
     }.apply {
         disabled()
         accelerator(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK)
     }
 
-    val forwardAction = DefaultAction(getString("action.forward"), getString("action.forward.description"), "browser_forward_small.png", "browser_forward_large.png") {
+    val forwardAction = DefaultAction(getString("action.forward"), getString("action.forward.description"), "browser_forward.svg") {
         frameContent.selectedTab?.browserComponent?.history?.historyForward()
     }.apply {
         disabled()
         accelerator(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK)
     }
 
-    val reloadAction = DefaultAction(getString("action.reload"), getString("action.reload.description"), "reload_small.png", "reload_large.png") {
+    val reloadAction = DefaultAction(getString("action.reload"), getString("action.reload.description"), "reload.svg") {
         try {
             frameContent.selectedTab?.reload()
         } catch (e: IOException) {
@@ -206,11 +204,11 @@ class BrowserFrame : JFrame() {
         accelerator(KeyEvent.VK_R)
     }
 
-    val showHomepageAction = DefaultAction(getString("action.website"), getString("action.website.description"), "web_small.png", "web_large.png") {
+    val showHomepageAction = DefaultAction(getString("action.website"), getString("action.website.description"), "web.svg") {
         GUIHelper.showURL(WEBSITE_URL)
     }
 
-    val showEjtAction = DefaultAction(getString("action.ej.technologies.web.site"), getString("action.ej.technologies.web.site.description"), "web_small.png") {
+    val showEjtAction = DefaultAction(getString("action.ej.technologies.web.site"), getString("action.ej.technologies.web.site.description"), "web.svg") {
         GUIHelper.showURL("https://www.ej-technologies.com")
     }
 
@@ -417,7 +415,7 @@ class BrowserFrame : JFrame() {
                     })
                 })
                 add(JMenu(getString("menu.switch.language")).apply {
-                    icon = getIcon("language.png")
+                    icon = getSvgIcon("language.svg", DefaultAction.SMALL_ICON_SIZE)
                     val selectedSupportedLocale = SupportedLocale.findByLocaleCode(getPreferencesNode().get(SETTINGS_LOCALE, ""))
                     val buttonGroup = ButtonGroup()
                     for (supportedLocale in SupportedLocale.values()) {
@@ -747,45 +745,22 @@ class BrowserFrame : JFrame() {
         data class IconNameAndDimension(val name: String, val dimension: Dimension?)
         private val icons = hashMapOf<IconNameAndDimension, ImageIcon>()
         val ICON_IMAGES = listOf(16, 32, 48, 64, 128, 256).map { getIcon("jclasslib_$it.png").image }
-        val multiResolutionImageConstructor = try {
-            Class.forName("java.awt.image.BaseMultiResolutionImage")?.getConstructor(Array<Image>::class.java)
-        } catch (t : Throwable) {
-            null
-        }
 
-        fun getIcon(fileName: String, dimension: Dimension? = null): ImageIcon {
-            return icons.getOrPut(IconNameAndDimension(fileName, dimension)) {
-                when {
-                    fileName.contains("jclasslib_") -> {
-                        ImageIcon(getImageUrl(fileName))
-                    }
-                    fileName.endsWith(".svg") -> {
-                        val imageResourcePath = getImageResourcePath(fileName)
-                        if (dimension != null) {
-                            FlatSVGIcon(imageResourcePath, dimension.width, dimension.height)
-                        } else {
-                            FlatSVGIcon(imageResourcePath)
-                        }
-                    }
-                    else -> {
-                        val lowResImage = readImage(fileName)
-                        val highResImage = readImage(fileName.replace(".png", "@2x.png"))
-                        val images = listOfNotNull(lowResImage, highResImage).toTypedArray()
-                        require(images.size == 2)
-                        val combinedImage = multiResolutionImageConstructor?.let {
-                            try {
-                                it.newInstance(images) as Image
-                            } catch (t: Throwable) {
-                                null
-                            }
-                        } ?: images.first()
-                        ImageIcon(combinedImage)
-                    }
+        fun getSvgIcon(fileName: String, dimension: Dimension? = null): ImageIcon =
+            icons.getOrPut(IconNameAndDimension(fileName, dimension)) {
+                val imageResourcePath = getImageResourcePath(fileName)
+                if (dimension != null) {
+                    FlatSVGIcon(imageResourcePath, dimension.width, dimension.height)
+                } else {
+                    FlatSVGIcon(imageResourcePath)
                 }
             }
-        }
 
-        private fun readImage(fileName: String): BufferedImage? = getImageUrl(fileName)?.let { ImageIO.read(it) }
+        fun getIcon(fileName: String): ImageIcon =
+            icons.getOrPut(IconNameAndDimension(fileName, null)) {
+                ImageIcon(getImageUrl(fileName))
+            }
+
         private fun getImageUrl(fileName: String) = BrowserFrame::class.java.getResource(getRelativeImageResourceName(fileName))
         private fun getImageResourcePath(fileName: String) = BrowserFrame::class.java.`package`.name.replace('.', '/') + "/" + getRelativeImageResourceName(fileName)
         private fun getRelativeImageResourceName(fileName: String) = "images/$fileName"

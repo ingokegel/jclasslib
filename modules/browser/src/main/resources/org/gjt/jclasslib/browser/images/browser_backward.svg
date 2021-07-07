@@ -1,0 +1,12 @@
+<svg x="0" y="0" width="512" height="512" version="1.1"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 512 512">
+    <title>nav left icon</title>
+    <desc>nav left icon from the IconExperience.com G-Collection. Copyright by INCORS GmbH (www.incors.com).</desc>
+    <g>
+        <path d="M496,256c0,132.55 -107.45,240 -240,240c-132.55,0 -240,-107.45 -240,-240c0,-132.55 107.45,-240 240,-240c132.55,0 240,107.45 240,240z" fill="#28b5f5"/>
+        <path d="M496,256c0,132.55 -107.45,240 -240,240c-66.25,0 -126.25,-26.85 -169.7,-70.3l339.4,-339.4c43.45,43.45 70.3,103.45 70.3,169.7z" fill="#0299e3"/>
+        <polygon points="400,208 400,304 224,304 224,384 96,256 224,128 224,208" fill="#ffffff"/>
+        <polygon points="400,208 400,304 224,304 224,384 176,336 304,208" fill="#ebedef"/>
+    </g>
+</svg>

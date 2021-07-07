@@ -12,16 +12,12 @@ import org.jetbrains.annotations.Nls
 import java.awt.Dimension
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
-import javax.swing.AbstractAction
-import javax.swing.JButton
-import javax.swing.JComponent
-import javax.swing.KeyStroke
+import javax.swing.*
 
 class DefaultAction(
         @Nls name: String,
         @Nls shortDescription: String? = null,
-        smallIconFileName: String? = null,
-        largeIconFileName: String? = if (smallIconFileName?.endsWith(".svg") == true) smallIconFileName else null,
+        iconFileName: String? = null,
         private val action: (action: DefaultAction) -> Unit
 ) : AbstractAction(name) {
 
@@ -29,10 +25,9 @@ class DefaultAction(
         private set
 
     init {
-        val smallIcon = if (smallIconFileName != null) BrowserFrame.getIcon(smallIconFileName, SMALL_ICON_SIZE) else null
-        putValue(SMALL_ICON, smallIcon)
-        if (largeIconFileName != null) {
-            putValue(LARGE_ICON_KEY, BrowserFrame.getIcon(largeIconFileName, LARGE_ICON_SIZE))
+        if (iconFileName != null) {
+            putValue(SMALL_ICON, BrowserFrame.getSvgIcon(iconFileName, SMALL_ICON_SIZE))
+            putValue(LARGE_ICON_KEY, BrowserFrame.getSvgIcon(iconFileName, LARGE_ICON_SIZE))
         }
         if (shortDescription != null) {
             putValue(SHORT_DESCRIPTION, shortDescription)
@@ -55,6 +50,7 @@ class DefaultAction(
 
     fun createImageButton() = createButton().apply {
         text = null
+        icon = getValue(SMALL_ICON) as Icon?
         fixedSize(IMAGE_BUTTON_SIZE)
         if (GUIHelper.isMacOs()) {
             putClientProperty("JButton.buttonType", "toolbar")
@@ -94,8 +90,8 @@ class DefaultAction(
         val MENU_MODIFIER = Toolkit.getDefaultToolkit().menuShortcutKeyMaskEx
         private val IMAGE_BUTTON_SIZE = Dimension(26, 26)
         private val TOOL_BAR_BUTTON_SIZE = Dimension(35, 35)
-        private val SMALL_ICON_SIZE = Dimension(16, 16)
-        private val LARGE_ICON_SIZE = Dimension(24, 24)
+        val SMALL_ICON_SIZE = Dimension(16, 16)
+        val LARGE_ICON_SIZE = Dimension(24, 24)
     }
 
 }

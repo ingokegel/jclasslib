@@ -61,7 +61,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
         }
     }
 
-    private val addButton: JButton = DefaultAction(getString("action.classpath.add.entry"), getString("action.classpath.add.entry.description"), "add.png") {
+    private val addButton: JButton = DefaultAction(getString("action.classpath.add.entry"), getString("action.classpath.add.entry.description"), "add.svg") {
         it.lastButton?.let {
             val bounds = it.bounds
             popupMenu.show(it.parent, bounds.x, bounds.y + bounds.height)
@@ -71,7 +71,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
         applyAcceleratorTo(lstElements)
     }.createImageButton()
 
-    private val removeAction = DefaultAction(getString("action.classpath.remove.entry"), getString("action.classpath.remove.entry.description"), "remove.png") {
+    private val removeAction = DefaultAction(getString("action.classpath.remove.entry"), getString("action.classpath.remove.entry.description"), "remove.svg") {
         val selectedIndex = lstElements.selectedIndex
         if (selectedIndex > -1) {
             listModel.remove(selectedIndex)
@@ -82,7 +82,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
         applyAcceleratorTo(lstElements)
     }
 
-    private val upAction = DefaultAction(getString("action.move.up"), getString("action.move.up.description"), "up.png") {
+    private val upAction = DefaultAction(getString("action.move.up"), getString("action.move.up.description"), "up.svg") {
         val selectedIndex = lstElements.selectedIndex
         if (selectedIndex > 0) {
             val entry = listModel.remove(selectedIndex)
@@ -96,7 +96,7 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
         applyAcceleratorTo(lstElements)
     }
 
-    private val downAction = DefaultAction(getString("action.move.down"), getString("action.move.down.description"), "down.png") {
+    private val downAction = DefaultAction(getString("action.move.down"), getString("action.move.down.description"), "down.svg") {
         val selectedIndex = lstElements.selectedIndex
         if (selectedIndex < listModel.size - 1) {
             val entry = listModel.remove(selectedIndex)
