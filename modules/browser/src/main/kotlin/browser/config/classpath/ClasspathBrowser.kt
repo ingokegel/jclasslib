@@ -120,7 +120,7 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
             if (updateClassPathFromFrame) {
                 classpathComponent = frame.classpathComponent
             }
-            setupAction.isEnabled = frame.vmConnection != null
+            setupAction.isEnabled = frame.vmConnection == null
         }
         super.setVisible(visible)
     }
