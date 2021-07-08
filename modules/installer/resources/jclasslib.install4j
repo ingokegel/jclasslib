@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="9.0" transformSequenceNumber="9">
+<install4j version="9.0.3" transformSequenceNumber="9">
   <directoryPresets config="." />
-  <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="5.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="11">
+  <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="6.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="11">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="zh_CN" />
@@ -13,7 +13,7 @@
       <variable name="macCertPath" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:macCertPath}" windowsEnabled="true" windowsPkcs12File="${compiler:winCertPath}" />
-    <jreBundles jdkProviderId="JBR" release="11/11.0.9.1-b1145.77" />
+    <jreBundles jdkProviderId="JBR" release="11/11.0.11-b1504.8" />
   </application>
   <files preserveSymlinks="false">
     <mountPoints>
@@ -58,7 +58,9 @@
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" launchInNewProcess="false">
         <serializedBean>
+          <property name="frameHeight" type="int" value="470" />
           <property name="frameSizeClientArea" type="boolean" value="false" />
+          <property name="frameWidth" type="int" value="550" />
           <property name="resizable" type="boolean" value="false" />
         </serializedBean>
         <startup>
@@ -254,7 +256,9 @@ return console.askOkCancel(message, true);
           <property name="allowConsole" type="boolean" value="false" />
           <property name="allowUnattended" type="boolean" value="false" />
           <property name="customMacosExecutableName" type="string">${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</property>
+          <property name="frameHeight" type="int" value="470" />
           <property name="frameSizeClientArea" type="boolean" value="false" />
+          <property name="frameWidth" type="int" value="550" />
           <property name="resizable" type="boolean" value="false" />
           <property name="useCustomMacosExecutableName" type="boolean" value="true" />
         </serializedBean>
@@ -559,5 +563,5 @@ return console.askYesNo(message, true);
       <jreBundle jreBundleSource="none" />
     </unixArchive>
   </mediaSets>
-  <buildIds buildAll="false" />
+  <buildOptions disableSigning="true" />
 </install4j>
