@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.util
 
+import org.jetbrains.annotations.Nls
 import java.awt.*
 import javax.swing.JEditorPane
 import javax.swing.UIManager
@@ -17,7 +18,7 @@ import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
-open class HtmlDisplayTextArea(text: String? = null) : JEditorPane(), TextDisplay {
+open class HtmlDisplayTextArea(@Nls text: String? = null) : JEditorPane(), TextDisplay {
 
     var inverted: Boolean = false
         set(inverted) {

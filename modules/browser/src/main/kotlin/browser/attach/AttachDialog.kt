@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser.attach
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.AttachableVm
 import org.gjt.jclasslib.browser.BrowserBundle.getString
+import org.gjt.jclasslib.util.HtmlDisplayTextArea
 import org.gjt.jclasslib.util.SelectionDialog
 import java.awt.Window
 import java.awt.event.MouseAdapter
@@ -40,6 +41,9 @@ class AttachDialog(vms: List<AttachableVm>, parentWindow: Window?): SelectionDia
         with (component) {
             layout = MigLayout("wrap", "[grow]")
             add(JScrollPane(list), "pushy, grow")
+            add(HtmlDisplayTextArea(getString("classes.attach.info")).apply {
+                isEnabled = false
+            }, "growx")
         }
         setSize(600, 400)
     }
