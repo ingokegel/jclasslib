@@ -10,8 +10,8 @@
 package org.gjt.jclasslib.browser
 
 import com.exe4j.runtime.util.LazyFileOutputStream
-import com.formdev.flatlaf.FlatDarkLaf
-import com.formdev.flatlaf.FlatLightLaf
+import com.formdev.flatlaf.FlatDarculaLaf
+import com.formdev.flatlaf.FlatIntelliJLaf
 import com.install4j.api.Util
 import com.install4j.api.launcher.StartupNotification
 import com.install4j.runtime.installer.platform.macos.MacosUiHelper
@@ -89,9 +89,9 @@ fun updateFlatLaf() {
             .map { "OptionPane.${it}Icon" }
             .associateWith { UIManager.getIcon(it) }
     if (darkMode) {
-        FlatDarkLaf.install()
+        FlatDarculaLaf.setup()
     } else {
-        FlatLightLaf.install()
+        FlatIntelliJLaf.setup()
     }
     if (Util.isMacOS()) {
         for ((key, icon) in defaultOptionPaneIcons) {

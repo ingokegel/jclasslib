@@ -30,8 +30,4 @@ public class AgentMain {
             server.registerMBean(new Communicator(instrumentation), objectName);
         }
     }
-
-    public static void main(String[] args) {
-        System.out.println(new NoModuleResolverImpl().getModuleName(String.class));
-    }
 }
