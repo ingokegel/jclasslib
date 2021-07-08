@@ -50,6 +50,7 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
     }
 
     protected fun setupComponent() {
+        pack() // Required for FlatLaf with JetBrains JRE custom decorations enabled, otherwise bounds on HiDPI screens are wrong
         (contentPane as JComponent).apply {
             addContent(this)
 
