@@ -37,7 +37,7 @@
           <versionLine y="40" text="${compiler:sys.version}" />
         </text>
       </splashScreen>
-      <java mainClass="org.gjt.jclasslib.browser.BrowserApplication" vmParameters="-Dapple.laf.useScreenMenuBar=true">
+      <java mainClass="org.gjt.jclasslib.browser.BrowserApplication" vmParameters="-Dapple.laf.useScreenMenuBar=true -Djdk.attach.allowAttachSelf=true">
         <classPath>
           <scanDirectory location="lib" />
         </classPath>

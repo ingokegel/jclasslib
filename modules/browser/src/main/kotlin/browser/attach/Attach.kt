@@ -79,7 +79,7 @@ fun attachToVm(parentWindow: Window?): VmConnection? =
 
 private fun getAgentPath(): String =
     (File(
-            System.getProperty(LauncherEngine.PROPNAME_MODULE_NAME)?.let { File(it, "../lib/") }
+            System.getProperty(LauncherEngine.PROPNAME_MODULE_NAME)?.let { File(it, "../../lib/") }
                     ?: File("build/gradle/agent/libs/"),
             "jclasslib-agent.jar"
     )).canonicalPath
