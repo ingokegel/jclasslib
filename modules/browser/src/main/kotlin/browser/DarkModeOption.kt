@@ -10,16 +10,21 @@ package org.gjt.jclasslib.browser
 import com.install4j.api.UiUtil
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 
-enum class DarkModeOption(val displayName: String) {
-    AUTO(getString("menu.dark.mode.auto")) {
+enum class DarkModeOption {
+    AUTO() {
+        override val displayName get() = getString("menu.dark.mode.auto")
         override fun isDarkMode() = UiUtil.isDarkDesktop()
     },
-    ON(getString("menu.dark.mode.on")) {
+    ON() {
+        override val displayName get() = getString("menu.dark.mode.on")
         override fun isDarkMode() = true
     },
-    OFF(getString("menu.dark.mode.off")) {
+    OFF() {
+        override val displayName get() = getString("menu.dark.mode.off")
         override fun isDarkMode() = false
     };
 
+    // Cannot be a constructor parameter because the class is used in Main.kt
+    abstract val displayName: String
     abstract fun isDarkMode(): Boolean
 }
