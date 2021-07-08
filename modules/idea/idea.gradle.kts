@@ -21,9 +21,9 @@ tasks {
     patchPluginXml {
         changeNotes.set("""
             <ul>
-                <li>Value labels and hyperlinks in detail panes can be focused and text in value labels can be selected</li>
-                <li>Support the Record class file attribute new in Java 14</li>
-                <li>Support the PermittedSubclasses class file attribute new in Java 15</li>
+                <li>Editing functionality for constant pool, attributes and bytecode</li>
+                <li>UI fixes and improvements</li>
+                <li>By setting the custom VM option -Djclasslib.locale=en (or another supported locale), the displayed language can be changed regardless of the default locale</li>
             </ul>
         """.trimIndent())
         version.set(project.version.toString())
