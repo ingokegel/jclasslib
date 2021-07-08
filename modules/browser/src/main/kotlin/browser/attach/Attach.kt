@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import com.exe4j.runtime.LauncherEngine
+import com.install4j.api.Util
 import com.sun.tools.attach.VirtualMachine
 import com.sun.tools.attach.VirtualMachineDescriptor
 import org.gjt.jclasslib.browser.BrowserBundle.getString
@@ -79,7 +80,8 @@ fun attachToVm(parentWindow: Window?): VmConnection? =
 
 private fun getAgentPath(): String =
     (File(
-            System.getProperty(LauncherEngine.PROPNAME_MODULE_NAME)?.let { File(it, "../../lib/") }
+            System.getProperty(LauncherEngine.PROPNAME_MODULE_NAME)
+                    ?.let { File(it, if (Util.isMacOS()) "Contents/Resources/app/lib" else "../../lib/") }
                     ?: File("build/gradle/agent/libs/"),
             "jclasslib-agent.jar"
     )).canonicalPath
