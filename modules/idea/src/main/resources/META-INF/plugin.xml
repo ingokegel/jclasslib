@@ -3,6 +3,7 @@
     <id>jclasslib</id>
     <!--suppress PluginXmlCapitalization -->
     <name>jclasslib Bytecode Viewer</name>
+    <depends>com.intellij.modules.java</depends>
     <description>jclasslib is a bytecode viewer for Java class files</description>
     <version>5.0</version>
     <vendor url="https://github.com/ingokegel/jclasslib">Ingo Kegel</vendor>
