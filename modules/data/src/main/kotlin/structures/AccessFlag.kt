@@ -17,7 +17,11 @@ import java.util.*
  * @property sinceJava the first Java version that supports this access flag
  */
 @Suppress("NOT_DOCUMENTED")
-enum class AccessFlag(override val flag: Int, override val verbose: String, val sinceJava: String? = null): ClassFileFlag {
+enum class AccessFlag(
+        override val flag: Int,
+        override val verbose: String,
+        val sinceJava: String? = null,
+        val historical: Boolean = false): ClassFileFlag {
     PUBLIC(0x0001, "public"),
     PRIVATE(0x0002, "private"),
     PROTECTED(0x0004, "protected"),
@@ -27,7 +31,7 @@ enum class AccessFlag(override val flag: Int, override val verbose: String, val 
     /**
      * For ClassFile structures, 0x0020 is ACC_SUPER, which has historical significance only
      */
-    SUPER(0x0020, ""),
+    SUPER(0x0020, "super", historical=true),
     VOLATILE(0x0040, "volatile"),
     TRANSIENT(0x0080, "transient"),
     NATIVE(0x0100, "native"),

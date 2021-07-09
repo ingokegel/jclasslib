@@ -104,7 +104,7 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
     private fun replaceOpcode(instruction: Instruction) {
         val replacementOpcodes = getStackCompatibleReplacementOpcodes(instruction)
         if (replacementOpcodes.isEmpty()) {
-            GUIHelper.showMessage(this, "There are no compatible opcodes for the selected instruction", null, JOptionPane.WARNING_MESSAGE)
+            GUIHelper.showMessage(this, getString("no.compatible.opcode"), null, JOptionPane.WARNING_MESSAGE)
         } else {
             val opcode = instruction.opcode
             val newOpcode = JOptionPane.showInputDialog(
