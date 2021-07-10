@@ -7,7 +7,22 @@
 
 package org.gjt.jclasslib.structures
 
+/**
+ * Implemented by enums that represent a bit field flag.
+ */
 interface ClassFileFlag {
+    /**
+     * The flag
+     */
     val flag: Int
+
+    /**
+     * if the flag is only of historical significance
+     */
+    val historical: Boolean
+
+    /**
+     * The verbose representation of this flag
+     */
     val verbose: String
 }

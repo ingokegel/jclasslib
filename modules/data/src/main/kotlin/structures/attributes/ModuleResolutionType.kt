@@ -23,6 +23,7 @@ enum class ModuleResolutionType(override val flag: Int, override val verbose: St
     RESOLUTION_WARN_INCUBATING(8, "Warn incubating");
 
     override fun toString() = verbose
+    override val historical get() = false
 
     companion object : FlagLookup<ModuleResolutionType>()
 }

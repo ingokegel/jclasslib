@@ -88,9 +88,10 @@ abstract class Structure {
     protected fun formatFlagsVerbose(availableFlags: Set<ClassFileFlag>, flags: Int, separator: String = " "): String {
         val matchingFlags = availableFlags.filter { (flags and it.flag) != 0 }
         val handledFlags = matchingFlags.fold(0) { value, accessFlag -> value or accessFlag.flag }
-        return matchingFlags.
-                mapNotNull { it.verbose.ifEmpty { null } }.
-                joinToString(separator = separator, postfix = if (flags != handledFlags) "?" else "")
+        return matchingFlags
+                .filterNot { it.historical }
+                .mapNotNull { it.verbose.ifEmpty { null } }
+                .joinToString(separator = separator, postfix = if (flags != handledFlags) "?" else "")
     }
 
 }
