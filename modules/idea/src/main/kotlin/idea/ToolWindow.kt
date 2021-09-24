@@ -37,6 +37,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.content.Content
+import com.intellij.ui.content.ContentManagerEvent
+import com.intellij.ui.content.ContentManagerListener
 import com.intellij.util.PlatformIcons
 import org.gjt.jclasslib.browser.BrowserComponent
 import org.gjt.jclasslib.browser.BrowserServices
@@ -47,18 +49,21 @@ import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import java.awt.BorderLayout
+import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
-import javax.swing.AbstractAction
-import javax.swing.Action
+import javax.swing.*
 
 const val TOOL_WINDOW_ID: String = "jclasslib"
 
 fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?, project: Project) {
     val toolWindow = getToolWindow(project)
-    val existingEntry = toolWindow.contentManager.contents
+    val contentManager = toolWindow.contentManager
+    val existingEntry = contentManager.contents
+            .filter { it.component is BytecodeToolWindowPanel }
             .associateBy { it.component as BytecodeToolWindowPanel }
             .entries.firstOrNull { it.key.locatedClassFile == locatedClassFile }
     if (existingEntry != null) {
@@ -69,11 +74,14 @@ fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?,
         if (classFile != null) {
             val panel = BytecodeToolWindowPanel(classFile, locatedClassFile, project)
             panel.browserComponent.browserPath = browserPath
-            val content = toolWindow.contentManager.run {
+            val content = contentManager.run {
                 val content = factory.createContent(panel, locatedClassFile.virtualFile.name, false)
                 panel.content = content
                 addContent(content)
                 content
+            }
+            contentManager.contents.filter { it.component !is BytecodeToolWindowPanel }.forEach {
+                contentManager.removeContent(it, true)
             }
             activateToolWindow(toolWindow, content, panel, browserPath)
         }
@@ -146,9 +154,44 @@ private fun getToolWindow(project: Project): ToolWindow {
     return requireNotNull(ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID))
 }
 
+private fun addInfoPanel(toolWindow: ToolWindow) {
+    val infoPanel = JPanel().apply {
+        layout = BorderLayout()
+        add(JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            add(Box.createVerticalGlue())
+            add(JPanel().apply {
+                layout = FlowLayout(FlowLayout.CENTER, 5, 5)
+                add(JLabel("To see bytecode, invoke"))
+                add(JLabel(ShowBytecodeAction.ICON))
+                add(JLabel(ActionManager.getInstance().getAction("ShowByteCodeJclasslib").templateText))
+                add(JLabel("while in an editor or on a class in the project window"))
+            })
+            add(Box.createVerticalGlue())
+        }, BorderLayout.CENTER)
+    }
+    val contentManager = toolWindow.contentManager
+    contentManager.addContent(contentManager.factory.createContent(infoPanel, null, false).apply {
+        isCloseable = false
+    })
+}
+
 class ByteCodeToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         ContentManagerWatcher.watchContentManager(toolWindow, toolWindow.contentManager)
+    }
+
+    override fun init(toolWindow: ToolWindow) {
+        super.init(toolWindow)
+        addInfoPanel(toolWindow)
+        val contentManager = toolWindow.contentManager
+        contentManager.addContentManagerListener(object : ContentManagerListener {
+            override fun contentRemoved(event: ContentManagerEvent) {
+                if (contentManager.contents.isEmpty()) {
+                    addInfoPanel(toolWindow)
+                }
+            }
+        })
     }
 }
 
