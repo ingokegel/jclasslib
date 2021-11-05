@@ -1,6 +1,9 @@
 plugins {
     java
+    `maven-publish`
 }
+
+configurePublishing()
 
 sourceSets {
     create("java9") {
