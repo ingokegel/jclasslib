@@ -12,7 +12,7 @@ dependencies {
 intellij {
     version.set("IC-2020.2.4")
     pluginName.set("jclasslib")
-    plugins.set(listOf("ByteCodeViewer", "java", "org.jetbrains.kotlin:202-$kotlinVersion-release-315-IJ8194.7"))
+    plugins.set(listOf("ByteCodeViewer", "java", "org.jetbrains.kotlin:202-$kotlinVersion-release-542-IJ8194.7"))
     sandboxDir.set("${rootProject.buildDir}/../idea_sandbox")
     updateSinceUntilBuild.set(false)
 }

@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "1.5.0" apply false
+    id("org.jetbrains.dokka") version "1.5.31" apply false
     idea
 }
 
@@ -56,19 +56,16 @@ subprojects {
             useTestNG()
         }
 
-        val javaHome = the<JavaToolchainService>()
-                .launcherFor(the<JavaPluginExtension>().toolchain)
-                .get()
-                .metadata
-                .installationPath
-                .toString()
-
         tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
                 languageVersion = "1.5"
                 apiVersion = "1.5"
-                jvmTarget = "11"
-                jdkHome = javaHome
+            }
+        }
+
+        configure<JavaPluginExtension> {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(11))
             }
         }
     }
