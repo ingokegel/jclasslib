@@ -87,27 +87,8 @@ class ClassFile : Structure(), AttributeContainer {
      * Verbose major version of the class file format.
      */
     val majorVersionVerbose: String
-        get() = when (majorVersion) {
-            45 -> "1.1"
-            46 -> "1.2"
-            47 -> "1.3"
-            48 -> "1.4"
-            49 -> "1.5"
-            50 -> "1.6"
-            51 -> "1.7"
-            52 -> "1.8"
-            53 -> "9"
-            54 -> "10"
-            55 -> "11"
-            56 -> "12"
-            57 -> "13"
-            58 -> "14"
-            59 -> "15"
-            60 -> "16"
-            61 -> "17"
-            // Note: also update checkMajorVersion
-            else -> "unknown value $majorVersion"
-        }
+        get() =
+            KnownMajorJavaVersions.values().firstOrNull { it.majorVersion == majorVersion }?.verbose ?: "unknown value $majorVersion"
 
     /**
      * Index of an equivalent constant pool entry, or -1 if no equivalent constant pool entry can be found.
@@ -472,12 +453,34 @@ class ClassFile : Structure(), AttributeContainer {
 
     private fun checkMajorVersion(majorVersion: Int) {
         // Note: also update majorVersionVerbose
-        if (majorVersion < 45 || majorVersion > 61) {
-            warning("major version should be between 45 and 59 for JDK <= 17, was $majorVersion")
+        if (majorVersion !in MAJOR_VERSION_RANGE) {
+            warning("major version should be between ${MAJOR_VERSION_RANGE.first} and ${MAJOR_VERSION_RANGE.last} for JDK <= ${KnownMajorJavaVersions.values().last().verbose}, was $majorVersion")
         }
+    }
+
+    private enum class KnownMajorJavaVersions(val majorVersion: Int, val verbose: String) {
+        V45(45, "1.1"),
+        V46(46, "1.2"),
+        V47(47, "1.3"),
+        V48(48, "1.4"),
+        V49(49, "1.5"),
+        V50(50, "1.6"),
+        V51(51, "1.7"),
+        V52(52, "1.8"),
+        V53(53, "9"),
+        V54(54, "10"),
+        V55(55, "11"),
+        V56(56, "12"),
+        V57(57, "13"),
+        V58(58, "14"),
+        V59(59, "15"),
+        V60(60, "16"),
+        V61(61, "17"),
+        V62(62, "18"),
     }
 
     companion object {
         private const val MAGIC_NUMBER = 0xCAFEBABE.toInt()
+        private val MAJOR_VERSION_RANGE = KnownMajorJavaVersions.values().first().majorVersion.rangeTo(KnownMajorJavaVersions.values().last().majorVersion)
     }
 }
