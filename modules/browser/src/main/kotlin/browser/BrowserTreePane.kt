@@ -51,6 +51,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         add(scrollPane.apply {
             minimumSize = Dimension(100, 150)
             preferredSize = Dimension(250, 150)
+            border = null
         }, BorderLayout.CENTER)
     }
 
