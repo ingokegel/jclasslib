@@ -25,3 +25,9 @@ dependencies {
     //classpath ':dokka-fatjar'
     //classpath ':dokka-gradle-plugin'
 }
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
