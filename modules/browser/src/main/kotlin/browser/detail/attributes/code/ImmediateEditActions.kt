@@ -195,7 +195,7 @@ class TableSwitchJumpOffsetEditAction(val index: Int) : IntegerEditAction<TableS
     override val group get() = getString("action.edit.jump.offsets")
 }
 
-class TableSwitchDefaultJumpOffsetEditAction() : IntegerEditAction<TableSwitchInstruction>(getString("action.edit.default.jump.offset")) {
+class TableSwitchDefaultJumpOffsetEditAction : IntegerEditAction<TableSwitchInstruction>(getString("action.edit.default.jump.offset")) {
     override val instructionClass get() = TableSwitchInstruction::class.java
 
     override fun getValue(instruction: TableSwitchInstruction): UInt = instruction.defaultOffset.toUInt()
@@ -229,7 +229,7 @@ class LookupSwitchJumpOffsetEditAction(val index: Int, match: Int) : IntegerEdit
     override val group get() = getString("action.edit.jump.offsets")
 }
 
-class LookupSwitchDefaultJumpOffsetEditAction() : IntegerEditAction<LookupSwitchInstruction>(getString("action.edit.default.jump.offset")) {
+class LookupSwitchDefaultJumpOffsetEditAction : IntegerEditAction<LookupSwitchInstruction>(getString("action.edit.default.jump.offset")) {
     override val instructionClass get() = LookupSwitchInstruction::class.java
 
     override fun getValue(instruction: LookupSwitchInstruction): UInt = instruction.defaultOffset.toUInt()

@@ -33,8 +33,8 @@ tasks {
     }
 
     val copyDist by registering(Copy::class) {
-        from(configurations.compileClasspath.map { it.files.filterNot { it.name.contains("install4j") } })
-        from(configurations.runtimeClasspath.map { it.files.filter { it.name.contains("svg") } })
+        from(configurations.compileClasspath.map { configuration -> configuration.files.filterNot { file -> file.name.contains("install4j") } })
+        from(configurations.runtimeClasspath.map { configuration -> configuration.files.filter { file -> file.name.contains("svg") } })
         from(jar)
         into(externalLibsDir)
     }

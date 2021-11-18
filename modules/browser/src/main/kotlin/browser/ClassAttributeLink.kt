@@ -32,5 +32,5 @@ fun classAttributeLink(services: BrowserServices, index: Int, attributeInfoClass
 }
 
 private fun findChildNode(attributesNode: BrowserTreeNode, attributeInfoClass: Class<out AttributeInfo>): BrowserTreeNode? =
-        attributesNode.find { it.element?.let { it::class.java } == attributeInfoClass }
+        attributesNode.find { node -> node.element?.let { it::class.java } == attributeInfoClass }
 

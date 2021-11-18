@@ -61,8 +61,8 @@ class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(fra
         }
     }
 
-    private val addButton: JButton = DefaultAction(getString("action.classpath.add.entry"), getString("action.classpath.add.entry.description"), "add.svg") {
-        it.lastButton?.let {
+    private val addButton: JButton = DefaultAction(getString("action.classpath.add.entry"), getString("action.classpath.add.entry.description"), "add.svg") { action ->
+        action.lastButton?.let {
             val bounds = it.bounds
             popupMenu.show(it.parent, bounds.x, bounds.y + bounds.height)
         }

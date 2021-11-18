@@ -52,6 +52,6 @@ class ShowBytecodeAction : AnAction() {
     }
 
     companion object {
-        val ICON = IconLoader.getIcon("/icons/jclasslib.png") // 13x13
+        val ICON = IconLoader.getIcon("/icons/jclasslib.png", ShowBytecodeAction::class.java) // 13x13
     }
 }

@@ -11,15 +11,15 @@ import com.install4j.api.UiUtil
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 
 enum class DarkModeOption {
-    AUTO() {
+    AUTO {
         override val displayName get() = getString("menu.dark.mode.auto")
         override fun isDarkMode() = UiUtil.isDarkDesktop()
     },
-    ON() {
+    ON {
         override val displayName get() = getString("menu.dark.mode.on")
         override fun isDarkMode() = true
     },
-    OFF() {
+    OFF {
         override val displayName get() = getString("menu.dark.mode.off")
         override fun isDarkMode() = false
     };

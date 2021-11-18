@@ -265,7 +265,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
     private val saveAction: AnAction = object : DumbAwareAction() {
         init {
             templatePresentation.apply {
-                icon = AllIcons.Actions.Menu_saveall
+                icon = AllIcons.Actions.MenuSaveall
                 text = "Save Modified Class File"
             }
         }
