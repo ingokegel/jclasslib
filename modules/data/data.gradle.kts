@@ -44,6 +44,17 @@ tasks {
         from(dokkaJavadoc)
     }
 
+    test {
+        useTestNG()
+        testLogging.showStandardStreams = true
+
+        val majorVersions = listOf(8, 11, 17)
+        for (majorVersion in majorVersions) {
+            setJreSystemProperty(majorVersion)
+        }
+        systemProperty("majorVersions", majorVersions.joinToString(separator = ","))
+    }
+
     register("dist") {
         dependsOn(doc, copyDist)
     }
@@ -56,4 +67,12 @@ fun DokkaTask.applyDokkaConfig(additionalConfig: GradleDokkaSourceSetBuilder.() 
             additionalConfig()
         }
     }
+}
+
+fun Test.setJreSystemProperty(majorVersion: Int) {
+    val javaHome = project.javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(majorVersion))
+    }.get().metadata.installationPath.asFile.path
+
+    systemProperty("javaHome.$majorVersion", javaHome)
 }

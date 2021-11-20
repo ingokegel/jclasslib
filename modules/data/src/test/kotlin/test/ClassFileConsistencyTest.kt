@@ -21,15 +21,17 @@ import java.util.jar.JarFile
 
 class ClassFileConsistencyTest {
     @Test
-    fun testCurrentJre() {
-        scanJre(System.getProperty("java.home"))
-        //scanJre("C:\\Program Files\\Java\\jdk-9")
+    fun testJres() {
+        withAllJres { javaHome ->
+            scanJre(javaHome)
+        }
     }
 
     @Test
-    fun testCurrentJreModules() {
-        scanJreModules(System.getProperty("java.home"))
-        //scanJreModules("C:\\Program Files\\Java\\jdk-9", true)
+    fun testJreModules() {
+        withAllJres { javaHome ->
+            scanJreModules(javaHome)
+        }
     }
 
     @Test
@@ -38,31 +40,31 @@ class ClassFileConsistencyTest {
         checkClassFile("/moduleMainClass/module-info.class")
     }
 
-    fun scanJre(javaHome: String) {
+    private fun scanJre(javaHome: File) {
         val testStatistics = TestStatistics()
-        val rtJar = File("$javaHome/lib/rt.jar")
+        val rtJar = javaHome.resolve("lib/rt.jar")
         if (rtJar.exists()) {
             scanJar(rtJar, testStatistics)
         } else {
-            scanJrt(File(javaHome), testStatistics)
+            scanJrt(javaHome, testStatistics)
         }
         println("${testStatistics.count} classes checked, ${testStatistics.errors} errors")
     }
 
-    fun scanJreModules(javaHome: String, logPaths: Boolean = false) {
-        val rtJar = File("$javaHome/lib/rt.jar")
+    private fun scanJreModules(javaHome: File, logPaths: Boolean = false) {
+        val rtJar = javaHome.resolve("lib/rt.jar")
         if (rtJar.exists()) {
             println("Not a modular JRE")
             return
         }
         val testStatistics = TestStatistics()
-        scanJrt(File(javaHome), testStatistics, logPaths) { path ->
+        scanJrt(javaHome, testStatistics, logPaths) { path ->
             path.endsWith("module-info.class")
         }
         println("${testStatistics.count} modules checked, ${testStatistics.errors} errors")
     }
 
-    fun scanJar(file: File, testStatistics: TestStatistics) {
+    private fun scanJar(file: File, testStatistics: TestStatistics) {
         val jar = JarFile(file)
         for (entry in jar.entries().iterator()) {
             val fileName = entry.name
@@ -72,7 +74,7 @@ class ClassFileConsistencyTest {
         }
     }
 
-    fun scanJrt(jreHome: File, testStatistics: TestStatistics, logPaths: Boolean = false, pathFilter: (Path) -> Boolean = {true}) {
+    private fun scanJrt(jreHome: File, testStatistics: TestStatistics, logPaths: Boolean = false, pathFilter: (Path) -> Boolean = { true }) {
         forEachClassInJrt(jreHome) { path ->
             if (pathFilter(path)) {
                 if (logPaths) {
@@ -84,7 +86,7 @@ class ClassFileConsistencyTest {
         }
     }
 
-    data class TestStatistics(var count: Int = 0, var errors: Int = 0)
+    private data class TestStatistics(var count: Int = 0, var errors: Int = 0)
 
     private fun checkClassFile(fileName: String, inputStreamProvider: InputStreamProvider, testStatistics: TestStatistics) {
         val className = fileName.toClassNameWithModuleCheck()
@@ -97,6 +99,35 @@ class ClassFileConsistencyTest {
             throw e
         }
         testStatistics.count++
+    }
+
+    private fun withAllJres(block: (File) -> Unit) {
+        for (javaHome in getJavaHomes()) {
+            println("Testing with $javaHome")
+            block(javaHome)
+        }
+    }
+
+    private fun getJavaHomes(): List<File> {
+        val majorVersions = System.getProperty("majorVersions", "")
+                .split(",")
+                .mapNotNull { it.toIntOrNull() }
+        val javaHomes = majorVersions.map {
+            requireNotNull(System.getProperty("javaHome.$it")) {
+                "Java $it home not specified"
+            }
+        }.ifEmpty { listOf(System.getProperty("java.home")) }.map { getJavaHome(it) }
+        return javaHomes
+    }
+
+    private fun getJavaHome(javaHomePath: String): File {
+        val javaHome = File(javaHomePath)
+        val jreHome = javaHome.resolve("jre")
+        return if (jreHome.exists()) {
+            jreHome
+        } else {
+            javaHome
+        }
     }
 
     private fun String.toClassNameWithModuleCheck(): String {
@@ -112,15 +143,15 @@ class ClassFileConsistencyTest {
         return removeSuffix(".class").replace("/", ".")
     }
 
-    fun checkClassFile(resourcePath: String): Boolean {
+    private fun checkClassFile(resourcePath: String): Boolean {
         return checkClassFile(requireNotNull(InputStreamProvider::class.java.getResource(resourcePath)))
     }
 
-    fun checkClassFile(url: URL): Boolean {
+    private fun checkClassFile(url: URL): Boolean {
         return checkClassFile(null, UrlInputStreamProvider(url))
     }
 
-    fun checkClassFile(className: String?, inputStreamProvider: InputStreamProvider): Boolean {
+    private fun checkClassFile(className: String?, inputStreamProvider: InputStreamProvider): Boolean {
         val output = ByteArrayOutputStream()
         inputStreamProvider.createInputStream().use {
             it.copyTo(output)
@@ -148,19 +179,20 @@ class ClassFileConsistencyTest {
         return success
     }
 
-    fun error(className: String) {
-        System.err.println("ERROR when processing $className")
+    private fun error(className: String) {
+        println("ERROR when processing $className")
     }
 
-    fun compare(className: String, before: ByteArray, after: ByteArray): Boolean {
+    private fun compare(className: String, before: ByteArray, after: ByteArray): Boolean {
         if (before.size != after.size) {
-            System.err.println("ERROR in $className")
-            System.err.println("Different length " + before.size + " != " + after.size)
+            println("ERROR in $className")
+            println("Different length " + before.size + " != " + after.size)
         }
         for (i in 0 until minOf(before.size, after.size)) {
             if (before[i] != after[i]) {
-                System.err.println("Different byte at index $i")
-                System.err.println("" + before[i] +" != " + after[i])
+                println("ERROR in $className")
+                println("Different byte at index $i")
+                println("" + before[i] + " != " + after[i])
                 return false
             }
         }
