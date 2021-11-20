@@ -80,7 +80,6 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
 
     override fun getAttributeLength(): Int = 12 + code.size +
             exceptionTable.sumOf { it.length } +
-            6 * attributes.size +
             totalAttributesLength
 
     override val debugInfo: String

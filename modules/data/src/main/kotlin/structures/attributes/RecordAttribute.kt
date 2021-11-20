@@ -34,7 +34,7 @@ class RecordAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeByte(entries.size)
+        output.writeShort(entries.size)
         entries.forEach { it.write(output) }
     }
 

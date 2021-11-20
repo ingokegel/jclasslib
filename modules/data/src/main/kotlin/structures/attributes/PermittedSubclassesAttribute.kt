@@ -32,8 +32,8 @@ class PermittedSubclassesAttribute(classFile: ClassFile) : AttributeInfo(classFi
     }
 
     override fun writeData(output: DataOutput) {
-        output.writeByte(entries.size)
-        entries.forEach { output.writeByte(it) }
+        output.writeShort(entries.size)
+        entries.forEach { output.writeShort(it) }
     }
 
     override fun getAttributeLength(): Int = 2 + 2 * entries.size
