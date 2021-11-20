@@ -16,7 +16,7 @@ dependencies {
     api(project(":agent"))
     api(project(":data"))
     compileOnly(":apple")
-    implementation("com.install4j:install4j-runtime:9.0.3")
+    implementation("com.install4j:install4j-runtime:9.0.5")
     implementation("org.jetbrains:annotations:19.0.0")
     implementation("com.github.ingokegel:kotlinx.dom:0.0.10")
     implementation("com.miglayout:miglayout-swing:5.2")
