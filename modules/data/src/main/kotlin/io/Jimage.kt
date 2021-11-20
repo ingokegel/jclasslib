@@ -10,7 +10,6 @@ package org.gjt.jclasslib.io
 import java.io.File
 import java.io.InputStream
 import java.net.URI
-import java.net.URLClassLoader
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
@@ -74,8 +73,5 @@ fun forEachClassNameInJrt(jreHome: File, block : (moduleName: String, className 
 }
 
 private fun getModulesRoot(jreHome: File): Path = modulesRootsCache.getOrPut(jreHome) {
-    val classLoader = URLClassLoader(arrayOf(File(jreHome, "lib/jrt-fs.jar").toURI().toURL()))
-    FileSystems.newFileSystem(URI("jrt:/"), emptyMap<String, String>(), classLoader).getPath("/modules")
+    FileSystems.newFileSystem(URI("jrt:/"), mapOf("java.home" to jreHome.path)).getPath("/modules")
 }
-
-
