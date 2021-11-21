@@ -26,17 +26,17 @@ class RecordEntry(private val classFile: ClassFile, override var attributes: Arr
     /**
      * The description index.
      */
-    var descriptionIndex: Int = 0
+    var descriptorIndex: Int = 0
 
     override fun readData(input: DataInput) {
         nameIndex = input.readUnsignedShort()
-        descriptionIndex = input.readUnsignedShort()
+        descriptorIndex = input.readUnsignedShort()
         readAttributes(input, classFile)
     }
 
     override fun writeData(output: DataOutput) {
         output.writeShort(nameIndex)
-        output.writeShort(descriptionIndex)
+        output.writeShort(descriptorIndex)
         writeAttributes(output)
     }
 

@@ -99,10 +99,12 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }
     }
 
-    fun refreshSelectedNode() {
-        (tree.selectionPath?.lastPathComponent as? RefreshableBrowserTreeNode)?.let { node ->
-            node.refresh()
-            treeModel.nodeChanged(node)
+    fun refreshNodes() {
+        root.depthFirstEnumeration().asIterator().forEach { node ->
+            if (node is RefreshableBrowserTreeNode) {
+                node.refresh()
+                treeModel.nodeChanged(node)
+            }
         }
     }
 
@@ -209,6 +211,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
             val name = getFormattedIndex(index, attributesCount) + attribute.name
             add(BrowserTreeNode(name, NodeType.ATTRIBUTE, attribute).apply {
                 when (attribute) {
+                    is RecordAttribute -> addRecordEntries(attribute)
                     is RuntimeAnnotationsAttribute -> addRuntimeAnnotations(attribute)
                     is RuntimeParameterAnnotationsAttribute -> addRuntimeParameterAnnotation(attribute)
                     is AnnotationDefaultAttribute -> addSingleElementValueEntryNode(attribute.defaultValue, 0, 1)
@@ -240,6 +243,21 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         annotations.forEachIndexed { i, annotation ->
             addSingleAnnotationNode(annotation, i, annotations.size)
         }
+    }
+
+    private fun BrowserTreeNode.addRecordEntries(attribute: RecordAttribute) {
+        val entries = attribute.entries
+        entries.forEachIndexed { i, entry ->
+            addSingleRecordEntry(entry, i, entries.size)
+        }
+    }
+
+    private fun BrowserTreeNode.addSingleRecordEntry(entry: RecordEntry, index: Int, entriesCount: Int) {
+        add(RefreshableBrowserTreeNode(NodeType.RECORD_ENTRY, entry) {
+            getFormattedIndex(index, entriesCount) + services.classFile.getConstantPoolEntryName(entry.nameIndex)
+        }.apply {
+            addAttributeNodes(entry)
+        })
     }
 
     private fun BrowserTreeNode.addRuntimeParameterAnnotation(attribute: RuntimeParameterAnnotationsAttribute) {

@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.detail.*
 import org.gjt.jclasslib.browser.detail.attributes.AttributeDetailPane
+import org.gjt.jclasslib.browser.detail.attributes.RecordEntryDetailPane
 import org.gjt.jclasslib.browser.detail.constants.ConstantPoolDetailPane
 import org.gjt.jclasslib.browser.detail.constants.ConstantPoolEntryDetailPane
 
@@ -73,6 +74,9 @@ enum class NodeType {
     },
     ARRAY_ELEMENT_VALUE {
         override fun createDetailPanel(services: BrowserServices) = ArrayElementValueDetailPane(services)
+    },
+    RECORD_ENTRY {
+        override fun createDetailPanel(services: BrowserServices) = RecordEntryDetailPane(services)
     },
     ATTRIBUTES {
         override fun createDetailPanel(services: BrowserServices) = EmptyDetailPane(services)

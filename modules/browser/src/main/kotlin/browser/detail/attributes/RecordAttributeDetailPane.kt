@@ -9,33 +9,34 @@ package org.gjt.jclasslib.browser.detail.attributes
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.detail.TableDetailPane
+import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
+import org.gjt.jclasslib.browser.detail.constants.DelegateBuilder
+import org.gjt.jclasslib.browser.detail.constants.DelegatesEditor
 import org.gjt.jclasslib.structures.attributes.RecordAttribute
 import org.gjt.jclasslib.structures.attributes.RecordEntry
 
-class RecordAttributeDetailPane(services: BrowserServices) : TableDetailPane<RecordAttribute>(RecordAttribute::class.java, services) {
+class RecordAttributeDetailPane(services: BrowserServices) : KeyValueDetailPane<RecordAttribute>(RecordAttribute::class.java, services) {
+    override fun addLabels() {
+        addDetail(getString("key.record.entries.count")) { recordAttribute -> recordAttribute.entries.size.toString() }
+    }
+}
 
-    override fun createTableModel(attribute: RecordAttribute) = AttributeTableModel(attribute.entries)
+class RecordEntryDetailPane(services: BrowserServices) : KeyValueDetailPane<RecordEntry>(RecordEntry::class.java, services) {
+    override fun addLabels() {
+        addConstantPoolLink(getString("key.name")) { entry -> entry.nameIndex }
+        addConstantPoolLink(getString("key.descriptor")) { entry -> entry.descriptorIndex }
+        addEditor { RecordEntryEditor() }
+    }
 
-    override val rowHeightFactor: Float
-        get() = 2f
+    override fun hasInsets() = true
 
-    inner class AttributeTableModel(rows: Array<RecordEntry>) : ColumnTableModel<RecordEntry>(rows) {
-
-        override fun buildColumns(columns: ArrayList<Column<RecordEntry>>) {
-            super.buildColumns(columns)
-            columns.apply {
-                add(object : NamedConstantPoolLinkColumn<RecordEntry>(getString("column.name"), services, 200) {
-                    override fun getConstantPoolIndex(row: RecordEntry) = row.nameIndex
-                })
-                add(object : NamedConstantPoolLinkColumn<RecordEntry>(getString("column.descriptor"), services, 200) {
-                    override fun getConstantPoolIndex(row: RecordEntry) = row.descriptionIndex
-                })
-                //The record entries can hold additional attributes
-                add(object : StringColumn<RecordEntry>(getString("tree.attributes"), 200) {
-                    override fun createValue(row: RecordEntry)  = "${row.attributes.size}: " +
-                            row.attributes.joinToString { it.name }
-                })
+    inner class RecordEntryEditor : DelegatesEditor<RecordEntry>() {
+        override fun DelegateBuilder<RecordEntry>.buildDelegateSpecs() {
+            addDelegateSpec(getString("menu.name")) {
+                services.classFile.getConstantPoolUtf8Entry(it.nameIndex)
+            }
+            addDelegateSpec(getString("menu.descriptor")) {
+                services.classFile.getConstantPoolUtf8Entry(it.descriptorIndex)
             }
         }
     }
