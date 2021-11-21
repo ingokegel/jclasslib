@@ -11,6 +11,10 @@ val winKeystorePassword: String? by project
 val macKeystorePassword: String? by project
 val appleId: String? by project
 val appleIdPassword: String? by project
+val azureVaultUri: String? by project
+val azureTenantId: String? by project
+val azureClientId: String? by project
+val azureCertificateName: String? by project
 
 install4j {
     install4jHomeDir?.let {
@@ -37,7 +41,10 @@ tasks {
         appleIdPassword = this@Installer_gradle.appleIdPassword ?: ""
 
         variables = mapOf(
-                "winCertPath" to (winCertPath ?: ""),
+                "azureVaultUri" to (azureVaultUri ?: ""),
+                "azureTenantId" to (azureTenantId ?: ""),
+                "azureClientId" to (azureClientId ?: ""),
+                "azureCertificateName" to (azureCertificateName ?: ""),
                 "macCertPath" to (macCertPath ?: "")
         )
 

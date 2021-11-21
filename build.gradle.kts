@@ -92,7 +92,7 @@ tasks {
     }
 
     register<Delete>("clean") {
-        dependsOn(":installer:clean", ":data:clean", ":browser:clean")
+        dependsOn(":installer:clean", ":data:clean", ":browser:clean", ":agent:clean")
         delete(externalLibsDir)
     }
 }
