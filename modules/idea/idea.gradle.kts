@@ -21,9 +21,10 @@ tasks {
     patchPluginXml {
         changeNotes.set("""
             <ul>
-                <li>Editing functionality for constant pool, attributes and bytecode</li>
-                <li>UI fixes and improvements</li>
-                <li>By setting the custom VM option -Djclasslib.locale=en (or another supported locale), the displayed language can be changed regardless of the default locale</li>
+                <li>Improved display of record attributes by displaying each record entry as a single node with nested attribute nodes</li>
+                <li>Support reading class files compiled by Java 18</li>
+                <li>Added a placeholder panel with instructions in the IDEA tool window</li>
+                <li>PermittedSubclassesAttribute and RecordAttribute were saved incorrectly and corrupted the class file</li>
             </ul>
         """.trimIndent())
         version.set(project.version.toString())
