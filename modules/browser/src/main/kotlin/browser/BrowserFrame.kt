@@ -389,6 +389,7 @@ class BrowserFrame : JFrame() {
                 add(showEjtAction)
                 addSeparator()
                 add(JMenu(getString("menu.dark.mode")).apply {
+                    icon = GUIHelper.ICON_EMPTY
                     val buttonGroup = ButtonGroup()
                     val actions = mutableMapOf<DarkModeOption, DefaultAction>()
                     for (option in DarkModeOption.values()) {
