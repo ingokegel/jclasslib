@@ -26,10 +26,12 @@ class DefaultAction(
 
     init {
         if (iconFileName != null) {
-            putValue(SMALL_ICON, BrowserFrame.getSvgIcon(iconFileName, SMALL_ICON_SIZE))
-            putValue(LARGE_ICON_KEY, BrowserFrame.getSvgIcon(iconFileName, LARGE_ICON_SIZE))
-        } else {
-            putValue(SMALL_ICON, GUIHelper.ICON_EMPTY)
+            if (iconFileName.isEmpty()) {
+                putValue(SMALL_ICON, GUIHelper.ICON_EMPTY)
+            } else {
+                putValue(SMALL_ICON, BrowserFrame.getSvgIcon(iconFileName, SMALL_ICON_SIZE))
+                putValue(LARGE_ICON_KEY, BrowserFrame.getSvgIcon(iconFileName, LARGE_ICON_SIZE))
+            }
         }
         if (shortDescription != null) {
             putValue(SHORT_DESCRIPTION, shortDescription)

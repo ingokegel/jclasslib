@@ -99,11 +99,11 @@ class BrowserFrame : JFrame() {
         }
     }
 
-    val setupClasspathAction = DefaultAction(getString("action.setup.class.path"), getString("action.setup.class.path.description")) {
+    val setupClasspathAction = DefaultAction(getString("action.setup.class.path"), getString("action.setup.class.path.description"), "") {
         classpathSetupDialog.isVisible = true
     }
 
-    val newWindowAction = DefaultAction(getString("action.new.window"), getString("action.new.window.description")) {
+    val newWindowAction = DefaultAction(getString("action.new.window"), getString("action.new.window.description"), "") {
         saveWindowSettings()
         BrowserFrame().isVisible = true
     }.apply {
@@ -116,7 +116,7 @@ class BrowserFrame : JFrame() {
         isEnabled = false
     }
 
-    val newWorkspaceAction = DefaultAction(getString("action.new.workspace"), getString("action.new.workspace.description")) {
+    val newWorkspaceAction = DefaultAction(getString("action.new.workspace"), getString("action.new.workspace.description"), "") {
         if (frameContent.closeAllTabs()) {
             workspaceFile = null
             config.clear()
@@ -142,25 +142,25 @@ class BrowserFrame : JFrame() {
         }
     }
 
-    val saveClassesAction = DefaultAction(getString("action.save.open.classes"), getString("action.save.open.classes.description")) {
+    val saveClassesAction = DefaultAction(getString("action.save.open.classes"), getString("action.save.open.classes.description"), "") {
         if (saveClassesFileChooser.select()) {
             frameContent.saveClassesToDirectory(saveClassesFileChooser.selectedFile)
         }
     }
 
-    val saveWorkspaceAsAction = DefaultAction(getString("action.save.workspace.as"), getString("action.save.workspace.as.description")) {
+    val saveWorkspaceAsAction = DefaultAction(getString("action.save.workspace.as"), getString("action.save.workspace.as.description"), "") {
         saveWorkspace()
     }.apply {
         disabled()
     }
 
-    val quitAction = DefaultAction(getString("action.quit")) {
+    val quitAction = DefaultAction(getString("action.quit"), "", "") {
         if (prepareClose()) {
             exit()
         }
     }
 
-    val closeAction = DefaultAction(getString("action.close.window")) {
+    val closeAction = DefaultAction(getString("action.close.window"), "", "") {
         if (prepareClose()) {
             isVisible = false
             dispose()
@@ -212,7 +212,7 @@ class BrowserFrame : JFrame() {
         GUIHelper.showURL("https://www.ej-technologies.com")
     }
 
-    val aboutAction = DefaultAction(getString("action.about"), getString("action.about.description")) {
+    val aboutAction = DefaultAction(getString("action.about"), getString("action.about.description"), "") {
         BrowserAboutDialog(this).isVisible = true
     }
 
