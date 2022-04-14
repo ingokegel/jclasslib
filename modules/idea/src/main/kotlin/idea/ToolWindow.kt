@@ -12,7 +12,6 @@ import com.intellij.ide.BrowserUtil
 import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.highlighter.JavaClassFileType
-import com.intellij.ide.impl.ContentManagerWatcher
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -178,7 +177,16 @@ private fun addInfoPanel(toolWindow: ToolWindow) {
 
 class ByteCodeToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        ContentManagerWatcher.watchContentManager(toolWindow, toolWindow.contentManager)
+        val contentManager = toolWindow.contentManager
+        contentManager.addContentManagerListener(object : ContentManagerListener {
+            override fun contentAdded(e: ContentManagerEvent) {
+                toolWindow.isAvailable = true
+            }
+
+            override fun contentRemoved(e: ContentManagerEvent) {
+                toolWindow.isAvailable = contentManager.getContentCount() > 0
+            }
+        })
     }
 
     override fun init(toolWindow: ToolWindow) {

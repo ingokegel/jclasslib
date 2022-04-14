@@ -4,6 +4,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="org.gjt.jclasslib.browser.BrowserApplication" />
     <module name="jclasslib.browser.main" />
+    <shortenClasspath name="NONE" />
     <option name="VM_PARAMETERS" value="--illegal-access=warn @modules/installer/resources/base.options -Djclasslib.io.debug=false -Djdk.attach.allowAttachSelf=true" />
     <RunnerSettings RunnerId="JProfiler" />
     <method v="2">

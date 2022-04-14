@@ -88,7 +88,7 @@ fun initUiFacades() {
         addColorMapping(ColorKey.ACTIVE_LINK, ConsoleHighlighter.GREEN_BRIGHT)
     }
 
-    val uiSettings = UISettings.instance
+    val uiSettings = UISettings.getInstance()
     tableRowHeight = ((if (uiSettings.overrideLafFonts) uiSettings.fontSize else 12) * 1.5).roundToInt()
 
     val editorColorsScheme = EditorColorsManager.getInstance().schemeForCurrentUITheme
