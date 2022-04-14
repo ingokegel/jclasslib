@@ -21,10 +21,7 @@ tasks {
     patchPluginXml {
         changeNotes.set("""
             <ul>
-                <li>Improved display of record attributes by displaying each record entry as a single node with nested attribute nodes</li>
-                <li>Support reading class files compiled by Java 18</li>
-                <li>Added a placeholder panel with instructions in the IDEA tool window</li>
-                <li>PermittedSubclassesAttribute and RecordAttribute were saved incorrectly and corrupted the class file</li>
+                <li>Fixed exception when running with IDEA 2022.1</li>
             </ul>
         """.trimIndent())
         version.set(project.version.toString())
