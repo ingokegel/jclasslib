@@ -31,3 +31,9 @@ java {
         languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
+
+tasks {
+    compileJava {
+        targetCompatibility = "1.8" // To prevent warning that compileKotlin has 1.8 target compatibility
+    }
+}
