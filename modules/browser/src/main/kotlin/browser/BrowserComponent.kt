@@ -83,7 +83,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
                     }
                 }
             }
-        } catch (ex: InvalidByteCodeException) {
+        } catch (_: InvalidByteCodeException) {
         }
     }
 

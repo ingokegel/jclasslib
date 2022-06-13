@@ -1,9 +1,9 @@
 import org.gradle.plugins.ide.idea.model.IdeaModel
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm") apply false
-    id("org.jetbrains.dokka") version "1.6.0" apply false
+    id("org.jetbrains.dokka") version "1.6.21" apply false
     idea
 }
 
@@ -58,8 +58,8 @@ subprojects {
 
         tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
-                languageVersion = "1.5"
-                apiVersion = "1.5"
+                languageVersion = "1.7"
+                apiVersion = "1.7"
             }
         }
 

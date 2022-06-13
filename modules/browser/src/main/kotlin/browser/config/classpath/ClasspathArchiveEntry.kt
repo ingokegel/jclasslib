@@ -41,7 +41,7 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
                 if (entry != null) {
                     return FindResult(file.path + "!" + fileName, moduleName)
                 }
-            } catch (e: IOException) {
+            } catch (_: IOException) {
             }
         }
         return null
@@ -56,7 +56,7 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
                     }
                 }
             }
-        } catch (ex: IOException) {
+        } catch (_: IOException) {
         }
     }
 

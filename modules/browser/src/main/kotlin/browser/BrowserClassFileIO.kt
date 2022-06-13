@@ -101,7 +101,7 @@ fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?
                 val directory = directoryChooser()
                 if (directory != null) {
                     val alternativePath = File(directory, classFile.simpleClassName + ".class").path
-                    writeClassFile(classFile, alternativePath, parentWindow, vmConnection, directoryChooser)
+                    writeClassFile(classFile, alternativePath, parentWindow, null, directoryChooser)
                 } else {
                     false
                 }
@@ -110,7 +110,7 @@ fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?
             }
         }
         fileName.startsWith(jarPrefix) -> {
-            writeClassFile(classFile, fileName.substringAfter(jarPrefix), parentWindow, vmConnection, directoryChooser)
+            writeClassFile(classFile, fileName.substringAfter(jarPrefix), parentWindow, null, directoryChooser)
         }
         fileName.contains('!') -> {
             val tempOutputFile = createTempFile("jclasslib")

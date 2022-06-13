@@ -333,7 +333,7 @@ class BrowserFrame : JFrame() {
             if (currentDirectory != null) {
                 config.addClasspathDirectory(currentDirectory.path)
             }
-        } catch (e: InvalidByteCodeException) {
+        } catch (_: InvalidByteCodeException) {
         }
         return tab
     }

@@ -45,7 +45,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
                     removeLast()
                 }
             }
-        } catch (e: IOException) {
+        } catch (_: IOException) {
         }
     }
 
@@ -72,7 +72,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
         val recentNode = preferences.node(SETTINGS_RECENT_WORKSPACES)
         try {
             recentNode.clear()
-        } catch (e: BackingStoreException) {
+        } catch (_: BackingStoreException) {
         }
 
         for ((count, fileName) in recentWorkspaces.withIndex()) {

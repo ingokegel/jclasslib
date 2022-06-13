@@ -184,7 +184,7 @@ class ByteCodeToolWindowFactory : ToolWindowFactory {
             }
 
             override fun contentRemoved(e: ContentManagerEvent) {
-                toolWindow.isAvailable = contentManager.getContentCount() > 0
+                toolWindow.isAvailable = contentManager.contentCount > 0
             }
         })
     }
@@ -352,7 +352,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
             add(webAction)
         }
         val actionToolbar = ActionManager.getInstance().createActionToolbar("bytecodeToolBar", actionGroup, true).apply {
-            setTargetComponent(this@BytecodeToolWindowPanel)
+            targetComponent = this@BytecodeToolWindowPanel
         }
         toolbar = actionToolbar.component
         setContent(browserComponent)

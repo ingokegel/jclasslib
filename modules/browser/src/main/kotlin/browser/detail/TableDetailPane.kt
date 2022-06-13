@@ -140,13 +140,13 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
 
     private fun updateRowHeights() {
         for (row in 0 until table.rowCount) {
-            val rowHeight = (0 until table.columnCount).map { column ->
-                        val c = table.prepareRenderer(table.getCellRenderer(row, column), row, column) as JComponent
-                        c.size = c.preferredSize.apply {
-                            width = table.columnModel.getColumn(column).width
-                        }
-                        c.preferredSize.height
-                    }.maxOrNull() ?: table.rowHeight
+            val rowHeight = (0 until table.columnCount).maxOfOrNull { column ->
+                val c = table.prepareRenderer(table.getCellRenderer(row, column), row, column) as JComponent
+                c.size = c.preferredSize.apply {
+                    width = table.columnModel.getColumn(column).width
+                }
+                c.preferredSize.height
+            } ?: table.rowHeight
             table.setRowHeight(row, rowHeight)
         }
     }

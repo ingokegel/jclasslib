@@ -143,7 +143,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
             textPane.caretPosition = position
             textPane.scrollRectToVisible(target)
 
-        } catch (ex: BadLocationException) {
+        } catch (_: BadLocationException) {
         }
     }
 
@@ -325,7 +325,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
                     stroke = oldStroke
                     color = oldColor
                 }
-            } catch (e: BadLocationException) {
+            } catch (_: BadLocationException) {
             }
         }
     }

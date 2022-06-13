@@ -57,7 +57,7 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
                     isVisible = false
                 }
             }
-        } catch (e: InvalidByteCodeException) {
+        } catch (_: InvalidByteCodeException) {
         }
     }
 
