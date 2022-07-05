@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="9.0.5" transformSequenceNumber="9">
+<install4j version="9.0.7" transformSequenceNumber="9">
   <directoryPresets config="." />
   <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="6.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="11">
     <languages skipLanguageSelection="true">
@@ -19,7 +19,7 @@
     <codeSigning macEnabled="true" macPkcs12File="${compiler:macCertPath}" windowsEnabled="true" windowsKeySource="azure">
       <windowsAzure vaultUri="${compiler:azureVaultUri}" tenantId="${compiler:azureTenantId}" clientId="${compiler:azureClientId}" certificateName="${compiler:azureCertificateName}" />
     </codeSigning>
-    <jreBundles jdkProviderId="JBR" release="17/17.0.1-b164.8" />
+    <jreBundles jdkProviderId="JBR" release="17/17.0.3-b498.3" />
   </application>
   <files preserveSymlinks="false">
     <mountPoints>
