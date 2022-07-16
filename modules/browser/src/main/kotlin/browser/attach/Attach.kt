@@ -9,11 +9,13 @@ package org.gjt.jclasslib.browser
 
 import com.exe4j.runtime.LauncherEngine
 import com.install4j.api.Util
+import com.install4j.api.launcher.Variables
 import com.sun.tools.attach.VirtualMachine
 import com.sun.tools.attach.VirtualMachineDescriptor
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.attach.AttachDialog
 import org.gjt.jclasslib.util.AlertType
+import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.alertFacade
 import org.jclasslib.agent.AgentMain
 import org.jclasslib.agent.CommunicatorMBean
@@ -88,7 +90,11 @@ private fun getAgentPath(): String =
 
 private fun VirtualMachine.getConnectorAddress(): String? = agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress")
 
-private fun selectVm(parentWindow: Window?): AttachableVm? {
-    val vms = VirtualMachine.list().map { AttachableVm(it) }
-    return AttachDialog(vms, parentWindow).select()
-}
+private fun selectVm(parentWindow: Window?): AttachableVm? =
+    if (Variables.getCompilerVariable("macSandboxed").toBoolean()) {
+        GUIHelper.showMessage(parentWindow, getString("attach.not.supported.in.sandbox"), AlertType.WARNING)
+        null
+    } else {
+        val vms = VirtualMachine.list().map { AttachableVm(it) }
+        AttachDialog(vms, parentWindow).select()
+    }

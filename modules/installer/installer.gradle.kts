@@ -9,6 +9,8 @@ val winCertPath: String? by project
 val macCertPath: String? by project
 val winKeystorePassword: String? by project
 val macKeystorePassword: String? by project
+val macProvisioningProfile: String? by project
+val appStoreOnly = project.findProperty("appStoreOnly").toString().toBoolean()
 val appleId: String? by project
 val appleIdPassword: String? by project
 val azureVaultUri: String? by project
@@ -45,8 +47,13 @@ tasks {
                 "azureTenantId" to (azureTenantId ?: ""),
                 "azureClientId" to (azureClientId ?: ""),
                 "azureCertificateName" to (azureCertificateName ?: ""),
-                "macCertPath" to (macCertPath ?: "")
+                "macCertPath" to (macCertPath ?: ""),
+                "macProvisioningProfile" to (macProvisioningProfile ?: "")
         )
+
+        if (appStoreOnly) {
+            buildIds = listOf("2047307322")
+        }
 
         doFirst {
             if (install4jHomeDir == null) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="9.0.7" transformSequenceNumber="9">
-  <directoryPresets config="." />
-  <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="6.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="11">
+<install4j version="@VERSION@" transformSequenceNumber="10">
+  <directoryPresets config="../../../../../Downloads" />
+  <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="6.0.4" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="11">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="zh_CN" />
@@ -10,7 +10,9 @@
     </languages>
     <variables>
       <variable name="winCertPath" />
-      <variable name="macCertPath" />
+      <variable name="macCertPath" value="../../../../../mac_certs.p12" />
+      <variable name="macProvisioningProfile" value="../../../../../jclasslib_app_store.provisionprofile" />
+      <variable name="macSandboxed" value="false" />
       <variable name="azureVaultUri" />
       <variable name="azureTenantId" />
       <variable name="azureClientId" />
@@ -21,7 +23,7 @@
     </codeSigning>
     <jreBundles jdkProviderId="JBR" release="17/17.0.3-b498.3" />
   </application>
-  <files preserveSymlinks="false">
+  <files>
     <mountPoints>
       <mountPoint id="683316172" location="bin" />
       <mountPoint id="2047307201" location="lib" />
@@ -34,7 +36,7 @@
     </entries>
   </files>
   <launchers>
-    <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns">
+    <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns" customMacBundleIdentifier="true" macBundleIdentifier="org.jclasslib.browser" addMacEntitlements="true" macEntitlementsFile="./entitlements.plist" addMacApplicationCategory="true" macApplicationCategory="public.app-category.developer-tools">
       <executable name="jclasslib" iconSet="true" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true">
         <versionInfo include="true" fileDescription="jclasslib bytecode viewer" legalCopyright="ej-technologies" internalName="jclasslib" />
       </executable>
@@ -58,6 +60,10 @@
         <file path="./jclasslib128x128.png" />
         <file path="./jclasslib256x256.png" />
       </iconImageFiles>
+      <macStaticAssociations>
+        <fileAssociation extension="jcw" description="jclasslib workspace file" handlerRank="owner" />
+        <fileAssociation extension="class" description="Java class file" />
+      </macStaticAssociations>
     </launcher>
   </launchers>
   <installerGui>
@@ -556,7 +562,7 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows 64-bit" id="2047307151" mediaFileName="${compiler:sys.shortName}_win64_${compiler:sys.version}" installDir="jclasslib" />
+    <windows name="Windows 64-bit" id="2047307151" mediaFileName="${compiler:sys.shortName}_win64_${compiler:sys.version}" installDir="jclasslib" architecture="64" />
     <macosArchive name="Mac OS X Single Bundle Archive" id="2047307321" architecture="universal" launcherId="404488187">
       <topLevelFiles>
         <file name=".DS_Store" file="./DS_Store" />
@@ -564,10 +570,18 @@ return console.askYesNo(message, true);
         <symlink name="&quot; &quot;" target="/Applications" />
       </topLevelFiles>
     </macosArchive>
+    <macosArchive name="Mac OS X App Store" id="2047307322" archiveType="appstore" provisioningProfile="${compiler:macProvisioningProfile}" architecture="universal" launcherId="404488187">
+      <variables>
+        <variable name="macSandboxed" value="true" />
+      </variables>
+    </macosArchive>
     <unixArchive name="Linux x64" id="2047307325" mediaFileName="${compiler:sys.shortName}_linux_x64_${compiler:sys.version}" installDir="jclasslib" overridePrincipalLanguage="true" />
     <unixArchive name="Generic Unix" id="850942491" installDir="jclasslib" overridePrincipalLanguage="true">
       <jreBundle jreBundleSource="none" />
     </unixArchive>
   </mediaSets>
-  <buildOptions disableSigning="true" />
+  <buildIds buildAll="false">
+    <mediaSet refId="2047307322" />
+  </buildIds>
+  <buildOptions verbose="true" />
 </install4j>
