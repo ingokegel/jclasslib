@@ -10,7 +10,7 @@ application {
     mainClass.set("org.gjt.jclasslib.browser.BrowserApplication")
 }
 
-val flatLafVersion = "2.3"
+val flatLafVersion = "2.4"
 
 dependencies {
     api(project(":agent"))

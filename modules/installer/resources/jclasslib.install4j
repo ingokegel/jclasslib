@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="@VERSION@" transformSequenceNumber="10">
-  <directoryPresets config="../../../../../Downloads" />
+  <directoryPresets config="./jclasslib.iconset" />
   <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="6.0.4" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="11">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
@@ -36,7 +36,7 @@
     </entries>
   </files>
   <launchers>
-    <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns" customMacBundleIdentifier="true" macBundleIdentifier="org.jclasslib.browser" addMacEntitlements="true" macEntitlementsFile="./entitlements.plist" addMacApplicationCategory="true" macApplicationCategory="public.app-category.developer-tools">
+    <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns" customMacBundleIdentifier="true" macBundleIdentifier="com.mycorp.myapp" addMacEntitlements="true" macEntitlementsFile="./entitlements.plist" addMacApplicationCategory="true" macApplicationCategory="public.app-category.business">
       <executable name="jclasslib" iconSet="true" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true">
         <versionInfo include="true" fileDescription="jclasslib bytecode viewer" legalCopyright="ej-technologies" internalName="jclasslib" />
       </executable>
@@ -59,6 +59,7 @@
         <file path="./jclasslib32x32.png" />
         <file path="./jclasslib128x128.png" />
         <file path="./jclasslib256x256.png" />
+        <file path="./jclasslib.iconset/icon_512x512.png" />
       </iconImageFiles>
       <macStaticAssociations>
         <fileAssociation extension="jcw" description="jclasslib workspace file" handlerRank="owner" />
