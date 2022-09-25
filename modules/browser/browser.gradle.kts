@@ -17,7 +17,7 @@ dependencies {
     api(project(":data"))
     compileOnly(":apple")
     implementation("com.install4j:install4j-runtime:10.0.3")
-    implementation("org.jetbrains:annotations:19.0.0")
+    implementation("org.jetbrains:annotations:23.0.0")
     implementation("com.github.ingokegel:kotlinx.dom:0.0.10")
     implementation("com.miglayout:miglayout-swing:5.2")
     implementation("com.formdev:flatlaf:$flatLafVersion")
