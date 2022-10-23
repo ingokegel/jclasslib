@@ -42,7 +42,6 @@ abstract class MultiDetailPane<T : Structure>(elementClass: Class<T>, services: 
     }
 
     override fun show(treePath: TreePath) {
-        @Suppress("UNCHECKED_CAST")
         val element = getElementOrNull(treePath)
         if (element == null) {
             showEmptyCard()

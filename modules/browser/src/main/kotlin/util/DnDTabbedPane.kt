@@ -325,7 +325,7 @@ open class DnDTabbedPane : JTabbedPane() {
         override fun isDataFlavorSupported(flavor: DataFlavor) = flavor.humanPresentableName == NAME
     }
 
-    private inner class TabTransferData(val tabbedPane: DnDTabbedPane, val tabIndex: Int)
+    private class TabTransferData(val tabbedPane: DnDTabbedPane, val tabIndex: Int)
 
     private inner class TabDropTargetListener(private val dropNotifier: () -> Unit) : DropTargetListener {
         override fun dragEnter(event: DropTargetDragEvent) {
