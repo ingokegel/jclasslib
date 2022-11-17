@@ -36,7 +36,7 @@
     </entries>
   </files>
   <launchers>
-    <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns" customMacBundleIdentifier="true" macBundleIdentifier="com.mycorp.myapp" addMacEntitlements="true" macEntitlementsFile="./entitlements.plist" addMacApplicationCategory="true" macApplicationCategory="public.app-category.business">
+    <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns" customMacBundleIdentifier="true" macBundleIdentifier="org.jclasslib.browser" addMacEntitlements="true" macEntitlementsFile="./entitlements.plist" addMacApplicationCategory="true" macApplicationCategory="public.app-category.developer-tools">
       <executable name="jclasslib" iconSet="true" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true">
         <versionInfo include="true" fileDescription="jclasslib bytecode viewer" legalCopyright="ej-technologies" internalName="jclasslib" />
       </executable>
