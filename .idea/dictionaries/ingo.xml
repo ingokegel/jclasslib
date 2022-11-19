@@ -169,6 +169,7 @@
       <w>resetter</w>
       <w>retransform</w>
       <w>saload</w>
+      <w>sandboxed</w>
       <w>sastore</w>
       <w>scroller</w>
       <w>shrinkprio</w>

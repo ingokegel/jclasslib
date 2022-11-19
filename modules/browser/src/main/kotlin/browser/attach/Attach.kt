@@ -91,10 +91,16 @@ private fun getAgentPath(): String =
 private fun VirtualMachine.getConnectorAddress(): String? = agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress")
 
 private fun selectVm(parentWindow: Window?): AttachableVm? =
-    if (Variables.getCompilerVariable("macSandboxed").toBoolean()) {
+    if (isMacosSandboxed()) {
         GUIHelper.showMessage(parentWindow, getString("attach.not.supported.in.sandbox"), AlertType.WARNING)
         null
     } else {
         val vms = VirtualMachine.list().map { AttachableVm(it) }
         AttachDialog(vms, parentWindow).select()
     }
+
+private fun isMacosSandboxed() = try {
+    Variables.getCompilerVariable("macSandboxed").toBoolean()
+} catch (e: Exception) {
+    false
+}
