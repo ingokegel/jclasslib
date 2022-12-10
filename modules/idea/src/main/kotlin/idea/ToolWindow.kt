@@ -18,14 +18,14 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.CompilerModuleExtension
-import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.roots.*
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ToolWindowManager
@@ -126,21 +126,41 @@ private fun loadCompiledClassFileBytes(locatedClassFile: LocatedClassFile, proje
 }
 
 private fun loadSourceClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): ByteArray {
-    val index = ProjectFileIndex.SERVICE.getInstance(project)
+    val pathList = arrayListOf<String>()
+    val index = ProjectRootManager.getInstance(project).fileIndex
     val file = locatedClassFile.virtualFile
     val module = index.getModuleForFile(file) ?: throw IOException("Module not found")
     val extension = CompilerModuleExtension.getInstance(module) ?: throw IOException("Extension not found")
     val inTests = index.isInTestSourceContent(file)
-    val classPathRoot = (if (inTests) extension.compilerOutputPathForTests else extension.compilerOutputPath)
-            ?: throw IOException("Class root not found")
-    val relativePath = locatedClassFile.jvmClassName.replace('.', '/') + ".class"
-    val classFile = File(classPathRoot.path, relativePath)
-    return if (classFile.exists()) {
-        locatedClassFile.writableUrl = classFile.toURI().path
-        FileUtil.loadFileBytes(classFile)
+    val classPathRoot = if (inTests) {
+        extension.compilerOutputPathForTests?.path ?: extension.compilerOutputForTestsPointer?.presentableUrl
     } else {
-        throw IOException("Class file not found")
+        extension.compilerOutputPath?.path ?: extension.compilerOutputPointer?.presentableUrl
+    } ?: throw IOException("Class root not found")
+
+    pathList.add(classPathRoot)
+
+    val moduleRootManager = ModuleRootManager.getInstance(module)
+    for (handlerFactory in OrderEnumerationHandler.EP_NAME.extensions) {
+        if (handlerFactory.isApplicable(module)) {
+            val handler = handlerFactory.createHandler(module)
+            val outputUrls: List<String> = ArrayList()
+            handler.addCustomModuleRoots(OrderRootType.CLASSES, moduleRootManager, outputUrls, true, true)
+            for (outputUrl in outputUrls) {
+                pathList.add(VirtualFileManager.extractPath(outputUrl).replace('/', File.separatorChar))
+            }
+        }
     }
+
+    val relativePath = locatedClassFile.jvmClassName.replace('.', '/') + ".class"
+    for (path in pathList) {
+        val classFile = File(path, relativePath)
+        if (classFile.exists()) {
+            locatedClassFile.writableUrl = classFile.toURI().path
+            return FileUtil.loadFileBytes(classFile)
+        }
+    }
+    throw IOException("Class file not found")
 }
 
 private fun activateToolWindow(toolWindow: ToolWindow, content: Content, panel: BytecodeToolWindowPanel, browserPath: BrowserPath?) {
