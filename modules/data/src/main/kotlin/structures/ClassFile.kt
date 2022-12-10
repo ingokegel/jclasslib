@@ -477,6 +477,8 @@ class ClassFile : Structure(), AttributeContainer {
         V60(60, "16"),
         V61(61, "17"),
         V62(62, "18"),
+        V63(63, "19"),
+        V64(64, "20"),
     }
 
     companion object {
