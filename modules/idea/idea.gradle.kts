@@ -21,7 +21,8 @@ tasks {
     patchPluginXml {
         changeNotes.set("""
             <ul>
-                <li>Fixed exception when running with IDEA 2022.1</li>
+                <li>Fixed "class root not found" message</li>
+                <li>Support reading class files compiled by Java 19 and Java 20</li>
             </ul>
         """.trimIndent())
         version.set(project.version.toString())
