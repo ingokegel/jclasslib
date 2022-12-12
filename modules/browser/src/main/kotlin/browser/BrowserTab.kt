@@ -63,7 +63,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
                 try {
                     tabbedPane.addTab(findResult.fileName, findResult.moduleName, browserPath)
                 } catch (e: IOException) {
-                    GUIHelper.showMessage(parentFrame, e)
+                    alertFacade.showMessage(parentFrame, e)
                 }
 
             }
@@ -79,7 +79,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
             ClassFileWriter.writeToFile(file, classFile)
             true
         } catch (e: Exception) {
-            GUIHelper.showMessage(parentFrame, getString("message.class.save.error", file.path), getString("message.error.message", e.message
+            alertFacade.showMessage(parentFrame, getString("message.class.save.error", file.path), getString("message.error.message", e.message
                     ?: ""), AlertType.ERROR)
             false
         }
@@ -94,14 +94,14 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
             }
 
     private fun isRetryFindClass(className: String) = if (parentFrame.vmConnection != null) {
-        alertFacade.showMessage(parentFrame, getString("message.class.not.loaded", className), null,  AlertType.WARNING)
+        alertFacade.showMessage(parentFrame, getString("message.class.not.loaded", className), null, AlertType.WARNING)
         false
     } else {
         alertFacade.showOptionDialog(parentFrame,
                 getString("message.class.not.found.title"),
                 getString("message.class.not.found", className),
                 arrayOf(getString("action.setup.class.path"), getString("action.cancel")),
-                AlertType.WARNING) == 0
+                AlertType.WARNING).selectedIndex == 0
     }
 
     init {
@@ -170,7 +170,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
                     resetModified()
                 }
             } catch (e: IOException) {
-                GUIHelper.showMessage(parentFrame, e)
+                alertFacade.showMessage(parentFrame, e)
             }
         }
     }

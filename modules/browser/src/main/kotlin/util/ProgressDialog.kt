@@ -66,7 +66,7 @@ class ProgressDialog(parent: Window, @Nls message: String, var task: () -> Unit 
                             get()
                         } catch (e: ExecutionException) {
                             e.cause?.printStackTrace()
-                            GUIHelper.showMessage(parent, getString("message.error.occurred"), "${e.cause?.javaClass}: ${e.cause?.message}", AlertType.ERROR)
+                            alertFacade.showMessage(parent, getString("message.error.occurred"), "${e.cause?.javaClass}: ${e.cause?.message}", AlertType.ERROR)
                         }
                     }
                 }.execute()

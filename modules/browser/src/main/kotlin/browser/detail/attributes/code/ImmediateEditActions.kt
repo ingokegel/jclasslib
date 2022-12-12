@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail.attributes.code
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.bytecode.*
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.alertFacade
 import org.jetbrains.annotations.Nls
 import java.awt.Window
 import javax.swing.JOptionPane
@@ -82,7 +82,7 @@ abstract class ValueEditAction<I : Instruction, T>(@Nls name: String) : Immediat
                     value
             ))
         } catch (e: NumberFormatException) {
-            GUIHelper.showMessage(parentWindow, conversionErrorMessage, AlertType.WARNING)
+            alertFacade.showMessage(parentWindow, conversionErrorMessage, AlertType.WARNING)
             null
         }
 

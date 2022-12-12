@@ -7,13 +7,16 @@
 
 package org.gjt.jclasslib.idea
 
+import com.intellij.CommonBundle
 import com.intellij.execution.process.ConsoleHighlighter
 import com.intellij.icons.AllIcons
 import com.intellij.ide.ui.UISettings
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DoNotAskOption
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.ui.messages.MessagesService
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.JBTabsPaneImpl
@@ -44,13 +47,33 @@ fun initUiFacades() {
     borderlessScrollPaneFactory = ::BorderlessJBScrollPane
 
     alertFacade = object : AlertFacade {
-        override fun showOptionDialog(parent: Component?, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType): Int {
-            return Messages.showDialog(getProject(parent), combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, options, 0, alertType.getIcon())
+        override fun showOptionDialog(parent: Component?, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType, suppressionShown: Boolean): OptionAlertResult {
+            var suppressionSelected = false
+            val doNotAskOption = if (suppressionShown) {
+                object : DoNotAskOption.Adapter() {
+                    override fun rememberChoice(isSelected: Boolean, exitCode: Int) {
+                        if (exitCode == Messages.OK && isSelected) {
+                            suppressionSelected = true
+                        }
+                    }
+                }
+
+            } else {
+                null
+            }
+            val selectedIndex = MessagesService.getInstance().showMessageDialog(getProject(parent), null, combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, options, 0, -1, alertType.getIcon(), doNotAskOption, false, null)
+            return OptionAlertResult(selectedIndex, suppressionSelected)
         }
 
-        override fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType) {
-            Messages.showDialog(getProject(parent), combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, arrayOf(Messages.getOkButton()), 0, alertType.getIcon())
+        override fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType, suppressionShown: Boolean): Boolean {
+            return showOptionDialog(parent, mainMessage, contentMessage, arrayOf(Messages.getOkButton()), alertType, suppressionShown).suppressionSelected
         }
+
+        override fun showYesNoDialog(parent: Component?, mainMessage: String, contentMessage: String?, suppressionShown: Boolean) =
+            showOptionDialog(parent, mainMessage, contentMessage, arrayOf(CommonBundle.getYesButtonText(), CommonBundle.getNoButtonText()), AlertType.QUESTION, suppressionShown)
+
+        override fun showOkCancelDialog(parent: Component?, mainMessage: String, contentMessage: String?, suppressionShown: Boolean) =
+            showOptionDialog(parent, mainMessage, contentMessage, arrayOf(CommonBundle.getOkButtonText(), CommonBundle.getCancelButtonText()), AlertType.QUESTION, suppressionShown)
 
         private fun getProject(parent: Component?) : Project? = getToolWindow(parent)?.project
 

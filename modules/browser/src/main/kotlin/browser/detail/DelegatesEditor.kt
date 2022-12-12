@@ -17,7 +17,7 @@ import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.constants.*
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.alertFacade
 import org.jetbrains.annotations.Nls
 import java.awt.Window
 import kotlin.reflect.KMutableProperty1
@@ -88,7 +88,7 @@ abstract class DelegatesEditor<T : Any> : DataEditor<T>() {
             is ConstantDoubleInfo -> ConstantDoubleEditor().edit(delegate, detailPane, delegateName)
             is ConstantNameInfo -> ConstantNameEditor().edit(delegate, detailPane, delegateName)
             is ConstantStringInfo -> ConstantStringEditor().edit(delegate, detailPane, delegateName)
-            else -> GUIHelper.showMessage(
+            else -> alertFacade.showMessage(
                     detailPane,
                     getString("message.constant.pool.type.edit.error", delegate.javaClass.name),
                     AlertType.WARNING

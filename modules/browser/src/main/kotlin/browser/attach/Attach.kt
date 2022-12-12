@@ -15,7 +15,6 @@ import com.sun.tools.attach.VirtualMachineDescriptor
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.attach.AttachDialog
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.alertFacade
 import org.jclasslib.agent.AgentMain
 import org.jclasslib.agent.CommunicatorMBean
@@ -92,7 +91,7 @@ private fun VirtualMachine.getConnectorAddress(): String? = agentProperties.getP
 
 private fun selectVm(parentWindow: Window?): AttachableVm? =
     if (isMacosSandboxed()) {
-        GUIHelper.showMessage(parentWindow, getString("attach.not.supported.in.sandbox"), AlertType.WARNING)
+        alertFacade.showMessage(parentWindow, getString("attach.not.supported.in.sandbox"), AlertType.WARNING)
         null
     } else {
         val vms = VirtualMachine.list().map { AttachableVm(it) }

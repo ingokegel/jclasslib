@@ -25,6 +25,7 @@ import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.DefaultAction
 import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.GUIHelper.applyPath
+import org.gjt.jclasslib.util.alertFacade
 import org.w3c.dom.Document
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
@@ -63,7 +64,7 @@ class BrowserFrame : JFrame() {
                 when {
                     lowerCasePath.endsWith(".class") -> openClassFromFile(file)
                     lowerCasePath.endsWith(".jar") -> openClassFromJar(file)
-                    else -> GUIHelper.showMessage(this, getString("message.select.class.or.jar"), AlertType.WARNING)
+                    else -> alertFacade.showMessage(this, getString("message.select.class.or.jar"), AlertType.WARNING)
                 }
             }
         }
@@ -93,7 +94,7 @@ class BrowserFrame : JFrame() {
                         frameContent.openClassFile(findResult.fileName, findResult.moduleName)
                     }
                 } else {
-                    GUIHelper.showMessage(this, getString("message.class.load.error", selectedClassName), AlertType.ERROR)
+                    alertFacade.showMessage(this, getString("message.class.load.error", selectedClassName), AlertType.ERROR)
                 }
             }
         }
@@ -196,7 +197,7 @@ class BrowserFrame : JFrame() {
         try {
             frameContent.selectedTab?.reload()
         } catch (e: IOException) {
-            GUIHelper.showMessage(this, e)
+            alertFacade.showMessage(this, e)
         }
 
     }.apply {
@@ -359,7 +360,7 @@ class BrowserFrame : JFrame() {
                     try {
                         openClassFromFile(file)
                     } catch (e: IOException) {
-                        GUIHelper.showMessage(this@BrowserFrame, e)
+                        alertFacade.showMessage(this@BrowserFrame, e)
                     }
                 }
             }
@@ -422,10 +423,10 @@ class BrowserFrame : JFrame() {
                     for (supportedLocale in SupportedLocale.values()) {
                         add(JRadioButtonMenuItem(DefaultAction(supportedLocale.displayName) {
                             getPreferencesNode().put(SETTINGS_LOCALE, supportedLocale.localeCode)
-                            GUIHelper.showMessage(this@BrowserFrame,
-                                getString("message.language.changed.title"),
-                                getString("message.language.changed"),
-                                AlertType.INFORMATION
+                            alertFacade.showMessage(this@BrowserFrame,
+                                    getString("message.language.changed.title"),
+                                    getString("message.language.changed"),
+                                    AlertType.INFORMATION
                             )
                         }.apply {
                             if (supportedLocale == selectedSupportedLocale) {
@@ -564,11 +565,11 @@ class BrowserFrame : JFrame() {
         workspaceFileChooser.fileAccessMode(FileAccessMode.SAVE)
         if (workspaceFileChooser.select()) {
             val selectedFile = getWorkspaceFile(workspaceFileChooser.selectedFile)
-            if (!selectedFile.exists() || Util.isMacOS() || Util.isWindows() || GUIHelper.showOptionDialog(this,
-                    getString("message.file.exists.title"),
-                    getString("message.file.exists", selectedFile.path),
-                    GUIHelper.YES_NO_OPTIONS,
-                    AlertType.QUESTION) == 0) {
+            if (!selectedFile.exists() || Util.isMacOS() || Util.isWindows() || alertFacade.showYesNoDialog(
+                            this,
+                            getString("message.file.exists.title"),
+                            getString("message.file.exists", selectedFile.path),
+                    ).selectedIndex == 0) {
                 saveWorkspaceToFile(selectedFile)
                 workspaceFile = selectedFile
                 updateTitle()
@@ -599,10 +600,10 @@ class BrowserFrame : JFrame() {
             }
             recentMenu.addRecentWorkspace(file)
         } catch (e: IOException) {
-            GUIHelper.showMessage(this, getString("message.workspace.save.error", file.path), AlertType.ERROR)
+            alertFacade.showMessage(this, getString("message.workspace.save.error", file.path), AlertType.ERROR)
         }
 
-        GUIHelper.showMessage(this, getString("message.workspace.saved", file.path), AlertType.INFORMATION)
+        alertFacade.showMessage(this, getString("message.workspace.saved", file.path), AlertType.INFORMATION)
         saveWorkspaceAsAction.isEnabled = true
     }
 
@@ -628,9 +629,9 @@ class BrowserFrame : JFrame() {
         try {
             function.invoke()
         } catch (e: FileNotFoundException) {
-            GUIHelper.showMessage(this, getString("message.file.not.found", e.message ?: ""), AlertType.ERROR)
+            alertFacade.showMessage(this, getString("message.file.not.found", e.message ?: ""), AlertType.ERROR)
         } catch (e: IOException) {
-            GUIHelper.showMessage(this, e)
+            alertFacade.showMessage(this, e)
         } finally {
             cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
         }

@@ -19,7 +19,6 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.*
-import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.openapi.util.io.FileUtil
@@ -145,6 +144,7 @@ private fun loadSourceClassFileBytes(locatedClassFile: LocatedClassFile, project
         if (handlerFactory.isApplicable(module)) {
             val handler = handlerFactory.createHandler(module)
             val outputUrls: List<String> = ArrayList()
+            @Suppress("OverrideOnly")
             handler.addCustomModuleRoots(OrderRootType.CLASSES, moduleRootManager, outputUrls, true, true)
             for (outputUrl in outputUrls) {
                 pathList.add(VirtualFileManager.extractPath(outputUrl).replace('/', File.separatorChar))
@@ -223,8 +223,7 @@ class ByteCodeToolWindowFactory : ToolWindowFactory {
     }
 }
 
-private var preventSavingConfirmation: Boolean = false
-private const val modificationPrefix = "* "
+private const val MODIFICATION_PREFIX = "* "
 
 class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClassFile: LocatedClassFile, val project: Project) : SimpleToolWindowPanel(true, true), BrowserServices {
 
@@ -358,7 +357,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
     }
 
     override fun modified() {
-        content.displayName = modificationPrefix + content.displayName
+        content.displayName = MODIFICATION_PREFIX + content.displayName
     }
 
     init {
@@ -426,37 +425,21 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
     }
 
     private fun saveModified() {
-        if (preventSavingConfirmation ||
-                Messages.showOkCancelDialog(project,
-                        "Do you really want to save your modifications back to the original class file?",
-                        GUIHelper.MESSAGE_TITLE,
-                        Messages.getOkButton(),
-                        Messages.getCancelButton(),
-                        Messages.getQuestionIcon(),
-                        object : DialogWrapper.DoNotAskOption.Adapter() {
-                            override fun rememberChoice(isSelected: Boolean, exitCode: Int) {
-                                if (exitCode == Messages.OK && isSelected) {
-                                    preventSavingConfirmation = true
-                                }
-                            }
-                        }
-                ) == Messages.OK
-        ) {
-            writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow(), null) {
-                FileChooser.chooseFile(FileChooserDescriptor(false, true, false, false, false, false).apply {
-                    title = "Select Directory"
-                    description = "Select the output directory for the modified class files"
-                }, project, null)?.let {
-                    File(it.path)
-                }
+        if (writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow(), null) {
+            FileChooser.chooseFile(FileChooserDescriptor(false, true, false, false, false, false).apply {
+                title = "Select Directory"
+                description = "Select the output directory for the modified class files"
+            }, project, null)?.let {
+                File(it.path)
             }
+        }) {
             resetModified()
         }
     }
 
     private fun resetModified() {
         browserComponent.isModified = false
-        content.displayName = content.displayName.removePrefix(modificationPrefix)
+        content.displayName = content.displayName.removePrefix(MODIFICATION_PREFIX)
     }
 
     companion object {

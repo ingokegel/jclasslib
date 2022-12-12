@@ -14,8 +14,8 @@ import org.gjt.jclasslib.browser.detail.DataEditor
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.constants.*
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import org.gjt.jclasslib.util.alertFacade
 import javax.swing.JOptionPane
 
 abstract class ConstantEditor<T : Constant> : DataEditor<T>() {
@@ -40,7 +40,7 @@ abstract class ConstantEditor<T : Constant> : DataEditor<T>() {
                 setValueFromString(constant, newValue)
                 detailPane.modified()
             } catch (e: Exception) {
-                GUIHelper.showMessage(detailPane, getString("message.invalid.input"), AlertType.ERROR)
+                alertFacade.showMessage(detailPane, getString("message.invalid.input"), AlertType.ERROR)
             }
         }
     }

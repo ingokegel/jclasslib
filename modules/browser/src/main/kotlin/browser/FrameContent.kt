@@ -14,7 +14,7 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.alertFacade
 import org.jetbrains.annotations.Nls
 import org.w3c.dom.Element
 import util.LightOrDarkColor
@@ -45,7 +45,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         val count = wrappers.flatMap { it.tabbedPane.tabs() }
                 .map { it.saveClassToDirectory(directory) }.count { it }
 
-        GUIHelper.showMessage(frame, getString("message.classes.saved.info", count, directory), AlertType.INFORMATION)
+        alertFacade.showMessage(frame, getString("message.classes.saved.info", count, directory), AlertType.INFORMATION)
     }
 
     fun focus(focusedTabbedPane: BrowserTabbedPane) {

@@ -9,10 +9,9 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
-import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.ClosableTabComponent
 import org.gjt.jclasslib.util.DnDTabbedPane
-import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.alertFacade
 import java.awt.Component
 import java.awt.EventQueue
 import java.awt.datatransfer.DataFlavor
@@ -111,13 +110,11 @@ class BrowserTabbedPane(val container: FrameContent) : DnDTabbedPane(), Closable
         container.updateSaveAction()
     }
 
-    fun canClose(): Boolean = !hasModified() || GUIHelper.showOptionDialog(
+    fun canClose(): Boolean = !hasModified() || alertFacade.showDiscardCancelDialog(
             this,
             getString("message.class.files.modified.title"),
             getString("message.class.files.modified"),
-            GUIHelper.DISCARD_CANCEL_OPTIONS,
-            AlertType.QUESTION
-    ) == 0
+    ).selectedIndex == 0
 
     fun hasModified() = tabs().any { it.browserComponent.isModified }
 

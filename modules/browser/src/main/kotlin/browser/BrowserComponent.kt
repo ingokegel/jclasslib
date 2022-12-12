@@ -9,7 +9,10 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.*
 import org.gjt.jclasslib.structures.*
-import org.gjt.jclasslib.util.*
+import org.gjt.jclasslib.util.SplitDirection
+import org.gjt.jclasslib.util.SplitterFacade
+import org.gjt.jclasslib.util.alertFacade
+import org.gjt.jclasslib.util.splitterFactory
 import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.event.TreeSelectionEvent
@@ -126,13 +129,11 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     }
 
     fun canRemove(): Boolean =
-        !isModified || GUIHelper.showOptionDialog(
+        !isModified || alertFacade.showDiscardCancelDialog(
                 this,
                 BrowserBundle.getString("message.class.file.modified.title"),
                 BrowserBundle.getString("message.class.file.modified"),
-                GUIHelper.DISCARD_CANCEL_OPTIONS,
-                AlertType.QUESTION
-        ) == 0
+        ).selectedIndex == 0
 
     override fun valueChanged(selectionEvent: TreeSelectionEvent) {
         services.activate()

@@ -11,14 +11,14 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.alertFacade
 
 fun classAttributeLink(services: BrowserServices, index: Int, attributeInfoClass: Class<out AttributeInfo>) {
     val attributesPath = services.browserComponent.treePane.getPathForCategory(NodeType.ATTRIBUTE)
     val attributesNode = attributesPath.lastPathComponent as BrowserTreeNode
     val targetNode = findChildNode(attributesNode, attributeInfoClass)
     if (targetNode == null) {
-        GUIHelper.showMessage(services.browserComponent, getString("message.attribute.of.class.not.found", attributeInfoClass.name), AlertType.ERROR)
+        alertFacade.showMessage(services.browserComponent, getString("message.attribute.of.class.not.found", attributeInfoClass.name), AlertType.ERROR)
         return
     }
     val targetPath = attributesPath.pathByAddingChild(targetNode)
