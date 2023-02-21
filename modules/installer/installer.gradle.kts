@@ -1,7 +1,7 @@
 import com.install4j.gradle.Install4jTask
 
 plugins {
-    id("com.install4j.gradle") version "9.0.3"
+    id("com.install4j.gradle") version "10.0.5"
 }
 
 val install4jHomeDir: String? by project
