@@ -10,7 +10,7 @@ dependencies {
 }
 
 intellij {
-    version.set("IC-2022.1")
+    version.set("IC-2022.2.4")
     pluginName.set("jclasslib")
     plugins.set(listOf("ByteCodeViewer", "java", "Kotlin"))
     sandboxDir.set("${rootProject.buildDir}/../idea_sandbox")

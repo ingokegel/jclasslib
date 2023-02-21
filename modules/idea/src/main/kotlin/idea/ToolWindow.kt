@@ -13,18 +13,19 @@ import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.compiler.CompilerPaths
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.*
+import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ToolWindowManager
@@ -105,7 +106,7 @@ fun loadClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): By
     }
 
 private fun loadCompiledClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): ByteArray {
-    val index = ProjectFileIndex.SERVICE.getInstance(project)
+    val index = ProjectFileIndex.getInstance(project)
     val file = locatedClassFile.virtualFile
     val classFileName = StringUtil.getShortName(locatedClassFile.jvmClassName) + ".class"
     return if (index.isInLibraryClasses(file)) {
@@ -125,35 +126,11 @@ private fun loadCompiledClassFileBytes(locatedClassFile: LocatedClassFile, proje
 }
 
 private fun loadSourceClassFileBytes(locatedClassFile: LocatedClassFile, project: Project): ByteArray {
-    val pathList = arrayListOf<String>()
     val index = ProjectRootManager.getInstance(project).fileIndex
-    val file = locatedClassFile.virtualFile
-    val module = index.getModuleForFile(file) ?: throw IOException("Module not found")
-    val extension = CompilerModuleExtension.getInstance(module) ?: throw IOException("Extension not found")
-    val inTests = index.isInTestSourceContent(file)
-    val classPathRoot = if (inTests) {
-        extension.compilerOutputPathForTests?.path ?: extension.compilerOutputForTestsPointer?.presentableUrl
-    } else {
-        extension.compilerOutputPath?.path ?: extension.compilerOutputPointer?.presentableUrl
-    } ?: throw IOException("Class root not found")
-
-    pathList.add(classPathRoot)
-
-    val moduleRootManager = ModuleRootManager.getInstance(module)
-    for (handlerFactory in OrderEnumerationHandler.EP_NAME.extensions) {
-        if (handlerFactory.isApplicable(module)) {
-            val handler = handlerFactory.createHandler(module)
-            val outputUrls: List<String> = ArrayList()
-            @Suppress("OverrideOnly")
-            handler.addCustomModuleRoots(OrderRootType.CLASSES, moduleRootManager, outputUrls, true, true)
-            for (outputUrl in outputUrls) {
-                pathList.add(VirtualFileManager.extractPath(outputUrl).replace('/', File.separatorChar))
-            }
-        }
-    }
+    val module = index.getModuleForFile(locatedClassFile.virtualFile) ?: throw IOException("Module not found")
 
     val relativePath = locatedClassFile.jvmClassName.replace('.', '/') + ".class"
-    for (path in pathList) {
+    for (path in CompilerPaths.getOutputPaths(arrayOf(module)).toList()) {
         val classFile = File(path, relativePath)
         if (classFile.exists()) {
             locatedClassFile.writableUrl = classFile.toURI().path
@@ -250,6 +227,8 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         override fun update(e: AnActionEvent) {
             e.presentation.isEnabled = backwardAction.isEnabled
         }
+
+        override fun getActionUpdateThread() = ActionUpdateThread.EDT
     }
 
     private val forwardActionDelegate: AnAction = object : DumbAwareAction() {
@@ -267,6 +246,8 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         override fun update(e: AnActionEvent) {
             e.presentation.isEnabled = forwardAction.isEnabled
         }
+
+        override fun getActionUpdateThread() = ActionUpdateThread.EDT
     }
 
     private val reloadAction: AnAction = object : DumbAwareAction() {
@@ -287,6 +268,8 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
                 resetModified()
             }
         }
+
+        override fun getActionUpdateThread() = ActionUpdateThread.EDT
     }
 
     private val saveAction: AnAction = object : DumbAwareAction() {
@@ -304,6 +287,8 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         override fun update(e: AnActionEvent) {
             e.presentation.isEnabled = browserComponent.isModified
         }
+
+        override fun getActionUpdateThread() = ActionUpdateThread.EDT
     }
 
     private val webAction: AnAction = object : DumbAwareAction() {

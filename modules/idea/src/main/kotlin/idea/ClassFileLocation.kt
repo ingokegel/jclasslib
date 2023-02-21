@@ -66,7 +66,7 @@ fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Pr
             if (locatedClassFile != null) {
                 showClassFile(locatedClassFile, browserPath, project)
             } else {
-                if (!project.isDisposed && myTitle != null) {
+                if (!project.isDisposed) {
                     Messages.showWarningDialog(
                         project,
                         locationResult?.errorMessage ?: "internal error",

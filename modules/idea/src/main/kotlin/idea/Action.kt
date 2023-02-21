@@ -8,10 +8,7 @@
 package org.gjt.jclasslib.idea
 
 import com.intellij.lang.injection.InjectedLanguageManager
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.IconLoader
@@ -27,6 +24,8 @@ class ShowBytecodeAction : AnAction() {
             icon = ICON
         }
     }
+
+    override fun getActionUpdateThread() = ActionUpdateThread.EDT
 
     override fun actionPerformed(e: AnActionEvent) {
         val psiElement = getPsiElement(e) ?: return
