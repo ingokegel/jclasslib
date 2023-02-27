@@ -45,6 +45,7 @@ subprojects {
         configure<JavaPluginExtension> {
             toolchain {
                 languageVersion.set(JavaLanguageVersion.of(11))
+                vendor.set(JvmVendorSpec.ADOPTIUM)
             }
         }
 
@@ -60,12 +61,6 @@ subprojects {
             kotlinOptions {
                 languageVersion = "1.7"
                 apiVersion = "1.7"
-            }
-        }
-
-        configure<JavaPluginExtension> {
-            toolchain {
-                languageVersion.set(JavaLanguageVersion.of(11))
             }
         }
     }

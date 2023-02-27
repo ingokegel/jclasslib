@@ -1,3 +1,4 @@
+import org.gradle.toolchains.foojay.FoojayToolchainResolver
 
 pluginManagement {
     val kotlinVersion: String by settings
@@ -16,6 +17,20 @@ pluginManagement {
         eachPlugin {
             if (requested.id.namespace == "org.jetbrains.kotlin") {
                 useVersion(kotlinVersion)
+            }
+        }
+    }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver") version("0.4.0")
+}
+
+toolchainManagement {
+    jvm {
+        javaRepositories {
+            repository("foojay") {
+                resolverClass.set(FoojayToolchainResolver::class.java)
             }
         }
     }
