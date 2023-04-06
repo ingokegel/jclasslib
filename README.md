@@ -2,7 +2,7 @@
 
 ## Download
 
-Installers can be downloaded from the [releases section](https://github.com/ingokegel/jclasslib/releases), you can install this via HomeBrew on MacOS:
+Installers can be downloaded from the [releases section](https://github.com/ingokegel/jclasslib/releases), on macOS you can install it via HomeBrew with
 ```sh
 brew install jclasslib-bytecode-viewer
 ```
