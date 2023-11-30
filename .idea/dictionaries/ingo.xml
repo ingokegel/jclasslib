@@ -66,6 +66,7 @@
       <w>fload</w>
       <w>fmul</w>
       <w>fneg</w>
+      <w>foojay</w>
       <w>formdev</w>
       <w>frem</w>
       <w>freturn</w>

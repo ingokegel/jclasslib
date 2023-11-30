@@ -3,8 +3,6 @@ plugins {
     id("org.jetbrains.intellij") version "1.13.0"
 }
 
-val kotlinVersion: String by project
-
 dependencies {
     implementation(project(":browser"))
 }

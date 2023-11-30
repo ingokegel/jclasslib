@@ -2,7 +2,7 @@ import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
-    kotlin("jvm") apply false
+    alias(libs.plugins.kotlin) apply false
     id("org.jetbrains.dokka") version "1.7.20" apply false
     idea
 }

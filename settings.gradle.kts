@@ -1,8 +1,6 @@
 import org.gradle.toolchains.foojay.FoojayToolchainResolver
 
 pluginManagement {
-    val kotlinVersion: String by settings
-
     repositories {
         gradlePluginPortal()
         maven("https://maven.ej-technologies.com/repository") {
@@ -11,14 +9,6 @@ pluginManagement {
             }
         }
         mavenCentral()
-    }
-
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.namespace == "org.jetbrains.kotlin") {
-                useVersion(kotlinVersion)
-            }
-        }
     }
 }
 
