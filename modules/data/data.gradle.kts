@@ -3,7 +3,7 @@ import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
     `maven-publish`
 }
 

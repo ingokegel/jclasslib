@@ -331,7 +331,6 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     }
 
     companion object {
-        private val origin = Rectangle(0, 0, 0, 0)
         private const val LINE_NUMBERS_OFFSET = 9
 
         private data class FontInfo(val family: String, val style: Int, val size: Int)

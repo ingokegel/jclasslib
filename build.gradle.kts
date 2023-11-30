@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     alias(libs.plugins.kotlin) apply false
-    id("org.jetbrains.dokka") version "1.7.20" apply false
     idea
 }
 
@@ -57,8 +56,8 @@ subprojects {
 
         tasks.withType<KotlinJvmCompile>().configureEach {
             kotlinOptions {
-                languageVersion = "1.7"
-                apiVersion = "1.7"
+                languageVersion = "1.9"
+                apiVersion = "1.9"
             }
         }
     }

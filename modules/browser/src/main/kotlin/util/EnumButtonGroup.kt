@@ -9,8 +9,9 @@ package org.gjt.jclasslib.util
 
 import javax.swing.ButtonGroup
 import javax.swing.JRadioButton
+import kotlin.enums.EnumEntries
 
-class EnumButtonGroup<E : Enum<E>>(values: Array<E>, actionListener: (E) -> Unit = {}) : ButtonGroup() {
+class EnumButtonGroup<E : Enum<E>>(values: EnumEntries<E>, actionListener: (E) -> Unit = {}) : ButtonGroup() {
 
     val radioButtons = values.toList().associateWith {
         JRadioButton(it.toString()).apply {

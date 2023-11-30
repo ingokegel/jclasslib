@@ -27,7 +27,7 @@ import javax.swing.*
 
 class FrameContent(val frame: BrowserFrame) : JPanel() {
 
-    val wrappers = Position.values().map { TabbedPaneWrapper(it) }
+    val wrappers = Position.entries.map { TabbedPaneWrapper(it) }
 
     private var splitMode: SplitMode = SplitMode.NONE
 
@@ -193,7 +193,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
         NW(getString("window.open.class.file.label")), NE, SE, SW;
 
         companion object {
-            fun getByName(name: String?) = values().firstOrNull { it.name == name } ?: NW
+            fun getByName(name: String?) = entries.firstOrNull { it.name == name } ?: NW
         }
     }
 

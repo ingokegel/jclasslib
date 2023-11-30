@@ -32,7 +32,7 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
     protected abstract fun isElementTextFiltered(element: S, filterText: String): Boolean
     protected abstract fun getFilterKeys(element: S): Collection<T>
 
-    private val buttonGroup = EnumButtonGroup(FilterMode.values()) { selectedValue ->
+    private val buttonGroup = EnumButtonGroup(FilterMode.entries) { selectedValue ->
         filterMode = selectedValue
     }
 

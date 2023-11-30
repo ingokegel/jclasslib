@@ -25,7 +25,7 @@ class ModuleResolutionAttributeDetailPane(services: BrowserServices) : KeyValueD
 
     class ModuleResolutionEditor : DelegatesEditor<ModuleResolutionAttribute>() {
         override fun DelegateBuilder<ModuleResolutionAttribute>.buildDelegateSpecs() {
-            addFlagsSpec(getString("menu.resolution"), ModuleResolutionType.values().toSet(), ::ModuleResolutionEditDialog, ModuleResolutionAttribute::resolution)
+            addFlagsSpec(getString("menu.resolution"), ModuleResolutionType.entries.toSet(), ::ModuleResolutionEditDialog, ModuleResolutionAttribute::resolution)
         }
     }
 

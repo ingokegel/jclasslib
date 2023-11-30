@@ -88,7 +88,7 @@ class ClassFile : Structure(), AttributeContainer {
      */
     val majorVersionVerbose: String
         get() =
-            KnownMajorJavaVersions.values().firstOrNull { it.majorVersion == majorVersion }?.verbose ?: "unknown value $majorVersion"
+            KnownMajorJavaVersions.entries.firstOrNull { it.majorVersion == majorVersion }?.verbose ?: "unknown value $majorVersion"
 
     /**
      * Index of an equivalent constant pool entry, or -1 if no equivalent constant pool entry can be found.
@@ -454,7 +454,7 @@ class ClassFile : Structure(), AttributeContainer {
     private fun checkMajorVersion(majorVersion: Int) {
         // Note: also update majorVersionVerbose
         if (majorVersion !in MAJOR_VERSION_RANGE) {
-            warning("major version should be between ${MAJOR_VERSION_RANGE.first} and ${MAJOR_VERSION_RANGE.last} for JDK <= ${KnownMajorJavaVersions.values().last().verbose}, was $majorVersion")
+            warning("major version should be between ${MAJOR_VERSION_RANGE.first} and ${MAJOR_VERSION_RANGE.last} for JDK <= ${KnownMajorJavaVersions.entries.last().verbose}, was $majorVersion")
         }
     }
 
@@ -483,6 +483,6 @@ class ClassFile : Structure(), AttributeContainer {
 
     companion object {
         private const val MAGIC_NUMBER = 0xCAFEBABE.toInt()
-        private val MAJOR_VERSION_RANGE = KnownMajorJavaVersions.values().first().majorVersion.rangeTo(KnownMajorJavaVersions.values().last().majorVersion)
+        private val MAJOR_VERSION_RANGE = KnownMajorJavaVersions.entries.first().majorVersion.rangeTo(KnownMajorJavaVersions.entries.last().majorVersion)
     }
 }

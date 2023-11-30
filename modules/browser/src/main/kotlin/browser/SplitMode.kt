@@ -18,6 +18,6 @@ enum class SplitMode(@Nls val actionName: String, val actionDescription: String,
     BOTH(getString("action.split.4way"), getString("action.split.4way.description"), KeyEvent.VK_B);
 
     companion object {
-        fun getByName(name : String?) = values().firstOrNull { it.name == name } ?: NONE
+        fun getByName(name : String?) = entries.firstOrNull { it.name == name } ?: NONE
     }
 }

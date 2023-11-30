@@ -40,6 +40,6 @@ enum class SupportedLocale(val localeCode: String, val displayName: String) {
 
     companion object {
         fun findByLocaleCode(localeCode: String) : SupportedLocale =
-            values().find { it.localeCode == localeCode } ?: AUTO_DETECT
+            entries.find { it.localeCode == localeCode } ?: AUTO_DETECT
     }
 }

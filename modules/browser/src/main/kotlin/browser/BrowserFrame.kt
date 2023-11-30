@@ -229,7 +229,7 @@ class BrowserFrame : JFrame() {
         accelerator(KeyEvent.VK_F3)
     }
 
-    val splitActions = SplitMode.values().associateWith { splitMode ->
+    val splitActions = SplitMode.entries.associateWith { splitMode ->
         DefaultAction(splitMode.actionName, splitMode.actionDescription) {
             frameContent.split(splitMode)
         }.apply {
@@ -393,7 +393,7 @@ class BrowserFrame : JFrame() {
                     icon = GUIHelper.ICON_EMPTY
                     val buttonGroup = ButtonGroup()
                     val actions = mutableMapOf<DarkModeOption, DefaultAction>()
-                    for (option in DarkModeOption.values()) {
+                    for (option in DarkModeOption.entries) {
                         add(JRadioButtonMenuItem(DefaultAction(option.displayName) {
                             darkModeOption = option
                             darkModeChanged()
@@ -420,7 +420,7 @@ class BrowserFrame : JFrame() {
                     icon = getSvgIcon("language.svg", DefaultAction.SMALL_ICON_SIZE)
                     val selectedSupportedLocale = SupportedLocale.findByLocaleCode(getPreferencesNode().get(SETTINGS_LOCALE, ""))
                     val buttonGroup = ButtonGroup()
-                    for (supportedLocale in SupportedLocale.values()) {
+                    for (supportedLocale in SupportedLocale.entries) {
                         add(JRadioButtonMenuItem(DefaultAction(supportedLocale.displayName) {
                             getPreferencesNode().put(SETTINGS_LOCALE, supportedLocale.localeCode)
                             alertFacade.showMessage(this@BrowserFrame,

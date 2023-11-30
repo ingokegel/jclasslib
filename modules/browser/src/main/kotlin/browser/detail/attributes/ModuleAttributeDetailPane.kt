@@ -149,7 +149,7 @@ class ModuleDocument(styles: StyleContext, private val attribute: ModuleAttribut
     }
 
     private fun <T> Array<T>.textBlock(f: (T) -> Unit) {
-        if (!isEmpty() && length > 0) {
+        if (isNotEmpty() && length > 0) {
             appendBatchLineFeed()
         }
         forEach(f)

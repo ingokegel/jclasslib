@@ -22,7 +22,7 @@ import javax.swing.tree.TreePath
 class ConstantPoolDetailPane(services: BrowserServices) : DetailPane<Array<Constant>>(Array<Constant>::class.java, services) {
 
     val filterPane = object : FilterPane<ConstantType, Constant>(this@ConstantPoolDetailPane) {
-        override fun getAllFilterKeys() = ConstantType.values().toList()
+        override fun getAllFilterKeys() = ConstantType.entries
         override fun isElementTextFiltered(element: Constant, filterText: String) = element is AbstractConstant && (isShowAll || element.verbose.contains(filterText))
         override fun getFilterKeys(element: Constant) = if (element == ConstantPlaceholder) setOf() else setOf(element.constantType)
     }

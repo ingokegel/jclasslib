@@ -33,7 +33,7 @@ class ModuleResolutionAttribute(classFile: ClassFile) : AttributeInfo(classFile)
      * The verbose description of the module resolution.
      */
     val resolutionVerbose: String
-        get() = formatFlagsVerbose(ModuleResolutionType.values().toSet(), resolution, separator = ", ")
+        get() = formatFlagsVerbose(ModuleResolutionType.entries.toSet(), resolution, separator = ", ")
 
 
     override fun readData(input: DataInput) {
