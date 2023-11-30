@@ -5,9 +5,8 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.gradle.plugins.signing.SigningExtension
-import java.io.File
 
-val Project.externalLibsDir: File get() = file("${rootProject.buildDir}/externalLibs")
+val Project.externalLibsDir get() = rootProject.layout.buildDirectory.map { it.dir("externalLibs") }
 
 fun Project.configurePublishing() {
     pluginManager.apply("signing")

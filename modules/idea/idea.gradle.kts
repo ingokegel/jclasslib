@@ -13,7 +13,7 @@ intellij {
     version.set("IC-2022.2.4")
     pluginName.set("jclasslib")
     plugins.set(listOf("ByteCodeViewer", "java", "Kotlin"))
-    sandboxDir.set("${rootProject.buildDir}/../idea_sandbox")
+    sandboxDir = rootProject.layout.buildDirectory.dir("../idea_sandbox").get().asFile.path
     updateSinceUntilBuild.set(false)
 }
 

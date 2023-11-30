@@ -31,7 +31,7 @@ tasks {
     }
 
     dokkaJavadoc {
-        outputDirectory.set(buildDir.resolve("javadoc"))
+        outputDirectory = layout.buildDirectory.map { it.dir("javadoc").asFile }
         applyDokkaConfig()
     }
 

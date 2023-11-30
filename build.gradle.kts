@@ -8,13 +8,11 @@ plugins {
 }
 
 version = "6.0.4"
-buildDir = file("build/gradle")
-
-val kotlinVersion: String by project
+val rootBuildDir = file("build/gradle")
+layout.buildDirectory = rootBuildDir
 
 subprojects {
-
-    buildDir = File(rootProject.buildDir, path.substring(1).replace(':', '/'))
+    layout.buildDirectory = File(rootBuildDir, path.substring(1).replace(':', '/'))
 
     group = "org.jclasslib"
     version = rootProject.version
@@ -78,7 +76,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "8.0.1"
+        gradleVersion = "8.5"
         distributionType = Wrapper.DistributionType.ALL
     }
 
