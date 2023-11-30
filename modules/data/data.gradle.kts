@@ -15,7 +15,7 @@ dependencies {
 
 tasks {
     jar {
-        archiveFileName.set("jclasslib-library.jar")
+        archiveFileName = "jclasslib-library.jar"
     }
 
     val copyDist by registering(Copy::class) {
@@ -63,7 +63,7 @@ tasks {
 fun DokkaTask.applyDokkaConfig(additionalConfig: GradleDokkaSourceSetBuilder.() -> Unit =  {}) {
     dokkaSourceSets {
         configureEach {
-            moduleName.set("jclasslib data")
+            moduleName = "jclasslib data"
             additionalConfig()
         }
     }
@@ -71,7 +71,7 @@ fun DokkaTask.applyDokkaConfig(additionalConfig: GradleDokkaSourceSetBuilder.() 
 
 fun Test.setJreSystemProperty(majorVersion: Int) {
     val javaHome = project.javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(majorVersion))
+        languageVersion = JavaLanguageVersion.of(majorVersion)
     }.get().metadata.installationPath.asFile.path
 
     systemProperty("javaHome.$majorVersion", javaHome)

@@ -20,7 +20,7 @@ toolchainManagement {
     jvm {
         javaRepositories {
             repository("foojay") {
-                resolverClass.set(FoojayToolchainResolver::class.java)
+                resolverClass = FoojayToolchainResolver::class.java
             }
         }
     }

@@ -19,7 +19,7 @@ dependencies {
 
 tasks {
     jar {
-        archiveFileName.set("jclasslib-agent.jar")
+        archiveFileName = "jclasslib-agent.jar"
         manifest {
             attributes(
                     "Agent-Class" to "org.jclasslib.agent.AgentMain",

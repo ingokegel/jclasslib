@@ -7,7 +7,7 @@ plugins {
 configurePublishing()
 
 application {
-    mainClass.set("org.gjt.jclasslib.browser.BrowserApplication")
+    mainClass = "org.gjt.jclasslib.browser.BrowserApplication"
 }
 
 val flatLafVersion = "2.6"
@@ -26,7 +26,7 @@ dependencies {
 
 tasks {
     jar {
-        archiveFileName.set("jclasslib-browser.jar")
+        archiveFileName = "jclasslib-browser.jar"
         manifest {
             attributes("Main-Class" to application.mainClass.get())
         }

@@ -41,8 +41,8 @@ subprojects {
     pluginManager.withPlugin("kotlin") {
         configure<JavaPluginExtension> {
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of(11))
-                vendor.set(JvmVendorSpec.ADOPTIUM)
+                languageVersion = JavaLanguageVersion.of(11)
+                vendor = JvmVendorSpec.ADOPTIUM
             }
         }
 
