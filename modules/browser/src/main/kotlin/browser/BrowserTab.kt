@@ -85,13 +85,15 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         }
     }
 
-    private tailrec fun findClass(className: String): FindResult? = parentFrame.classpathComponent.findClass(className, false)
-            ?: if (isRetryFindClass(className)) {
-                parentFrame.setupClasspathAction()
-                findClass(className)
-            } else {
-                null
-            }
+    private tailrec fun findClass(className: String): FindResult? {
+        val result = parentFrame.classpathComponent.findClass(className, false)
+        return if (result != null || !isRetryFindClass(className)) {
+            result
+        } else {
+            parentFrame.setupClasspathAction()
+            findClass(className)
+        }
+    }
 
     private fun isRetryFindClass(className: String) = if (parentFrame.vmConnection != null) {
         alertFacade.showMessage(parentFrame, getString("message.class.not.loaded", className), null, AlertType.WARNING)
