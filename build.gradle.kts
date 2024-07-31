@@ -88,6 +88,10 @@ tasks {
         dependsOn(":installer:clean", ":data:clean", ":browser:clean", ":agent:clean")
         delete(externalLibsDir)
     }
+
+    updateDaemonJvm {
+        jvmVersion = JavaVersion.VERSION_17
+    }
 }
 
 idea {
