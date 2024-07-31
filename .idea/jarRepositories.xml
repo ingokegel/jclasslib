@@ -46,5 +46,15 @@
       <option name="name" value="maven3" />
       <option name="url" value="https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="IntelliJ Platform Dependencies Repository" />
+      <option name="name" value="IntelliJ Platform Dependencies Repository" />
+      <option name="url" value="https://cache-redirector.jetbrains.com/intellij-dependencies" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="IntelliJ Repository (Snapshots)" />
+      <option name="name" value="IntelliJ Repository (Snapshots)" />
+      <option name="url" value="https://cache-redirector.jetbrains.com/www.jetbrains.com/intellij-repository/snapshots" />
+    </remote-repository>
   </component>
 </project>

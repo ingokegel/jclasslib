@@ -1,18 +1,32 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij") version "1.17.3"
+    id("org.jetbrains.intellij.platform") version "2.0.0"
+}
+
+repositories {
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
     implementation(project(":browser"))
+
+    intellijPlatform {
+        intellijIdeaCommunity("2024.1.4")
+        bundledPlugins("ByteCodeViewer", "com.intellij.java", "org.jetbrains.kotlin")
+
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+    }
 }
 
-intellij {
-    version = "IC-2022.2.4"
-    pluginName = "jclasslib"
-    plugins = listOf("ByteCodeViewer", "java", "Kotlin")
-    sandboxDir = rootProject.layout.buildDirectory.dir("../idea_sandbox").get().asFile.path
-    updateSinceUntilBuild = false
+intellijPlatform {
+    pluginConfiguration {
+        name = "jclasslib"
+    }
+    sandboxContainer = rootProject.layout.buildDirectory.dir("../idea_sandbox")
 }
 
 tasks {

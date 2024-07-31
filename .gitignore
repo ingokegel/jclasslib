@@ -1,4 +1,5 @@
 .gradle/
+.intellijPlatform/
 .idea/workspace.xml
 .idea/kotlinc.xml
 .idea/modules.xml
