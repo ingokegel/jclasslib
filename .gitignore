@@ -9,4 +9,5 @@
 .idea/shelf/
 build/
 media/
+buildSrc/out
 .DS_Store
