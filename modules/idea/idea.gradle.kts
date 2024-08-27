@@ -25,8 +25,12 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         name = "jclasslib"
+        ideaVersion {
+            untilBuild = ""
+        }
     }
     sandboxContainer = rootProject.layout.buildDirectory.dir("../idea_sandbox")
+    projectName = "jclasslib"
 }
 
 tasks {
