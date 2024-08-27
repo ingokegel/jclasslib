@@ -17,7 +17,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DoNotAskOption
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.messages.MessagesService
-import com.intellij.openapi.util.Disposer
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.JBTabsPaneImpl
 import com.intellij.ui.components.JBScrollPane
@@ -150,7 +149,7 @@ private class JBSplitterFacade(splitDirection: SplitDirection, first: JComponent
         get() = this
 }
 
-private class JBTabsFacade : JBTabsPaneImpl(null, SwingConstants.TOP, Disposer.newDisposable()), TabbedPaneFacade {
+private class JBTabsFacade : JBTabsPaneImpl(null, SwingConstants.TOP, ByteCodePluginService.instance), TabbedPaneFacade {
     override fun addTabAtEnd(name: String, component: JComponent) {
         insertTab(name, null, component, null, -1)
     }
