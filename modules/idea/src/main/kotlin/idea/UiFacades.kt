@@ -38,7 +38,10 @@ fun initUiFacades() {
         val rendererFillBackground = UIManager.getBoolean("Tree.rendererFillBackground")
         try {
             UIManager.put("Tree.rendererFillBackground", false)
-            DefaultTreeCellRenderer()
+            object : DefaultTreeCellRenderer() {
+                override fun getTreeCellRendererComponent(tree: JTree?, value: Any?, selected: Boolean, expanded: Boolean, leaf: Boolean, row: Int, hasFocus: Boolean) =
+                    super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
+            }
         } finally {
             UIManager.put("Tree.rendererFillBackground", rendererFillBackground)
         }
