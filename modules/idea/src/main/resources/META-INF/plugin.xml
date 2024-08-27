@@ -7,7 +7,7 @@
     <description>jclasslib is a bytecode viewer for Java class files</description>
     <version>5.0</version>
     <vendor url="https://github.com/ingokegel/jclasslib">Ingo Kegel</vendor>
-    <idea-version since-build="222"/>
+    <idea-version since-build="241"/>
 
     <depends>com.intellij.java</depends>
     <depends optional="true" config-file="withByteCodeViewer.xml">ByteCodeViewer</depends>
