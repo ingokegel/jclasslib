@@ -14,7 +14,7 @@ intellijPlatform {
     pluginConfiguration {
         name = "jclasslib"
         ideaVersion {
-            untilBuild = ""
+            untilBuild = provider { null }
         }
         changeNotes = """
             <ul>
