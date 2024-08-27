@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij.platform") version "2.0.0"
+    id("org.jetbrains.intellij.platform") version "2.0.1"
 }
 
 repositories {
@@ -9,11 +9,35 @@ repositories {
     }
 }
 
+val ideaVersion = "2024.1.4"
+intellijPlatform {
+    pluginConfiguration {
+        name = "jclasslib"
+        ideaVersion {
+            untilBuild = ""
+        }
+        changeNotes = """
+            <ul>
+                <li>Compatibility with IDEA 2024.2</li>
+                <li>Support reading class files compiled by Java 21 and Java 22</li>
+                <li>When saving modified class files, ask whether to overwrite the original class files or to save to a different output directory with the option to remember the selection</li>
+            </ul>
+        """.trimIndent()
+    }
+    pluginVerification {
+        ides {
+            ide(ideaVersion)
+        }
+    }
+    sandboxContainer = rootProject.layout.buildDirectory.dir("../idea_sandbox")
+    projectName = "jclasslib"
+}
+
 dependencies {
     implementation(project(":browser"))
 
     intellijPlatform {
-        intellijIdeaCommunity("2024.1.4")
+        intellijIdeaCommunity(ideaVersion)
         bundledPlugins("ByteCodeViewer", "com.intellij.java", "org.jetbrains.kotlin")
 
         pluginVerifier()
@@ -22,32 +46,7 @@ dependencies {
     }
 }
 
-intellijPlatform {
-    pluginConfiguration {
-        name = "jclasslib"
-        ideaVersion {
-            untilBuild = ""
-        }
-    }
-    sandboxContainer = rootProject.layout.buildDirectory.dir("../idea_sandbox")
-    projectName = "jclasslib"
-}
-
 tasks {
-    patchPluginXml {
-        changeNotes = """
-            <ul>
-                <li>Fixed "class root not found" message</li>
-                <li>Support reading class files compiled by Java 19 and Java 20</li>
-            </ul>
-        """.trimIndent()
-        version = project.version.toString()
-    }
-
-    publishPlugin {
-        token = project.findProperty("intellij.publish.token")?.toString()
-    }
-
     runIde {
         jvmArgs("-Xmx1g")
     }
