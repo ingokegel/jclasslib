@@ -13,10 +13,13 @@ import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.compiler.CompilerPaths
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileTypes.FileTypeRegistry
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
@@ -69,28 +72,39 @@ fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?,
         val (panel, content) = existingEntry
         activateToolWindow(toolWindow, content, panel, browserPath)
     } else {
-        val classFile = readClassFile(locatedClassFile, project)
-        if (classFile != null) {
-            val panel = BytecodeToolWindowPanel(classFile, locatedClassFile, project)
-            panel.browserComponent.browserPath = browserPath
-            val content = contentManager.run {
-                val content = factory.createContent(panel, locatedClassFile.virtualFile.name, false)
-                panel.content = content
-                addContent(content)
-                content
+        object : Task.Backgroundable(project, "Loading class file", false) {
+            var classFile: ClassFile? = null
+            override fun run(indicator: ProgressIndicator) {
+                classFile = readClassFile(locatedClassFile, project)
             }
-            contentManager.contents.filter { it.component !is BytecodeToolWindowPanel }.forEach {
-                contentManager.removeContent(it, true)
+
+            override fun onSuccess() {
+                classFile?.let {classFile ->
+                    val panel = BytecodeToolWindowPanel(classFile, locatedClassFile, project)
+                    panel.browserComponent.browserPath = browserPath
+                    val content = contentManager.run {
+                        val content = factory.createContent(panel, locatedClassFile.virtualFile.name, false)
+                        panel.content = content
+                        addContent(content)
+                        content
+                    }
+                    contentManager.contents.filter { it.component !is BytecodeToolWindowPanel }.forEach {
+                        contentManager.removeContent(it, true)
+                    }
+                    activateToolWindow(toolWindow, content, panel, browserPath)
+                }
             }
-            activateToolWindow(toolWindow, content, panel, browserPath)
         }
+        .queue()
     }
 }
 
 private fun readClassFile(locatedClassFile: LocatedClassFile, project: Project): ClassFile? {
     locatedClassFile.virtualFile.refresh(false, false)
     return try {
-        val classFileBytes = loadClassFileBytes(locatedClassFile, project)
+        val classFileBytes = ReadAction.compute<ByteArray, Throwable> {
+            loadClassFileBytes(locatedClassFile, project)
+        }
         ClassFileReader.readFromInputStream(ByteArrayInputStream(classFileBytes))
     } catch (e: Exception) {
         Messages.showWarningDialog(project, "Error reading class file: ${e.message}", GUIHelper.MESSAGE_TITLE)
@@ -260,12 +274,21 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
 
         override fun actionPerformed(e: AnActionEvent) {
             if (browserComponent.canRemove()) {
-                val newClassFile = readClassFile(locatedClassFile, project)
-                if (newClassFile != null) {
-                    classFile = newClassFile
-                    browserComponent.rebuild()
+                object : Task.Backgroundable(project, "Reloading class file", false) {
+                    var newClassFile: ClassFile? = null
+                    override fun run(indicator: ProgressIndicator) {
+                        newClassFile = readClassFile(locatedClassFile, project)
+                    }
+
+                    override fun onSuccess() {
+                        newClassFile?.let { newClassFile ->
+                            classFile = newClassFile
+                            browserComponent.rebuild()
+                        }
+                        resetModified()
+                    }
                 }
-                resetModified()
+                .queue()
             }
         }
 
