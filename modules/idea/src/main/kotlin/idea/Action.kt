@@ -18,14 +18,14 @@ import com.intellij.psi.util.PsiUtilBase
 
 class ShowBytecodeAction : AnAction() {
 
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
+
     override fun update(e: AnActionEvent) {
         e.presentation.apply {
             isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && isContainedInClass(this) } == true
             icon = ICON
         }
     }
-
-    override fun getActionUpdateThread() = ActionUpdateThread.EDT
 
     override fun actionPerformed(e: AnActionEvent) {
         val psiElement = getPsiElement(e) ?: return
