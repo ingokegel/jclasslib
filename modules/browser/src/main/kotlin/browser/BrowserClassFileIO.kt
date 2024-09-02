@@ -134,7 +134,7 @@ private fun writeClassFileUnguarded(classFile: ClassFile, fileName: String, pare
             try {
                 ClassFileWriter.writeToFile(tempOutputFile, classFile)
                 val (jarFileName, classFileName) = splitJarFileName(fileName)
-                FileSystems.newFileSystem(Path(jarFileName), null).use { fs ->
+                FileSystems.newFileSystem(Path(jarFileName), null as ClassLoader?).use { fs ->
                     tempOutputFile.copyTo(fs.getPath(classFileName), overwrite = true)
                 }
             } finally {
