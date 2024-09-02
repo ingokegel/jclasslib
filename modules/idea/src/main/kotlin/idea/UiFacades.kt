@@ -14,9 +14,8 @@ import com.intellij.ide.ui.UISettings
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DoNotAskOption
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.ui.messages.MessagesService
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.JBTabsPaneImpl
 import com.intellij.ui.components.JBScrollPane
@@ -49,10 +48,11 @@ fun initUiFacades() {
     borderlessScrollPaneFactory = ::BorderlessJBScrollPane
 
     alertFacade = object : AlertFacade {
+        @Suppress("removal", "DEPRECATION")
         override fun showOptionDialog(parent: Component?, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType, suppressionShown: Boolean): OptionAlertResult {
             var suppressionSelected = false
             val doNotAskOption = if (suppressionShown) {
-                object : DoNotAskOption.Adapter() {
+                object : DialogWrapper.DoNotAskOption.Adapter() {
                     override fun rememberChoice(isSelected: Boolean, exitCode: Int) {
                         if (exitCode == Messages.OK && isSelected) {
                             suppressionSelected = true
@@ -63,7 +63,7 @@ fun initUiFacades() {
             } else {
                 null
             }
-            val selectedIndex = MessagesService.getInstance().showMessageDialog(getProject(parent), null, combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, options, 0, -1, alertType.getIcon(), doNotAskOption, false, null)
+            val selectedIndex = Messages.showDialog(getProject(parent), combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, options, 0, alertType.getIcon(), doNotAskOption)
             return OptionAlertResult(selectedIndex, suppressionSelected)
         }
 
