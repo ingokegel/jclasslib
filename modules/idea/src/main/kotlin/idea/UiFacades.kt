@@ -14,7 +14,8 @@ import com.intellij.ide.ui.UISettings
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.DoNotAskOption
+import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.JBTabsPaneImpl
@@ -48,11 +49,10 @@ fun initUiFacades() {
     borderlessScrollPaneFactory = ::BorderlessJBScrollPane
 
     alertFacade = object : AlertFacade {
-        @Suppress("removal", "DEPRECATION")
         override fun showOptionDialog(parent: Component?, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType, suppressionShown: Boolean): OptionAlertResult {
             var suppressionSelected = false
             val doNotAskOption = if (suppressionShown) {
-                object : DialogWrapper.DoNotAskOption.Adapter() {
+                object : DoNotAskOption.Adapter() {
                     override fun rememberChoice(isSelected: Boolean, exitCode: Int) {
                         if (exitCode == Messages.OK && isSelected) {
                             suppressionSelected = true
@@ -63,8 +63,14 @@ fun initUiFacades() {
             } else {
                 null
             }
-            val selectedIndex = Messages.showDialog(getProject(parent), combineMessage(mainMessage, contentMessage), GUIHelper.MESSAGE_TITLE, options, 0, alertType.getIcon(), doNotAskOption)
-            return OptionAlertResult(selectedIndex, suppressionSelected)
+
+            val selectedButton = MessageDialogBuilder.Message(GUIHelper.MESSAGE_TITLE, combineMessage(mainMessage, contentMessage))
+                .buttons(*options)
+                .icon(alertType.getIcon())
+                .doNotAsk(doNotAskOption)
+                .show(getProject(parent), parent)
+
+            return OptionAlertResult(options.indexOf(selectedButton), suppressionSelected)
         }
 
         override fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType, suppressionShown: Boolean): Boolean {
