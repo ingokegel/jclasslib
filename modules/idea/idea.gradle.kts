@@ -11,7 +11,7 @@ repositories {
     }
 }
 
-val ideaVersion = "2024.1.4"
+val ideaVersion = "2024.2.1"
 intellijPlatform {
     pluginConfiguration {
         name = "jclasslib"
@@ -40,7 +40,7 @@ dependencies {
 
     intellijPlatform {
         intellijIdeaCommunity(ideaVersion)
-        bundledPlugins("ByteCodeViewer", "com.intellij.java", "org.jetbrains.kotlin")
+        bundledPlugins("ByteCodeViewer", "com.intellij.java")
 
         pluginVerifier()
         zipSigner()
