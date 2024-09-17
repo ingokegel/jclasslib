@@ -20,9 +20,7 @@ intellijPlatform {
         }
         changeNotes = """
             <ul>
-                <li>Compatibility with IDEA 2024.2</li>
-                <li>Support reading class files compiled by Java 21 and Java 22</li>
-                <li>When saving modified class files, ask whether to overwrite the original class files or to save to a different output directory with the option to remember the selection</li>
+                <li>Compatibility with Kotlin K2 mode</li>
             </ul>
         """.trimIndent()
     }
