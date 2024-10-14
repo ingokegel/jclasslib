@@ -13,6 +13,7 @@ import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.compiler.CompilerPaths
 import com.intellij.openapi.fileChooser.FileChooser
@@ -107,8 +108,14 @@ private fun readClassFile(locatedClassFile: LocatedClassFile, project: Project):
         }
         ClassFileReader.readFromInputStream(ByteArrayInputStream(classFileBytes))
     } catch (e: Exception) {
-        Messages.showWarningDialog(project, "Error reading class file: ${e.message}", GUIHelper.MESSAGE_TITLE)
+        showWarningDialog("Error reading class file: ${e.message}", project)
         null
+    }
+}
+
+private fun showWarningDialog(text: String, project: Project) {
+    ApplicationManager.getApplication().invokeLater {
+        Messages.showWarningDialog(project, text, GUIHelper.MESSAGE_TITLE)
     }
 }
 
@@ -344,7 +351,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
             if (psiClass != null) {
                 openClassFile(psiClass, browserPath, project)
             } else {
-                Messages.showWarningDialog(project, "Class $className could not be found", GUIHelper.MESSAGE_TITLE)
+                showWarningDialog("Class $className could not be found", project)
             }
         }
     }
