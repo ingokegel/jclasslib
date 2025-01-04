@@ -1,7 +1,7 @@
 import com.install4j.gradle.Install4jTask
 
 plugins {
-    id("com.install4j.gradle") version "10.0.5"
+    id("com.install4j.gradle") version "11.0.1"
 }
 
 val install4jHomeDir: String? by project
@@ -10,8 +10,9 @@ val winKeystorePassword: String? by project
 val macKeystorePassword: String? by project
 val macProvisioningProfile: String? by project
 val appStoreOnly = project.findProperty("appStoreOnly").toString().toBoolean()
-val appleId: String? by project
-val appleIdPassword: String? by project
+val appleIssuerId: String? by project
+val appleKeyId: String? by project
+val applePrivateApiKey: String? by project
 val azureVaultUri: String? by project
 val azureTenantId: String? by project
 val azureClientId: String? by project
@@ -30,8 +31,6 @@ tasks {
 
     val externalWinKeystorePassword = winKeystorePassword
     val externalMacKeystorePassword = macKeystorePassword
-    val externalAppleId = appleId
-    val externalAppleIdPassword = appleIdPassword
 
     register<Install4jTask>("media") {
         dependsOn(":dist", ":clean")
@@ -43,16 +42,21 @@ tasks {
         disableSigning = !project.hasProperty("macCertPath")
         winKeystorePassword = externalWinKeystorePassword ?: ""
         macKeystorePassword = externalMacKeystorePassword ?: ""
-        appleId = externalAppleId ?: ""
-        appleIdPassword = externalAppleIdPassword ?: ""
+
+        if (appleIssuerId == null || appleKeyId == null || applePrivateApiKey == null) {
+            disableNotarization = true
+        }
 
         variables = mapOf(
-                "azureVaultUri" to (azureVaultUri ?: ""),
-                "azureTenantId" to (azureTenantId ?: ""),
-                "azureClientId" to (azureClientId ?: ""),
-                "azureCertificateName" to (azureCertificateName ?: ""),
-                "macCertPath" to (macCertPath ?: ""),
-                "macProvisioningProfile" to (macProvisioningProfile ?: "")
+            "azureVaultUri" to (azureVaultUri ?: ""),
+            "azureTenantId" to (azureTenantId ?: ""),
+            "azureClientId" to (azureClientId ?: ""),
+            "azureCertificateName" to (azureCertificateName ?: ""),
+            "macCertPath" to (macCertPath ?: ""),
+            "macProvisioningProfile" to (macProvisioningProfile ?: ""),
+            "appleIssuerId" to (appleIssuerId ?: ""),
+            "appleKeyId" to (appleKeyId ?: ""),
+            "applePrivateApiKey" to (applePrivateApiKey ?: ""),
         )
 
         if (appStoreOnly) {
