@@ -2,7 +2,7 @@
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation; either
-    version 2 of the license, or (at your option) any later version.
+    version 2 of the license or (at your option) any later version.
 */
 
 package org.gjt.jclasslib.browser.detail.attributes
@@ -14,7 +14,6 @@ import org.gjt.jclasslib.browser.detail.TableDetailPane
 import org.gjt.jclasslib.structures.attributes.StackMapFrameEntry
 import org.gjt.jclasslib.structures.attributes.StackMapTableAttribute
 import org.gjt.jclasslib.util.MultiLineHtmlCellHandler
-import java.util.*
 import javax.swing.JTable
 
 class StackMapTableAttributeDetailPane(services: BrowserServices) : TableDetailPane<StackMapTableAttribute>(StackMapTableAttribute::class.java, services) {
