@@ -97,7 +97,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
 
     private fun updateContents() {
         removeAll()
-        if (recentWorkspaces.size > 0) {
+        if (recentWorkspaces.isNotEmpty()) {
             val workspaceOpenListener = ActionListener { event ->
                 isPopupMenuVisible = false
                 EventQueue.invokeLater { frame.openWorkspace(File((event.source as JMenuItem).text)) }

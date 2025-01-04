@@ -59,7 +59,6 @@ class AccessFlagsEditDialog(selectedValue: Int, validFlags: Set<AccessFlag>, par
     : FlagsEditDialog<AccessFlag>(selectedValue, validFlags, parentWindow, delegateName
 ) {
     override fun getFlagText(flag: AccessFlag): String {
-        @Suppress("HardCodedStringLiteral")
         val extraText = " (0x" + "%04x".format(flag.flag) +
                 (flag.sinceJava?.let { ", " + getString("access.flag.since.0", it) } ?: "") +
                 (if (flag.historical) ", " + getString("access.flag.historical") else "") +

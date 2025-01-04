@@ -29,12 +29,12 @@ class AttributeEditorKit : StyledEditorKit() {
         override fun isVisible() = true
         override fun getMinimumSpan(axis: Int) = getPreferredSpan(axis)
         override fun getResizeWeight(axis: Int) = when (axis) {
-            View.X_AXIS -> 1
-            View.Y_AXIS -> 0
+            X_AXIS -> 1
+            Y_AXIS -> 0
             else -> throw IllegalArgumentException("Invalid axis: $axis")
         }
 
-        override fun getAlignment(axis: Int) = if (axis == View.X_AXIS) {
+        override fun getAlignment(axis: Int) = if (axis == X_AXIS) {
             0f
         } else {
             super.getAlignment(axis)

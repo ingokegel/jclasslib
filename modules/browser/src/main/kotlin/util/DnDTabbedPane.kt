@@ -301,7 +301,7 @@ open class DnDTabbedPane : JTabbedPane() {
         val ghostHeight: Int
             get() = draggingGhost?.getHeight(this) ?: 0
 
-        public override fun paintComponent(g: Graphics) {
+        override fun paintComponent(g: Graphics) {
             if (draggingGhost == null || !drawDrag) {
                 return
             }

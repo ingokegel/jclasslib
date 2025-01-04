@@ -86,11 +86,8 @@ fun initUiFacades() {
         private fun getProject(parent: Component?) : Project? = getToolWindow(parent)?.project
 
         private fun getToolWindow(parent: Component?) =
-            if (parent is BytecodeToolWindowPanel) {
-                parent
-            } else {
-                (SwingUtilities.getAncestorOfClass(BytecodeToolWindowPanel::class.java, parent) as BytecodeToolWindowPanel?)
-            }
+            parent as? BytecodeToolWindowPanel
+                ?: SwingUtilities.getAncestorOfClass(BytecodeToolWindowPanel::class.java, parent) as BytecodeToolWindowPanel?
 
         private fun combineMessage(mainMessage: String, contentMessage: String?): String =
             if (contentMessage != null) {

@@ -117,7 +117,7 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
                     opcode
             ) as Opcode?
             if (newOpcode != null && newOpcode != opcode) {
-                val newInstruction = ByteCodeReader.createInstruction(newOpcode, (instruction as? HasWide)?.isWide ?: false)
+                val newInstruction = ByteCodeReader.createInstruction(newOpcode, (instruction as? HasWide)?.isWide == true)
                 newInstruction.copyFrom(instruction)
                 val offset = instruction.offset
                 modifyInstructions { instructions ->

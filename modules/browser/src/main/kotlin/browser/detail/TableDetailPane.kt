@@ -20,7 +20,10 @@ import java.awt.Point
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
 import java.util.*
-import javax.swing.*
+import javax.swing.JComponent
+import javax.swing.JTable
+import javax.swing.ListSelectionModel
+import javax.swing.UIManager
 import javax.swing.border.Border
 import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent
@@ -161,7 +164,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
 
     private class NoFocusTableCellRenderer : DefaultTableCellRenderer() {
         init {
-            verticalAlignment = JLabel.TOP
+            verticalAlignment = TOP
         }
         override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)

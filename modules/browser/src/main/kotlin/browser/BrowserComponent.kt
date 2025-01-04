@@ -43,7 +43,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
 
         }
         set(browserPath) {
-            if (browserPath == null || browserPath.pathComponents.size == 0) {
+            if (browserPath == null || browserPath.pathComponents.isEmpty()) {
                 treePane.tree.addSelectionRow(0)
             } else {
                 val path = buildPath(browserPath.pathComponents)

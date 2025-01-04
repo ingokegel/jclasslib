@@ -261,7 +261,7 @@ class BrowserFrame : JFrame() {
         get() = if (isMaximized) getDefaultFrameBounds() else bounds
 
     private val isMaximized: Boolean
-        get() = extendedState and Frame.MAXIMIZED_BOTH != 0
+        get() = extendedState and MAXIMIZED_BOTH != 0
 
     private val frameContent: FrameContent = FrameContent(this)
 
@@ -693,7 +693,7 @@ class BrowserFrame : JFrame() {
         bounds = screenBounds.intersection(frameBounds)
 
         if (preferences.getBoolean(SETTINGS_WINDOW_MAXIMIZED, false)) {
-            extendedState = Frame.MAXIMIZED_BOTH
+            extendedState = MAXIMIZED_BOTH
         }
 
     }

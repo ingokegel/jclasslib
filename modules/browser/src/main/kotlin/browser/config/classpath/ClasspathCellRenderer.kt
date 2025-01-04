@@ -12,7 +12,6 @@ import javax.swing.DefaultListCellRenderer
 import javax.swing.JList
 import javax.swing.UIManager
 
-@Suppress("HardCodedStringLiteral")
 class ClasspathCellRenderer : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(list: JList<*>, value: Any?, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
         val entry = value as ClasspathFileEntry?

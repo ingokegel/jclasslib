@@ -15,7 +15,6 @@ import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JComponent
 import javax.swing.JDialog
-import javax.swing.WindowConstants
 
 abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialog(parentWindow, title) {
     protected val okAction = DefaultAction(BrowserBundle.getString("action.ok")) {
@@ -73,7 +72,7 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
             pack()
         }
         isModal = true
-        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
+        defaultCloseOperation = DO_NOTHING_ON_CLOSE
     }
 
     protected open fun isPack(): Boolean {
