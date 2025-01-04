@@ -30,7 +30,7 @@ fun Project.configurePublishing() {
             dependsOn("publishModulePublicationToMavenLocal", "jar")
         }
 
-        create("publishToCentral") {
+        register("publishToCentral") {
             dependsOn("publishModulePublicationToOssrhRepository")
         }
 

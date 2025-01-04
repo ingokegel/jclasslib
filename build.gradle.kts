@@ -76,7 +76,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "8.10.1"
+        gradleVersion = "8.12"
         distributionType = Wrapper.DistributionType.ALL
     }
 
@@ -90,7 +90,7 @@ tasks {
     }
 
     updateDaemonJvm {
-        jvmVersion = JavaVersion.VERSION_17
+        jvmVersion = JavaLanguageVersion.of(17)
     }
 }
 

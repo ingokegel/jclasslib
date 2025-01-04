@@ -5,7 +5,6 @@ plugins {
 }
 
 val install4jHomeDir: String? by project
-val winCertPath: String? by project
 val macCertPath: String? by project
 val winKeystorePassword: String? by project
 val macKeystorePassword: String? by project
@@ -29,6 +28,11 @@ tasks {
         delete(rootProject.file("media"))
     }
 
+    val externalWinKeystorePassword = winKeystorePassword
+    val externalMacKeystorePassword = macKeystorePassword
+    val externalAppleId = appleId
+    val externalAppleIdPassword = appleIdPassword
+
     register<Install4jTask>("media") {
         dependsOn(":dist", ":clean")
         group = "Build"
@@ -36,11 +40,11 @@ tasks {
 
         projectFile = file("resources/jclasslib.install4j")
         release = version as String
-        disableSigning = !project.hasProperty("winCertPath") || !project.hasProperty("macCertPath")
-        winKeystorePassword = this@Installer_gradle.winKeystorePassword ?: ""
-        macKeystorePassword = this@Installer_gradle.macKeystorePassword ?: ""
-        appleId = this@Installer_gradle.appleId ?: ""
-        appleIdPassword = this@Installer_gradle.appleIdPassword ?: ""
+        disableSigning = !project.hasProperty("macCertPath")
+        winKeystorePassword = externalWinKeystorePassword ?: ""
+        macKeystorePassword = externalMacKeystorePassword ?: ""
+        appleId = externalAppleId ?: ""
+        appleIdPassword = externalAppleIdPassword ?: ""
 
         variables = mapOf(
                 "azureVaultUri" to (azureVaultUri ?: ""),
