@@ -111,7 +111,7 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     /**
-     * Register the constant pool entry at a given index, so that it can
+     * Register the constant pool entry at a given index so that it can
      * be found through the getConstantPoolIndex method.
      *
      * @param index the index
@@ -121,7 +121,7 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     /**
-     * Unregister the constant pool entry at a given index, so that it can
+     * Unregister the constant pool entry at a given index so that it can
      * no longer be found through the getConstantPoolIndex method.
      *
      * @param index the index
@@ -200,7 +200,7 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     /**
-     * Get the index of a field for given field name and signature or -1 if not found.
+     * Get the index of a field for the given field name and signature or -1 if not found.
      * @param name       the field name.
      * @param descriptor the signature.
      */
@@ -216,7 +216,7 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     /**
-     * Get the FieldInfo for given field name and signature or null if not found.
+     * Get the FieldInfo for the given field name and signature or null if not found.
      * @param name       the field name.
      * @param descriptor the signature.
      */
@@ -227,7 +227,7 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     /**
-     * Get the index of a method for given method name and signature or -1 if not found.
+     * Get the index of a method for the given method name and signature or -1 if not found.
      * @param name       the method name.
      * @param descriptor the signature.
      */

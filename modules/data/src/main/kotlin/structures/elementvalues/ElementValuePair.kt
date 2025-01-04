@@ -51,7 +51,7 @@ class ElementValuePair private constructor() : SubStructure() {
         get() = "with elementNameIndex $elementNameIndex"
 
     /**
-     * Length of the the structure in bytes.
+     * Length of the structure in bytes.
      */
     override val length: Int
         get() = 2 + elementValue.length

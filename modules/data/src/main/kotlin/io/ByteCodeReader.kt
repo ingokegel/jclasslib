@@ -20,7 +20,7 @@ object ByteCodeReader {
     /**
      * Converts the code to a list of instructions.
      * @param code the code as an array of bytes from which to read the instructions
-     * @param prependInstructions an array of instructions that is prepended, may be null
+     * @param prependInstructions an array of instructions that is prepended. May be null.
      * @return the list of instructions
      */
     @Throws(IOException::class)

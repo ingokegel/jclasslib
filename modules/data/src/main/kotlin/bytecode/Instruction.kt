@@ -38,7 +38,7 @@ abstract class Instruction(val opcode: Opcode) {
     /**
      * Read this instruction from the given ByteCodeInput.
      * Expects ByteCodeInput to be in JVM class file format and just
-     * before a instruction of this kind.
+     * before an instruction of this kind.
      * @param input the ByteCodeInput from which to read
      */
     open fun read(input: ByteCodeInput) {

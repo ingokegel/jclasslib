@@ -8,7 +8,7 @@
 package org.gjt.jclasslib.structures
 
 /**
- * Base class for all constant pool entries in the constants package.
+ * Base class for all constant pool entries in the "constants" package.
  */
 abstract class Constant : Structure() {
 

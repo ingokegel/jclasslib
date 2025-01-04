@@ -1,6 +1,6 @@
 # Module data
 
-This module contains the code that can reads and write Java bytecode.
+This module contains the code that can read and write Java bytecode.
 
 # Package org.gjt.jclasslib.bytecode
 

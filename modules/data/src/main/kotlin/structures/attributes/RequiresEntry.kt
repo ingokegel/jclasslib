@@ -22,7 +22,7 @@ class RequiresEntry : SubStructure() {
     var index: Int = 0
 
     /**
-     * The flags of the requires statement.
+     * The flags of the "requires" statement.
      */
     var flags: Int = 0
 

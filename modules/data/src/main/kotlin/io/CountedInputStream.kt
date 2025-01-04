@@ -13,7 +13,7 @@ import java.io.IOException
 import java.io.InputStream
 
 /**
- * InputStream which counts the number of bytes read.
+ * An InputStream which counts the number of bytes read.
  */
 @Suppress("NOT_DOCUMENTED")
 class CountedInputStream(input: InputStream) : FilterInputStream(input) {

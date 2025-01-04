@@ -80,7 +80,7 @@ abstract class Structure {
 
     /**
      * Utility method for derived structures. Format a class file flag as
-     * a space separated list of verbose modifiers.
+     * a space-separated list of verbose modifiers.
      * @param availableFlags array with the flags available for the derived structure
      * @param flags the unsigned short value to print in verbose form
      * @return the verbose description

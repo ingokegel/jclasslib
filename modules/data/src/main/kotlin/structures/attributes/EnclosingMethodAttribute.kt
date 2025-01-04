@@ -15,7 +15,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an  EnclosingMethod attribute structure.
+ * Describes an EnclosingMethod attribute structure.
  */
 class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
@@ -35,7 +35,7 @@ class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
 
     /**
      * Constant pool index of the CONSTANT_NameAndType_info
-     * structure representing the name and type of a method in the class
+     * structure representing the name and the type of a method in the class
      * referenced by the class info index above.
      */
     var methodInfoIndex: Int = 0

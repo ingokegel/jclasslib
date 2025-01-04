@@ -14,7 +14,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an LineNumberTable attribute structure.
+ * Describes a LineNumberTable attribute structure.
  */
 class LineNumberTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 

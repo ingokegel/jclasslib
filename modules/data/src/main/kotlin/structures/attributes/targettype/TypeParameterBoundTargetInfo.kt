@@ -11,7 +11,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Target info for a TypeAnnotation structure with a parameter index an a bound index.
+ * Target info for a TypeAnnotation structure with a parameter index and a bound index.
  */
 class TypeParameterBoundTargetInfo : TargetInfo() {
 

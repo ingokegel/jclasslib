@@ -25,7 +25,7 @@ constructor(immediateShort: Int = 0, var count: Int = 0) : ImmediateShortInstruc
         super.read(input)
 
         count = input.readUnsignedByte()
-        // Next byte is always 0 and thus discarded
+        // The next byte is always 0 and thus discarded
         input.readByte()
     }
 

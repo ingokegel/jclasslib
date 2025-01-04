@@ -23,7 +23,7 @@ constructor(immediateShort: Int = 0) : ImmediateShortInstruction(Opcode.INVOKEDY
     override fun read(input: ByteCodeInput) {
         super.read(input)
 
-        // Next two bytes are always 0 and thus discarded
+        // The next two bytes are always 0 and thus discarded
         input.readUnsignedShort()
     }
 

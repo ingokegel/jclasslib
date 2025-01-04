@@ -10,7 +10,7 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.structures.Structure
 
 /**
- * Base class for all sub-structures that are used in attribute infos.
+ * Base class for all substructures that are used in attribute infos.
  */
 abstract class SubStructure : Structure() {
 

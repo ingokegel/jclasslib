@@ -23,7 +23,7 @@ abstract class ConstantNumeric(classFile: ClassFile) : AbstractConstant(classFil
     var bytes: Int = 0
 
     /**
-     * Get the the bytes field of this constant pool
+     * Get the bytes field of this constant pool
      * entry as a hex string.
      */
     val formattedBytes: String

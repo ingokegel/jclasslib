@@ -28,14 +28,14 @@ abstract class ConstantLargeNumeric(classFile: ClassFile) : AbstractConstant(cla
     var lowBytes: Int = 0
 
     /**
-     * Get the the high_bytes field of this constant pool
+     * Get the high_bytes field of this constant pool
      * entry as a hex string.
      */
     val formattedHighBytes: String
         get() = formatBytes(highBytes)
 
     /**
-     * Get the the low_bytes field of this constant pool
+     * Get the low_bytes field of this constant pool
      * entry as a hex string.
      */
     val formattedLowBytes: String

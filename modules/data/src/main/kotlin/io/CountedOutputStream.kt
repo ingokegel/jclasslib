@@ -13,7 +13,7 @@ import java.io.IOException
 import java.io.OutputStream
 
 /**
- * OutputStream which counts the number of bytes written.
+ * Ab OutputStream which counts the number of bytes written.
  */
 @Suppress("NOT_DOCUMENTED")
 class CountedOutputStream(outputStream: OutputStream) : FilterOutputStream(outputStream) {

@@ -21,7 +21,7 @@ class LookupSwitchInstruction : PaddedInstruction(Opcode.LOOKUPSWITCH) {
     var defaultOffset: Int = 0
 
     /**
-     * Match-offset pairs of the branch of this instruction as
+     * Match-offset pairs of the branches of this instruction as
      * a java.util.List of MatchOffsetPair
      * elements.
      * @return the list

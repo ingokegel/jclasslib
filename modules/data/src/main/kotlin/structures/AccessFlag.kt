@@ -120,7 +120,7 @@ enum class AccessFlag(
                 SYNTHETIC)
 
         /**
-         * Access flags for MethodParameters attribute
+         * Access flags for the MethodParameters attribute
          */
         val METHOD_PARAMETERS_ACCESS_FLAGS = enumSet(
                 FINAL,

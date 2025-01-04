@@ -13,7 +13,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an SourceDebugExtension attribute structure.
+ * Describes a SourceDebugExtension attribute structure.
  */
 class SourceDebugExtensionAttribute(private val attributeLength: Int, classFile: ClassFile) : AttributeInfo(classFile) {
 

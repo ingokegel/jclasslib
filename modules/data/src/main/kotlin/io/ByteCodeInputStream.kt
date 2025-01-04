@@ -11,7 +11,7 @@ import java.io.DataInputStream
 import java.io.InputStream
 
 /**
- * DataInputStream which extends ByteCodeInput.
+ * A DataInputStream which extends ByteCodeInput.
  */
 class ByteCodeInputStream(input: InputStream) : DataInputStream(CountedInputStream(input)), ByteCodeInput {
 

@@ -12,7 +12,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes a "exports" or "opens" statement in a Module attribute structure.
+ * Describes an "exports" or "opens" statement in a Module attribute structure.
  */
 class ExportsEntry : SubStructure() {
 

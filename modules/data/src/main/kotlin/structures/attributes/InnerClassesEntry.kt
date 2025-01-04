@@ -12,7 +12,7 @@ import java.io.DataInput
 import java.io.DataOutput
 
 /**
- * Describes an entry in a InnerClasses attribute structure.
+ * Describes an entry in an InnerClasses attribute structure.
  */
 class InnerClassesEntry : SubStructure() {
 

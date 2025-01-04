@@ -30,7 +30,7 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
     var maxLocals: Int = 0
 
     /**
-     * Code of this code attribute as an array of bytes.
+     * The code of this attribute as an array of bytes.
      */
     var code: ByteArray = ByteArray(0)
 
