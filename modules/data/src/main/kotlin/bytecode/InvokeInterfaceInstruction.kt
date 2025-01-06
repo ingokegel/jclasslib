@@ -7,21 +7,19 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Describes the invokeinterface instruction.
  * @property count Argument count of this instruction.
  */
-class InvokeInterfaceInstruction
-@JvmOverloads
-constructor(immediateShort: Int = 0, var count: Int = 0) : ImmediateShortInstruction(Opcode.INVOKEINTERFACE, immediateShort) {
+class InvokeInterfaceInstruction(immediateShort: Int = 0, var count: Int = 0) : ImmediateShortInstruction(Opcode.INVOKEINTERFACE, immediateShort) {
 
     override val size: Int
         get() = super.size + 2
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         count = input.readUnsignedByte()
@@ -29,7 +27,7 @@ constructor(immediateShort: Int = 0, var count: Int = 0) : ImmediateShortInstruc
         input.readByte()
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         output.writeByte(count)

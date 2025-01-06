@@ -10,7 +10,7 @@ package org.gjt.jclasslib.browser.detail.attributes.code
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
 import org.gjt.jclasslib.browser.detail.attributes.document.LineNumberCounts
 import org.gjt.jclasslib.bytecode.*
-import org.gjt.jclasslib.io.ByteCodeReader
+import org.gjt.jclasslib.io.readByteCode
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
@@ -34,7 +34,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
     fun getPosition(offset: Int): Int = offsetToPosition[offset] ?: 0
 
     override fun addContent(): LineNumberCounts {
-        val instructions = ByteCodeReader.readByteCode(attribute.code)
+        val instructions = readByteCode(attribute.code)
         lastInstructions = instructions
         verifyOffsets(instructions)
         calculateOffsetWidth(instructions)
@@ -94,7 +94,7 @@ class ByteCodeDocument(styles: StyleContext, private val attribute: CodeAttribut
         } else if (opcode === Opcode.NEWARRAY) {
             val verbose: String = try {
                 NewArrayType.getFromTag(immediateByte).verbose
-            } catch (e: InvalidByteCodeException) {
+            } catch (_: InvalidByteCodeException) {
                 "invalid array type"
             }
             appendString(" $immediateByte ($verbose)", STYLE_IMMEDIATE_VALUE)

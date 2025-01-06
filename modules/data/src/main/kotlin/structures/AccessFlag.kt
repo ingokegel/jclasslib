@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.structures
 
-import java.util.*
 
 /**
  * Defines access flags constants and verbose expressions as defined by
@@ -155,8 +154,8 @@ enum class AccessFlag(
                 MANDATED
         )
 
-        private fun enumSet(accessFlag: AccessFlag, vararg accessFlags: AccessFlag): EnumSet<AccessFlag> =
-            EnumSet.of(accessFlag, *accessFlags)
+        private fun enumSet(accessFlag: AccessFlag, vararg accessFlags: AccessFlag): Set<AccessFlag> =
+            setOf(accessFlag, *accessFlags)
     }
 
 }

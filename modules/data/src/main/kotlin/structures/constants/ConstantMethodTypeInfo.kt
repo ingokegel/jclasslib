@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_MethodType_info constant pool data structure.
@@ -28,18 +27,15 @@ class ConstantMethodTypeInfo(classFile: ClassFile) : AbstractConstant(classFile)
         get() = ConstantType.METHOD_TYPE
 
     override val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = name
 
     /**
      * The descriptor.
      */
     val name: String
-        @Throws(InvalidByteCodeException::class)
         get() = typeConstant.string
 
     val typeConstant: ConstantUtf8Info
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(descriptorIndex)
 
     override fun readData(input: DataInput) {

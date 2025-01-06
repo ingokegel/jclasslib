@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 
 /**
  * Describes an entry in a StackMapFrameEntry attribute structure.
@@ -16,12 +16,12 @@ import java.io.DataOutput
  */
 open class VerificationTypeInfoEntry(val type: VerificationType) : SubStructure() {
 
-    override fun writeData(output: DataOutput) {
-        output.writeByte(type.tag)
-    }
-
     override fun readData(input: DataInput) {
 
+    }
+
+    override fun writeData(output: DataOutput) {
+        output.writeByte(type.tag)
     }
 
     override val debugInfo: String
@@ -39,5 +39,4 @@ open class VerificationTypeInfoEntry(val type: VerificationType) : SubStructure(
     open fun appendTo(buffer: StringBuilder) {
         buffer.append(type)
     }
-
 }

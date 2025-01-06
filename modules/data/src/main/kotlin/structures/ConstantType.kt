@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.structures.constants.*
-import java.io.DataInput
 
 /**
  * Describes all different constant types in the constant pool of a class file.
@@ -121,9 +121,9 @@ enum class ConstantType(override val tag: Int, val verbose: String, val size: In
 
 
     /**
-     * Read the corresponding constant pool structure from the input stream.
+     * Read the corresponding constant pool structure from the DataInput.
      * @param classFile the class file of which this structure is part of
-     * @param input the input stream from which to read the structure.
+     * @param input the input from which to read the structure.
      */
     fun read(classFile: ClassFile, input: DataInput): Constant {
         return create(classFile, input).apply {

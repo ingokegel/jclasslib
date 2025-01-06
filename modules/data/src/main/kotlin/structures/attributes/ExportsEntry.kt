@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AccessFlag
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an "exports" or "opens" statement in a Module attribute structure.

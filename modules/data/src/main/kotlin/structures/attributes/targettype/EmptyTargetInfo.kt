@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 
 /**
  * Target info for a TypeAnnotation structure with empty content.
@@ -21,10 +21,10 @@ class EmptyTargetInfo : TargetInfo() {
     override val verbose: String
         get() = "<none>"
 
-    override fun writeData(output: DataOutput) {
+    override fun readData(input: DataInput) {
     }
 
-    override fun readData(input: DataInput) {
+    override fun writeData(output: DataOutput) {
     }
 
     override val debugInfo: String

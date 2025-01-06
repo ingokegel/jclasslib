@@ -9,7 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.structures.ClassFile
 
 /**
- * Describes an  RuntimeInvisibleAnnotations attribute structure.
+ * Describes a RuntimeInvisibleAnnotations attribute structure.
  */
 class RuntimeInvisibleAnnotationsAttribute(classFile: ClassFile) : RuntimeAnnotationsAttribute(classFile) {
 

@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.attributes.*
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Implemented by structures that have attributes.
@@ -44,9 +44,9 @@ interface AttributeContainer {
         val attributesCount = input.readUnsignedShort()
         if (java.lang.Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_ATTRIBUTES)) {
             attributes = Array(attributesCount) {
-                input.skipBytes(2)
+                input.skip(2)
                 val attributeLength = input.readInt()
-                input.skipBytes(attributeLength)
+                input.skip(attributeLength)
                 UnknownAttribute(attributeLength, classFile)
             }
         } else {

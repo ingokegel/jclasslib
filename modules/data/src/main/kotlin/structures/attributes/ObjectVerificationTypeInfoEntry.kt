@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an entry of type [VerificationType.OBJECT] in a StackMapFrameEntry attribute structure.

@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.constants.ConstantClassInfo
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * The class file structure in which all other structures are hooked up.
@@ -134,7 +134,6 @@ class ClassFile : Structure(), AttributeContainer {
      * The name of this class.
      */
     val thisClassName: String
-        @Throws(InvalidByteCodeException::class)
         get() = getConstantPoolEntryName(thisClass)
 
     /**
@@ -147,7 +146,6 @@ class ClassFile : Structure(), AttributeContainer {
      * The name of the super class.
      */
     val superClassName: String
-        @Throws(InvalidByteCodeException::class)
         get() = getConstantPoolEntryName(superClass)
 
     /**
@@ -157,7 +155,7 @@ class ClassFile : Structure(), AttributeContainer {
         get() = formatFlags(accessFlags)
 
     /**
-     * The verbose description of the access flags of this class.
+     * The verbose description for the access flags of this class.
      */
     val accessFlagsVerbose: String
         get() = formatFlagsVerbose(AccessFlag.CLASS_ACCESS_FLAGS, accessFlags)
@@ -166,7 +164,6 @@ class ClassFile : Structure(), AttributeContainer {
      * The ConstantUtf8Info constant pool entry at the specified index.
      * @param index the index
      */
-    @Throws(InvalidByteCodeException::class)
     fun getConstantPoolUtf8Entry(index: Int): ConstantUtf8Info =
             getConstantPoolEntry(index, ConstantUtf8Info::class.java)
 
@@ -175,7 +172,6 @@ class ClassFile : Structure(), AttributeContainer {
      * @param index the index
      * @param entryClass the required subtype of CPInfo
      */
-    @Throws(InvalidByteCodeException::class)
     fun <T : Constant> getConstantPoolEntry(index: Int, entryClass: Class<T>): T {
         checkValidConstantPoolIndex(index)
 
@@ -188,12 +184,11 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     /**
-     * Get an approximate verbose description of the content of the constant pool entry
+     * Get an approximate verbose description for the content of the constant pool entry
      * at the specified index.
      *
      * @param index the index
      */
-    @Throws(InvalidByteCodeException::class)
     fun getConstantPoolEntryName(index: Int): String {
         checkValidConstantPoolIndex(index)
         return constantPool[index].verbose
@@ -204,7 +199,6 @@ class ClassFile : Structure(), AttributeContainer {
      * @param name       the field name.
      * @param descriptor the signature.
      */
-    @Throws(InvalidByteCodeException::class)
     fun getFieldIndex(name: String, descriptor: String): Int {
 
         fields.forEachIndexed { i, fieldInfo ->
@@ -220,7 +214,6 @@ class ClassFile : Structure(), AttributeContainer {
      * @param name       the field name.
      * @param descriptor the signature.
      */
-    @Throws(InvalidByteCodeException::class)
     fun getField(name: String, descriptor: String): FieldInfo? {
         val index = getFieldIndex(name, descriptor)
         return if (index < 0) null else fields[index]
@@ -231,7 +224,6 @@ class ClassFile : Structure(), AttributeContainer {
      * @param name       the method name.
      * @param descriptor the signature.
      */
-    @Throws(InvalidByteCodeException::class)
     fun getMethodIndex(name: String, descriptor: String): Int {
         methods.forEachIndexed { i, methodInfo ->
             if (methodInfo.name == name && methodInfo.descriptor == descriptor) {
@@ -242,11 +234,10 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     /**
-     * Get the MethodInfo for given method name and signature or null if not found.
+     * Get the MethodInfo for the given method name and signature or null if not found.
      * @param name       the method name.
      * @param descriptor the signature.
      */
-    @Throws(InvalidByteCodeException::class)
     fun getMethod(name: String, descriptor: String): MethodInfo? {
         val index = getMethodIndex(name, descriptor)
         return if (index < 0) null else methods[index]
@@ -296,9 +287,9 @@ class ClassFile : Structure(), AttributeContainer {
         if (isDebug) debug("read magic number", input)
     }
 
-    private fun writeMagicNumber(out: DataOutput) {
-        out.writeInt(MAGIC_NUMBER)
-        if (isDebug) debug("wrote magic number", out)
+    private fun writeMagicNumber(output: DataOutput) {
+        output.writeInt(MAGIC_NUMBER)
+        if (isDebug) debug("wrote magic number", output)
     }
 
     private fun readVersion(input: DataInput) {
@@ -311,12 +302,12 @@ class ClassFile : Structure(), AttributeContainer {
         checkMajorVersion(majorVersion)
     }
 
-    private fun writeVersion(out: DataOutput) {
-        out.writeShort(minorVersion)
-        if (isDebug) debug("wrote minor version $minorVersion", out)
+    private fun writeVersion(output: DataOutput) {
+        output.writeShort(minorVersion)
+        if (isDebug) debug("wrote minor version $minorVersion", output)
 
-        out.writeShort(majorVersion)
-        if (isDebug) debug("wrote major version $majorVersion", out)
+        output.writeShort(majorVersion)
+        if (isDebug) debug("wrote major version $majorVersion", output)
 
         checkMajorVersion(majorVersion)
     }
@@ -348,14 +339,14 @@ class ClassFile : Structure(), AttributeContainer {
         }
     }
 
-    private fun writeConstantPool(out: DataOutput) {
-        out.writeShort(constantPool.size)
-        if (isDebug) debug("wrote constant pool count ${constantPool.size}", out)
+    private fun writeConstantPool(output: DataOutput) {
+        output.writeShort(constantPool.size)
+        if (isDebug) debug("wrote constant pool count ${constantPool.size}", output)
 
         constantPool.forEachIndexed { i, cpInfo ->
             if (cpInfo != ConstantPlaceholder) {
-                if (isDebug) debug("writing constant pool entry $i", out)
-                cpInfo.write(out)
+                if (isDebug) debug("writing constant pool entry $i", output)
+                cpInfo.write(output)
             }
         }
     }
@@ -401,14 +392,14 @@ class ClassFile : Structure(), AttributeContainer {
         }
     }
 
-    private fun writeInterfaces(out: DataOutput) {
+    private fun writeInterfaces(output: DataOutput) {
         val interfacesCount = interfaces.size
-        out.writeShort(interfacesCount)
-        if (isDebug) debug("wrote interfaces count $interfacesCount", out)
+        output.writeShort(interfacesCount)
+        if (isDebug) debug("wrote interfaces count $interfacesCount", output)
 
         interfaces.forEach {
-            out.writeShort(it)
-            if (isDebug) debug("wrote interface index $it", out)
+            output.writeShort(it)
+            if (isDebug) debug("wrote interface index $it", output)
         }
     }
 
@@ -423,12 +414,12 @@ class ClassFile : Structure(), AttributeContainer {
         }
     }
 
-    private fun writeFields(out: DataOutput) {
+    private fun writeFields(output: DataOutput) {
         val fieldsCount = fields.size
-        out.writeShort(fieldsCount)
-        if (isDebug) debug("wrote fields count $fieldsCount", out)
+        output.writeShort(fieldsCount)
+        if (isDebug) debug("wrote fields count $fieldsCount", output)
 
-        fields.forEach { it.write(out) }
+        fields.forEach { it.write(output) }
     }
 
     private fun readMethods(input: DataInput) {
@@ -443,12 +434,12 @@ class ClassFile : Structure(), AttributeContainer {
         }
     }
 
-    private fun writeMethods(out: DataOutput) {
+    private fun writeMethods(output: DataOutput) {
         val methodsCount = methods.size
-        out.writeShort(methodsCount)
-        if (isDebug) debug("wrote methods count $methodsCount", out)
+        output.writeShort(methodsCount)
+        if (isDebug) debug("wrote methods count $methodsCount", output)
 
-        methods.forEach { it.write(out) }
+        methods.forEach { it.write(output) }
     }
 
     private fun checkMajorVersion(majorVersion: Int) {

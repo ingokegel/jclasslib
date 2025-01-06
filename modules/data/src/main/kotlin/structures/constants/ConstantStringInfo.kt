@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_String_info constant pool data structure.
@@ -29,14 +28,12 @@ class ConstantStringInfo(classFile: ClassFile) : AbstractConstant(classFile) {
      * Returns the ConstantUtf8Info constant pool entry that contains the actual string.
      */
     val utf8Constant: ConstantUtf8Info
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(stringIndex)
 
     override val constantType: ConstantType
         get() = ConstantType.STRING
 
     override val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = utf8Constant.string
 
     override fun readData(input: DataInput) {

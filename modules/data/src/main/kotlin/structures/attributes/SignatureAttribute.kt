@@ -6,12 +6,11 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an  Signature attribute structure.
@@ -28,7 +27,6 @@ class SignatureAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
      * Returns the constant that is referenced by the [signatureIndex] index.
      */
     val signatureConstant: ConstantUtf8Info
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(signatureIndex)
 
     override fun readData(input: DataInput) {

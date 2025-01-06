@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 
 /**
  * Target info for a TypeAnnotation structure with a super class target.
@@ -16,7 +16,7 @@ import java.io.DataOutput
 class SupertypeTargetInfo : TargetInfo() {
 
     /**
-     * The index of the super type, 65535 if the super class is the target, otherwise
+     * The index of the super type, 65,535 if the super class is the target, otherwise
      * an index in the list of implemented interfaces.
      */
     var supertypeIndex: Int = 0

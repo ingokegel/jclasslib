@@ -7,25 +7,25 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Describes an instruction that branches to a different offset.
  */
 
-class BranchInstruction @JvmOverloads constructor(opcode: Opcode, branchOffset: Int = 0) : AbstractBranchInstruction(opcode, branchOffset) {
+class BranchInstruction(opcode: Opcode, branchOffset: Int = 0) : AbstractBranchInstruction(opcode, branchOffset) {
 
     override val size: Int
         get() = super.size + 2
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         branchOffset = input.readShort().toInt()
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         output.writeShort(branchOffset)

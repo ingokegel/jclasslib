@@ -16,8 +16,8 @@ import org.gjt.jclasslib.browser.detail.attributes.code.ByteCodeDocument.OffsetL
 import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
 import org.gjt.jclasslib.browser.detail.attributes.document.DocumentDetailPane
 import org.gjt.jclasslib.bytecode.*
-import org.gjt.jclasslib.io.ByteCodeReader
-import org.gjt.jclasslib.io.ByteCodeWriter
+import org.gjt.jclasslib.io.createInstruction
+import org.gjt.jclasslib.io.writeByteCode
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.util.GUIHelper.getParentWindow
@@ -117,7 +117,7 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
                     opcode
             ) as Opcode?
             if (newOpcode != null && newOpcode != opcode) {
-                val newInstruction = ByteCodeReader.createInstruction(newOpcode, (instruction as? HasWide)?.isWide == true)
+                val newInstruction = createInstruction(newOpcode, (instruction as? HasWide)?.isWide == true)
                 newInstruction.copyFrom(instruction)
                 val offset = instruction.offset
                 modifyInstructions { instructions ->
@@ -134,7 +134,7 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
         attributeDocument.lastInstructions?.let { instructions ->
             modifier(instructions)
             lastAttribute?.let {
-                it.code = ByteCodeWriter.writeByteCode(instructions)
+                it.code = writeByteCode(instructions)
             }
             removeActiveHighlight()
             modified()

@@ -6,8 +6,8 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 
 /**
  * Contains common attributes to a local variable table entry structure.

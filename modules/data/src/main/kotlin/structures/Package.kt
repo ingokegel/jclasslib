@@ -9,10 +9,11 @@
 
 package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.io.CountedDataInputStream
-import org.gjt.jclasslib.io.CountedDataOutputStream
-import java.io.DataInput
-import java.io.DataOutput
+import kotlinx.io.*
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import kotlin.reflect.KClass
 
 /**
@@ -33,18 +34,20 @@ internal fun warning(message: String) {
     println(message)
 }
 
+@OptIn(InternalIoApi::class)
 internal fun debug(message: String, input: DataInput) {
     print("[debug] ")
-    if (input is CountedDataInputStream) {
-        print("+" + input.bytesRead + " ")
+    (input as? CountingDataInput)?.let {
+        print("+" + it.bytesRead + " ")
     }
     println(message)
 }
 
+@OptIn(InternalIoApi::class)
 internal fun debug(message: String, output: DataOutput) {
     print("[debug] ")
-    if (output is CountedDataOutputStream) {
-        print("+" + output.bytesWritten + " ")
+    (output as? CountingDataOutput)?.let {
+        print("+" + it.bytesWritten + " ")
     }
     println(message)
 }
@@ -53,6 +56,12 @@ internal val Int.hex: String
     get() = "0x${Integer.toHexString(this)}"
 
 internal fun Int.paddedHex(length: Int): String = "0x" + this.toString(16).padStart(length, '0')
+
+internal fun Source.readUnsignedShort(): Int = readUShort().toInt()
+internal fun Sink.writeShort(value: Int) = writeUShort(value.toUShort())
+
+internal fun Source.readUnsignedByte(): Int = readUByte().toInt()
+internal fun Sink.writeByte(value: Int) = writeUByte(value.toUByte())
 
 private val arraySingletons = hashMapOf<KClass<*>, Array<*>>()
 

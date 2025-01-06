@@ -7,15 +7,13 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Describes the multianewarray instruction.
  */
-class MultianewarrayInstruction
-@JvmOverloads
-constructor(immediateShort: Int = 0) : ImmediateShortInstruction(Opcode.MULTIANEWARRAY, immediateShort) {
+class MultianewarrayInstruction(immediateShort: Int = 0) : ImmediateShortInstruction(Opcode.MULTIANEWARRAY, immediateShort) {
 
     /**
      * Number of dimensions for the new array.
@@ -25,13 +23,13 @@ constructor(immediateShort: Int = 0) : ImmediateShortInstruction(Opcode.MULTIANE
     override val size: Int
         get() = super.size + 1
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         dimensions = input.readUnsignedByte()
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         output.writeByte(dimensions)

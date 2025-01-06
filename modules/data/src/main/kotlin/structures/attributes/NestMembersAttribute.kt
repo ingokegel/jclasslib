@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.emptyArraySingleton
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a NestMembers attribute structure.
@@ -47,6 +47,5 @@ class NestMembersAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
          * Name of the attribute as in the corresponding constant pool entry.
          */
         const val ATTRIBUTE_NAME = "NestMembers"
-
     }
 }

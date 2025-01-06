@@ -21,7 +21,6 @@ abstract class AttributeInfo(protected val classFile: ClassFile) : Structure() {
      * Name of the attribute.
      */
     val name: String
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(attributeNameIndex).string
 
     /**

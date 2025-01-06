@@ -7,10 +7,10 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Base class for large numeric constant pool data structures.
@@ -42,13 +42,11 @@ abstract class ConstantLargeNumeric(classFile: ClassFile) : AbstractConstant(cla
         get() = formatBytes(lowBytes)
 
     override fun readData(input: DataInput) {
-
         highBytes = input.readInt()
         lowBytes = input.readInt()
     }
 
     override fun writeData(output: DataOutput) {
-
         output.writeInt(highBytes)
         output.writeInt(lowBytes)
     }

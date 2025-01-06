@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_MethodHandle_info constant pool data structure.
@@ -46,7 +45,6 @@ class ConstantMethodHandleInfo private constructor(classFile: ClassFile) : Abstr
         get() = ConstantType.METHOD_HANDLE
 
     override val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = name
 
     /**
@@ -54,24 +52,22 @@ class ConstantMethodHandleInfo private constructor(classFile: ClassFile) : Abstr
      * @return the descriptor
      */
     val name: String
-        @Throws(InvalidByteCodeException::class)
         get() = constantType.verbose + " " + referenceConstant.verbose
 
     /**
      * Returns the ConstantReference constant pool entry that contains the reference
      */
     val referenceConstant: ConstantReference
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(referenceIndex, ConstantReference::class.java)
 
     override fun readData(input: DataInput) {
-        type = MethodHandleType.getFromTag(input.readByte().toInt())
+        type = MethodHandleType.getFromTag(input.readUnsignedByte())
         referenceIndex = input.readUnsignedShort()
     }
 
     override fun writeData(output: DataOutput) {
         output.writeByte(ConstantType.METHOD_HANDLE.tag)
-        output.write(type.tag)
+        output.writeByte(type.tag)
         output.writeShort(referenceIndex)
     }
 

@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * The class file can contain non-standard attributes that can be read, but that are not interpreted.
@@ -22,14 +22,14 @@ class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : Attribu
     /**
      * Raw bytes of the unknown attribute.
      */
-    var info: ByteArray = ByteArray(byteArrayLength)
+    var info: ByteArray = byteArrayOf()
 
     override fun readData(input: DataInput) {
         // Uncomment to print out the attribute name and size
         //println(classFile.getConstantPoolUtf8Entry(attributeNameIndex).string)
         //println(byteArrayLength)
 
-        input.readFully(info)
+        info = input.readByteArray(byteArrayLength)
     }
 
     override fun writeData(output: DataOutput) {
@@ -44,7 +44,7 @@ class UnknownAttribute(val byteArrayLength: Int, classFile: ClassFile) : Attribu
     private fun getAttributeName(): String {
         return try {
             classFile.getConstantPoolUtf8Entry(attributeNameIndex).string
-        } catch (ex: InvalidByteCodeException) {
+        } catch (_: InvalidByteCodeException) {
             "(unknown)"
         }
     }

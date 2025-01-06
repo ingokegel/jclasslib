@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Describes the tableswitch instruction.
@@ -16,7 +16,7 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 class TableSwitchInstruction : PaddedInstruction(Opcode.TABLESWITCH) {
 
     /**
-     * Default offset of the branch of this instruction.
+     * Default offset for the branch of this instruction.
      */
     var defaultOffset: Int = 0
 
@@ -38,7 +38,7 @@ class TableSwitchInstruction : PaddedInstruction(Opcode.TABLESWITCH) {
     override val size: Int
         get() = super.size + 12 + 4 * jumpOffsets.size
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         defaultOffset = input.readInt()
@@ -54,7 +54,7 @@ class TableSwitchInstruction : PaddedInstruction(Opcode.TABLESWITCH) {
 
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         output.writeInt(defaultOffset)

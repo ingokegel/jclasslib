@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
@@ -117,39 +117,39 @@ class StackMapFrameEntry(private val classFile: ClassFile) : SubStructure() {
         }
     }
 
-    private fun writeOneStackItem(out: DataOutput) {
-        stackItems[0].write(out)
+    private fun writeOneStackItem(output: DataOutput) {
+        stackItems[0].write(output)
     }
 
-    private fun writeOneStackItemExt(out: DataOutput) {
-        out.writeShort(offsetDelta)
-        stackItems[0].write(out)
+    private fun writeOneStackItemExt(output: DataOutput) {
+        output.writeShort(offsetDelta)
+        stackItems[0].write(output)
     }
 
-    private fun writeChop(out: DataOutput) {
-        out.writeShort(offsetDelta)
+    private fun writeChop(output: DataOutput) {
+        output.writeShort(offsetDelta)
     }
 
-    private fun writeSameExt(out: DataOutput) {
-        out.writeShort(offsetDelta)
+    private fun writeSameExt(output: DataOutput) {
+        output.writeShort(offsetDelta)
     }
 
-    private fun writeAppend(out: DataOutput) {
-        out.writeShort(offsetDelta)
+    private fun writeAppend(output: DataOutput) {
+        output.writeShort(offsetDelta)
         for (localItem in localItems) {
-            localItem.write(out)
+            localItem.write(output)
         }
     }
 
-    private fun writeFull(out: DataOutput) {
-        out.writeShort(offsetDelta)
-        out.writeShort(localItems.size)
+    private fun writeFull(output: DataOutput) {
+        output.writeShort(offsetDelta)
+        output.writeShort(localItems.size)
         for (localItem in localItems) {
-            localItem.write(out)
+            localItem.write(output)
         }
-        out.writeShort(stackItems.size)
+        output.writeShort(stackItems.size)
         for (stackItem in stackItems) {
-            stackItem.write(out)
+            stackItem.write(output)
         }
     }
 

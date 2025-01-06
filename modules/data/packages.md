@@ -7,9 +7,9 @@ This module contains the code that can read and write Java bytecode.
 This package contains classes which are wrappers for opcode instructions contained
 in the `code` field of a `Code` attribute structure. These classes are not
 generated when reading the [org.gjt.jclasslib.structures.ClassFile] structure via
-the [org.gjt.jclasslib.io.ClassFileReader], they have to be created through the
-[org.gjt.jclasslib.io.ByteCodeReader] and converted back to bytecode with the
-[org.gjt.jclasslib.io.ByteCodeWriter].
+the [org.gjt.jclasslib.io.ClassFileReader], they have to be created through 
+[org.gjt.jclasslib.io.readByteCode] and converted back to bytecode with
+[org.gjt.jclasslib.io.writeByteCode].
 
 
 # Package org.gjt.jclasslib.io

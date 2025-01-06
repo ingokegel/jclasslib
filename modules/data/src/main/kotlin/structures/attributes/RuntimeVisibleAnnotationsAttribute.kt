@@ -10,7 +10,7 @@ import org.gjt.jclasslib.structures.ClassFile
 
 
 /**
- * Describes an RuntimeVisibleAnnotations attribute structure.
+ * Describes a RuntimeVisibleAnnotations attribute structure.
  */
 class RuntimeVisibleAnnotationsAttribute(classFile: ClassFile) : RuntimeAnnotationsAttribute(classFile) {
 

@@ -6,9 +6,9 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.attributes.SubStructure
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an ElementValuePair attribute structure.

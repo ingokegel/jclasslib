@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.attributes.SubStructure
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Local variable target for the LocalVarTargetInfo structure.

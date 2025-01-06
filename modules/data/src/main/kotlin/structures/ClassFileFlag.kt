@@ -8,7 +8,7 @@
 package org.gjt.jclasslib.structures
 
 /**
- * Implemented by enums that represent a bit-field flag.
+ * Implemented by enums that represent bit-field flags.
  */
 interface ClassFileFlag {
     /**

@@ -7,12 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes
 
-import org.gjt.jclasslib.structures.AttributeContainer
-import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.emptyArraySingleton
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
+import org.gjt.jclasslib.structures.*
 
 /**
  * Describes a Code attribute structure.
@@ -46,8 +43,8 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
         maxStack = input.readUnsignedShort()
         maxLocals = input.readUnsignedShort()
         val codeLength = input.readInt()
-        code = ByteArray(codeLength)
-        input.readFully(code)
+        code = input.readByteArray(codeLength)
+        if (isDebug) debug("read code with ${code.size} bytes", input)
 
         readExceptionTable(input)
         readAttributes(input, classFile)
@@ -58,24 +55,26 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
         output.writeShort(maxLocals)
         output.writeInt(code.size)
         output.write(code)
+        if (isDebug) debug("wrote code with ${code.size} bytes", output)
 
         writeExceptionTable(output)
         writeAttributes(output)
     }
 
     private fun readExceptionTable(input: DataInput) {
-
         val exceptionTableLength = input.readUnsignedShort()
         exceptionTable = Array(exceptionTableLength) {
             ExceptionTableEntry().apply {
                 read(input)
             }
         }
+        if (isDebug) debug("read exception table with ${exceptionTable.size} entries", input)
     }
 
     private fun writeExceptionTable(output: DataOutput) {
         output.writeShort(exceptionTable.size)
         exceptionTable.forEach { it.write(output) }
+        if (isDebug) debug("wrote exception table with ${exceptionTable.size} entries", output)
     }
 
     override fun getAttributeLength(): Int = 12 + code.size +

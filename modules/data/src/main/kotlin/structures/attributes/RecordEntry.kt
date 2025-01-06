@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeContainer
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an entry in a Record attribute structure.

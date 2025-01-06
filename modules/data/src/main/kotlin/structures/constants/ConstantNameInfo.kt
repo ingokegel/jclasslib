@@ -14,11 +14,10 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Base class for constant pool data structures that reference a name.
@@ -34,18 +33,15 @@ abstract class ConstantNameInfo(classFile: ClassFile) : AbstractConstant(classFi
      * Returns the ConstantUtf8Info constant pool entry that contains the actual string.
      */
     val nameConstant: ConstantUtf8Info
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(nameIndex)
 
     override val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = name
 
     /**
      * The referenced name.
      */
     val name: String
-        @Throws(InvalidByteCodeException::class)
         get() = nameConstant.string
 
     override fun readData(input: DataInput) {

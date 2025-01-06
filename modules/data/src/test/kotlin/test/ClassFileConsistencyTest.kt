@@ -7,9 +7,8 @@
 
 package org.gjt.jclasslib.test
 
-import org.gjt.jclasslib.io.ClassFileReader
-import org.gjt.jclasslib.io.ClassFileWriter
-import org.gjt.jclasslib.io.forEachClassInJrt
+import org.gjt.jclasslib.io.*
+import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.gjt.jclasslib.structures.isDebug
 import org.testng.annotations.Test
 import java.io.ByteArrayInputStream
@@ -159,6 +158,17 @@ class ClassFileConsistencyTest {
         val before = output.toByteArray()
 
         val classFile = ClassFileReader.readFromInputStream(inputStreamProvider.createInputStream())
+        classFile.methods.forEach { methodInfo ->
+            methodInfo.attributes.filterIsInstance<CodeAttribute>().firstOrNull()?.let { codeAttribute ->
+                val codeBefore = codeAttribute.code
+                val instructions = readByteCode(codeBefore)
+                val codeAfter = writeByteCode(instructions)
+                if (!codeBefore.contentEquals(codeAfter)) {
+                    println("ERROR in $className: bytecode difference for ${methodInfo.name}")
+                }
+            }
+        }
+
         val after = ClassFileWriter.writeToByteArray(classFile)
         val reportedClassName = className ?: classFile.thisClassName.replace('/', '.')
 

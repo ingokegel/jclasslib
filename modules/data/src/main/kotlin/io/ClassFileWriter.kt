@@ -9,8 +9,8 @@ package org.gjt.jclasslib.io
 
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import org.gjt.jclasslib.structures.isDebug
-import java.io.*
+import java.io.File
+import java.io.IOException
 import java.nio.file.Path
 
 /**
@@ -27,7 +27,7 @@ object ClassFileWriter {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     fun writeToFile(file: File, classFile: ClassFile) {
-        DataOutputStream(BufferedOutputStream(FileOutputStream(file)).wrapForDebug()).use { classFile.write(it) }
+        classFile.writeToPath(kotlinx.io.files.Path(file.path))
     }
 
     /**
@@ -38,7 +38,7 @@ object ClassFileWriter {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     fun writeToFile(path: Path, classFile: ClassFile) {
-        writeToFile(path.toFile(), classFile)
+        classFile.writeToPath(kotlinx.io.files.Path(path.toString()))
     }
 
     /**
@@ -47,12 +47,6 @@ object ClassFileWriter {
      */
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
-    fun writeToByteArray(classFile: ClassFile): ByteArray {
-        val result = ByteArrayOutputStream()
-        result.wrapForDebug().use { classFile.write(it) }
-        return result.toByteArray()
-    }
-
-    private fun OutputStream.wrapForDebug() = if (isDebug) CountedDataOutputStream(this) else DataOutputStream(this)
+    fun writeToByteArray(classFile: ClassFile): ByteArray = classFile.writeToByteArray()
 
 }

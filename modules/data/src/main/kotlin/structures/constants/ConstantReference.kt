@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Base class for constant pool data structures which reference class members.
@@ -31,14 +31,12 @@ abstract class ConstantReference(classFile: ClassFile) : AbstractConstant(classF
     var nameAndTypeIndex: Int = 0
 
     override val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = classConstant.verbose + "." + nameAndTypeConstant.verbose
 
     /**
      * Class info for this reference.
      */
     val classConstant: ConstantClassInfo
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(classIndex, ConstantClassInfo::class.java)
 
     /**
@@ -46,7 +44,6 @@ abstract class ConstantReference(classFile: ClassFile) : AbstractConstant(classF
      * @throws InvalidByteCodeException
      */
     val nameAndTypeConstant: ConstantNameAndTypeInfo
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(nameAndTypeIndex, ConstantNameAndTypeInfo::class.java)
 
     override fun readData(input: DataInput) {

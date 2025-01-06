@@ -7,27 +7,25 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Describes the invokedynamic instruction.
  */
-class InvokeDynamicInstruction
-@JvmOverloads
-constructor(immediateShort: Int = 0) : ImmediateShortInstruction(Opcode.INVOKEDYNAMIC, immediateShort) {
+class InvokeDynamicInstruction(immediateShort: Int = 0) : ImmediateShortInstruction(Opcode.INVOKEDYNAMIC, immediateShort) {
 
     override val size: Int
         get() = super.size + 2
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         // The next two bytes are always 0 and thus discarded
         input.readUnsignedShort()
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         output.writeShort(0)

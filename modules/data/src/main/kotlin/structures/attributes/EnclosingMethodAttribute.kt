@@ -6,13 +6,12 @@
 */
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.ConstantClassInfo
 import org.gjt.jclasslib.structures.constants.ConstantNameAndTypeInfo
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an EnclosingMethod attribute structure.
@@ -30,7 +29,6 @@ class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
      * Returns the constant that is referenced by the [classInfoIndex] index.
      */
     val classInfoConstant: ConstantClassInfo
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(classInfoIndex, ConstantClassInfo::class.java)
 
     /**
@@ -44,7 +42,6 @@ class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
      * Returns the constant that is referenced by the [methodInfoIndex] index.
      */
     val methodInfoConstant: ConstantNameAndTypeInfo
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(methodInfoIndex, ConstantNameAndTypeInfo::class.java)
 
     override fun readData(input: DataInput) {

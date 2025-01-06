@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.emptyArraySingleton
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a MethodParameter attribute structure.
@@ -24,7 +24,6 @@ class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile)
     var entries: Array<MethodParametersEntry> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
-
         val numberOfEntries = input.readUnsignedByte()
         entries = Array(numberOfEntries) {
             MethodParametersEntry().apply {
@@ -48,6 +47,5 @@ class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile)
          * Name of the attribute as in the corresponding constant pool entry.
          */
         const val ATTRIBUTE_NAME = "MethodParameters"
-
     }
 }

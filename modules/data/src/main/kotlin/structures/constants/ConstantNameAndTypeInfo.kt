@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_NameAndType_info constant pool data structure.
@@ -33,35 +32,30 @@ class ConstantNameAndTypeInfo(classFile: ClassFile) : AbstractConstant(classFile
         get() = ConstantType.NAME_AND_TYPE
 
     override val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = "$name : $descriptor"
 
     /**
      * The name of this entry.
      */
     val name: String
-        @Throws(InvalidByteCodeException::class)
         get() = nameConstant.string
 
     /**
      * Returns the constant that is referenced by the [nameIndex] index.
      */
     val nameConstant: ConstantUtf8Info
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(nameIndex)
 
     /**
      * The descriptor string.
      */
     val descriptor: String
-        @Throws(InvalidByteCodeException::class)
         get() = descriptorConstant.string
 
     /**
      * Returns the constant that is referenced by the [descriptorIndex] index.
      */
     val descriptorConstant: ConstantUtf8Info
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(descriptorIndex)
 
     override fun readData(input: DataInput) {

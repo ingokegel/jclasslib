@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 
+
 /**
  * Represents the available stack frame types in a stack map entry attribute.
  */
@@ -29,7 +30,6 @@ enum class StackFrameType(private val boundary: Int) {
          * Get the stack frame type from the associated bytecode.
          * @throws InvalidByteCodeException if the bytecode is invalid
          */
-        @Throws(InvalidByteCodeException::class)
         fun getFromTag(tag: Int): StackFrameType {
             if (tag < 0) {
                 throw InvalidByteCodeException("StackMapFrame tag must be positive")

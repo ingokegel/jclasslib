@@ -9,7 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.structures.ClassFile
 
 /**
- * Describes an LocalVariableTypeTable attribute structure.
+ * Describes a LocalVariableTypeTable attribute structure.
  */
 class LocalVariableTypeTableAttribute(classFile: ClassFile) : LocalVariableAttribute(classFile) {
 

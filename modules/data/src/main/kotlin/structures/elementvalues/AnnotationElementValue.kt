@@ -6,10 +6,10 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AnnotationData
 import org.gjt.jclasslib.structures.emptyArraySingleton
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an Annotation attribute structure.

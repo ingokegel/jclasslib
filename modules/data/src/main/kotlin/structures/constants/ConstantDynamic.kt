@@ -7,11 +7,10 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Base class for constants that reference a bootstrap method.
@@ -29,14 +28,12 @@ abstract class ConstantDynamic(classFile: ClassFile) : AbstractConstant(classFil
     var nameAndTypeIndex: Int = 0
 
     override val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = "${nameAndTypeInfo.name}, BootstrapMethods #$bootstrapMethodAttributeIndex"
 
     /**
      * The associated [ConstantNameAndTypeInfo] constant pool entry.
      */
     val nameAndTypeInfo: ConstantNameAndTypeInfo
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(nameAndTypeIndex, ConstantNameAndTypeInfo::class.java)
 
     override fun readData(input: DataInput) {

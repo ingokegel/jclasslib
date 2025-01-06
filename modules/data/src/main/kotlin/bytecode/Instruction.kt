@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Base class for all opcode instruction wrappers.
@@ -41,7 +41,7 @@ abstract class Instruction(val opcode: Opcode) {
      * before an instruction of this kind.
      * @param input the ByteCodeInput from which to read
      */
-    open fun read(input: ByteCodeInput) {
+    open fun read(input: CountingDataInput) {
         // The opcode has already been read
         offset = input.bytesRead - 1
     }
@@ -50,7 +50,7 @@ abstract class Instruction(val opcode: Opcode) {
      * Write this instruction to the given ByteCodeOutput.
      * @param output the ByteCodeOutput to which to write
      */
-    open fun write(output: ByteCodeOutput) {
+    open fun write(output: CountingDataOutput) {
         output.writeByte(opcode.tag)
     }
 

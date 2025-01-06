@@ -7,12 +7,11 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.ConstantClassInfo
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a NestHost attribute structure.
@@ -28,7 +27,6 @@ class NestHostAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
      * Returns the constant that is referenced by the [classInfoIndex] index.
      */
     val classConstant: ConstantClassInfo
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolEntry(classInfoIndex, ConstantClassInfo::class.java)
 
     override fun readData(input: DataInput) {

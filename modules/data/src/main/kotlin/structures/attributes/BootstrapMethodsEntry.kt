@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
@@ -23,7 +23,7 @@ class BootstrapMethodsEntry(private val classFile: ClassFile) : SubStructure() {
     var methodRefIndex: Int = 0
 
     /**
-     * Set the array of argument references of this BootstrapMethodsEntry.
+     * Set the array of argument references for this BootstrapMethodsEntry.
      */
     var argumentIndices: IntArray = IntArray(0)
 

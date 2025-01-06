@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Describes the lookupswitch instruction.
@@ -16,12 +16,12 @@ import org.gjt.jclasslib.io.ByteCodeOutput
 class LookupSwitchInstruction : PaddedInstruction(Opcode.LOOKUPSWITCH) {
 
     /**
-     * Default offset of the branch of this instruction.
+     * Default offset for the branch of this instruction.
      */
     var defaultOffset: Int = 0
 
     /**
-     * Match-offset pairs of the branches of this instruction as
+     * Match-offset pairs for the branches of this instruction as
      * a java.util.List of MatchOffsetPair
      * elements.
      * @return the list
@@ -31,7 +31,7 @@ class LookupSwitchInstruction : PaddedInstruction(Opcode.LOOKUPSWITCH) {
     override val size: Int
         get() = super.size + 8 + 8 * matchOffsetPairs.size
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         matchOffsetPairs.clear()
@@ -39,7 +39,7 @@ class LookupSwitchInstruction : PaddedInstruction(Opcode.LOOKUPSWITCH) {
         defaultOffset = input.readInt()
         val numberOfPairs = input.readInt()
 
-        for (i in 0 until numberOfPairs) {
+        repeat(numberOfPairs) {
             val match = input.readInt()
             val offset = input.readInt()
 
@@ -48,7 +48,7 @@ class LookupSwitchInstruction : PaddedInstruction(Opcode.LOOKUPSWITCH) {
 
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         output.writeInt(defaultOffset)

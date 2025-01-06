@@ -7,11 +7,12 @@
 
 package org.gjt.jclasslib.io
 
+import kotlinx.io.asSource
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import org.gjt.jclasslib.structures.debug
-import org.gjt.jclasslib.structures.isDebug
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.util.jar.JarFile
 
 /**
@@ -67,7 +68,8 @@ object ClassFileReader {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     @JvmOverloads
-    fun readFromFile(file: File, suppressEOF: Boolean = false): ClassFile = readFromInputStream(FileInputStream(file), suppressEOF)
+    fun readFromFile(file: File, suppressEOF: Boolean = false): ClassFile =
+        readFromPath(kotlinx.io.files.Path(file.path), suppressEOF)
 
     /**
      * Converts a class file to a ClassFile structure.
@@ -78,22 +80,6 @@ object ClassFileReader {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     @JvmOverloads
-    fun readFromInputStream(stream: InputStream, suppressEOF: Boolean = false): ClassFile {
-        val classFile = ClassFile()
-        val bufferedInputStream = BufferedInputStream(stream)
-        bufferedInputStream.wrapForDebug().use {
-            if (suppressEOF) {
-                try {
-                    classFile.read(it)
-                } catch (e: EOFException) {
-                    if (isDebug) debug("A suppressed end-of-file occurred while reading the class file: ${e.message}", it)
-                }
-            } else {
-                classFile.read(it)
-            }
-        }
-        return classFile
-    }
-
-    private fun InputStream.wrapForDebug() = if (isDebug) CountedDataInputStream(this) else DataInputStream(this)
+    fun readFromInputStream(stream: InputStream, suppressEOF: Boolean = false): ClassFile =
+        readFromSource(stream.asSource(), suppressEOF)
 }

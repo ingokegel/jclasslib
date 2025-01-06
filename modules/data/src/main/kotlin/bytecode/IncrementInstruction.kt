@@ -7,22 +7,20 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Describes the iinc instruction.
  * @property incrementConst Increment of this instruction.
  */
-class IncrementInstruction
-@JvmOverloads
-constructor(wide: Boolean, immediateByte: Int = 0, var incrementConst: Int = 0) :
+class IncrementInstruction(wide: Boolean, immediateByte: Int = 0, var incrementConst: Int = 0) :
         ImmediateByteInstruction(Opcode.IINC, wide, immediateByte) {
 
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         incrementConst = if (isWide) {
@@ -32,7 +30,7 @@ constructor(wide: Boolean, immediateByte: Int = 0, var incrementConst: Int = 0) 
         }
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         if (isWide) {

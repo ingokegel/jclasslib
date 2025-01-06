@@ -10,8 +10,8 @@
  */
 package org.gjt.jclasslib.structures
 
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 
 /**
  * Base class for all structures defined in the class file format.
@@ -30,7 +30,9 @@ abstract class Structure {
      */
     fun read(input: DataInput) {
         readData(input)
-        if (isDebug) debug("read ${this::class.java.simpleName} $debugInfo", input)
+        if (isDebug) {
+            debug("read ${this::class.java.simpleName} $debugInfo", input)
+        }
     }
 
     /**
@@ -49,7 +51,9 @@ abstract class Structure {
      */
     fun write(output: DataOutput) {
         writeData(output)
-        if (isDebug) debug("wrote ${this::class.java.simpleName} $debugInfo", output)
+        if (isDebug) {
+            debug("wrote ${this::class.java.simpleName} $debugInfo", output)
+        }
     }
 
     /**

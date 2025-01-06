@@ -6,8 +6,8 @@
 */
 package org.gjt.jclasslib.structures.elementvalues
 
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 
 /**
  * Describes a ClassElementValue attribute structure.

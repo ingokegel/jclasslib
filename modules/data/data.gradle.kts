@@ -11,6 +11,7 @@ configurePublishing()
 
 dependencies {
     api(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
 }
 
 tasks {

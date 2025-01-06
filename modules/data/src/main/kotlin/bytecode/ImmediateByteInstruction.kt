@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
  * Base class for instructions that are followed by an immediate unsigned byte.
@@ -20,7 +20,7 @@ abstract class ImmediateByteInstruction(opcode: Opcode, override var isWide: Boo
     override val size: Int
         get() = super.size + (if (isWide) 2 else 1)
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         immediateByte = if (isWide) {
@@ -30,7 +30,7 @@ abstract class ImmediateByteInstruction(opcode: Opcode, override var isWide: Boo
         }
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         if (isWide) {
@@ -43,8 +43,6 @@ abstract class ImmediateByteInstruction(opcode: Opcode, override var isWide: Boo
 }
 
 /**
- * Describes an instruction that is followed by an immediate unsigned byte.
+ * Describes an instruction followed by an immediate unsigned byte.
  */
-class SimpleImmediateByteInstruction
-@JvmOverloads
-constructor(opcode: Opcode, isWide: Boolean, immediateByte: Int = 0) : ImmediateByteInstruction(opcode, isWide, immediateByte)
+class SimpleImmediateByteInstruction(opcode: Opcode, isWide: Boolean, immediateByte: Int = 0) : ImmediateByteInstruction(opcode, isWide, immediateByte)

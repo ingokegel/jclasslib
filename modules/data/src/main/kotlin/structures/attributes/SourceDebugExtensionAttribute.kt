@@ -7,10 +7,10 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a SourceDebugExtension attribute structure.
@@ -23,8 +23,7 @@ class SourceDebugExtensionAttribute(private val attributeLength: Int, classFile:
     var string: String = ""
 
     override fun readData(input: DataInput) {
-        val byteArray = ByteArray(attributeLength)
-        input.readFully(byteArray)
+        val byteArray = input.readByteArray(attributeLength)
         string = String(byteArray)
     }
 

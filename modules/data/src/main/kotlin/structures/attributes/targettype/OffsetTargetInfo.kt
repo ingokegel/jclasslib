@@ -7,8 +7,8 @@
 
 package org.gjt.jclasslib.structures.attributes.targettype
 
-import java.io.DataInput
-import java.io.DataOutput
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 
 /**
  * Target info for a TypeAnnotation structure with a bytecode offset.

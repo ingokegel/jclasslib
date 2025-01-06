@@ -18,10 +18,9 @@ abstract class Constant : Structure() {
     abstract val constantType: ConstantType
 
     /**
-     * Verbose description of the content of the constant pool entry.
+     * Verbose description of the content for the constant pool entry.
      */
     open val verbose: String
-        @Throws(InvalidByteCodeException::class)
         get() = ""
 
     /**

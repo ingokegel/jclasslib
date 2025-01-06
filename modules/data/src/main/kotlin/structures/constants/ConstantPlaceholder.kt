@@ -7,10 +7,10 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.ConstantType
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Constant pool entry for unused indices in the constant pool, such as after [ConstantLongInfo] or [ConstantDoubleInfo]

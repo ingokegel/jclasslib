@@ -7,12 +7,12 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
- * Base class for instructions which need a four byte padding relative
- * to the start of the enclosing code of the parent Code
+ * Base class for instructions which need four bytes padding relative
+ * to the start of the enclosing code for the parent Code
  * attribute before reading immediate arguments.
  */
 abstract class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
@@ -24,20 +24,20 @@ abstract class PaddedInstruction(opcode: Opcode) : Instruction(opcode) {
      */
     override fun getPaddedSize(offset: Int): Int = size + paddingBytes(offset + 1)
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         val bytesToRead = paddingBytes(input.bytesRead)
-        for (i in 0 until bytesToRead) {
+        repeat (bytesToRead) {
             input.readByte()
         }
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         val bytesToWrite = paddingBytes(output.bytesWritten)
-        for (i in 0 until bytesToWrite) {
+        repeat(bytesToWrite) {
             output.writeByte(0)
         }
     }

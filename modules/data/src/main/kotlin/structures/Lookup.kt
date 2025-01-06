@@ -26,7 +26,6 @@ abstract class Lookup<T>(val enumClass: Class<T>, val name: String) where T : En
      * Get the enum instance for the specified bytecode tag.
      * @throws InvalidByteCodeException if the bytecode tag is not found
      */
-    @Throws(InvalidByteCodeException::class)
     fun getFromTag(tag: Int): T {
         if (tag < lookup.size && tag >= 0) {
             val constant = lookup[tag]

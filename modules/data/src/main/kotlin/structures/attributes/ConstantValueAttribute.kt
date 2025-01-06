@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a ConstantValue attribute structure.
@@ -48,5 +48,4 @@ class ConstantValueAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
          */
         const val ATTRIBUTE_NAME = "ConstantValue"
     }
-
 }

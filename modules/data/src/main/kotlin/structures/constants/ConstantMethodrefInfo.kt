@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures.constants
 
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantType
-import java.io.DataOutput
 
 /**
  * Describes a CONSTANT_Methodref_info constant pool data structure.

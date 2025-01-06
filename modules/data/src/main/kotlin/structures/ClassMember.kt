@@ -7,9 +7,9 @@
 
 package org.gjt.jclasslib.structures
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Base class for class members.
@@ -23,7 +23,7 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
     var accessFlags: Int = 0
 
     /**
-     * The constant pool index of the name of this class member.
+     * The constant pool index for the name of this class member.
      */
     var nameIndex: Int = 0
 
@@ -34,7 +34,7 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
         get() = classFile.getConstantPoolUtf8Entry(nameIndex)
 
     /**
-     * The constant pool index of the descriptor of this class member.
+     * The constant pool index for the descriptor of this class member.
      */
     var descriptorIndex: Int = 0
 
@@ -50,14 +50,12 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
      * Name of the class member.
      */
     val name: String
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(nameIndex).string
 
     /**
      * Verbose descriptor of the class member.
      */
     val descriptor: String
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(descriptorIndex).string
 
     /**
@@ -67,7 +65,7 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
         get() = formatFlags(accessFlags)
 
     /**
-     * Verbose description of the access flags of this class.
+     * Verbose description for the access flags of this class.
      */
     val accessFlagsVerbose: String
         get() = formatAccessFlagsVerbose(accessFlags)

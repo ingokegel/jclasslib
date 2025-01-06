@@ -7,11 +7,11 @@
 
 package org.gjt.jclasslib.bytecode
 
-import org.gjt.jclasslib.io.ByteCodeInput
-import org.gjt.jclasslib.io.ByteCodeOutput
+import org.gjt.jclasslib.io.CountingDataInput
+import org.gjt.jclasslib.io.CountingDataOutput
 
 /**
- * Describes an instruction that is followed by an immediate unsigned short.
+ * Describes an instruction followed by an immediate unsigned short.
  * @property immediateShort Immediate unsigned short of this instruction.
  */
 abstract class ImmediateShortInstruction(opcode: Opcode, var immediateShort: Int) : Instruction(opcode) {
@@ -19,23 +19,20 @@ abstract class ImmediateShortInstruction(opcode: Opcode, var immediateShort: Int
     override val size: Int
         get() = super.size + 2
 
-    override fun read(input: ByteCodeInput) {
+    override fun read(input: CountingDataInput) {
         super.read(input)
 
         immediateShort = input.readUnsignedShort()
     }
 
-    override fun write(output: ByteCodeOutput) {
+    override fun write(output: CountingDataOutput) {
         super.write(output)
 
         output.writeShort(immediateShort)
     }
-
 }
 
 /**
- * Describes an instruction that is followed by an immediate unsigned short.
+ * Describes an instruction followed by an immediate unsigned short.
  */
-class SimpleImmediateShortInstruction
-@JvmOverloads
-constructor(opcode: Opcode, immediateShort: Int = 0) : ImmediateShortInstruction(opcode, immediateShort)
+class SimpleImmediateShortInstruction(opcode: Opcode, immediateShort: Int = 0) : ImmediateShortInstruction(opcode, immediateShort)

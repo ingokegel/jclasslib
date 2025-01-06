@@ -7,10 +7,10 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
  * Describes a Deprecated attribute structure.
@@ -32,5 +32,4 @@ class DeprecatedAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         /** Name of the attribute as in the corresponding constant pool entry.  */
         const val ATTRIBUTE_NAME = "Deprecated"
     }
-
 }

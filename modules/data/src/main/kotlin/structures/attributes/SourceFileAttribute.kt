@@ -7,20 +7,20 @@
 
 package org.gjt.jclasslib.structures.attributes
 
+import org.gjt.jclasslib.io.DataInput
+import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
-import java.io.DataInput
-import java.io.DataOutput
 
 /**
- * Describes a SourceFile attribute structure.
+
+* Describes a SourceFile attribute structure.
  */
 class SourceFileAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
 
     /**
-     * Constant pool index of the name of the source file.
+     * Constant pool index of the name for the input file.
      */
     var sourceFileIndex: Int = 0
 
@@ -28,7 +28,6 @@ class SourceFileAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
      * Returns the constant that is referenced by the [sourceFileIndex] index.
      */
     val sourceFileConstant: ConstantUtf8Info
-        @Throws(InvalidByteCodeException::class)
         get() = classFile.getConstantPoolUtf8Entry(sourceFileIndex)
 
 
@@ -43,7 +42,7 @@ class SourceFileAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     override fun getAttributeLength(): Int = 2
 
     override val debugInfo: String
-        get() = "sourcefileIndex $sourceFileIndex"
+        get() = "inputfileIndex $sourceFileIndex"
 
     companion object {
         /**
