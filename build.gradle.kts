@@ -3,11 +3,10 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
-    alias(libs.plugins.kotlin) apply false
     idea
 }
 
-version = "6.0.5.1"
+version = "6.1"
 val rootBuildDir = file("build/gradle")
 layout.buildDirectory = rootBuildDir
 
@@ -42,7 +41,7 @@ subprojects {
     pluginManager.withPlugin("kotlin") {
         configure<JavaPluginExtension> {
             toolchain {
-                languageVersion = JavaLanguageVersion.of(11)
+                languageVersion = JavaLanguageVersion.of(JAVA_COMPILE_VERSION)
                 vendor = JvmVendorSpec.ADOPTIUM
             }
         }
@@ -84,13 +83,13 @@ tasks {
         dependsOn(":data:dist", ":browser:dist", ":agent:dist")
     }
 
-    register<Delete>("clean") {
+    /*register<Delete>("clean") {
         dependsOn(":installer:clean", ":data:clean", ":browser:clean", ":agent:clean")
         delete(externalLibsDir)
-    }
+    }*/
 
     updateDaemonJvm {
-        jvmVersion = JavaLanguageVersion.of(17)
+        jvmVersion = JavaLanguageVersion.of(JAVA_RUN_VERSION)
     }
 }
 

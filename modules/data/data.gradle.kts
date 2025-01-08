@@ -1,54 +1,58 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
-    alias(libs.plugins.dokka)
+    kotlin("multiplatform")
+    id("org.jetbrains.dokka") version "1.9.20"
     `maven-publish`
 }
 
-configurePublishing()
+configurePublishing(multiplatform = true)
 
 dependencies {
-    api(kotlin("stdlib"))
-    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
+    commonTestImplementation(kotlin("test"))
+    commonMainImplementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
+}
+
+kotlin {
+    jvm {
+    }
+
+    js {
+        nodejs()
+    }
 }
 
 tasks {
-    jar {
-        archiveFileName = "jclasslib-library.jar"
-    }
-
     val copyDist by registering(Copy::class) {
-        from(configurations.compileClasspath)
-        from(jar)
+        kotlin.jvm().compilations["main"].compileDependencyFiles
+        from("jvmJar")
         into(externalLibsDir)
     }
 
     dokkaHtml {
-        applyDokkaConfig {
-            includes.from("packages.md")
+        dokkaSourceSets {
+            configureEach {
+                moduleName = "jclasslib data"
+                includes.from("packages.md")
+            }
         }
     }
 
-    dokkaJavadoc {
-        outputDirectory = layout.buildDirectory.map { it.dir("javadoc").asFile }
-        applyDokkaConfig()
-    }
-
     val doc by registering {
-        dependsOn(dokkaHtml, dokkaJavadoc)
+        dependsOn(dokkaHtml)
     }
 
-    "javadocJar"(Jar::class) {
-        dependsOn(dokkaJavadoc)
-        from(dokkaJavadoc)
+    register("dist") {
+        dependsOn(doc, copyDist)
     }
 
-    test {
-        useTestNG()
-        testLogging.showStandardStreams = true
-
+    named<Test>("jvmTest") {
+        javaLauncher.set(
+            project.javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(JAVA_RUN_VERSION))
+            }
+        )
+        useJUnitPlatform()
         val majorVersions = listOf(8, 11, 17)
         for (majorVersion in majorVersions) {
             setJreSystemProperty(majorVersion)
@@ -56,17 +60,25 @@ tasks {
         systemProperty("majorVersions", majorVersions.joinToString(separator = ","))
     }
 
-    register("dist") {
-        dependsOn(doc, copyDist)
-    }
-}
+    val compileTestJavaJvm by registering(JavaCompile::class) {
+        javaCompiler.set(
+            project.javaToolchains.compilerFor {
+                languageVersion.set(JavaLanguageVersion.of(JAVA_RUN_VERSION))
+            }
+        )
+        source(kotlin.sourceSets["jvmTest"].kotlin.sourceDirectories.map {
+            fileTree(it) {
+                include("**/*.java")
+            }
+        })
 
-fun DokkaTask.applyDokkaConfig(additionalConfig: GradleDokkaSourceSetBuilder.() -> Unit =  {}) {
-    dokkaSourceSets {
-        configureEach {
-            moduleName = "jclasslib data"
-            additionalConfig()
-        }
+        val compileTestKotlinJvm by getting(KotlinCompile::class)
+        destinationDirectory = compileTestKotlinJvm.destinationDirectory.get().asFile.parentFile.resolve("java")
+        classpath = compileTestKotlinJvm.classpathSnapshotProperties.classpath
+    }
+
+    named("jvmTestClasses") {
+        dependsOn(compileTestJavaJvm)
     }
 }
 

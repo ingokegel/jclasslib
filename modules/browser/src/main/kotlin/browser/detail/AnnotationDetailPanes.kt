@@ -143,7 +143,7 @@ class ConstElementValueEntryDetailPane(services: BrowserServices) : ElementValue
     inner class ConstElementValueEntryEditor : DelegatesEditor<ConstElementValue>() {
         override fun DelegateBuilder<ConstElementValue>.buildDelegateSpecs() {
             addDelegateSpec {
-                services.classFile.getConstantPoolEntry(it.constValueIndex, Constant::class.java)
+                services.classFile.getConstantPoolEntry(it.constValueIndex, Constant::class)
             }
         }
     }

@@ -120,7 +120,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         val addedIndices = constantPoolNode.childCount..constantPoolCount
         for (i in addedIndices) {
             val constantPoolIndex = i + 1
-            constantPoolNode.addConstantPoolEntryNode(constantPoolIndex, classFile.getConstantPoolEntry(constantPoolIndex, Constant::class.java), constantPool)
+            constantPoolNode.addConstantPoolEntryNode(constantPoolIndex, classFile.getConstantPoolEntry(constantPoolIndex, Constant::class), constantPool)
         }
         treeModel.nodesWereInserted(constantPoolNode, addedIndices.toList().toIntArray())
     }
@@ -157,7 +157,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
             } else {
                 try {
                     BrowserTreeNode(getFormattedIndex(i, constantPool.size) + constant.constantType.verbose, NodeType.CONSTANT_POOL_ENTRY, constant)
-                } catch (ex: InvalidByteCodeException) {
+                } catch (_: InvalidByteCodeException) {
                     buildNullNode()
                 }
             })
@@ -186,7 +186,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
                     }.apply {
                         addAttributeNodes(classMember)
                     })
-                } catch (ex: InvalidByteCodeException) {
+                } catch (_: InvalidByteCodeException) {
                     add(buildNullNode())
                 }
             }
@@ -219,7 +219,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
                     is AttributeContainer -> addAttributeNodes(attribute)
                 }
             })
-        } catch (ex: InvalidByteCodeException) {
+        } catch (_: InvalidByteCodeException) {
             add(buildNullNode())
         }
     }

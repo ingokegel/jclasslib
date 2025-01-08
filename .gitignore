@@ -8,6 +8,7 @@
 .idea/modules/
 .idea/libraries/
 .idea/shelf/
+.idea/artifacts/
 build/
 media/
 buildSrc/out

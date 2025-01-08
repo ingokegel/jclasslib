@@ -88,7 +88,7 @@ abstract class ClasspathEntry : ClasspathComponent {
         inputStream.use {
             try {
                 val classFile = ClassFileReader.readFromInputStream(inputStream)
-                val moduleAttribute = classFile.findAttribute(ModuleAttribute::class.java)
+                val moduleAttribute = classFile.findAttribute(ModuleAttribute::class)
                 if (moduleAttribute != null) {
                     return classFile.getConstantPoolEntryName(moduleAttribute.moduleNameIndex)
                 }

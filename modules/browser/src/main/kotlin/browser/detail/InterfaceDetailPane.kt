@@ -24,7 +24,7 @@ class InterfaceDetailPane(services: BrowserServices) : KeyValueDetailPane<Int>(I
     inner class InterfaceEditor : DelegatesEditor<Int>() {
         override fun DelegateBuilder<Int>.buildDelegateSpecs() {
             addDelegateSpec {
-                services.classFile.getConstantPoolEntry(it, ConstantClassInfo::class.java)
+                services.classFile.getConstantPoolEntry(it, ConstantClassInfo::class)
             }
         }
     }

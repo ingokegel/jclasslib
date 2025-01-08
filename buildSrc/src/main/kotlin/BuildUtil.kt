@@ -9,17 +9,21 @@ import org.gradle.kotlin.dsl.*
 import org.gradle.plugins.signing.SigningExtension
 
 val Project.externalLibsDir: Provider<Directory> get() = rootProject.layout.buildDirectory.map { it.dir("externalLibs") }
+val Project.JAVA_RUN_VERSION get() = 17
+val Project.JAVA_COMPILE_VERSION get() = 11
 
-fun Project.configurePublishing() {
+fun Project.configurePublishing(multiplatform: Boolean = false) {
     pluginManager.apply("signing")
     val project = this
     val ossrhUser: String? by extra
     val ossrhPassword: String? by extra
 
     tasks {
-        val sourcesJar by registering(Jar::class) {
-            archiveClassifier.set("sources")
-            from(project.the<JavaPluginExtension>().sourceSets["main"].allSource)
+        if (!multiplatform) {
+            register<Jar>("sourcesJar") {
+                archiveClassifier.set("sources")
+                from(project.the<JavaPluginExtension>().sourceSets["main"].allSource)
+            }
         }
 
         val javadocJar by registering(Jar::class) {
@@ -27,11 +31,11 @@ fun Project.configurePublishing() {
         }
 
         "publishToMavenLocal" {
-            dependsOn("publishModulePublicationToMavenLocal", "jar")
+            dependsOn(if (multiplatform) "publishKotlinMultiplatformPublicationToMavenLocal" else "publishJvmPublicationToMavenLocal")
         }
 
         register("publishToCentral") {
-            dependsOn("publishModulePublicationToOssrhRepository")
+            dependsOn("publishJvmPublicationToOssrhRepository")
         }
 
         configure<PublishingExtension> {
@@ -46,10 +50,23 @@ fun Project.configurePublishing() {
             }
 
             publications {
-                create<MavenPublication>("Module") {
-                    from(project.components["java"])
-                    artifactId = "jclasslib-${project.name}"
-                    artifact(sourcesJar.get())
+                if (!multiplatform) {
+                    create<MavenPublication>("jvm") {
+                        from(components["java"])
+                        artifactId = "jclasslib-${project.name}"
+                        artifact(tasks.findByName("sourcesJar"))
+                    }
+                }
+
+                publications.withType<MavenPublication>().all {
+                    gradle.projectsEvaluated {
+                        // Must be done later, otherwise the default artifact names are used
+                        artifactId = "jclasslib-${project.name}" + if (multiplatform && name != "kotlinMultiplatform") {
+                            "-$name"
+                        } else {
+                            ""
+                        }
+                    }
                     artifact(javadocJar.get())
                     pom {
                         name.set("jclasslib bytecode viewer")
@@ -79,7 +96,7 @@ fun Project.configurePublishing() {
                 }
             }
             configure<SigningExtension> {
-                sign(publications["Module"])
+                sign(*publications.toTypedArray())
             }
         }
     }
