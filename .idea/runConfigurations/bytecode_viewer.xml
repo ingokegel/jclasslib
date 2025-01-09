@@ -8,8 +8,8 @@
     <option name="VM_PARAMETERS" value="--illegal-access=warn @modules/installer/resources/base.options -Djclasslib.io.debug=false -Djdk.attach.allowAttachSelf=true" />
     <RunnerSettings RunnerId="JProfiler" />
     <method v="2">
-      <option name="Make" enabled="true" />
       <option name="Gradle.BeforeRunTask" enabled="false" tasks=":agent:dist :data:jvmMainClasses" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="Make" enabled="true" />
     </method>
   </configuration>
 </component>
