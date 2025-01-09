@@ -1,4 +1,4 @@
-# jclasslib bytecode editor
+# jclasslib bytecode editor and Kotlin Multiplatform class file library
 
 ## Download
 
@@ -11,7 +11,21 @@ brew install jclasslib-bytecode-viewer
 
 jclasslib bytecode editor is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.
 Many aspects of class files can be edited in the UI.
-In addition, it contains a library that enables developers to read and write Java class files and bytecode.
+In addition, it contains a Kotlin Multiplatform library that enables developers to read and write Java class files
+and bytecode.
+
+## Maven repository
+
+The Kotlin Multiplatform library to read and write JVM class files is available on Maven Central under 
+the coordinates: `org.jclasslib:jclasslib-data:<version>`. 
+
+Platform-specific artifacts are provided under
+`org.jclasslib:jclasslib-data-jvm:<version>` and `org.jclasslib:jclasslib-data-js:<version>`.
+
+## jclasslib UI
+
+In the main window of the jclasslib bytecode viewer, you can open multiple class files at the same time, by
+selecting class or JAR files, browsing a configured classpath or dragging class files on top of the window. 
 
 ![Main window](web/screenshots/main_light.png)
 
@@ -26,11 +40,13 @@ Bytecode instructions can be edited from the context menu:
 
 ![Editing bytecode instructions](web/screenshots/edit_opcode_popup.png)
 
-## UI
+## Dark mode
 
 Dark mode can be enabled persistently by selecting "File->Dark mode" in the main menu. 
 
 ![Dark mode](web/screenshots/main_dark.png)
+
+## Localizations
 
 Several localizations are available and can be chosen in the UI:
 
