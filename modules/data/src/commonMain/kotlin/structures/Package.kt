@@ -29,7 +29,13 @@ const val SYSTEM_PROPERTY_DEBUG = "jclasslib.io.debug"
  */
 const val SYSTEM_PROPERTY_SKIP_ATTRIBUTES = "jclasslib.io.skipAttributes"
 
+/**
+ * Set this JVM System property to true to switch on warnings for unsupported major class file versions.
+ */
+const val SYSTEM_PROPERTY_MAJOR_VERSION_WARNINGS = "jclasslib.majorVersionWarnings"
+
 internal var isDebug: Boolean = getSystemProperty(SYSTEM_PROPERTY_DEBUG) == "true"
+internal var isMajorVersionWarnings: Boolean = getSystemProperty(SYSTEM_PROPERTY_MAJOR_VERSION_WARNINGS) == "true"
 
 internal fun warning(message: String) {
     print("[warning] ")

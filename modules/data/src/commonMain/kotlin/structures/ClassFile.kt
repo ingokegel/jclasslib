@@ -445,8 +445,7 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     private fun checkMajorVersion(majorVersion: Int) {
-        // Note: also update majorVersionVerbose
-        if (majorVersion !in MAJOR_VERSION_RANGE) {
+        if (isMajorVersionWarnings && majorVersion !in MAJOR_VERSION_RANGE) {
             warning("major version should be between ${MAJOR_VERSION_RANGE.first} and ${MAJOR_VERSION_RANGE.last} for JDK <= ${KnownMajorJavaVersions.entries.last().verbose}, was $majorVersion")
         }
     }
