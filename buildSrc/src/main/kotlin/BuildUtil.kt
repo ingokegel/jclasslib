@@ -96,6 +96,7 @@ fun Project.configurePublishing(multiplatform: Boolean = false) {
                 }
             }
             configure<SigningExtension> {
+                useGpgCmd()
                 sign(*publications.toTypedArray())
             }
         }
