@@ -7,6 +7,7 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.gradle.plugins.signing.SigningExtension
+import java.util.*
 
 val Project.externalLibsDir: Provider<Directory> get() = rootProject.layout.buildDirectory.map { it.dir("externalLibs") }
 val Project.JAVA_RUN_VERSION get() = 17
@@ -26,16 +27,12 @@ fun Project.configurePublishing(multiplatform: Boolean = false) {
             }
         }
 
-        val javadocJar by registering(Jar::class) {
-            archiveClassifier.set("javadoc")
-        }
-
         "publishToMavenLocal" {
             dependsOn(if (multiplatform) "publishKotlinMultiplatformPublicationToMavenLocal" else "publishJvmPublicationToMavenLocal")
         }
 
         register("publishToCentral") {
-            dependsOn("publishJvmPublicationToOssrhRepository")
+            dependsOn("publishAllPublicationsToOssrhRepository")
         }
 
         configure<PublishingExtension> {
@@ -59,15 +56,22 @@ fun Project.configurePublishing(multiplatform: Boolean = false) {
                 }
 
                 publications.withType<MavenPublication>().all {
-                    gradle.projectsEvaluated {
-                        // Must be done later, otherwise the default artifact names are used
-                        artifactId = "jclasslib-${project.name}" + if (multiplatform && name != "kotlinMultiplatform") {
-                            "-$name"
+                    val artifactName =
+                        "jclasslib-${project.name}" + if (multiplatform && this.name != "kotlinMultiplatform") {
+                            "-${this.name}"
                         } else {
                             ""
                         }
+                    gradle.projectsEvaluated {
+                        // Must be done later, otherwise the default artifact names are used
+                        artifactId = artifactName
                     }
-                    artifact(javadocJar.get())
+                    val javadocJarTask =
+                        tasks.register<Jar>("javadocJar" + if (multiplatform && name != "kotlinMultiplatform") name.capitalizeFirstCharacter() else "") {
+                            archiveClassifier.set("javadoc")
+                            archiveBaseName = artifactName
+                        }
+                    artifact(javadocJarTask.get())
                     pom {
                         name.set("jclasslib bytecode viewer")
                         description.set("jclasslib bytecode viewer is a tool that visualizes all aspects of compiled Java class files and the contained bytecode.")
@@ -97,8 +101,11 @@ fun Project.configurePublishing(multiplatform: Boolean = false) {
             }
             configure<SigningExtension> {
                 useGpgCmd()
-                sign(*publications.toTypedArray())
+                sign(publications)
             }
         }
     }
 }
+
+private fun String.capitalizeFirstCharacter() =
+    replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
