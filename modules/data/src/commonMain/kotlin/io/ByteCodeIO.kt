@@ -5,9 +5,12 @@
  version 2 of the license, or (at your option) any later version.
  */
 
+@file:JvmName("ByteCodeIO")
+
 package org.gjt.jclasslib.io
 
 import org.gjt.jclasslib.bytecode.*
+import kotlin.jvm.JvmName
 
 /**
  * Converts a list of instructions to code.
