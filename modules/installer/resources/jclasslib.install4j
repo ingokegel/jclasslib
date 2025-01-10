@@ -20,11 +20,12 @@
       <variable name="appleIssuerId" />
       <variable name="appleKeyId" />
       <variable name="applePrivateApiKey" />
+      <variable name="sys.ext.addIDtoEntitlements" value="false" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:macCertPath}" windowsEnabled="true" windowsKeySource="azure" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
       <windowsAzure vaultUri="${compiler:azureVaultUri}" tenantId="${compiler:azureTenantId}" clientId="${compiler:azureClientId}" certificateName="${compiler:azureCertificateName}" />
     </codeSigning>
-    <jreBundles jdkProviderId="JBR" release="21/21.0.4-b598.4" />
+    <jreBundles jdkProviderId="JBR" release="21/21.0.5-b631.16" />
   </application>
   <files>
     <mountPoints>
