@@ -24,7 +24,7 @@ kotlin {
 
 tasks {
     val copyDist by registering(Copy::class) {
-        kotlin.jvm().compilations["main"].compileDependencyFiles
+        from(kotlin.jvm().compilations["main"].compileDependencyFiles)
         from("jvmJar")
         into(externalLibsDir)
     }
