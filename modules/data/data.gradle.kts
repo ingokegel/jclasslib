@@ -14,6 +14,11 @@ dependencies {
 }
 
 kotlin {
+    jvmToolchain {
+        languageVersion = JavaLanguageVersion.of(JAVA_COMPILE_VERSION)
+        vendor = JvmVendorSpec.ADOPTIUM
+    }
+
     jvm {
     }
 
