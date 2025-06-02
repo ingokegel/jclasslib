@@ -2,11 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.dokka") version "1.9.20"
-    `maven-publish`
+    id("org.jetbrains.dokka")
+    id("com.vanniktech.maven.publish")
 }
 
-configurePublishing(multiplatform = true)
+configurePublishing()
 
 dependencies {
     commonTestImplementation(kotlin("test"))

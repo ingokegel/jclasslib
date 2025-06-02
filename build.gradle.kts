@@ -6,7 +6,7 @@ plugins {
     idea
 }
 
-version = "6.1.0.1"
+version = "6.1.0.2"
 val rootBuildDir = file("build/gradle")
 layout.buildDirectory = rootBuildDir
 
@@ -75,7 +75,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "8.12"
+        gradleVersion = "8.13"
         distributionType = Wrapper.DistributionType.ALL
     }
 

@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
     application
-    `maven-publish`
+    id("com.vanniktech.maven.publish")
 }
 
 configurePublishing()
