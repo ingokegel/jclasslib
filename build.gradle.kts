@@ -75,7 +75,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "8.13"
+        gradleVersion = "8.14.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 
@@ -83,13 +83,8 @@ tasks {
         dependsOn(":data:dist", ":browser:dist", ":agent:dist")
     }
 
-    /*register<Delete>("clean") {
-        dependsOn(":installer:clean", ":data:clean", ":browser:clean", ":agent:clean")
-        delete(externalLibsDir)
-    }*/
-
     updateDaemonJvm {
-        jvmVersion = JavaLanguageVersion.of(JAVA_RUN_VERSION)
+        languageVersion = JavaLanguageVersion.of(JAVA_COMPILE_VERSION)
     }
 }
 
