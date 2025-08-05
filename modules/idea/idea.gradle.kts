@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij.platform") version "2.2.1"
+    id("org.jetbrains.intellij.platform") version "2.7.0"
 }
 
 defaultTasks("buildPlugin")
@@ -26,7 +26,9 @@ intellijPlatform {
     }
     pluginVerification {
         ides {
-            ide(ideaVersion)
+            create {
+                version = ideaVersion
+            }
         }
     }
     sandboxContainer = rootProject.layout.buildDirectory.dir("../idea_sandbox")
