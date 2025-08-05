@@ -180,7 +180,7 @@ private fun addInfoPanel(toolWindow: ToolWindow) {
             add(JPanel().apply {
                 layout = FlowLayout(FlowLayout.CENTER, 5, 5)
                 add(JLabel("To see bytecode, invoke"))
-                add(JLabel(ShowBytecodeAction.ICON))
+                add(JLabel(ICON_SHOW_BYTE_CODE))
                 add(JLabel(ActionManager.getInstance().getAction("ShowByteCodeJclasslib").templateText))
                 add(JLabel("while in an editor or on a class in the project window"))
             })

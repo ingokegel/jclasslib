@@ -23,7 +23,7 @@ class ShowBytecodeAction : AnAction() {
     override fun update(e: AnActionEvent) {
         e.presentation.apply {
             isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && isContainedInClass(this) } == true
-            icon = ICON
+            icon = ICON_SHOW_BYTE_CODE
         }
     }
 
@@ -50,7 +50,6 @@ class ShowBytecodeAction : AnAction() {
         }
     }
 
-    companion object {
-        val ICON = IconLoader.getIcon("/icons/jclasslib.png", ShowBytecodeAction::class.java) // 13x13
-    }
 }
+
+val ICON_SHOW_BYTE_CODE = IconLoader.getIcon("/icons/jclasslib.png", ShowBytecodeAction::class.java) // 13x13
