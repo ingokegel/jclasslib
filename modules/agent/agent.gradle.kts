@@ -6,7 +6,7 @@ plugins {
 configurePublishing()
 
 sourceSets {
-    create("java9") {
+    create("java9").apply {
         java {
             setSrcDirs(listOf("src/main/java9"))
         }

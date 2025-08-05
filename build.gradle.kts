@@ -20,11 +20,6 @@ subprojects {
         flatDir {
             dirs = setOf(file("lib"), file("$rootDir/lib-compile"))
         }
-        maven("https://maven.ej-technologies.com/repository") {
-            content {
-                includeGroup("com.install4j")
-            }
-        }
         maven("https://jitpack.io") {
             content {
                 includeGroup("com.github.ingokegel")
@@ -75,7 +70,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "8.14.1"
+        gradleVersion = "9.0.0"
         distributionType = Wrapper.DistributionType.ALL
     }
 

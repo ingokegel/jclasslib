@@ -10,20 +10,18 @@
     </languages>
     <variables>
       <variable name="winCertPath" />
-      <variable name="macCertPath" value="../../../../../mac_certs.p12" />
+      <variable name="macCertPath" />
       <variable name="macProvisioningProfile" value="../../../../../jclasslib_app_store.provisionprofile" />
       <variable name="macSandboxed" value="false" />
-      <variable name="azureVaultUri" />
-      <variable name="azureTenantId" />
-      <variable name="azureClientId" />
-      <variable name="azureCertificateName" />
+      <variable name="digestSigningCommandLine" />
       <variable name="appleIssuerId" />
       <variable name="appleKeyId" />
       <variable name="applePrivateApiKey" />
       <variable name="sys.ext.addIDtoEntitlements" value="false" />
     </variables>
-    <codeSigning macEnabled="true" macPkcs12File="${compiler:macCertPath}" windowsEnabled="true" windowsKeySource="azure" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
-      <windowsAzure vaultUri="${compiler:azureVaultUri}" tenantId="${compiler:azureTenantId}" clientId="${compiler:azureClientId}" certificateName="${compiler:azureCertificateName}" />
+    <codeSigning macEnabled="true" macKeySource="digestSigningExecutable"  windowsEnabled="true" windowsKeySource="digestSigningExecutable" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
+      <windowsDigestSigningExectuable certificateFile="${compiler:macCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
+      <macDigestSigningExectuable certificateFile="${compiler:winCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
     </codeSigning>
     <jreBundles jdkProviderId="JBR" release="21/21.0.5-b631.16" />
   </application>

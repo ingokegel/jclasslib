@@ -6,7 +6,6 @@ import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.plugins.signing.SigningExtension
-import java.util.*
 
 val Project.externalLibsDir: Provider<Directory> get() = rootProject.layout.buildDirectory.map { it.dir("externalLibs") }
 val JAVA_RUN_VERSION get() = 17
@@ -60,6 +59,3 @@ fun Project.configurePublishing() {
         }
     }
 }
-
-private fun String.capitalizeFirstCharacter() =
-    replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
