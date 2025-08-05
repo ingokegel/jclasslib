@@ -3,13 +3,14 @@ import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.assign
+import org.gradle.kotlin.dsl.configure
 import org.gradle.plugins.signing.SigningExtension
 import java.util.*
 
 val Project.externalLibsDir: Provider<Directory> get() = rootProject.layout.buildDirectory.map { it.dir("externalLibs") }
-val Project.JAVA_RUN_VERSION get() = 17
-val Project.JAVA_COMPILE_VERSION get() = 11
+val JAVA_RUN_VERSION get() = 17
+val JAVA_COMPILE_VERSION get() = 11
 
 
 // see https://github.com/vanniktech/gradle-maven-publish-plugin/pull/201#discussion_r584270633 for secret key export

@@ -11,7 +11,6 @@ import kotlinx.dom.build.addElement
 import kotlinx.dom.childElements
 import kotlinx.dom.firstChildElement
 import org.gjt.jclasslib.browser.BrowserBundle.getString
-import org.gjt.jclasslib.browser.FrameContent.Position.entries
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.util.AlertType
@@ -190,7 +189,7 @@ class FrameContent(val frame: BrowserFrame) : JPanel() {
 
     operator fun List<TabbedPaneWrapper>.get(position: Position) = this[position.ordinal]
 
-    enum class Position(@Nls val noneOpenMessage: String? = null) {
+    enum class Position(@param:Nls val noneOpenMessage: String? = null) {
         NW(getString("window.open.class.file.label")), NE, SE, SW;
 
         companion object {

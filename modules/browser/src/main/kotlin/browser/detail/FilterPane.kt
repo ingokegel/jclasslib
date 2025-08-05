@@ -144,7 +144,7 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
         updateFilter()
     }
 
-    enum class FilterMode(@Nls val verbose: String) {
+    enum class FilterMode(@param:Nls val verbose: String) {
         ALL(getString("filter.mode.all")),
         SELECTED(getString("filter.mode.selected"));
 

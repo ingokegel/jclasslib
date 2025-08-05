@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nls
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-abstract class Column<in T : Any>(@Nls val name: String, val width: Int, val columnClass: Class<*>) {
+abstract class Column<in T : Any>(@param:Nls val name: String, val width: Int, val columnClass: Class<*>) {
     open val maxWidth: Int
         get() = Int.MAX_VALUE
     open val minWidth: Int
@@ -71,7 +71,7 @@ abstract class NamedConstantPoolLinkColumn<in T : Any>(@Nls name: String, servic
     private fun getConstantPoolEntryName(constantPoolIndex: Int): String {
         return try {
             services.classFile.getConstantPoolEntryName(constantPoolIndex)
-        } catch (ex: InvalidByteCodeException) {
+        } catch (_: InvalidByteCodeException) {
             getString("message.invalid.constant.pool.reference")
         }
     }

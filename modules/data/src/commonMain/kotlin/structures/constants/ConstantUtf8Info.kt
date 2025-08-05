@@ -68,7 +68,7 @@ class ConstantUtf8Info(classFile: ClassFile) : AbstractConstant(classFile) {
             }
         }
 
-        if (utfLen > 65535 || utfLen < strlen) {
+        if (utfLen !in strlen..65535) {
             throw IllegalStateException("String too long: $utfLen chars")
         }
 

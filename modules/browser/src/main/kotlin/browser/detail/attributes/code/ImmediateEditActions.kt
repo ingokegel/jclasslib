@@ -49,7 +49,7 @@ fun getImmediateEditActions(instruction: Instruction): List<ImmediateEditAction<
         else -> emptyList()
     }
 
-abstract class ImmediateEditAction<I : Instruction>(@Nls val name: String) {
+abstract class ImmediateEditAction<I : Instruction>(@param:Nls val name: String) {
     abstract val instructionClass: Class<I>
     abstract fun execute(instruction: I, parentWindow: Window?): Boolean
     fun executeRaw(instruction: Instruction, parentWindow: Window?): Boolean =
@@ -81,7 +81,7 @@ abstract class ValueEditAction<I : Instruction, T>(@Nls name: String) : Immediat
                     null,
                     value
             ))
-        } catch (e: NumberFormatException) {
+        } catch (_: NumberFormatException) {
             alertFacade.showMessage(parentWindow, conversionErrorMessage, AlertType.WARNING)
             null
         }

@@ -8,11 +8,10 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
-import org.gjt.jclasslib.browser.SplitMode.entries
 import org.jetbrains.annotations.Nls
 import java.awt.event.KeyEvent
 
-enum class SplitMode(@Nls val actionName: String, val actionDescription: String, val accelerator: Int) {
+enum class SplitMode(@param:Nls val actionName: String, val actionDescription: String, val accelerator: Int) {
     NONE(getString("action.merge.splits"), getString("action.merge.splits.description"), KeyEvent.VK_M),
     HORIZONTAL(getString("action.split.horizontally"), getString("action.split.horizontally.description"), KeyEvent.VK_H),
     VERTICAL(getString("action.split.vertically"), getString("action.split.vertically.description"), KeyEvent.VK_V),

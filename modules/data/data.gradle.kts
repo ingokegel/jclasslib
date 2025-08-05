@@ -79,7 +79,7 @@ tasks {
 
         val compileTestKotlinJvm by getting(KotlinCompile::class)
         destinationDirectory = compileTestKotlinJvm.destinationDirectory.get().asFile.parentFile.resolve("java")
-        classpath = compileTestKotlinJvm.classpathSnapshotProperties.classpath
+        classpath = compileTestKotlinJvm.classpathSnapshotProperties.classpathSnapshot
     }
 
     named("jvmTestClasses") {
