@@ -27,6 +27,14 @@ kotlin {
     }
 }
 
+
+dokka {
+    moduleName = "jclasslib data"
+    dokkaSourceSets.named("jvmMain") {
+        includes.from("packages.md")
+    }
+}
+
 tasks {
     val copyDist by registering(Copy::class) {
         from(kotlin.jvm().compilations["main"].compileDependencyFiles)
@@ -34,17 +42,8 @@ tasks {
         into(externalLibsDir)
     }
 
-    dokkaHtml {
-        dokkaSourceSets {
-            configureEach {
-                moduleName = "jclasslib data"
-                includes.from("packages.md")
-            }
-        }
-    }
-
     val doc by registering {
-        dependsOn(dokkaHtml)
+        dependsOn(dokkaGenerate)
     }
 
     register("dist") {
