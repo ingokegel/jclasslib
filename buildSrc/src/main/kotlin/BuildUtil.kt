@@ -1,5 +1,4 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.provider.Provider
@@ -23,7 +22,7 @@ val JAVA_COMPILE_VERSION get() = 11
 fun Project.configurePublishing() {
     configure<MavenPublishBaseExtension> {
         coordinates("org.jclasslib", "jclasslib-${project.name}", version.toString())
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        publishToMavenCentral()
         signAllPublications()
 
 
