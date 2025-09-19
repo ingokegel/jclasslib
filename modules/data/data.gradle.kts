@@ -46,7 +46,7 @@ tasks {
         dependsOn(dokkaGenerate)
     }
 
-    register("dist") {
+    val dist by registering {
         dependsOn(doc, copyDist)
     }
 
