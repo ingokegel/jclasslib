@@ -6,7 +6,7 @@ plugins {
     idea
 }
 
-version = "6.1.0.2"
+version = "6.1.0.3"
 val rootBuildDir = file("build/gradle")
 layout.buildDirectory = rootBuildDir
 

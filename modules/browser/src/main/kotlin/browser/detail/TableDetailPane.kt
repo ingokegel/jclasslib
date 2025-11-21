@@ -12,9 +12,10 @@ import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
 import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
 import org.gjt.jclasslib.structures.AttributeInfo
+import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.LinkMouseListener
+import org.gjt.jclasslib.util.applyTableRowHeight
 import org.gjt.jclasslib.util.scrollPaneFactory
-import org.gjt.jclasslib.util.tableRowHeight
 import java.awt.Component
 import java.awt.Point
 import java.awt.event.MouseEvent
@@ -39,10 +40,7 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
     protected val table: JTable = JTable().apply {
         this.autoResizeMode = JTable.AUTO_RESIZE_OFF
         selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
-        val rowHeightFactor = rowHeightFactor
-        val baseRowHeight = tableRowHeight.takeIf { it  > 0 } ?: rowHeight
-        rowHeight = (baseRowHeight * rowHeightFactor).toInt()
-
+        applyTableRowHeight(rowHeightFactor)
         TableLinkListener(this)
         gridColor = UIManager.getColor("control")
         this.autoResizeMode = this@TableDetailPane.autoResizeMode
@@ -97,10 +95,10 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
             columnModel.columns.iterator().withIndex().forEach {
                 val column = tableModel.columns[it.index]
                 it.value.apply {
-                    minWidth = column.minWidth
-                    maxWidth = column.maxWidth
-                    width = column.width
-                    preferredWidth = column.width
+                    minWidth = GUIHelper.scale(column.minWidth)
+                    maxWidth = column.maxWidth.let { if (it == Int.MAX_VALUE) it else GUIHelper.scale(it) }
+                    width = GUIHelper.scale(column.width)
+                    preferredWidth = GUIHelper.scale(column.width)
                     cellRenderer = column.createTableCellRenderer()
                     cellEditor = column.createTableCellEditor()
                 }

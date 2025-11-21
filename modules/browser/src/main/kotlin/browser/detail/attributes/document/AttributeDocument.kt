@@ -142,6 +142,8 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
         const val ATTRIBUTE_NAME_LINK = "attributeLink"
         const val ATTRIBUTE_NAME_HOVER_HIGHLIGHT = "hoverHighlight"
 
+        private val ALL_STYLES = mutableListOf<SimpleAttributeSet>()
+
         val DOTTED_STROKE = BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0.toFloat(), floatArrayOf(3.toFloat(), 4.toFloat()), 0.0f)
         const val TAB = "    "
 
@@ -158,6 +160,23 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
             fontSize -= 2
         }
 
+        fun updateFontSizes() {
+            for (attributeSet in ALL_STYLES) {
+                val fontSize = StyleConstants.getFontSize(attributeSet)
+                if (fontSize > 0) {
+                    StyleConstants.setFontSize(attributeSet, documentFontSize)
+                }
+            }
+        }
+
+        fun updateFontFamilies() {
+            documentFontFamily?.let { fontFamily ->
+                for (attributeSet in ALL_STYLES) {
+                    StyleConstants.setFontFamily(attributeSet, fontFamily)
+                }
+            }
+        }
+
         fun style(init: StyleBuilder.() -> Unit = {}): AttributeSet {
             val styleBuilder = StyleBuilder()
             // The next line explicitly sets the font size on the attribute set, this is needed for HiDPI displays
@@ -167,7 +186,9 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
                 styleBuilder.fontFamily = it
             }
             styleBuilder.init()
-            return styleBuilder.attributeSet
+            return styleBuilder.attributeSet.also {
+                ALL_STYLES.add(it)
+            }
         }
 
         class StyleBuilder {

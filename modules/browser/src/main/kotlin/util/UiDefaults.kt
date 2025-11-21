@@ -7,11 +7,15 @@
 
 package org.gjt.jclasslib.util
 
+import org.gjt.jclasslib.browser.detail.attributes.document.AttributeDocument
+import org.gjt.jclasslib.browser.detail.attributes.document.DocumentDetailPane
 import util.LightOrDarkColor
 import java.awt.Color
 import java.awt.Component
+import java.util.*
 import javax.swing.Icon
 import javax.swing.JScrollPane
+import javax.swing.JTable
 import javax.swing.JTree
 import javax.swing.border.Border
 import javax.swing.tree.DefaultTreeCellRenderer
@@ -32,10 +36,56 @@ class BorderLessScrollPane(component: Component): JScrollPane(component) {
 
 enum class TreeIcon {CLOSED, OPEN, LEAF}
 
+private val trees = WeakHashMap<JTree, Unit>()
+fun JTree.applyTreeRowHeight() {
+    trees[this] = Unit
+    applyTreeRowHeightInternal()
+}
+
+private fun JTree.applyTreeRowHeightInternal() {
+    if (treeRowHeight > 0) {
+        rowHeight = treeRowHeight
+    }
+}
+
 var treeRowHeight : Int = 0
+    set(value) {
+        field = value
+        trees.keys.filterNotNull().forEach { it.applyTreeRowHeightInternal() }
+    }
+
+private val tables = WeakHashMap<JTable, Float>()
+fun JTable.applyTableRowHeight(rowHeightFactor: Float) {
+    tables[this] = rowHeightFactor
+    applyTableRowHeightInternal(rowHeightFactor)
+}
+
+private fun JTable.applyTableRowHeightInternal(rowHeightFactor: Float) {
+    val baseRowHeight = tableRowHeight.takeIf { it > 0 } ?: rowHeight
+    rowHeight = (baseRowHeight * rowHeightFactor).toInt()
+}
+
 var tableRowHeight : Int = 0
+    set(value) {
+        field = value
+        tables.entries.forEach { (tree, rowHeightFactor) ->
+            tree?.applyTableRowHeightInternal(rowHeightFactor)
+        }
+    }
+
 var documentFontFamily : String? = null
-var documentFontSize : Int = 12
+    set(value) {
+        field = value
+        AttributeDocument.updateFontFamilies()
+        DocumentDetailPane.clearDocuments()
+    }
+
+var documentFontSize: Int = 12
+    set(value) {
+        field = value
+        AttributeDocument.updateFontSizes()
+        DocumentDetailPane.clearDocuments()
+    }
 
 var treeIcons: Map<TreeIcon, Icon> = emptyMap()
 

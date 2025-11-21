@@ -34,6 +34,14 @@ class BrowserDetailPane(private val services: BrowserServices) : JPanel() {
         showCard(nodeType)
     }
 
+    // called externally
+    @Suppress("unused")
+    fun recreateCurrentPane() {
+        services.browserComponent.treePane.tree.selectionPath?.let {
+            currentDetailPane.show(it)
+        }
+    }
+
     private fun showCard(nodeType: NodeType) {
         (layout as CardLayout).show(this, nodeType.name)
     }

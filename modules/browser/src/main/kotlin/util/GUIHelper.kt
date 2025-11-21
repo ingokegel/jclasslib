@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.util
 
+import com.formdev.flatlaf.util.UIScale
 import com.install4j.api.Util
 import com.install4j.runtime.filechooser.AbstractFileSystemChooser
 import java.awt.Window
@@ -16,6 +17,7 @@ import java.net.URL
 import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
+import kotlin.math.roundToInt
 
 object GUIHelper {
 
@@ -45,4 +47,7 @@ object GUIHelper {
 
     fun JComponent.getParentWindow(): Window? = SwingUtilities.getWindowAncestor(this)
 
+    fun scale(value: Int): Int {
+        return (value * UIScale.getUserScaleFactor()).roundToInt()
+    }
 }

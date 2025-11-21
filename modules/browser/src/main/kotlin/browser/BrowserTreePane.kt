@@ -39,9 +39,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
             treeIcons[TreeIcon.OPEN]?.apply { openIcon = this }
             treeIcons[TreeIcon.LEAF]?.apply { leafIcon = this }
         }
-        if (treeRowHeight > 0) {
-            rowHeight = treeRowHeight
-        }
+        applyTreeRowHeight()
     }
 
     private val scrollPane = scrollPaneFactory(tree)

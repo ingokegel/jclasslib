@@ -60,7 +60,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         val attribute = getElement(treePath)
         show(attribute, 0)
     }
-    
+
     private fun show(attribute: T, viewCaretPosition: Int) {
         lastAttribute = attribute
         val detailDocument = attributeToDocument.getOrPut(attribute) {
@@ -280,8 +280,6 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
 
         init {
             editorKit = AttributeEditorKit()
-            font = Font("MonoSpaced".intern(), 0, UIManager.getFont("TextArea.font").size)
-            background = UIManager.getColor("TextField.background")
             isEditable = false
             DocumentLinkListener(this)
 
@@ -296,6 +294,12 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
                             attributeDocument.getLineStartPosition(nextLineNumber)
                         }
             }
+        }
+
+        override fun updateUI() {
+            super.updateUI()
+            font = Font("MonoSpaced".intern(), 0, UIManager.getFont("TextArea.font").size)
+            background = UIManager.getColor("TextField.background")
         }
 
         override fun processMouseMotionEvent(e: MouseEvent) {
@@ -347,6 +351,9 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         }
         private val attributeToDocument = WeakHashMap<AttributeInfo, AttributeDocument>()
 
+        fun clearDocuments() {
+            attributeToDocument.clear()
+        }
     }
 
 }
