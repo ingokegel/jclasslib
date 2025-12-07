@@ -37,6 +37,8 @@ class SignatureAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(signatureIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, signatureIndex)
+
     override fun getAttributeLength(): Int = 2
 
     override val debugInfo: String

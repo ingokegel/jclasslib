@@ -98,4 +98,20 @@ abstract class Structure {
                 .joinToString(separator = separator, postfix = if (flags != handledFlags) "?" else "")
     }
 
+    /**
+     * Determine if the specified constant is used directly by this structure.
+     * @param constant the constant
+     * @param the class file of which the constant is part of
+     * @return whether the constant is used
+     */
+    open fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        val constantPoolIndex = classFile.getConstantPoolIndex(constant)
+        return getUsedConstantPoolIndices().any { it == constantPoolIndex }
+    }
+
+    /**
+     * Determine the used constant pool indices of this constant
+     */
+    protected open fun getUsedConstantPoolIndices(): IntArray = intArrayOf()
+
 }

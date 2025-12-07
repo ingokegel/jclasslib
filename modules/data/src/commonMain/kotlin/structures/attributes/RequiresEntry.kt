@@ -50,6 +50,8 @@ class RequiresEntry : SubStructure() {
         output.writeShort(versionIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(index, versionIndex)
+
     override val debugInfo: String
         get() = ""
 

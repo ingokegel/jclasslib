@@ -39,6 +39,8 @@ class HashEntry : SubStructure() {
         hashValues.forEach { output.writeByte(it) }
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(moduleNameIndex)
+
     override val debugInfo: String
         get() = "with ${hashValues.size} hash values"
 

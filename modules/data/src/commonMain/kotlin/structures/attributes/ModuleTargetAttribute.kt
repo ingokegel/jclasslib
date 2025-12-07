@@ -31,6 +31,9 @@ class ModuleTargetAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(platformIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, platformIndex)
+
+
     override fun getAttributeLength(): Int =  2
 
     override val debugInfo: String

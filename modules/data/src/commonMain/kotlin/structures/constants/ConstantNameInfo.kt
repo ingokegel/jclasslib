@@ -53,6 +53,8 @@ abstract class ConstantNameInfo(classFile: ClassFile) : AbstractConstant(classFi
         output.writeShort(nameIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(nameIndex)
+
     override fun equals(other: Any?): Boolean {
         if (other != null && other::class != this::class) {
             return false

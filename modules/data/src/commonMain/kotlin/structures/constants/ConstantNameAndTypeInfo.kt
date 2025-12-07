@@ -69,6 +69,8 @@ class ConstantNameAndTypeInfo(classFile: ClassFile) : AbstractConstant(classFile
         output.writeShort(descriptorIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(nameIndex, descriptorIndex)
+
     override val debugInfo: String
         get() = "with nameIndex $nameIndex and descriptorIndex $descriptorIndex"
 

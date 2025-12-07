@@ -29,4 +29,7 @@ abstract class AttributeInfo(protected val classFile: ClassFile) : Structure() {
      */
     abstract fun getAttributeLength(): Int
 
+    override fun getUsedConstantPoolIndices(): IntArray {
+        return intArrayOf(attributeNameIndex)
+    }
 }

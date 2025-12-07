@@ -54,6 +54,8 @@ class ExportsEntry : SubStructure() {
         toIndices.forEach { output.writeShort(it) }
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(index) + toIndices
+
     override val debugInfo: String
         get() = "with ${toIndices.size} target modules"
 

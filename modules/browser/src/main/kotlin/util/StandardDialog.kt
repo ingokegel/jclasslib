@@ -17,9 +17,12 @@ import javax.swing.JComponent
 import javax.swing.JDialog
 
 abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialog(parentWindow, title) {
-    protected val okAction = DefaultAction(BrowserBundle.getString("action.ok")) {
+    protected val okAction = DefaultAction(okButtonText) {
         doOk()
     }
+
+    protected open val okButtonText: String
+        get() = BrowserBundle.getString("action.ok")
 
     var isCanceled: Boolean = false
         private set

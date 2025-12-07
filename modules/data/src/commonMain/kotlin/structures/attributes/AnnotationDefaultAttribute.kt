@@ -10,6 +10,7 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.elementvalues.ElementValue
 
 /**
@@ -40,8 +41,12 @@ class AnnotationDefaultAttribute private constructor(classFile: ClassFile) : Att
     }
 
     override fun writeData(output: DataOutput) {
-
         defaultValue.write(output)
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                defaultValue.isConstantUsed(constant, classFile)
     }
 
     override fun getAttributeLength(): Int = defaultValue.length

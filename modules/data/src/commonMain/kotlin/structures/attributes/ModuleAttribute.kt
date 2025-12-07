@@ -9,10 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
-import org.gjt.jclasslib.structures.AccessFlag
-import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.emptyArraySingleton
+import org.gjt.jclasslib.structures.*
 
 /**
  * Describes a Module attribute structure.
@@ -107,6 +104,16 @@ class ModuleAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         usesIndices.forEach { output.writeShort(it) }
 
         output.writeList(providesEntries)
+    }
+
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, moduleNameIndex, moduleVersionIndex) + usesIndices
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                requiresEntries.any { it.isConstantUsed(constant, classFile) } ||
+                exportsEntries.any { it.isConstantUsed(constant, classFile) } ||
+                opensEntries.any { it.isConstantUsed(constant, classFile) } ||
+                providesEntries.any { it.isConstantUsed(constant, classFile) }
     }
 
     private fun DataOutput.writeList(entries: Array<out SubStructure>) {

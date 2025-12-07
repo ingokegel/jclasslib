@@ -28,7 +28,7 @@ class ClassMemberDetailPane(services: BrowserServices, signatureMode: SignatureM
         addConstantPoolLink(getString("key.descriptor"), ClassMember::descriptorIndex)
         addDetail(getString("key.access.flags")) { classMember -> "${classMember.formattedAccessFlags} [${classMember.accessFlagsVerbose}]" }
         addEditor { ClassMemberEditor() }
-        super.addLabels()
+        addCommon()
     }
 
     override val signatureButtonText: String

@@ -30,6 +30,8 @@ class ClassElementValue : ElementValue(ElementValueType.CLASS) {
         output.writeShort(classInfoIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(classInfoIndex)
+
     override val debugInfo: String
         get() = "with classInfoIndex $classInfoIndex"
 

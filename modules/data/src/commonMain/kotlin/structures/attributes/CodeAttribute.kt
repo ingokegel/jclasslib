@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
+import org.gjt.jclasslib.io.readByteCode
 import org.gjt.jclasslib.structures.*
 
 /**
@@ -59,6 +60,11 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
 
         writeExceptionTable(output)
         writeAttributes(output)
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                readByteCode(code).any { it.isConstantUsed(constant, classFile) }
     }
 
     private fun readExceptionTable(input: DataInput) {

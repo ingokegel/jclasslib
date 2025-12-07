@@ -31,6 +31,8 @@ class ObjectVerificationTypeInfoEntry(private val classFile: ClassFile) : Verifi
         output.writeShort(cpIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(cpIndex)
+
     override fun appendTo(buffer: StringBuilder) {
         super.appendTo(buffer)
         buffer.append(" <a href=\"").append(cpIndex).append("\">cp_info #").append(cpIndex).append("</a> &lt;").append(verboseIndex).append("&gt;")

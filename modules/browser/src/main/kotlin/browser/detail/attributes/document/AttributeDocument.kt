@@ -103,7 +103,6 @@ abstract class AttributeDocument(protected val styles: StyleContext, protected v
     }.toString()
 
     protected fun addConstantPoolLink(constantPoolIndex: Int, sourceOffset: Int = length) {
-
         val currentLinkStyle = styles.addAttribute(STYLE_LINK, ATTRIBUTE_NAME_LINK,
                 ConstantPoolLink(constantPoolIndex, sourceOffset))
 

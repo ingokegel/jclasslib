@@ -45,6 +45,8 @@ class ConstantStringInfo(classFile: ClassFile) : AbstractConstant(classFile) {
         output.writeShort(stringIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(stringIndex)
+
     override val debugInfo: String
         get() = "with stringIndex $stringIndex"
 
@@ -56,5 +58,4 @@ class ConstantStringInfo(classFile: ClassFile) : AbstractConstant(classFile) {
     }
 
     override fun hashCode(): Int = super.hashCode() xor stringIndex
-
 }

@@ -56,6 +56,8 @@ abstract class ConstantReference(classFile: ClassFile) : AbstractConstant(classF
         output.writeShort(nameAndTypeIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(classIndex, nameAndTypeIndex)
+
     override val debugInfo: String
         get() = "with classIndex $classIndex and nameAndTypeIndex $nameAndTypeIndex"
 

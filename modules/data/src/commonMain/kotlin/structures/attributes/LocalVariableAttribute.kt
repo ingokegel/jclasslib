@@ -10,6 +10,7 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.emptyArraySingleton
 
 /**
@@ -34,6 +35,11 @@ abstract class LocalVariableAttribute(classFile: ClassFile) : AttributeInfo(clas
     override fun writeData(output: DataOutput) {
         output.writeShort(localVariableEntries.size)
         localVariableEntries.forEach { it.write(output) }
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                localVariableEntries.any { it.isConstantUsed(constant, classFile) }
     }
 
     override val debugInfo: String

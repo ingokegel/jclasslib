@@ -8,6 +8,8 @@ package org.gjt.jclasslib.structures.elementvalues
 
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.SubStructure
 
 /**
@@ -45,6 +47,13 @@ class ElementValuePair private constructor() : SubStructure() {
     override fun writeData(output: DataOutput) {
         output.writeShort(elementNameIndex)
         elementValue.write(output)
+    }
+
+    override fun getUsedConstantPoolIndices() = intArrayOf(elementNameIndex)
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                elementValue.isConstantUsed(constant, classFile)
     }
 
     override val debugInfo: String

@@ -92,6 +92,8 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
         writeAttributes(output)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(nameIndex, descriptorIndex)
+
     override val debugInfo: String
         get() = "with accessFlags $accessFlagsVerbose, nameIndex $nameIndex, descriptorIndex $descriptorIndex, ${attributes.size} attributes"
 

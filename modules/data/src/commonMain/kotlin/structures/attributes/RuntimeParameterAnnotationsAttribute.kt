@@ -10,6 +10,7 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.emptyArraySingleton
 
 /**
@@ -32,6 +33,11 @@ abstract class RuntimeParameterAnnotationsAttribute(classFile: ClassFile) : Attr
     override fun writeData(output: DataOutput) {
         output.writeByte(parameterAnnotations.size)
         parameterAnnotations.forEach { it.write(output) }
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                parameterAnnotations.any { it.isConstantUsed(constant, classFile) }
     }
 
     override val debugInfo: String

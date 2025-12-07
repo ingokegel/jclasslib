@@ -105,9 +105,9 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
         showHandlers.add(showHandler)
     }
 
-    protected fun addEditor(editorProvider: () -> DataEditor<T>) {
+    protected open fun addEditor(editorProvider: () -> DataEditor<T>) {
         if (services.canSaveClassFiles()) {
-            add(editorProvider().createButton(this), "newline, spanx")
+            add(editorProvider().createButton(this), "newline unrel, spanx")
         }
     }
 
@@ -171,7 +171,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     protected fun addClassElementOpener(constantResolver: (element: T) -> Constant) {
         if (services.canOpenClassFiles()) {
             val classElementOpener = ClassElementOpener(this)
-            add(classElementOpener, "newline unrel, spanx")
+            add(classElementOpener, "newline, spanx")
             addShowHandler { element ->
                 classElementOpener.setConstant(constantResolver(element))
             }

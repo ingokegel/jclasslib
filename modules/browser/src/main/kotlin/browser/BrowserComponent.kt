@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.browser
 
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.*
 import org.gjt.jclasslib.structures.*
 import org.gjt.jclasslib.util.SplitDirection
@@ -19,7 +20,7 @@ import javax.swing.event.TreeSelectionEvent
 import javax.swing.event.TreeSelectionListener
 import javax.swing.tree.TreePath
 
-class BrowserComponent(private val services: BrowserServices) : JComponent(), TreeSelectionListener {
+class BrowserComponent(val services: BrowserServices) : JComponent(), TreeSelectionListener {
     val history: BrowserHistory = BrowserHistory(services)
     val detailPane: BrowserDetailPane = BrowserDetailPane(services)
     val treePane: BrowserTreePane = BrowserTreePane(services)
@@ -69,17 +70,21 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
                         NodeType.METHOD -> {
                             addReferenceHolder(element as MethodInfo)
                         }
+
                         NodeType.FIELD -> {
                             addReferenceHolder(element as FieldInfo)
                         }
+
                         NodeType.ATTRIBUTE -> {
                             addPathComponent(AttributeHolder((element as AttributeInfo).name))
                         }
+
                         NodeType.CONSTANT_POOL_ENTRY -> {
                             if (detailPane.constantPoolDetailPane.filterPane.isShowAll) {
                                 addIndexHolder(node)
                             }
                         }
+
                         else -> {
                             addIndexHolder(node)
                         }
@@ -91,7 +96,7 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     }
 
     private fun buildPath(pathComponents: List<PathComponent>): TreePath {
-        val nodes = mutableListOf(treePane.root)
+        val nodes = mutableListOf<BrowserTreeNode>(treePane.root)
         for (pathComponent in pathComponents) {
             val node = nodes.last().firstOrNull { pathComponent.matches(it) }
             if (node != null) {
@@ -123,16 +128,16 @@ class BrowserComponent(private val services: BrowserServices) : JComponent(), Tr
     fun checkSelection() {
         val tree = treePane.tree
         if (tree.selectionPath == null) {
-            val rootNode = tree.model.root as BrowserTreeNode
+            val rootNode = treePane.root
             tree.selectionPath = TreePath(arrayOf<Any>(rootNode, rootNode.firstChild))
         }
     }
 
     fun canRemove(): Boolean =
         !isModified || alertFacade.showDiscardCancelDialog(
-                this,
-                BrowserBundle.getString("message.class.file.modified.title"),
-                BrowserBundle.getString("message.class.file.modified"),
+            this,
+            getString("message.class.file.modified.title"),
+            getString("message.class.file.modified"),
         ).selectedIndex == 0
 
     override fun valueChanged(selectionEvent: TreeSelectionEvent) {

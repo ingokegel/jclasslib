@@ -9,14 +9,30 @@ package org.gjt.jclasslib.browser.detail.constants
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.detail.DataEditor
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
+import org.gjt.jclasslib.browser.findUsages
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
 import org.jetbrains.annotations.Nls
+import javax.swing.JButton
 
 abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, services: BrowserServices) : KeyValueDetailPane<T>(constantClass, services) {
+    private val btnFindUsages: JButton = JButton(getString("action.find.usages")).apply {
+        addActionListener {
+            element?.let {constant ->
+                findUsages(services.browserComponent, constant)
+            }
+        }
+    }
+
+    override fun addEditor(editorProvider: () -> DataEditor<T>) {
+        super.addEditor(editorProvider)
+        add(btnFindUsages, "newline, spanx")
+    }
+
     protected fun addClassElementOpener() {
         addClassElementOpener { constant -> constant }
     }
@@ -140,7 +156,7 @@ class ConstantUtf8InfoDetailPane(services: BrowserServices) : ConstantDetailPane
         addDetail(getString("key.string")) { constant ->
             try {
                 constant.verbose
-            } catch (e: InvalidByteCodeException) {
+            } catch (_: InvalidByteCodeException) {
                 getString("message.invalid.constant.pool.entry")
             }
         }

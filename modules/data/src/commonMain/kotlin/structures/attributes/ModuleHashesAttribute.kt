@@ -11,6 +11,7 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.emptyArraySingleton
 
 /**
@@ -23,7 +24,7 @@ class ModuleHashesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
      */
     var algorithmIndex: Int = 0
     /**
-     * Constant pool index of the CONSTANT_Utf8_info structure containing the OS architecture.
+     * Array of the module hashes
      */
     var hashEntries: Array<HashEntry> = emptyArraySingleton()
 
@@ -41,6 +42,13 @@ class ModuleHashesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(algorithmIndex)
         output.writeShort(hashEntries.size)
         hashEntries.forEach { it.write(output) }
+    }
+
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, algorithmIndex)
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                hashEntries.any { it.isConstantUsed(constant, classFile) }
     }
 
     override fun getAttributeLength(): Int =  4 + hashEntries.sumOf { it.length }

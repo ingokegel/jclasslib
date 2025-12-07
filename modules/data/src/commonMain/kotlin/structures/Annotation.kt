@@ -39,6 +39,13 @@ class Annotation : SubStructure(), AnnotationData {
         elementValuePairEntries.forEach { it.write(output) }
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(typeIndex)
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                elementValuePairEntries.any { it.isConstantUsed(constant, classFile) }
+    }
+
     override val debugInfo: String
         get() = "with ${elementValuePairEntries.size} value pair elements"
 }

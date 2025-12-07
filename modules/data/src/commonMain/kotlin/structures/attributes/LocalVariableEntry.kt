@@ -57,6 +57,8 @@ class LocalVariableEntry : SubStructure() {
         output.writeShort(index)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(nameIndex, descriptorOrSignatureIndex)
+
     override val debugInfo: String
         get() = "with startPc $startPc, length $targetLength, nameIndex $nameIndex, descriptorIndex $descriptorOrSignatureIndex, index $index"
 

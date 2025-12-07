@@ -35,6 +35,8 @@ class ModulePackagesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         indices.forEach { output.writeShort(it) }
     }
 
+    override fun getUsedConstantPoolIndices() = super.getUsedConstantPoolIndices() + indices
+
     override fun getAttributeLength(): Int =  2 + 2 * indices.size
 
     override val debugInfo: String

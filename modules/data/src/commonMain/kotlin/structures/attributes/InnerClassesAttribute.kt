@@ -11,6 +11,7 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.emptyArraySingleton
 
 /**
@@ -35,6 +36,11 @@ class InnerClassesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     override fun writeData(output: DataOutput) {
         output.writeShort(classes.size)
         classes.forEach { it.write(output) }
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                classes.any { it.isConstantUsed(constant, classFile) }
     }
 
     override fun getAttributeLength(): Int = 2 + classes.sumOf { it.length }

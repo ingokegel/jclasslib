@@ -8,10 +8,7 @@ package org.gjt.jclasslib.structures.attributes
 
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
-import org.gjt.jclasslib.structures.Annotation
-import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.emptyArraySingleton
+import org.gjt.jclasslib.structures.*
 
 /**
  * Base class for runtime annotations.
@@ -35,6 +32,11 @@ abstract class RuntimeAnnotationsAttribute(classFile: ClassFile) : AttributeInfo
     override fun writeData(output: DataOutput) {
         output.writeShort(runtimeAnnotations.size)
         runtimeAnnotations.forEach { it.write(output) }
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                runtimeAnnotations.any { it.isConstantUsed(constant, classFile) }
     }
 
     override val debugInfo: String

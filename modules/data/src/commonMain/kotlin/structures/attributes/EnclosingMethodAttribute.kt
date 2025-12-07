@@ -54,6 +54,8 @@ class EnclosingMethodAttribute(classFile: ClassFile) : AttributeInfo(classFile) 
         output.writeShort(methodInfoIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, classInfoIndex, methodInfoIndex)
+
     override fun getAttributeLength(): Int = 4
 
     override val debugInfo: String

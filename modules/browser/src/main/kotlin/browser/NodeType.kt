@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.browser
 
-import org.gjt.jclasslib.browser.NodeType.entries
 import org.gjt.jclasslib.browser.detail.*
 import org.gjt.jclasslib.browser.detail.attributes.AttributeDetailPane
 import org.gjt.jclasslib.browser.detail.attributes.RecordEntryDetailPane

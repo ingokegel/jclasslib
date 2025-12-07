@@ -71,6 +71,8 @@ class ConstantMethodHandleInfo private constructor(classFile: ClassFile) : Abstr
         output.writeShort(referenceIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(referenceIndex)
+
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantMethodHandleInfo) {
             return false

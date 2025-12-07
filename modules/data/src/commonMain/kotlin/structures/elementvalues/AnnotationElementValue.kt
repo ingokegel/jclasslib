@@ -9,6 +9,8 @@ package org.gjt.jclasslib.structures.elementvalues
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AnnotationData
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.emptyArraySingleton
 
 /**
@@ -43,6 +45,13 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
         output.writeShort(typeIndex)
         output.writeShort(elementValuePairEntries.size)
         elementValuePairEntries.forEach { it.write(output) }
+    }
+
+    override fun getUsedConstantPoolIndices() = intArrayOf(typeIndex)
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                elementValuePairEntries.any { it.isConstantUsed(constant, classFile) }
     }
 
     override val length: Int

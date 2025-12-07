@@ -40,6 +40,8 @@ class RecordEntry(private val classFile: ClassFile, override var attributes: Arr
         writeAttributes(output)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(nameIndex, descriptorIndex)
+
     override val debugInfo: String
         get() = ""
 

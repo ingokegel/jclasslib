@@ -28,6 +28,8 @@ class NestMembersEntry : SubStructure() {
         output.writeShort(classInfoIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(classInfoIndex)
+
     override val debugInfo: String
         get() = ""
 

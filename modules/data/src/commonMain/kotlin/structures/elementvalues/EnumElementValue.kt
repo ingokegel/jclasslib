@@ -37,6 +37,8 @@ class EnumElementValue : ElementValue(ElementValueType.ENUM) {
         output.writeShort(constNameIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(typeNameIndex, constNameIndex)
+
     override val debugInfo: String
         get() = "with typeNameIndex $typeNameIndex, constNameIndex $constNameIndex"
 

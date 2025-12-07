@@ -37,6 +37,8 @@ class ConstantValueAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(constantValueIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, constantValueIndex)
+
     override fun getAttributeLength(): Int = 2
 
     override val debugInfo: String

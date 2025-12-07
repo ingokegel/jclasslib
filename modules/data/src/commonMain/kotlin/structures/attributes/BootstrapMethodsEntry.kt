@@ -41,6 +41,8 @@ class BootstrapMethodsEntry(private val classFile: ClassFile) : SubStructure() {
         argumentIndices.forEach { output.writeShort(it) }
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(methodRefIndex)
+
     override val debugInfo: String
         get() = "with methodRefIndex $methodRefIndex, arguments ($verbose)"
 

@@ -37,6 +37,8 @@ class NestHostAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(classInfoIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, classInfoIndex)
+
     override fun getAttributeLength(): Int =  2
 
     override val debugInfo: String

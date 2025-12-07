@@ -9,6 +9,8 @@ package org.gjt.jclasslib.bytecode
 
 import org.gjt.jclasslib.io.CountingDataInput
 import org.gjt.jclasslib.io.CountingDataOutput
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 
 /**
  * Base class for instructions that are followed by an immediate unsigned byte.
@@ -40,6 +42,9 @@ abstract class ImmediateByteInstruction(opcode: Opcode, override var isWide: Boo
         }
     }
 
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return opcode == Opcode.LDC && classFile.getConstantPoolIndex(constant) == immediateByte
+    }
 }
 
 /**

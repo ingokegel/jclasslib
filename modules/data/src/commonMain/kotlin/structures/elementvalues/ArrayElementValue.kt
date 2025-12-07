@@ -8,6 +8,8 @@ package org.gjt.jclasslib.structures.elementvalues
 
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.emptyArraySingleton
 
 /**
@@ -33,6 +35,11 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
         super.writeData(output)
         output.writeShort(elementValueEntries.size)
         elementValueEntries.forEach { it.write(output) }
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                elementValueEntries.any { it.isConstantUsed(constant, classFile) }
     }
 
     override val debugInfo: String

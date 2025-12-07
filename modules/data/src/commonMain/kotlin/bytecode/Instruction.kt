@@ -9,6 +9,8 @@ package org.gjt.jclasslib.bytecode
 
 import org.gjt.jclasslib.io.CountingDataInput
 import org.gjt.jclasslib.io.CountingDataOutput
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 
 /**
  * Base class for all opcode instruction wrappers.
@@ -54,6 +56,7 @@ abstract class Instruction(val opcode: Opcode) {
         output.writeByte(opcode.tag)
     }
 
+    open fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean = false
 }
 
 /**

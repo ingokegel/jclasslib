@@ -10,30 +10,30 @@ package org.gjt.jclasslib.browser
 import org.jetbrains.annotations.Nls
 import javax.swing.tree.DefaultMutableTreeNode
 
-open class BrowserTreeNode(@Nls text: String, val type: NodeType, val element: Any? = null) : DefaultMutableTreeNode(text), Iterable<BrowserTreeNode> {
+open class BrowserTreeNode(@Nls text: String, val type: NodeType, val element: Any? = null) :
+    DefaultMutableTreeNode(text), Iterable<BrowserTreeNode> {
+
     val index: Int
         get() = getParent().getIndex(this)
 
-    val originalChildren = ArrayList<BrowserTreeNode>()
+    val allChildren by lazy { iterator().asSequence().toList() }
 
     @Suppress("UNCHECKED_CAST")
     override fun iterator() = (children ?: emptyList<BrowserTreeNode>()).iterator() as Iterator<BrowserTreeNode>
 
     fun filterChildren(predicate: (node: BrowserTreeNode) -> Boolean) {
-        if (originalChildren.isEmpty()) {
-            originalChildren.addAll(iterator().asSequence())
-        }
+        val filteredChildren = allChildren.filter(predicate)
         removeAllChildren()
-        originalChildren.filter(predicate).forEach {
+        filteredChildren.forEach {
             add(it)
         }
     }
 }
 
-class RefreshableBrowserTreeNode(type: NodeType, element: Any? = null, private val textProvider: () -> String)
-    : BrowserTreeNode(textProvider(), type, element) {
+class RefreshableBrowserTreeNode(type: NodeType, element: Any? = null, private val textProvider: () -> String) :
+    BrowserTreeNode(textProvider(), type, element) {
 
-        fun refresh() {
-            userObject = textProvider()
-        }
+    fun refresh() {
+        userObject = textProvider()
+    }
 }

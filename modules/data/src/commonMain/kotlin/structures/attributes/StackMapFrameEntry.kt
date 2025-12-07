@@ -10,6 +10,7 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 
 /**
  * Describes an entry in a BootstrapMethods attribute structure.
@@ -115,6 +116,12 @@ class StackMapFrameEntry(private val classFile: ClassFile) : SubStructure() {
             StackFrameType.APPEND -> writeAppend(output)
             StackFrameType.FULL -> writeFull(output)
         }
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                localItems.any { it.isConstantUsed(constant, classFile) } ||
+                stackItems.any { it.isConstantUsed(constant, classFile) }
     }
 
     private fun writeOneStackItem(output: DataOutput) {

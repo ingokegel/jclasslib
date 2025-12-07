@@ -16,7 +16,10 @@ import java.net.MalformedURLException
 import java.net.URL
 import javax.swing.Icon
 import javax.swing.JComponent
+import javax.swing.JTree
 import javax.swing.SwingUtilities
+import javax.swing.tree.DefaultMutableTreeNode
+import javax.swing.tree.TreePath
 import kotlin.math.roundToInt
 
 object GUIHelper {
@@ -40,7 +43,7 @@ object GUIHelper {
         }
     }
 
-    fun <T : AbstractFileSystemChooser<*>> T.applyPath(currentDirectory: String) : T {
+    fun <T : AbstractFileSystemChooser<*>> T.applyPath(currentDirectory: String): T {
         currentDirectory(currentDirectory.let { if (it.isNotEmpty()) File(it) else null })
         return this
     }
@@ -50,4 +53,11 @@ object GUIHelper {
     fun scale(value: Int): Int {
         return (value * UIScale.getUserScaleFactor()).roundToInt()
     }
+}
+
+
+fun JTree.expandAll() {
+    val rootNode = model.root as DefaultMutableTreeNode
+    rootNode.depthFirstEnumeration().asSequence()
+        .forEach { node -> expandPath(TreePath((node as DefaultMutableTreeNode).path)) }
 }

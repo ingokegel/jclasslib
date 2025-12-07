@@ -33,8 +33,8 @@ abstract class FixedListWithSignatureDetailPane<T : Any>(
     override val clipboardText: String?
         get() = signatureVerbose
 
-    override fun addLabels() {
-        add(btnCopyToClipboard, "newline unrel, spanx")
+    protected fun addCommon(spacer: Boolean = false) {
+        add(btnCopyToClipboard, "newline" + (if (spacer) " unrel" else "") + ", spanx")
     }
 
     override fun hasInsets() = true

@@ -11,6 +11,7 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.emptyArraySingleton
 
 /**
@@ -35,6 +36,11 @@ class RecordAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     override fun writeData(output: DataOutput) {
         output.writeShort(entries.size)
         entries.forEach { it.write(output) }
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return super.isConstantUsed(constant, classFile) ||
+                entries.any { it.isConstantUsed(constant, classFile) }
     }
 
     override fun getAttributeLength(): Int = 2 + entries.sumOf { it.length }

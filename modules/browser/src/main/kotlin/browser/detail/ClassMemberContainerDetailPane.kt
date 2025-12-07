@@ -25,11 +25,6 @@ class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: S
         override fun getFilterKeys(element: ClassMember) = AccessFlag.decompose(element.accessFlags, getAllFilterKeys())
     }
 
-    override fun show(treePath: TreePath) {
-        super.show(treePath)
-        updateFilter(expand = false)
-    }
-
     override fun updateFilter(tree: JTree, treeNode: BrowserTreeNode, expand: Boolean) {
         super.updateFilter(tree, treeNode, expand)
         filterPane.updateFilterCheckboxes(getElement(TreePath(treeNode.path)).toList())
@@ -50,7 +45,7 @@ class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: S
         add(filterPane, "spanx, growx")
         add(TitledSeparator(getString("detail.displayed.members.title")), "newline para, spanx, growx")
         addDetail(getString("key.members.count")) { classMembers -> classMembers.count { filterPane.isElementShown(it) }.toString() }
-        super.addLabels()
+        addCommon(spacer = true)
     }
 
     override val signatureButtonText: String

@@ -24,7 +24,6 @@ class PermittedSubclassesAttribute(classFile: ClassFile) : AttributeInfo(classFi
     var entries: Array<Int> = emptyArraySingleton()
 
     override fun readData(input: DataInput) {
-
         val numberOfEntries = input.readUnsignedShort()
         entries = Array(numberOfEntries) {
             input.readUnsignedShort()
@@ -46,6 +45,5 @@ class PermittedSubclassesAttribute(classFile: ClassFile) : AttributeInfo(classFi
          * Name of the attribute as in the corresponding constant pool entry.
          */
         const val ATTRIBUTE_NAME = "PermittedSubclasses"
-
     }
 }

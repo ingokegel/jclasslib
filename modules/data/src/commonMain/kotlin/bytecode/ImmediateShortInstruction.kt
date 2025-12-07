@@ -9,6 +9,8 @@ package org.gjt.jclasslib.bytecode
 
 import org.gjt.jclasslib.io.CountingDataInput
 import org.gjt.jclasslib.io.CountingDataOutput
+import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.Constant
 
 /**
  * Describes an instruction followed by an immediate unsigned short.
@@ -29,6 +31,10 @@ abstract class ImmediateShortInstruction(opcode: Opcode, var immediateShort: Int
         super.write(output)
 
         output.writeShort(immediateShort)
+    }
+
+    override fun isConstantUsed(constant: Constant, classFile: ClassFile): Boolean {
+        return opcode != Opcode.SIPUSH && classFile.getConstantPoolIndex(constant) == immediateShort
     }
 }
 

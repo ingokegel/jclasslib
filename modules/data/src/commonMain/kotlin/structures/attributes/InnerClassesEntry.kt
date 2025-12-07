@@ -65,6 +65,8 @@ class InnerClassesEntry : SubStructure() {
         output.writeShort(innerClassAccessFlags)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(innerClassInfoIndex, outerClassInfoIndex, innerNameIndex)
+
     override val debugInfo: String
         get() = "with innerClassInfoIndex $innerClassInfoIndex, " +
                 "outerClassInfoIndex $outerClassInfoIndex, innerNameIndex $innerNameIndex, " +

@@ -30,6 +30,8 @@ class ConstElementValue(elementValueType: ElementValueType) : ElementValue(eleme
         output.writeShort(constValueIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(constValueIndex)
+
     override val debugInfo: String
         get() = "with constValueIndex $constValueIndex"
 

@@ -271,6 +271,8 @@ class ClassFile : Structure(), AttributeContainer {
         writeAttributes(output)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(thisClass, superClass)
+
     override val debugInfo: String
         get() = ""
 

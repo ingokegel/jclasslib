@@ -39,6 +39,8 @@ class SourceFileAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
         output.writeShort(sourceFileIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(attributeNameIndex, sourceFileIndex)
+
     override fun getAttributeLength(): Int = 2
 
     override val debugInfo: String

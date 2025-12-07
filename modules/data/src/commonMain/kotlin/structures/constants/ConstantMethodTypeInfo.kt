@@ -47,6 +47,8 @@ class ConstantMethodTypeInfo(classFile: ClassFile) : AbstractConstant(classFile)
         output.writeShort(descriptorIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(descriptorIndex)
+
     override fun equals(other: Any?): Boolean {
         if (other !is ConstantMethodTypeInfo) {
             return false

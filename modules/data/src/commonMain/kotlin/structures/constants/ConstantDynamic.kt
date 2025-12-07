@@ -47,6 +47,8 @@ abstract class ConstantDynamic(classFile: ClassFile) : AbstractConstant(classFil
         output.writeShort(nameAndTypeIndex)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(bootstrapMethodAttributeIndex, nameAndTypeIndex)
+
     override val debugInfo: String
         get() = "with bootstrapMethodAttributeIndex $bootstrapMethodAttributeIndex and nameAndTypeIndex $nameAndTypeIndex"
 

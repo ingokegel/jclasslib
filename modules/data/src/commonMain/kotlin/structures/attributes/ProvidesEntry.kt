@@ -39,6 +39,8 @@ class ProvidesEntry : SubStructure() {
         withIndices.forEach { output.writeShort(it) }
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(index) + withIndices
+
     override val debugInfo: String
         get() = "with ${withIndices.size} implementation classes"
 

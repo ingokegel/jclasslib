@@ -53,8 +53,8 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         }, BorderLayout.CENTER)
     }
 
-    val root: BrowserTreeNode
-        get() = tree.model.root as BrowserTreeNode
+    val root: BrowserRootNode
+        get() = tree.model.root as BrowserRootNode
 
     private val treeModel: DefaultTreeModel get() = tree.model as DefaultTreeModel
 
@@ -132,7 +132,7 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         add(NodeType.ATTRIBUTE, buildAttributesNode())
     })
 
-    private inner class BrowserRootNode : BrowserTreeNode(getString("tree.class.file"), NodeType.NO_CONTENT) {
+    inner class BrowserRootNode : BrowserTreeNode(getString("tree.class.file"), NodeType.NO_CONTENT) {
         fun add(nodeType: NodeType, node: BrowserTreeNode) {
             add(node)
             categoryToPath[nodeType] = TreePath(arrayOf<Any>(this, node))

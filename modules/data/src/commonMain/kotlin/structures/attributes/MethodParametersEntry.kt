@@ -42,6 +42,8 @@ class MethodParametersEntry : SubStructure() {
         output.writeShort(accessFlags)
     }
 
+    override fun getUsedConstantPoolIndices() = intArrayOf(nameIndex)
+
     override val debugInfo: String
         get() = ""
 
