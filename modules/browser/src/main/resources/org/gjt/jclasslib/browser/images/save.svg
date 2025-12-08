@@ -1,16 +1,1 @@
-<svg x="0" y="0" width="512" height="512" version="1.1"
-     xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 512 512">
-    <title>floppy disk icon</title>
-    <desc>floppy disk icon from the IconExperience.com G-Collection. Copyright by INCORS GmbH (www.incors.com).</desc>
-    <g>
-        <path d="M480,48l0,416c0,8.8 -7.2,16 -16,16l-400,0l-32,-32l0,-400c0,-8.8 7.2,-16 16,-16l416,0c8.8,0 16,7.2 16,16z" fill="#546e7a"/>
-        <path d="M480,48l0,416c0,8.8 -7.2,16 -16,16l-208,0l0,-448l208,0c8.8,0 16,7.2 16,16z" fill="#445a64"/>
-        <path d="M96,32l320,0l0,224c0,8.8 -7.2,16 -16,16l-288,0c-8.8,0 -16,-7.2 -16,-16z" fill="#dff3fd"/>
-        <path d="M256,32l160,0l0,224c0,8.8 -7.2,16 -16,16l-144,0z" fill="#b1e3fb"/>
-        <path d="M416,208l0,48c0,8.8 -7.2,16 -16,16l-288,0c-8.8,0 -16,-7.2 -16,-16l0,-48z" fill="#f98b00"/>
-        <path d="M416,208l0,48c0,8.8 -7.2,16 -16,16l-144,0l0,-64z" fill="#f37c00"/>
-        <path d="M384,336l0,144l-256,0l0,-144c0,-8.8 7.2,-16 16,-16l224,0c8.8,0 16,7.2 16,16z M160,336l0,112l64,0l0,-112z" fill="#ebedef"/>
-        <path d="M384,336l0,144l-128,0l0,-160l112,0c8.8,0 16,7.2 16,16z" fill="#cdd7db"/>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="m720-120 160-160-56-56-64 64v-167h-80v167l-64-64-56 56 160 160ZM560 0v-80h320V0H560ZM240-160q-33 0-56.5-23.5T160-240v-560q0-33 23.5-56.5T240-880h280l240 240v121h-80v-81H480v-200H240v560h240v80H240Zm0-80v-560 560Z"/></svg>

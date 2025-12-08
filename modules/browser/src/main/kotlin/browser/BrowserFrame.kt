@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.browser
 
-import com.formdev.flatlaf.extras.FlatSVGIcon
 import com.install4j.api.Util
 import com.install4j.runtime.filechooser.DirectoryChooser
 import com.install4j.runtime.filechooser.FileAccessMode
@@ -21,13 +20,9 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.classpath.*
 import org.gjt.jclasslib.structures.InvalidByteCodeException
-import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.DefaultAction
-import org.gjt.jclasslib.util.applyPath
-import org.gjt.jclasslib.util.ICON_EMPTY
-import org.gjt.jclasslib.util.alertFacade
-import org.gjt.jclasslib.util.showURL
+import org.gjt.jclasslib.util.*
 import org.w3c.dom.Document
+import util.CustomSvgIcon
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.InputEvent
@@ -753,10 +748,10 @@ class BrowserFrame : JFrame() {
             icons.getOrPut(IconNameAndDimension(fileName, dimension)) {
                 val imageResourcePath = getImageResourcePath(fileName)
                 if (dimension != null) {
-                    FlatSVGIcon(imageResourcePath, dimension.width, dimension.height)
+                    CustomSvgIcon(imageResourcePath, dimension.width, dimension.height)
                 } else {
-                    FlatSVGIcon(imageResourcePath)
-                }
+                    CustomSvgIcon(imageResourcePath)
+                }.materialIcon()
             }
 
         fun getIcon(fileName: String): ImageIcon =
