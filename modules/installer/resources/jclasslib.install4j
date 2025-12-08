@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="11.0.2" transformSequenceNumber="11">
-  <directoryPresets config="./jclasslib.iconset" />
-  <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="6.1" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="11">
+<install4j version="12.0.1" transformSequenceNumber="12">
+  <directoryPresets config="." />
+  <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="7.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="17">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="zh_CN" />
@@ -19,11 +19,11 @@
       <variable name="applePrivateApiKey" />
       <variable name="sys.ext.addIDtoEntitlements" value="false" />
     </variables>
-    <codeSigning macEnabled="true" macKeySource="digestSigningExecutable"  windowsEnabled="true" windowsKeySource="digestSigningExecutable" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
-      <windowsDigestSigningExectuable certificateFile="${compiler:macCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
-      <macDigestSigningExectuable certificateFile="${compiler:winCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
+    <codeSigning macEnabled="true" macKeySource="digestSigningExecutable" windowsEnabled="true" windowsKeySource="digestSigningExecutable" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
+      <windowsDigestSigningExecutable certificateFile="${compiler:macCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
+      <macDigestSigningExecutable certificateFile="${compiler:winCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
     </codeSigning>
-    <jreBundles jdkProviderId="JBR" release="21/21.0.5-b631.16" />
+    <jreBundles jdkProviderId="JBR" release="25/25-b176.4" />
   </application>
   <files>
     <mountPoints>
@@ -39,7 +39,7 @@
   </files>
   <launchers>
     <launcher name="jclasslib bytecode viewer" id="404488187" icnsFile="./jclasslib.icns" customMacBundleIdentifier="true" macBundleIdentifier="org.jclasslib.browser" addMacEntitlements="true" macEntitlementsFile="./entitlements.plist" addMacApplicationCategory="true" macApplicationCategory="public.app-category.developer-tools">
-      <executable name="jclasslib" iconSet="true" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true">
+      <executable name="jclasslib" iconSet="true" iconFile="./jclasslib.ico" executableDir="bin" redirectStdout="true" executableMode="gui" changeWorkingDirectory="false" singleInstance="true">
         <versionInfo include="true" fileDescription="jclasslib bytecode viewer" legalCopyright="ej-technologies" internalName="jclasslib" />
       </executable>
       <splashScreen>
@@ -60,8 +60,6 @@
         <file path="./jclasslib16x16.png" />
         <file path="./jclasslib32x32.png" />
         <file path="./jclasslib128x128.png" />
-        <file path="./jclasslib256x256.png" />
-        <file path="./jclasslib.iconset/icon_512x512.png" />
       </iconImageFiles>
       <macStaticAssociations>
         <fileAssociation extension="jcw" description="jclasslib workspace file" handlerRank="owner" />
@@ -87,6 +85,7 @@
                   <property name="failIfNotObtainedWin" type="boolean" value="false" />
                 </serializedBean>
               </action>
+              <action id="2047307326" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none" />
             </actions>
           </screen>
         </startup>
@@ -99,7 +98,7 @@
                     <element index="0">sys.installationDir</element>
                   </property>
                 </serializedBean>
-                <condition>context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+                <condition>context.getBooleanVariable("sys.streamlinedInstallation")</condition>
               </action>
             </actions>
             <formComponents>
@@ -120,9 +119,12 @@ return console.askOkCancel(message, true);
                   </property>
                 </serializedBean>
               </formComponent>
-              <formComponent id="2047307212" beanClass="com.install4j.runtime.beans.formcomponents.UpdateAlertComponent" useExternalParametrization="true" externalParametrizationName="Update Alert" externalParametrizationMode="include">
+              <formComponent id="2047307212" beanClass="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationChooserComponent" useExternalParametrization="true" externalParametrizationName="Update Alert" externalParametrizationMode="include">
+                <serializedBean>
+                  <property name="streamlinedInstallationStrategy" type="enum" class="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationStrategy" value="UPDATE_ONLY" />
+                </serializedBean>
                 <externalParametrizationPropertyNames>
-                  <propertyName>updateCheck</propertyName>
+                  <propertyName>streamlinedInstallationStrategy</propertyName>
                 </externalParametrizationPropertyNames>
               </formComponent>
               <formComponent id="2047307213" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetTop="20">
@@ -192,10 +194,10 @@ return console.askOkCancel(message, true);
             <actions>
               <action id="2047307200" beanClass="com.install4j.runtime.beans.actions.UninstallPreviousAction" actionElevationType="none" />
               <action id="1880276851" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" failureStrategy="quit" errorMessage="${i18n:FileCorrupted}" />
-              <action id="1880276852" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated">
+              <action id="1880276852" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDefaultStartMenuEntriesAction" actionElevationType="elevated">
                 <serializedBean>
-                  <property name="addUninstaller" type="boolean" value="true" />
-                  <property name="uninstallerMenuName" type="string">${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</property>
+                  <property name="folderName" type="string">${installer:sys.programGroupName}</property>
+                  <property name="linkDirectory" type="string">${installer:sys.symlinkDir}</property>
                 </serializedBean>
               </action>
               <action id="1880276853" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" actionElevationType="elevated">
@@ -386,20 +388,19 @@ return console.askYesNo(message, true);
               <property name="imageEdgeBackgroundColor">
                 <object class="com.install4j.runtime.beans.LightOrDarkColor">
                   <object class="java.awt.Color">
-                    <int>25</int>
+                    <int>27</int>
                     <int>143</int>
                     <int>220</int>
                     <int>255</int>
                   </object>
                   <object class="java.awt.Color">
                     <int>0</int>
-                    <int>74</int>
-                    <int>151</int>
+                    <int>73</int>
+                    <int>150</int>
                     <int>255</int>
                   </object>
                 </object>
               </property>
-              <property name="imageEdgeBorder" type="boolean" value="true" />
               <property name="imageFile">
                 <object class="com.install4j.api.beans.ExternalFile">
                   <string>${compiler:sys.install4jHome}/resource/styles/wizard.png</string>
@@ -417,9 +418,14 @@ return console.askYesNo(message, true);
             <beans>
               <formComponent id="2047307293" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent" insetTop="0">
                 <serializedBean>
-                  <property name="labelFontSizePercent" type="int" value="130" />
-                  <property name="labelFontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
-                  <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                  <property name="labelWidgetStyle" id="LabelWidgetStyle0">
+                    <property name="fontDescriptor">
+                      <property name="fontSizePercent" type="int" value="130" />
+                      <property name="fontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
+                      <property name="fontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                    </property>
+                  </property>
+                  <property name="labelWidgetStyleId" type="null" />
                 </serializedBean>
               </formComponent>
               <formComponent id="2047307294" beanClass="com.install4j.runtime.beans.formcomponents.SeparatorComponent" />
@@ -497,8 +503,13 @@ return console.askYesNo(message, true);
                 <beans>
                   <formComponent name="Title" id="2047307300" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent">
                     <serializedBean>
-                      <property name="labelFontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
-                      <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                      <property name="labelWidgetStyle" id="LabelWidgetStyle0">
+                        <property name="fontDescriptor">
+                          <property name="fontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
+                          <property name="fontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                        </property>
+                      </property>
+                      <property name="labelWidgetStyleId" type="null" />
                     </serializedBean>
                   </formComponent>
                   <formComponent name="Subtitle" id="2047307301" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent" insetLeft="8">
@@ -563,10 +574,13 @@ return console.askYesNo(message, true);
         </beans>
       </group>
     </styles>
+    <widgetStyles defaultWidgetStyleId="106">
+      <widgetStyle name="Standard" id="106" beanClass="com.install4j.runtime.beans.widgets.WidgetStyleCollection" />
+    </widgetStyles>
   </installerGui>
   <mediaSets>
     <windows name="Windows 64-bit" id="2047307151" mediaFileName="${compiler:sys.shortName}_win64_${compiler:sys.version}" installDir="jclasslib" architecture="64" />
-    <macosArchive name="Mac OS X Single Bundle Archive" id="2047307321" architecture="universal" launcherId="404488187">
+    <macosArchive name="Mac OS X Single Bundle Archive" id="2047307321" architecture="universal" dmgStylingMode="none" launcherId="404488187">
       <topLevelFiles>
         <file name=".DS_Store" file="./DS_Store" />
         <file name=".background/dmg_background_archive.png" file="./dmg_background_archive.png" />
