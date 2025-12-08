@@ -9,6 +9,7 @@ package org.gjt.jclasslib.structures.attributes
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.*
+import org.gjt.jclasslib.structures.Annotation
 
 /**
  * Base class for runtime annotations.
