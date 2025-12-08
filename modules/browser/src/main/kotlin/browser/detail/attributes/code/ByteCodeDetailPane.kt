@@ -20,7 +20,7 @@ import org.gjt.jclasslib.io.createInstruction
 import org.gjt.jclasslib.io.writeByteCode
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
-import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import org.gjt.jclasslib.util.getParentWindow
 import java.awt.event.MouseEvent
 import javax.swing.JMenu
 import javax.swing.JOptionPane

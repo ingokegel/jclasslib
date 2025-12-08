@@ -50,8 +50,8 @@ import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.writeClassFile
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.util.GUIHelper
-import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import org.gjt.jclasslib.util.getParentWindow
+import org.gjt.jclasslib.util.MESSAGE_TITLE
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
@@ -115,7 +115,7 @@ private fun readClassFile(locatedClassFile: LocatedClassFile, project: Project):
 
 private fun showWarningDialog(text: String, project: Project) {
     ApplicationManager.getApplication().invokeLater {
-        Messages.showWarningDialog(project, text, GUIHelper.MESSAGE_TITLE)
+        Messages.showWarningDialog(project, text, MESSAGE_TITLE)
     }
 }
 

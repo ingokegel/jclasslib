@@ -64,7 +64,7 @@ fun initUiFacades() {
                 null
             }
 
-            val selectedButton = MessageDialogBuilder.Message(GUIHelper.MESSAGE_TITLE, combineMessage(mainMessage, contentMessage))
+            val selectedButton = MessageDialogBuilder.Message(MESSAGE_TITLE, combineMessage(mainMessage, contentMessage))
                 .buttons(*options)
                 .icon(alertType.getIcon())
                 .doNotAsk(doNotAskOption)

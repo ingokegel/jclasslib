@@ -23,9 +23,10 @@ import org.gjt.jclasslib.browser.config.classpath.*
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.DefaultAction
-import org.gjt.jclasslib.util.GUIHelper
-import org.gjt.jclasslib.util.GUIHelper.applyPath
+import org.gjt.jclasslib.util.applyPath
+import org.gjt.jclasslib.util.ICON_EMPTY
 import org.gjt.jclasslib.util.alertFacade
+import org.gjt.jclasslib.util.showURL
 import org.w3c.dom.Document
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
@@ -206,11 +207,11 @@ class BrowserFrame : JFrame() {
     }
 
     val showHomepageAction = DefaultAction(getString("action.website"), getString("action.website.description"), "web.svg") {
-        GUIHelper.showURL(WEBSITE_URL)
+        showURL(WEBSITE_URL)
     }
 
     val showEjtAction = DefaultAction(getString("action.ej.technologies.web.site"), getString("action.ej.technologies.web.site.description"), "web.svg") {
-        GUIHelper.showURL("https://www.ej-technologies.com")
+        showURL("https://www.ej-technologies.com")
     }
 
     val aboutAction = DefaultAction(getString("action.about"), getString("action.about.description"), "") {
@@ -390,7 +391,7 @@ class BrowserFrame : JFrame() {
                 add(showEjtAction)
                 addSeparator()
                 add(JMenu(getString("menu.dark.mode")).apply {
-                    icon = GUIHelper.ICON_EMPTY
+                    icon = ICON_EMPTY
                     val buttonGroup = ButtonGroup()
                     val actions = mutableMapOf<DarkModeOption, DefaultAction>()
                     for (option in DarkModeOption.entries) {
@@ -599,7 +600,7 @@ class BrowserFrame : JFrame() {
                 ))
             }
             recentMenu.addRecentWorkspace(file)
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             alertFacade.showMessage(this, getString("message.workspace.save.error", file.path), AlertType.ERROR)
         }
 

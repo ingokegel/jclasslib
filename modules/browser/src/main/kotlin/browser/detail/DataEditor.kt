@@ -9,7 +9,7 @@ package org.gjt.jclasslib.browser.detail
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
-import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import org.gjt.jclasslib.util.getParentWindow
 import org.gjt.jclasslib.util.MenuButton
 import org.jetbrains.annotations.Nls
 import java.awt.Window

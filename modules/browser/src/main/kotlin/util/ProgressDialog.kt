@@ -34,7 +34,7 @@ class ProgressDialog(parent: Window, @Nls message: String, var task: () -> Unit 
     override fun setVisible(visible: Boolean) {
         progressBar.isIndeterminate = visible
         if (visible) {
-            GUIHelper.centerOnParentWindow(this, owner)
+            centerOnParentWindow(this, owner)
         }
         super.setVisible(visible)
     }
@@ -46,7 +46,7 @@ class ProgressDialog(parent: Window, @Nls message: String, var task: () -> Unit 
             add(messageLabel)
             add(progressBar, "growx")
 
-            title = GUIHelper.MESSAGE_TITLE
+            title = MESSAGE_TITLE
             isModal = true
             pack()
         }

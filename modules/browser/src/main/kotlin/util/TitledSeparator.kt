@@ -16,7 +16,7 @@ import javax.swing.UIManager
 
 class TitledSeparator(@Nls title: String) : JPanel() {
     init {
-        layout = MigLayout("insets 0 0 unrel 0", "[][grow, fill]", "[align ${if (GUIHelper.isMacOs()) "bottom" else "center" }]")
+        layout = MigLayout("insets 0 0 unrel 0", "[][grow, fill]", "[align ${if (isMacOs()) "bottom" else "center" }]")
         add(JLabel(title).apply {
             font = UIManager.getFont("TitledBorder.font")
             foreground = UIManager.getColor("TitledBorder.titleColor")

@@ -15,7 +15,6 @@ import org.gjt.jclasslib.browser.config.classpath.FindResult
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.alertFacade
 import org.w3c.dom.Element
 import java.awt.BorderLayout
@@ -129,7 +128,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     override fun canSaveClassFiles(): Boolean = true
 
     override fun showURL(urlSpec: String) {
-        GUIHelper.showURL(urlSpec)
+        org.gjt.jclasslib.util.showURL(urlSpec)
     }
 
     override fun modified() {

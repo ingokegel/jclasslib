@@ -14,7 +14,7 @@ import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.util.DefaultAction
-import org.gjt.jclasslib.util.GUIHelper.applyPath
+import org.gjt.jclasslib.util.applyPath
 import org.gjt.jclasslib.util.StandardDialog
 import org.gjt.jclasslib.util.scrollPaneFactory
 import java.awt.BorderLayout

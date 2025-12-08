@@ -11,7 +11,7 @@ import com.install4j.api.launcher.Variables
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.util.DefaultAction
-import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.centerOnParentWindow
 import java.awt.Font
 import java.awt.event.KeyEvent
 import java.io.IOException
@@ -57,14 +57,14 @@ class BrowserAboutDialog(parent: JFrame) : JDialog(parent) {
         isModal = true
         isResizable = false
         title = getString("about.title")
-        GUIHelper.centerOnParentWindow(this, owner)
+        centerOnParentWindow(this, owner)
         defaultCloseOperation = DISPOSE_ON_CLOSE
     }
 
     private fun getVersion(): String {
         return try {
             Variables.getCompilerVariable("sys.version")
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             "<unknown>"
         }
     }

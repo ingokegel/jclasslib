@@ -45,7 +45,7 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
 
     override fun setVisible(visible: Boolean) {
         if (visible) {
-            GUIHelper.centerOnParentWindow(this, owner)
+            centerOnParentWindow(this, owner)
             isCanceled = false
         }
         super.setVisible(visible)

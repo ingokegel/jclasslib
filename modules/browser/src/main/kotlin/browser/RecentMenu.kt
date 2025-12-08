@@ -8,7 +8,7 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
-import org.gjt.jclasslib.util.GUIHelper
+import org.gjt.jclasslib.util.ICON_EMPTY
 import java.awt.EventQueue
 import java.awt.event.ActionListener
 import java.io.File
@@ -27,7 +27,7 @@ class RecentMenu(private val frame: BrowserFrame) : JMenu() {
 
     init {
         text = getString("menu.recent.workspaces")
-        icon = GUIHelper.ICON_EMPTY
+        icon = ICON_EMPTY
     }
 
     override fun menuSelectionChanged(isIncluded: Boolean) {

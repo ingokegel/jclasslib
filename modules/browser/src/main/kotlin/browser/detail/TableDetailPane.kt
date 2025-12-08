@@ -12,9 +12,9 @@ import org.gjt.jclasslib.browser.detail.attributes.ColumnTableModel
 import org.gjt.jclasslib.browser.detail.attributes.Link
 import org.gjt.jclasslib.browser.detail.attributes.LinkRenderer
 import org.gjt.jclasslib.structures.AttributeInfo
-import org.gjt.jclasslib.util.GUIHelper
 import org.gjt.jclasslib.util.LinkMouseListener
 import org.gjt.jclasslib.util.applyTableRowHeight
+import org.gjt.jclasslib.util.scale
 import org.gjt.jclasslib.util.scrollPaneFactory
 import java.awt.Component
 import java.awt.Point
@@ -95,10 +95,10 @@ abstract class TableDetailPane<T : AttributeInfo>(elementClass: Class<T>, servic
             columnModel.columns.iterator().withIndex().forEach {
                 val column = tableModel.columns[it.index]
                 it.value.apply {
-                    minWidth = GUIHelper.scale(column.minWidth)
-                    maxWidth = column.maxWidth.let { if (it == Int.MAX_VALUE) it else GUIHelper.scale(it) }
-                    width = GUIHelper.scale(column.width)
-                    preferredWidth = GUIHelper.scale(column.width)
+                    minWidth = scale(column.minWidth)
+                    maxWidth = column.maxWidth.let { if (it == Int.MAX_VALUE) it else scale(it) }
+                    width = scale(column.width)
+                    preferredWidth = scale(column.width)
                     cellRenderer = column.createTableCellRenderer()
                     cellEditor = column.createTableCellEditor()
                 }

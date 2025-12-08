@@ -20,7 +20,7 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.ConstantPoolUtil
 import org.gjt.jclasslib.structures.attributes.ExportsEntry
 import org.gjt.jclasslib.structures.attributes.ModuleAttribute
-import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import org.gjt.jclasslib.util.getParentWindow
 import util.LightOrDarkColor
 import java.awt.Color
 import javax.swing.JOptionPane

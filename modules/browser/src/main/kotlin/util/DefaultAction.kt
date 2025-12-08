@@ -27,7 +27,7 @@ class DefaultAction(
     init {
         if (iconFileName != null) {
             if (iconFileName.isEmpty()) {
-                putValue(SMALL_ICON, GUIHelper.ICON_EMPTY)
+                putValue(SMALL_ICON, ICON_EMPTY)
             } else {
                 putValue(SMALL_ICON, BrowserFrame.getSvgIcon(iconFileName, SMALL_ICON_SIZE))
                 putValue(LARGE_ICON_KEY, BrowserFrame.getSvgIcon(iconFileName, LARGE_ICON_SIZE))
@@ -56,7 +56,7 @@ class DefaultAction(
         text = null
         icon = getValue(SMALL_ICON) as Icon?
         fixedSize(IMAGE_BUTTON_SIZE)
-        if (GUIHelper.isMacOs()) {
+        if (isMacOs()) {
             putClientProperty("JButton.buttonType", "toolbar")
         }
     }
@@ -65,7 +65,7 @@ class DefaultAction(
         text = null
         fixedSize(TOOL_BAR_BUTTON_SIZE)
         isFocusable = false
-        if (GUIHelper.isMacOs()) {
+        if (isMacOs()) {
             putClientProperty("JButton.buttonType", "toolbar")
         }
     }

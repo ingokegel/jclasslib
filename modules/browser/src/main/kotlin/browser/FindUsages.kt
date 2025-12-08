@@ -12,7 +12,7 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.GUIHelper.getParentWindow
+import org.gjt.jclasslib.util.getParentWindow
 import org.gjt.jclasslib.util.SelectionDialog
 import org.gjt.jclasslib.util.alertFacade
 import org.gjt.jclasslib.util.expandAll

@@ -22,7 +22,7 @@ private val okCancelOptions by lazy { arrayOf(BrowserBundle.getString("action.ok
 
 var alertFacade: AlertFacade = object : AlertFacade {
     override fun showOptionDialog(parent: Component?, mainMessage: String, contentMessage: String?, options: Array<String>, alertType: AlertType, suppressionShown: Boolean) =
-        Alert.create<String>(parent, GUIHelper.MESSAGE_TITLE, mainMessage, contentMessage)
+        Alert.create<String>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
                 .addButtons(options)
                 .defaultButton(options[0])
                 .cancelButton(options[options.size - 1])
@@ -34,7 +34,7 @@ var alertFacade: AlertFacade = object : AlertFacade {
                 }
 
     override fun showMessage(parent: Component?, mainMessage: String, contentMessage: String?, alertType: AlertType, suppressionShown: Boolean) =
-        Alert.create<Any>(parent, GUIHelper.MESSAGE_TITLE, mainMessage, contentMessage)
+        Alert.create<Any>(parent, MESSAGE_TITLE, mainMessage, contentMessage)
                 .mainMessageRedundant(true)
                 .alertType(alertType.convert())
                 .suppressionShown(suppressionShown)
