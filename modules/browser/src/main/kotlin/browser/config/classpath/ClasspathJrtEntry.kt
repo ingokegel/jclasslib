@@ -7,24 +7,37 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import org.gjt.jclasslib.browser.BrowserFrame
+import org.gjt.jclasslib.browser.ClassFileCallback
+import org.gjt.jclasslib.browser.handleClassFile
 import org.gjt.jclasslib.io.findClassInJrt
 import org.gjt.jclasslib.io.findClassWithModuleNameInJrt
+import org.gjt.jclasslib.io.forEachClassInJrt
 import org.gjt.jclasslib.io.forEachClassNameInJrt
 import org.w3c.dom.Element
+import java.nio.file.Path
 import javax.swing.tree.DefaultTreeModel
 
 class ClasspathJrtEntry(jreHome: String) : ClasspathFileEntry(jreHome) {
     override fun findClass(className: String, modulePathSelection: Boolean): FindResult? {
         return if (modulePathSelection) {
-            findClassWithModuleNameInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it", it.getName(1).toString()) }
+            findClassWithModuleNameInJrt(className, file)?.let { createFindResult(it, it.getName(1).toString()) }
         } else {
-            findClassInJrt(className, file)?.let { FindResult("$JRT_PREFIX$it") }
+            findClassInJrt(className, file)?.let { createFindResult(it, UNNAMED_MODULE) }
         }
     }
+
+    private fun createFindResult(path: Path, moduleName: String): FindResult = FindResult("$JRT_PREFIX$path", moduleName)
 
     override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
         forEachClassNameInJrt(file) { moduleName, path ->
             addEntry(path, moduleName, classPathModel, modulePathModel, reset)
+        }
+    }
+
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+        forEachClassInJrt(file) { moduleName, path ->
+            classFileCallback.handleClassFile(createFindResult(path, moduleName), frame)
         }
     }
 

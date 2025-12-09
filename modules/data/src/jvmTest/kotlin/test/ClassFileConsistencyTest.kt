@@ -73,7 +73,7 @@ class ClassFileConsistencyTest {
     }
 
     private fun scanJrt(jreHome: File, testStatistics: TestStatistics, logPaths: Boolean = false, pathFilter: (Path) -> Boolean = { true }) {
-        forEachClassInJrt(jreHome) { path ->
+        forEachClassInJrt(jreHome) { _, path ->
             if (pathFilter(path)) {
                 if (logPaths) {
                     println("Processing $path")

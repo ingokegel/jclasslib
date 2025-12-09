@@ -16,8 +16,7 @@ import java.awt.event.ComponentEvent
 import java.util.concurrent.ExecutionException
 import javax.swing.*
 
-class ProgressDialog(parent: Window, @Nls message: String, var task: () -> Unit = {}) : JDialog(parent) {
-
+class ProgressDialog(parent: Window?, @Nls message: String, var task: () -> Unit = {}) : JDialog(parent) {
     private val progressBar: JProgressBar = JProgressBar().apply {
         preferredSize = preferredSize.apply {
             width = 200

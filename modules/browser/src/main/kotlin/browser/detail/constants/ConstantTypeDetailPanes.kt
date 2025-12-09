@@ -11,7 +11,7 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.DataEditor
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
-import org.gjt.jclasslib.browser.findUsages
+import org.gjt.jclasslib.browser.findConstantUsages
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
@@ -23,7 +23,7 @@ abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, service
     private val btnFindUsages: JButton = JButton(getString("action.find.usages")).apply {
         addActionListener {
             element?.let {constant ->
-                findUsages(services.browserComponent, constant)
+                findConstantUsages(services.browserComponent, constant)
             }
         }
     }

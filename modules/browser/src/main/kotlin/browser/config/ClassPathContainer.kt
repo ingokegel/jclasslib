@@ -7,6 +7,8 @@
 
 package org.gjt.jclasslib.browser.config
 
+import org.gjt.jclasslib.browser.BrowserFrame
+import org.gjt.jclasslib.browser.ClassFileCallback
 import org.gjt.jclasslib.browser.config.classpath.*
 import java.io.File
 import javax.swing.tree.DefaultTreeModel
@@ -38,6 +40,15 @@ abstract class ClassPathContainer : ClasspathComponent {
         createJreEntry()?.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
     }
 
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+        for (entry in classpath) {
+            entry.scanClassFiles(classFileCallback, includeJdk, frame)
+        }
+        if (includeJdk) {
+            createJreEntry()?.scanClassFiles(classFileCallback, true, frame)
+        }
+    }
+
     override fun contains(component: ClasspathComponent): Boolean = if (component is ClassPathContainer) {
         jreHome == component.jreHome && classpath.containsAll(component.classpath)
     } else {
@@ -48,7 +59,7 @@ abstract class ClassPathContainer : ClasspathComponent {
         return when {
             File(jreHome, "lib/modules").exists() -> ClasspathJrtEntry(jreHome)
             File(jreHome, "lib/rt.jar").exists() -> ClasspathArchiveEntry(File(jreHome, "lib/rt.jar").path)
-            else -> return null
+            else -> null
         }
     }
 }

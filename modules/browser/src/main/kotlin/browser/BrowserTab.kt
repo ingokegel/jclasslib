@@ -124,8 +124,8 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         browserComponent.treePane.tree.requestFocus()
     }
 
-    override fun canOpenClassFiles(): Boolean = true
-    override fun canSaveClassFiles(): Boolean = true
+    override fun canOpenClassFiles() = true
+    override fun canSaveClassFiles() = true
 
     override fun showURL(urlSpec: String) {
         org.gjt.jclasslib.util.showURL(urlSpec)
@@ -134,6 +134,12 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
     override fun modified() {
         tabbedPane.updateSelectedTitle()
         frameContent.updateSaveAction()
+    }
+
+    override fun canScanClassFiles() = true
+
+    override fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {
+        parentFrame.classpathComponent.scanClassFiles(classFileCallback, includeJdk, parentFrame)
     }
 
     fun getTabTitle(): String =

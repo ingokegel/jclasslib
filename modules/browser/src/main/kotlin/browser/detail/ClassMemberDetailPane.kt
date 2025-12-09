@@ -11,10 +11,20 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.constants.DelegateBuilder
 import org.gjt.jclasslib.browser.detail.constants.DelegatesEditor
+import org.gjt.jclasslib.browser.findClassMemberUsages
 import org.gjt.jclasslib.structures.ClassMember
+import javax.swing.JButton
 
 class ClassMemberDetailPane(services: BrowserServices, signatureMode: SignatureMode) :
         FixedListWithSignatureDetailPane<ClassMember>(ClassMember::class.java, services, signatureMode) {
+
+    private val btnFindUsages: JButton = JButton(getString("action.find.usages")).apply {
+        addActionListener {
+            element?.let {classMember ->
+                findClassMemberUsages(services.browserComponent, classMember)
+            }
+        }
+    }
 
     override val signatureVerbose: String
         get() = StringBuilder().apply {
@@ -29,6 +39,13 @@ class ClassMemberDetailPane(services: BrowserServices, signatureMode: SignatureM
         addDetail(getString("key.access.flags")) { classMember -> "${classMember.formattedAccessFlags} [${classMember.accessFlagsVerbose}]" }
         addEditor { ClassMemberEditor() }
         addCommon()
+    }
+
+    override fun addEditor(editorProvider: () -> DataEditor<ClassMember>) {
+        super.addEditor(editorProvider)
+        if (services.canScanClassFiles()) {
+            add(btnFindUsages, "newline, spanx")
+        }
     }
 
     override val signatureButtonText: String

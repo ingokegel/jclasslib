@@ -11,11 +11,7 @@ import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.Structure
-import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.getParentWindow
-import org.gjt.jclasslib.util.SelectionDialog
-import org.gjt.jclasslib.util.alertFacade
-import org.gjt.jclasslib.util.expandAll
+import org.gjt.jclasslib.util.*
 import java.awt.Component
 import java.awt.Window
 import java.awt.event.MouseAdapter
@@ -26,7 +22,7 @@ import javax.swing.JTree
 import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.TreePath
 
-fun findUsages(browserComponent: BrowserComponent, constant: Constant) {
+fun findConstantUsages(browserComponent: BrowserComponent, constant: Constant) {
     val rootNode = browserComponent.treePane.root
     val usagesRootNode = FoundUsageNode(rootNode, false)
     createUsageNodes(rootNode, usagesRootNode) { node ->
@@ -43,8 +39,12 @@ fun findUsages(browserComponent: BrowserComponent, constant: Constant) {
             }
         }
     } else {
-        alertFacade.showMessage(browserComponent, getString("no.usages.found"), AlertType.INFORMATION)
+        showNoUsagesFoundMessage(browserComponent)
     }
+}
+
+fun showNoUsagesFoundMessage(browserComponent: BrowserComponent) {
+    alertFacade.showMessage(browserComponent, getString("no.usages.found"), AlertType.INFORMATION)
 }
 
 private fun createUsageNodes(
@@ -69,10 +69,10 @@ private fun pruneTree(node: FoundUsageNode): Boolean {
     return node.used || node.childCount > 0
 }
 
-class FoundUsageNode(val sourceNode: BrowserTreeNode, val used: Boolean) :
+private class FoundUsageNode(val sourceNode: BrowserTreeNode, val used: Boolean) :
     BrowserTreeNode(sourceNode.userObject.toString(), sourceNode.type, sourceNode.element)
 
-class FoundUsagesDialog(rootNode: FoundUsageNode, parentWindow: Window?) :
+private class FoundUsagesDialog(rootNode: FoundUsageNode, parentWindow: Window?) :
     SelectionDialog<FoundUsageNode>(parentWindow, getString("found.usages.title")) {
     private val tree = JTree(rootNode).apply {
         addMouseListener(object : MouseAdapter() {

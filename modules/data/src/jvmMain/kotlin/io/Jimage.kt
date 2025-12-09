@@ -53,10 +53,10 @@ fun findClassInJrt(className: String, jreHome: File): Path? {
  * @param jreHome the home directory of the JRE
  * @param block the code that should be executed for each class
  */
-fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
+fun forEachClassInJrt(jreHome: File, block : (moduleName: String, path : Path) -> Unit) {
     Files.walk(getModulesRoot(jreHome)).forEach { path ->
         if (path.nameCount > 2 && !Files.isDirectory(path) && path.toString().lowercase().endsWith(CLASS_FILE_SUFFIX)) {
-            block(path)
+            block(path.getName(1).toString(), path)
         }
     }
 }
@@ -67,8 +67,8 @@ fun forEachClassInJrt(jreHome: File, block : (path : Path) -> Unit) {
  * @param block the code that should be executed for each class name
  */
 fun forEachClassNameInJrt(jreHome: File, block : (moduleName: String, className :String) -> Unit) {
-    forEachClassInJrt(jreHome) { path ->
-        block(path.getName(1).toString(), path.subpath(2, path.nameCount).toString())
+    forEachClassInJrt(jreHome) { moduleName, path ->
+        block(moduleName, path.subpath(2, path.nameCount).toString())
     }
 }
 

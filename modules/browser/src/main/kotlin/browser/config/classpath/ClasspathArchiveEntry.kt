@@ -8,8 +8,12 @@
 package org.gjt.jclasslib.browser.config.classpath
 
 import kotlinx.dom.build.addElement
+import org.gjt.jclasslib.browser.BrowserFrame
+import org.gjt.jclasslib.browser.ClassFileCallback
+import org.gjt.jclasslib.browser.handleClassFile
 import org.w3c.dom.Element
 import java.io.IOException
+import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import javax.swing.tree.DefaultTreeModel
 
@@ -39,7 +43,7 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
                 val jarFile = JarFile(file)
                 val entry = jarFile.getJarEntry(fileName)
                 if (entry != null) {
-                    return FindResult(file.path + "!" + fileName, moduleName)
+                    return createFindResult(entry)
                 }
             } catch (_: IOException) {
             }
@@ -47,12 +51,26 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
         return null
     }
 
+    private fun createFindResult(entry: JarEntry): FindResult = FindResult(file.path + "!" + entry.name, moduleName)
+
     override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
+        forEachEntry {
+            addEntry(it.name, moduleName, classPathModel, modulePathModel, reset)
+        }
+    }
+
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+        forEachEntry {
+            classFileCallback.handleClassFile(createFindResult(it), frame)
+        }
+    }
+
+    private fun forEachEntry(handler: (jarEntry: JarEntry) -> Unit) {
         try {
             JarFile(file).use { jarFile ->
                 jarFile.entries().iterator().forEach {
                     if (!it.isDirectory && it.name.lowercase().endsWith(CLASSFILE_SUFFIX)) {
-                        addEntry(it.name, moduleName, classPathModel, modulePathModel, reset)
+                        handler(it)
                     }
                 }
             }

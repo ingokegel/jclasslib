@@ -8,6 +8,9 @@
 package org.gjt.jclasslib.browser.config.classpath
 
 import kotlinx.dom.build.addElement
+import org.gjt.jclasslib.browser.BrowserFrame
+import org.gjt.jclasslib.browser.ClassFileCallback
+import org.gjt.jclasslib.browser.handleClassFile
 import org.w3c.dom.Element
 import java.io.File
 import java.io.FileInputStream
@@ -34,7 +37,7 @@ class ClasspathDirectoryEntry(fileName: String) : ClasspathFileEntry(fileName) {
         if (!modulePathSelection || getModuleName(className) == moduleName) {
             val classFile = File(file, getClassPathClassName(className, modulePathSelection).replace('.', '/') + ".class")
             if (classFile.exists() && classFile.canRead()) {
-                return FindResult(classFile.path, moduleName)
+                return createFindResult(classFile)
             }
         }
         return null
@@ -75,6 +78,24 @@ class ClasspathDirectoryEntry(fileName: String) : ClasspathFileEntry(fileName) {
             }
         }
     }
+
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+        scanClasses(file, classFileCallback, frame)
+    }
+
+    private fun scanClasses(directory: File, classFileCallback: ClassFileCallback, frame: BrowserFrame) {
+        val files = directory.listFiles() ?: return
+        for (file in files) {
+            if (file.isDirectory) {
+                scanClasses(file, classFileCallback, frame)
+            } else if (file.name.lowercase().endsWith(CLASSFILE_SUFFIX) &&
+                (!file.name.endsWith(MODULE_INFO_CLASS_FILE_NAME) || directory != file)) {
+                classFileCallback.handleClassFile(createFindResult(file), frame)
+            }
+        }
+    }
+
+    private fun createFindResult(classFile: File): FindResult = FindResult(classFile.path, moduleName)
 
     companion object {
         const val NODE_NAME = "directory"
