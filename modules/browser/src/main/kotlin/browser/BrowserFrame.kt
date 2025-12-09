@@ -23,6 +23,7 @@ import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.*
 import org.w3c.dom.Document
 import util.CustomSvgIcon
+import util.MenuBarMenu
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.InputEvent
@@ -366,7 +367,7 @@ class BrowserFrame : JFrame() {
     private fun setupMenu() {
         jMenuBar = JMenuBar().apply {
 
-            add(JMenu(getString("menu.file")).apply {
+            add(MenuBarMenu(getString("menu.file")).apply {
                 add(openClassFileAction)
                 addSeparator()
                 add(attachVmAction)
@@ -385,7 +386,7 @@ class BrowserFrame : JFrame() {
                 add(showHomepageAction)
                 add(showEjtAction)
                 addSeparator()
-                add(JMenu(getString("menu.dark.mode")).apply {
+                add(MenuBarMenu(getString("menu.dark.mode")).apply {
                     icon = ICON_EMPTY
                     val buttonGroup = ButtonGroup()
                     val actions = mutableMapOf<DarkModeOption, DefaultAction>()
@@ -412,7 +413,7 @@ class BrowserFrame : JFrame() {
                         }
                     })
                 })
-                add(JMenu(getString("menu.switch.language")).apply {
+                add(MenuBarMenu(getString("menu.switch.language")).apply {
                     icon = getSvgIcon("language.svg", DefaultAction.SMALL_ICON_SIZE)
                     val selectedSupportedLocale = SupportedLocale.findByLocaleCode(getPreferencesNode().get(SETTINGS_LOCALE, ""))
                     val buttonGroup = ButtonGroup()
@@ -436,12 +437,12 @@ class BrowserFrame : JFrame() {
                 add(quitAction)
             })
 
-            add(JMenu(getString("menu.classpath")).apply {
+            add(MenuBarMenu(getString("menu.classpath")).apply {
                 add(browseClasspathAction)
                 add(setupClasspathAction)
             })
 
-            add(JMenu(getString("menu.browse")).apply {
+            add(MenuBarMenu(getString("menu.browse")).apply {
                 add(backwardAction)
                 add(forwardAction)
 
@@ -451,7 +452,7 @@ class BrowserFrame : JFrame() {
 
             add(windowMenu)
 
-            add(JMenu(getString("menu.help")).apply {
+            add(MenuBarMenu(getString("menu.help")).apply {
                 add(showHomepageAction)
                 add(aboutAction)
             })
