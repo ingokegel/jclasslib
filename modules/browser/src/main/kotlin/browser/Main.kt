@@ -12,6 +12,7 @@ package org.gjt.jclasslib.browser
 import com.exe4j.runtime.util.LazyFileOutputStream
 import com.formdev.flatlaf.FlatDarculaLaf
 import com.formdev.flatlaf.FlatIntelliJLaf
+import com.formdev.flatlaf.FlatLaf
 import com.install4j.api.Util
 import com.install4j.api.launcher.StartupNotification
 import com.install4j.runtime.installer.platform.macos.MacosUiHelper
@@ -88,6 +89,7 @@ fun updateFlatLaf() {
     val defaultOptionPaneIcons = listOf("error", "information", "question", "warning")
             .map { "OptionPane.${it}Icon" }
             .associateWith { UIManager.getIcon(it) }
+    FlatLaf.registerCustomDefaultsSource("org/gjt/jclasslib/browser/laf")
     if (darkMode) {
         FlatDarculaLaf.setup()
     } else {
