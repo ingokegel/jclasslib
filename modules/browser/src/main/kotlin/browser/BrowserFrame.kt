@@ -473,42 +473,41 @@ class BrowserFrame : JFrame() {
 
     private fun setupFrame() {
         defaultCloseOperation = DO_NOTHING_ON_CLOSE
-
-        val contentPane = contentPane as JComponent
-        contentPane.layout = BorderLayout(5, 5)
-        contentPane.add(frameContent, BorderLayout.CENTER)
-        contentPane.add(buildToolbar(), BorderLayout.NORTH)
-        iconImages = ICON_IMAGES
-
-        contentPane.transferHandler = object : TransferHandler() {
-            override fun canImport(support: TransferSupport): Boolean {
-                val supported = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
-                if (supported) {
-                    support.dropAction = COPY
-                }
-                return supported
-            }
-
-            override fun importData(support: TransferSupport): Boolean {
-                val transferable = support.transferable
-                val flavors = transferable.transferDataFlavors
-                for (flavor in flavors) {
-                    try {
-                        if (flavor.isFlavorJavaFileListType) {
-                            @Suppress("UNCHECKED_CAST")
-                            (transferable.getTransferData(flavor) as List<File>).forEach {
-                                openExternalFile(it.path)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+        (contentPane as JComponent).apply {
+            isOpaque = false
+            layout = BorderLayout(5, 5)
+            add(frameContent, BorderLayout.CENTER)
+            add(buildToolbar(), BorderLayout.NORTH)
+            iconImages = ICON_IMAGES
+            transferHandler = object : TransferHandler() {
+                override fun canImport(support: TransferSupport): Boolean {
+                    val supported = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
+                    if (supported) {
+                        support.dropAction = COPY
                     }
-
+                    return supported
                 }
-                return false
+
+                override fun importData(support: TransferSupport): Boolean {
+                    val transferable = support.transferable
+                    val flavors = transferable.transferDataFlavors
+                    for (flavor in flavors) {
+                        try {
+                            if (flavor.isFlavorJavaFileListType) {
+                                @Suppress("UNCHECKED_CAST")
+                                (transferable.getTransferData(flavor) as List<File>).forEach {
+                                    openExternalFile(it.path)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+
+                    }
+                    return false
+                }
             }
         }
-
     }
 
     private fun updateTitle() {
@@ -523,6 +522,7 @@ class BrowserFrame : JFrame() {
     }
 
     private fun buildToolbar(): JToolBar = JToolBar().apply {
+        isOpaque = false
         add(openClassFileAction.createToolBarButton())
         add(attachVmAction.createToolBarButton())
         add(detachVmAction.createToolBarButton())
