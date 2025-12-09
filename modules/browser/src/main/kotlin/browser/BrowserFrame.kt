@@ -19,11 +19,11 @@ import kotlinx.dom.writeXmlString
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.classpath.*
+import org.gjt.jclasslib.browser.util.MenuBarMenu
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.*
 import org.w3c.dom.Document
 import util.CustomSvgIcon
-import util.MenuBarMenu
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.InputEvent

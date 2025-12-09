@@ -5,7 +5,7 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package util
+package org.gjt.jclasslib.browser.util
 
 import com.install4j.api.Util
 import javax.swing.Action
