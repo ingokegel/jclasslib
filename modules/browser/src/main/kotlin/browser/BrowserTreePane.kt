@@ -7,6 +7,8 @@
 
 package org.gjt.jclasslib.browser
 
+import com.formdev.flatlaf.FlatLaf
+import com.install4j.runtime.beans.LazyColor
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.*
 import org.gjt.jclasslib.structures.Annotation
@@ -20,6 +22,7 @@ import java.awt.Dimension
 import java.util.*
 import javax.swing.JPanel
 import javax.swing.JTree
+import javax.swing.UIManager
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
@@ -42,15 +45,19 @@ class BrowserTreePane(private val services: BrowserServices) : JPanel() {
         applyTreeRowHeight()
     }
 
-    private val scrollPane = scrollPaneFactory(tree)
+    private val scrollPane = borderlessScrollPaneFactory(tree)
 
     init {
         layout = BorderLayout()
         add(scrollPane.apply {
             minimumSize = Dimension(100, 150)
             preferredSize = Dimension(250, 150)
-            border = null
         }, BorderLayout.CENTER)
+        if (UIManager.getLookAndFeel() is FlatLaf) {
+            val background = LazyColor { UIManager.getColor(if (FlatLaf.isLafDark()) "RootPane.background" else "Tree.background") }
+            scrollPane.viewport.background = background
+            tree.background = background
+        }
     }
 
     val root: BrowserRootNode
