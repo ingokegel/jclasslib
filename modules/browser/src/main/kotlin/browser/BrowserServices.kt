@@ -19,6 +19,8 @@ interface GlobalBrowserServices {
     fun showURL(urlSpec: String)
     fun canScanClassFiles(): Boolean = false
     fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {}
+    fun canReadClassFiles(): Boolean = false
+    fun readClassFile(className: String): ClassFile? = null
 }
 
 interface BrowserServices : GlobalBrowserServices {

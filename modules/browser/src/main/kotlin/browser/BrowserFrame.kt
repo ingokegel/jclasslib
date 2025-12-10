@@ -22,6 +22,7 @@ import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.*
 import org.gjt.jclasslib.browser.usages.findString
 import org.gjt.jclasslib.browser.util.MenuBarMenu
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.*
 import org.w3c.dom.Document
@@ -426,6 +427,21 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
 
     override fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {
         classpathComponent.scanClassFiles(classFileCallback, includeJdk, this)
+    }
+
+    override fun canReadClassFiles() = true
+
+    override fun readClassFile(className: String): ClassFile? {
+        val findResult: FindResult? = findClass(className)
+        return if (findResult != null) {
+            try {
+                readClassFile(findResult.fileName, this)
+            } catch (_: Exception) {
+                null
+            }
+        } else {
+            null
+        }
     }
 
     private fun setupMenu() {

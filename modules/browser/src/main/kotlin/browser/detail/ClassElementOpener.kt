@@ -13,6 +13,7 @@ import org.gjt.jclasslib.browser.NodeType
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.CategoryHolder
 import org.gjt.jclasslib.browser.config.ReferenceHolder
+import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.*
@@ -28,9 +29,8 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
     private val btnShow: JButton = JButton(getString("action.show")).apply {
         addActionListener {
             try {
-                val classInfo = getClassInfo()
-                if (classInfo != null) {
-                    val className = classInfo.name.replace('/', '.')
+                val className = getClassName()
+                if (className != null) {
                     detailPane.services.openClassFile(className, getBrowserPath())
                 }
             } catch (ex: InvalidByteCodeException) {
@@ -61,12 +61,33 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
         }
     }
 
-    private fun getClassInfo(): ConstantClassInfo? = constant?.let { constant ->
+    private fun getClassName(): String? = constant?.let { constant ->
         when (constant) {
-            is ConstantClassInfo -> constant
-            is ConstantReference -> constant.classConstant
+            is ConstantClassInfo -> constant.name.replace('/', '.')
+            is ConstantReference -> {
+                var currentClassName = constant.classConstant.name.replace("/", ".")
+                while (currentClassName != "java.lang.Object") {
+                    val classFile = detailPane.services.readClassFile(currentClassName)
+                    if (classFile == null || containsReference(classFile, constant)) {
+                        break
+                    }
+                    currentClassName = classFile.superClassName.replace("/", ".")
+                }
+                currentClassName
+            }
             else -> null
         }
+    }
+
+    private fun containsReference(classFile: ClassFile, constant: ConstantReference): Boolean {
+        val members = when (constant) {
+            is ConstantFieldrefInfo -> classFile.fields
+            is ConstantMethodrefInfo, is ConstantInterfaceMethodrefInfo -> classFile.methods
+            else -> null
+        }
+        val nameAndTypeConstant = constant.nameAndTypeConstant
+        return members?.any { it.name == nameAndTypeConstant.name && it.descriptor == nameAndTypeConstant.descriptor }
+            ?: false
     }
 
     private fun getBrowserPath(): BrowserPath? {

@@ -104,6 +104,9 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         parentFrame.scanClassFiles(includeJdk, classFileCallback)
     }
 
+    override fun canReadClassFiles() = parentFrame.canReadClassFiles()
+    override fun readClassFile(className: String) = parentFrame.readClassFile(className)
+
     fun getTabTitle(): String =
         (if (browserComponent.isModified) "* " else "") +
                 if (moduleName != ClasspathEntry.UNNAMED_MODULE) {
