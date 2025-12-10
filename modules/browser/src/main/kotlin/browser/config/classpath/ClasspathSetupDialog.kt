@@ -23,7 +23,7 @@ import java.awt.event.KeyEvent
 import java.io.File
 import javax.swing.*
 
-class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(frame, getString("window.setup.classpath")) {
+class ClasspathSetupDialog(private val frame: BrowserFrame) : StandardDialog(frame, getString("window.setup.classpath.title")) {
 
     private val listModel: DefaultListModel<ClasspathEntry> = DefaultListModel()
     private val lstElements: JList<ClasspathEntry> = JList(listModel).apply {

@@ -45,7 +45,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 class BrowserFrame : JFrame(), GlobalBrowserServices {
-
     var vmConnection: VmConnection? = null
         private set
 
@@ -53,7 +52,7 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
     val classpathComponent: ClasspathComponent
         get() = vmConnection?.let { ClasspathVmEntry(it) } ?: config.toImmutableContainer()
 
-    val openClassFileAction = DefaultAction(getString("action.open.class.file"), getString("action.open.class.file"), "open.svg") {
+    val openClassFileAction = DefaultAction(getString("action.open.class.file"), getString("action.open.class.file.description"), "open.svg") {
         if (classesFileChooser.select()) {
             repaintNow()
             withWaitCursor {
@@ -103,7 +102,7 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
         classpathSetupDialog.isVisible = true
     }
 
-    val searchStringAction = DefaultAction(getString("search.string.action"), getString("search.string.description"), "search.svg") {
+    val searchStringAction = DefaultAction(getString("action.search.string"), getString("action.search.string.description"), "search.svg") {
         findString(this@BrowserFrame)
     }
 
