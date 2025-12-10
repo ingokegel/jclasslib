@@ -80,6 +80,8 @@ fun main(args: Array<String>) {
             isVisible = true
             if (args.isNotEmpty()) {
                 openExternalFile(args[0])
+            } else if (unprocessedStartupArg.isNotEmpty()) {
+                openExternalFile(unprocessedStartupArg)
             }
         }
     }
@@ -147,13 +149,17 @@ private fun syncDarkMode() {
     }
 }
 
+var unprocessedStartupArg = ""
+
 private fun registerStartupListener() {
     StartupNotification.registerStartupListener { argLine ->
         splitupCommandLine(argLine).let { startupArgs ->
             if (startupArgs.isNotEmpty()) {
                 val frames = getBrowserFrames()
-                frames.elementAtOrElse(0) { BrowserFrame().apply { isVisible = true } }.apply {
-                    openExternalFile(startupArgs[0])
+                if (frames.isNotEmpty()) {
+                    (frames.find { it.isActive } ?: frames.first()).openExternalFile(startupArgs[0])
+                } else {
+                    unprocessedStartupArg = startupArgs[0]
                 }
             }
         }
