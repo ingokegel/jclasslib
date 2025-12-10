@@ -18,7 +18,9 @@ import kotlinx.dom.parseXml
 import kotlinx.dom.writeXmlString
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserConfig
+import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.*
+import org.gjt.jclasslib.browser.usages.findString
 import org.gjt.jclasslib.browser.util.MenuBarMenu
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.*
@@ -42,7 +44,7 @@ import javax.xml.transform.OutputKeys
 import kotlin.math.max
 import kotlin.math.min
 
-class BrowserFrame : JFrame() {
+class BrowserFrame : JFrame(), GlobalBrowserServices {
 
     var vmConnection: VmConnection? = null
         private set
@@ -99,6 +101,10 @@ class BrowserFrame : JFrame() {
 
     val setupClasspathAction = DefaultAction(getString("action.setup.class.path"), getString("action.setup.class.path.description"), "") {
         classpathSetupDialog.isVisible = true
+    }
+
+    val searchStringAction = DefaultAction(getString("search.string.action"), getString("search.string.description"), "search.svg") {
+        findString(this@BrowserFrame)
     }
 
     val newWindowAction = DefaultAction(getString("action.new.window"), getString("action.new.window.description"), "") {
@@ -364,6 +370,65 @@ class BrowserFrame : JFrame() {
         }
     }
 
+    override fun openClassFile(className: String, browserPath: BrowserPath?) {
+        openClassFile(className, browserPath, frameContent.focusedTabbedPane)
+    }
+
+    fun openClassFile(className: String, browserPath: BrowserPath?, tabbedPane: BrowserTabbedPane) {
+        val findResult: FindResult? = findClass(className)
+        if (findResult != null) {
+            val openTab = frameContent.findTab(findResult.fileName)
+            if (openTab != null) {
+                openTab.apply {
+                    select()
+                    browserComponent.browserPath = browserPath
+                }
+            } else {
+                try {
+                    tabbedPane.addTab(findResult.fileName, findResult.moduleName, browserPath)
+                } catch (e: IOException) {
+                    alertFacade.showMessage(this, e)
+                }
+
+            }
+        }
+    }
+
+    private tailrec fun findClass(className: String): FindResult? {
+        val result = classpathComponent.findClass(className, false)
+        return if (result != null || !isRetryFindClass(className)) {
+            result
+        } else {
+            setupClasspathAction()
+            findClass(className)
+        }
+    }
+
+    private fun isRetryFindClass(className: String) = if (vmConnection != null) {
+        alertFacade.showMessage(this, getString("message.class.not.loaded", className), null, AlertType.WARNING)
+        false
+    } else {
+        alertFacade.showOptionDialog(this,
+            getString("message.class.not.found.title"),
+            getString("message.class.not.found", className),
+            arrayOf(getString("action.setup.class.path"), getString("action.cancel")),
+            AlertType.WARNING).selectedIndex == 0
+    }
+
+    override fun canOpenClassFiles() = true
+
+    override fun canSaveClassFiles() = true
+
+    override fun showURL(urlSpec: String) {
+        org.gjt.jclasslib.util.showURL(urlSpec)
+    }
+
+    override fun canScanClassFiles() = true
+
+    override fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {
+        classpathComponent.scanClassFiles(classFileCallback, includeJdk, this)
+    }
+
     private fun setupMenu() {
         jMenuBar = JMenuBar().apply {
 
@@ -440,6 +505,8 @@ class BrowserFrame : JFrame() {
             add(MenuBarMenu(getString("menu.classpath")).apply {
                 add(browseClasspathAction)
                 add(setupClasspathAction)
+                addSeparator()
+                add(searchStringAction)
             })
 
             add(MenuBarMenu(getString("menu.browse")).apply {
@@ -529,6 +596,7 @@ class BrowserFrame : JFrame() {
         add(detachVmAction.createToolBarButton())
         addSeparator()
         add(browseClasspathAction.createToolBarButton())
+        add(searchStringAction.createToolBarButton())
         add(saveModifiedClassesAction.createToolBarButton())
         addSeparator()
         add(openWorkspaceAction.createToolBarButton())

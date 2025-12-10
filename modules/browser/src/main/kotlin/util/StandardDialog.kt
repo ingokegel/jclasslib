@@ -58,7 +58,7 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
 
             add(okAction.createTextButton().apply {
                 this@StandardDialog.getRootPane().defaultButton = this
-            }, "split, tag ok")
+            }, "span, split, tag ok")
             add(cancelAction.createTextButton(), "tag cancel")
 
             addWindowListener(object : WindowAdapter() {
@@ -68,6 +68,10 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
 
                 override fun windowActivated(e: WindowEvent?) {
                     conditionalUpdate()
+                }
+
+                override fun windowOpened(e: WindowEvent?) {
+                    windowOpened()
                 }
             })
         }
@@ -85,6 +89,9 @@ abstract class StandardDialog(parentWindow: Window?, @Nls title: String): JDialo
     protected abstract fun addContent(component: JComponent)
 
     protected open fun conditionalUpdate() {
+    }
+
+    protected open fun windowOpened() {
     }
 }
 

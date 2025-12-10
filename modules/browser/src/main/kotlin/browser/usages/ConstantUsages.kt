@@ -5,12 +5,13 @@
  version 2 of the license, or (at your option) any later version.
  */
 
-package org.gjt.jclasslib.browser
+package org.gjt.jclasslib.browser.usages
 
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.Structure
+import org.gjt.jclasslib.browser.*
 import org.gjt.jclasslib.util.*
 import java.awt.Component
 import java.awt.Window
@@ -41,10 +42,6 @@ fun findConstantUsages(browserComponent: BrowserComponent, constant: Constant) {
     } else {
         showNoUsagesFoundMessage(browserComponent)
     }
-}
-
-fun showNoUsagesFoundMessage(browserComponent: BrowserComponent) {
-    alertFacade.showMessage(browserComponent, getString("no.usages.found"), AlertType.INFORMATION)
 }
 
 private fun createUsageNodes(

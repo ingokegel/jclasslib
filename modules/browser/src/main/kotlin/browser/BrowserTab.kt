@@ -11,7 +11,6 @@ import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
-import org.gjt.jclasslib.browser.config.classpath.FindResult
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.AlertType
@@ -50,23 +49,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         get() = parentFrame.forwardAction
 
     override fun openClassFile(className: String, browserPath: BrowserPath?) {
-        val findResult: FindResult? = findClass(className)
-        if (findResult != null) {
-            val openTab = frameContent.findTab(findResult.fileName)
-            if (openTab != null) {
-                openTab.apply {
-                    select()
-                    browserComponent.browserPath = browserPath
-                }
-            } else {
-                try {
-                    tabbedPane.addTab(findResult.fileName, findResult.moduleName, browserPath)
-                } catch (e: IOException) {
-                    alertFacade.showMessage(parentFrame, e)
-                }
-
-            }
-        }
+        parentFrame.openClassFile(className, browserPath, tabbedPane)
     }
 
     fun saveClassToDirectory(directory: File): Boolean {
@@ -84,27 +67,6 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         }
     }
 
-    private tailrec fun findClass(className: String): FindResult? {
-        val result = parentFrame.classpathComponent.findClass(className, false)
-        return if (result != null || !isRetryFindClass(className)) {
-            result
-        } else {
-            parentFrame.setupClasspathAction()
-            findClass(className)
-        }
-    }
-
-    private fun isRetryFindClass(className: String) = if (parentFrame.vmConnection != null) {
-        alertFacade.showMessage(parentFrame, getString("message.class.not.loaded", className), null, AlertType.WARNING)
-        false
-    } else {
-        alertFacade.showOptionDialog(parentFrame,
-                getString("message.class.not.found.title"),
-                getString("message.class.not.found", className),
-                arrayOf(getString("action.setup.class.path"), getString("action.cancel")),
-                AlertType.WARNING).selectedIndex == 0
-    }
-
     init {
         layout = BorderLayout()
         add(browserComponent, BorderLayout.CENTER)
@@ -118,17 +80,17 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         }
     }
 
-    private fun select() {
+    fun select() {
         tabbedPane.selectedComponent = this
         tabbedPane.focus()
         browserComponent.treePane.tree.requestFocus()
     }
 
-    override fun canOpenClassFiles() = true
-    override fun canSaveClassFiles() = true
+    override fun canOpenClassFiles() = parentFrame.canOpenClassFiles()
+    override fun canSaveClassFiles() = parentFrame.canSaveClassFiles()
 
     override fun showURL(urlSpec: String) {
-        org.gjt.jclasslib.util.showURL(urlSpec)
+        parentFrame.showURL(urlSpec)
     }
 
     override fun modified() {
@@ -136,10 +98,10 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
         frameContent.updateSaveAction()
     }
 
-    override fun canScanClassFiles() = true
+    override fun canScanClassFiles() = parentFrame.canScanClassFiles()
 
     override fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {
-        parentFrame.classpathComponent.scanClassFiles(classFileCallback, includeJdk, parentFrame)
+        parentFrame.scanClassFiles(includeJdk, classFileCallback)
     }
 
     fun getTabTitle(): String =

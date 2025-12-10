@@ -11,7 +11,7 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.constants.DelegateBuilder
 import org.gjt.jclasslib.browser.detail.constants.DelegatesEditor
-import org.gjt.jclasslib.browser.findClassMemberUsages
+import org.gjt.jclasslib.browser.usages.findClassMemberUsages
 import org.gjt.jclasslib.structures.ClassMember
 import javax.swing.JButton
 
