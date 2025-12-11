@@ -11,52 +11,11 @@ import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
+import org.gjt.jclasslib.util.MatchType
 import org.gjt.jclasslib.util.StandardDialog
-import org.jetbrains.annotations.Nls
 import java.awt.Window
-import java.util.WeakHashMap
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import java.util.*
 import javax.swing.*
-
-private enum class MatchType(@param:Nls val verbose: String) {
-    EQUALS(getString("match.equals")) {
-        override fun matches(string: String, spec: String, matcher: Matcher?): Boolean {
-            return string == spec
-        }
-    },
-    START_WITH(getString("match.starts.with")) {
-        override fun matches(string: String, spec: String, matcher: Matcher?): Boolean {
-            return string.startsWith(spec)
-        }
-    },
-    ENDS_WIDTH(getString("match.ends.with")) {
-        override fun matches(string: String, spec: String, matcher: Matcher?): Boolean {
-            return string.endsWith(spec)
-        }
-    },
-    CONTAINS(getString("match.contains")) {
-        override fun matches(string: String, spec: String, matcher: Matcher?): Boolean {
-            return string.contains(spec)
-        }
-    },
-    REGEX(getString("match.regex")) {
-        override fun matches(string: String, spec: String, matcher: Matcher?): Boolean {
-            requireNotNull(matcher)
-            matcher.reset(string)
-            return matcher.matches()
-        }
-
-        override fun createMatcher(spec: String): Matcher? {
-            return Pattern.compile(spec).matcher("")
-        }
-    };
-
-    abstract fun matches(string: String, spec: String, matcher: Matcher?): Boolean
-    open fun createMatcher(spec: String): Matcher? = null
-
-    override fun toString() = verbose
-}
 
 private val stringUsageDialogs = WeakHashMap<BrowserFrame, StringUsagesDialog>()
 

@@ -7,25 +7,24 @@
 
 package org.gjt.jclasslib.browser.config.classpath
 
+import com.formdev.flatlaf.FlatClientProperties
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserFrame
-import org.gjt.jclasslib.util.DefaultAction
-import org.gjt.jclasslib.util.ProgressDialog
-import org.gjt.jclasslib.util.StandardDialog
-import org.gjt.jclasslib.util.scrollPaneFactory
+import org.gjt.jclasslib.util.*
 import org.jetbrains.annotations.Nls
-import java.awt.event.ActionEvent
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
-import javax.swing.JComponent
-import javax.swing.JTabbedPane
-import javax.swing.JTree
+import java.awt.Cursor
+import java.awt.event.*
+import java.util.regex.Matcher
+import javax.swing.*
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, private val updateClassPathFromFrame: Boolean) : StandardDialog(frame, title) {
+private val ICON_RETURN = BrowserFrame.getSvgIcon("return.svg")
 
+class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, private val updateClassPathFromFrame: Boolean) : StandardDialog(frame, title) {
     var classpathComponent: ClasspathComponent? = null
         set(classpathComponent) {
             if (field != classpathComponent) {
@@ -38,8 +37,8 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
             }
         }
 
-    private val classPathTree: JTree = createTree(getString("classpath.tab.class.path"))
-    private val modulePathTree: JTree = createTree(getString("classpath.tab.module.path"))
+    private val classPathTree: ClasspathTree = ClasspathTree(getString("classpath.tab.class.path"))
+    private val modulePathTree: ClasspathTree = ClasspathTree(getString("classpath.tab.module.path"))
     private val trees = listOf(classPathTree, modulePathTree)
 
     private val tabbedPane = JTabbedPane().apply {
@@ -48,27 +47,67 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
         }
     }
 
-    private fun createTree(@Nls treeName: String): JTree {
-        return JTree(ClassTreeNode()).apply {
-            name = treeName
-            isRootVisible = false
-            showsRootHandles = true
-            putClientProperty("JTree.lineStyle", "Angled")
+    private val matchTypeDropDown = JComboBox(MatchType.entries.toTypedArray()).apply {
+        selectedItem = MatchType.CONTAINS
+        addActionListener {
+            updateFilter()
+        }
+    }
 
-            addTreeSelectionListener {
-                val selectionPath = selectionPath
-                okAction.isEnabled = if (selectionPath != null) {
-                    !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
-                } else false
+    private val applyButton = JButton(ICON_RETURN).apply {
+        putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON)
+        setCursor(Cursor.getDefaultCursor())
+        addActionListener {
+            updateFilter()
+        }
+    }
 
-            }
-            addMouseListener(object : MouseAdapter() {
-                override fun mouseClicked(event: MouseEvent) {
-                    if (event.clickCount == 2 && isValidDoubleClickPath(event, this@apply)) {
-                        okAction()
-                    }
+    private val filterTextField = JTextField().apply {
+        putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, getString("enter.filter.expression"))
+        putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, applyButton)
+        putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true)
+        putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, Runnable {
+            text = ""
+            updateFilter()
+        })
+        addActionListener {
+            updateFilter()
+        }
+        addKeyListener(object : KeyAdapter() {
+            override fun keyPressed(e: KeyEvent) {
+                when (e.keyCode) {
+                    KeyEvent.VK_UP -> selectLeaf(true)
+                    KeyEvent.VK_DOWN -> selectLeaf(false)
                 }
-            })
+            }
+        })
+        document.addDocumentListener(object : DocumentListener {
+            override fun insertUpdate(e: DocumentEvent) {
+                modified()
+            }
+
+            override fun removeUpdate(e: DocumentEvent) {
+                modified()
+            }
+
+            override fun changedUpdate(e: DocumentEvent) {
+                modified()
+            }
+
+            private fun modified() {
+                applyButton.isVisible = true
+            }
+        })
+    }
+
+    private fun selectLeaf(last: Boolean) {
+        getSelectedTree().apply {
+            requestFocus()
+            val rootNode = model.root as ClassTreeNode
+            (if (last) rootNode.lastLeaf else rootNode.firstLeaf)?.let {
+                selectionPath = TreePath(it.path)
+                scrollPathToVisible(selectionPath)
+            }
         }
     }
 
@@ -137,13 +176,16 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
             layout = MigLayout("wrap", "[grow]")
 
             add(tabbedPane, "grow, pushy")
+            add(JLabel(getString("filter.class.name")), "split")
+            add(matchTypeDropDown)
+            add(filterTextField, "growx, wrap")
 
             if (updateClassPathFromFrame) {
                 add(setupAction.createTextButton(), "tag help2")
             }
             add(syncAction.createTextButton(), "split, tag help2")
         }
-        setSize(450, 450)
+        setSize(550, 550)
     }
 
     override fun conditionalUpdate() {
@@ -152,18 +194,14 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
         }
     }
 
-    private fun isValidDoubleClickPath(event: MouseEvent, tree: JTree): Boolean {
-        val locationPath = tree.getPathForLocation(event.x, event.y)
-        val selectionPath = tree.selectionPath
-        if (selectionPath == null || locationPath == null || selectionPath != locationPath) {
-            return false
-        }
-        return !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
+    override fun windowOpened() {
+        super.windowOpened()
+        filterTextField.requestFocusInWindow()
     }
 
     private fun sync(reset: Boolean) {
-        val classPathModel = getModel(reset, classPathTree)
-        val modulePathModel = getModel(reset, modulePathTree)
+        val classPathModel = getUnfilteredModel(reset, classPathTree)
+        val modulePathModel = getUnfilteredModel(reset, modulePathTree)
         resetOnNextMerge = false
         needsMerge = false
 
@@ -172,17 +210,104 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
         }
         progressDialog.isVisible = true
         if (reset) {
-            classPathTree.applyModel(classPathModel)
-            modulePathTree.applyModel(modulePathModel)
+            classPathTree.unfilteredModel = classPathModel
+            modulePathTree.unfilteredModel = modulePathModel
+        }
+        updateFilter()
+    }
+
+    private fun updateFilter() {
+        val filterText = filterTextField.text.trim()
+        for (tree in trees) {
+            if (filterText.isEmpty()) {
+                tree.showUnfiltered()
+            } else {
+                tree.showFiltered(filterText, matchTypeDropDown.selectedItem as MatchType)
+            }
+        }
+        applyButton.isVisible = false
+    }
+
+    private fun getUnfilteredModel(reset: Boolean, tree: ClasspathTree) =
+        if (reset) DefaultTreeModel(ClassTreeNode()) else tree.unfilteredModel
+
+    private fun getSelectedTree(): ClasspathTree = trees[tabbedPane.selectedIndex]
+
+    private inner class ClasspathTree(@Nls treeName: String) : JTree(ClassTreeNode()) {
+        var unfilteredModel: DefaultTreeModel = model as DefaultTreeModel
+
+        init {
+            name = treeName
+            addTreeSelectionListener {
+                val selectionPath = selectionPath
+                okAction.isEnabled = if (selectionPath != null) {
+                    !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
+                } else false
+
+            }
+            addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(event: MouseEvent) {
+                    if (event.clickCount == 2 && isValidDoubleClickPath(event)) {
+                        okAction()
+                    }
+                }
+            })
+        }
+
+        override fun isRootVisible() = false
+        override fun getShowsRootHandles() = true
+
+        private fun isValidDoubleClickPath(event: MouseEvent): Boolean {
+            val locationPath = getPathForLocation(event.x, event.y)
+            val selectionPath = selectionPath
+            if (selectionPath == null || locationPath == null || selectionPath != locationPath) {
+                return false
+            }
+            return !(selectionPath.lastPathComponent as ClassTreeNode).isPackageNode
+        }
+
+        fun showUnfiltered() {
+            if (model != unfilteredModel) {
+                model = unfilteredModel
+            }
+            expandRoot()
+        }
+
+        fun showFiltered(filterText: String, matchType: MatchType) {
+            val matcher = matchType.createMatcher(filterText)
+            val originalRoot = unfilteredModel.root as ClassTreeNode
+            val filteredRoot = filterNodeRecursive(originalRoot, filterText, matchType, matcher)
+            model = DefaultTreeModel(filteredRoot)
+            expandAll()
+        }
+
+        private fun filterNodeRecursive(
+            originalNode: ClassTreeNode,
+            filterText: String,
+            matchType: MatchType,
+            matcher: Matcher?
+        ): ClassTreeNode? {
+            val nodeText = originalNode.userObject as String?
+            val matches = nodeText != null && !originalNode.isPackageNode && matchType.matches(nodeText, filterText, matcher)
+            val matchingChildren = mutableListOf<ClassTreeNode>()
+            val children = originalNode.children()
+            while (children.hasMoreElements()) {
+                val child = children.nextElement() as ClassTreeNode
+                val filteredChild = filterNodeRecursive(child, filterText, matchType, matcher)
+                if (filteredChild != null) {
+                    matchingChildren.add(filteredChild)
+                }
+            }
+
+            return if (matches || matchingChildren.isNotEmpty()) {
+                val newNode = if (nodeText == null) ClassTreeNode() else ClassTreeNode(nodeText, originalNode.isPackageNode)
+                matchingChildren.forEach {
+                    newNode.add(it)
+                }
+                newNode
+            } else {
+                null
+            }
         }
     }
-
-    private fun JTree.applyModel(model: DefaultTreeModel) {
-        this.model = model
-        expandPath(TreePath(model.root))
-    }
-
-    private fun getModel(reset: Boolean, tree: JTree) = if (reset) DefaultTreeModel(ClassTreeNode()) else tree.model as DefaultTreeModel
-
-    private fun getSelectedTree(): JTree = trees[tabbedPane.selectedIndex]
 }

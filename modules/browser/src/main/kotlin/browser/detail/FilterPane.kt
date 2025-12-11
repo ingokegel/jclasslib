@@ -7,13 +7,16 @@
 
 package org.gjt.jclasslib.browser.detail
 
+import com.formdev.flatlaf.FlatClientProperties
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.structures.Structure
 import org.gjt.jclasslib.util.EnumButtonGroup
+import org.gjt.jclasslib.util.MatchType
 import org.gjt.jclasslib.util.TitledSeparator
 import org.jetbrains.annotations.Nls
+import java.util.regex.Matcher
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -29,14 +32,28 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
     }
 
     protected abstract fun getAllFilterKeys(): Collection<T>
-    protected abstract fun isElementTextFiltered(element: S, filterText: String): Boolean
+    protected abstract fun isElementTextFiltered(element: S, filterText: String, matchType: MatchType, matcher: Matcher?): Boolean
     protected abstract fun getFilterKeys(element: S): Collection<T>
 
     private val buttonGroup = EnumButtonGroup(FilterMode.entries) { selectedValue ->
         filterMode = selectedValue
     }
 
+    private val matchTypeDropDown = JComboBox(MatchType.entries.toTypedArray()).apply {
+        selectedItem = MatchType.CONTAINS
+        addActionListener {
+            updateFilter()
+        }
+    }
+
     private val filterTextField = JTextField().apply {
+        putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, getString("enter.filter.expression"))
+        putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true)
+        putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, Runnable {
+            text = ""
+            updateFilter()
+        })
+
         columns = 30
         document.addDocumentListener(object : DocumentListener {
             override fun changedUpdate(event: DocumentEvent) {
@@ -85,14 +102,9 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
         }
 
     protected open fun addComponents() {
-        add(filterComponent(JLabel(getString("filter.text.label"))), "split, $RADIO_BUTTON_INSET")
-        add(filterComponent(filterTextField))
-        add(filterComponent(JButton(getString("action.filter.clear")).apply {
-            addActionListener {
-                filterTextField.text = ""
-                updateFilter()
-            }
-        }), "wrap unrel")
+        add(filterComponent(JLabel(getString("text.filter.label"))), "split, $RADIO_BUTTON_INSET")
+        add(filterComponent(matchTypeDropDown))
+        add(filterComponent(filterTextField), "wrap unrel")
         filterCheckboxes.values.forEachIndexed { i, checkBox ->
             add(filterComponent(checkBox), if (i % 2 == 0) "split, sgx col1, gapright para, $RADIO_BUTTON_INSET" else "sgx col2, wrap")
         }
@@ -111,7 +123,9 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
 
     fun updateFilterCheckboxes(elements: Collection<S>) {
         val filterText = filterTextField.text.trim()
-        val statistics = elements.filter { isElementTextFiltered(it, filterText) }
+        val matchType = matchTypeDropDown.selectedItem as MatchType
+        val matcher = matchType.createMatcher(filterText)
+        val statistics = elements.filter { isElementTextFiltered(it, filterText, matchType, matcher) }
                 .flatMap { getFilterKeys(it) }
                 .groupingBy { it }
                 .eachCount()
@@ -123,9 +137,12 @@ abstract class FilterPane<out T, in S : Structure>(private val detailPane: Detai
     }
 
     fun isElementShown(element: S): Boolean {
+        val filterText = filterTextField.text.trim()
+        val matchType = matchTypeDropDown.selectedItem as MatchType
+        val matcher = matchType.createMatcher(filterText)
         return isShowAll || (
                 filterCheckboxes.any { it.key in getFilterKeys(element) && it.value.isSelected } &&
-                        isElementTextFiltered(element, filterTextField.text.trim())
+                        isElementTextFiltered(element, filterText, matchType, matcher)
                 )
     }
 

@@ -12,7 +12,9 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.BrowserTreeNode
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.ClassMember
+import org.gjt.jclasslib.util.MatchType
 import org.gjt.jclasslib.util.TitledSeparator
+import java.util.regex.Matcher
 import javax.swing.JTree
 import javax.swing.tree.TreePath
 
@@ -21,7 +23,10 @@ class ClassMemberContainerDetailPane(services: BrowserServices, signatureMode: S
 
     val filterPane = object : FilterPane<AccessFlag, ClassMember>(this@ClassMemberContainerDetailPane) {
         override fun getAllFilterKeys() = signatureMode.getAccessFlags()
-        override fun isElementTextFiltered(element: ClassMember, filterText: String) = isShowAll || element.name.contains(filterText)
+
+        override fun isElementTextFiltered(element: ClassMember, filterText: String, matchType: MatchType, matcher: Matcher?) =
+            isShowAll || matchType.matches(element.name, filterText, matcher)
+
         override fun getFilterKeys(element: ClassMember) = AccessFlag.decompose(element.accessFlags, getAllFilterKeys())
     }
 

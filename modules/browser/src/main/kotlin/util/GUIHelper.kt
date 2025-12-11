@@ -54,7 +54,10 @@ fun scale(value: Int): Int {
 }
 
 fun JTree.expandAll() {
-    val rootNode = model.root as DefaultMutableTreeNode
-    rootNode.depthFirstEnumeration().asSequence()
-        .forEach { node -> expandPath(TreePath((node as DefaultMutableTreeNode).path)) }
+    val rootNode = model.root as DefaultMutableTreeNode?
+    rootNode?.depthFirstEnumeration()?.asSequence()?.forEach { node -> expandPath(TreePath((node as DefaultMutableTreeNode).path)) }
+}
+
+fun JTree.expandRoot() {
+    expandPath(TreePath(model.root))
 }

@@ -16,6 +16,8 @@ import org.gjt.jclasslib.structures.AbstractConstant
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.ConstantType
 import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
+import org.gjt.jclasslib.util.MatchType
+import java.util.regex.Matcher
 import javax.swing.JTree
 import javax.swing.tree.TreePath
 
@@ -23,7 +25,10 @@ class ConstantPoolDetailPane(services: BrowserServices) : DetailPane<Array<Const
 
     val filterPane = object : FilterPane<ConstantType, Constant>(this@ConstantPoolDetailPane) {
         override fun getAllFilterKeys() = ConstantType.entries
-        override fun isElementTextFiltered(element: Constant, filterText: String) = element is AbstractConstant && (isShowAll || element.verbose.contains(filterText))
+
+        override fun isElementTextFiltered(element: Constant, filterText: String, matchType: MatchType, matcher: Matcher?) =
+            element is AbstractConstant && (isShowAll || matchType.matches(element.verbose, filterText, matcher))
+
         override fun getFilterKeys(element: Constant) = if (element == ConstantPlaceholder) setOf() else setOf(element.constantType)
     }
 
