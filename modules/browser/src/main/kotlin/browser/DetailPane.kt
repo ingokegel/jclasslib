@@ -13,6 +13,7 @@ import org.gjt.jclasslib.util.HtmlDisplayTextArea
 import org.gjt.jclasslib.util.MultiLineLabel
 import org.gjt.jclasslib.util.getValueColor
 import org.jetbrains.annotations.Nls
+import java.awt.Cursor
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTree
@@ -46,6 +47,7 @@ abstract class DetailPane<out T : Any>(protected val elementClass: Class<out T>,
 
     protected fun multiLineLabel() = MultiLineLabel().apply {
         foreground = getValueColor()
+        cursor = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR)
     }
 
     fun getElement(treePath: TreePath): T = getElementOrNull(treePath)!!
