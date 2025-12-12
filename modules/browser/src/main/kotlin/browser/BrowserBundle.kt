@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
-import org.gjt.jclasslib.browser.SupportedLocale.entries
 import org.jetbrains.annotations.PropertyKey
 import java.text.MessageFormat
 import java.util.*
@@ -35,8 +34,10 @@ object BrowserBundle {
 enum class SupportedLocale(val localeCode: String, val displayName: String) {
     AUTO_DETECT("", getString("menu.language.auto.detect")),
     ENGLISH("en", "English"),
-    GERMAN("de", "Deutsch"),
     SIMPLIFIED_CHINESE("zh_CN", "简体中文"),
+    JAPANESE("ja", "日本語"),
+    KOREAN("ko", "한국어"),
+    GERMAN("de", "Deutsch"),
     POLISH("pl", "Polski");
 
     companion object {
