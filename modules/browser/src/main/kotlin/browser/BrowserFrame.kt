@@ -16,6 +16,7 @@ import kotlinx.dom.build.addElement
 import kotlinx.dom.createDocument
 import kotlinx.dom.parseXml
 import kotlinx.dom.writeXmlString
+import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserConfig
 import org.gjt.jclasslib.browser.config.BrowserPath
@@ -29,6 +30,7 @@ import org.w3c.dom.Document
 import util.CustomSvgIcon
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
+import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowAdapter
@@ -39,6 +41,7 @@ import java.io.FileWriter
 import java.io.IOException
 import java.util.prefs.Preferences
 import javax.swing.*
+import javax.swing.event.HyperlinkEvent
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.xml.transform.OutputKeys
@@ -218,6 +221,10 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
 
     val aboutAction = DefaultAction(getString("action.about"), getString("action.about.description"), "") {
         BrowserAboutDialog(this).isVisible = true
+    }
+
+    val jprofilerAction = DefaultAction("JProfiler", getString("jprofiler.action.description"), "jprofiler.svg") {
+        showURL(JPROFILER_URL)
     }
 
     val previousWindowAction = DefaultAction(getString("action.previous.window"), getString("action.previous.window.description")) {
@@ -558,9 +565,9 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
         defaultCloseOperation = DO_NOTHING_ON_CLOSE
         (contentPane as JComponent).apply {
             isOpaque = false
-            layout = BorderLayout(5, 5)
-            add(frameContent, BorderLayout.CENTER)
-            add(buildToolbar(), BorderLayout.NORTH)
+            layout = MigLayout("insets 0")
+            add(frameContent, "dock center")
+            add(buildToolbar(), "dock north")
             iconImages = ICON_IMAGES
             transferHandler = object : TransferHandler() {
                 override fun canImport(support: TransferSupport): Boolean {
@@ -604,25 +611,41 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
         }
     }
 
-    private fun buildToolbar(): JToolBar = JToolBar().apply {
-        isOpaque = false
-        add(openClassFileAction.createToolBarButton())
-        add(attachVmAction.createToolBarButton())
-        add(detachVmAction.createToolBarButton())
-        addSeparator()
-        add(browseClasspathAction.createToolBarButton())
-        add(searchStringAction.createToolBarButton())
-        add(saveModifiedClassesAction.createToolBarButton())
-        addSeparator()
-        add(openWorkspaceAction.createToolBarButton())
-        add(saveWorkspaceAction.createToolBarButton())
-        addSeparator()
-        add(backwardAction.createToolBarButton())
-        add(forwardAction.createToolBarButton())
-        addSeparator()
-        add(reloadAction.createToolBarButton())
+    private fun buildToolbar(): JPanel = JPanel(MigLayout("insets 0", "[grow]para[]unrel")).apply {
+        add(
+            JToolBar().apply {
+                isOpaque = false
+                add(openClassFileAction.createToolBarButton())
+                add(attachVmAction.createToolBarButton())
+                add(detachVmAction.createToolBarButton())
+                addSeparator()
+                add(browseClasspathAction.createToolBarButton())
+                add(searchStringAction.createToolBarButton())
+                add(saveModifiedClassesAction.createToolBarButton())
+                addSeparator()
+                add(openWorkspaceAction.createToolBarButton())
+                add(saveWorkspaceAction.createToolBarButton())
+                addSeparator()
+                add(backwardAction.createToolBarButton())
+                add(forwardAction.createToolBarButton())
+                addSeparator()
+                add(reloadAction.createToolBarButton())
 
-        isFloatable = false
+                isFloatable = false
+            }, "growx"
+        )
+        add(
+            JToolBar().apply {
+                add(jprofilerAction.createToolBarButton())
+                add(HtmlDisplayTextArea(getString("optimize.code.multi.line")).apply {
+                    addHyperlinkListener { e ->
+                        if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+                            jprofilerAction.actionPerformed(ActionEvent(this, 0, null))
+                        }
+                    }
+                }, "gaptop 2, gapbottom 2")
+            }
+        )
     }
 
     private fun repaintNow() {

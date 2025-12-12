@@ -44,8 +44,10 @@ import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.ui.content.ContentManagerListener
 import com.intellij.util.PlatformIcons
 import org.gjt.jclasslib.browser.BrowserComponent
+import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.WEBSITE_URL
+import org.gjt.jclasslib.browser.JPROFILER_URL
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.writeClassFile
 import org.gjt.jclasslib.io.ClassFileReader
@@ -53,6 +55,7 @@ import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.getParentWindow
 import org.gjt.jclasslib.util.MESSAGE_TITLE
 import java.awt.BorderLayout
+import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.io.ByteArrayInputStream
@@ -334,6 +337,19 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         }
     }
 
+    private val jprofilerAction: AnAction = object : DumbAwareAction(), RightAlignedToolbarAction {
+        init {
+            templatePresentation.apply {
+                icon = BrowserFrame.getSvgIcon("jprofiler.svg", Dimension(18, 18))
+                text = "Optimize Code With JProfiler"
+            }
+        }
+
+        override fun actionPerformed(e: AnActionEvent) {
+            showURL(JPROFILER_URL)
+        }
+    }
+
     override fun activate() {
     }
 
@@ -384,6 +400,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
             add(saveAction)
             addSeparator()
             add(webAction)
+            add(jprofilerAction)
         }
         val actionToolbar = ActionManager.getInstance().createActionToolbar("bytecodeToolBar", actionGroup, true).apply {
             targetComponent = this@BytecodeToolWindowPanel

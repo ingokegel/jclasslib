@@ -73,8 +73,10 @@
       <w>freturn</w>
       <w>fstore</w>
       <w>fsub</w>
+      <w>gapbottom</w>
       <w>gapleft</w>
       <w>gapright</w>
+      <w>gaptop</w>
       <w>gapy</w>
       <w>getfield</w>
       <w>getstatic</w>
