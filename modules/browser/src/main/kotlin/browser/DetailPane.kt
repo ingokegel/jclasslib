@@ -80,7 +80,7 @@ abstract class DetailPane<out T : Any>(protected val elementClass: Class<out T>,
     protected fun getConstantPoolEntryName(constantPoolIndex: Int): String {
         return try {
             services.classFile.getConstantPoolEntryName(constantPoolIndex)
-        } catch (ex: InvalidByteCodeException) {
+        } catch (_: InvalidByteCodeException) {
             getString("message.invalid.constant.pool.reference")
         }
     }

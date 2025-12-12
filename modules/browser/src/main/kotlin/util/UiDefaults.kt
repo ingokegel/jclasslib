@@ -94,6 +94,6 @@ enum class ColorKey {LINK, ACTIVE_LINK, VALUE}
 var colors: Map<ColorKey, Color> = emptyMap()
 var darkMode = false
 
-fun getLinkColor() = colors[ColorKey.LINK] ?: LightOrDarkColor(Color(0, 128, 0), Color(60, 140, 60))
-fun getActiveLinkColor() = colors[ColorKey.ACTIVE_LINK] ?: LightOrDarkColor(Color(196, 0, 0), Color(255, 80, 80))
-fun getValueColor() = colors[ColorKey.VALUE] ?: LightOrDarkColor(Color(128, 0, 0), Color(190, 80, 80))
+fun getLinkColor() = colors[ColorKey.LINK] ?: LightOrDarkColor(Color(0, 77, 145), Color(88, 157, 246))
+fun getActiveLinkColor() = colors[ColorKey.ACTIVE_LINK] ?: LightOrDarkColor(Color(225, 9, 21), Color(186, 51, 36))
+fun getValueColor() = colors[ColorKey.VALUE] ?:  LightOrDarkColor(Color(0, 110, 0), Color(60, 140, 60))
