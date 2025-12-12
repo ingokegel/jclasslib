@@ -27,7 +27,7 @@ Platform-specific artifacts are provided under
 In the main window of the jclasslib bytecode viewer, you can open multiple class files at the same time, by
 selecting class or JAR files, browsing a configured classpath or dragging class files on top of the window. 
 
-![Main window](web/screenshots/main_light.png)
+![Main window](web/screenshots/main_dark.png)
 
 ## Editing
 
@@ -44,7 +44,7 @@ Bytecode instructions can be edited from the context menu:
 
 Dark mode can be enabled persistently by selecting "File->Dark mode" in the main menu. 
 
-![Dark mode](web/screenshots/main_dark.png)
+![Dark mode](web/screenshots/main_light.png)
 
 ## Localizations
 
