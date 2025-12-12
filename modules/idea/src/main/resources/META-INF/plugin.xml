@@ -13,17 +13,17 @@
     <depends optional="true" config-file="withByteCodeViewer.xml">ByteCodeViewer</depends>
 
     <actions>
-        <action id="ShowByteCodeJclasslib" class="org.gjt.jclasslib.idea.ShowBytecodeAction"
-                text="Show Bytecode With Jclasslib">
+        <action id="ShowByteCodeJclasslib" class="org.gjt.jclasslib.idea.ShowBytecodeAction" icon="/icons/jclasslib.svg">
             <add-to-group group-id="QuickActions" anchor="after" relative-to-action="QuickJavaDoc"/>
         </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="jclasslib" anchor="right" canCloseContents="true" icon="/icons/jclasslib.png"
+        <toolWindow id="jclasslib" anchor="right" canCloseContents="true" icon="/icons/jclasslib.svg"
                     factoryClass="org.gjt.jclasslib.idea.ByteCodeToolWindowFactory"/>
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
         <supportsKotlinPluginMode supportsK2="true" />
     </extensions>
+    <resource-bundle>messages.jclasslibBundle</resource-bundle>
 </idea-plugin>

@@ -23,7 +23,6 @@ class ShowBytecodeAction : AnAction() {
     override fun update(e: AnActionEvent) {
         e.presentation.apply {
             isEnabled = getPsiElement(e)?.run { containingFile is PsiClassOwner && isContainedInClass(this) } == true
-            icon = ICON_SHOW_BYTE_CODE
         }
     }
 
@@ -52,4 +51,5 @@ class ShowBytecodeAction : AnAction() {
 
 }
 
-val ICON_SHOW_BYTE_CODE = IconLoader.getIcon("/icons/jclasslib.png", ShowBytecodeAction::class.java) // 13x13
+@Suppress("HardCodedStringLiteral")
+val ICON_SHOW_BYTE_CODE = IconLoader.getIcon("/icons/jclasslib.svg", ShowBytecodeAction::class.java)

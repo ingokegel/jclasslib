@@ -11,7 +11,7 @@ repositories {
     }
 }
 
-val ideaVersion = "2024.2.1"
+val ideaVersion = "2025.2.5"
 intellijPlatform {
     pluginConfiguration {
         name = "jclasslib"

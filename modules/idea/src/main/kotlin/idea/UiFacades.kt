@@ -111,9 +111,9 @@ fun initUiFacades() {
     )
 
     colors = mutableMapOf<ColorKey, Color>().apply {
-        addColorMapping(ColorKey.VALUE, ConsoleHighlighter.RED)
-        addColorMapping(ColorKey.LINK, ConsoleHighlighter.GREEN)
-        addColorMapping(ColorKey.ACTIVE_LINK, ConsoleHighlighter.GREEN_BRIGHT)
+        addColorMapping(ColorKey.VALUE, ConsoleHighlighter.GREEN)
+        addColorMapping(ColorKey.LINK, ConsoleHighlighter.BLUE)
+        addColorMapping(ColorKey.ACTIVE_LINK, ConsoleHighlighter.RED)
     }
 
     val uiSettings = UISettings.getInstance()
@@ -145,6 +145,7 @@ private class JBSplitterFacade(splitDirection: SplitDirection, first: JComponent
     init {
         firstComponent = first
         secondComponent = second
+        @Suppress("HardCodedStringLiteral")
         splitterProportionKey = "jclasslib"
     }
 

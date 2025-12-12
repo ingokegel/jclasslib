@@ -13,6 +13,7 @@ import com.intellij.ide.DataManager
 import com.intellij.ide.actions.CloseTabToolbarAction
 import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.compiler.CompilerPaths
@@ -43,17 +44,13 @@ import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentManagerEvent
 import com.intellij.ui.content.ContentManagerListener
 import com.intellij.util.PlatformIcons
-import org.gjt.jclasslib.browser.BrowserComponent
-import org.gjt.jclasslib.browser.BrowserFrame
-import org.gjt.jclasslib.browser.BrowserServices
-import org.gjt.jclasslib.browser.WEBSITE_URL
-import org.gjt.jclasslib.browser.JPROFILER_URL
+import org.gjt.jclasslib.browser.*
 import org.gjt.jclasslib.browser.config.BrowserPath
-import org.gjt.jclasslib.browser.writeClassFile
+import org.gjt.jclasslib.idea.JclasslibPluginBundle.message
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.util.getParentWindow
 import org.gjt.jclasslib.util.MESSAGE_TITLE
+import org.gjt.jclasslib.util.getParentWindow
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -63,6 +60,7 @@ import java.io.File
 import java.io.IOException
 import javax.swing.*
 
+@Suppress("HardCodedStringLiteral")
 const val TOOL_WINDOW_ID: String = "jclasslib"
 
 fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?, project: Project) {
@@ -76,7 +74,7 @@ fun showClassFile(locatedClassFile: LocatedClassFile, browserPath: BrowserPath?,
         val (panel, content) = existingEntry
         activateToolWindow(toolWindow, content, panel, browserPath)
     } else {
-        object : Task.Backgroundable(project, "Loading class file", false) {
+        object : Task.Backgroundable(project, message("progress.title.loading.class.file"), false) {
             var classFile: ClassFile? = null
             override fun run(indicator: ProgressIndicator) {
                 classFile = readClassFile(locatedClassFile, project)
@@ -111,7 +109,7 @@ private fun readClassFile(locatedClassFile: LocatedClassFile, project: Project):
         }
         ClassFileReader.readFromInputStream(ByteArrayInputStream(classFileBytes))
     } catch (e: Exception) {
-        showWarningDialog("Error reading class file: ${e.message}", project)
+        showWarningDialog(message("error.reading.class.file") + e.message, project)
         null
     }
 }
@@ -182,10 +180,11 @@ private fun addInfoPanel(toolWindow: ToolWindow) {
             add(Box.createVerticalGlue())
             add(JPanel().apply {
                 layout = FlowLayout(FlowLayout.CENTER, 5, 5)
-                add(JLabel("To see bytecode, invoke"))
+                val text = message("tool.window.info.text", I18N_PLACEHOLDER)
+                add(JLabel(text.substringBefore(I18N_PLACEHOLDER)))
                 add(JLabel(ICON_SHOW_BYTE_CODE))
                 add(JLabel(ActionManager.getInstance().getAction("ShowByteCodeJclasslib").templateText))
-                add(JLabel("while in an editor or on a class in the project window"))
+                add(JLabel(text.substringAfter(I18N_PLACEHOLDER)))
             })
             add(Box.createVerticalGlue())
         }, BorderLayout.CENTER)
@@ -240,7 +239,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         init {
             templatePresentation.apply {
                 icon = AllIcons.Actions.Back
-                text = "Backward"
+                text = message("action.backward.text")
             }
         }
 
@@ -259,7 +258,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         init {
             templatePresentation.apply {
                 icon = AllIcons.Actions.Forward
-                text = "Forward"
+                text = message("action.forward.text")
             }
         }
 
@@ -278,13 +277,14 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         init {
             templatePresentation.apply {
                 icon = PlatformIcons.SYNCHRONIZE_ICON
-                text = "Reload"
+                text = message("action.reload.text")
             }
         }
 
         override fun actionPerformed(e: AnActionEvent) {
             if (browserComponent.canRemove()) {
-                object : Task.Backgroundable(project, "Reloading class file", false) {
+                object : Task.Backgroundable(project,
+                    message("progress.title.reloading.class.file"), false) {
                     var newClassFile: ClassFile? = null
                     override fun run(indicator: ProgressIndicator) {
                         newClassFile = readClassFile(locatedClassFile, project)
@@ -309,7 +309,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         init {
             templatePresentation.apply {
                 icon = AllIcons.Actions.MenuSaveall
-                text = "Save Modified Class File"
+                text = message("action.save.modified.class.file.text")
             }
         }
 
@@ -328,7 +328,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         init {
             templatePresentation.apply {
                 icon = PlatformIcons.WEB_ICON
-                text = "Show Web Site"
+                text = message("action.show.web.site.text")
             }
         }
 
@@ -337,11 +337,11 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         }
     }
 
-    private val jprofilerAction: AnAction = object : DumbAwareAction(), RightAlignedToolbarAction {
+    private val jprofilerAction: AnAction = object : DumbAwareAction() {
         init {
             templatePresentation.apply {
-                icon = BrowserFrame.getSvgIcon("jprofiler.svg", Dimension(18, 18))
-                text = "Optimize Code With JProfiler"
+                icon = BrowserFrame.getSvgIcon("jprofiler.svg", Dimension(16, 16))
+                text = message("action.optimize.code.with.jprofiler.text")
             }
         }
 
@@ -367,7 +367,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
             if (psiClass != null) {
                 openClassFile(psiClass, browserPath, project)
             } else {
-                showWarningDialog("Class $className could not be found", project)
+                showWarningDialog(message("class.0.could.not.be.found", className), project)
             }
         }
     }
@@ -411,7 +411,10 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
 
     private inner class ActionDelegate(private val anAction: AnAction) : AbstractAction() {
         override fun actionPerformed(e: ActionEvent?) {
-            anAction.actionPerformed(AnActionEvent.createFromAnAction(anAction, null, ActionPlaces.TOOLBAR, DataManager.getInstance().getDataContext(browserComponent)))
+            ActionUtil.performAction(
+                anAction,
+                AnActionEvent.createEvent(anAction, DataManager.getInstance().getDataContext(browserComponent), null, ActionPlaces.TOOLBAR, ActionUiKind.TOOLBAR, null)
+            )
         }
     }
 
@@ -440,6 +443,7 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
         return null
     }
 
+    @Suppress("HardCodedStringLiteral")
     private fun findClass(parent: PsiClass?, name: String): PsiClass? = when {
         parent == null -> JavaPsiFacade.getInstance(project).findClass(name, GlobalSearchScope.allScope(project))
         Character.isJavaIdentifierStart(name[0]) -> parent.findInnerClassByName(name, false)
@@ -459,8 +463,8 @@ class BytecodeToolWindowPanel(override var classFile: ClassFile, val locatedClas
     private fun saveModified() {
         if (writeClassFile(classFile, requireNotNull(locatedClassFile.writableUrl), getParentWindow(), null) {
             FileChooser.chooseFile(FileChooserDescriptor(false, true, false, false, false, false).apply {
-                title = "Select Directory"
-                description = "Select the output directory for the modified class files"
+                title = message("dialog.title.select.directory")
+                description = message("label.select.output.directory")
             }, project, null)?.let {
                 File(it.path)
             }

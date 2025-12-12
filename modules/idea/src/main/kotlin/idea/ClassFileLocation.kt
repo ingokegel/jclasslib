@@ -9,7 +9,6 @@ package org.gjt.jclasslib.idea
 
 import com.intellij.byteCodeViewer.ByteCodeViewerManager
 import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.ide.util.JavaAnonymousClassesHelper
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.progress.ProgressIndicator
@@ -19,7 +18,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiAnonymousClass
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiTypeParameter
@@ -27,6 +25,7 @@ import com.intellij.psi.util.ClassUtil
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.idea.JclasslibPluginBundle.message
 import java.io.FileNotFoundException
 
 private class LocationResult private constructor(val locatedClassFile: LocatedClassFile?, val errorMessage: String?) {
@@ -48,7 +47,7 @@ fun isContainedInClass(psiElement: PsiElement) : Boolean {
 }
 
 fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Project) {
-    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Locating class file ...") {
+    ProgressManager.getInstance().run(object : Task.Backgroundable(project, message("progress.title.locating.class.file")) {
         var locationResult: LocationResult? = null
 
         override fun run(indicator: ProgressIndicator) {
@@ -56,7 +55,7 @@ fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Pr
                 try {
                     locateClassFile(psiElement)
                 } catch (e: Exception) {
-                    LocationResult.of("Class file could not be found" + (if (e.message.isNullOrBlank()) "" else ": " + e.message))
+                    LocationResult.of(message("class.file.could.not.be.found") + (if (e.message.isNullOrBlank()) "" else ": " + e.message))
                 }
             })
         }
@@ -69,8 +68,8 @@ fun openClassFile(psiElement: PsiElement, browserPath: BrowserPath?, project: Pr
                 if (!project.isDisposed) {
                     Messages.showWarningDialog(
                         project,
-                        locationResult?.errorMessage ?: "internal error",
-                        "Jclasslib Bytecode Viewer"
+                        locationResult?.errorMessage ?: message("internal.error"),
+                        message("dialog.title.jclasslib.bytecode.viewer")
                     )
                 }
             }
@@ -98,8 +97,9 @@ private tailrec fun getFileClass(c: PsiClass): PsiClass =
     }
 
 private fun getContainingClass(psiElement: PsiElement): PsiClass? {
-    val byteCodeViewerPlugin = PluginManagerCore.getPlugin(PluginId.getId("ByteCodeViewer"))
-    return if (byteCodeViewerPlugin != null && byteCodeViewerPlugin.isEnabled) {
+    val pluginId = PluginId.getId("ByteCodeViewer")
+    val byteCodeViewerPlugin = PluginManagerCore.getPlugin(pluginId)
+    return if (byteCodeViewerPlugin != null && PluginManagerCore.isLoaded(pluginId)) {
         ByteCodeViewerManager.getContainingClass(psiElement)
     } else {
         val containingClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass::class.java, false)
@@ -112,10 +112,5 @@ private fun getContainingClass(psiElement: PsiElement): PsiClass? {
 }
 
 private fun getJVMClassName(containingClass: PsiClass): String? {
-    return if (containingClass is PsiAnonymousClass) {
-        val containingClassOfAnonymous = PsiTreeUtil.getParentOfType(containingClass, PsiClass::class.java) ?: return null
-        getJVMClassName(containingClassOfAnonymous) + JavaAnonymousClassesHelper.getName(containingClass)
-    } else {
-        ClassUtil.getJVMClassName(containingClass)
-    }
+    return ClassUtil.getBinaryClassName(containingClass)
 }
