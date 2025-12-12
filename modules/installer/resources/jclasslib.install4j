@@ -20,8 +20,8 @@
       <variable name="sys.ext.addIDtoEntitlements" value="false" />
     </variables>
     <codeSigning macEnabled="true" macKeySource="digestSigningExecutable" windowsEnabled="true" windowsKeySource="digestSigningExecutable" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
-      <windowsDigestSigningExecutable certificateFile="${compiler:macCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
-      <macDigestSigningExecutable certificateFile="${compiler:winCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
+      <windowsDigestSigningExecutable certificateFile="${compiler:winCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
+      <macDigestSigningExecutable certificateFile="${compiler:macCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
     </codeSigning>
     <jreBundles jdkProviderId="JBR" release="25/25-b176.4" />
   </application>
@@ -170,11 +170,6 @@ return console.askOkCancel(message, true);
                 </externalParametrizationPropertyNames>
               </formComponent>
             </formComponents>
-          </screen>
-          <screen id="1880276848" beanClass="com.install4j.runtime.beans.screens.StandardProgramGroupScreen">
-            <serializedBean>
-              <property name="programGroupName" type="string">${compiler:sys.fullName}</property>
-            </serializedBean>
           </screen>
           <screen id="2047307155" beanClass="com.install4j.runtime.beans.screens.FileAssociationsScreen">
             <formComponents>

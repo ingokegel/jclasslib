@@ -8,6 +8,7 @@ val winCertPath: String? by project
 val macCertPath: String? by project
 val macProvisioningProfile: String? by project
 val appStoreOnly = project.findProperty("appStoreOnly").toString().toBoolean()
+val noAppStore = project.findProperty("noAppStore").toString().toBoolean()
 val appleIssuerId: String? by project
 val appleKeyId: String? by project
 val applePrivateApiKey: String? by project
@@ -19,7 +20,7 @@ tasks {
     }
 
     register<Install4jTask>("media") {
-        dependsOn(":dist", ":clean")
+        dependsOn(":dist")
 
         inputs.dir(rootProject.file("modules"))
         inputs.files(rootProject.file("license"))
@@ -47,6 +48,8 @@ tasks {
 
         if (appStoreOnly) {
             buildIds = listOf("2047307322")
+        } else if (noAppStore) {
+            buildIds = listOf("2047307151", "2047307321", "2047307325", "850942491")
         }
     }
 }
