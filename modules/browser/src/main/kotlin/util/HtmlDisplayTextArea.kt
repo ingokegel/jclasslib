@@ -23,10 +23,7 @@ open class HtmlDisplayTextArea(@Nls text: String? = null) : JEditorPane(), TextD
     var inverted: Boolean = false
         set(inverted) {
             field = inverted
-            styleSheet?.apply {
-                addRule("a {color : #" + getHexValue(if (inverted) foreground else getLinkColor()) + " }")
-                addRule("a:active {color : #" + getHexValue(if (inverted) foreground else getActiveLinkColor()) + " }")
-            }
+            updateColors()
         }
 
     init {
@@ -51,6 +48,16 @@ open class HtmlDisplayTextArea(@Nls text: String? = null) : JEditorPane(), TextD
         if (text != null) {
             setText(text)
         }
+    }
+
+    override fun updateUI() {
+        updateColors()
+        super.updateUI()
+    }
+
+    private fun updateColors(): StyleSheet? = styleSheet?.apply {
+        addRule("a {color : #" + getHexValue(if (inverted) foreground else getLinkColor()) + " }")
+        addRule("a:active {color : #" + getHexValue(if (inverted) foreground else getActiveLinkColor()) + " }")
     }
 
     override fun getMinimumSize(): Dimension = super.getMinimumSize().apply {
