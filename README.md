@@ -40,9 +40,10 @@ Bytecode instructions can be edited from the context menu:
 
 ![Editing bytecode instructions](web/screenshots/edit_opcode_popup.png)
 
-## Dark mode
+## Light mode and dark mode
 
-Dark mode can be enabled persistently by selecting "File->Dark mode" in the main menu. 
+By default, jclasslib uses dark mode if the system appearance is set to dark. Dark mode or light mode can be 
+enabled persistently by selecting "File->Dark mode->On/Off" in the main menu. 
 
 ![Dark mode](web/screenshots/main_light.png)
 
