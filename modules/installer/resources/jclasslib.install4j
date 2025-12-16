@@ -2,10 +2,13 @@
 <install4j version="12.0.1" transformSequenceNumber="12">
   <directoryPresets config="." />
   <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="7.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="17">
-    <languages skipLanguageSelection="true">
+    <languages>
       <additionalLanguages>
         <language id="zh_CN" />
         <language id="de" />
+        <language id="ja" />
+        <language id="ko" />
+        <language id="pl" />
       </additionalLanguages>
     </languages>
     <variables>
@@ -79,18 +82,17 @@
         <startup>
           <screen id="1880276844" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
-              <action id="2047307103" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none">
+              <action id="2047307326" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none">
                 <serializedBean>
-                  <property name="failIfNotObtainedMac" type="boolean" value="false" />
-                  <property name="failIfNotObtainedWin" type="boolean" value="false" />
+                  <property name="includeAllUsers" type="boolean" value="true" />
+                  <property name="includeUserSpecific" type="boolean" value="true" />
                 </serializedBean>
               </action>
-              <action id="2047307326" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none" />
             </actions>
           </screen>
         </startup>
         <screens>
-          <screen id="1880276845" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" styleId="2047307291">
+          <screen id="1880276845" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" styleId="2047307291" rollbackBarrier="true">
             <actions>
               <action id="2047307101" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
                 <serializedBean>
@@ -120,21 +122,48 @@ return console.askOkCancel(message, true);
                 </serializedBean>
               </formComponent>
               <formComponent id="2047307212" beanClass="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationChooserComponent" useExternalParametrization="true" externalParametrizationName="Update Alert" externalParametrizationMode="include">
-                <serializedBean>
-                  <property name="streamlinedInstallationStrategy" type="enum" class="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationStrategy" value="UPDATE_ONLY" />
-                </serializedBean>
                 <externalParametrizationPropertyNames>
                   <propertyName>streamlinedInstallationStrategy</propertyName>
                 </externalParametrizationPropertyNames>
               </formComponent>
               <formComponent id="2047307213" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetTop="20">
                 <serializedBean>
-                  <property name="labelText" type="string">${i18n:ClickNext}</property>
+                  <property name="labelText" type="string">${form:footerMessage}</property>
                 </serializedBean>
               </formComponent>
             </formComponents>
           </screen>
+          <screen id="2047307327" beanClass="com.install4j.runtime.beans.screens.InstallationScopeScreen" rollbackBarrier="true" rollbackBarrierExitCode="0">
+            <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
+            <actions>
+              <action id="2047307330" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0" multiExec="true" failureStrategy="returnToScreen" errorMessage="${i18n:InstallationScopePrivilegesError}">
+                <serializedBean>
+                  <property name="failIfNotObtainedMac" type="boolean" value="false" />
+                  <property name="failIfNotObtainedWin" type="boolean" value="false" />
+                  <property name="linuxPrivilegeRequirement" type="enum" class="com.install4j.runtime.beans.actions.misc.PrivilegeRequirement" value="OBTAIN" />
+                  <property name="obtainIfNormalMac" type="boolean" value="true" />
+                  <property name="obtainIfNormalWin" type="boolean" value="true" />
+                </serializedBean>
+                <condition>context.getBooleanVariable("sys.installForAllUsers")</condition>
+              </action>
+              <action id="2047307331" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none" rollbackBarrierExitCode="0" multiExec="true">
+                <serializedBean>
+                  <property name="installationScope" type="enum" class="com.install4j.runtime.beans.actions.control.InstallationScope" value="ACCORDING_TO_VARIABLE" />
+                </serializedBean>
+              </action>
+            </actions>
+            <formComponents>
+              <formComponent id="2047307328" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                <serializedBean>
+                  <property name="labelText" type="string">${form:installationScopeMessage}</property>
+                </serializedBean>
+                <visibilityScript>!context.isConsole()</visibilityScript>
+              </formComponent>
+              <formComponent id="2047307329" beanClass="com.install4j.runtime.beans.formcomponents.InstallationScopeChooserComponent" />
+            </formComponents>
+          </screen>
           <screen id="1880276846" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen">
+            <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
             <actions>
               <action id="2047307102" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
                 <serializedBean>
@@ -172,6 +201,7 @@ return console.askOkCancel(message, true);
             </formComponents>
           </screen>
           <screen id="2047307155" beanClass="com.install4j.runtime.beans.screens.FileAssociationsScreen">
+            <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
             <formComponents>
               <formComponent id="2047307222" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
                 <serializedBean>
@@ -187,6 +217,16 @@ return console.askOkCancel(message, true);
           </screen>
           <screen id="1880276850" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" rollbackBarrier="true">
             <actions>
+              <action id="2047307332" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="failIfNotObtainedLinux" type="boolean" value="true" />
+                  <property name="failIfNotRootUnix" type="boolean" value="true" />
+                  <property name="linuxPrivilegeRequirement" type="enum" class="com.install4j.runtime.beans.actions.misc.PrivilegeRequirement" value="OBTAIN" />
+                  <property name="obtainIfNormalMac" type="boolean" value="true" />
+                  <property name="obtainIfNormalWin" type="boolean" value="true" />
+                </serializedBean>
+                <condition>context.getBooleanVariable("sys.installForAllUsers")</condition>
+              </action>
               <action id="2047307200" beanClass="com.install4j.runtime.beans.actions.UninstallPreviousAction" actionElevationType="none" />
               <action id="1880276851" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" failureStrategy="quit" errorMessage="${i18n:FileCorrupted}" />
               <action id="1880276852" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDefaultStartMenuEntriesAction" actionElevationType="elevated">
@@ -226,6 +266,13 @@ return console.askOkCancel(message, true);
                     </object>
                   </property>
                   <property name="unixMimeType" type="string">application/x-jclasslib-workspace</property>
+                </serializedBean>
+              </action>
+              <action name="Save selected locale" id="2047307334" beanClass="com.install4j.runtime.beans.actions.registry.SetPreferenceKeyAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="key" type="string">locale</property>
+                  <property name="packageName" type="string">/org/gjt/jclasslib/browser</property>
+                  <property name="value" type="string">${installer:sys.languageId}</property>
                 </serializedBean>
               </action>
             </actions>
@@ -277,8 +324,8 @@ return console.askOkCancel(message, true);
         <startup>
           <screen id="1880276856" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
-              <link id="2047307104" targetId="2047307103" />
               <action id="2047307105" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" />
+              <action id="2047307333" beanClass="com.install4j.runtime.beans.actions.misc.RequireInstallerPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0" />
             </actions>
           </screen>
         </startup>
@@ -570,7 +617,28 @@ return console.askYesNo(message, true);
       </group>
     </styles>
     <widgetStyles defaultWidgetStyleId="106">
-      <widgetStyle name="Standard" id="106" beanClass="com.install4j.runtime.beans.widgets.WidgetStyleCollection" />
+      <widgetStyle name="Standard" id="106" beanClass="com.install4j.runtime.beans.widgets.WidgetStyleCollection">
+        <serializedBean>
+          <property name="buttonWidgetStyle" id="ButtonWidgetStyle0">
+            <void id="FontDescriptor0" property="fontDescriptor" />
+          </property>
+          <property name="defaultsWidgetStyle">
+            <property name="fontDescriptor">
+              <object idref="FontDescriptor0" />
+            </property>
+          </property>
+          <property name="labelWidgetStyle">
+            <property name="fontDescriptor">
+              <object idref="FontDescriptor0" />
+            </property>
+          </property>
+          <property name="toggleButtonWidgetStyle">
+            <property name="fontDescriptor">
+              <object idref="FontDescriptor0" />
+            </property>
+          </property>
+        </serializedBean>
+      </widgetStyle>
     </widgetStyles>
   </installerGui>
   <mediaSets>
