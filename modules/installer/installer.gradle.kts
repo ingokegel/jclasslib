@@ -7,8 +7,7 @@ plugins {
 val winCertPath: String? by project
 val macCertPath: String? by project
 val macProvisioningProfile: String? by project
-val appStoreOnly = project.findProperty("appStoreOnly").toString().toBoolean()
-val noAppStore = project.findProperty("noAppStore").toString().toBoolean()
+val appStore = project.findProperty("appStoreOnly").toString().toBoolean()
 val appleIssuerId: String? by project
 val appleKeyId: String? by project
 val applePrivateApiKey: String? by project
@@ -46,9 +45,9 @@ tasks {
             "applePrivateApiKey" to (applePrivateApiKey ?: ""),
         )
 
-        if (appStoreOnly) {
+        if (appStore) {
             buildIds = listOf("2047307322")
-        } else if (noAppStore) {
+        } else {
             buildIds = listOf("2047307151", "2047307321", "2047307325", "850942491")
         }
     }
