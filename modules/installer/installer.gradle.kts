@@ -4,9 +4,8 @@ plugins {
     id("com.install4j.gradle") version "12.0.1"
 }
 
-val winCertPath: String? by project
-val macCertPath: String? by project
 val macProvisioningProfile: String? by project
+val appStoreCerts: String? by project
 val appStore = project.findProperty("appStoreOnly").toString().toBoolean()
 val appleIssuerId: String? by project
 val appleKeyId: String? by project
@@ -29,21 +28,20 @@ tasks {
 
         projectFile = file("resources/jclasslib.install4j")
         release = version as String
-        disableSigning = !project.hasProperty("macCertPath")
+        macKeystorePassword = ""
 
         if (appleIssuerId == null || appleKeyId == null || applePrivateApiKey == null) {
             disableNotarization = true
         }
 
         variables = mapOf(
-            "winCertPath" to (winCertPath ?: ""),
-            "macCertPath" to (macCertPath ?: ""),
             "macProvisioningProfile" to (macProvisioningProfile ?: ""),
+            "appStoreCerts" to (appStoreCerts ?: ""),
             "digestSigningCommandLine" to (digestSigningCommandLine ?: ""),
             "appleIssuerId" to (appleIssuerId ?: ""),
             "appleKeyId" to (appleKeyId ?: ""),
             "applePrivateApiKey" to (applePrivateApiKey ?: ""),
-        )
+        ) + if (appStore) mapOf("macKeySource" to "pkcs12") else emptyMap()
 
         if (appStore) {
             buildIds = listOf("2047307322")
