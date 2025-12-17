@@ -41,7 +41,7 @@ tasks {
             "appleIssuerId" to (appleIssuerId ?: ""),
             "appleKeyId" to (appleKeyId ?: ""),
             "applePrivateApiKey" to (applePrivateApiKey ?: ""),
-        ) + if (appStore) mapOf("macKeySource" to "pkcs12") else emptyMap()
+        ) + if (appStore) mapOf("sys.ext.macKeySource" to "pkcs12") else emptyMap()
 
         if (appStore) {
             buildIds = listOf("2047307322")
