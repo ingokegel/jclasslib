@@ -1,7 +1,7 @@
 import com.install4j.gradle.Install4jTask
 
 plugins {
-    id("com.install4j.gradle") version "12.0.1"
+    id("com.install4j.gradle") version "12.0.2"
 }
 
 val macProvisioningProfile: String? by project
