@@ -114,17 +114,25 @@ class ConstantUtf8Info(classFile: ClassFile) : AbstractConstant(classFile) {
 
     private fun DataInput.readUTF(): String {
         val utfLen = readUnsignedShort()
-        val chars = CharArray(utfLen)
         val bytes = readByteArray(utfLen)
 
+        // Fast path: scan for first non-ASCII byte
         var count = 0
-        var charCount = 0
-
         while (count < utfLen) {
-            val c = bytes[count].toInt() and 0xFF
-            if (c > 127) break
+            if (bytes[count].toInt() and 0xFF > 127) break
             count++
-            chars[charCount++] = c.toChar()
+        }
+
+        // Pure ASCII: skip CharArray allocation, use efficient platform String construction
+        if (count == utfLen) {
+            return bytes.decodeToString()
+        }
+
+        // Multi-byte path: allocate CharArray only when needed
+        val chars = CharArray(utfLen)
+        var charCount = count
+        for (i in 0 until count) {
+            chars[i] = bytes[i].toInt().toChar()
         }
 
         while (count < utfLen) {
