@@ -11,8 +11,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Contains common attributes to a local variable table attribute structure.
  */
@@ -21,7 +19,7 @@ abstract class LocalVariableAttribute(classFile: ClassFile) : AttributeInfo(clas
     /**
      * Local variable associations of the parent code attribute
      */
-    var localVariableEntries: Array<LocalVariableEntry> = emptyArraySingleton()
+    var localVariableEntries: Array<LocalVariableEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         val localVariableTableLength = input.readUnsignedShort()

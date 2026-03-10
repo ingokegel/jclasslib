@@ -35,9 +35,9 @@ class CodeAttribute(classFile: ClassFile) : AttributeInfo(classFile), AttributeC
     /**
      * Exception table of this code attribute.
      */
-    var exceptionTable: Array<ExceptionTableEntry> = emptyArraySingleton()
+    var exceptionTable: Array<ExceptionTableEntry> = emptyArray()
 
-    override var attributes: Array<AttributeInfo> = emptyArraySingleton()
+    override var attributes: Array<AttributeInfo> = emptyArray()
 
     override fun readData(input: DataInput) {
 

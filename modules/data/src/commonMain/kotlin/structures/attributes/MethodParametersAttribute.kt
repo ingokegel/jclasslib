@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes a MethodParameter attribute structure.
  */
@@ -22,7 +20,7 @@ class MethodParametersAttribute(classFile: ClassFile) : AttributeInfo(classFile)
     /**
      * List of method parameter entries in the MethodParametersAttribute structure
      */
-    var entries: Array<MethodParametersEntry> = emptyArraySingleton()
+    var entries: Array<MethodParametersEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         val numberOfEntries = input.readUnsignedByte()

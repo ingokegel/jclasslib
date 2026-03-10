@@ -11,8 +11,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Common class for runtime parameter annotations.
  */
@@ -21,7 +19,7 @@ class ParameterAnnotations : SubStructure() {
     /**
      * Runtime annotations associations of the parent structure
      */
-    var runtimeAnnotations: Array<Annotation> = emptyArraySingleton()
+    var runtimeAnnotations: Array<Annotation> = emptyArray()
 
     override fun readData(input: DataInput) {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()

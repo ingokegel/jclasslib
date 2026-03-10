@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes a NestMembers attribute structure.
  */
@@ -22,7 +20,7 @@ class NestMembersAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * List of class entries in the NestMembersAttribute structure
      */
-    var entries: Array<NestMembersEntry> = emptyArraySingleton()
+    var entries: Array<NestMembersEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         val numberOfEntries = input.readUnsignedShort()

@@ -32,7 +32,7 @@ class ClassFile : Structure(), AttributeContainer {
     /**
      * Constant pool entries.
      */
-    var constantPool: Array<Constant> = emptyArraySingleton()
+    var constantPool: Array<Constant> = emptyArray()
         set(constantPool) {
             field = constantPool
             constantPool.forEachIndexed { i, cpInfo ->
@@ -75,14 +75,14 @@ class ClassFile : Structure(), AttributeContainer {
     /**
      * FieldInfo structures for the fields of this class.
      */
-    var fields: Array<FieldInfo> = emptyArraySingleton()
+    var fields: Array<FieldInfo> = emptyArray()
 
     /**
      * MethodInfo structures for the methods of this class.
      */
-    var methods: Array<MethodInfo> = emptyArraySingleton()
+    var methods: Array<MethodInfo> = emptyArray()
 
-    override var attributes: Array<AttributeInfo> = emptyArraySingleton()
+    override var attributes: Array<AttributeInfo> = emptyArray()
 
     /**
      * Verbose major version of the class file format.

@@ -11,8 +11,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AnnotationData
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes an Annotation attribute structure.
  */
@@ -26,7 +24,7 @@ class AnnotationElementValue : ElementValue(ElementValueType.ANNOTATION), Annota
     /**
      * element value pair associations of the parent structure
      */
-    override var elementValuePairEntries: Array<ElementValuePair> = emptyArraySingleton()
+    override var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
 
     override val entryName: String
         get() = "Annotation"

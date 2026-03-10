@@ -10,8 +10,6 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes an ArrayElementValue attribute structure.
  */
@@ -19,7 +17,7 @@ class ArrayElementValue : ElementValue(ElementValueType.ARRAY) {
     /**
      * Element values associations of this entry.
      */
-    var elementValueEntries: Array<ElementValue> = emptyArraySingleton()
+    var elementValueEntries: Array<ElementValue> = emptyArray()
 
     override val length: Int
         get() = super.length + 2 + elementValueEntries.sumOf { it.length }

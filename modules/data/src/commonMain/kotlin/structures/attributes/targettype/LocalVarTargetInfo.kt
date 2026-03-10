@@ -9,8 +9,6 @@ package org.gjt.jclasslib.structures.attributes.targettype
 
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Target info for a TypeAnnotation structure with local variable table links.
  */
@@ -19,7 +17,7 @@ class LocalVarTargetInfo : TargetInfo() {
     /**
      * Contained local variable targets.
      */
-    var localVarTargets: Array<LocalVarTarget> = emptyArraySingleton()
+    var localVarTargets: Array<LocalVarTarget> = emptyArray()
 
     override fun readData(input: DataInput) {
         val count = input.readUnsignedShort()

@@ -11,8 +11,6 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes a BootstrapMethods attribute structure.
  */
@@ -21,7 +19,7 @@ class StackMapTableAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * stackMapFrame entries in the StackMapTableAttribute structure
      */
-    var entries: Array<StackMapFrameEntry> = emptyArraySingleton()
+    var entries: Array<StackMapFrameEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         val numberOfEntries = input.readUnsignedShort()

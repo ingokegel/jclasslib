@@ -42,17 +42,17 @@ class ModuleAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * Requires declarations of the module.
      */
-    var requiresEntries: Array<RequiresEntry> = emptyArraySingleton()
+    var requiresEntries: Array<RequiresEntry> = emptyArray()
 
     /**
      * Exports statements of the module.
      */
-    var exportsEntries: Array<ExportsEntry> = emptyArraySingleton()
+    var exportsEntries: Array<ExportsEntry> = emptyArray()
 
     /**
      * Opens statements of the module.
      */
-    var opensEntries: Array<ExportsEntry> = emptyArraySingleton()
+    var opensEntries: Array<ExportsEntry> = emptyArray()
 
     /**
      * Uses statements of the module.
@@ -63,7 +63,7 @@ class ModuleAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * Provides statements of the module.
      */
-    var providesEntries: Array<ProvidesEntry> = emptyArraySingleton()
+    var providesEntries: Array<ProvidesEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         moduleNameIndex = input.readUnsignedShort()

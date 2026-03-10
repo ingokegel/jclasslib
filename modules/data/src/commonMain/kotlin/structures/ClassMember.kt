@@ -44,7 +44,7 @@ abstract class ClassMember(protected val classFile: ClassFile) : Structure(), At
     val descriptorConstant: ConstantUtf8Info
         get() = classFile.getConstantPoolUtf8Entry(descriptorIndex)
 
-    override var attributes: Array<AttributeInfo> = emptyArraySingleton()
+    override var attributes: Array<AttributeInfo> = emptyArray()
 
     /**
      * Name of the class member.
