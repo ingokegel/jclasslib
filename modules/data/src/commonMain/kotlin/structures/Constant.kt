@@ -26,11 +26,15 @@ abstract class Constant : Structure() {
     /**
      * Check if constant is equal to another one.
      */
-    override fun equals(other: Any?): Boolean = other is Constant
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+        return true
+    }
 
     /**
      * Hash code of the constant,
      */
-    override fun hashCode(): Int = 0
+    override fun hashCode(): Int = constantType.tag
 
 }
