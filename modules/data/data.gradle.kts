@@ -62,6 +62,10 @@ tasks {
             setJreSystemProperty(majorVersion)
         }
         systemProperty("majorVersions", majorVersions.joinToString(separator = ","))
+
+        propertyOrNull("profilingJvmArg")?.let {
+            jvmArgs(it)
+        }
     }
 
     val compileTestJavaJvm by registering(JavaCompile::class) {

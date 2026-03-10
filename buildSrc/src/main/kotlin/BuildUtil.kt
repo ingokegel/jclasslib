@@ -58,3 +58,9 @@ fun Project.configurePublishing() {
         }
     }
 }
+
+fun Project.propertyOrNull(propertyName: String): String? = if (hasProperty(propertyName)) {
+    property(propertyName)?.toString()
+} else {
+    null
+}

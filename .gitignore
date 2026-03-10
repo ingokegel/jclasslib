@@ -13,3 +13,4 @@ build/
 media/
 buildSrc/out
 .DS_Store
+.mcp.json
