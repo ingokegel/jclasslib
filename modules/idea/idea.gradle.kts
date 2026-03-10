@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij.platform") version "2.10.0"
+    id("org.jetbrains.intellij.platform") version "2.12.0"
 }
 
 defaultTasks("buildPlugin")
@@ -39,7 +39,7 @@ dependencies {
     implementation(project(":browser"))
 
     intellijPlatform {
-        intellijIdeaCommunity(ideaVersion)
+        intellijIdea(ideaVersion)
         bundledPlugins("ByteCodeViewer", "com.intellij.java")
 
         pluginVerifier()
