@@ -330,7 +330,6 @@ class ClassFile : Structure(), AttributeContainer {
                     if (isDebug) debug("reading constant pool entry $i", input)
                     val constantType = ConstantType.getFromTag(input.readByte().toInt())
                     constantType.read(this, input).apply {
-                        constantPoolEntryToIndex[this] = i
                         val extraEntryCount = constantType.extraEntryCount
                         if (extraEntryCount > 0) {
                             // CONSTANT_Double_info and CONSTANT_Long_info take 2 constant
