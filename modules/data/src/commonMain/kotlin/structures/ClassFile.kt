@@ -40,7 +40,7 @@ class ClassFile : Structure(), AttributeContainer {
             }
         }
 
-    private val constantPoolEntryToIndex = HashMap<Constant, Int>()
+    private var constantPoolEntryToIndex = HashMap<Constant, Int>()
 
     /**
      * Access flags of this class.
@@ -317,9 +317,9 @@ class ClassFile : Structure(), AttributeContainer {
     }
 
     private fun readConstantPool(input: DataInput) {
-        constantPoolEntryToIndex.clear()
         val constantPoolCount = input.readUnsignedShort()
         if (isDebug) debug("read constant pool count $constantPoolCount", input)
+        constantPoolEntryToIndex = HashMap(constantPoolCount)
 
         // constantPool[0] is not used
         var placeholderIndex = 0
