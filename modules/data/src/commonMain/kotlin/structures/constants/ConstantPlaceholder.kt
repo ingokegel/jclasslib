@@ -31,4 +31,12 @@ object ConstantPlaceholder : Constant() {
 
     override val debugInfo: String
         get() = throw UnsupportedOperationException()
+
+    override fun equals(other: Any?): Boolean {
+        return other === this
+    }
+
+    override fun hashCode(): Int {
+        return 0
+    }
 }
