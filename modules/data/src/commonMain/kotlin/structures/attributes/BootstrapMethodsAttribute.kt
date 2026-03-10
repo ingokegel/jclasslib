@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes a BootstrapMethods attribute structure.
  */
@@ -22,7 +20,7 @@ class BootstrapMethodsAttribute(classFile: ClassFile) : AttributeInfo(classFile)
     /**
      * Bootstrap method references in the BootstrapMethodsAttribute structure
      */
-    var methods: Array<BootstrapMethodsEntry> = emptyArraySingleton()
+    var methods: Array<BootstrapMethodsEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         val numberOfRefs = input.readUnsignedShort()

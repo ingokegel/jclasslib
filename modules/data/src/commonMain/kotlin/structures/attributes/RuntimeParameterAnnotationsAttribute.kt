@@ -11,8 +11,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Common class for runtime parameter annotations.
  */
@@ -21,7 +19,7 @@ abstract class RuntimeParameterAnnotationsAttribute(classFile: ClassFile) : Attr
     /**
      * Parameter annotations
      */
-    var parameterAnnotations: Array<ParameterAnnotations> = emptyArraySingleton()
+    var parameterAnnotations: Array<ParameterAnnotations> = emptyArray()
 
     override fun readData(input: DataInput) {
         val numParameters = input.readUnsignedByte()

@@ -11,8 +11,6 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.Annotation
 import org.gjt.jclasslib.structures.attributes.targettype.TargetInfo
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes an entry in a RuntimeVisibleTypeAnnotations or RuntimeInvisibleTypeAnnotations
  * attribute structure.
@@ -46,7 +44,7 @@ class TypeAnnotation private constructor() : SubStructure() {
     /**
      * The type path entries.
      */
-    var typePathEntries: Array<TypePathEntry> = emptyArraySingleton()
+    var typePathEntries: Array<TypePathEntry> = emptyArray()
 
     /**
      * The annotation.

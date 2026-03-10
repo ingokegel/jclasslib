@@ -11,8 +11,6 @@ import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes a PermittedSubclasses attribute structure.
  */
@@ -21,7 +19,7 @@ class PermittedSubclassesAttribute(classFile: ClassFile) : AttributeInfo(classFi
     /**
      * List of classes in the PermittedSubclassesAttribute structure
      */
-    var entries: Array<Int> = emptyArraySingleton()
+    var entries: Array<Int> = emptyArray()
 
     override fun readData(input: DataInput) {
         val numberOfEntries = input.readUnsignedShort()

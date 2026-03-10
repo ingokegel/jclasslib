@@ -17,7 +17,7 @@ import org.gjt.jclasslib.structures.elementvalues.ElementValuePair
 class Annotation : SubStructure(), AnnotationData {
 
     override var typeIndex: Int = 0
-    override var elementValuePairEntries: Array<ElementValuePair> = emptyArraySingleton()
+    override var elementValuePairEntries: Array<ElementValuePair> = emptyArray()
 
     override fun readData(input: DataInput) {
         typeIndex = input.readUnsignedShort()

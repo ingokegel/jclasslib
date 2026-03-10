@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes a ModuleHashes attribute structure.
  */
@@ -26,7 +24,7 @@ class ModuleHashesAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * Array of the module hashes
      */
-    var hashEntries: Array<HashEntry> = emptyArraySingleton()
+    var hashEntries: Array<HashEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         algorithmIndex = input.readUnsignedShort()

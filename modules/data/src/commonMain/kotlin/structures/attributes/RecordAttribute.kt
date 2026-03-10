@@ -12,8 +12,6 @@ import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.AttributeInfo
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.emptyArraySingleton
-
 /**
  * Describes a Record attribute structure.
  */
@@ -22,7 +20,7 @@ class RecordAttribute(classFile: ClassFile) : AttributeInfo(classFile) {
     /**
      * List of class entries in the RecordAttribute structure
      */
-    var entries: Array<RecordEntry> = emptyArraySingleton()
+    var entries: Array<RecordEntry> = emptyArray()
 
     override fun readData(input: DataInput) {
         val numberOfEntries = input.readUnsignedShort()

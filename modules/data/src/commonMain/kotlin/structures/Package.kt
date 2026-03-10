@@ -16,7 +16,6 @@ import org.gjt.jclasslib.io.CountingDataOutput
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import kotlin.jvm.JvmName
-import kotlin.reflect.KClass
 
 /**
  * Set this JVM System property to true to switch on debugging for
@@ -70,11 +69,4 @@ internal fun Sink.writeShort(value: Int) = writeUShort(value.toUShort())
 
 internal fun Source.readUnsignedByte(): Int = readUByte().toInt()
 internal fun Sink.writeByte(value: Int) = writeUByte(value.toUByte())
-
-private val arraySingletons = hashMapOf<KClass<*>, Array<*>>()
-
-@Suppress("UNCHECKED_CAST")
-internal inline fun <reified T> emptyArraySingleton(): Array<T> = arraySingletons.getOrPut(T::class) {
-    arrayOfNulls<T>(0)
-} as Array<T>
 

@@ -19,7 +19,7 @@ abstract class RuntimeAnnotationsAttribute(classFile: ClassFile) : AttributeInfo
     /**
      * Runtime annotations associations of the parent
      */
-    var runtimeAnnotations: Array<Annotation> = emptyArraySingleton()
+    var runtimeAnnotations: Array<Annotation> = emptyArray()
 
     override fun readData(input: DataInput) {
         val runtimeVisibleAnnotationsLength = input.readUnsignedShort()
