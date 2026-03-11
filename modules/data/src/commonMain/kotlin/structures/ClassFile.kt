@@ -35,12 +35,10 @@ class ClassFile : Structure(), AttributeContainer {
     var constantPool: Array<Constant> = emptyArray()
         set(constantPool) {
             field = constantPool
-            constantPool.forEachIndexed { i, cpInfo ->
-                constantPoolEntryToIndex[cpInfo] = i
-            }
+            constantPoolEntryToIndex = null
         }
 
-    private var constantPoolEntryToIndex = HashMap<Constant, Int>()
+    private var constantPoolEntryToIndex: HashMap<Constant, Int>? = null
 
     /**
      * Access flags of this class.
@@ -96,7 +94,7 @@ class ClassFile : Structure(), AttributeContainer {
      *
      * @param constant the constant pool entry
      */
-    fun getConstantPoolIndex(constant: Constant): Int = constantPoolEntryToIndex[constant] ?: -1
+    fun getConstantPoolIndex(constant: Constant): Int = getOrCreateConstantPoolEntryToIndex()[constant] ?: -1
 
     /**
      * Set all constant pool entries where the new array
@@ -105,8 +103,10 @@ class ClassFile : Structure(), AttributeContainer {
      * @param enlargedConstantPool the enlarged constant pool
      */
     fun enlargeConstantPool(enlargedConstantPool: Array<Constant>) {
-        for (i in constantPool.size until enlargedConstantPool.size) {
-            constantPoolEntryToIndex[enlargedConstantPool[i]] = i
+        constantPoolEntryToIndex?.let { constantPoolEntryToIndex ->
+            for (i in constantPool.size until enlargedConstantPool.size) {
+                constantPoolEntryToIndex[enlargedConstantPool[i]] = i
+            }
         }
         this.constantPool = enlargedConstantPool
     }
@@ -118,7 +118,7 @@ class ClassFile : Structure(), AttributeContainer {
      * @param index the index
      */
     fun registerConstantPoolEntry(index: Int) {
-        constantPoolEntryToIndex[constantPool[index]] = index
+        getOrCreateConstantPoolEntryToIndex()[constantPool[index]] = index
     }
 
     /**
@@ -128,7 +128,7 @@ class ClassFile : Structure(), AttributeContainer {
      * @param index the index
      */
     fun unregisterConstantPoolEntry(index: Int) {
-        constantPoolEntryToIndex.remove(constantPool[index])
+        getOrCreateConstantPoolEntryToIndex().remove(constantPool[index])
     }
 
     /**
@@ -319,8 +319,6 @@ class ClassFile : Structure(), AttributeContainer {
     private fun readConstantPool(input: DataInput) {
         val constantPoolCount = input.readUnsignedShort()
         if (isDebug) debug("read constant pool count $constantPoolCount", input)
-        constantPoolEntryToIndex = HashMap(constantPoolCount)
-
         // constantPool[0] is not used
         var placeholderIndex = 0
         constantPool = Array(constantPoolCount) { i ->
@@ -450,6 +448,14 @@ class ClassFile : Structure(), AttributeContainer {
             warning("major version should be between ${MAJOR_VERSION_RANGE.first} and ${MAJOR_VERSION_RANGE.last} for JDK <= ${KnownMajorJavaVersions.entries.last().verbose}, was $majorVersion")
         }
     }
+
+    private fun getOrCreateConstantPoolEntryToIndex(): HashMap<Constant, Int> =
+        constantPoolEntryToIndex ?: HashMap<Constant, Int>(constantPool.size).also { constantPoolEntryToIndex ->
+            constantPool.forEachIndexed { i, cpInfo ->
+                constantPoolEntryToIndex[cpInfo] = i
+            }
+            this.constantPoolEntryToIndex = constantPoolEntryToIndex
+        }
 
     private enum class KnownMajorJavaVersions(val majorVersion: Int, val verbose: String) {
         V45(45, "1.1"),
