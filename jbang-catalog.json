@@ -1,0 +1,17 @@
+{
+  "catalogs": {},
+  "aliases": {
+    "jclasslib": {
+      "script-ref": "org.jclasslib:jclasslib-browser:RELEASE",
+      "repositories": [
+        "central",
+        "kotlinx\u003dhttps://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven",
+        "ej\u003dhttps://maven.ej-technologies.com/repository",
+        "jitpack"
+      ],
+      "enable-preview": false,
+      "java-agents": []
+    }
+  },
+  "templates": {}
+}
