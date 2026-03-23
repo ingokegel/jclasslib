@@ -137,10 +137,12 @@ object ConstantPoolUtil {
             return index
         }
 
-        val newConstantPool = Array(constantPool.size + 1) { i ->
-            when (i) {
-                constantPool.size -> newEntry
-                else -> constantPool[i]
+        val extraSlots = newEntry.constantType.extraEntryCount
+        val newConstantPool = Array(constantPool.size + 1 + extraSlots) { i ->
+            when {
+                i < constantPool.size -> constantPool[i]
+                i == constantPool.size -> newEntry
+                else -> ConstantPlaceholder
             }
         }
         classFile.enlargeConstantPool(newConstantPool)

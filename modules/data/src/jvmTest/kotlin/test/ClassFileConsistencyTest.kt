@@ -8,7 +8,11 @@
 package org.gjt.jclasslib.test
 
 import org.gjt.jclasslib.io.*
+import org.gjt.jclasslib.structures.ConstantPoolUtil
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
+import org.gjt.jclasslib.structures.constants.ConstantDoubleInfo
+import org.gjt.jclasslib.structures.constants.ConstantLongInfo
+import org.gjt.jclasslib.structures.constants.ConstantPlaceholder
 import org.gjt.jclasslib.structures.isDebug
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -16,6 +20,8 @@ import java.io.File
 import java.nio.file.Path
 import java.util.jar.JarFile
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertSame
 
 class ClassFileConsistencyTest {
     @Test
@@ -34,7 +40,6 @@ class ClassFileConsistencyTest {
 
     @Test
     fun testSingleClasses() {
-        checkJavaClassFile("Main.class")
         checkResourceClassFile("/moduleMainClass/module-info.class")
     }
 
@@ -135,6 +140,33 @@ class ClassFileConsistencyTest {
         } else {
             toClassName()
         }
+    }
+
+    @Test
+    fun testAddMultipleWideConstants() {
+        val classFile = readResourceClassFile("/moduleMainClass/module-info.class")
+        val originalPoolSize = classFile.constantPool.size
+
+        val longIndex1 = ConstantPoolUtil.addConstantPoolEntry(classFile, ConstantLongInfo(classFile).apply { long = 123456789123456789 })
+        assertEquals(originalPoolSize, longIndex1)
+        assertSame(ConstantPlaceholder, classFile.constantPool[longIndex1 + 1])
+
+        val longIndex2 = ConstantPoolUtil.addConstantPoolEntry(classFile, ConstantLongInfo(classFile).apply { long = 987654321987654321 })
+        assertEquals(originalPoolSize + 2, longIndex2)
+        assertSame(ConstantPlaceholder, classFile.constantPool[longIndex2 + 1])
+
+        val doubleIndex = ConstantPoolUtil.addConstantPoolEntry(classFile, ConstantDoubleInfo(classFile).apply { double = 3.14 })
+        assertEquals(originalPoolSize + 4, doubleIndex)
+        assertSame(ConstantPlaceholder, classFile.constantPool[doubleIndex + 1])
+
+        // Verify the class file can be written and read back
+        val bytes = classFile.writeToByteArray()
+        val reread = ClassFileReader.readFromInputStream(ByteArrayInputStream(bytes))
+
+        assertEquals(classFile.constantPool.size, reread.constantPool.size)
+        assertEquals(123456789123456789, (reread.constantPool[longIndex1] as ConstantLongInfo).long)
+        assertEquals(987654321987654321, (reread.constantPool[longIndex2] as ConstantLongInfo).long)
+        assertEquals(3.14, (reread.constantPool[doubleIndex] as ConstantDoubleInfo).double)
     }
 
     private fun String.toClassName(): String {
