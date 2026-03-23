@@ -17,6 +17,13 @@ import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import javax.swing.tree.DefaultTreeModel
 
+// Some obfuscators (Caesium, Paramorphism, etc.) append "/" to class entry names,
+// making them appear as directories. The JVM still loads these as class files.
+fun JarFile.getJarEntryAllowingObfuscatedDirectory(name: String): JarEntry? =
+    getJarEntry(name) ?: getJarEntry("$name/")
+
+fun JarEntry.nameWithoutObfuscatedDirectorySuffix(): String = name.removeSuffix("/")
+
 class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
 
     private val moduleName by lazy {
@@ -41,7 +48,7 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
             val fileName = getClassPathClassName(className, modulePathSelection).replace('.', '/') + ".class"
             try {
                 val jarFile = JarFile(file)
-                val entry = jarFile.getJarEntry(fileName)
+                val entry = jarFile.getJarEntryAllowingObfuscatedDirectory(fileName)
                 if (entry != null) {
                     return createFindResult(entry)
                 }
@@ -51,11 +58,11 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
         return null
     }
 
-    private fun createFindResult(entry: JarEntry): FindResult = FindResult(file.path + "!" + entry.name, moduleName)
+    private fun createFindResult(entry: JarEntry): FindResult = FindResult(file.path + "!" + entry.nameWithoutObfuscatedDirectorySuffix(), moduleName)
 
     override fun mergeClassesIntoTree(classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
         forEachEntry {
-            addEntry(it.name, moduleName, classPathModel, modulePathModel, reset)
+            addEntry(it.nameWithoutObfuscatedDirectorySuffix(), moduleName, classPathModel, modulePathModel, reset)
         }
     }
 
@@ -69,7 +76,7 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
         try {
             JarFile(file).use { jarFile ->
                 jarFile.entries().iterator().forEach {
-                    if (!it.isDirectory && it.name.lowercase().endsWith(CLASSFILE_SUFFIX)) {
+                    if (it.nameWithoutObfuscatedDirectorySuffix().lowercase().endsWith(CLASSFILE_SUFFIX)) {
                         handler(it)
                     }
                 }

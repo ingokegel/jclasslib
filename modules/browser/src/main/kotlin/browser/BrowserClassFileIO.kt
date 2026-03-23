@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.classpath.ClasspathJrtEntry
+import org.gjt.jclasslib.browser.config.classpath.getJarEntryAllowingObfuscatedDirectory
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.io.getJrtInputStream
@@ -42,7 +43,7 @@ fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = 
             fileName.contains('!') -> {
                 val (jarFileName, classFileName) = splitJarFileName(fileName)
                 JarFile(jarFileName).use { jarFile ->
-                    val jarEntry = jarFile.getJarEntry(classFileName)
+                    val jarEntry = jarFile.getJarEntryAllowingObfuscatedDirectory(classFileName)
                     if (jarEntry != null) {
                         ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF)
                     } else {

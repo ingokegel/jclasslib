@@ -43,6 +43,21 @@ class ClassFileConsistencyTest {
         checkResourceClassFile("/moduleMainClass/module-info.class")
     }
 
+    @Test
+    fun testObfuscatedJarWithDirectorySuffixedEntries() {
+        val jarUrl = getResourceClassFileUrl("/obfuscation_problem.jar")
+        val jar = JarFile(File(jarUrl.toURI()))
+        var count = 0
+        for (entry in jar.entries().iterator()) {
+            val fileName = entry.name.removeSuffix("/")
+            if (fileName.endsWith(".class")) {
+                ClassFileReader.readFromInputStream(jar.getInputStream(entry), suppressEOF = true)
+                count++
+            }
+        }
+        assert(count > 0) { "Expected to find class files in obfuscated JAR, including directory-suffixed entries" }
+    }
+
     private fun scanJre(javaHome: File) {
         val testStatistics = TestStatistics()
         val rtJar = javaHome.resolve("lib/rt.jar")
@@ -70,7 +85,7 @@ class ClassFileConsistencyTest {
     private fun scanJar(file: File, testStatistics: TestStatistics) {
         val jar = JarFile(file)
         for (entry in jar.entries().iterator()) {
-            val fileName = entry.name
+            val fileName = entry.name.removeSuffix("/")
             if (fileName.endsWith(".class")) {
                 checkClassFile(fileName, JarInputStreamProvider(jar, entry), testStatistics)
             }
