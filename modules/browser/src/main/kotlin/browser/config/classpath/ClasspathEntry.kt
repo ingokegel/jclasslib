@@ -25,36 +25,64 @@ abstract class ClasspathEntry : ClasspathComponent {
                                 model: DefaultTreeModel,
                                 reset: Boolean): ClassTreeNode {
         val childCount = parentNode.childCount
+        if (childCount == 0) {
+            return insertNewNode(newNodeName, packageNode, parentNode, 0, model, reset)
+        }
 
-        val newNode = ClassTreeNode(newNodeName, packageNode)
-        for (i in 0 until childCount) {
-            val childNode = parentNode.getChildAt(i) as ClassTreeNode
-            val childNodeName = childNode.toString()
-            if (childNode.childCount > 0 && !packageNode) {
-                continue
-            } else if (childNode.childCount == 0 && packageNode) {
-                insertNode(newNode, parentNode, i, model, reset)
-                return newNode
-            } else if (newNodeName == childNodeName) {
-                return childNode
-            } else if (newNodeName < childNodeName) {
-                insertNode(newNode, parentNode, i, model, reset)
-                return newNode
+        // Find the boundary between package nodes and class leaf nodes using binary search
+        var lo = 0
+        var hi = childCount
+        while (lo < hi) {
+            val mid = (lo + hi) ushr 1
+            if ((parentNode.getChildAt(mid) as ClassTreeNode).isPackageNode) {
+                lo = mid + 1
+            } else {
+                hi = mid
             }
         }
-        insertNode(newNode, parentNode, childCount, model, reset)
+        val packageEnd = lo
 
-        return newNode
+        // Binary search within the relevant range (packages or classes)
+        val searchStart: Int
+        val searchEnd: Int
+        if (packageNode) {
+            searchStart = 0
+            searchEnd = packageEnd
+        } else {
+            searchStart = packageEnd
+            searchEnd = childCount
+        }
+
+        lo = searchStart
+        hi = searchEnd
+        while (lo < hi) {
+            val mid = (lo + hi) ushr 1
+            val cmp = newNodeName.compareTo((parentNode.getChildAt(mid) as ClassTreeNode).userObject as String)
+            when {
+                cmp < 0 -> hi = mid
+                cmp > 0 -> lo = mid + 1
+                else -> return parentNode.getChildAt(mid) as ClassTreeNode
+            }
+        }
+        return insertNewNode(newNodeName, packageNode, parentNode, lo, model, reset)
     }
+
+    private fun insertNewNode(name: String, packageNode: Boolean, parentNode: ClassTreeNode, index: Int, model: DefaultTreeModel, reset: Boolean): ClassTreeNode =
+        ClassTreeNode(name, packageNode).also {
+            insertNode(it, parentNode, index, model, reset)
+        }
 
     protected fun String.stripClassSuffix(): String = this.removeSuffix(CLASSFILE_SUFFIX)
 
     protected fun addEntry(path: String, moduleName: String?, classPathModel: DefaultTreeModel, modulePathModel: DefaultTreeModel, reset: Boolean) {
-        val pathComponents = path.stripClassSuffix().replace('\\', '/').split(Regex("/"))
+        val pathComponents = path.stripClassSuffix().replace('\\', '/').split("/")
         if (!path.endsWith(MODULE_INFO_CLASS_FILE_NAME)) {
             addEntry(classPathModel, pathComponents, reset)
         }
-        addEntry(modulePathModel, listOf(moduleName ?: UNNAMED_MODULE) + pathComponents, reset)
+        addEntry(modulePathModel, buildList(pathComponents.size + 1) {
+            add(moduleName ?: UNNAMED_MODULE)
+            addAll(pathComponents)
+        }, reset)
     }
 
     private fun addEntry(model: DefaultTreeModel, pathComponents: List<String>, reset: Boolean) {
