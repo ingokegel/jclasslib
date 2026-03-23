@@ -8,6 +8,7 @@ configurePublishing()
 
 application {
     mainClass = "org.gjt.jclasslib.browser.BrowserApplication"
+    applicationDefaultJvmArgs = findProperty("extraArgs")?.toString()?.split(" ") ?: emptyList()
 }
 
 val flatLafVersion = "2.6"
