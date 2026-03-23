@@ -22,6 +22,14 @@ kotlin {
     jvm {
     }
 
+    sourceSets {
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.ow2.asm:asm:9.7.1")
+            }
+        }
+    }
+
     js {
         nodejs()
     }
