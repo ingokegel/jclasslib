@@ -165,10 +165,11 @@ class ClasspathBrowser(private val frame: BrowserFrame, @Nls title: String, priv
     }
 
     fun clear() {
-        //The trees will not be synchronized automatically on the next setVisible.
         for (tree in trees) {
             tree.model = DefaultTreeModel(ClassTreeNode())
         }
+        needsMerge = true
+        resetOnNextMerge = true
     }
 
     override fun addContent(component: JComponent) {
