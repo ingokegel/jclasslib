@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser.config
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.browser.ClassFileCallback
 import org.gjt.jclasslib.browser.config.classpath.*
+import org.gjt.jclasslib.io.ClassFileReadMode
 import java.io.File
 import javax.swing.tree.DefaultTreeModel
 
@@ -40,12 +41,12 @@ abstract class ClassPathContainer : ClasspathComponent {
         createJreEntry()?.mergeClassesIntoTree(classPathModel, modulePathModel, reset)
     }
 
-    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame, readMode: ClassFileReadMode) {
         for (entry in classpath) {
-            entry.scanClassFiles(classFileCallback, includeJdk, frame)
+            entry.scanClassFiles(classFileCallback, includeJdk, frame, readMode)
         }
         if (includeJdk) {
-            createJreEntry()?.scanClassFiles(classFileCallback, true, frame)
+            createJreEntry()?.scanClassFiles(classFileCallback, true, frame, readMode)
         }
     }
 

@@ -11,6 +11,7 @@ import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.browser.ClassFileCallback
 import org.gjt.jclasslib.browser.handleClassFile
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.w3c.dom.Element
 import java.io.File
 import java.io.FileInputStream
@@ -79,18 +80,18 @@ class ClasspathDirectoryEntry(fileName: String) : ClasspathFileEntry(fileName) {
         }
     }
 
-    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
-        scanClasses(file, classFileCallback, frame)
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame, readMode: ClassFileReadMode) {
+        scanClasses(file, classFileCallback, frame, readMode)
     }
 
-    private fun scanClasses(directory: File, classFileCallback: ClassFileCallback, frame: BrowserFrame) {
+    private fun scanClasses(directory: File, classFileCallback: ClassFileCallback, frame: BrowserFrame, readMode: ClassFileReadMode) {
         val files = directory.listFiles() ?: return
         for (file in files) {
             if (file.isDirectory) {
-                scanClasses(file, classFileCallback, frame)
+                scanClasses(file, classFileCallback, frame, readMode)
             } else if (file.name.lowercase().endsWith(CLASSFILE_SUFFIX) &&
                 (!file.name.endsWith(MODULE_INFO_CLASS_FILE_NAME) || directory != file)) {
-                classFileCallback.handleClassFile(createFindResult(file), frame)
+                classFileCallback.handleClassFile(createFindResult(file), frame, readMode)
             }
         }
     }

@@ -142,7 +142,7 @@ class ConstantUtf8Info(classFile: ClassFile) : AbstractConstant(classFile) {
         // Multi-byte path: allocate CharArray only when needed
         val chars = CharArray(utfLen)
         var charCount = count
-        for (i in 0 until count) {
+        for (i in 0..count) {
             chars[i] = bytes[i].toInt().toChar()
         }
 

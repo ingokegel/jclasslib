@@ -99,20 +99,32 @@ open class HtmlDisplayTextArea(@Nls text: String? = null) : JEditorPane(), TextD
         } ?: Dimension(400, 400)
     }
 
+    private var baseline = -1
+
     override fun getBaseline(width: Int, height: Int): Int {
-        val insets = insets
-        val rootView = getUI().getRootView(this)
-        if (rootView.viewCount > 0) {
-            val baseline = insets.top
-            val fieldBaseline = getBaseline(rootView.getView(0),
+        if (baseline < 0) {
+            val insets = insets
+            val rootView = getUI().getRootView(this)
+            if (rootView.viewCount > 0) {
+                val fieldBaseline = getBaseline(
+                    rootView.getView(0),
                     width - insets.left - insets.right,
                     height - insets.top - insets.bottom
-            )
-            if (fieldBaseline >= 0) {
-                return baseline + fieldBaseline
+                )
+                if (fieldBaseline < 0) {
+                    return -1
+                }
+                baseline = insets.top + fieldBaseline
             }
         }
-        return -1
+        return baseline
+    }
+
+    override fun setBounds(x: Int, y: Int, width: Int, height: Int) {
+        super.setBounds(x, y, width, height)
+        if (width > 0 && height > 0) {
+            baseline = -1
+        }
     }
 
     // methods copied from BasicHTML

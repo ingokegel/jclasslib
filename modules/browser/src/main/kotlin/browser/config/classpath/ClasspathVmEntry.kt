@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.browser.ClassFileCallback
 import org.gjt.jclasslib.browser.VmConnection
 import org.gjt.jclasslib.browser.handleClassFile
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.jclasslib.agent.ClassDescriptor
 import org.w3c.dom.Element
 import javax.swing.tree.DefaultTreeModel
@@ -33,9 +34,9 @@ class ClasspathVmEntry(private val vmConnection: VmConnection) : ClasspathEntry(
         }
     }
 
-    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame, readMode: ClassFileReadMode) {
         forEachClass {
-            classFileCallback.handleClassFile(createFindResult(it), frame)
+            classFileCallback.handleClassFile(createFindResult(it), frame, readMode)
         }
     }
 

@@ -23,6 +23,7 @@ import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.*
 import org.gjt.jclasslib.browser.usages.findString
 import org.gjt.jclasslib.browser.util.MenuBarMenu
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.util.*
@@ -432,8 +433,8 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
 
     override fun canScanClassFiles() = true
 
-    override fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {
-        classpathComponent.scanClassFiles(classFileCallback, includeJdk, this)
+     override fun scanClassFiles(includeJdk: Boolean, readMode: ClassFileReadMode, classFileCallback: ClassFileCallback) {
+        classpathComponent.scanClassFiles(classFileCallback, includeJdk, this, readMode)
     }
 
     override fun canReadClassFiles() = true

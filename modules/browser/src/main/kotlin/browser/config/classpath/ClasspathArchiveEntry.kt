@@ -11,6 +11,7 @@ import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.browser.ClassFileCallback
 import org.gjt.jclasslib.browser.handleClassFile
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.w3c.dom.Element
 import java.io.IOException
 import java.util.jar.JarEntry
@@ -66,9 +67,9 @@ class ClasspathArchiveEntry(fileName : String) : ClasspathFileEntry(fileName) {
         }
     }
 
-    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame, readMode: ClassFileReadMode) {
         forEachEntry {
-            classFileCallback.handleClassFile(createFindResult(it), frame)
+            classFileCallback.handleClassFile(createFindResult(it), frame, readMode)
         }
     }
 

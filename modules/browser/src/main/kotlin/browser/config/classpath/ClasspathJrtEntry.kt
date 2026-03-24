@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser.config.classpath
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.browser.ClassFileCallback
 import org.gjt.jclasslib.browser.handleClassFile
+ import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.io.findClassInJrt
 import org.gjt.jclasslib.io.findClassWithModuleNameInJrt
 import org.gjt.jclasslib.io.forEachClassInJrt
@@ -35,9 +36,9 @@ class ClasspathJrtEntry(jreHome: String) : ClasspathFileEntry(jreHome) {
         }
     }
 
-    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame) {
+    override fun scanClassFiles(classFileCallback: ClassFileCallback, includeJdk: Boolean, frame: BrowserFrame, readMode: ClassFileReadMode) {
         forEachClassInJrt(file) { moduleName, path ->
-            classFileCallback.handleClassFile(createFindResult(path, moduleName), frame)
+            classFileCallback.handleClassFile(createFindResult(path, moduleName), frame, readMode)
         }
     }
 

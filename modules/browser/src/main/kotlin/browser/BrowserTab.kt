@@ -11,6 +11,7 @@ import kotlinx.dom.build.addElement
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.AlertType
@@ -100,8 +101,8 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
 
     override fun canScanClassFiles() = parentFrame.canScanClassFiles()
 
-    override fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {
-        parentFrame.scanClassFiles(includeJdk, classFileCallback)
+    override fun scanClassFiles(includeJdk: Boolean, readMode: ClassFileReadMode, classFileCallback: ClassFileCallback) {
+        parentFrame.scanClassFiles(includeJdk, readMode, classFileCallback)
     }
 
     override fun canReadClassFiles() = parentFrame.canReadClassFiles()

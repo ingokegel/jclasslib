@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser
 
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.classpath.FindResult
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.structures.ClassFile
 import javax.swing.Action
 
@@ -18,7 +19,7 @@ interface GlobalBrowserServices {
     fun canSaveClassFiles(): Boolean
     fun showURL(urlSpec: String)
     fun canScanClassFiles(): Boolean = false
-    fun scanClassFiles(includeJdk: Boolean, classFileCallback: ClassFileCallback) {}
+    fun scanClassFiles(includeJdk: Boolean, readMode: ClassFileReadMode = ClassFileReadMode.FULL, classFileCallback: ClassFileCallback) {}
     fun canReadClassFiles(): Boolean = false
     fun readClassFile(className: String): ClassFile? = null
 }
@@ -36,6 +37,6 @@ fun interface ClassFileCallback {
     fun handleClassFile(classFile: ClassFile, findResult: FindResult)
 }
 
-fun ClassFileCallback.handleClassFile(findResult: FindResult, frame: BrowserFrame) {
-    handleClassFile(readClassFile(findResult.fileName, frame), findResult)
+fun ClassFileCallback.handleClassFile(findResult: FindResult, frame: BrowserFrame, readMode: ClassFileReadMode = ClassFileReadMode.FULL) {
+    handleClassFile(readClassFile(findResult.fileName, frame, readMode = readMode), findResult)
 }

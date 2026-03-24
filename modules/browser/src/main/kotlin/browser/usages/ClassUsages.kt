@@ -14,12 +14,9 @@ import org.gjt.jclasslib.browser.NodeType
 import org.gjt.jclasslib.browser.config.BrowserPath
 import org.gjt.jclasslib.browser.config.CategoryHolder
 import org.gjt.jclasslib.browser.config.IndexHolder
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.util.AlertType
-import org.gjt.jclasslib.util.HtmlDisplayTextArea
-import org.gjt.jclasslib.util.ProgressDialog
-import org.gjt.jclasslib.util.StandardDialog
-import org.gjt.jclasslib.util.alertFacade
+import org.gjt.jclasslib.util.*
 import java.awt.Component
 import java.awt.Window
 import java.awt.event.MouseAdapter
@@ -36,7 +33,7 @@ fun showNoUsagesFoundMessage(parent: Component) {
 fun findClassUsages(services: GlobalBrowserServices, includeJdk: Boolean, parentWindow: Window?, predicate: (Constant) -> Boolean): List<ClassUsage> {
     val classUsages = mutableListOf<ClassUsage>()
     ProgressDialog(parentWindow, getString("searching.usages")) {
-        services.scanClassFiles(includeJdk) { classFile, _ ->
+        services.scanClassFiles(includeJdk, readMode = ClassFileReadMode.SKIP_ATTRIBUTES) { classFile, _ ->
             classFile.constantPool.filter(predicate).forEach { constant ->
                 classUsages.add(ClassUsage(classFile.thisClassName, classFile.getConstantPoolIndex(constant)))
             }

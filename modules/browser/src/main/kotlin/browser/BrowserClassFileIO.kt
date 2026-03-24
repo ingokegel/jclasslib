@@ -10,6 +10,7 @@ package org.gjt.jclasslib.browser
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.config.classpath.ClasspathJrtEntry
 import org.gjt.jclasslib.browser.config.classpath.getJarEntryAllowingObfuscatedDirectory
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.ClassFileWriter
 import org.gjt.jclasslib.io.getJrtInputStream
@@ -25,37 +26,37 @@ import kotlin.io.path.copyTo
 import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteIfExists
 
-fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = false): ClassFile {
+fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = false, readMode: ClassFileReadMode = ClassFileReadMode.FULL): ClassFile {
     try {
         val vmConnection = frame.vmConnection
         return when {
             vmConnection != null -> {
                 val bytes = vmConnection.communicator.getClassFile(fileName)
                 if (bytes != null) {
-                    ClassFileReader.readFromInputStream(ByteArrayInputStream(bytes))
+                    ClassFileReader.readFromInputStream(ByteArrayInputStream(bytes), readMode = readMode)
                 } else {
                     throw IOException("The class $fileName was not found")
                 }
             }
             fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX) -> {
-                ClassFileReader.readFromInputStream(getJrtInputStream(fileName.removePrefix(ClasspathJrtEntry.JRT_PREFIX), File(frame.config.jreHome)), suppressEOF)
+                ClassFileReader.readFromInputStream(getJrtInputStream(fileName.removePrefix(ClasspathJrtEntry.JRT_PREFIX), File(frame.config.jreHome)), suppressEOF, readMode)
             }
             fileName.contains('!') -> {
                 val (jarFileName, classFileName) = splitJarFileName(fileName)
                 JarFile(jarFileName).use { jarFile ->
                     val jarEntry = jarFile.getJarEntryAllowingObfuscatedDirectory(classFileName)
                     if (jarEntry != null) {
-                        ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF)
+                        ClassFileReader.readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF, readMode)
                     } else {
                         throw IOException("The jar entry $classFileName was not found")
                     }
                 }
             }
             else -> {
-                ClassFileReader.readFromFile(File(fileName), suppressEOF)
+                ClassFileReader.readFromFile(File(fileName), suppressEOF, readMode)
             }
         }
-    } catch (ex: FileNotFoundException) {
+    } catch (_: FileNotFoundException) {
         throw IOException("The file $fileName was not found")
     } catch (ex: EOFException) {
         if (alertFacade.showYesNoDialog(
