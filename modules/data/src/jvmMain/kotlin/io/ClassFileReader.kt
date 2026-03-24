@@ -33,7 +33,7 @@ object ClassFileReader {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     @JvmOverloads
-    fun readFromClassPath(classPath: Array<String>, packageName: String, className: String, suppressEOF: Boolean = false): ClassFile? {
+    fun readFromClassPath(classPath: Array<String>, packageName: String, className: String, suppressEOF: Boolean = false, readMode: ClassFileReadMode = ClassFileReadMode.FULL): ClassFile? {
 
         val relativePath = packageName.replace('.', File.separatorChar) + (if (packageName.isEmpty()) "" else File.separator) + className + ".class"
         val jarRelativePath = relativePath.replace(File.separatorChar, '/')
@@ -44,13 +44,13 @@ object ClassFileReader {
                     if (classPathEntry.isDirectory) {
                         val testFile = File(classPathEntry, relativePath)
                         if (testFile.exists()) {
-                            return readFromFile(testFile, suppressEOF)
+                            return readFromFile(testFile, suppressEOF, readMode)
                         }
                     } else if (classPathEntry.isFile) {
                         JarFile(classPathEntry).use { jarFile ->
                             val jarEntry = jarFile.getJarEntry(jarRelativePath)
                             if (jarEntry != null) {
-                                return readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF)
+                                return readFromInputStream(jarFile.getInputStream(jarEntry), suppressEOF, readMode)
                             }
                         }
                     }
@@ -68,8 +68,8 @@ object ClassFileReader {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     @JvmOverloads
-    fun readFromFile(file: File, suppressEOF: Boolean = false): ClassFile =
-        readFromPath(kotlinx.io.files.Path(file.path), suppressEOF)
+    fun readFromFile(file: File, suppressEOF: Boolean = false, readMode: ClassFileReadMode = ClassFileReadMode.FULL): ClassFile =
+        readFromPath(kotlinx.io.files.Path(file.path), suppressEOF, readMode)
 
     /**
      * Converts a class file to a ClassFile structure.
@@ -80,6 +80,6 @@ object ClassFileReader {
     @Throws(InvalidByteCodeException::class, IOException::class)
     @JvmStatic
     @JvmOverloads
-    fun readFromInputStream(stream: InputStream, suppressEOF: Boolean = false): ClassFile =
-        readFromSource(stream.asSource(), suppressEOF)
+    fun readFromInputStream(stream: InputStream, suppressEOF: Boolean = false, readMode: ClassFileReadMode = ClassFileReadMode.FULL): ClassFile =
+        readFromSource(stream.asSource(), suppressEOF, readMode)
 }

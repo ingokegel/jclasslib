@@ -10,16 +10,25 @@ package org.gjt.jclasslib.io
 import kotlinx.io.*
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
+import org.gjt.jclasslib.getSystemProperty
 import org.gjt.jclasslib.structures.ClassFile
+import org.gjt.jclasslib.structures.SYSTEM_PROPERTY_SKIP_ATTRIBUTES
 import org.gjt.jclasslib.structures.debug
 import org.gjt.jclasslib.structures.isDebug
 
-fun readFromPath(path: Path, suppressEOF: Boolean = false): ClassFile =
-    readFromSource(SystemFileSystem.source(path), suppressEOF)
+fun readFromPath(path: Path, suppressEOF: Boolean = false, readMode: ClassFileReadMode = ClassFileReadMode.FULL): ClassFile =
+    readFromSource(SystemFileSystem.source(path), suppressEOF, readMode)
 
-fun readFromSource(source: RawSource, suppressEOF: Boolean = false): ClassFile {
+fun readFromSource(source: RawSource, suppressEOF: Boolean = false, readMode: ClassFileReadMode = ClassFileReadMode.FULL): ClassFile {
     val classFile = ClassFile()
-    val input = source.createDataInput()
+    val resolvedReadMode = if (readMode != ClassFileReadMode.FULL) {
+        readMode
+    } else if (getSystemProperty(SYSTEM_PROPERTY_SKIP_ATTRIBUTES) == "true") {
+        ClassFileReadMode.SKIP_ATTRIBUTES
+    } else {
+        ClassFileReadMode.FULL
+    }
+    val input = source.createDataInput(resolvedReadMode)
     if (suppressEOF) {
         try {
             classFile.read(input)
@@ -48,12 +57,12 @@ fun ClassFile.writeToByteArray(): ByteArray =
     }
 
 
-private fun RawSource.createDataInput(): SourceDataInput {
+private fun RawSource.createDataInput(readMode: ClassFileReadMode = ClassFileReadMode.FULL): SourceDataInput {
     val source = buffered()
     return if (isDebug) {
-        CountingSourceDataInput(source)
+        CountingSourceDataInput(source, readMode)
     } else {
-        SourceDataInput(source)
+        SourceDataInput(source, readMode)
     }
 }
 

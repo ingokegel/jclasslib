@@ -18,6 +18,11 @@ import org.gjt.jclasslib.structures.writeShort
 
 interface DataInput {
     /**
+     * The reading mode for the class file.
+     */
+    val readMode: ClassFileReadMode
+
+    /**
      * Read an unsigned byte.
      * @return the byte value
      */
@@ -103,7 +108,7 @@ interface CountingDataOutput : DataOutput {
     val bytesWritten: Int
 }
 
-internal open class SourceDataInput(private val source: Source) : DataInput {
+internal open class SourceDataInput(private val source: Source, override val readMode: ClassFileReadMode = ClassFileReadMode.FULL) : DataInput {
     override fun readUnsignedByte(): Int = source.readUnsignedByte()
     override fun readByte(): Byte = source.readByte()
     override fun readUnsignedShort(): Int = source.readUnsignedShort()
@@ -116,7 +121,7 @@ internal open class SourceDataInput(private val source: Source) : DataInput {
     }
 }
 
-internal open class CountingSourceDataInput(source: Source) : SourceDataInput(source), CountingDataInput {
+internal open class CountingSourceDataInput(source: Source, readMode: ClassFileReadMode = ClassFileReadMode.FULL) : SourceDataInput(source, readMode), CountingDataInput {
     constructor(byteArray: ByteArray) : this(Buffer().also { it.write(byteArray) })
 
     private var _bytesRead: Int = 0

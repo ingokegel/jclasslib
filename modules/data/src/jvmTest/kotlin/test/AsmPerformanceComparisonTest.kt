@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.test
 
 import org.gjt.jclasslib.io.*
-import org.gjt.jclasslib.structures.SYSTEM_PROPERTY_SKIP_ATTRIBUTES
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
@@ -62,9 +61,7 @@ class AsmPerformanceComparisonTest {
         var jclasslibNanos = 0L
         var asmNanos = 0L
 
-        if (mode == Mode.READ_ONLY_SKIP_ATTRIBUTES) {
-            System.setProperty(SYSTEM_PROPERTY_SKIP_ATTRIBUTES, "true")
-        }
+        val readMode = if (mode == Mode.READ_ONLY_SKIP_ATTRIBUTES) ClassFileReadMode.SKIP_ATTRIBUTES else ClassFileReadMode.FULL
 
         val processClass: (String, InputStreamProvider) -> Unit = { _, provider ->
             val bytes = provider.createInputStream().use { input ->
@@ -72,7 +69,7 @@ class AsmPerformanceComparisonTest {
             }
 
             val jclasslibStart = System.nanoTime()
-            val classFile = ClassFileReader.readFromInputStream(bytes.inputStream())
+            val classFile = ClassFileReader.readFromInputStream(bytes.inputStream(), readMode = readMode)
             if (mode == Mode.READ_WRITE_BYTECODE) {
                 classFile.methods.forEach { methodInfo ->
                     methodInfo.attributes.filterIsInstance<CodeAttribute>().firstOrNull()?.let { codeAttribute ->
@@ -117,10 +114,6 @@ class AsmPerformanceComparisonTest {
                 val fileName = path.toString()
                 processClass(fileName, JrtInputStreamProvider(fileName, javaHome))
             }
-        }
-
-        if (mode == Mode.READ_ONLY_SKIP_ATTRIBUTES) {
-            System.clearProperty(SYSTEM_PROPERTY_SKIP_ATTRIBUTES)
         }
 
         val jclasslibMs = jclasslibNanos / 1_000_000

@@ -7,7 +7,7 @@
 
 package org.gjt.jclasslib.structures
 
-import org.gjt.jclasslib.getSystemProperty
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.io.DataInput
 import org.gjt.jclasslib.io.DataOutput
 import org.gjt.jclasslib.structures.attributes.*
@@ -45,7 +45,7 @@ interface AttributeContainer {
      */
     fun AttributeContainer.readAttributes(input: DataInput, classFile: ClassFile) {
         val attributesCount = input.readUnsignedShort()
-        if (getSystemProperty(SYSTEM_PROPERTY_SKIP_ATTRIBUTES) == "true") {
+        if (input.readMode == ClassFileReadMode.SKIP_ATTRIBUTES) {
             attributes = Array(attributesCount) {
                 input.skip(2)
                 val attributeLength = input.readInt()
