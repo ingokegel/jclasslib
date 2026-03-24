@@ -9,10 +9,7 @@ package org.gjt.jclasslib.test
 
 import org.gjt.jclasslib.io.*
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
-import org.objectweb.asm.ClassReader
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.ClassWriter
-import org.objectweb.asm.Opcodes
+import org.objectweb.asm.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.jar.JarFile
@@ -22,39 +19,27 @@ class AsmPerformanceComparisonTest {
 
     @Test
     fun testJresReadOnly() {
-        for (javaHome in getJavaHomes()) {
-            println("Testing with $javaHome")
-            scanJre(javaHome, Mode.READ_ONLY)
-        }
+        scanJresWithWarmup(Mode.READ_ONLY)
     }
 
     @Test
     fun testJresReadOnlySkipAttributes() {
-        for (javaHome in getJavaHomes()) {
-            println("Testing with $javaHome")
-            scanJre(javaHome, Mode.READ_ONLY_SKIP_ATTRIBUTES)
-        }
+        scanJresWithWarmup(Mode.READ_ONLY_SKIP_ATTRIBUTES)
     }
 
     @Test
     fun testJresReadWrite() {
-        for (javaHome in getJavaHomes()) {
-            println("Testing with $javaHome")
-            scanJre(javaHome, Mode.READ_WRITE)
-        }
+        scanJresWithWarmup(Mode.READ_WRITE)
     }
 
     @Test
     fun testJresReadWriteBytecode() {
-        for (javaHome in getJavaHomes()) {
-            println("Testing with $javaHome")
-            scanJre(javaHome, Mode.READ_WRITE_BYTECODE)
-        }
+        scanJresWithWarmup(Mode.READ_WRITE_BYTECODE)
     }
 
     private enum class Mode { READ_ONLY, READ_ONLY_SKIP_ATTRIBUTES, READ_WRITE, READ_WRITE_BYTECODE }
 
-    private fun scanJre(javaHome: File, mode: Mode) {
+    private fun scanJre(javaHome: File, mode: Mode, warmup: Boolean = false) {
         val rtJar = javaHome.resolve("lib/rt.jar")
 
         var count = 0
@@ -90,7 +75,7 @@ class AsmPerformanceComparisonTest {
                 } else {
                     0
                 }
-                reader.accept(object : ClassVisitor(Opcodes.ASM9) {}, asmFlags)
+                reader.accept(FullReadClassVisitor, asmFlags)
             } else {
                 val writer = ClassWriter(0)
                 reader.accept(writer, 0)
@@ -116,9 +101,21 @@ class AsmPerformanceComparisonTest {
             }
         }
 
-        val jclasslibMs = jclasslibNanos / 1_000_000
-        val asmMs = asmNanos / 1_000_000
-        println("$count classes [${mode.name}]: jclasslib ${jclasslibMs}ms, ASM ${asmMs}ms, ratio %.2f".format(jclasslibMs.toDouble() / asmMs))
+        if (!warmup) {
+            val jclasslibMs = jclasslibNanos / 1_000_000
+            val asmMs = asmNanos / 1_000_000
+            println("$count classes [${mode.name}]: jclasslib ${jclasslibMs}ms, ASM ${asmMs}ms, ratio %.2f".format(jclasslibMs.toDouble() / asmMs))
+        }
+    }
+
+    private fun scanJresWithWarmup(mode: Mode) {
+        val javaHomes = getJavaHomes()
+        println("Warmup with ${javaHomes.first()}")
+        scanJre(javaHomes.first(), mode, warmup = true)
+        for (javaHome in javaHomes) {
+            println("Testing with $javaHome")
+            scanJre(javaHome, mode)
+        }
     }
 
     private fun getJavaHomes(): List<File> {
@@ -136,5 +133,43 @@ class AsmPerformanceComparisonTest {
         val javaHome = File(javaHomePath)
         val jreHome = javaHome.resolve("jre")
         return if (jreHome.exists()) jreHome else javaHome
+    }
+
+    /**
+     * A ClassVisitor that returns non-null sub-visitors to force ASM to fully
+     * parse all structures, making the comparison with jclasslib more meaningful.
+     */
+    private object FullReadClassVisitor : ClassVisitor(Opcodes.ASM9) {
+        private val annotationVisitor = object : AnnotationVisitor(Opcodes.ASM9) {
+            override fun visitAnnotation(name: String?, descriptor: String?) = this
+            override fun visitArray(name: String?) = this
+        }
+
+        private val methodVisitor = object : MethodVisitor(Opcodes.ASM9) {
+            override fun visitAnnotationDefault() = annotationVisitor
+            override fun visitAnnotation(descriptor: String?, visible: Boolean) = annotationVisitor
+            override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath?, descriptor: String?, visible: Boolean) = annotationVisitor
+            override fun visitParameterAnnotation(parameter: Int, descriptor: String?, visible: Boolean) = annotationVisitor
+            override fun visitInsnAnnotation(typeRef: Int, typePath: TypePath?, descriptor: String?, visible: Boolean) = annotationVisitor
+            override fun visitTryCatchAnnotation(typeRef: Int, typePath: TypePath?, descriptor: String?, visible: Boolean) = annotationVisitor
+            override fun visitLocalVariableAnnotation(typeRef: Int, typePath: TypePath?, start: Array<out Label>?, end: Array<out Label>?, index: IntArray?, descriptor: String?, visible: Boolean) = annotationVisitor
+        }
+
+        private val fieldVisitor = object : FieldVisitor(Opcodes.ASM9) {
+            override fun visitAnnotation(descriptor: String?, visible: Boolean) = annotationVisitor
+            override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath?, descriptor: String?, visible: Boolean) = annotationVisitor
+        }
+
+        private val recordComponentVisitor = object : RecordComponentVisitor(Opcodes.ASM9) {
+            override fun visitAnnotation(descriptor: String?, visible: Boolean) = annotationVisitor
+            override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath?, descriptor: String?, visible: Boolean) = annotationVisitor
+        }
+
+        override fun visitAnnotation(descriptor: String?, visible: Boolean) = annotationVisitor
+        override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath?, descriptor: String?, visible: Boolean) = annotationVisitor
+        override fun visitMethod(access: Int, name: String?, descriptor: String?, signature: String?, exceptions: Array<out String>?) = methodVisitor
+        override fun visitField(access: Int, name: String?, descriptor: String?, signature: String?, value: Any?) = fieldVisitor
+        override fun visitRecordComponent(name: String?, descriptor: String?, signature: String?) = recordComponentVisitor
+        override fun visitModule(name: String?, access: Int, version: String?) = object : ModuleVisitor(Opcodes.ASM9) {}
     }
 }
