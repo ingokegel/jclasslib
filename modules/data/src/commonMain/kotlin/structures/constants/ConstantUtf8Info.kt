@@ -18,10 +18,21 @@ import org.gjt.jclasslib.structures.ConstantType
  */
 class ConstantUtf8Info(classFile: ClassFile) : AbstractConstant(classFile) {
 
+    private var rawBytes: ByteArray? = null
+    private var decodedString: String? = null
+
     /**
-     * The string in this entry.
+     * The string in this entry. Decoded lazily from the raw bytes on first access.
      */
-    var string: String = ""
+    var string: String
+        get() {
+            decodedString?.let { return it }
+            return decodeUTF(rawBytes ?: return "").also { decodedString = it }
+        }
+        set(value) {
+            decodedString = value
+            rawBytes = null
+        }
 
     override val constantType: ConstantType
         get() = ConstantType.UTF8
@@ -37,7 +48,9 @@ class ConstantUtf8Info(classFile: ClassFile) : AbstractConstant(classFile) {
         get() = string.encodeToByteArray()
 
     override fun readData(input: DataInput) {
-        string = input.readUTF()
+        val utfLen = input.readUnsignedShort()
+        rawBytes = input.readByteArray(utfLen)
+        decodedString = null
     }
 
     override fun writeData(output: DataOutput) {
@@ -111,10 +124,8 @@ class ConstantUtf8Info(classFile: ClassFile) : AbstractConstant(classFile) {
         return utfLen + 2
     }
 
-
-    private fun DataInput.readUTF(): String {
-        val utfLen = readUnsignedShort()
-        val bytes = readByteArray(utfLen)
+    private fun decodeUTF(bytes: ByteArray): String {
+        val utfLen = bytes.size
 
         // Fast path: scan for first non-ASCII byte
         var count = 0
