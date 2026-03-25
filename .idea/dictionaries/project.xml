@@ -82,6 +82,7 @@
       <w>getstatic</w>
       <w>gridy</w>
       <w>growx</w>
+      <w>hidemode</w>
       <w>hotfix</w>
       <w>httpcomponents</w>
       <w>iadd</w>

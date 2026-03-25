@@ -18,15 +18,12 @@ import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.constants.*
 import org.jetbrains.annotations.Nls
-import java.awt.BorderLayout
 import javax.swing.JButton
-import javax.swing.JPanel
 
-class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
-
+class ClassElementOpener(private val detailPane: DetailPane<*>) : JButton(getString("action.show")) {
     private var constant: Constant? = null
 
-    private val btnShow: JButton = JButton(getString("action.show")).apply {
+    init {
         addActionListener {
             try {
                 val className = getClassName()
@@ -39,23 +36,15 @@ class ClassElementOpener(private val detailPane: DetailPane<*>) : JPanel() {
         }
     }
 
-    init {
-        layout = BorderLayout()
-        add(btnShow, BorderLayout.CENTER)
-        isOpaque = false
-    }
-
     fun setConstant(constant: Constant) {
         this.constant = constant
         try {
             val buttonText = getButtonText()
-            btnShow.apply {
-                if (buttonText != null) {
-                    isVisible = true
-                    text = buttonText
-                } else {
-                    isVisible = false
-                }
+            if (buttonText != null) {
+                this@ClassElementOpener.isVisible = true
+                text = buttonText
+            } else {
+                this@ClassElementOpener.isVisible = false
             }
         } catch (_: InvalidByteCodeException) {
         }

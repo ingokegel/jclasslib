@@ -16,9 +16,23 @@ import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-class MenuButton(@Nls text: String, private val popupMenu: JPopupMenu) : JButton(text) {
+open class MenuButton(@Nls text: String, private val popupMenu: JPopupMenu = JPopupMenu()) : JButton(text) {
+    private val originalText = text
     init {
         setModel(MenuButtonModel())
+    }
+
+    fun addMenuItem(menuItem: JMenuItem) {
+        if (popupMenu.componentCount == 0) {
+            text = menuItem.text
+        } else {
+            text = originalText
+        }
+        popupMenu.add(menuItem)
+    }
+
+    fun clearMenuItems() {
+        popupMenu.removeAll()
     }
 
     override fun setEnabled(enabled: Boolean) {

@@ -18,11 +18,13 @@ import org.gjt.jclasslib.util.getParentWindow
 
 private val JDK_PREFIXES = listOf("java/", "javax/", "jdk/", "sun/", "com/sun/")
 
+internal fun isJdkClassName(className: String) = JDK_PREFIXES.any { className.startsWith(it) }
+
 fun findClassMemberUsages(browserComponent: BrowserComponent, classMember: ClassMember) {
     val className = browserComponent.services.classFile.thisClassName
     val classMemberName = classMember.name
     val classMemberDescriptor = classMember.descriptor
-    val includeJdk = JDK_PREFIXES.any { className.startsWith(it) }
+    val includeJdk = isJdkClassName(className)
 
     val classUsages = findClassUsages(browserComponent.services, includeJdk, browserComponent.getParentWindow()) { constant ->
         if ((classMember is FieldInfo && constant is ConstantFieldrefInfo) ||

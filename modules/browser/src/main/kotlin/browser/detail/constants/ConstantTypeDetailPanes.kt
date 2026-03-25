@@ -12,25 +12,30 @@ import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.DataEditor
 import org.gjt.jclasslib.browser.detail.KeyValueDetailPane
 import org.gjt.jclasslib.browser.usages.findConstantUsages
+import org.gjt.jclasslib.browser.usages.findImplementingClasses
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.InvalidByteCodeException
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.structures.constants.*
 import org.jetbrains.annotations.Nls
-import javax.swing.JButton
+import javax.swing.JMenuItem
 
 abstract class ConstantDetailPane<T : Constant>(constantClass: Class<T>, services: BrowserServices) : KeyValueDetailPane<T>(constantClass, services) {
-    private val btnFindUsages: JButton = JButton(getString("action.find.usages")).apply {
-        addActionListener {
-            element?.let {constant ->
-                findConstantUsages(services.browserComponent, constant)
+    protected val searchButton = SearchButton()
+
+    init {
+        searchButton.addMenuItem(JMenuItem(getString("action.find.usages")).apply {
+            addActionListener {
+                element?.let { constant ->
+                    findConstantUsages(services.browserComponent, constant)
+                }
             }
-        }
+        })
     }
 
     override fun addEditor(editorProvider: () -> DataEditor<T>) {
         super.addEditor(editorProvider)
-        add(btnFindUsages, "newline, spanx")
+        add(searchButton, "newline, spanx")
     }
 
     protected fun addClassElementOpener() {
@@ -52,6 +57,18 @@ abstract class ConstantNameInfoDetailPane<T : ConstantNameInfo>(constantClass: C
 }
 
 class ConstantClassInfoDetailPane(services: BrowserServices) : ConstantNameInfoDetailPane<ConstantClassInfo>(ConstantClassInfo::class.java, services) {
+    init {
+        if (services.canScanClassFiles()) {
+            searchButton.addMenuItem(JMenuItem(getString("action.find.subclasses")).apply {
+                addActionListener {
+                    element?.let { constant ->
+                        findImplementingClasses(constant.name, services)
+                    }
+                }
+            })
+        }
+    }
+
     override fun addLabels() {
         super.addLabels()
         addClassElementOpener()

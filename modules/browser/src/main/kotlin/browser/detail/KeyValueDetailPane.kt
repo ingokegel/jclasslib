@@ -9,6 +9,7 @@ package org.gjt.jclasslib.browser.detail
 
 import net.miginfocom.swing.MigLayout
 import org.gjt.jclasslib.browser.*
+import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.attributes.BootstrapMethodsAttribute
 import org.gjt.jclasslib.util.*
@@ -69,7 +70,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     }
 
     override fun setupComponent() {
-        layout = MigLayout("wrap" + if (hasInsets()) "" else ", insets 0", "[][][grow]")
+        layout = MigLayout("hidemode 3, wrap" + if (hasInsets()) "" else ", insets 0", "[][][grow]")
         addLabels()
     }
 
@@ -216,6 +217,8 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
             }
         }
     }
+
+    class SearchButton : MenuButton(getString("action.search"))
 
     companion object {
         const val UNIT_SCROLL_INCREMENT = 25
