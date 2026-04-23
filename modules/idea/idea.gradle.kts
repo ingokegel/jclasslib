@@ -20,7 +20,10 @@ intellijPlatform {
         }
         changeNotes = """
             <ul>
-                <li>Compatibility with Kotlin K2 mode</li>
+                <li>New "Find Subclasses", "Find Implementing Classes" and "Find Annotated Elements" actions</li>
+                <li>Faster class file scanning for "Find usages"</li>
+                <li>Support for reading Java 26 class files</li>
+                <li>Various bug fixes</li>
             </ul>
         """.trimIndent()
     }
