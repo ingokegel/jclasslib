@@ -21,7 +21,7 @@
       <variable name="appleKeyId" />
       <variable name="applePrivateApiKey" />
     </variables>
-    <codeSigning macEnabled="true" macPkcs12File="${compiler:appStoreCerts}" windowsEnabled="true" windowsKeySource="digestSigningExecutable" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
+    <codeSigning macEnabled="true" macKeySource="digestSigningExecutable" macPkcs12File="${compiler:appStoreCerts}" windowsEnabled="true" windowsKeySource="digestSigningExecutable" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateApiKey}">
       <windowsDigestSigningExecutable certificateFile="${compiler:winCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
       <macDigestSigningExecutable certificateFile="${compiler:macCertPath}" commandLine="${compiler:digestSigningCommandLine}" batchMode="true" />
     </codeSigning>

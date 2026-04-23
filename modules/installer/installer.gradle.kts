@@ -4,6 +4,8 @@ plugins {
     id("com.install4j.gradle") version "12.0.4"
 }
 
+val winCertPath: String? by project
+val macCertPath: String? by project
 val macProvisioningProfile: String? by project
 val appStoreCerts: String? by project
 val appleIssuerId: String? by project
@@ -26,7 +28,6 @@ tasks {
         buildIds = listOf("2047307322")
         variables.putAll(mapOf(
             "macProvisioningProfile" to (macProvisioningProfile ?: ""),
-            "appStoreCerts" to (appStoreCerts ?: ""),
             "sys.ext.macKeySource" to "pkcs12"
         ))
     }
@@ -51,6 +52,9 @@ fun Install4jTask.configureInstall4j() {
     }
 
     variables.putAll(mapOf(
+        "winCertPath" to (winCertPath ?: ""),
+        "macCertPath" to (macCertPath ?: ""),
+        "appStoreCerts" to (appStoreCerts ?: ""),
         "digestSigningCommandLine" to (digestSigningCommandLine ?: ""),
         "appleIssuerId" to (appleIssuerId ?: ""),
         "appleKeyId" to (appleKeyId ?: ""),
