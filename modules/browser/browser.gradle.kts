@@ -11,7 +11,7 @@ application {
     applicationDefaultJvmArgs = findProperty("extraArgs")?.toString()?.split(" ") ?: emptyList()
 }
 
-val flatLafVersion = "2.6"
+val flatLafVersion = "3.7.1"
 
 dependencies {
     api(project(":agent"))
