@@ -16,6 +16,7 @@ import com.formdev.flatlaf.FlatLaf
 import com.install4j.api.Util
 import com.install4j.api.launcher.StartupNotification
 import com.install4j.runtime.installer.platform.macos.MacosUiHelper
+import org.gjt.jclasslib.util.DefaultAction.Companion.SMALL_ICON_SIZE
 import org.gjt.jclasslib.util.darkMode
 import java.awt.EventQueue
 import java.awt.Frame
@@ -103,6 +104,9 @@ fun updateFlatLaf() {
             UIManager.put(key, icon)
         }
     }
+    UIManager.put("Tree.closedIcon", BrowserFrame.getSvgIcon("folder_closed.svg", SMALL_ICON_SIZE))
+    UIManager.put("Tree.openIcon", BrowserFrame.getSvgIcon("folder_open.svg", SMALL_ICON_SIZE))
+    UIManager.put("Tree.leafIcon", BrowserFrame.getSvgIcon("file.svg", SMALL_ICON_SIZE))
 }
 
 fun darkModeChanged() {
