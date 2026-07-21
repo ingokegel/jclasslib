@@ -65,6 +65,11 @@ at the same time.
 
 ![IntelliJ IDEA action](web/screenshots/ij_window.png)
 
+## Related projects
+
+[jvmguard](https://github.com/jvmguard/jvmguard) — JVM monitoring and production profiling with access control
+and audit trails. Includes a web UI, trigger-based captures, and an MCP server for AI-assisted profiling.
+
 ## License
 
 jclasslib bytecode editor is released under the [GPL, Version 2.0](https://www.gnu.org/licenses/gpl-2.0.html).
