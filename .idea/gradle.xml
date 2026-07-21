@@ -15,8 +15,6 @@
             </builds>
           </compositeBuild>
         </compositeConfiguration>
-        <option name="delegatedBuild" value="false" />
-        <option name="testRunner" value="PLATFORM" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
