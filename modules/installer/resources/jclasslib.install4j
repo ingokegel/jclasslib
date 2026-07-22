@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="12.0.4" transformSequenceNumber="12">
+<install4j version="13.0.1" transformSequenceNumber="13">
   <directoryPresets config="." />
   <application name="jclasslib bytecode viewer" applicationId="8931-3388-4457-4383" mediaDir="../../../media" lzmaCompression="true" shortName="jclasslib" publisher="ej-technologies" publisherWeb="https://www.ej-technologies.com" version="7.0" allPathsRelative="true" macVolumeId="75379f30e977c6d1" javaMinVersion="17">
     <languages>
@@ -251,7 +251,7 @@ return console.askOkCancel(message, true);
                       <string>./jclasslib32x32.png</string>
                     </object>
                   </property>
-                  <property name="unixMimeType" type="string">application/x-java-class-file</property>
+                  <property name="unixMimeType" type="string">application/x-jclasslib-workspace</property>
                 </serializedBean>
               </action>
               <action id="2047307156" beanClass="com.install4j.runtime.beans.actions.desktop.CreateFileAssociationAction" actionElevationType="elevated">
@@ -265,7 +265,7 @@ return console.askOkCancel(message, true);
                       <string>./jclasslib32x32.png</string>
                     </object>
                   </property>
-                  <property name="unixMimeType" type="string">application/x-jclasslib-workspace</property>
+                  <property name="unixMimeType" type="string">application/x-java-class-file</property>
                 </serializedBean>
               </action>
               <action name="Save selected locale" id="2047307334" beanClass="com.install4j.runtime.beans.actions.registry.SetPreferenceKeyAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
