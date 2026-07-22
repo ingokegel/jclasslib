@@ -14,6 +14,12 @@ Many aspects of class files can be edited in the UI.
 In addition, it contains a Kotlin Multiplatform library that enables developers to read and write Java class files
 and bytecode.
 
+## Related projects
+
+[jvmguard](https://github.com/jvmguard/jvmguard) is my other OSS project and provides JVM monitoring and production
+profiling with access control and audit trails. Includes a web UI, trigger-based captures, and an MCP server for
+AI-assisted profiling. It's quite new, so I'd be grateful for any GitHub stars 🙏
+
 ## Maven repository
 
 The Kotlin Multiplatform library to read and write JVM class files is available on Maven Central under 
@@ -64,11 +70,6 @@ The bytecode will be shown in the "jclasslib" tool window on the right hand side
 at the same time.
 
 ![IntelliJ IDEA action](web/screenshots/ij_window.png)
-
-## Related projects
-
-[jvmguard](https://github.com/jvmguard/jvmguard) — JVM monitoring and production profiling with access control
-and audit trails. Includes a web UI, trigger-based captures, and an MCP server for AI-assisted profiling.
 
 ## License
 
