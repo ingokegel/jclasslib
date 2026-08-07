@@ -8,6 +8,7 @@
 package org.gjt.jclasslib.browser.detail.attributes.code
 
 import org.gjt.jclasslib.browser.BrowserBundle.getString
+import org.gjt.jclasslib.browser.detail.EditResult
 import org.gjt.jclasslib.bytecode.*
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.alertFacade
@@ -70,27 +71,37 @@ abstract class ValueEditAction<I : Instruction, T>(@Nls name: String) : Immediat
     abstract fun setValue(value: T, instruction: I)
     abstract fun convertToValue(result: Any?): T?
     override fun execute(instruction: I, parentWindow: Window?): Boolean {
+        val input = JOptionPane.showInputDialog(
+                parentWindow,
+                message,
+                name,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                getValue(instruction)
+        )
+        return when (applyValue(instruction, input)) {
+            EditResult.APPLIED -> true
+            EditResult.INVALID -> {
+                alertFacade.showMessage(parentWindow, conversionErrorMessage, AlertType.WARNING)
+                false
+            }
+            EditResult.UNCHANGED -> false
+        }
+    }
+
+    fun applyValue(instruction: I, input: Any?): EditResult {
         val value = getValue(instruction)
         val newValue = try {
-            convertToValue(JOptionPane.showInputDialog(
-                    parentWindow,
-                    message,
-                    name,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    null,
-                    value
-            ))
+            convertToValue(input)
         } catch (_: NumberFormatException) {
-            alertFacade.showMessage(parentWindow, conversionErrorMessage, AlertType.WARNING)
-            null
+            return EditResult.INVALID
         }
-
         return if (newValue != null && newValue != value) {
             setValue(newValue, instruction)
-            true
+            EditResult.APPLIED
         } else {
-            false
+            EditResult.UNCHANGED
         }
     }
 }

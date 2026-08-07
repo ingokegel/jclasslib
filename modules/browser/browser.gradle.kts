@@ -23,9 +23,13 @@ dependencies {
     implementation("com.miglayout:miglayout-swing:5.2")
     implementation("com.formdev:flatlaf:$flatLafVersion")
     implementation("com.formdev:flatlaf-extras:$flatLafVersion")
+    testImplementation(kotlin("test"))
 }
 
 tasks {
+    test {
+        useJUnitPlatform()
+    }
     jar {
         archiveFileName = "jclasslib-browser.jar"
         manifest {

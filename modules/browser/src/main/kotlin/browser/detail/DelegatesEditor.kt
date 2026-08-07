@@ -15,7 +15,6 @@ import org.gjt.jclasslib.browser.detail.DataEditor
 import org.gjt.jclasslib.browser.detail.FlagsEditDialog
 import org.gjt.jclasslib.structures.AccessFlag
 import org.gjt.jclasslib.structures.Constant
-import org.gjt.jclasslib.structures.constants.*
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.alertFacade
 import org.jetbrains.annotations.Nls
@@ -80,15 +79,11 @@ abstract class DelegatesEditor<T : Any> : DataEditor<T>() {
     private fun getUntypedSetter(delegateSpec: EnumSpec<T, *>) = delegateSpec.setter as T.(Any) -> Unit
 
     protected fun editDelegate(delegate: Constant, detailPane: DetailPane<*>, delegateName: String?) {
-        when (delegate) {
-            is ConstantUtf8Info -> ConstantUtf8Editor().edit(delegate, detailPane, delegateName)
-            is ConstantIntegerInfo -> ConstantIntegerEditor().edit(delegate, detailPane, delegateName)
-            is ConstantLongInfo -> ConstantLongEditor().edit(delegate, detailPane, delegateName)
-            is ConstantFloatInfo -> ConstantFloatEditor().edit(delegate, detailPane, delegateName)
-            is ConstantDoubleInfo -> ConstantDoubleEditor().edit(delegate, detailPane, delegateName)
-            is ConstantNameInfo -> ConstantNameEditor().edit(delegate, detailPane, delegateName)
-            is ConstantStringInfo -> ConstantStringEditor().edit(delegate, detailPane, delegateName)
-            else -> alertFacade.showMessage(
+        val edit = getConstantEdit(delegate)
+        if (edit != null) {
+            edit.edit(detailPane, delegateName)
+        } else {
+            alertFacade.showMessage(
                     detailPane,
                     getString("message.constant.pool.type.edit.error", delegate.javaClass.name),
                     AlertType.WARNING

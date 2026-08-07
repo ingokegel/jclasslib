@@ -11,6 +11,7 @@ import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.detail.ActionBuilder
 import org.gjt.jclasslib.browser.detail.DataEditor
+import org.gjt.jclasslib.browser.detail.EditResult
 import org.gjt.jclasslib.structures.Constant
 import org.gjt.jclasslib.structures.constants.*
 import org.gjt.jclasslib.util.AlertType
@@ -28,20 +29,28 @@ abstract class ConstantEditor<T : Constant> : DataEditor<T>() {
     }
 
     fun edit(constant: T, detailPane: DetailPane<*>, delegateName: String? = null) {
-        val value = toString(constant)
         val newValue = JOptionPane.showInputDialog(
-                detailPane.getParentWindow(),
-                labelText,
-                getEditTitle() + (if (delegateName == null) "" else (" [$delegateName]")),
-                JOptionPane.QUESTION_MESSAGE, null, null, value
-        ) as String?
-        if (newValue != null && value != newValue) {
-            try {
-                setValueFromString(constant, newValue)
-                detailPane.modified()
-            } catch (_: Exception) {
-                alertFacade.showMessage(detailPane, getString("message.invalid.input"), AlertType.ERROR)
-            }
+            detailPane.getParentWindow(),
+            labelText,
+            getEditTitle() + (if (delegateName == null) "" else (" [$delegateName]")),
+            JOptionPane.QUESTION_MESSAGE, null, null, toString(constant)
+        ) as? String? ?: return
+        when (applyValue(constant, newValue)) {
+            EditResult.APPLIED -> detailPane.modified()
+            EditResult.INVALID -> alertFacade.showMessage(detailPane, getString("message.invalid.input"), AlertType.ERROR)
+            EditResult.UNCHANGED -> {}
+        }
+    }
+
+    fun applyValue(constant: T, newValue: String): EditResult {
+        if (newValue == toString(constant)) {
+            return EditResult.UNCHANGED
+        }
+        return try {
+            setValueFromString(constant, newValue)
+            EditResult.APPLIED
+        } catch (_: Exception) {
+            EditResult.INVALID
         }
     }
 
@@ -155,4 +164,19 @@ class ConstantDynamicEditor : DelegatesEditor<ConstantDynamic>() {
             it.nameAndTypeInfo.descriptorConstant
         }
     }
+}
+
+fun interface ConstantEdit {
+    fun edit(detailPane: DetailPane<*>, delegateName: String?)
+}
+
+fun getConstantEdit(constant: Constant): ConstantEdit? = when (constant) {
+    is ConstantUtf8Info -> ConstantEdit { pane, name -> ConstantUtf8Editor().edit(constant, pane, name) }
+    is ConstantIntegerInfo -> ConstantEdit { pane, name -> ConstantIntegerEditor().edit(constant, pane, name) }
+    is ConstantLongInfo -> ConstantEdit { pane, name -> ConstantLongEditor().edit(constant, pane, name) }
+    is ConstantFloatInfo -> ConstantEdit { pane, name -> ConstantFloatEditor().edit(constant, pane, name) }
+    is ConstantDoubleInfo -> ConstantEdit { pane, name -> ConstantDoubleEditor().edit(constant, pane, name) }
+    is ConstantNameInfo -> ConstantEdit { pane, name -> ConstantNameEditor().edit(constant, pane, name) }
+    is ConstantStringInfo -> ConstantEdit { pane, name -> ConstantStringEditor().edit(constant, pane, name) }
+    else -> null
 }
