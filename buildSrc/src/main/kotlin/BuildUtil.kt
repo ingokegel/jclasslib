@@ -8,7 +8,7 @@ import org.gradle.plugins.signing.SigningExtension
 
 val Project.externalLibsDir: Provider<Directory> get() = rootProject.layout.buildDirectory.map { it.dir("externalLibs") }
 val JAVA_RUN_VERSION get() = 17
-val JAVA_COMPILE_VERSION get() = 11
+val JAVA_COMPILE_VERSION get() = 17
 
 
 // see https://github.com/vanniktech/gradle-maven-publish-plugin/pull/201#discussion_r584270633 for secret key export
