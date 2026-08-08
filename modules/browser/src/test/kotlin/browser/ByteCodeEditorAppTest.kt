@@ -61,7 +61,7 @@ class ByteCodeEditorAppTest : SwingRobotTest() {
             val textPane = pane.descendants().filterIsInstance<JTextPane>().first { it.isShowing }
             val position = textPane.text.indexOf(mnemonic)
             check(position >= 0) { "instruction '$mnemonic' not found in bytecode document" }
-            val rect = textPane.modelToView(position)
+            val rect = textPane.modelToView2D(position).bounds
             textPane.scrollRectToVisible(rect)
             textPane to Point(rect.x + 2, rect.y + rect.height / 2)
         }

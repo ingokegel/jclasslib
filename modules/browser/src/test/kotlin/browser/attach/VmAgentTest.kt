@@ -8,7 +8,6 @@
 package org.gjt.jclasslib.browser.attach
 
 import org.gjt.jclasslib.browser.AttachableVm
-import org.gjt.jclasslib.browser.VmConnection
 import org.gjt.jclasslib.browser.config.classpath.ClassTreeNode
 import org.gjt.jclasslib.browser.config.classpath.ClasspathEntry
 import org.gjt.jclasslib.browser.config.classpath.ClasspathVmEntry
@@ -20,15 +19,7 @@ import org.gjt.jclasslib.testutil.withFakeAlertFacade
 import org.gjt.jclasslib.util.AlertType
 import java.io.ByteArrayInputStream
 import javax.swing.tree.DefaultTreeModel
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class VmAgentTest {
 
@@ -168,6 +159,5 @@ class VmAgentTest {
         assertNull(connection)
         assertEquals(1, alerts.messages.size)
         assertEquals(AlertType.ERROR, alerts.messages[0].alertType)
-        Unit
     }
 }

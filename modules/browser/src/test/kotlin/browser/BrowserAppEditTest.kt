@@ -14,7 +14,6 @@ import org.gjt.jclasslib.structures.constants.ConstantIntegerInfo
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
 import org.gjt.jclasslib.testutil.BrowserAppFixture
 import org.gjt.jclasslib.testutil.SwingRobotTest
-import org.gjt.jclasslib.testutil.onEdt
 import org.gjt.jclasslib.testutil.readJdkClass
 import org.gjt.jclasslib.testutil.withFakeAlertFacade
 import org.junit.jupiter.api.io.TempDir

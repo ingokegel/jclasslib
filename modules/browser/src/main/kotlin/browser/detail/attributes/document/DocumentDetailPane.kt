@@ -138,7 +138,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
     fun scrollToOffset(offset: Int) {
         val position = offsetToPosition(offset)
         try {
-            val target = textPane.modelToView(position)
+            val target = textPane.modelToView2D(position).bounds
             target.height = textPane.height
             textPane.caretPosition = position
             textPane.scrollRectToVisible(target)
@@ -234,7 +234,7 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         }
 
         private fun getTextElement(event: MouseEvent): AbstractElement {
-            val position = textPane.viewToModel(event.point)
+            val position = textPane.viewToModel2D(event.point)
             val document = textPane.document as DefaultStyledDocument
             return document.getCharacterElement(position) as AbstractElement
         }
@@ -315,8 +315,8 @@ abstract class DocumentDetailPane<T : AttributeInfo, out D: AttributeDocument>(e
         override fun paint(g: Graphics, startOffset: Int, endOffset: Int, bounds: Shape, c: JTextComponent) {
             try {
                 val textUi = c.ui
-                val startRect = textUi.modelToView(c, startOffset)
-                val endRect = textUi.modelToView(c, endOffset)
+                val startRect = textUi.modelToView2D(c, startOffset, Position.Bias.Forward).bounds
+                val endRect = textUi.modelToView2D(c, endOffset, Position.Bias.Forward).bounds
                 val totalRect = startRect.union(endRect)
 
                 val y = totalRect.y + totalRect.height - 1

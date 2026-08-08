@@ -102,6 +102,6 @@ private fun selectVm(parentWindow: Window?): AttachableVm? =
 
 private fun isMacosSandboxed() = try {
     Variables.getCompilerVariable("macSandboxed").toBoolean()
-} catch (e: Exception) {
+} catch (_: Exception) {
     false
 }
