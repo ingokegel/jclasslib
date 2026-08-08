@@ -13,6 +13,7 @@
 -- Entities -------------------------------------------------------------------
 
 entity ClassFile {
+    this_class_name: String
     major_version: Integer
     minor_version: Integer
     constant_pool: List<ConstantPoolEntry>

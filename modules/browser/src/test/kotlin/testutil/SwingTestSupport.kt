@@ -12,13 +12,18 @@ import org.assertj.swing.core.GenericTypeMatcher
 import org.assertj.swing.core.Robot
 import org.assertj.swing.edt.GuiActionRunner
 import org.assertj.swing.finder.JOptionPaneFinder
+import org.assertj.swing.finder.WindowFinder
+import org.assertj.swing.fixture.DialogFixture
 import org.assertj.swing.fixture.JOptionPaneFixture
 import org.assertj.swing.fixture.JPopupMenuFixture
 import org.assertj.swing.junit.jupiter.testcase.AssertJSwingJupiterTestCase
 import org.gjt.jclasslib.browser.BrowserComponent
 import org.gjt.jclasslib.browser.BrowserServices
+import org.gjt.jclasslib.browser.ClassFileCallback
 import org.gjt.jclasslib.browser.DetailPane
 import org.gjt.jclasslib.browser.config.BrowserPath
+import org.gjt.jclasslib.browser.config.classpath.FindResult
+import org.gjt.jclasslib.io.ClassFileReadMode
 import org.gjt.jclasslib.io.ClassFileReader
 import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.ClassFile
@@ -76,6 +81,12 @@ class TestBrowserServices(override val classFile: ClassFile = readJdkClass()) : 
     var modifiedCount = 0
         private set
 
+    var scannedClassFiles: List<ClassFile> = emptyList()
+    var lastScanIncludeJdk: Boolean? = null
+        private set
+    var lastScanReadMode: ClassFileReadMode? = null
+        private set
+
     override val browserComponent: BrowserComponent by lazy { BrowserComponent(this) }
     override val backwardAction: Action = object : AbstractAction() {
         override fun actionPerformed(e: ActionEvent) = Unit
@@ -104,6 +115,15 @@ class TestBrowserServices(override val classFile: ClassFile = readJdkClass()) : 
     } catch (_: Exception) {
         null
     }
+
+    override fun canScanClassFiles() = true
+    override fun scanClassFiles(includeJdk: Boolean, readMode: ClassFileReadMode, classFileCallback: ClassFileCallback) {
+        lastScanIncludeJdk = includeJdk
+        lastScanReadMode = readMode
+        scannedClassFiles.forEach { classFile ->
+            classFileCallback.handleClassFile(classFile, FindResult("test:///${classFile.thisClassName}.class"))
+        }
+    }
 }
 
 class TestDetailPane(services: BrowserServices) : DetailPane<Any>(Any::class.java, services) {
@@ -129,6 +149,12 @@ fun JOptionPaneFixture.cancel() {
 fun findActivePopupMenuFixture(robot: Robot): JPopupMenuFixture =
     JPopupMenuFixture(robot, robot.finder().findByType(JPopupMenu::class.java, true))
 
+fun DialogFixture.clickButtonWithText(text: String) {
+    button(object : GenericTypeMatcher<JButton>(JButton::class.java) {
+        override fun isMatching(button: JButton) = button.text == text
+    }).click()
+}
+
 fun JPopupMenuFixture.clickMenuItemWithText(text: String) {
     menuItem(object : GenericTypeMatcher<JMenuItem>(JMenuItem::class.java) {
         override fun isMatching(item: JMenuItem) = item.text == text
@@ -142,6 +168,18 @@ fun Component.descendants(): Sequence<Component> =
 
 inline fun <reified T : Component> Robot.findAllByType(root: Container): Collection<T> =
     finder().findAll(root, org.assertj.swing.core.TypeMatcher(T::class.java)).filterIsInstance<T>()
+
+fun showInWindow(component: Component): JFrame = onEdt {
+    JFrame().apply {
+        contentPane.add(component)
+        pack()
+        isVisible = true
+    }
+}
+
+fun disposeWindow(frame: JFrame) {
+    onEdt { frame.dispose() }
+}
 
 @GUITest
 abstract class SwingRobotTest : AssertJSwingJupiterTestCase() {
@@ -197,6 +235,13 @@ abstract class SwingRobotTest : AssertJSwingJupiterTestCase() {
     fun expectOptionPane(dialogHandler: (JOptionPaneFixture) -> Unit) {
         val optionPane = JOptionPaneFinder.findOptionPane().withTimeout(DIALOG_TIMEOUT_MS).using(robot())
         dialogHandler(optionPane)
+    }
+
+    fun expectDialog(title: String, dialogHandler: (DialogFixture) -> Unit) {
+        val dialog = WindowFinder.findDialog(object : GenericTypeMatcher<JDialog>(JDialog::class.java) {
+            override fun isMatching(dialog: JDialog) = dialog.title == title && dialog.isShowing
+        }).withTimeout(DIALOG_TIMEOUT_MS).using(robot())
+        dialogHandler(dialog)
     }
 
     companion object {

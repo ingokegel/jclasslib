@@ -1,0 +1,197 @@
+-- allium: 3
+-- search-usages.allium
+--
+-- Distilled from the jclasslib codebase (browser/usages packages,
+-- MatchType, classpath scanning in ClassPathContainer).
+--
+-- Scope: Searching the configured classpath and the open class file.
+-- Includes: string search with match types, class member usages, constant
+--           usages within the open class, finding implementing classes and
+--           annotated elements, JDK scan inclusion, result navigation.
+-- Excludes:
+--   - Editing of class files (class-file-editing.allium)
+--   - Classpath configuration itself (classpath-workspace.allium)
+--   - Navigation mechanics of the opened results (navigation-history.allium)
+
+use "./class-file-core.allium" as core
+
+-- Entities -------------------------------------------------------------------
+
+entity SearchRequest {
+    spec: String
+    match_type: equals | starts_with | ends_with | contains | regex
+    include_jdk: Boolean
+}
+
+entity ScannedClass {
+    class_name: String
+    class_file: core/ClassFile
+}
+
+entity ClassUsage {
+    class_name: String
+    reference_index: Integer?         -- constant pool index of the matching entry, null for class-level results
+}
+
+-- A usage location inside the open class: a node of the structure tree whose
+-- structure references the constant.
+entity UsageNode {
+    node: core/TreeNode
+    used: Boolean
+    children: List<UsageNode>
+}
+
+entity User {
+    display_name: String
+}
+
+-- Rules ----------------------------------------------------------------------
+
+rule MatchString {
+    when: MatchString(request, text)
+    ensures: matched(request, text) = matches(request.match_type, text, request.spec)  -- black box
+
+    @guidance
+        -- Equals, starts-with, ends-with and contains are plain string
+        -- operations; regex compiles the spec as a pattern and matches the
+        -- whole text. An invalid regex propagates as an error.
+}
+
+rule FindString {
+    when: FindString(request)
+    ensures:
+        for scanned in ScannedClasses where matches_request(scanned, request):  -- black box: has a matching UTF8 entry
+            for constant in matching_utf8_entries(scanned, request):            -- black box
+                ClassUsage.created(class_name: scanned.class_name, reference_index: constant.index)
+
+    @guidance
+        -- All classes on the configured classpath are scanned for UTF8
+        -- constant pool entries matching the spec; the JDK is scanned only
+        -- when the request includes it. Results reference the constant
+        -- pool index of the match. No match shows an information message.
+}
+
+rule FindMemberUsages {
+    when: FindMemberUsages(doc, member)
+    let referencing = filter(ScannedClasses, c => declares_reference(c, doc.class_file, member))  -- black box: has a field/method ref with the class, name and descriptor
+    ensures:
+        if referencing.count = 0:
+            core/UserMessage.created(severity: info)
+        else if referencing.count = 1 and referencing.first().class_name = doc.class_file.this_class_name:
+            ConstantUsagesShown(doc, member_constant(doc, member))   -- black box: in-class usage tree of the reference
+        else:
+            for c in referencing:
+                ClassUsage.created(class_name: c.class_name, reference_index: reference_index(c, member))
+
+    @guidance
+        -- Field members match field references, method members match
+        -- method and interface method references; class name, name and
+        -- descriptor must all match. A single usage within the same class
+        -- goes directly to the in-class usage view.
+}
+
+rule FindConstantUsages {
+    when: FindConstantUsages(doc, constant)
+    let usages = usage_tree(doc, constant)                          -- black box: pruned tree of referencing nodes
+    ensures:
+        if usages = null:
+            core/UserMessage.created(severity: info)
+        else:
+            ConstantUsagesShown(doc, constant)
+
+    @guidance
+        -- The usage tree mirrors the structure tree, pruned to branches
+        -- that reference the constant; selecting a usage navigates to the
+        -- node in the structure tree.
+}
+
+rule FindImplementingClasses {
+    when: FindImplementingClasses(class_name)
+    ensures:
+        for scanned in ScannedClasses where is_implementation(scanned.class_file, class_name):  -- black box: superclass or direct interface match
+            ClassUsage.created(class_name: scanned.class_name, reference_index: null)
+
+    @guidance
+        -- A class matches when its superclass is the searched class or one
+        -- of its direct interfaces is. java.lang.Object (no superclass)
+        -- never matches as a subclass. No match shows an information
+        -- message.
+}
+
+rule FindAnnotatedElements {
+    when: FindAnnotatedElements(annotation_class_name)
+    ensures:
+        for scanned in ScannedClasses where is_annotated(scanned.class_file, annotation_class_name):  -- black box
+            ClassUsage.created(class_name: scanned.class_name, reference_index: null)
+
+    @guidance
+        -- Matches classes annotated with the annotation, in visible and
+        -- invisible annotation attributes. The scan reads full class files
+        -- (attributes included), other scans skip attributes for speed.
+}
+
+rule JdkScanInclusion {
+    when: FindUsages(target_class_name, include_jdk_requested)
+    let include_jdk = include_jdk_requested or is_jdk_class(target_class_name)  -- black box: java/, javax/, jdk/, sun/, com/sun/ prefixes
+    ensures: jdk_scanned(include_jdk)                          -- black box: the JRE is part of the scan iff include_jdk
+
+    @guidance
+        -- The JDK is scanned automatically when the searched class is
+        -- itself a JDK class. Only the string search lets the user choose
+        -- explicitly.
+}
+
+rule OpenUsageResult {
+    when: OpenUsageResults(usages)
+    for usage in usages:
+        ensures: core/OpenClass.created(class_file: class_of(usage))      -- black box
+        ensures:
+            if usage.reference_index != null:
+                selected_constant_index(usage) = usage.reference_index   -- black box: navigation selects the referencing entry
+
+    @guidance
+        -- Every class selected in the result list is opened. String and
+        -- member usages navigate to the referencing constant pool entry;
+        -- implementing and annotated classes open without a selection.
+}
+
+-- Surfaces -------------------------------------------------------------------
+
+surface SearchDialog {
+    facing user: core/User
+
+    provides:
+        FindString(user, request)
+
+    @guidance
+        -- The search dialog remembers its input per window. Cancelling
+        -- does not search.
+}
+
+surface UsagesView {
+    facing user: core/User
+    context doc: core/OpenClass
+
+    provides:
+        FindMemberUsages(user, doc, member)
+        FindConstantUsages(user, doc, constant)
+        FindImplementingClasses(user, class_name)
+        FindAnnotatedElements(user, annotation_class_name)
+        OpenUsageResults(user, usages)
+
+    @guarantee EmptyResultsAreNotErrors
+        -- A search without matches ends in an information message, never
+        -- in an empty result dialog.
+}
+
+-- Open questions ---------------------------------------------------------------
+
+-- (none)
+
+-- Accepted as intended behaviour:
+-- - Find annotated elements matches class-level annotations only; annotated
+--   methods and fields are not found (see FindAnnotatedElements).
+-- - The JDK is scanned automatically when the searched class is a JDK class;
+--   only the string search offers an explicit choice (see JdkScanInclusion).
+-- - A single member usage within the same class bypasses the class list and
+--   goes directly to the in-class usage view (see FindMemberUsages).
