@@ -49,7 +49,7 @@ public class Communicator implements CommunicatorMBean {
                 instrumentation.redefineClasses(new ClassDefinition(c, bytes));
                 return ReplacementResult.SUCCESS;
             } catch (Throwable e) {
-                return new ReplacementResult(e.getMessage());
+                return new ReplacementResult(e.getMessage() != null ? e.getMessage() : e.getClass().getName());
             }
         }
         return new ReplacementResult("The class could not be found");
