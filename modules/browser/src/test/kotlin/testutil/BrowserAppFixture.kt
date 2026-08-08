@@ -7,6 +7,7 @@
 
 package org.gjt.jclasslib.testutil
 
+import org.assertj.swing.core.Robot
 import org.gjt.jclasslib.browser.BrowserFrame
 import org.gjt.jclasslib.browser.BrowserTab
 import org.gjt.jclasslib.browser.BrowserTreeNode
@@ -14,6 +15,7 @@ import org.gjt.jclasslib.browser.DefaultSavingConfirmationPolicy
 import org.gjt.jclasslib.browser.savingConfirmationPolicy
 import org.gjt.jclasslib.io.writeToByteArray
 import org.gjt.jclasslib.structures.ClassFile
+import java.awt.Point
 import java.io.File
 
 class BrowserAppFixture {
@@ -28,6 +30,12 @@ class BrowserAppFixture {
     fun openClass(classFile: ClassFile, file: File): BrowserTab {
         file.writeBytes(classFile.writeToByteArray())
         return onEdt { frame.openClassFromFile(file) }
+    }
+
+    fun focusFrame(robot: Robot) {
+        // metacity consumes the first click for focusing the window
+        robot.click(frame, Point(frame.width / 2, 5))
+        robot.waitForIdle()
     }
 
     fun selectNode(tab: BrowserTab, predicate: (BrowserTreeNode) -> Boolean): BrowserTreeNode = onEdt {

@@ -1,0 +1,153 @@
+-- allium: 3
+-- vm-attach.allium
+--
+-- Distilled from the jclasslib codebase (browser/attach, modules/agent).
+--
+-- Scope: Attaching to a running JVM and working with its loaded classes.
+-- Includes: VM discovery and selection, the attach sequence (agent load,
+--           management connection), class listing (hidden classes and
+--           arrays excluded, module names), reading class bytes from the
+--           VM, redefining classes in the VM, detach.
+-- Excludes:
+--   - Editing of class files before redefinition (class-file-editing.allium)
+--   - The agent's MBean protocol details (implementation)
+--   - macOS sandbox handling (attach is unavailable there)
+
+use "./class-file-core.allium" as core
+
+-- External entities ----------------------------------------------------------
+
+-- A running JVM process, governed by the JVM, not by jclasslib.
+external entity RunningVm {
+    id: String
+    display_name: String
+    loaded_classes: List<LoadedClass>
+}
+
+external entity LoadedClass {
+    name: String
+    module_name: String?                 -- null on Java 8 or in the unnamed module
+    is_hidden: Boolean                   -- hidden classes have a / in their name
+    is_array: Boolean
+}
+
+-- Entities -------------------------------------------------------------------
+
+entity VmConnection {
+    vm: RunningVm
+    open: Boolean
+}
+
+entity User {
+    display_name: String
+}
+
+-- Rules ----------------------------------------------------------------------
+
+rule AttachToVm {
+    when: AttachToVm(user, vm)
+    ensures: VmConnection.created(vm: vm, open: true)
+
+    @guidance
+        -- Attaching loads the agent into the VM (repeated loads do not
+        -- register the agent twice), starts the local management agent
+        -- when no connector address exists yet and connects to it.
+}
+
+rule AttachFailed {
+    when: AttachToVm(user, vm)
+    requires: not attachable(vm)                             -- black box: attach, agent load or connection fails
+    ensures: core/UserMessage.created(severity: error)
+
+    @guidance
+        -- Each stage of the sequence (attach, agent load, management agent,
+        -- connect) fails with an error message and no connection is
+        -- established.
+}
+
+rule ListLoadedClasses {
+    when: ListLoadedClasses(connection)
+    requires: connection.open
+    let listed = filter(connection.vm.loaded_classes, c => not c.is_hidden and not c.is_array)
+    ensures: for c in listed: listed_in_results(c)           -- black box: each listed class appears with its module name
+
+    @guidance
+        -- Hidden classes (lambda bodies, with a / in their name) and array
+        -- classes are excluded. Module names are resolved on Java 9+;
+        -- classes without a module report the unnamed module.
+}
+
+rule ReadClassFromVm {
+    when: ReadClassFromVm(connection, class_name)
+    requires: connection.open
+    requires: connection.vm.loaded_classes.any(c => c.name = class_name)
+    ensures: core/ClassFile.created(this_class_name: class_name)  -- black box: current bytes of the loaded class
+
+    @guidance
+        -- The current bytes of the loaded class are captured via
+        -- retransformation; they reflect any earlier redefinition.
+}
+
+rule ReadUnknownClassFromVm {
+    when: ReadClassFromVm(connection, class_name)
+    requires: not connection.vm.loaded_classes.any(c => c.name = class_name)
+    ensures: core/UserMessage.created(severity: error)
+}
+
+rule RedefineClassInVm {
+    when: RedefineClassInVm(connection, class_name, bytes)
+    requires: connection.open
+    ensures: redefinition_result(connection, class_name, bytes)  -- black box: success or the JVM's rejection reason
+
+    @guidance
+        -- The JVM decides whether a redefinition is legal (no schema
+        -- changes); a rejection is surfaced as an error and the class
+        -- stays modified, see VmRedefinitionRejected in
+        -- class-file-editing.allium.
+}
+
+rule DetachFromVm {
+    when: DetachFromVm(connection)
+    ensures: connection.open = false
+
+    @guidance
+        -- Detaching closes the management connection and restores the
+        -- configured classpath for class lookup.
+}
+
+-- Surfaces -------------------------------------------------------------------
+
+surface AttachDialog {
+    facing user: core/User
+
+    provides:
+        AttachToVm(user, vm)
+
+    @guarantee CancellableSelection
+        -- Cancelling the VM selection attaches to nothing. The list shows
+        -- the attachable VMs with id and display name.
+}
+
+surface VmSession {
+    facing user: core/User
+    context connection: VmConnection
+
+    provides:
+        ListLoadedClasses(user, connection) when connection.open
+        ReadClassFromVm(user, connection, class_name) when connection.open
+        RedefineClassInVm(user, connection, class_name, bytes) when connection.open
+        DetachFromVm(user, connection)
+
+    @guarantee LiveView
+        -- The class list and the class bytes always reflect the current
+        -- state of the VM, including earlier redefinitions.
+}
+
+-- Open questions ---------------------------------------------------------------
+
+-- (none)
+
+-- Accepted as intended behaviour:
+-- - Repeated agent loads do not register the MBean twice (see AttachToVm).
+-- - Hidden and array classes are excluded from the class list (see
+--   ListLoadedClasses).

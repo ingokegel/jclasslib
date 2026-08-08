@@ -34,6 +34,7 @@ class BrowserAppEditTest : SwingRobotTest() {
 
     override fun onSetUp() {
         fixture = BrowserAppFixture()
+        fixture.focusFrame(robot())
     }
 
     override fun onTearDown() {

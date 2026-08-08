@@ -238,13 +238,17 @@ abstract class SwingRobotTest : AssertJSwingJupiterTestCase() {
     }
 
     fun expectDialog(title: String, dialogHandler: (DialogFixture) -> Unit) {
-        val dialog = WindowFinder.findDialog(object : GenericTypeMatcher<JDialog>(JDialog::class.java) {
-            override fun isMatching(dialog: JDialog) = dialog.title == title && dialog.isShowing
+        val dialog = WindowFinder.findDialog(object : GenericTypeMatcher<javax.swing.JDialog>(javax.swing.JDialog::class.java) {
+            override fun isMatching(dialog: javax.swing.JDialog) = dialog.title == title && dialog.isShowing
         }).withTimeout(DIALOG_TIMEOUT_MS).using(robot())
+        // a freshly shown modal dialog may not be mapped/focused by the window manager yet
+        robot().waitForIdle()
+        Thread.sleep(SETTLE_DELAY_MS)
         dialogHandler(dialog)
     }
 
     companion object {
         private const val DIALOG_TIMEOUT_MS = 10_000L
+        private const val SETTLE_DELAY_MS = 300L
     }
 }

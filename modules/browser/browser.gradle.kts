@@ -39,6 +39,10 @@ tasks {
             }
         }
         executable = launcher.get().executablePath.asFile.absolutePath
+        val agentJar = project(":agent").tasks.named<Jar>("jar")
+        dependsOn(agentJar)
+        systemProperty("jclasslib.agent.jar",
+                rootProject.layout.buildDirectory.file("agent/libs/jclasslib-agent.jar").get().asFile.absolutePath)
         wrapWithXvfb()
     }
     jar {

@@ -46,41 +46,43 @@ class VmConnection(val communicator: CommunicatorMBean, private val connection: 
 }
 
 fun attachToVm(parentWindow: Window?): VmConnection? =
-    selectVm(parentWindow)?.let { attachableVm ->
-        val vm = try {
-            VirtualMachine.attach(attachableVm.descriptor.id()).also { vm ->
-                vm.loadAgent(getAgentPath())
-            }
-        } catch (e: Exception) {
-            alertFacade.showMessage(parentWindow, getString("message.attach.failed.0", e.message ?: ""), null, AlertType.ERROR)
-            return@let null
+    selectVm(parentWindow)?.let { attachableVm -> connectToVm(attachableVm, parentWindow) }
+
+fun connectToVm(attachableVm: AttachableVm, parentWindow: Window?): VmConnection? {
+    val vm = try {
+        VirtualMachine.attach(attachableVm.descriptor.id()).also { vm ->
+            vm.loadAgent(getAgentPath())
         }
-        val connectorAddress = try {
-            vm.getConnectorAddress() ?: vm.run {
-                startLocalManagementAgent()
-                getConnectorAddress()
-            }
-        } catch (e: Exception) {
-            alertFacade.showMessage(parentWindow, getString("message.management.agent.error.0", e.message ?: ""), null, AlertType.ERROR)
-            return@let null
-        }
-        val connection = try {
-            JMXConnectorFactory.connect(JMXServiceURL(connectorAddress))
-        } catch (e: Exception) {
-            alertFacade.showMessage(parentWindow, getString("message.connection.failed.0", e.message ?: ""), null, AlertType.ERROR)
-            return@let null
-        }
-        val communicator = MBeanServerInvocationHandler.newProxyInstance(
-                connection.mBeanServerConnection,
-                ObjectName(AgentMain.MBEAN_NAME),
-                CommunicatorMBean::class.java,
-                false
-        )
-        VmConnection(communicator, connection, vm)
+    } catch (e: Exception) {
+        alertFacade.showMessage(parentWindow, getString("message.attach.failed.0", e.message ?: ""), null, AlertType.ERROR)
+        return null
     }
+    val connectorAddress = try {
+        vm.getConnectorAddress() ?: vm.run {
+            startLocalManagementAgent()
+            getConnectorAddress()
+        }
+    } catch (e: Exception) {
+        alertFacade.showMessage(parentWindow, getString("message.management.agent.error.0", e.message ?: ""), null, AlertType.ERROR)
+        return null
+    }
+    val connection = try {
+        JMXConnectorFactory.connect(JMXServiceURL(connectorAddress))
+    } catch (e: Exception) {
+        alertFacade.showMessage(parentWindow, getString("message.connection.failed.0", e.message ?: ""), null, AlertType.ERROR)
+        return null
+    }
+    val communicator = MBeanServerInvocationHandler.newProxyInstance(
+            connection.mBeanServerConnection,
+            ObjectName(AgentMain.MBEAN_NAME),
+            CommunicatorMBean::class.java,
+            false
+    )
+    return VmConnection(communicator, connection, vm)
+}
 
 private fun getAgentPath(): String =
-    (File(
+    System.getProperty("jclasslib.agent.jar")?.let { File(it).canonicalPath } ?: (File(
             System.getProperty(LauncherEngine.PROPNAME_MODULE_NAME)
                     ?.let { File(it, if (Util.isMacOS()) "Contents/Resources/app/lib" else "../../lib/") }
                     ?: File("build/gradle/agent/libs/"),
