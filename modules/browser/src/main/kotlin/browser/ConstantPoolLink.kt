@@ -11,23 +11,23 @@ import org.gjt.jclasslib.browser.detail.FilterPane
 import javax.swing.tree.TreePath
 
 fun constantPoolLink(services: BrowserServices, constantPoolIndex: Int) {
-    if (constantPoolIndex <= 0) {
+    val constantPoolPath = services.browserComponent.treePane.getPathForCategory(NodeType.CONSTANT_POOL_ENTRY)
+    val constantPoolNode = constantPoolPath.lastPathComponent as BrowserTreeNode
+    if (constantPoolIndex <= 0 || constantPoolIndex > constantPoolNode.childCount) {
         return
     }
-    val newPath = linkPath(services, constantPoolIndex)
+    val newPath = linkPath(services, constantPoolPath, constantPoolNode, constantPoolIndex)
     services.browserComponent.treePane.tree.apply {
         selectionPath = newPath
         scrollPathToVisible(newPath)
     }
 }
 
-private fun linkPath(services: BrowserServices, constantPoolIndex: Int): TreePath {
+private fun linkPath(services: BrowserServices, constantPoolPath: TreePath, constantPoolNode: BrowserTreeNode, constantPoolIndex: Int): TreePath {
     val browserComponent = services.browserComponent
-    val constantPoolPath = browserComponent.treePane.getPathForCategory(NodeType.CONSTANT_POOL_ENTRY)
     browserComponent.treePane.tree.selectionPath = constantPoolPath
     browserComponent.detailPane.constantPoolDetailPane.filterPane.filterMode = FilterPane.FilterMode.ALL
     browserComponent.history.historyBackward()
-    val constantPoolNode = constantPoolPath.lastPathComponent as BrowserTreeNode
     val targetNode = constantPoolNode.getChildAt(constantPoolIndex - 1)
     return constantPoolPath.pathByAddingChild(targetNode)
 }
