@@ -37,7 +37,7 @@ tasks {
         }
     }
 
-    val copyDist by registering(Copy::class) {
+    val copyDist = register<Copy>("copyDist") {
         from(configurations.compileClasspath.map { configuration -> configuration.files.filterNot { file -> file.name.contains("install4j") } })
         from(configurations.runtimeClasspath.map { configuration -> configuration.files.filter { file -> file.name.contains("svg") } })
         from(jar)

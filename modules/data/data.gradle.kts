@@ -23,7 +23,7 @@ kotlin {
     }
 
     sourceSets {
-        val jvmTest by getting {
+        getByName("jvmTest") {
             dependencies {
                 implementation("org.ow2.asm:asm:9.7.1")
             }
@@ -44,17 +44,17 @@ dokka {
 }
 
 tasks {
-    val copyDist by registering(Copy::class) {
+    val copyDist = register<Copy>("copyDist") {
         from(kotlin.jvm().compilations["main"].compileDependencyFiles)
         from("jvmJar")
         into(externalLibsDir)
     }
 
-    val doc by registering {
+    val doc = register("doc") {
         dependsOn(dokkaGenerate)
     }
 
-    val dist by registering {
+    register("dist") {
         dependsOn(doc, copyDist)
     }
 
@@ -76,7 +76,7 @@ tasks {
         }
     }
 
-    val compileTestJavaJvm by registering(JavaCompile::class) {
+    val compileTestJavaJvm = register<JavaCompile>("compileTestJavaJvm") {
         javaCompiler.set(
             project.javaToolchains.compilerFor {
                 languageVersion.set(JavaLanguageVersion.of(JAVA_RUN_VERSION))
@@ -88,7 +88,7 @@ tasks {
             }
         })
 
-        val compileTestKotlinJvm by getting(KotlinCompile::class)
+        val compileTestKotlinJvm = getByName<KotlinCompile>("compileTestKotlinJvm")
         destinationDirectory = compileTestKotlinJvm.destinationDirectory.get().asFile.parentFile.resolve("java")
         classpath = compileTestKotlinJvm.classpathSnapshotProperties.classpathSnapshot
     }

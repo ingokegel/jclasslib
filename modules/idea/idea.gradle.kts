@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij.platform") version "2.12.0"
+    id("org.jetbrains.intellij.platform") version "2.18.1"
 }
 
 defaultTasks("buildPlugin")

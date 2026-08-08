@@ -4,14 +4,14 @@ plugins {
     id("com.install4j.gradle") version "12.0.4"
 }
 
-val winCertPath: String? by project
-val macCertPath: String? by project
-val macProvisioningProfile: String? by project
-val appStoreCerts: String? by project
-val appleIssuerId: String? by project
-val appleKeyId: String? by project
-val applePrivateApiKey: String? by project
-val digestSigningCommandLine: String? by project
+val winCertPath = project.findProperty("winCertPath") as String?
+val macCertPath = project.findProperty("macCertPath") as String?
+val macProvisioningProfile = project.findProperty("macProvisioningProfile") as String?
+val appStoreCerts = project.findProperty("appStoreCerts") as String?
+val appleIssuerId = project.findProperty("appleIssuerId") as String?
+val appleKeyId = project.findProperty("appleKeyId") as String?
+val applePrivateApiKey = project.findProperty("applePrivateApiKey") as String?
+val digestSigningCommandLine = project.findProperty("digestSigningCommandLine") as String?
 
 tasks {
     register<Delete>("clean") {

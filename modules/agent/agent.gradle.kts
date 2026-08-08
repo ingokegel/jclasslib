@@ -34,6 +34,7 @@ tasks {
     compileJava {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
+        options.compilerArgs.add("-Xlint:-options")
     }
 
     "compileJava9Java"(JavaCompile::class) {
@@ -41,7 +42,7 @@ tasks {
         targetCompatibility = "9"
     }
 
-    val copyDist by registering(Copy::class) {
+    val copyDist = register<Copy>("copyDist") {
         from(jar)
         into(externalLibsDir)
     }

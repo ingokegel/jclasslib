@@ -51,8 +51,8 @@ subprojects {
 
         tasks.withType<KotlinJvmCompile>().configureEach {
             compilerOptions {
-                languageVersion = KotlinVersion.KOTLIN_2_0
-                apiVersion = KotlinVersion.KOTLIN_2_0
+                languageVersion = KotlinVersion.KOTLIN_2_2
+                apiVersion = KotlinVersion.KOTLIN_2_2
             }
         }
     }
@@ -70,7 +70,7 @@ subprojects {
 
 tasks {
     getByName<Wrapper>("wrapper") {
-        gradleVersion = "9.4.0"
+        gradleVersion = "9.7.0"
         distributionType = Wrapper.DistributionType.ALL
     }
 

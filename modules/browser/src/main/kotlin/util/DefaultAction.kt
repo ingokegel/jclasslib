@@ -85,7 +85,7 @@ class DefaultAction(
     }
 
     fun applyAcceleratorTo(component: JComponent) {
-        val key = Object()
+        val key = Any()
         component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(getValue(ACCELERATOR_KEY) as KeyStroke, key)
         component.actionMap.put(key, this)
     }
