@@ -106,8 +106,10 @@ class TestBrowserServices(override val classFile: ClassFile = readJdkClass()) : 
     override fun openClassFile(className: String, browserPath: BrowserPath?) {
         openedClassFiles.add(className to browserPath)
     }
+    var canSaveClassFilesResult = true
+
     override fun canOpenClassFiles() = true
-    override fun canSaveClassFiles() = true
+    override fun canSaveClassFiles() = canSaveClassFilesResult
     override fun showURL(urlSpec: String) = Unit
     override fun canReadClassFiles() = true
     override fun readClassFile(className: String): ClassFile? = try {

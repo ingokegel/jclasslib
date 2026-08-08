@@ -66,10 +66,10 @@ rule SelectSameNodeAgain {
     ensures: doc.selected_node = node
 
     @guidance
-        -- Reselecting the current node does not append a history entry,
-        -- unless the previous entry carried detail state (a document
-        -- offset): then a fresh entry is appended, so going back restores
-        -- the offset.
+        -- Reselecting the current node without new detail state merges into
+        -- the current history entry instead of appending one. An entry
+        -- carrying detail state (a document offset) is always appended,
+        -- so going back restores the offset.
 }
 
 rule GoBack {
@@ -89,16 +89,6 @@ rule GoForward {
     requires: doc.can_go_forward
     ensures: doc.history_position = doc.history_position + 1
     ensures: doc.selected_node = history_node_at(doc, doc.history_position)
-}
-
-rule GoBackAtStart {
-    when: GoBack(doc)
-    requires: not doc.can_go_back
-    ensures: core/UserMessage.created(severity: info)
-
-    @guidance
-        -- The backward action is disabled at the oldest location, so this
-        -- cannot be triggered through the UI.
 }
 
 rule ReloadKeepsSelection {

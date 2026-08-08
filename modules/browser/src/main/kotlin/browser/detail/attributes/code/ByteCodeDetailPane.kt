@@ -58,12 +58,14 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
                             services.showURL(instruction.opcode.docUrl)
                         }
                     }
-                    add(getString("action.replace.opcode")).apply {
-                        addActionListener {
-                            replaceOpcode(instruction)
+                    if (services.canSaveClassFiles()) {
+                        add(getString("action.replace.opcode")).apply {
+                            addActionListener {
+                                replaceOpcode(instruction)
+                            }
                         }
+                        addImmediateEditActions(instruction)
                     }
-                    addImmediateEditActions(instruction)
                     addPopupMenuListener(object : PopupMenuListener {
                         override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
                         }
