@@ -1,6 +1,4 @@
 import org.gradle.plugins.ide.idea.model.IdeaModel
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     idea
@@ -47,13 +45,6 @@ subprojects {
 
         tasks.withType<Test>().configureEach {
             useTestNG()
-        }
-
-        tasks.withType<KotlinJvmCompile>().configureEach {
-            compilerOptions {
-                languageVersion = KotlinVersion.KOTLIN_2_2
-                apiVersion = KotlinVersion.KOTLIN_2_2
-            }
         }
     }
 
