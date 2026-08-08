@@ -31,7 +31,7 @@ fun getJrtInputStream(fileName: String, jreHome: File): InputStream =
  * @param jreHome the home directory of the JRE
  */
 fun findClassWithModuleNameInJrt(moduleNameAndClassName: String, jreHome: File): Path? =
-        getModulesRoot(jreHome).resolve(moduleNameAndClassName + CLASS_FILE_SUFFIX)
+        getModulesRoot(jreHome).resolve(moduleNameAndClassName + CLASS_FILE_SUFFIX).takeIf { Files.exists(it) }
 /**
  * Find a class in the JRT (Java 9+)
  * @param className the class name
