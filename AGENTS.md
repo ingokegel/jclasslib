@@ -51,4 +51,9 @@ The currently configured class path and the open class files can be saved to a w
 
 # Run a specific test class with an additional JVM argument <ARG> for profiling
 ./gradlew :data:jvmTest --tests "*ClassFileConsistencyTest" -PprofilingJvmArg=<ARG>
+
+# Run browser tests including Swing UI tests (assertj-swing). -Pxvfb wraps the test JVM in
+# xvfb-run + metacity (needed when no reliable display is available), -Pjetbrains runs the
+# tests on the JetBrains runtime for reliable robot events.
+./gradlew :browser:test -Pxvfb -Pjetbrains
 ```

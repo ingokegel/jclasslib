@@ -139,7 +139,7 @@ class BrowserTab(val fileName: String, val moduleName: String, frame: BrowserFra
                         null
                     }
                 }
-                if (writeClassFile(classFile, fileName, parentFrame, parentFrame.vmConnection, directoryChooser)) {
+                if (writeClassFile(classFile, fileName, parentFrame, parentFrame.vmConnection?.communicator, directoryChooser)) {
                     resetModified()
                 }
             } catch (e: IOException) {

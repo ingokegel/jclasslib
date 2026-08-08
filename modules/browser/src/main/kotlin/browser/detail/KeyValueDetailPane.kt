@@ -108,7 +108,7 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
 
     protected open fun addEditor(editorProvider: () -> DataEditor<T>) {
         if (services.canSaveClassFiles()) {
-            add(editorProvider().createButton(this), "newline unrel, spanx")
+            add(editorProvider().createButton(this).apply { name = EDIT_BUTTON_NAME }, "newline unrel, spanx")
         }
     }
 
@@ -223,5 +223,6 @@ abstract class KeyValueDetailPane<T : Any>(elementClass: Class<T>, services: Bro
     companion object {
         const val UNIT_SCROLL_INCREMENT = 25
         const val BLOCK_SCROLL_INCREMENT = 100
+        const val EDIT_BUTTON_NAME = "edit"
     }
 }

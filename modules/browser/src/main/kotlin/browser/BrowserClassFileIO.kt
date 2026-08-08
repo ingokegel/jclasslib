@@ -17,6 +17,7 @@ import org.gjt.jclasslib.io.getJrtInputStream
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.util.AlertType
 import org.gjt.jclasslib.util.alertFacade
+import org.jclasslib.agent.CommunicatorMBean
 import java.awt.Window
 import java.io.*
 import java.nio.file.FileSystems
@@ -79,9 +80,34 @@ fun readClassFile(fileName: String, frame: BrowserFrame, suppressEOF: Boolean = 
     }
 }
 
-private var persistentSavingConfirmationIndex: Int = -1
+interface SavingConfirmationPolicy {
+    fun getSavingConfirmationIndex(parentWindow: Window?): Int
+}
 
-fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?, vmConnection: VmConnection?, directoryChooser: () -> File?): Boolean {
+class DefaultSavingConfirmationPolicy : SavingConfirmationPolicy {
+    private var persistentConfirmationIndex: Int = -1
+
+    override fun getSavingConfirmationIndex(parentWindow: Window?): Int {
+        if (persistentConfirmationIndex != -1) {
+            return persistentConfirmationIndex
+        }
+        val (selectedIndex, suppressionSelected) = alertFacade.showOptionDialog(parentWindow,
+                getString("message.save.confirmation.title"),
+                getString("message.save.confirmation"),
+                arrayOf(getString("button.overwrite"), getString("button.choose.directory"), getString("button.cancel")),
+                AlertType.QUESTION,
+                true
+        )
+        if (suppressionSelected && selectedIndex in listOf(1, 2)) {
+            persistentConfirmationIndex = selectedIndex
+        }
+        return selectedIndex
+    }
+}
+
+var savingConfirmationPolicy: SavingConfirmationPolicy = DefaultSavingConfirmationPolicy()
+
+fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?, communicator: CommunicatorMBean?, directoryChooser: () -> File?): Boolean {
     if (fileName.startsWith(ClasspathJrtEntry.JRT_PREFIX)) {
         return if (alertFacade.showYesNoDialog(
                         parentWindow,
@@ -94,33 +120,17 @@ fun writeClassFile(classFile: ClassFile, fileName: String, parentWindow: Window?
             false
         }
     }
-    return when (getSavingConfirmationIndex(parentWindow)) {
-        0 -> writeClassFileUnguarded(classFile, fileName, parentWindow, vmConnection, directoryChooser)
+    return when (savingConfirmationPolicy.getSavingConfirmationIndex(parentWindow)) {
+        0 -> writeClassFileUnguarded(classFile, fileName, parentWindow, communicator, directoryChooser)
         1 -> writeClassFileToDirectory(directoryChooser, classFile, parentWindow)
         else -> false
     }
 }
 
-private fun getSavingConfirmationIndex(parentWindow: Window?) = if (persistentSavingConfirmationIndex == -1) {
-    val (selectedIndex, suppressionSelected) = alertFacade.showOptionDialog(parentWindow,
-            getString("message.save.confirmation.title"),
-            getString("message.save.confirmation"),
-            arrayOf(getString("button.overwrite"), getString("button.choose.directory"), getString("button.cancel")),
-            AlertType.QUESTION,
-            true
-    )
-    if (suppressionSelected && selectedIndex in listOf(1, 2)) {
-        persistentSavingConfirmationIndex = selectedIndex
-    }
-    selectedIndex
-} else {
-    persistentSavingConfirmationIndex
-}
-
-private fun writeClassFileUnguarded(classFile: ClassFile, fileName: String, parentWindow: Window?, vmConnection: VmConnection?, directoryChooser: () -> File?): Boolean {
+private fun writeClassFileUnguarded(classFile: ClassFile, fileName: String, parentWindow: Window?, communicator: CommunicatorMBean?, directoryChooser: () -> File?): Boolean {
     return when {
-        vmConnection != null -> {
-            val result = vmConnection.communicator.replaceClassFile(fileName, ClassFileWriter.writeToByteArray(classFile))
+        communicator != null -> {
+            val result = communicator.replaceClassFile(fileName, ClassFileWriter.writeToByteArray(classFile))
             if (!result.isSuccess) {
                 alertFacade.showMessage(parentWindow, getString("message.could.not.redefine.class.file"), getString("error.message.was.0", result.errorMessage), AlertType.ERROR)
             }

@@ -7,7 +7,6 @@
 
 package org.gjt.jclasslib.browser.detail.attributes.code
 
-import com.install4j.runtime.installer.frontend.GUIHelper
 import org.gjt.jclasslib.browser.BrowserBundle.getString
 import org.gjt.jclasslib.browser.BrowserServices
 import org.gjt.jclasslib.browser.detail.attributes.CodeAttributeDetailPane
@@ -20,6 +19,8 @@ import org.gjt.jclasslib.io.createInstruction
 import org.gjt.jclasslib.io.writeByteCode
 import org.gjt.jclasslib.structures.ClassFile
 import org.gjt.jclasslib.structures.attributes.CodeAttribute
+import org.gjt.jclasslib.util.AlertType
+import org.gjt.jclasslib.util.alertFacade
 import org.gjt.jclasslib.util.getParentWindow
 import java.awt.event.MouseEvent
 import javax.swing.JMenu
@@ -104,7 +105,7 @@ class ByteCodeDetailPane(services: BrowserServices, private val codeAttributeDet
     private fun replaceOpcode(instruction: Instruction) {
         val replacementOpcodes = getStackCompatibleReplacementOpcodes(instruction)
         if (replacementOpcodes.isEmpty()) {
-            GUIHelper.showMessage(this, getString("no.compatible.opcode"), null, JOptionPane.WARNING_MESSAGE)
+            alertFacade.showMessage(this, getString("no.compatible.opcode"), AlertType.WARNING)
         } else {
             val opcode = instruction.opcode
             val newOpcode = JOptionPane.showInputDialog(

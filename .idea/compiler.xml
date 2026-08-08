@@ -11,6 +11,11 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="17" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jclasslib.agent.main" options="-Xlint:-options" />
+    </option>
   </component>
 </project>

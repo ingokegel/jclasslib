@@ -24,11 +24,22 @@ dependencies {
     implementation("com.formdev:flatlaf:$flatLafVersion")
     implementation("com.formdev:flatlaf-extras:$flatLafVersion")
     testImplementation(kotlin("test"))
+    testImplementation(platform("org.junit:junit-bom:6.1.0"))
+    testImplementation("com.github.ingokegel.assertj-swing:assertj-swing-junit-jupiter:3.18.2")
 }
 
 tasks {
     test {
         useJUnitPlatform()
+        val launcher = project.javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(JAVA_RUN_VERSION))
+            // the JetBrains runtime is required for reliable robot events in GUI tests
+            if (project.hasProperty("jetbrains")) {
+                vendor.set(JvmVendorSpec.JETBRAINS)
+            }
+        }
+        executable = launcher.get().executablePath.asFile.absolutePath
+        wrapWithXvfb()
     }
     jar {
         archiveFileName = "jclasslib-browser.jar"

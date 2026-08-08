@@ -21,6 +21,8 @@ subprojects {
         maven("https://jitpack.io") {
             content {
                 includeGroup("com.github.ingokegel")
+                // multi-module assertj-swing fork with JUnit jupiter support
+                includeGroup("com.github.ingokegel.assertj-swing")
             }
         }
         maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") {

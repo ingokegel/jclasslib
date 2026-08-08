@@ -274,7 +274,7 @@ class BrowserFrame : JFrame(), GlobalBrowserServices {
     private val isMaximized: Boolean
         get() = extendedState and MAXIMIZED_BOTH != 0
 
-    private val frameContent: FrameContent = FrameContent(this)
+    val frameContent: FrameContent = FrameContent(this)
 
     private var workspaceFile: File? = null
     private var workspaceChooserPath = ""
