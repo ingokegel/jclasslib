@@ -34,16 +34,12 @@ import java.util.concurrent.Callable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
-import javax.swing.AbstractAction
-import javax.swing.Action
-import javax.swing.JMenuItem
-import javax.swing.JPopupMenu
-import javax.swing.SwingUtilities
+import javax.swing.*
 import javax.swing.tree.TreePath
 
 class RecordedMessage(val mainMessage: String, val contentMessage: String?, val alertType: AlertType)
 
-class RecordedOptionDialog(val mainMessage: String, val options: List<String>, val alertType: AlertType)
+class RecordedOptionDialog(@Suppress("unused") val mainMessage: String, val options: List<String>, val alertType: AlertType)
 
 class FakeAlertFacade : AlertFacade {
     val messages = mutableListOf<RecordedMessage>()
@@ -94,10 +90,20 @@ class TestBrowserServices(override val classFile: ClassFile = readJdkClass()) : 
         modifiedCount++
     }
 
-    override fun openClassFile(className: String, browserPath: BrowserPath?) = Unit
+    val openedClassFiles = mutableListOf<Pair<String, BrowserPath?>>()
+
+    override fun openClassFile(className: String, browserPath: BrowserPath?) {
+        openedClassFiles.add(className to browserPath)
+    }
     override fun canOpenClassFiles() = true
     override fun canSaveClassFiles() = true
     override fun showURL(urlSpec: String) = Unit
+    override fun canReadClassFiles() = true
+    override fun readClassFile(className: String): ClassFile? = try {
+        readJdkClass(className)
+    } catch (_: Exception) {
+        null
+    }
 }
 
 class TestDetailPane(services: BrowserServices) : DetailPane<Any>(Any::class.java, services) {

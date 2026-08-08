@@ -9,6 +9,9 @@
 --           entry, class lookup order and module filtering, the classpath
 --           setup dialog, workspace save/load (config and open tabs) and
 --           the recent workspaces list.
+use "./class-file-core.allium" as core
+
+--
 -- Excludes:
 --   - Editing and saving of class files (class-file-editing.allium)
 --   - Navigation state within open tabs (browser paths, history)
@@ -45,15 +48,6 @@ entity Workspace {
 
 entity RecentWorkspaces {
     files: List<String>                 -- most recently used first, at most 10
-}
-
-entity UserMessage {
-    text: String
-    severity: info | warning | error
-}
-
-entity User {
-    display_name: String
 }
 
 -- Rules ----------------------------------------------------------------------
@@ -134,7 +128,7 @@ rule ClassNotFound {
     requires: not filter(settings.entries, e => module_selection = null or e.module_name = module_selection)
                     .any(e => contains_class(e, class_name))
     requires: settings.implicit_jre_entry = none or not jre_contains_class(settings.jre_home, class_name)
-    ensures: UserMessage.created(severity: warning)
+    ensures: core/UserMessage.created(severity: warning)
 
     @guidance
         -- The warning offers to open the classpath setup dialog; accepting
@@ -217,7 +211,7 @@ invariant RecentWorkspacesUnique {
 -- Surfaces -------------------------------------------------------------------
 
 surface ClasspathSetup {
-    facing user: User
+    facing user: core/User
     context settings: ClasspathConfig
 
     exposes:
@@ -238,7 +232,7 @@ surface ClasspathSetup {
 }
 
 surface ClassLookup {
-    facing user: User
+    facing user: core/User
     context settings: ClasspathConfig
 
     provides:
@@ -251,7 +245,7 @@ surface ClassLookup {
 }
 
 surface WorkspaceMenu {
-    facing user: User
+    facing user: core/User
     context workspace: Workspace
 
     exposes:

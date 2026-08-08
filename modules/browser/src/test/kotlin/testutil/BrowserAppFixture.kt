@@ -15,7 +15,6 @@ import org.gjt.jclasslib.browser.savingConfirmationPolicy
 import org.gjt.jclasslib.io.writeToByteArray
 import org.gjt.jclasslib.structures.ClassFile
 import java.io.File
-import javax.swing.tree.TreePath
 
 class BrowserAppFixture {
 
@@ -32,11 +31,7 @@ class BrowserAppFixture {
     }
 
     fun selectNode(tab: BrowserTab, predicate: (BrowserTreeNode) -> Boolean): BrowserTreeNode = onEdt {
-        val tree = tab.browserComponent.treePane.tree
-        val root = tree.model.root as BrowserTreeNode
-        val node = root.depthFirstEnumeration().asSequence().filterIsInstance<BrowserTreeNode>().first(predicate)
-        tree.selectionPath = TreePath(node.path)
-        node
+        tab.browserComponent.selectNode(predicate)
     }
 
     fun dispose() {
@@ -46,4 +41,10 @@ class BrowserAppFixture {
 
 fun resetSavingConfirmationPolicy() {
     savingConfirmationPolicy = DefaultSavingConfirmationPolicy()
+}
+
+fun BrowserTab.modifyFirstUtf8(newValue: String) {
+    val constant = classFile.constantPool.filterIsInstance<org.gjt.jclasslib.structures.constants.ConstantUtf8Info>().first()
+    constant.string = newValue
+    browserComponent.isModified = true
 }

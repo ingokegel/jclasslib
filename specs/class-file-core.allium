@@ -1,0 +1,115 @@
+-- allium: 3
+-- class-file-core.allium
+--
+-- Shared domain model for the jclasslib specifications: the parsed class
+-- file, its constant pool and bytecode, the structure tree and the open
+-- class document with its navigation state.
+--
+-- Scope: Shared entities only. Behavior lives in the area specs:
+--   - class-file-editing.allium (mutation, save and discard flows)
+--   - classpath-workspace.allium (lookup configuration, workspaces)
+--   - navigation-history.allium (tree navigation, history, links)
+
+-- Entities -------------------------------------------------------------------
+
+entity ClassFile {
+    major_version: Integer
+    minor_version: Integer
+    constant_pool: List<ConstantPoolEntry>
+    methods: List<Method>
+    fields: List<ClassMember>
+    attributes: List<ClassAttribute>
+
+    constant_pool_size: constant_pool.count
+}
+
+entity ClassMember {
+    name: String
+    descriptor: String
+}
+
+entity ClassAttribute {
+    name: String
+}
+
+entity Method {
+    name: String
+    descriptor: String
+    code: List<Instruction>
+    max_stack: Integer
+    max_locals: Integer
+}
+
+entity ConstantPoolEntry {
+    index: Integer
+    constant_kind: utf8 | integer | long | float | double | string
+        | class_ref | name_and_type | field_ref | method_ref
+        | interface_method_ref | method_handle | method_type
+        | dynamic | invoke_dynamic | module | package | placeholder
+    scalar_value: String?                     -- editable payload of scalar entries
+    references: List<ConstantPoolEntry>       -- entries this entry points to
+
+    is_wide: constant_kind in {long, double}
+    is_placeholder: constant_kind = placeholder
+}
+
+entity Instruction {
+    opcode: Opcode
+    immediates: List<Integer>
+    offset: Integer
+}
+
+-- The tree mirrors the class file: category nodes (general information,
+-- constant pool, interfaces, fields, methods, attributes) with element
+-- nodes below them.
+entity TreeNode {
+    category: general | constant_pool | interfaces | fields | methods | attributes | constant_pool_entry | interface | field | method | attribute
+    index: Integer                     -- position among its siblings
+    member: ClassMember?               -- set for field and method nodes
+    attribute: ClassAttribute?         -- set for attribute nodes
+}
+
+entity HistoryEntry {
+    node: TreeNode
+    detail_state: String?              -- e.g. the scroll offset in a document pane
+}
+
+entity OpenClass {
+    class_file: ClassFile
+    origin: plain_file | jar_entry | jdk_module | running_vm
+    writable: Boolean
+    is_modified: Boolean
+    selected_node: TreeNode?
+    history: List<HistoryEntry>
+    history_position: Integer          -- index into history, pointing at the current location
+
+    can_save_in_place: writable and origin != jdk_module
+    can_go_back: history_position > 0
+    can_go_forward: history_position < history.count - 1
+}
+
+entity UserMessage {
+    text: String
+    severity: info | warning | error
+}
+
+entity User {
+    display_name: String
+}
+
+-- External entities ----------------------------------------------------------
+
+-- The JVM instruction set, defined by the JVM specification, not by jclasslib.
+external entity Opcode {
+    mnemonic: String
+    structural_class: simple | immediate_byte | immediate_short | branch
+        | wide_branch | switch | other_immediate
+    stack_effect: StackEffect
+}
+
+-- Value types ----------------------------------------------------------------
+
+value StackEffect {
+    pops: List<String>
+    pushes: List<String>
+}

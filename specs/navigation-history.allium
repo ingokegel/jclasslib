@@ -1,0 +1,237 @@
+-- allium: 3
+-- navigation-history.allium
+--
+-- Distilled from the jclasslib codebase (BrowserComponent, BrowserTreePane,
+-- BrowserHistory, BrowserPath, ConstantPoolLink, ClassAttributeLink,
+-- ClassElementOpener, DocumentDetailPane).
+
+use "./class-file-core.allium" as core
+
+--
+-- Scope: Navigation within an open class file and navigation history.
+-- Includes: the structure tree and node selection, browser paths (recording,
+--           resolution, persistence), backward/forward history with detail
+--           state, constant pool and attribute links, opening the defining
+--           class of a referenced member, selection preservation across
+--           reload.
+-- Excludes:
+--   - Editing and saving of class files (class-file-editing.allium)
+--   - Workspace and classpath configuration (classpath-workspace.allium)
+--   - The content of the detail panes beyond what navigation restores
+
+-- Entities -------------------------------------------------------------------
+
+entity PathComponent {
+    kind: Category | Position | MemberReference | AttributeName
+}
+
+variant Category : PathComponent {
+    category: general | constant_pool | interfaces | fields | methods | attributes | constant_pool_entry | interface | field | method | attribute
+}
+
+variant Position : PathComponent {
+    index: Integer
+}
+
+variant MemberReference : PathComponent {
+    name: String
+    descriptor: String
+}
+
+variant AttributeName : PathComponent {
+    attribute_name: String
+}
+
+entity BrowserPath {
+    components: List<PathComponent>
+}
+
+-- Rules ----------------------------------------------------------------------
+
+rule SelectNode {
+    when: SelectNode(doc, node)
+    ensures: doc.selected_node = node
+    ensures: core/HistoryEntry.created(node: node, detail_state: null)
+    ensures: doc.history_position = doc.history.count - 1
+
+    @guidance
+        -- Selecting a node shows the detail pane for its category and
+        -- appends a history entry. The backward action becomes enabled
+        -- once a second location exists.
+}
+
+rule SelectSameNodeAgain {
+    when: SelectNode(doc, node)
+    requires: node = doc.selected_node
+    ensures: doc.selected_node = node
+
+    @guidance
+        -- Reselecting the current node does not append a history entry,
+        -- unless the previous entry carried detail state (a document
+        -- offset): then a fresh entry is appended, so going back restores
+        -- the offset.
+}
+
+rule GoBack {
+    when: GoBack(doc)
+    requires: doc.can_go_back
+    ensures: doc.history_position = doc.history_position - 1
+    ensures: doc.selected_node = history_node_at(doc, doc.history_position)  -- black box: node of the entry at the position
+
+    @guidance
+        -- Going back restores the selected node and, for entries with
+        -- detail state, the scroll position in the document. The selection
+        -- change does not create a new history entry.
+}
+
+rule GoForward {
+    when: GoForward(doc)
+    requires: doc.can_go_forward
+    ensures: doc.history_position = doc.history_position + 1
+    ensures: doc.selected_node = history_node_at(doc, doc.history_position)
+}
+
+rule GoBackAtStart {
+    when: GoBack(doc)
+    requires: not doc.can_go_back
+    ensures: core/UserMessage.created(severity: info)
+
+    @guidance
+        -- The backward action is disabled at the oldest location, so this
+        -- cannot be triggered through the UI.
+}
+
+rule ReloadKeepsSelection {
+    when: ClassReloaded(doc)                                -- lifecycle trigger: reload
+    let path = record_path(doc.selected_node)                -- black box: path of the current selection
+    ensures: doc.selected_node = resolve_path(doc, path)     -- black box: best-effort resolution
+    ensures: doc.history = []
+    ensures: doc.history_position = -1
+
+    @guidance
+        -- Reloading (or rebuilding the tree) keeps the selection by
+        -- resolving the recorded path against the fresh tree and clears
+        -- the navigation history.
+}
+
+rule ResolvePathLenient {
+    when: ResolvePath(doc, path)                          -- lifecycle trigger: path restoration
+    ensures: doc.selected_node = deepest_resolvable(doc, path)  -- black box
+
+    @guidance
+        -- Path resolution walks components from the root and stops at the
+        -- first component that matches no child; the deepest resolvable
+        -- node is selected. Stale paths from older class versions degrade
+        -- gracefully instead of failing.
+}
+
+rule FollowConstantPoolLink {
+    when: FollowConstantPoolLink(doc, constant_pool_index)
+    requires: constant_pool_index > 0
+    requires: constant_pool_index < doc.class_file.constant_pool_size
+    ensures: doc.selected_node = constant_pool_entry_node(doc, constant_pool_index)  -- black box
+    ensures: constant_pool_filter(doc) = show_all                -- black box: filter shows all entries
+
+    @guidance
+        -- The constant pool filter is switched to "show all" first, so the
+        -- linked entry is visible, and the detour through the constant
+        -- pool category does not clutter the history.
+}
+
+rule FollowInvalidConstantPoolLink {
+    when: FollowConstantPoolLink(doc, constant_pool_index)
+    requires: constant_pool_index <= 0
+    ensures: doc.selected_node = doc.selected_node
+
+    @guidance
+        -- Index 0 is not a real constant pool entry; the link is ignored.
+}
+
+rule FollowAttributeLink {
+    when: FollowAttributeLink(doc, attribute_name, row_index)
+    requires: doc.class_file.attributes.any(a => a.name = attribute_name)
+    ensures: doc.selected_node = attribute_node(doc, attribute_name)       -- black box
+    ensures: selected_row(doc, attribute_name) = row_index                 -- black box: row in the attribute table
+}
+
+rule FollowMissingAttributeLink {
+    when: FollowAttributeLink(doc, attribute_name, row_index)
+    requires: not doc.class_file.attributes.any(a => a.name = attribute_name)
+    ensures: core/UserMessage.created(severity: error)
+}
+
+rule OpenReferencedClass {
+    when: OpenReferencedClass(doc, reference)
+    -- A class or member reference in the constant pool can be opened in a
+    -- new tab. For member references the defining class is located first.
+    requires: reference_valid(doc, reference)                  -- black box
+    ensures: core/OpenClass.created(class_file: defining_class(doc, reference))  -- black box: walks superclasses until the member is declared
+    ensures: doc.selected_node = doc.selected_node
+
+    @guidance
+        -- For a member reference, superclasses are searched until a class
+        -- declaring the member is found; the search stops at
+        -- java.lang.Object. The new tab selects the referenced member.
+        -- A reference to the currently open class itself is not offered.
+}
+
+rule RecordPathForMember {
+    when: RecordPath(doc, node)                           -- lifecycle trigger: path recording
+    requires: node.member != null
+    ensures: BrowserPath.created(components: member_path_components(node))   -- black box: category component plus name/descriptor component
+
+    @guidance
+        -- Method and field nodes are recorded by name and descriptor, not
+        -- by index, so paths survive member reordering across reloads.
+        -- Attribute nodes are recorded by name, constant pool entries by
+        -- index (only while the constant pool filter shows all entries,
+        -- indices shift otherwise), all other nodes by index.
+}
+
+rule DefaultSelectionOnOpen {
+    when: ClassOpened(doc)                                -- lifecycle trigger: opening a class
+    ensures: doc.selected_node = first_category_node(doc)      -- black box: the general information node
+
+    @guidance
+        -- A freshly opened class selects the general information node
+        -- unless a path (from a workspace or a link) says otherwise.
+}
+
+-- Surfaces -------------------------------------------------------------------
+
+surface ClassTree {
+    facing user: core/User
+    context doc: core/OpenClass
+
+    exposes:
+        doc.selected_node
+        doc.can_go_back
+        doc.can_go_forward
+
+    provides:
+        SelectNode(user, doc, node)
+        FollowConstantPoolLink(user, doc, constant_pool_index) when constant_pool_index > 0
+        FollowAttributeLink(user, doc, attribute_name, row_index)
+        OpenReferencedClass(user, doc, reference) when reference_valid(doc, reference)
+        GoBack(user, doc) when doc.can_go_back
+        GoForward(user, doc) when doc.can_go_forward
+
+    @guarantee HistoryCoversNavigationOnly
+        -- Backward and forward only ever move the selection and restore
+        -- detail state; they never undo or redo edits to the class file.
+}
+
+-- Open questions ---------------------------------------------------------------
+
+-- (none)
+
+-- Accepted as intended behaviour:
+-- - Following a constant pool link replaces the current history entry instead
+--   of pushing the intermediate constant pool category selection (see
+--   FollowConstantPoolLink).
+-- - Reselecting the current node does not append a history entry unless the
+--   previous entry carried detail state (see SelectSameNodeAgain).
+-- - Constant pool entry paths are recorded by index and only while the filter
+--   shows all entries, because filtered indices are unstable (see RecordPathForMember).
+-- - Path resolution is lenient: it stops at the first unmatched component and
+--   selects the deepest resolvable node (see ResolvePathLenient).

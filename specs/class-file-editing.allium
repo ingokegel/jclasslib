@@ -3,6 +3,9 @@
 --
 -- Distilled from the jclasslib codebase (modules/data writing support,
 -- modules/browser editing UI, modules/idea tool window, modules/agent).
+
+use "./class-file-core.allium" as core
+
 --
 -- Scope: Mutation and editing of class files.
 -- Includes: scalar value edits, access flag and enum edits, linked constant
@@ -12,84 +15,15 @@
 --           discard flows (close, reload).
 -- Excludes:
 --   - Reading/parsing class files and rendering the tree/detail UI
---   - Navigation history (undo/redo covers navigation only, never edits)
---   - Workspace and classpath configuration
+--   - Navigation history (navigation-history.allium)
+--   - Workspace and classpath configuration (classpath-workspace.allium)
 --   - JVM attach mechanics (how a VM connection is established)
-
--- Entities -------------------------------------------------------------------
-
-entity ClassFile {
-    major_version: Integer
-    minor_version: Integer
-    constant_pool: List<ConstantPoolEntry>
-    methods: List<Method>
-}
-
-entity Method {
-    code: List<Instruction>
-    max_stack: Integer
-    max_locals: Integer
-}
-
-entity ConstantPoolEntry {
-    index: Integer
-    constant_kind: utf8 | integer | long | float | double | string
-        | class_ref | name_and_type | field_ref | method_ref
-        | interface_method_ref | method_handle | method_type
-        | dynamic | invoke_dynamic | module | package | placeholder
-    scalar_value: String?                     -- editable payload of scalar entries
-    references: List<ConstantPoolEntry>       -- entries this entry points to
-
-    is_wide: constant_kind in {long, double}
-    is_placeholder: constant_kind = placeholder
-}
-
-entity Instruction {
-    opcode: Opcode
-    immediates: List<Integer>
-    offset: Integer
-}
-
-entity OpenClass {
-    class_file: ClassFile
-    origin: plain_file | jar_entry | jdk_module | running_vm
-    writable: Boolean
-    is_modified: Boolean
-
-    can_save_in_place: writable and origin != jdk_module
-}
-
-entity UserMessage {
-    text: String
-    severity: info | warning | error
-}
-
-entity User {
-    display_name: String
-}
-
--- External entities ----------------------------------------------------------
-
--- The JVM instruction set, defined by the JVM specification, not by jclasslib.
-external entity Opcode {
-    mnemonic: String
-    structural_class: simple | immediate_byte | immediate_short | branch
-        | wide_branch | switch | other_immediate
-    stack_effect: StackEffect
-}
-
--- Value types ----------------------------------------------------------------
-
-value StackEffect {
-    pops: List<String>
-    pushes: List<String>
-}
 
 -- Contracts ------------------------------------------------------------------
 
 contract ClassFilePersistence {
-    read: (bytes: ByteArray) -> ClassFile
-    write: (class_file: ClassFile) -> ByteArray
+    read: (bytes: ByteArray) -> core/ClassFile
+    write: (class_file: core/ClassFile) -> ByteArray
 
     @invariant RoundTripFidelity
         -- Writing an unmodified class file reproduces the exact source
@@ -102,8 +36,8 @@ contract ClassFilePersistence {
 }
 
 contract BytecodePersistence {
-    disassemble: (code: ByteArray) -> ClassFile
-    assemble: (class_file: ClassFile) -> ByteArray
+    disassemble: (code: ByteArray) -> core/ClassFile
+    assemble: (class_file: core/ClassFile) -> ByteArray
 
     @invariant BytecodeRoundTrip
         -- Assembling a disassembled method body reproduces the exact
@@ -133,7 +67,7 @@ rule InvalidEditRejected {
     when: EditValue(doc, entry, input)
     requires: entry.scalar_value != null
     requires: not valid_scalar(input, entry.constant_kind)
-    ensures: UserMessage.created(severity: error)
+    ensures: core/UserMessage.created(severity: error)
     -- The entry is unchanged and the class is not marked modified.
 
     @guidance
@@ -170,7 +104,7 @@ rule EditLinkedConstant {
 rule UnsupportedLinkedEditRejected {
     when: EditLinkedValue(doc, owner, target, input)
     requires: target.scalar_value = null
-    ensures: UserMessage.created(severity: warning)
+    ensures: core/UserMessage.created(severity: warning)
 }
 
 rule AddConstantPoolEntry {
@@ -179,16 +113,16 @@ rule AddConstantPoolEntry {
     let matches = filter(doc.class_file.constant_pool, e => same_entry_value(e, kind, value, refs))  -- black box: value equality
     ensures:
         if matches.count = 0:
-            ConstantPoolEntry.created(
+            core/ConstantPoolEntry.created(
                 constant_kind: kind,
                 scalar_value: value,
                 references: refs
             )
             if kind in {long, double}:
-                ConstantPoolEntry.created(constant_kind: placeholder)
+                core/ConstantPoolEntry.created(constant_kind: placeholder)
             doc.is_modified = true
         else:
-            UserMessage.created(severity: info)
+            core/UserMessage.created(severity: info)
 
     @guidance
         -- An entry equal to an existing one is reused instead of added.
@@ -230,7 +164,7 @@ rule IncompatibleOpcodeRejected {
     when: ReplaceOpcode(doc, instruction, new_opcode)
     requires: not (new_opcode.structural_class = instruction.opcode.structural_class
         and new_opcode.stack_effect = instruction.opcode.stack_effect)
-    ensures: UserMessage.created(severity: warning)
+    ensures: core/UserMessage.created(severity: warning)
 }
 
 rule EditImmediateOperand {
@@ -244,7 +178,7 @@ rule EditImmediateOperand {
 rule InvalidImmediateRejected {
     when: EditImmediate(doc, instruction, position, input)
     requires: not valid_immediate(input, instruction)
-    ensures: UserMessage.created(severity: warning)
+    ensures: core/UserMessage.created(severity: warning)
 }
 
 rule SaveToFile {
@@ -278,7 +212,7 @@ rule VmRedefinitionRejected {
     when: RedefinitionRejected(doc, reason)                -- external stimulus from the JVM
     requires: doc.origin = running_vm
     ensures: doc.is_modified = true
-    ensures: UserMessage.created(severity: error, text: reason)
+    ensures: core/UserMessage.created(severity: error, text: reason)
 }
 
 rule SaveElsewhere {
@@ -295,7 +229,7 @@ rule SaveElsewhere {
 
 rule SaveAllModifiedClasses {
     when: SaveAllRequested()
-    for doc in OpenClasses where is_modified:
+    for doc in core/OpenClasses where is_modified:
         ensures: SaveConfirmed(doc)
 
     @guidance
@@ -305,7 +239,7 @@ rule SaveAllModifiedClasses {
 
 rule SaveAllCopiesToDirectory {
     when: SaveAllCopiesToDirectory(directory)
-    for doc in OpenClasses:
+    for doc in core/OpenClasses:
         ensures: ClassPersisted(doc, directory)
     -- The classes stay modified: copies were written, the origins are
     -- unchanged.
@@ -340,28 +274,28 @@ rule ReloadClass {
 -- Invariants -----------------------------------------------------------------
 
 invariant WideEntryReservesPlaceholder {
-    for cf in ClassFiles:
+    for cf in core/ClassFiles:
         for w in cf.constant_pool where is_wide:
             cf.constant_pool.any(e => e.is_placeholder and e.index = w.index + 1)
 }
 
 invariant PlaceholderFollowsWideEntry {
     -- Index 0 of every constant pool is a placeholder by definition.
-    for cf in ClassFiles:
+    for cf in core/ClassFiles:
         for p in cf.constant_pool where is_placeholder:
             p.index = 0 or cf.constant_pool.any(e => e.is_wide and e.index = p.index - 1)
 }
 
 invariant JdkModulesNotWritableInPlace {
-    for doc in OpenClasses:
+    for doc in core/OpenClasses:
         doc.origin = jdk_module implies not doc.can_save_in_place
 }
 
 -- Surfaces -------------------------------------------------------------------
 
 surface ClassFileDetailEditor {
-    facing user: User
-    context doc: OpenClass
+    facing user: core/User
+    context doc: core/OpenClass
 
     exposes:
         doc.class_file.constant_pool
@@ -390,8 +324,8 @@ surface ClassFileDetailEditor {
 }
 
 surface ByteCodeEditor {
-    facing user: User
-    context doc: OpenClass
+    facing user: core/User
+    context doc: core/OpenClass
 
     exposes:
         for method in doc.class_file.methods:
@@ -415,8 +349,8 @@ surface ByteCodeEditor {
 }
 
 surface ClassFileSave {
-    facing user: User
-    context doc: OpenClass where is_modified
+    facing user: core/User
+    context doc: core/OpenClass where is_modified
 
     provides:
         SaveConfirmed(user, doc) when doc.can_save_in_place

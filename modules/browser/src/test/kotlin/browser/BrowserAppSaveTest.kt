@@ -11,6 +11,7 @@ import org.gjt.jclasslib.io.writeToByteArray
 import org.gjt.jclasslib.structures.constants.ConstantUtf8Info
 import org.gjt.jclasslib.testutil.BrowserAppFixture
 import org.gjt.jclasslib.testutil.SwingRobotTest
+import org.gjt.jclasslib.testutil.modifyFirstUtf8
 import org.gjt.jclasslib.testutil.onEdt
 import org.gjt.jclasslib.testutil.readJdkClass
 import org.gjt.jclasslib.testutil.resetSavingConfirmationPolicy
@@ -45,12 +46,6 @@ class BrowserAppSaveTest : SwingRobotTest() {
     @BeforeTest
     @AfterTest
     fun resetConfirmation() = resetSavingConfirmationPolicy()
-
-    private fun BrowserTab.modifyFirstUtf8(newValue: String) {
-        val constant = classFile.constantPool.filterIsInstance<ConstantUtf8Info>().first()
-        constant.string = newValue
-        browserComponent.isModified = true
-    }
 
     @Test
     fun testSaveAllModifiedClassesWritesAllTabs() = withFakeAlertFacade { alerts ->
