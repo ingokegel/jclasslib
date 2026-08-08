@@ -1,0 +1,293 @@
+-- allium: 3
+-- classpath-workspace.allium
+--
+-- Distilled from the jclasslib codebase (modules/browser config packages,
+-- workspace save/load in BrowserFrame and FrameContent, RecentMenu).
+--
+-- Scope: Configuration of the class lookup path and workspace persistence.
+-- Includes: classpath entries (directories, archives), the implicit JRE
+--           entry, class lookup order and module filtering, the classpath
+--           setup dialog, workspace save/load (config and open tabs) and
+--           the recent workspaces list.
+-- Excludes:
+--   - Editing and saving of class files (class-file-editing.allium)
+--   - Navigation state within open tabs (browser paths, history)
+--   - Attach to a running VM (the transient VM classpath entry)
+--   - Classpath browsing tree construction details (merge/scan mechanics)
+
+-- Entities -------------------------------------------------------------------
+
+entity ClasspathEntry {
+    kind: directory | archive
+    path: String                        -- canonical file system path
+    module_name: String                 -- from module-info.class, or the unnamed module
+}
+
+entity ClasspathConfig {
+    jre_home: String
+    entries: List<ClasspathEntry>       -- ordered, lookup priority
+
+    -- The JRE contributes an implicit entry after all configured entries:
+    -- a Java 9+ image (lib/modules) is looked up through the module system,
+    -- a Java 8 JRE (lib/rt.jar) as a plain archive, anything else has none.
+    implicit_jre_entry: jre_entry_kind(jre_home)     -- black box: jrt_image | rt_jar | none
+}
+
+entity FindResult {
+    file_name: String                   -- plain path, "jar!entry" or "jrt:..." reference
+    module_name: String
+}
+
+entity Workspace {
+    config: ClasspathConfig
+    open_class_files: List<String>      -- origin references of the open tabs
+}
+
+entity RecentWorkspaces {
+    files: List<String>                 -- most recently used first, at most 10
+}
+
+entity UserMessage {
+    text: String
+    severity: info | warning | error
+}
+
+entity User {
+    display_name: String
+}
+
+-- Rules ----------------------------------------------------------------------
+
+rule AddClasspathEntry {
+    when: AddClasspathEntry(settings, entry)
+    requires: not (entry in settings.entries)     -- equality: same kind and same canonical path
+    ensures: settings.entries = settings.entries + entry
+
+    @guidance
+        -- Adding an entry that is already present is a no-op: the list is
+        -- unchanged and no message is shown. Duplicates cannot be created
+        -- through the UI or by opening class files.
+}
+
+rule RemoveClasspathEntry {
+    when: RemoveClasspathEntry(settings, entry)
+    requires: entry in settings.entries
+    ensures: settings.entries = without(settings.entries, entry)   -- black box: order-preserving removal
+}
+
+rule ReorderClasspathEntry {
+    when: MoveClasspathEntry(settings, entry, direction)
+    requires: entry in settings.entries
+    requires: can_move(settings.entries, entry, direction)         -- black box: not already at the boundary
+    ensures: moved(settings.entries, entry, direction)             -- black box: swapped with the neighbour
+
+    @guidance
+        -- Order is lookup priority. Moving past the first or last position
+        -- is not offered (the buttons are disabled at the boundaries).
+}
+
+rule SetJreHome {
+    when: SetJreHome(settings, path)
+    ensures: settings.jre_home = path
+
+    @guidance
+        -- Choosing a JDK home that contains a nested "jre" directory
+        -- (old JDK layout) selects that directory instead.
+}
+
+rule ClearConfig {
+    when: ClearConfig(settings)
+    ensures: settings.entries = []
+    ensures: settings.jre_home = current_jvm_home()                -- black box: the JVM running the tool
+}
+
+rule FindClass {
+    when: FindClass(settings, class_name, module_selection)
+    let candidates = filter(settings.entries, e => module_selection = null or e.module_name = module_selection)
+    requires: candidates.any(e => contains_class(e, class_name))   -- black box: entry can serve the class
+    let match = first_matching(candidates, class_name)             -- black box
+    ensures: FindResult.created(file_name: reference_to(match), module_name: match.module_name)
+
+    @guidance
+        -- The first entry in configuration order that contains the class
+        -- wins; later entries are shadowed silently. References are plain
+        -- paths for directories, "jar!entry" for archives. Jar entries
+        -- with an obfuscated trailing slash (some obfuscators mark classes
+        -- as directories) are found and normalized.
+}
+
+rule FindClassInJre {
+    when: FindClass(settings, class_name, module_selection)
+    requires: not filter(settings.entries, e => module_selection = null or e.module_name = module_selection)
+                    .any(e => contains_class(e, class_name))
+    requires: settings.implicit_jre_entry != none
+    requires: jre_contains_class(settings.jre_home, class_name)    -- black box
+    ensures: FindResult.created(file_name: jrt_reference(class_name), module_name: jrt_module(class_name))
+
+    @guidance
+        -- The implicit JRE entry is only consulted after all configured
+        -- entries. References have the "jrt:" prefix.
+}
+
+rule ClassNotFound {
+    when: FindClass(settings, class_name, module_selection)
+    requires: not filter(settings.entries, e => module_selection = null or e.module_name = module_selection)
+                    .any(e => contains_class(e, class_name))
+    requires: settings.implicit_jre_entry = none or not jre_contains_class(settings.jre_home, class_name)
+    ensures: UserMessage.created(severity: warning)
+
+    @guidance
+        -- The warning offers to open the classpath setup dialog; accepting
+        -- it opens the dialog and retries the lookup afterwards.
+}
+
+rule SaveWorkspace {
+    when: SaveWorkspace(workspace, file)
+    ensures: WorkspacePersisted(workspace, file)
+
+    @guidance
+        -- The workspace file captures the classpath configuration (JRE home
+        -- and entries in order) and the open class tabs with their
+        -- navigation state. Saving to an existing file asks for
+        -- confirmation on Linux only; on Windows and macOS the file is
+        -- overwritten silently.
+}
+
+rule LoadWorkspace {
+    when: LoadWorkspace(workspace, file)
+    ensures: workspace.config.entries = persisted_entries(file)            -- black box
+    ensures: workspace.open_class_files = persisted_open_classes(file)     -- black box: tabs reopened
+
+    @guidance
+        -- Loading replaces the current configuration entirely. Currently
+        -- open tabs are closed without asking.
+}
+
+rule LoadWorkspaceJreHome {
+    when: LoadWorkspace(workspace, file)
+    requires: dir_exists(persisted_jre_home(file))                       -- black box
+    ensures: workspace.config.jre_home = persisted_jre_home(file)
+}
+
+rule LoadWorkspaceMissingJreHome {
+    when: LoadWorkspace(workspace, file)
+    requires: not dir_exists(persisted_jre_home(file))
+    ensures: workspace.config.jre_home = current_jvm_home()
+
+    @guidance
+        -- A JRE home recorded on another machine is ignored when it does
+        -- not exist locally, keeping the JVM home the tool runs on.
+}
+
+rule RememberWorkspace {
+    when: WorkspaceUsed(recents, file)
+    ensures: recents.files = [file] + filter(recents.files, f => f != file)
+    ensures: recents.files.count <= 10
+
+    @guidance
+        -- The most recently used workspace comes first, repeats move it
+        -- back to the front, and the list is capped at 10 by dropping the
+        -- oldest entry. The list survives restarts of the tool.
+}
+
+rule ClearRecentWorkspaces {
+    when: ClearRecentList(recents)
+    ensures: recents.files = []
+}
+
+-- Invariants -----------------------------------------------------------------
+
+invariant NoDuplicateClasspathEntries {
+    for settings in ClasspathConfigs:
+        for e1 in settings.entries:
+            settings.entries.count(e => e = e1) = 1
+}
+
+invariant RecentWorkspacesBounded {
+    for recents in RecentWorkspaces:
+        recents.files.count <= 10
+}
+
+invariant RecentWorkspacesUnique {
+    for recents in RecentWorkspaces:
+        for f in recents.files:
+            recents.files.count(g => g = f) = 1
+}
+
+-- Surfaces -------------------------------------------------------------------
+
+surface ClasspathSetup {
+    facing user: User
+    context settings: ClasspathConfig
+
+    exposes:
+        settings.entries
+        settings.jre_home
+
+    provides:
+        AddClasspathEntry(user, settings, entry)
+        RemoveClasspathEntry(user, settings, entry) when entry in settings.entries
+        MoveClasspathEntry(user, settings, entry, direction) when can_move(settings.entries, entry, direction)
+        SetJreHome(user, settings, path)
+
+    @guarantee AtomicApply
+        -- Edits are staged in the dialog and only applied to the
+        -- configuration when the dialog is confirmed; cancelling leaves
+        -- the configuration untouched. The applied entry order is the
+        -- order shown in the dialog.
+}
+
+surface ClassLookup {
+    facing user: User
+    context settings: ClasspathConfig
+
+    provides:
+        FindClass(user, settings, class_name, module_selection)
+
+    @guidance
+        -- Entered when opening a class file by name or following a class
+        -- link. A module selection restricts the lookup to the entry whose
+        -- module matches.
+}
+
+surface WorkspaceMenu {
+    facing user: User
+    context workspace: Workspace
+
+    exposes:
+        for recents in RecentWorkspaces:
+            recents.files
+
+    provides:
+        SaveWorkspace(user, workspace, file)
+        LoadWorkspace(user, workspace, file)
+        ClearConfig(user, workspace.config)
+        WorkspaceUsed(user, recents, file)
+        ClearRecentList(user, recents)
+
+    @guarantee GuardedSwitch
+        -- Opening another workspace or starting a new one asks before
+        -- discarding unsaved class edits, reusing the close guard from
+        -- class-file-editing. Loading a workspace file itself discards
+        -- open tabs without asking once the switch is confirmed.
+}
+
+-- Open questions ---------------------------------------------------------------
+
+-- (none)
+
+-- Accepted as intended behaviour:
+-- - JRT and VM classpath entries are never persisted in a workspace: the JRT
+--   entry derives from the configured JRE home and the VM connection is
+--   transient.
+-- - Loading a workspace closes currently open tabs without per-tab
+--   confirmation; the open action asks once via the close guard (see
+--   GuardedSwitch).
+-- - A JRE home recorded in a workspace is ignored when it does not exist on the
+--   local machine; the JVM home the tool runs on is kept (see LoadWorkspace).
+-- - Saving a workspace over an existing file only asks for confirmation on
+--   Linux; Windows and macOS overwrite silently (see SaveWorkspace).
+-- - Class shadowing is silent: the first classpath entry that contains a class
+--   wins and no warning is shown (see FindClass).
+-- - Jar entries with an obfuscated trailing slash are normalized on lookup
+--   (see FindClass).

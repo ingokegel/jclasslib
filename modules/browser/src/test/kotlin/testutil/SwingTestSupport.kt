@@ -134,6 +134,9 @@ fun Component.descendants(): Sequence<Component> =
         sequenceOf(component) + component.descendants()
     }
 
+inline fun <reified T : Component> Robot.findAllByType(root: Container): Collection<T> =
+    finder().findAll(root, org.assertj.swing.core.TypeMatcher(T::class.java)).filterIsInstance<T>()
+
 @GUITest
 abstract class SwingRobotTest : AssertJSwingJupiterTestCase() {
 
